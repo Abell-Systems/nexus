@@ -1,0 +1,147 @@
+.container {
+  max-width: 820px;
+  margin: 2rem auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  color: var(--color-text);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.backBtn {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: white;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.backBtn:hover {
+  transform: translateY(-1px);
+}
+
+.empty,
+.error {
+  color: var(--color-text-muted);
+  padding: 1rem 0;
+}
+
+.error {
+  color: var(--color-error);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.item {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.itemBtn {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  padding: 1rem 1.25rem;
+  border: 0;
+  background: var(--color-surface);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.itemBtn:hover:not(:disabled) {
+  background: var(--color-surface-sunken);
+}
+
+.itemBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.itemMain {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.itemDomain {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.itemQuery {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.itemMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+}
+
+.statusBadge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 650;
+}
+
+.status_done {
+  background: var(--color-success-surface);
+  color: var(--color-success);
+}
+
+.status_error {
+  background: var(--color-error-surface);
+  color: var(--color-error);
+}
+
+.status_running {
+  background: var(--color-warning-surface);
+  color: var(--color-warning);
+}
+
+.candidateCount {
+  color: var(--color-text-muted);
+}
+
+.itemDate {
+  color: var(--color-text-muted);
+  margin-left: auto;
+}

@@ -1,0 +1,39 @@
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #111b3d;
+  background: #ffffff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+
+  /* Shared design tokens -- every component below should reference these
+     instead of redefining its own hex values (that duplication is what
+     caused #8057f5 vs #8056ee "purple" drift between LandingView and the
+     error view). Add new tokens here, don't hardcode a new color inline. */
+  --color-ink: #111b3d;
+  --color-muted: #5e6888;
+  --color-purple: #7c3fc4;
+  --color-pink: #e0217a;
+  --color-lavender: #f6eefc;
+  --color-surface: #ffffff;
+  --color-surface-sunken: #f7f6fb;
+  --color-border: #dfe2ea;
+  --color-text: var(--color-ink);
+  --color-text-muted: var(--color-muted);
+
+  /* Semantic status colors -- used for agent activity (survived/rejected/
+     revised), quota/error banners, etc. */
+  --color-success: #16a34a;
+  --color-success-surface: #ecfdf3;
+  --color-warning: #d97706;
+  --color-warning-surface: #fffbeb;
+  --color-error: #dc2626;
+  --color-error-surface: #fef2f2;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; min-width: 320px; min-height: 100vh; }
+body { min-height: 100vh; }
+button, input { font-family: inherit; }
+#root { min-height: 100vh; }
+

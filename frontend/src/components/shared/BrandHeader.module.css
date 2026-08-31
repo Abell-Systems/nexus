@@ -1,0 +1,48 @@
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logoMark {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+}
+
+.brandName {
+  color: #202640;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.brandName strong {
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.domainBadge {
+  display: inline-block;
+  padding: 8px 13px;
+  border: 1px solid rgba(124, 63, 196, 0.13);
+  border-radius: 999px;
+  background: var(--color-lavender);
+  color: #7c3fc4;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+@media (max-width: 640px) {
+  .brandName {
+    font-size: 15px;
+  }
+}

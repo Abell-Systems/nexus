@@ -1,0 +1,6 @@
+google-adk[extensions]==2.7.0
+google-cloud-bigquery==3.43.0
+pydantic==2.13.4
+python-dotenv==1.2.2
+fastapi==0.141.1
+uvicorn[standard]==0.52.3

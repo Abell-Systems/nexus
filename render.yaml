@@ -1,0 +1,26 @@
+# Dev-validation deployment on Render's free tier — no gcloud, no credit card.
+# Deploy via Render dashboard -> New -> Blueprint -> point at this repo.
+# See docs/deploy.md for the Cloud Run (production/demo) path.
+
+services:
+  - type: web
+    name: patent-agent-dev
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: MODEL_PROVIDER
+        value: groq # options: groq | openrouter | gemini
+      - key: MODEL_NAME
+        value: qwen/qwen3.8-27b
+      - key: MODEL_KEY
+        sync: false # set in Render dashboard — never commit real keys
+      - key: USE_MOCK_BIGQUERY
+        value: "true" # no GCP credentials needed for dev validation
+      - key: DEMAND_SOURCE
+        value: mock
+      - key: FRONTEND_ORIGINS
+        value: "*" # tighten to the real frontend origin once known
+      - key: ANALYZE_TIMEOUT_SECONDS
+        value: "900"
