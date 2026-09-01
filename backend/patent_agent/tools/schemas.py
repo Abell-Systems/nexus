@@ -1,6 +1,7 @@
 """Shared data contracts passed between agents via session state and returned by tools."""
 
-from pydantic import BaseModel, ConfigDict, Field
+from typing import Any
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class PatentRecord(BaseModel):
@@ -50,11 +51,27 @@ class PatentCluster(BaseModel):
 class InventionCandidate(BaseModel):
     """A candidate invention proposed by the Inventor agent for a given white-space cluster."""
 
-    candidate_id: str
+    candidate_id: str = ""
+    id: str | None = None
     cluster_id: str
     title: str
     description: str
-    claimed_novelty: str
+    claimed_novelty: str = ""
+    novelty_claim: str | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_fields(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            # Normalise ID
+            c_id = data.get("candidate_id") or data.get("id") or ""
+            data.setdefault("candidate_id", c_id)
+            data.setdefault("id", c_id)
+            # Normalise Novelty Claim
+            nov = data.get("novelty_claim") or data.get("claimed_novelty") or ""
+            data.setdefault("claimed_novelty", nov)
+            data.setdefault("novelty_claim", nov)
+        return data
 
 
 class AdversarialVerdict(BaseModel):
@@ -64,7 +81,7 @@ class AdversarialVerdict(BaseModel):
     prior art rather than an unsupported LLM judgment.
     """
 
-    candidate_id: str
+    candidate_id: str = ""
     verdict: str  # "survives" | "rejected"
     rationale: str
     cited_patents: list[str] = Field(min_length=1)
@@ -76,13 +93,13 @@ class ScoreCard(BaseModel):
     Every sub-score must be backed by supporting_evidence citations — never a bare number.
     """
 
-    candidate_id: str
+    candidate_id: str = ""
     novelty: float
     prior_art_risk: float
     differentiation: float
     evidence: float
     supporting_evidence: list[str] = Field(min_length=1)
-    summary: str
+    summary: str = ""
     scope_drift: bool = False
     drift_reason: str = ""
     obviousness_risk: str = "low"
