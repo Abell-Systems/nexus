@@ -1,0 +1,101 @@
+"""DuckDB-backed Patents Data Source for Spanish and Regional Patent Corpora."""
+
+from pathlib import Path
+from typing import Any
+import duckdb
+
+from .schemas import PatentRecord
+
+
+class DuckDbPatentsDataSource:
+    def __init__(self, db_path: str = "data/snapshots/patents_es_snapshot.duckdb"):
+        self.db_path = db_path
+        Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+        self.conn = duckdb.connect(db_path)
+        self._init_tables()
+
+    def _init_tables(self):
+        self.conn.execute("""
+            CREATE TABLE IF NOT EXISTS patents (
+                publication_number VARCHAR PRIMARY KEY,
+                title VARCHAR,
+                abstract VARCHAR,
+                assignee VARCHAR,
+                filing_date VARCHAR,
+                publication_date VARCHAR,
+                cpc_codes VARCHAR[],
+                citation_count INTEGER,
+                backward_citation_count INTEGER
+            );
+            CREATE INDEX IF NOT EXISTS idx_patents_pub ON patents(publication_number);
+        """)
+
+    def insert_patents(self, records: list[PatentRecord]):
+        for r in records:
+            pub_date = getattr(r, "publication_date", None) or r.filing_date
+            b_count = getattr(r, "backward_citation_count", 0) or 0
+            assignee_val = r.assignee if isinstance(r.assignee, str) else (", ".join(r.assignee) if r.assignee else "")
+            self.conn.execute("""
+                INSERT OR REPLACE INTO patents VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, [
+                r.publication_number,
+                r.title,
+                r.abstract,
+                assignee_val,
+                r.filing_date,
+                pub_date,
+                r.cpc_codes,
+                r.citation_count,
+                b_count
+            ])
+
+    def search_patents(self, cpc_prefix: str, limit: int = 50) -> list[PatentRecord]:
+        query = """
+            SELECT publication_number, title, abstract, assignee, filing_date,
+                   publication_date, cpc_codes, citation_count, backward_citation_count
+            FROM patents
+            WHERE list_contains(cpc_codes, ?) OR list_has_any(cpc_codes, (
+                SELECT COALESCE(array_agg(DISTINCT c), CAST([] AS VARCHAR[])) FROM (
+                    SELECT unnest(cpc_codes) as c FROM patents
+                ) WHERE c LIKE ?
+            ))
+            ORDER BY citation_count DESC
+            LIMIT ?
+        """
+        like_pattern = f"{cpc_prefix}%"
+        df = self.conn.execute(query, [cpc_prefix, like_pattern, limit]).df()
+        
+        records = []
+        for _, row in df.iterrows():
+            rec = PatentRecord(
+                publication_number=row["publication_number"],
+                title=row["title"],
+                abstract=row["abstract"],
+                assignee=row["assignee"],
+                filing_date=row["filing_date"],
+                cpc_codes=list(row["cpc_codes"]),
+                citation_count=int(row["citation_count"]),
+            )
+            # Attach extra properties
+            setattr(rec, "publication_date", row["publication_date"])
+            setattr(rec, "backward_citation_count", int(row["backward_citation_count"]))
+            records.append(rec)
+        return records
+
+    def get_cluster_stats(self, cpc_prefix: str, ref_year: int = 2026) -> dict[str, Any]:
+        patents = self.search_patents(cpc_prefix, limit=1000)
+        if not patents:
+            return {"patent_count": 0, "mean_age": 0.0, "patents": []}
+        
+        ages = []
+        for p in patents:
+            year = int(p.filing_date.split("-")[0]) if p.filing_date else ref_year
+            age = max(1, ref_year - year)
+            ages.append(age)
+            
+        mean_age = sum(ages) / len(ages) if ages else 0.0
+        return {
+            "patent_count": len(patents),
+            "mean_age": round(mean_age, 2),
+            "patents": patents
+        }

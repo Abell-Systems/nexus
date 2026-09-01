@@ -1,23 +1,25 @@
 """Shared data contracts passed between agents via session state and returned by tools."""
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class PatentRecord(BaseModel):
     """Mirrors the fields we pull from Google Patents Public Datasets on BigQuery."""
+    model_config = ConfigDict(extra="allow")
 
     publication_number: str
     title: str
     abstract: str
-    assignee: list[str] = Field(default_factory=list)
+    assignee: list[str] | str = Field(default_factory=list)
     inventors: list[str] = Field(default_factory=list)
     filing_date: str
-    publication_date: str
+    publication_date: str = ""
     priority_date: str | None = None
-    country_code: str
+    country_code: str = "US"
     cpc_codes: list[str] = Field(default_factory=list)
     family_id: str | None = None
     citation_count: int = 0
+    backward_citation_count: int = 0
     similarity_score: float | None = None
 
 
