@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from .cpc_mapper import map_cpc_prefix
+from .cpc_taxonomy import map_demand_to_cpc
 from .schemas import DemandSignal
 
 FIXTURE_PATH = Path(__file__).parent / "innoget_demands.json"
@@ -124,3 +125,28 @@ class InnogetDemandDataSource:
     def search_demand(self, query: str, domain: str, max_results: int = 20) -> list[DemandSignal]:
         """Search demand signals matching DemandDataSource protocol."""
         return [signal for signal, _ in self.search_demand_with_provenance(query, domain, max_results)]
+
+    def get_spanish_demands(self) -> list[DemandSignal]:
+        """Return all demand signals originating from Spain."""
+        results = []
+        for record in self._records:
+            if str(record.get("country", "")).strip().lower() == "spain":
+                rec_id = record.get("id", 0)
+                title = record.get("title", "")
+                desc = record.get("description", "") or record.get("text", "")[:300]
+                text = record.get("text", "")
+                cpc_prefixes = map_demand_to_cpc(title, text)
+                primary_cpc = cpc_prefixes[0] if cpc_prefixes else "G06Q"
+
+                results.append(
+                    DemandSignal(
+                        source="innoget",
+                        id=f"innoget-{rec_id}",
+                        title=title,
+                        description=desc,
+                        cpc_prefix=primary_cpc,
+                        posted_date=str(record.get("collected_at", "2026-08-25")).split("T")[0],
+                        url=record.get("url", f"https://www.innoget.com/technology-calls/{rec_id}"),
+                    )
+                )
+        return results
