@@ -111,6 +111,7 @@ def check_frontend_files(errors: list[str]) -> None:
         "index.html",
         "README.md",
         "dist",
+        "coverage",
         ".env",
         ".env.example",
     }

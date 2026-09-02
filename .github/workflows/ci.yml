@@ -61,12 +61,19 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - name: Install dependencies
         run: npm ci
-      - name: Typecheck
+      - name: Tests & Coverage
         run: npm test
+      - name: Typecheck
+        run: npm run typecheck
       - name: Lint
         run: npm run lint
       - name: Production Build
         run: npm run build
+      - name: Upload Frontend Coverage Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage/lcov.info
 
   # 4. Security & Secret Scanning
   security-scan:
@@ -105,7 +112,7 @@ jobs:
       - name: Integration Tests
         run: pytest backend/test/integration -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml
       - name: E2E Reproducibility Gate & Coverage Verification (Strict Fail Under)
-        run: pytest backend/test/e2e -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml --cov-report=term-missing --cov-fail-under=65
+        run: pytest backend/test/e2e -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml --cov-report=term-missing --cov-fail-under=80
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -115,7 +122,7 @@ jobs:
   # 6. Sonar Analysis & Quality Gate (Strict - No Green Fallback)
   sonar-quality-gate:
     name: 6. Sonar Quality Gate
-    needs: backend-tests
+    needs: [backend-tests, frontend-quality]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -134,10 +141,15 @@ jobs:
           echo "2. Generate a SonarCloud token at https://sonarcloud.io/account/security."
           echo "3. Add the token to GitHub repository secrets under the name SONAR_TOKEN."
           exit 1
-      - name: Download Coverage Report
+      - name: Download Backend Coverage Report
         uses: actions/download-artifact@v4
         with:
           name: coverage-report
+      - name: Download Frontend Coverage Report
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage
       - name: SonarQube Cloud Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
