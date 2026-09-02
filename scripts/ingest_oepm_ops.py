@@ -224,8 +224,8 @@ def build_and_freeze_corpus(
         cpc_codes = r["cpc_codes"]
         filing_date = r["filing_date"]
         pub_date = r.get("publication_date", filing_date)
-        cit_count = int(r["citation_count"]) if r.get("citation_count") is not None else 0
-        b_count = int(r["backward_citation_count"]) if r.get("backward_citation_count") is not None else 0
+        cit_count = int(r["citation_count"]) if r.get("citation_count") is not None else None
+        b_count = int(r["backward_citation_count"]) if r.get("backward_citation_count") is not None else None
         country = r.get("country_code", "ES")
 
         for cpc in cpc_codes:

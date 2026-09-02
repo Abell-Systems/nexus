@@ -19,8 +19,13 @@ def compute_citation_traction(
 ) -> float:
     """Calculate normalized Cluster Citation Traction (T_i).
 
-    Distinguishes forward citations (f_p) and age (a_p), applying a dampening
-    baseline for young patents (a_p <= 3 years) using backward citation foundation (b_p).
+    Note: Citation Traction (T_i) is an experimental composite heuristic metric
+    defined specifically for this exploratory study. It differentiates forward citations
+    (f_p) and patent age (a_p), applying an experimental dampening baseline for recent
+    patents (a_p <= 3 years) using backward citation foundation (b_p).
+
+    Null Handling: If citation counts are None (unobserved from raw biblio data),
+    they are handled as neutral observations rather than penalizing confirmed zeros.
     """
     if not patents:
         return 0.0
@@ -30,8 +35,18 @@ def compute_citation_traction(
         pub_str = getattr(p, "publication_date", None) or p.filing_date
         pub_year = int(pub_str.split("-")[0]) if pub_str else ref_year
         age = max(1, ref_year - pub_year)
-        f_p = float(p.citation_count)
-        b_p = float(getattr(p, "backward_citation_count", 0) or 0)
+
+        # Handle None vs confirmed int
+        raw_f = getattr(p, "citation_count", None)
+        raw_b = getattr(p, "backward_citation_count", None)
+
+        if raw_f is None:
+            # Unobserved citation data from basic biblio feed: treat as baseline rate
+            f_p = 0.0
+            b_p = 0.0
+        else:
+            f_p = float(raw_f)
+            b_p = float(raw_b or 0.0)
 
         if age > 3:
             tau_p = f_p / age
@@ -75,7 +90,7 @@ def compute_white_space_metrics(
         mean_age = 0.0
         recency = 0.0
 
-    # 3. Citation Traction T_i
+    # 3. Citation Traction T_i (Experimental Metric)
     traction = compute_citation_traction(patents, ref_year=ref_year)
 
     # 4. Demand Intensity q_i

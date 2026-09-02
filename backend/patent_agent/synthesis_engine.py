@@ -31,10 +31,10 @@ class InventionSynthesisEngine:
 Domain/Cluster: {cluster_id}
 Industrial Demand Need: {demand.title} - {demand.description}
 
-Existing Domestic Prior Art:
+Retrieved Prior Art Evidence Subset:
 {prior_art_summary}
 
-Synthesize a novel technological invention candidate that directly solves the industrial demand while technically differentiating from the prior art above.
+Synthesize a novel technological invention candidate that directly solves the industrial demand while technically differentiating from the retrieved prior art above.
 """
             candidate = self.client.generate_structured(
                 prompt=inventor_prompt,
@@ -49,16 +49,16 @@ Title: {candidate.title}
 Novelty Claim: {candidate.novelty_claim}
 Description: {candidate.description}
 
-Prior Art to Search & Attack With:
+Retrieved Prior Art Evidence Subset:
 {prior_art_summary}
 
-Critique this invention. If it is anticipated or obvious based on the prior art, set verdict to 'rejected' and cite the patent numbers. If it presents clear novelty beyond the cited prior art, set verdict to 'survives'.
-YOU MUST CITE AT LEAST ONE PUBLICATION NUMBER FROM THE PRIOR ART IN 'cited_patents'.
+Critique this invention candidate strictly against the supplied prior art. If it is anticipated or obvious in light of the cited documents, set verdict to 'rejected' and cite the relevant publication numbers. If it presents clear novelty beyond the cited prior art subset, set verdict to 'survives'.
+YOU MUST CITE AT LEAST ONE PUBLICATION NUMBER FROM THE RETRIEVED PRIOR ART IN 'cited_patents'.
 """
             verdict = self.client.generate_structured(
                 prompt=adversarial_prompt,
                 schema=AdversarialVerdict,
-                system_prompt="You are a strict European Patent Office (EPO) patent examiner."
+                system_prompt="You are a European patent-law-style adversarial reviewer evaluating novelty and prior-art differentiation against the supplied prior-art evidence."
             )
 
             if verdict.verdict == "survives":

@@ -1,7 +1,7 @@
 {
   "dataset_name": "Spanish National Patent Corpus",
   "dataset_version": "1.0.0",
-  "created_at": "2026-09-02T09:21:47.565968",
+  "created_at": "2026-09-02T09:26:50.322796",
   "source_authority": "Patentes y Modelos de Utilidad Concedidos en España (OEPM / BOPI)",
   "official_catalog_url": "https://datos.gob.es/es/catalogo/e05024401-patentes-solicitadas-y-concedidas-bopi",
   "raw_source_file": "data/raw/oepm_open_data_es.json",
