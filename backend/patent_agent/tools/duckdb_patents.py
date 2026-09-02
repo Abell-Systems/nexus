@@ -25,7 +25,8 @@ class DuckDbPatentsDataSource:
                 publication_date VARCHAR,
                 cpc_codes VARCHAR[],
                 citation_count INTEGER,
-                backward_citation_count INTEGER
+                backward_citation_count INTEGER,
+                country_code VARCHAR DEFAULT 'ES'
             );
             CREATE INDEX IF NOT EXISTS idx_patents_pub ON patents(publication_number);
         """)
@@ -34,9 +35,10 @@ class DuckDbPatentsDataSource:
         for r in records:
             pub_date = getattr(r, "publication_date", None) or r.filing_date
             b_count = getattr(r, "backward_citation_count", 0) or 0
+            country = getattr(r, "country_code", "ES") or "ES"
             assignee_val = r.assignee if isinstance(r.assignee, str) else (", ".join(r.assignee) if r.assignee else "")
             self.conn.execute("""
-                INSERT OR REPLACE INTO patents VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT OR REPLACE INTO patents VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, [
                 r.publication_number,
                 r.title,
@@ -46,13 +48,14 @@ class DuckDbPatentsDataSource:
                 pub_date,
                 r.cpc_codes,
                 r.citation_count,
-                b_count
+                b_count,
+                country
             ])
 
     def search_patents(self, cpc_prefix: str, limit: int = 50) -> list[PatentRecord]:
         query = """
             SELECT publication_number, title, abstract, assignee, filing_date,
-                   publication_date, cpc_codes, citation_count, backward_citation_count
+                   publication_date, cpc_codes, citation_count, backward_citation_count, country_code
             FROM patents
             WHERE list_contains(cpc_codes, ?) OR list_has_any(cpc_codes, (
                 SELECT COALESCE(array_agg(DISTINCT c), CAST([] AS VARCHAR[])) FROM (
@@ -79,6 +82,7 @@ class DuckDbPatentsDataSource:
             # Attach extra properties
             setattr(rec, "publication_date", row["publication_date"])
             setattr(rec, "backward_citation_count", int(row["backward_citation_count"]))
+            setattr(rec, "country_code", row.get("country_code", "ES"))
             records.append(rec)
         return records
 
@@ -89,7 +93,10 @@ class DuckDbPatentsDataSource:
         
         ages = []
         for p in patents:
-            year = int(p.filing_date.split("-")[0]) if p.filing_date else ref_year
+            try:
+                year = int(p.filing_date.split("-")[0]) if p.filing_date else ref_year
+            except (ValueError, IndexError):
+                year = ref_year
             age = max(1, ref_year - year)
             ages.append(age)
             

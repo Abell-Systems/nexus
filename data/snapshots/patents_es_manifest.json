@@ -1,0 +1,43 @@
+{
+  "dataset_name": "Spanish National Patent Corpus (OEPM / EPO OPS)",
+  "dataset_version": "1.0.0",
+  "created_at": "2026-09-02T08:46:09.953281",
+  "source_authority": "Oficina Española de Patentes y Marcas (OEPM) & EPO Open Patent Services (OPS 3.2)",
+  "inclusion_criteria": "Published patent documents with country_code == 'ES', filing range 2016-2023, multi-sector IPC/CPC coverage.",
+  "total_records": 16,
+  "sha256_hash": "c158bdaa2426e71c4aa42db5c1885885dc36607bf6cf5431135bdfa70eee3a2e",
+  "format": "parquet / jsonl",
+  "cpc_subclass_distribution": {
+    "C11D": 8,
+    "H01M": 6,
+    "E03C": 4,
+    "C08L": 4,
+    "G05B": 4,
+    "H02J": 4,
+    "B23B": 4,
+    "B01J": 3,
+    "G01R": 3,
+    "A47J": 2,
+    "C08K": 2,
+    "C22C": 2,
+    "A01N": 1,
+    "C02F": 1,
+    "G05D": 1,
+    "F16K": 1,
+    "G06N": 1,
+    "G06Q": 1,
+    "C22F": 1,
+    "C23C": 1,
+    "C01B": 1,
+    "H01B": 1,
+    "B60L": 1,
+    "B65D": 1,
+    "C07D": 1,
+    "C08G": 1
+  },
+  "provenance": {
+    "parquet_file": "data/snapshots/patents_es_corpus.parquet",
+    "jsonl_file": "data/snapshots/patents_es_corpus.jsonl",
+    "duckdb_file": "data/snapshots/patents_es_snapshot.duckdb"
+  }
+}

@@ -1,4 +1,4 @@
-"""Deterministic fake patent data generator used by MockPatentsDataSource.
+"""Deterministic fake patent data generator used by MockPatentsDataSource and unit tests.
 
 Same (query, domain) always yields the same corpus, so demo runs are reproducible
 without live BigQuery credentials.
@@ -35,6 +35,31 @@ _ABSTRACT_TEMPLATES = [
 ]
 
 _COUNTRIES = ["US", "EP", "CN", "JP", "KR"]
+
+
+# Explicitly scoped sample fixtures for unit test suites only
+SAMPLE_ES_PATENTS_FIXTURE = [
+    PatentRecord(
+        publication_number="ES-2849102-B2-FIXTURE",
+        title="[FIXTURE] Formulación detergente enzimática líquida biodegradable",
+        abstract="Formulación de prueba para tests unitarios.",
+        assignee=["Laboratorios Bilper S.A."],
+        filing_date="2020-05-12",
+        publication_date="2021-02-10",
+        cpc_codes=["C11D1/00", "C11D3/386"],
+        citation_count=6,
+    ),
+    PatentRecord(
+        publication_number="ES-2684913-A1-FIXTURE",
+        title="[FIXTURE] Fregadero modular con recirculación de aguas grises",
+        abstract="Dispositivo sanitario de prueba para tests unitarios.",
+        assignee=["Roca Sanitario S.A."],
+        filing_date="2017-03-22",
+        publication_date="2018-01-15",
+        cpc_codes=["E03C1/18", "E03C1/04"],
+        citation_count=14,
+    )
+]
 
 
 def _rng_for(query: str, domain: str) -> random.Random:

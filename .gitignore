@@ -24,7 +24,9 @@ frontend/.env
 backend/*_results.json
 backend/*judge_results.json
 *.duckdb
-data/
+data/*
+!data/snapshots/
+!data/experiments/
 
 # --- OS / IDE ---
 .DS_Store

@@ -1,7 +1,15 @@
 """Formal White-Space and Citation Traction Metrics for Patent Analysis."""
 
+from enum import Enum
 from typing import Any
 from .schemas import PatentRecord, DemandSignal
+
+
+class ExecutionMode(str, Enum):
+    """Execution mode distinguishing scientific evidence tiers."""
+    FIXTURE = "fixture"      # Mock data for fast unit testing
+    PILOT = "pilot"          # Local sample smoke tests
+    EMPIRICAL = "empirical"  # Validated empirical dataset with cryptographic provenance
 
 
 def compute_citation_traction(
