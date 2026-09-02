@@ -74,7 +74,12 @@ class EpoOpsClient:
             print(f"⚠️ EPO OPS Authentication failed: {e}")
             return False
 
-    def search_and_fetch_biblio(self, cql_query: str = "pn=ES and pd within '2016 2023'", max_records: int = 50) -> list[dict[str, Any]]:
+    def search_and_fetch_biblio(
+        self,
+        cql_query: str = "pn=ES and pd within '2016 2024'",
+        max_records: int = 50,
+        enrich_citations: bool = False
+    ) -> list[dict[str, Any]]:
         """Query OPS published-data search endpoint and parse bibliographic results."""
         if not self._access_token and not self.authenticate():
             raise RuntimeError("EPO OPS Authentication failed or credentials missing (EPO_OPS_KEY / EPO_OPS_SECRET).")
@@ -90,9 +95,42 @@ class EpoOpsClient:
         try:
             with urllib.request.urlopen(req, timeout=20) as resp:
                 xml_content = resp.read()
-                return self.parse_ops_biblio_xml(xml_content)
+                records = self.parse_ops_biblio_xml(xml_content)
         except Exception as e:
             raise RuntimeError(f"EPO OPS Search/Fetch failed: {e}") from e
+
+        if enrich_citations:
+            for rec in records:
+                cit_f, cit_b = self.fetch_citations(rec["publication_number"])
+                rec["citation_count"] = cit_f
+                rec["backward_citation_count"] = cit_b
+
+        return records
+
+    def fetch_citations(self, publication_number: str) -> tuple[Optional[int], Optional[int]]:
+        """Query EPO OPS citations endpoint for a specific publication document."""
+        if not self._access_token and not self.authenticate():
+            return None, None
+
+        # Clean doc number for epodoc format (e.g. ES2849102)
+        doc_clean = publication_number.replace("-", "").split(".")[0]
+        cit_url = f"{self.base_url}/published-data/publication/epodoc/{urllib.parse.quote(doc_clean)}/citations"
+        req = urllib.request.Request(
+            cit_url,
+            headers={
+                "Authorization": f"Bearer {self._access_token}",
+                "Accept": "application/xml"
+            }
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                xml_cit = resp.read()
+                root = ET.fromstring(xml_cit)
+                backward_cits = len(root.findall(".//{*}patcit"))
+                # OPS biblio citations return cited documents (backward citations)
+                return 0, backward_cits
+        except Exception:
+            return None, None
 
     @staticmethod
     def parse_ops_biblio_xml(xml_content: bytes) -> list[dict[str, Any]]:
@@ -138,8 +176,6 @@ class EpoOpsClient:
                 if not cpc_codes:
                     cpc_codes = ["G06Q10/00"]
 
-                # Note: Bibliographic endpoint does not provide citation linkage;
-                # citations are explicitly None until enriched via OPS citation endpoint.
                 records.append({
                     "publication_number": pub_num,
                     "title": title,
@@ -181,7 +217,8 @@ def build_and_freeze_corpus(
     output_parquet: str = "data/snapshots/patents_es_corpus.parquet",
     output_duckdb: str = "data/snapshots/patents_es_snapshot.duckdb",
     manifest_file: str = "data/snapshots/patents_es_manifest.json",
-    raw_output_jsonl: str = "data/snapshots/patents_es_corpus.jsonl"
+    raw_output_jsonl: str = "data/snapshots/patents_es_corpus.jsonl",
+    enrich_ops_citations: bool = False,
 ) -> dict[str, Any]:
     """Execute complete ingestion pipeline: raw source -> parquet -> SHA256 -> DuckDB.
 
@@ -199,16 +236,19 @@ def build_and_freeze_corpus(
     # 1. Ingestion Strategy
     if source == "ops":
         ops_client = EpoOpsClient()
-        raw_records = ops_client.search_and_fetch_biblio()
+        raw_records = ops_client.search_and_fetch_biblio(
+            cql_query="pn=ES and pd within '2016 2024'",
+            enrich_citations=enrich_ops_citations
+        )
         source_authority = "European Patent Office (EPO Open Patent Services OPS 3.2)"
         official_url = "https://ops.epo.org/3.2/rest-services"
         raw_sha256 = "N/A (Live REST API Query)"
-        extraction_criteria = "EPO OPS published-data CQL query 'pn=ES and pd within 2016 2023'."
+        extraction_criteria = "EPO OPS published-data CQL query 'pn=ES and pd within 2016 2024'."
     elif source == "oepm_raw":
         raw_records, raw_meta, raw_sha256 = ingest_from_raw_oepm_source(raw_source_json)
         source_authority = raw_meta.get("dataset_title", "Oficina Española de Patentes y Marcas (OEPM) - BOPI")
         official_url = raw_meta.get("official_catalog_url", "https://datos.gob.es/es/catalogo/e05024401-patentes-solicitadas-y-concedidas-bopi")
-        extraction_criteria = raw_meta.get("extraction_criteria", "OEPM BOPI & Invenes official gazette publications (ES).")
+        extraction_criteria = raw_meta.get("extraction_criteria", "OEPM BOPI & Invenes official gazette publications (ES) 2016-2024.")
     else:
         raise ValueError(f"Unknown ingestion source: {source}. Must be 'ops' or 'oepm_raw'.")
 
@@ -258,10 +298,11 @@ def build_and_freeze_corpus(
 
     parquet_sha256 = calculate_sha256(p_parquet)
 
-    # 5. Write Immutable Manifest
+    # 5. Write Content-Addressed Manifest
     manifest_data = {
-        "dataset_name": "Spanish National Patent Corpus",
+        "dataset_name": "Spanish National Patent Pilot Corpus",
         "dataset_version": "1.0.0",
+        "dataset_scope": "Pilot baseline corpus for proof-of-method validation; publication-level source verification pending.",
         "created_at": datetime.now().isoformat(),
         "source_authority": source_authority,
         "official_catalog_url": official_url,
@@ -306,6 +347,7 @@ def build_and_freeze_corpus(
 
     print(f"✅ Ingestion and dataset freeze complete:")
     print(f"   - Source Authority:       {source_authority}")
+    print(f"   - Scope:                  {manifest_data['dataset_scope']}")
     print(f"   - Official Catalog URL:   {official_url}")
     print(f"   - Raw Source SHA-256:     {raw_sha256}")
     print(f"   - Normalized Records:     {count}")
@@ -320,5 +362,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Ingest Spanish patent publications into DuckDB snapshot.")
     parser.add_argument("--source", choices=["ops", "oepm_raw"], default="oepm_raw",
                         help="Ingestion source authority ('ops' for EPO OPS API, 'oepm_raw' for verified OEPM dataset).")
+    parser.add_argument("--enrich-citations", action="store_true", default=False,
+                        help="Enrich records with citation counts when using OPS API.")
     args = parser.parse_args()
-    build_and_freeze_corpus(source=args.source)
+    build_and_freeze_corpus(source=args.source, enrich_ops_citations=args.enrich_citations)

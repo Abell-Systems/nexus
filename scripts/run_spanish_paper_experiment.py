@@ -142,15 +142,20 @@ def run_experiment(
         engine = None
         synthesis_status = "SYNTHETIC DRY-RUN (AWAITING LIVE GROQ API KEY)"
 
-    # Prioritize top white-space clusters (or default clusters if none pass threshold)
-    target_clusters = white_space_clusters if white_space_clusters else metrics_list[:2]
+    # Strictly select eligible clusters that have BOTH verified demands and domestic patents
+    eligible_case_study_clusters = [
+        m for m in metrics_list
+        if len(cpc_demands.get(m["cluster_id"], [])) > 0 and len(cluster_patents.get(m["cluster_id"], [])) > 0
+    ]
+    # Sort eligible clusters by white_space_score descending
+    eligible_case_study_clusters.sort(key=lambda x: -x["white_space_score"])
 
-    for m in target_clusters[:2]:
+    for m in eligible_case_study_clusters[:2]:
         c_id = m["cluster_id"]
-        dems = cpc_demands.get(c_id, [])
-        pats = cluster_patents.get(c_id, [])
-        primary_demand = dems[0] if dems else spanish_demands[0]
-        ref_pub = pats[0].publication_number if pats else "ES-2849102-B2"
+        dems = cpc_demands[c_id]
+        pats = cluster_patents[c_id]
+        primary_demand = dems[0]
+        ref_pub = pats[0].publication_number
 
         if not engine:
             # Deterministic structural mock strictly labeled
@@ -158,12 +163,12 @@ def run_experiment(
                 id=f"INV-{c_id}-001-SYNTHETIC",
                 cluster_id=c_id,
                 title=f"[DRY-RUN] Candidate Invention for {c_id}",
-                description="Cold-water active surfactant system with biocompatible microencapsulation.",
-                novelty_claim="Activation temperature window under 20C with zero phosphorus release.",
+                description=f"Tailored technological solution addressing {primary_demand.title[:60]}.",
+                novelty_claim=f"Novel differentiating implementation relative to domestic prior art {ref_pub}.",
             )
             verd = AdversarialVerdict(
                 verdict="survives",
-                rationale=f"Differentiates from cited domestic prior art {ref_pub} in room temperature kinetic activation.",
+                rationale=f"Differentiates from cited domestic prior art {ref_pub} in core technical execution.",
                 cited_patents=[ref_pub],
             )
             score = ScoreCard(
