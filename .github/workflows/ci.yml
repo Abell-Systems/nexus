@@ -2,34 +2,97 @@ name: ci
 
 on:
   push:
-    branches: [main]
+    branches: [main, "feature/**"]
     paths-ignore:
       - "docs/**"
       - "**.md"
   pull_request:
+    branches: [main, "feature/**"]
     paths-ignore:
       - "docs/**"
       - "**.md"
 
 jobs:
-  backend:
+  architecture:
+    name: 1. Architecture Quality Gate
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
+      - name: Run Architecture Checker
+        run: python scripts/check_architecture.py
+
+  backend-unit:
+    name: 2. Backend Unit Tests
+    needs: architecture
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
           cache: pip
           cache-dependency-path: backend/requirements-dev.txt
-      - run: pip install -r requirements-dev.txt
-      - run: pytest
-        env:
-          USE_MOCK_BIGQUERY: "true"
+      - name: Install dependencies
+        run: pip install -r backend/requirements-dev.txt
+      - name: Run Unit Tests
+        run: pytest backend/test/unit -v
 
-  frontend:
+  backend-integration:
+    name: 3. Backend Integration Tests
+    needs: architecture
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements-dev.txt
+      - name: Install dependencies
+        run: pip install -r backend/requirements-dev.txt
+      - name: Run Integration Tests
+        run: pytest backend/test/integration -v
+
+  backend-e2e:
+    name: 4. Backend E2E Reproducibility Gate
+    needs: [backend-unit, backend-integration]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements-dev.txt
+      - name: Install dependencies
+        run: pip install -r backend/requirements-dev.txt
+      - name: Run E2E Tests
+        run: pytest backend/test/e2e -v
+
+  frontend-tests:
+    name: 5. Frontend Tests & Lint
+    needs: architecture
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run lint
+
+  frontend-build:
+    name: 6. Frontend Production Build
+    needs: frontend-tests
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -43,4 +106,3 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run build
-      - run: npm run lint

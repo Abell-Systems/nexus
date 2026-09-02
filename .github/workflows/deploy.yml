@@ -1,28 +1,22 @@
+# TEMPORARILY DISABLED: Deploy is disabled until VPS / production target is provisioned.
+# Can only be manually triggered via workflow_dispatch when explicitly needed.
 name: deploy
 
 on:
-  workflow_run:
-    workflows: [ci]
-    types: [completed]
-    branches: [main]
+  workflow_dispatch:
 
-# Never deploy multiple revisions from a burst of CI completions.
-# A newer deploy run cancels any older in-progress deploy for main.
 concurrency:
   group: deploy-main
   cancel-in-progress: true
 
 jobs:
   deploy:
-    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_sha }}
 
       - uses: google-github-actions/auth@v2
         with:

@@ -1,7 +1,7 @@
 from google.adk.agents import LlmAgent
-from application.synthesis.config import get_agent_model
+from infrastructure.adk.config import get_agent_model
 from application.state_keys import ADVERSARIAL_VERDICTS
-from application.synthesis.tools import exit_loop, get_citations_tool, get_similar_patents_tool, search_patents_tool
+from infrastructure.adk.tools import exit_loop, get_citations_tool, get_similar_patents_tool, search_patents_tool
 from domain.models.runtime_schemas import AdversarialVerdict
 from .prompt import ADVERSARIAL_AGENT_INSTRUCTION
 

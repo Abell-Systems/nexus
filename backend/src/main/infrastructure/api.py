@@ -26,10 +26,10 @@ from google.adk.sessions import InMemorySessionService  # noqa: E402
 from google.genai import types  # noqa: E402
 from pydantic import BaseModel, Field, ValidationError  # noqa: E402
 
-from application.synthesis.agent import build_invention_pipeline  # noqa: E402
+from infrastructure.adk.agent import build_invention_pipeline  # noqa: E402
 from application.landscape.context import is_supported_domain  # noqa: E402
 from infrastructure.llm.provider import LLMProvider  # noqa: E402
-from application.research_service import get_research_service  # noqa: E402
+from application.research_service import ResearchService  # noqa: E402
 from infrastructure.storage.job_store import get_job_store  # noqa: E402
 from infrastructure.llm.provider_policy import (  # noqa: E402
     ProviderPacingPlugin,
@@ -71,7 +71,10 @@ app = get_fast_api_app(
 
 app.router.routes = [r for r in app.router.routes if getattr(r, "path", None) != "/health"]
 
-_research_service = get_research_service()
+_research_service = ResearchService(
+    patents_datasource=get_patents_datasource(),
+    demand_datasource=get_demand_datasource(),
+)
 _job_store = get_job_store()
 _execution_policy = get_execution_policy()
 _rate_limiter = ProviderPacingPlugin(policy=_execution_policy.provider_policy)

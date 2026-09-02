@@ -1,7 +1,6 @@
 """Clustering and landscape generation logic."""
 
 from typing import Any
-from google.adk.tools import FunctionTool
 from domain.models.runtime_schemas import PatentRecord, PatentCluster, DemandSignalItem
 from .metrics import compute_white_space_metrics
 from .cpc_taxonomy import map_concept_to_cpc
@@ -56,11 +55,7 @@ def cluster_patents(
 def patents_for_demand_signal(
     signal: Any,
     domain: str,
+    patents_datasource: Any,
     max_results: int = 20,
 ) -> list[PatentRecord]:
-    from infrastructure.sources.bigquery_patents import get_patents_datasource
-    datasource = get_patents_datasource()
-    return datasource.search_patents(query=signal.title, domain=domain, limit=max_results)
-
-
-cluster_patents_tool = FunctionTool(func=cluster_patents)
+    return patents_datasource.search_patents(query=signal.title, domain=domain, limit=max_results)

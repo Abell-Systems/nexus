@@ -3,8 +3,6 @@
 from typing import Any
 from pydantic import BaseModel, Field
 from domain.models.runtime_schemas import PatentRecord, PatentCluster
-from infrastructure.sources.bigquery_patents import get_patents_datasource
-from infrastructure.sources.demand_sources import get_demand_datasource
 from .landscape.clustering import cluster_patents
 
 
@@ -19,9 +17,13 @@ ResearchResult = ResearchOutput
 
 
 class ResearchService:
-    def __init__(self):
-        self.patents_datasource = get_patents_datasource()
-        self.demand_datasource = get_demand_datasource()
+    def __init__(
+        self,
+        patents_datasource: Any,
+        demand_datasource: Any,
+    ) -> None:
+        self.patents_datasource = patents_datasource
+        self.demand_datasource = demand_datasource
 
     async def conduct_research(
         self,
@@ -39,10 +41,3 @@ class ResearchService:
             patents=patents,
             clusters=clusters,
         )
-
-
-_RESEARCH_SERVICE_INSTANCE = ResearchService()
-
-
-def get_research_service() -> ResearchService:
-    return _RESEARCH_SERVICE_INSTANCE

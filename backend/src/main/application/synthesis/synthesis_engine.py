@@ -3,7 +3,6 @@
 import json
 from typing import Any
 from domain.models.runtime_schemas import InventionCandidate, AdversarialVerdict, ScoreCard, PatentRecord
-from infrastructure.llm.groq_client import GroqClient
 
 
 def validate_grounded_citations(cited_patents: list[str], prior_art: list[PatentRecord]) -> list[str]:
@@ -13,8 +12,8 @@ def validate_grounded_citations(cited_patents: list[str], prior_art: list[Patent
 
 
 class SynthesisEngine:
-    def __init__(self, groq_client: GroqClient | None = None):
-        self.client = groq_client or GroqClient()
+    def __init__(self, llm_client: Any = None):
+        self.client = llm_client
 
     def propose_candidate(
         self,
@@ -33,6 +32,8 @@ class SynthesisEngine:
         user_prompt = f"Cluster: {cluster_id}\n\nDemands:\n{demand_text}\n\nPrior Art:\n{prior_art_text}"
 
         try:
+            if not self.client:
+                raise ValueError("LLM client not configured")
             res = self.client.chat_completion(
                 messages=[
                     {"role": "system", "content": system_prompt},
@@ -83,6 +84,8 @@ class SynthesisEngine:
         )
 
         try:
+            if not self.client:
+                raise ValueError("LLM client not configured")
             res = self.client.chat_completion(
                 messages=[
                     {"role": "system", "content": system_prompt},

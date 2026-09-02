@@ -1,5 +1,5 @@
 from google.adk.agents import LlmAgent
-from application.synthesis.config import get_agent_model
+from infrastructure.adk.config import get_agent_model
 from application.state_keys import SCORED_CANDIDATES
 from domain.models.runtime_schemas import ScoreCard
 from .prompt import GOVERNOR_AGENT_INSTRUCTION
