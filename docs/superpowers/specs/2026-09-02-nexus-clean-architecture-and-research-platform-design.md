@@ -1,8 +1,8 @@
 # Nexus Innovation Intelligence Engine: Clean Architecture & Research Infrastructure Design
 
-**Document Version:** 2.1.0  
+**Document Version:** 2.2.0 (Final Approved Specification)  
 **Date:** 2026-09-02  
-**Status:** Approved Architectural Specification  
+**Status:** Approved for Implementation  
 **Target:** Sovereign Modular Monolith Clean Architecture for Innovation Analytics & Scientific Research
 
 ---
@@ -58,7 +58,7 @@ The product does not know about Spain, Innoget, or specific CPC codes. Instead:
 | Layer | Technology | Rationale & Architectural Scope |
 |---|---|---|
 | **Runtime & Language** | **Python 3.12+** | Type hinting, structural pattern matching, robust async I/O. |
-| **Domain Contracts & Validation** | **Pydantic v2** | Boundary validation only (APIs, CLI, ingestion boundaries). |
+| **Domain Contracts & Validation** | **Pydantic v2** | Minimal external dependency; Pydantic v2 serves as the sole standard contract and boundary validation dependency. |
 | **HTTP Client & API Adapters** | **httpx** | Resilient connection pooling, retry handling, async streaming. |
 | **Raw Ingestion Store** | **Filesystem / S3 Adapter** | Immutable storage of raw HTTP responses, XML payloads, and API metadata. |
 | **Canonical Data Storage** | **Apache Parquet + PyArrow** | Columnar, compressed, typed, content-addressed dataset files. |
@@ -81,13 +81,13 @@ To ensure low operational cost and deterministic execution on standard compute (
 
 ```text
 nexus/
-├── domain/                          # Pure business logic and entity contracts (zero external dependencies)
+├── domain/                          # Domain contracts & entity models (Pydantic standard)
 │   ├── models/
 │   │   ├── patent.py                # PatentDocument, PatentFamily, FamilyMembership, CitationLink
 │   │   ├── demand.py                # DemandSignal, DemandRequirement
 │   │   ├── evidence.py              # FieldObservation, SourceProvenance, VerificationStatus
 │   │   ├── snapshot.py              # DatasetSnapshot, SnapshotManifest
-│   │   └── opportunity.py           # OpportunityHypothesis, ClusterMetrics, QuadrantClassification
+│   │   └── opportunity.py           # OpportunityScore, OpportunityHypothesis, QuadrantClassification
 │   └── protocols/
 │       ├── sources.py               # PatentSourceProtocol, DemandSourceProtocol
 │       ├── classifiers.py           # ClassificationProtocol
@@ -191,8 +191,10 @@ nexus/
 ```python
 class FieldObservation(BaseModel):
     """Fine-grained provenance record tracking the origin and authority of a specific field observation."""
-    field_name: str
-    observed_value: Any
+    entity_id: str                    # Canonical entity ID: e.g. "ES-2849102-B2"
+    field_name: str                   # e.g. "publication_date", "citation_count"
+    observed_value_json: str          # Deterministically serialized JSON string of the observed value
+    value_type: str                   # e.g. "str", "int", "list[str]"
     source_authority: str             # e.g., "OEPM BOPI", "EPO OPS"
     source_uri: str                   # Direct archive / query URL
     retrieval_timestamp: datetime
@@ -251,22 +253,52 @@ class DemandSignal(BaseModel):
     origin_country: str | None = None
     posted_date: str | None = None
     deadline_date: str | None = None
-    classified_cpc_prefixes: list[str] # Primary CPC subclasses assigned (or empty if unclassified)
+    classified_cpc_prefixes: list[str] = Field(default_factory=list)
     observations: list[FieldObservation] = Field(default_factory=list)
 ```
 
 ### 5.4 `DatasetSnapshot` (First-Class Research Entity)
 ```python
 class DatasetSnapshot(BaseModel):
-    """Content-addressed snapshot representing a frozen, immutable analytical corpus."""
+    """Content-addressed snapshot representing a frozen, immutable analytical corpus.
+    
+    Hash Integrity Specification:
+    - content_sha256: SHA-256 digest of the canonical primary Parquet artifact, computed over raw chunk bytes.
+    - manifest_sha256: SHA-256 digest of the frozen JSON manifest documenting the snapshot.
+    """
     dataset_id: str
     schema_version: str
     source_batches: list[str]
     record_count: int
     content_sha256: str
+    manifest_sha256: str
     created_at: datetime
     transformation_version: str
     provenance_manifest_uri: str
+```
+
+### 5.5 `OpportunityScore` (Measurement) vs. `OpportunityHypothesis` (Interpretation)
+```python
+class OpportunityScore(BaseModel):
+    """Deterministic quantitative measurement of innovation gaps and saturation."""
+    cluster_id: str
+    score: float | None               # None if required signals are unobserved under strict mode
+    score_coverage: float             # Ratio of observed signal weight [0.0, 1.0]
+    components: dict[str, float | None] # {"density": d_i, "recency": r_i, "traction": T_i, "demand": q_i}
+    missing_components: list[str]     # e.g. ["traction"] when forward citations are unobserved
+    model_id: str                     # e.g. "composite_whitespace_v1"
+    model_version: str
+    quadrant: str
+
+class OpportunityHypothesis(BaseModel):
+    """Qualitative research interpretation and candidate innovation opportunity."""
+    hypothesis_id: str
+    cluster_id: str
+    opportunity_score: OpportunityScore
+    rationale: str
+    supporting_prior_art: list[str]   # Cited verified publication IDs
+    target_demand_ids: list[str]
+    status: str                       # "validated", "rejected", "exploratory"
 ```
 
 ---
@@ -282,8 +314,9 @@ class OpportunityModelProtocol(Protocol):
         cluster_id: str,
         patents: list[PatentDocument],
         demands: list[DemandSignal],
-        context: LandscapeContext
-    ) -> OpportunityHypothesis:
+        context: LandscapeContext,
+        strict_mode: bool = False
+    ) -> OpportunityScore:
         ...
 
 class SensitivityAnalyzerProtocol(Protocol):
@@ -298,7 +331,7 @@ class SensitivityAnalyzerProtocol(Protocol):
         ...
 ```
 
-### 6.2 Mathematical Formulation
+### 6.2 Mathematical Formulation & Null Signal Handling
 
 For each cluster $i$:
 1. **Relative Volume Density ($d_i$):**
@@ -307,11 +340,13 @@ For each cluster $i$:
    $$r_i = \max\left(0, 1 - \frac{\bar{a}_i}{Y}\right), \quad \text{where } \bar{a}_i = \frac{1}{n_i}\sum_{p \in S_i} \max(1, y_{ref} - y_{filing, p})$$
 3. **Citation Observation Coverage ($C_i$) & Traction ($T_i$):**
    $$C_i = \frac{|S_{i, obs}|}{n_i}$$
-   $$T_i = \begin{cases} \text{clip}\left(\frac{1}{|S_{i, obs}|} \sum_{p \in S_{i, obs}} \frac{\tilde{\tau}_p}{\tau_{max}}, 0, 1\right) & \text{if } |S_{i, obs}| > 0 \\ \text{null / unobserved baseline} & \text{if } |S_{i, obs}| = 0 \end{cases}$$
+   $$T_i = \begin{cases} \text{clip}\left(\frac{1}{|S_{i, obs}|} \sum_{p \in S_{i, obs}} \frac{\tilde{\tau}_p}{\tau_{max}}, 0, 1\right) & \text{if } |S_{i, obs}| > 0 \\ \text{None (unobserved)} & \text{if } |S_{i, obs}| = 0 \end{cases}$$
 4. **Demand Pull Intensity ($q_i$):**
    $$q_i = \begin{cases} \frac{m_i}{\max_j m_j} & \text{if } \max_j m_j > 0 \\ 0 & \text{otherwise} \end{cases}$$
 5. **Composite White-Space Metric ($W_i$):**
-   $$W_i = w_d(1 - d_i) + w_r r_i + w_T T_i + w_q q_i$$
+   * **Strict Mode:** If any required component (e.g. $T_i$) is `None`, $W_i = \text{None}$ and `missing_components = ["traction"]`.
+   * **Renormalized Mode:** $W_i = \frac{\sum_{k \in \text{observed}} w_k s_k}{\sum_{k \in \text{observed}} w_k}$, and `score_coverage = \sum_{k \in \text{observed}} w_k$.
+   * **Zero Silent Imputation:** Missing observations are explicitly tracked and never silently converted to zeros.
 
 ### 6.3 Automated Statistical Sensitivity Analysis
 The `SensitivityAnalyzer` evaluates 5 distinct mathematical regimes configured by the experiment client:
@@ -335,7 +370,7 @@ STAGE 1: DETERMINISTIC EMPIRICAL ANALYSIS
    - Outputs: `empirical_metrics_matrix.csv`, `sensitivity_analysis.csv`, `empirical_summary.md`
    - Complete cryptographic provenance and audit trail
                            │
-                           ▼ (passes top opportunity clusters)
+                           ▼ (passes top opportunity scores)
 STAGE 2: QUALITATIVE EXPLORATORY SYNTHESIS (OPTIONAL)
    - Powered by Groq API (`llama-3.3-70b-versatile`)
    - Propose-Critique loop with European patent-law adversarial persona
