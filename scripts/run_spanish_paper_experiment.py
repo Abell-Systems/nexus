@@ -85,6 +85,7 @@ def run_experiment(
     for d in spanish_demands:
         cpc_demands.setdefault(d.cpc_prefix, []).append(d)
 
+    # Predefined analytical evaluation set aligned with domestic industrial sectors
     all_clusters = sorted(list(set(
         list(cpc_demands.keys()) + ["C11D", "E03C", "G05B", "C22C", "H01M", "C08L"]
     )))
@@ -211,13 +212,15 @@ def run_experiment(
         "# Empirical Results: Spanish Innoget Demand vs. Spanish ES Patents\n",
         banner,
         f"**Generated:** {meta['timestamp']} | **Execution Mode:** `{mode.value}`\n",
-        "| Cluster (CPC) | Patents ($n_i$) | Demands ($m_i$) | Density ($d_i$) | Recency ($r_i$) | Traction ($T_i$) | Demand ($q_i$) | White Space ($W_i$) | Quadrant |",
-        "|---|---|---|---|---|---|---|---|---|",
+        "| Cluster (CPC) | Patents ($n_i$) | Demands ($m_i$) | Density ($d_i$) | Recency ($r_i$) | Traction ($T_i$) | Coverage ($C_i$) | Demand ($q_i$) | White Space ($W_i$) | Quadrant |",
+        "|---|---|---|---|---|---|---|---|---|---|",
     ]
     for m in metrics_list:
         md_summary.append(
-            f"| `{m['cluster_id']}` | {m['patent_count']} | {m['demand_count']} | {m['density']:.2f} | {m['recency']:.2f} | {m['citation_traction']:.2f} | {m['demand_intensity']:.2f} | **{m['white_space_score']:.2f}** | {m['quadrant']} |"
+            f"| `{m['cluster_id']}` | {m['patent_count']} | {m['demand_count']} | {m['density']:.2f} | {m['recency']:.2f} | {m['citation_traction']:.2f} | {m['citation_coverage']:.2f} | {m['demand_intensity']:.2f} | **{m['white_space_score']:.2f}** | {m['quadrant']} |"
         )
+
+    md_summary.append("\n*Note: Clusters C11D, E03C, G05B, C22C, H01M, C08L represent a predefined analytical evaluation set for cross-sector comparison.*\n")
 
     md_summary.append("\n## Multi-Agent Qualitative Case Studies\n")
     for cs in case_studies:
@@ -227,7 +230,7 @@ def run_experiment(
             f"- **Synthesized Invention:** **{cs['candidate']['title']}**\n"
             f"- **Claimed Novelty:** {cs['candidate']['novelty_claim']}\n"
             f"- **Adversarial Verdict:** `{cs['verdict']['verdict'].upper()}` — *{cs['verdict']['rationale']}*\n"
-            f"- **Cited Prior Art:** `{', '.join(cs['verdict']['cited_patents'])}`\n"
+            f"- **Cited Prior Art Evidence:** `{', '.join(cs['verdict']['cited_patents'])}`\n"
             f"- **ScoreCard:** Novelty: `{cs['scorecard']['novelty']:.2f}`, Risk: `{cs['scorecard']['prior_art_risk']:.2f}`, Evidence: `{cs['scorecard']['evidence']:.2f}`\n"
         )
 

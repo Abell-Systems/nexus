@@ -31,12 +31,30 @@ def test_citation_traction_formula():
     setattr(p2, "backward_citation_count", 5)
 
     # Mean tau = (2.0 + 0.6667)/2 = 1.3333. Traction T = clip(1.3333 / 5.0, 0, 1) = 0.2667
-    traction = compute_citation_traction([p1, p2], ref_year=2026, tau_max=5.0)
+    traction, coverage = compute_citation_traction([p1, p2], ref_year=2026, tau_max=5.0)
     assert 0.25 <= traction <= 0.28
+    assert coverage == 1.0
 
 
 def test_citation_traction_empty():
-    assert compute_citation_traction([]) == 0.0
+    traction, coverage = compute_citation_traction([])
+    assert traction == 0.0
+    assert coverage == 0.0
+
+
+def test_citation_traction_handles_null_unobserved():
+    p_null = PatentRecord(
+        publication_number="ES-003",
+        title="T3",
+        abstract="A3",
+        assignee="Z",
+        filing_date="2020-01-01",
+        cpc_codes=["C11D"],
+        citation_count=None,
+    )
+    traction, coverage = compute_citation_traction([p_null])
+    assert traction == 0.0
+    assert coverage == 0.0
 
 
 def test_composite_white_space_score():
@@ -74,6 +92,7 @@ def test_composite_white_space_score():
     assert metrics["cluster_id"] == "C11D"
     assert metrics["density"] == 0.1
     assert metrics["demand_intensity"] == 0.5
+    assert metrics["citation_coverage"] == 1.0
     assert 0.0 <= metrics["recency"] <= 1.0
     assert 0.0 <= metrics["citation_traction"] <= 1.0
     # W_i = 0.40*(1 - 0.1) + 0.20*r + 0.15*T + 0.25*0.5

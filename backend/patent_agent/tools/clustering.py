@@ -88,7 +88,7 @@ def cluster_patents(
         avg_age = sum(ages) / len(ages)
         recency_norm = max(0.0, min(1.0, 1 - (avg_age / 20)))
 
-        velocities = [r.citation_count / age for r, age in zip(records, ages)]
+        velocities = [((r.citation_count or 0) / age) for r, age in zip(records, ages)]
         avg_velocity = sum(velocities) / len(velocities)
         velocity_norm = max(0.0, min(1.0, avg_velocity / 10))
 
@@ -102,7 +102,7 @@ def cluster_patents(
             3,
         )
 
-        representative = sorted(records, key=lambda r: r.citation_count, reverse=True)[:3]
+        representative = sorted(records, key=lambda r: (r.citation_count or 0), reverse=True)[:3]
 
         clusters.append(
             PatentCluster(

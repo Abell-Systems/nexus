@@ -18,9 +18,8 @@ class PatentRecord(BaseModel):
     priority_date: str | None = None
     country_code: str = "US"
     cpc_codes: list[str] = Field(default_factory=list)
-    family_id: str | None = None
-    citation_count: int = 0
-    backward_citation_count: int = 0
+    citation_count: int | None = None
+    backward_citation_count: int | None = None
     similarity_score: float | None = None
 
 

@@ -16,37 +16,37 @@ def compute_citation_traction(
     patents: list[PatentRecord],
     ref_year: int = 2026,
     tau_max: float = 5.0,
-) -> float:
-    """Calculate normalized Cluster Citation Traction (T_i).
+) -> tuple[float, float]:
+    """Calculate normalized Cluster Citation Traction (T_i) and Citation Coverage.
 
     Note: Citation Traction (T_i) is an experimental composite heuristic metric
     defined specifically for this exploratory study. It differentiates forward citations
     (f_p) and patent age (a_p), applying an experimental dampening baseline for recent
     patents (a_p <= 3 years) using backward citation foundation (b_p).
 
-    Null Handling: If citation counts are None (unobserved from raw biblio data),
-    they are handled as neutral observations rather than penalizing confirmed zeros.
+    Null Handling & Coverage:
+    - Distinguishes observed citations (int >= 0) from unobserved citations (None).
+    - Returns a tuple of (traction_score: float, citation_coverage: float).
+    - If citation coverage is 0.0 (no citation observations in biblio data), traction defaults to 0.0.
     """
     if not patents:
-        return 0.0
+        return 0.0, 0.0
+
+    observed_patents = [p for p in patents if getattr(p, "citation_count", None) is not None]
+    coverage = len(observed_patents) / len(patents)
+
+    if not observed_patents:
+        return 0.0, round(coverage, 4)
 
     annualized_rates: list[float] = []
-    for p in patents:
+    for p in observed_patents:
         pub_str = getattr(p, "publication_date", None) or p.filing_date
         pub_year = int(pub_str.split("-")[0]) if pub_str else ref_year
         age = max(1, ref_year - pub_year)
 
-        # Handle None vs confirmed int
-        raw_f = getattr(p, "citation_count", None)
+        f_p = float(p.citation_count) if p.citation_count is not None else 0.0
         raw_b = getattr(p, "backward_citation_count", None)
-
-        if raw_f is None:
-            # Unobserved citation data from basic biblio feed: treat as baseline rate
-            f_p = 0.0
-            b_p = 0.0
-        else:
-            f_p = float(raw_f)
-            b_p = float(raw_b or 0.0)
+        b_p = float(raw_b) if raw_b is not None else 0.0
 
         if age > 3:
             tau_p = f_p / age
@@ -58,7 +58,7 @@ def compute_citation_traction(
 
     mean_tau = sum(annualized_rates) / len(annualized_rates)
     traction = min(1.0, max(0.0, mean_tau / tau_max))
-    return round(traction, 4)
+    return round(traction, 4), round(coverage, 4)
 
 
 def compute_white_space_metrics(
@@ -90,8 +90,8 @@ def compute_white_space_metrics(
         mean_age = 0.0
         recency = 0.0
 
-    # 3. Citation Traction T_i (Experimental Metric)
-    traction = compute_citation_traction(patents, ref_year=ref_year)
+    # 3. Citation Traction T_i (Experimental Composite Metric) & Citation Coverage
+    traction, citation_coverage = compute_citation_traction(patents, ref_year=ref_year)
 
     # 4. Demand Intensity q_i
     m_max = max(1, max_demands)
@@ -125,6 +125,7 @@ def compute_white_space_metrics(
         "mean_age_years": round(mean_age, 2),
         "recency": recency,
         "citation_traction": traction,
+        "citation_coverage": citation_coverage,
         "demand_intensity": demand_intensity,
         "white_space_score": white_space_score,
         "is_white_space": white_space_score >= 0.50,
