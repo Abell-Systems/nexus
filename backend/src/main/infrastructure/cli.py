@@ -49,8 +49,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.command == "ingest":
-        source_path = Path(args.source_file)
-        if not source_path.exists():
+        source_path = Path(args.source_file).resolve()
+        if not source_path.is_file():
             print(f"Error: Source file not found: {args.source_file}", file=sys.stderr)
             return 1
 
@@ -60,9 +60,15 @@ def main(argv: list[str] | None = None) -> int:
             return 1
 
         try:
-            base_output = Path(args.output_dir)
-            raw_store = FilesystemRawStore(base_dir=base_output / "raw")
-            canonical_store = ParquetCanonicalStore(base_dir=base_output / "canonical")
+            base_output = Path(args.output_dir).resolve()
+            raw_dir = (base_output / "raw").resolve()
+            canonical_dir = (base_output / "canonical").resolve()
+            if not str(raw_dir).startswith(str(base_output)) or not str(canonical_dir).startswith(str(base_output)):
+                print("Error: Path traversal in output directory", file=sys.stderr)
+                return 1
+
+            raw_store = FilesystemRawStore(base_dir=raw_dir)
+            canonical_store = ParquetCanonicalStore(base_dir=canonical_dir)
             validator = PatentValidator()
             pipeline = IngestionPipeline(
                 raw_store=raw_store,
@@ -73,11 +79,12 @@ def main(argv: list[str] | None = None) -> int:
             source = OepmRawSource(file_path=source_path)
             normalizer = OepmNormalizer(extraction_version=args.transformation_version)
 
-            manifest_dir = base_output / "canonical" / args.dataset_id
+            dataset_id = str(Path(args.dataset_id).name)
+            manifest_dir = canonical_dir / dataset_id
             summary = pipeline.ingest_patent_source(
                 source=source,
                 normalizer=normalizer,
-                dataset_id=args.dataset_id,
+                dataset_id=dataset_id,
                 manifest_output_dir=manifest_dir,
                 transformation_version=args.transformation_version,
             )

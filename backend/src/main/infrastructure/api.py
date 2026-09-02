@@ -211,7 +211,7 @@ def _as_list(value: Any) -> list:
 
 
 def _extract_json_object(text: str) -> str | None:
-    fence_match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
+    fence_match = re.search(r"```(?:json)?\s*(\{[^}]*\})\s*```", text, re.DOTALL)
     if fence_match:
         return fence_match.group(1)
     first = text.find("{")
