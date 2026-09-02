@@ -127,8 +127,9 @@ class EpoOpsClient:
                 xml_cit = resp.read()
                 root = ET.fromstring(xml_cit)
                 backward_cits = len(root.findall(".//{*}patcit"))
-                # OPS biblio citations return cited documents (backward citations)
-                return 0, backward_cits
+                # OPS citations endpoint provides backward citations (cited patents in biblio).
+                # Forward citations remain None (unobserved) to prevent false-zero bias in T_i calculation.
+                return None, backward_cits
         except Exception:
             return None, None
 
