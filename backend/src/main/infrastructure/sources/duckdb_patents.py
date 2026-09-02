@@ -11,7 +11,10 @@ from domain.models.runtime_schemas import PatentRecord
 class DuckDbPatentsDataSource:
     def __init__(self, db_path: str = "data/snapshots/patents_es_snapshot.duckdb", read_only: bool = True):
         self.db_path = db_path
-        self._conn = duckdb.connect(db_path, read_only=read_only)
+        if Path(db_path).exists():
+            self._conn = duckdb.connect(db_path, read_only=read_only)
+        else:
+            self._conn = duckdb.connect(":memory:")
 
     @classmethod
     def from_parquet(cls, parquet_path: str | Path) -> "DuckDbPatentsDataSource":
