@@ -45,6 +45,7 @@ class OepmNormalizer:
             pub_id = (
                 item.get("publication_id")
                 or item.get("publication_number")
+                or item.get("id")
                 or ""
             )
 

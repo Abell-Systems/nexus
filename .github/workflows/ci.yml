@@ -104,16 +104,15 @@ jobs:
         run: pytest backend/test/unit -v --cov=backend/src/main --cov-report=xml:coverage.xml
       - name: Integration Tests
         run: pytest backend/test/integration -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml
-      - name: E2E Reproducibility Gate
-        run: pytest backend/test/e2e -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml --cov-report=term-missing
+      - name: E2E Reproducibility Gate & Coverage Verification (Strict Fail Under)
+        run: pytest backend/test/e2e -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml --cov-report=term-missing --cov-fail-under=65
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage.xml
-          if-no-files-found: ignore
 
-  # 6. Sonar Analysis & Quality Gate
+  # 6. Sonar Analysis & Quality Gate (Strict - No Green Fallback)
   sonar-quality-gate:
     name: 6. Sonar Quality Gate
     needs: backend-tests
@@ -122,37 +121,50 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Check SONAR_TOKEN secret existence
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        if: env.SONAR_TOKEN == ''
+        run: |
+          echo "::error::SONAR_TOKEN secret is not configured in repository secrets."
+          echo "Quality Gate Failure: SonarCloud analysis and Quality Gate are mandatory."
+          echo ""
+          echo "MANUAL ACTION REQUIRED:"
+          echo "1. Create/configure SonarCloud project 'Abell-Systems_nexus' in organization 'abell-systems'."
+          echo "2. Generate a SonarCloud token at https://sonarcloud.io/account/security."
+          echo "3. Add the token to GitHub repository secrets under the name SONAR_TOKEN."
+          exit 1
       - name: Download Coverage Report
         uses: actions/download-artifact@v4
         with:
           name: coverage-report
-        continue-on-error: true
       - name: SonarCloud Scan
-        if: env.SONAR_TOKEN != ''
         uses: sonarsource/sonarcloud-github-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: Verify Quality Gate Fallback
-        if: env.SONAR_TOKEN == ''
-        run: |
-          echo "Notice: SONAR_TOKEN secret not present; local automated static analysis (Ruff + Mypy + Gitleaks + Pytest-Cov) verified successfully."
+      - name: Wait for SonarCloud Quality Gate Result
+        uses: sonarsource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  # 7. Final Consolidated Quality Gate
+  # 7. Final Consolidated Quality Gate (Must be all green)
   quality-gate:
     name: 7. QUALITY GATE (Ready to Merge)
     needs: [architecture, python-quality, frontend-quality, security-scan, backend-tests, sonar-quality-gate]
     runs-on: ubuntu-latest
     steps:
-      - name: Verify All Quality Gates Passed
+      - name: Confirm All Strict Quality Gates Passed
         run: |
           echo "================================================================="
-          echo "All Systematic Quality Gates Passed (Clean Code & Clean Architecture)"
-          echo " - Architecture: PASS"
+          echo "All Strict Quality Gates Passed (Clean Code & Clean Architecture)"
+          echo " - Architecture Gate: PASS"
           echo " - Ruff Static Analysis: PASS"
           echo " - Mypy Type Checking: PASS"
-          echo " - Frontend Tests & Build: PASS"
+          echo " - Frontend Tests, Lint & Build: PASS"
           echo " - Gitleaks Secret Scanner: PASS"
-          echo " - Backend Unit/Integration/E2E: PASS"
-          echo " - Coverage Metrics: PASS"
+          echo " - Backend Tests (Unit, Integration, E2E): PASS"
+          echo " - Coverage Threshold Gate (>=65%): PASS"
+          echo " - SonarCloud Analysis & Quality Gate: PASS"
           echo "================================================================="
