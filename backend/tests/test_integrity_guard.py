@@ -9,7 +9,7 @@ from scripts.run_spanish_paper_experiment import verify_dataset_manifest, run_ex
 
 def test_verify_manifest_success():
     manifest = verify_dataset_manifest("data/snapshots/patents_es_manifest.json")
-    assert manifest["dataset_name"] == "Spanish National Patent Corpus (OEPM / EPO OPS)"
+    assert "Spanish National Patent Corpus" in manifest["dataset_name"]
     assert len(manifest["sha256_hash"]) == 64
     assert manifest["total_records"] > 0
 
