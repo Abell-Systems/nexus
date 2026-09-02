@@ -53,20 +53,20 @@ class DuckDbPatentsDataSource:
             ])
 
     def search_patents(self, cpc_prefix: str, limit: int = 50) -> list[PatentRecord]:
+        """Search patents by CPC prefix using unnest subquery."""
         query = """
             SELECT publication_number, title, abstract, assignee, filing_date,
                    publication_date, cpc_codes, citation_count, backward_citation_count, country_code
             FROM patents
-            WHERE list_contains(cpc_codes, ?) OR list_has_any(cpc_codes, (
-                SELECT COALESCE(array_agg(DISTINCT c), CAST([] AS VARCHAR[])) FROM (
-                    SELECT unnest(cpc_codes) as c FROM patents
-                ) WHERE c LIKE ?
-            ))
+            WHERE EXISTS (
+                SELECT 1 FROM unnest(cpc_codes) AS t(c)
+                WHERE t.c LIKE ?
+            )
             ORDER BY citation_count DESC
             LIMIT ?
         """
         like_pattern = f"{cpc_prefix}%"
-        df = self.conn.execute(query, [cpc_prefix, like_pattern, limit]).df()
+        df = self.conn.execute(query, [like_pattern, limit]).df()
         
         records = []
         for _, row in df.iterrows():
@@ -77,11 +77,11 @@ class DuckDbPatentsDataSource:
                 assignee=row["assignee"],
                 filing_date=row["filing_date"],
                 cpc_codes=list(row["cpc_codes"]),
-                citation_count=int(row["citation_count"]),
+                citation_count=int(row["citation_count"]) if row["citation_count"] is not None else 0,
             )
             # Attach extra properties
             setattr(rec, "publication_date", row["publication_date"])
-            setattr(rec, "backward_citation_count", int(row["backward_citation_count"]))
+            setattr(rec, "backward_citation_count", int(row["backward_citation_count"]) if row["backward_citation_count"] is not None else 0)
             setattr(rec, "country_code", row.get("country_code", "ES"))
             records.append(rec)
         return records

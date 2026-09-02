@@ -1,9 +1,12 @@
 {
   "dataset_name": "Spanish National Patent Corpus",
   "dataset_version": "1.0.0",
-  "created_at": "2026-09-02T09:06:51.138392",
-  "source_authority": "Oficina Española de Patentes y Marcas (OEPM) - Boletín Oficial de la Propiedad Industrial (BOPI)",
-  "inclusion_criteria": "Published patent documents with country_code == 'ES', filing range 2016-2023, multi-sector IPC/CPC coverage.",
+  "created_at": "2026-09-02T09:21:47.565968",
+  "source_authority": "Patentes y Modelos de Utilidad Concedidos en España (OEPM / BOPI)",
+  "official_catalog_url": "https://datos.gob.es/es/catalogo/e05024401-patentes-solicitadas-y-concedidas-bopi",
+  "raw_source_file": "data/raw/oepm_open_data_es.json",
+  "raw_source_sha256": "68500f2536d65f2c136c06a0c6e0ec9798aa3814581a28e276c06124107c7313",
+  "inclusion_criteria": "Published patent documents under OEPM jurisdiction (ES) across IPC/CPC Sections A, B, C, E, G, H with confirmed grant/publication dates between 2016-2024.",
   "total_records": 16,
   "sha256_hash": "c158bdaa2426e71c4aa42db5c1885885dc36607bf6cf5431135bdfa70eee3a2e",
   "format": "parquet / jsonl",
@@ -36,7 +39,6 @@
     "C08G": 1
   },
   "provenance": {
-    "raw_source_file": "data/raw/oepm_open_data_es.json",
     "parquet_file": "data/snapshots/patents_es_corpus.parquet",
     "jsonl_file": "data/snapshots/patents_es_corpus.jsonl",
     "duckdb_file": "data/snapshots/patents_es_snapshot.duckdb"

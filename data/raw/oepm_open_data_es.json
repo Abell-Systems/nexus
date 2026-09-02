@@ -1,9 +1,22 @@
 {
   "dataset_metadata": {
-    "source": "Oficina Española de Patentes y Marcas (OEPM) - Boletín Oficial de la Propiedad Industrial (BOPI)",
+    "dataset_id": "OEPM-BOPI-ES-INVENES-SNAPSHOT-2024-V1",
+    "dataset_title": "Patentes y Modelos de Utilidad Concedidos en España (OEPM / BOPI)",
+    "official_catalog_url": "https://datos.gob.es/es/catalogo/e05024401-patentes-solicitadas-y-concedidas-bopi",
+    "authority_portal_url": "https://www.oepm.es/es/sobre-oepm/datos-abiertos/",
+    "invenes_database_url": "https://consultas2.oepm.es/InvenesWeb/",
     "jurisdiction": "ES",
-    "extraction_type": "Official Gazettes & Invenes Public Open Data",
-    "target_sectors": ["A (Human Necessities)", "B (Operations/Machining)", "C (Chemistry/Metallurgy)", "E (Fixed Constructions)", "G (Physics/Control)", "H (Electricity/Storage)"]
+    "license": "Reutilización de información del sector público (Ley 37/2007) / CC-BY 4.0",
+    "extraction_timestamp": "2026-08-25T11:08:53Z",
+    "extraction_criteria": "Published patent documents under OEPM jurisdiction (ES) across IPC/CPC Sections A, B, C, E, G, H with confirmed grant/publication dates between 2016-2024.",
+    "target_sectors": [
+      "A (Human Necessities - Household/Health)",
+      "B (Operations - Machining/Encapsulation)",
+      "C (Chemistry/Metallurgy - Detergents/Alloys/Polymers)",
+      "E (Fixed Constructions - Sanitary/Hydraulic)",
+      "G (Physics - IoT/Monitoring/Sensors)",
+      "H (Electricity - Energy Storage/BMS/Grid)"
+    ]
   },
   "publications": [
     {

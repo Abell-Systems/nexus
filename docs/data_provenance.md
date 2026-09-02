@@ -1,25 +1,28 @@
 # Data Provenance & Experimental Dataset Lineage
 
-**Document Version:** 1.0.0  
+**Document Version:** 1.1.0  
 **Updated:** 2026-09-02  
-**Corpus Authority:** Oficina Española de Patentes y Marcas (OEPM) & Innoget Open Innovation
+**Corpus Authority:** Oficina Española de Patentes y Marcas (OEPM) & European Patent Office (EPO Open Patent Services)
 
 ---
 
-## 1. Overview & Lineage Architecture
+## 1. Overview & Immutable Lineage Architecture
 
-To guarantee scientific rigor, empirical validity, and full reproducibility, all datasets in **Abell Nexus** follow a strict immutable lineage:
+To guarantee scientific rigor, empirical reproducibility, and verifiable source provenance, all datasets in **Abell Nexus** follow a strict two-tier cryptographic lineage:
 
 ```text
-[Raw Source API / Gazettes]
-            │
-            ▼
-[Normalized Storage: JSONL / Parquet]
-            │
-            ▼
-[Cryptographic Verification: SHA-256 Manifest]
-            │
-            ▼
+[Official Authority Catalog / Live API]
+                 │
+                 ▼
+[Certified Raw Source: data/raw/oepm_open_data_es.json (SHA-256: 68500f25...)]
+                 │
+                 ▼
+[Normalized Storage: Parquet / JSONL (SHA-256: c158bdaa...)]
+                 │
+                 ▼
+[Cryptographic Manifest: data/snapshots/patents_es_manifest.json]
+                 │
+                 ▼
 [Local Analytical Database: DuckDB]
 ```
 
@@ -53,34 +56,36 @@ To guarantee scientific rigor, empirical validity, and full reproducibility, all
 
 ## 3. Spanish Patent Corpus (`patents_es_corpus.parquet`)
 
-* **Source Authority:** Oficina Española de Patentes y Marcas (OEPM) & European Patent Office (EPO Open Patent Services 3.2).
-* **Inclusion Criteria:**
-  * Publication jurisdiction: `country_code == 'ES'` (Spanish National Patents `ES...A1/B1/B2` and European Patents validated in Spain).
-  * Filing Date Window: 2016–2023.
-  * Multi-sector IPC/CPC coverage across Sections A, B, C, E, G, H (Chemistry, Metallurgy, Sanitary, Control, Energy, Polymers).
-* **Dataset Artifacts:**
-  * **Normalized Parquet:** `data/snapshots/patents_es_corpus.parquet`
-  * **Normalized JSONL:** `data/snapshots/patents_es_corpus.jsonl`
-  * **Analytical Snapshot:** `data/snapshots/patents_es_snapshot.duckdb`
+* **Primary Catalog Authority:** Oficina Española de Patentes y Marcas (OEPM) - Boletín Oficial de la Propiedad Industrial (BOPI).
+* **Official Data Portal:** [datos.gob.es - Patentes Solicitadas y Concedidas BOPI](https://datos.gob.es/es/catalogo/e05024401-patentes-solicitadas-y-concedidas-bopi) | [OEPM Datos Abiertos](https://www.oepm.es/es/sobre-oepm/datos-abiertos/)
+* **Invenes Official Search Archive:** [OEPM Invenes Portal](https://consultas2.oepm.es/InvenesWeb/)
+* **Live API Engine:** European Patent Office Open Patent Services (EPO OPS 3.2).
+* **Date Semantics & Inclusion Criteria:**
+  * **Publication Jurisdiction:** `country_code == 'ES'` (Spanish National Patents `ES...A1/B1/B2` and European Patents validated in Spain).
+  * **Publication Date (`pd`):** 2016–2024.
+  * **Filing / Application Date (`filing_date`):** 2015–2023.
+  * **Classification Scope:** Multi-sector IPC/CPC coverage across Sections A, B, C, E, G, H.
+* **Dataset Artifacts & Cryptographic Checksums:**
+  * **Raw Source File:** `data/raw/oepm_open_data_es.json`  
+    * *SHA-256 Digest:* `68500f2536d65f2c136c06a0c6e0ec9798aa3814581a28e276c06124107c7313`
+  * **Normalized Parquet:** `data/snapshots/patents_es_corpus.parquet`  
+    * *SHA-256 Digest:* `c158bdaa2426e71c4aa42db5c1885885dc36607bf6cf5431135bdfa70eee3a2e`
+  * **Analytical DuckDB Store:** `data/snapshots/patents_es_snapshot.duckdb`
   * **Cryptographic Manifest:** `data/snapshots/patents_es_manifest.json`
-* **Dataset Cryptographic Hash (SHA-256):**
-  `c158bdaa2426e71c4aa42db5c1885885dc36607bf6cf5431135bdfa70eee3a2e`
-* **Recorded Institutions & Assignees:**
-  * *Public Research & Universities:* CSIC, Universidad Politécnica de Madrid (UPM), Universidad del País Vasco (UPV/EHU), Universidad de Barcelona (UB), CIC energiGUNE, AIMPLAS, ITQ-CSIC-UPV.
-  * *Industrial Leaders:* Roca Sanitario S.A., Teka Industrial S.A., Cosentino R&D, Circutor S.A., Repsol S.A., Mondragon S. Coop., Irizar e-mobility, Telefónica S.A., Laboratorios Bilper S.A.
 
 ---
 
-## 4. Execution Mode Enforcement
+## 4. Ingestion Pipeline & Execution Modes
 
-The experiment runner strictly distinguishes between execution modes:
+### Ingestion CLI (`scripts/ingest_oepm_ops.py`)
+
+* `python3 scripts/ingest_oepm_ops.py --source oepm_raw`: Verified local ingestion from `data/raw/oepm_open_data_es.json` with strict SHA-256 validation.
+* `python3 scripts/ingest_oepm_ops.py --source ops`: Queries live EPO OPS published-data REST API via OAuth2 client credentials. **Fails fast if credentials are missing; no silent fallback.**
+
+### Experiment Runner Modes (`scripts/run_spanish_paper_experiment.py`)
 
 | Mode | Dataset Used | LLM Engine | Valid for Scientific Paper? |
 |---|---|---|---|
 | **`ExecutionMode.FIXTURE`** | `SAMPLE_ES_PATENTS_FIXTURE` (in-memory mock) | Mock Client | ❌ No (Unit Testing Only) |
 | **`ExecutionMode.PILOT`** | Unverified / Local DB | Mock / Dry-Run | ❌ No (Smoke Test Only) |
 | **`ExecutionMode.EMPIRICAL`** | `patents_es_corpus.parquet` (SHA-256 Verified) | Deterministic Math for Metrics; Groq API for Case Studies | ✅ **Yes (Empirical Evidence)** |
-
-In `EMPIRICAL` mode:
-* The quantitative Demand-Patent alignment matrix ($W_i$, $d_i$, $r_i$, $T_i$, $q_i$) is 100% deterministic and requires zero LLM calls.
-* The qualitative Case Studies require live Groq API keys with verifiable prior-art citation checks. If Groq is not available, the Case Study section is explicitly flagged as synthetic while the quantitative results remain certified as empirical.
