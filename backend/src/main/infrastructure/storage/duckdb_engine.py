@@ -2,6 +2,7 @@
 
 from pathlib import Path
 from typing import Any
+
 import duckdb
 
 from domain.protocols.storage import QueryEngineProtocol
@@ -56,7 +57,7 @@ class DuckDbQueryEngine(QueryEngineProtocol):
         """
         cur = self.conn.execute(query, [cpc_prefix, limit])
         cols = [d[0] for d in cur.description]
-        return [dict(zip(cols, row)) for row in cur.fetchall()]
+        return [dict(zip(cols, row, strict=False)) for row in cur.fetchall()]
 
     def get_cluster_aggregates(self, cpc_prefix: str, ref_year: int = 2026) -> dict[str, Any]:
         """Compute cluster aggregates for patents matching the given CPC prefix.
@@ -83,7 +84,7 @@ class DuckDbQueryEngine(QueryEngineProtocol):
                 "avg_forward_citations": None,
             }
 
-        res = dict(zip(cols, row))
+        res = dict(zip(cols, row, strict=False))
         if res.get("observed_citations_count", 0) == 0:
             res["avg_forward_citations"] = None
 

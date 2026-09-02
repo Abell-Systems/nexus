@@ -1,7 +1,7 @@
 """Unit tests for white-space metrics and citation traction calculations."""
 
 from application.landscape.metrics import compute_citation_traction, compute_white_space_metrics
-from domain.models.runtime_schemas import PatentRecord, DemandSignalItem
+from domain.models.runtime_schemas import DemandSignalItem, PatentRecord
 
 
 def test_compute_citation_traction_handles_null_citations():

@@ -1,6 +1,5 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-import pytest
 
 from domain.models.evidence import FieldObservation, VerificationStatus
 from domain.models.patent import PatentDocument
@@ -44,7 +43,7 @@ def _sample_obs(entity_id: str, field_name: str = "title") -> FieldObservation:
         value_type="str",
         source_authority="OEPM BOPI",
         source_uri="https://consultas2.oepm.es/InvenesWeb/",
-        retrieval_timestamp=datetime(2026, 9, 2, 10, 0, 0, tzinfo=timezone.utc),
+        retrieval_timestamp=datetime(2026, 9, 2, 10, 0, 0, tzinfo=UTC),
         raw_payload_sha256="a" * 64,
         extraction_version="1.0.0",
         verification_status=VerificationStatus.SOURCE_REPORTED,
@@ -170,8 +169,9 @@ def test_duckdb_engine_aggregates_empty_match(tmp_path: Path):
 
 
 def test_end_to_end_ingestion_and_duckdb_query(tmp_path: Path):
-    from typing import Iterator
     import json
+    from collections.abc import Iterator
+
     from application.ingestion.normalizers.oepm_normalizer import OepmNormalizer
     from application.ingestion.pipeline import IngestionPipeline
     from domain.protocols.sources import RawPayload
@@ -208,7 +208,7 @@ def test_end_to_end_ingestion_and_duckdb_query(tmp_path: Path):
             yield RawPayload(
                 batch_id="batch_001",
                 source_id="oepm_bopi",
-                retrieval_timestamp=datetime(2026, 9, 2, 12, 0, 0, tzinfo=timezone.utc),
+                retrieval_timestamp=datetime(2026, 9, 2, 12, 0, 0, tzinfo=UTC),
                 payload_bytes=sample_oepm_json,
                 metadata={"source": "OEPM", "year": 2026},
             )

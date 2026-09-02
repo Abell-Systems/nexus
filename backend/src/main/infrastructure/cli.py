@@ -1,8 +1,8 @@
 """Nexus CLI entrypoint for ingestion and dataset operations."""
 
 import argparse
-from pathlib import Path
 import sys
+from pathlib import Path
 
 from application.ingestion.normalizers.oepm_normalizer import OepmNormalizer
 from application.ingestion.pipeline import IngestionPipeline

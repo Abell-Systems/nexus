@@ -1,9 +1,10 @@
 """Clustering and landscape generation logic."""
 
 from typing import Any
-from domain.models.runtime_schemas import PatentRecord, PatentCluster, DemandSignalItem
+
+from domain.models.runtime_schemas import PatentCluster, PatentRecord
+
 from .metrics import compute_white_space_metrics
-from .cpc_taxonomy import map_concept_to_cpc
 
 
 def cluster_patents(

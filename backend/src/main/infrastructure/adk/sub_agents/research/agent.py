@@ -1,7 +1,9 @@
 from google.adk.agents import LlmAgent
-from infrastructure.adk.config import get_agent_model
+
 from application.state_keys import RESEARCH_OUTPUT
-from infrastructure.adk.tools import search_patents_tool, get_similar_patents_tool, get_citations_tool
+from infrastructure.adk.config import get_agent_model
+from infrastructure.adk.tools import get_citations_tool, get_similar_patents_tool, search_patents_tool
+
 from .prompt import RESEARCH_AGENT_INSTRUCTION
 
 

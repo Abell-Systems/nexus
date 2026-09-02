@@ -1,9 +1,10 @@
 """OEPM (Oficina Española de Patentes y Marcas) raw data source adapter."""
 
-from datetime import datetime, timezone
 import json
+from collections.abc import Iterator
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
 
 from domain.protocols.sources import RawPayload
 
@@ -35,7 +36,7 @@ class OepmRawSource:
             "source_type": "filesystem_raw",
             "content_type": "application/json",
         }
-        retrieval_timestamp = datetime.now(timezone.utc)
+        retrieval_timestamp = datetime.now(UTC)
 
         try:
             parsed = json.loads(raw_bytes.decode("utf-8"))

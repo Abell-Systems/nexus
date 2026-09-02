@@ -1,9 +1,11 @@
 """EPO OPS (European Patent Office Open Patent Services 3.2) client adapter."""
 
-from datetime import datetime, timezone
 import os
+from collections.abc import Iterator
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
+
 import httpx
 
 from domain.protocols.sources import RawPayload
@@ -96,7 +98,7 @@ class EpoOpsClient:
                 batch_id="batch_fixture_0001",
                 payload_bytes=raw_bytes,
                 metadata=metadata,
-                retrieval_timestamp=datetime.now(timezone.utc),
+                retrieval_timestamp=datetime.now(UTC),
             )
             return
 
@@ -144,5 +146,5 @@ class EpoOpsClient:
                 batch_id=f"epo_batch_{range_start}_{range_end}",
                 payload_bytes=raw_bytes,
                 metadata=metadata,
-                retrieval_timestamp=datetime.now(timezone.utc),
+                retrieval_timestamp=datetime.now(UTC),
             )

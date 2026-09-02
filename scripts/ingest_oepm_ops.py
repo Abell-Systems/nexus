@@ -6,19 +6,21 @@ Preserves immutable dataset lineage:
   Raw Source (EPO OPS API or OEPM Open Data file) -> Normalized Parquet/JSONL -> SHA-256 Manifest -> DuckDB Snapshot.
 """
 
-import os
-import sys
-import json
-import hashlib
 import argparse
 import base64
+import hashlib
+import json
+import os
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
-import urllib.request
-import urllib.parse
-import urllib.error
+from typing import Any
+
+import duckdb
 
 # Add repository root to path
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -27,7 +29,6 @@ for p in (REPO_ROOT, BACKEND_SRC):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-from domain.models.runtime_schemas import PatentRecord
 
 
 def calculate_sha256(file_path: Path | str) -> str:
@@ -42,11 +43,11 @@ def calculate_sha256(file_path: Path | str) -> str:
 class EpoOpsClient:
     """Production client for European Patent Office Open Patent Services (OPS 3.2)."""
 
-    def __init__(self, key: Optional[str] = None, secret: Optional[str] = None):
+    def __init__(self, key: str | None = None, secret: str | None = None):
         self.key = key or os.getenv("EPO_OPS_KEY")
         self.secret = secret or os.getenv("EPO_OPS_SECRET")
         self.base_url = "https://ops.epo.org/3.2/rest-services"
-        self._access_token: Optional[str] = None
+        self._access_token: str | None = None
 
     def authenticate(self) -> bool:
         """Obtain OAuth2 bearer token from EPO OPS authorization service."""
@@ -54,7 +55,7 @@ class EpoOpsClient:
             return False
 
         token_url = "https://ops.epo.org/3.2/auth/accesstoken"
-        auth_bytes = f"{self.key}:{self.secret}".encode("utf-8")
+        auth_bytes = f"{self.key}:{self.secret}".encode()
         b64_auth = base64.b64encode(auth_bytes).decode("ascii")
 
         req = urllib.request.Request(
@@ -108,7 +109,7 @@ class EpoOpsClient:
 
         return records
 
-    def fetch_citations(self, publication_number: str) -> tuple[Optional[int], Optional[int]]:
+    def fetch_citations(self, publication_number: str) -> tuple[int | None, int | None]:
         """Query EPO OPS citations endpoint for a specific publication document."""
         if not self._access_token and not self.authenticate():
             return None, None
@@ -204,7 +205,7 @@ def ingest_from_raw_oepm_source(raw_path: str = "data/raw/oepm_open_data_es.json
 
     raw_sha256 = calculate_sha256(p)
 
-    with open(p, "r", encoding="utf-8") as f:
+    with open(p, encoding="utf-8") as f:
         data = json.load(f)
 
     meta = data.get("dataset_metadata", {})
@@ -347,7 +348,7 @@ def build_and_freeze_corpus(
     count = con_db.execute("SELECT count(*) FROM patents").fetchone()[0]
     con_db.close()
 
-    print(f"✅ Ingestion and dataset freeze complete:")
+    print("✅ Ingestion and dataset freeze complete:")
     print(f"   - Source Authority:       {source_authority}")
     print(f"   - Scope:                  {manifest_data['dataset_scope']}")
     print(f"   - Official Catalog URL:   {official_url}")

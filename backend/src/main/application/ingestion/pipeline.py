@@ -2,17 +2,18 @@
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
+
 from pydantic import BaseModel
 
+from application.ingestion.normalizers.base import PatentNormalizerProtocol
+from application.ingestion.validator import PatentValidator
 from domain.models.evidence import FieldObservation
 from domain.models.patent import PatentDocument
 from domain.models.snapshot import DatasetPart, DatasetSnapshot, RawBatch
 from domain.protocols.sources import PatentSourceProtocol
 from domain.protocols.storage import CanonicalStoreProtocol, RawStoreProtocol
-from application.ingestion.normalizers.base import PatentNormalizerProtocol
-from application.ingestion.validator import PatentValidator
 
 
 class IngestionSummary(BaseModel):
@@ -101,10 +102,7 @@ class IngestionPipeline:
                 parts.append(DatasetPart(**p))
 
         if created_at is None:
-            if source_batches:
-                created_at = max(b.retrieval_timestamp for b in source_batches)
-            else:
-                created_at = datetime.now(timezone.utc)
+            created_at = max(b.retrieval_timestamp for b in source_batches) if source_batches else datetime.now(UTC)
 
         # Compute deterministic manifest SHA256
         snapshot_dict = {

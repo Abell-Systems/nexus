@@ -8,8 +8,8 @@ from google.adk.agents import LoopAgent, SequentialAgent
 from .config import INVENTION_LOOP_MAX_ITERATIONS
 from .prompt import ROOT_AGENT_INSTRUCTION
 from .sub_agents.adversarial.agent import adversarial_agent, build_adversarial_agent
-from .sub_agents.governor.agent import governor_agent, build_governor_agent
-from .sub_agents.inventor.agent import inventor_agent, build_inventor_agent
+from .sub_agents.governor.agent import build_governor_agent, governor_agent
+from .sub_agents.inventor.agent import build_inventor_agent, inventor_agent
 from .sub_agents.research.agent import research_agent
 
 

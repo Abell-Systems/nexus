@@ -2,7 +2,9 @@
 
 import os
 from typing import Any
+
 from domain.models.runtime_schemas import PatentRecord
+
 from .fixtures import FIXTURE_PATENTS
 
 

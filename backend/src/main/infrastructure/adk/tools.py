@@ -1,8 +1,8 @@
 """ADK FunctionTools used by the synthesis agents."""
 
 from google.adk.tools import FunctionTool
+
 from infrastructure.sources.bigquery_patents import get_patents_datasource
-from domain.models.runtime_schemas import PatentRecord
 
 
 def search_patents(query: str, domain: str = "solid_state_battery") -> list[dict]:
@@ -33,4 +33,3 @@ search_patents_tool = FunctionTool(func=search_patents)
 get_similar_patents_tool = FunctionTool(func=get_similar_patents)
 get_citations_tool = FunctionTool(func=get_citations)
 exit_loop_tool = FunctionTool(func=exit_loop)
-exit_loop = exit_loop_tool

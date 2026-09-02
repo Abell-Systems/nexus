@@ -1,0 +1,53 @@
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort (import sorting)
+    "B",   # flake8-bugbear (common bug patterns)
+    "UP",  # pyupgrade (modern Python 3.12+ syntax)
+    "SIM", # flake8-simplify (code simplification)
+]
+ignore = [
+    "E501", # line too long
+    "B008", # do not perform function calls in argument defaults (FastAPI Query/Field/Depends)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*" = ["E402"]
+"backend/src/main/main.py" = ["E402"]
+"backend/src/main/infrastructure/api.py" = ["E402"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["domain", "application", "infrastructure"]
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
+[tool.coverage.run]
+source = ["backend/src/main"]
+branch = true
+omit = [
+    "*/__pycache__/*",
+    "*/test/*",
+    "*/site-packages/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+    "if TYPE_CHECKING:",
+]

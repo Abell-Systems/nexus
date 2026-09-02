@@ -1,7 +1,8 @@
 from pathlib import Path
 from typing import Any, Protocol
-from domain.models.patent import PatentDocument
+
 from domain.models.evidence import FieldObservation
+from domain.models.patent import PatentDocument
 from domain.models.snapshot import DatasetPart
 
 

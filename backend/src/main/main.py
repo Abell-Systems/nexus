@@ -1,6 +1,5 @@
 """Main entry point for Nexus backend application."""
 
-import os
 import sys
 from pathlib import Path
 

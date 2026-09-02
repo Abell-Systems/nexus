@@ -20,10 +20,9 @@ Enforces:
 """
 
 import ast
-import os
-from pathlib import Path
 import re
 import sys
+from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -254,25 +253,22 @@ def check_frontend_layer_dependencies(errors: list[str]) -> None:
             import_target = match.group(1) or match.group(2) or ""
 
             # 1. Frontend Domain Layer Invariants: pure models/types, zero dependencies on application, infrastructure, components, react
-            if layer == "domain":
-                if any(k in import_target for k in ("application", "infrastructure", "components", "react")):
-                    errors.append(
-                        f"FAIL: forbidden dependency: {rel_file} (frontend domain imports: {import_target})"
-                    )
+            if layer == "domain" and any(k in import_target for k in ("application", "infrastructure", "components", "react")):
+                errors.append(
+                    f"FAIL: forbidden dependency: {rel_file} (frontend domain imports: {import_target})"
+                )
 
             # 2. Frontend Infrastructure Layer Invariants: API fetch client, zero dependencies on application or presentation components
-            if layer == "infrastructure":
-                if any(k in import_target for k in ("application", "components")):
-                    errors.append(
-                        f"FAIL: forbidden dependency: {rel_file} (frontend infrastructure imports: {import_target})"
-                    )
+            if layer == "infrastructure" and any(k in import_target for k in ("application", "components")):
+                errors.append(
+                    f"FAIL: forbidden dependency: {rel_file} (frontend infrastructure imports: {import_target})"
+                )
 
             # 3. Frontend Application Layer Invariants: application hooks/orchestration, zero dependencies on presentation components
-            if layer == "application":
-                if "components" in import_target:
-                    errors.append(
-                        f"FAIL: forbidden dependency: {rel_file} (frontend application imports: {import_target})"
-                    )
+            if layer == "application" and "components" in import_target:
+                errors.append(
+                    f"FAIL: forbidden dependency: {rel_file} (frontend application imports: {import_target})"
+                )
 
 
 def main() -> int:

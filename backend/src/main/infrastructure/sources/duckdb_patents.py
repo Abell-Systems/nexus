@@ -1,9 +1,10 @@
 """DuckDB datasource adapter for local patent snapshots."""
 
-import os
 from pathlib import Path
 from typing import Any
+
 import duckdb
+
 from domain.models.runtime_schemas import PatentRecord
 
 

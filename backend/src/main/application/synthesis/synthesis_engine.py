@@ -2,7 +2,8 @@
 
 import json
 from typing import Any
-from domain.models.runtime_schemas import InventionCandidate, AdversarialVerdict, ScoreCard, PatentRecord
+
+from domain.models.runtime_schemas import AdversarialVerdict, InventionCandidate, PatentRecord
 
 
 def validate_grounded_citations(cited_patents: list[str], prior_art: list[PatentRecord]) -> list[str]:

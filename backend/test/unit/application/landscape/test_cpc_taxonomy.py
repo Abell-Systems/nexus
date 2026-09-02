@@ -1,10 +1,9 @@
 """Unit tests for concept-to-CPC taxonomy mapping."""
 
 from application.landscape.cpc_taxonomy import (
+    get_cpc_description,
     map_concept_to_cpc,
     map_demand_to_cpc,
-    map_cpc_prefix,
-    get_cpc_description,
 )
 
 

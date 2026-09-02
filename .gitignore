@@ -5,6 +5,10 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+.coverage
+coverage.xml
+coverage/
+htmlcov/
 
 # --- Node / frontend ---
 node_modules/

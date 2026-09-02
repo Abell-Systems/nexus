@@ -5,16 +5,16 @@ Executes deterministic quantitative alignment & white-space metrics with cryptog
 dataset verification, sensitivity analysis, and optional multi-agent candidate synthesis.
 """
 
-import os
-import sys
-import json
+import argparse
 import csv
 import hashlib
-import argparse
+import json
+import os
 import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, Any
+from typing import Any
 
 # Ensure backend/src/main is on sys.path
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -23,13 +23,13 @@ for p in (REPO_ROOT, BACKEND_SRC):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
+from application.landscape.cpc_taxonomy import CPC_TAXONOMY_DICTIONARY
+from application.landscape.metrics import ExecutionMode, compute_white_space_metrics
+from application.synthesis.synthesis_engine import SynthesisEngine as InventionSynthesisEngine
+from domain.models.runtime_schemas import AdversarialVerdict, InventionCandidate, ScoreCard
+from infrastructure.llm.groq_client import GroqClient as GroqLlmClient
 from infrastructure.sources.demand_sources import InnogetDemandDataSource
 from infrastructure.sources.duckdb_patents import DuckDbPatentsDataSource
-from application.landscape.metrics import compute_white_space_metrics, ExecutionMode
-from application.landscape.cpc_taxonomy import CPC_TAXONOMY_DICTIONARY
-from infrastructure.llm.groq_client import GroqClient as GroqLlmClient
-from application.synthesis.synthesis_engine import SynthesisEngine as InventionSynthesisEngine
-from domain.models.runtime_schemas import InventionCandidate, AdversarialVerdict, ScoreCard
 
 
 def get_git_commit() -> str:
@@ -49,7 +49,7 @@ def verify_dataset_manifest(
     if not p_man.exists():
         raise FileNotFoundError(f"Manifest not found at {manifest_path}. Run scripts/ingest_oepm_ops.py first.")
 
-    with open(p_man, "r", encoding="utf-8") as f:
+    with open(p_man, encoding="utf-8") as f:
         manifest = json.load(f)
 
     parquet_file = Path(manifest["provenance"]["parquet_file"])

@@ -1,8 +1,8 @@
 """Lightweight OpenAI-compatible client for Groq API."""
 
-import json
 import os
 from typing import Any
+
 import httpx
 
 

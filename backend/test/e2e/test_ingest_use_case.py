@@ -12,9 +12,9 @@ Validates:
 
 import json
 import os
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 
 from infrastructure.storage.duckdb_engine import DuckDbQueryEngine
 
@@ -67,9 +67,9 @@ def test_ingest_clean_clone_ab_reproducibility_gate(tmp_path: Path):
     assert manifest_a_path.exists(), f"Manifest A missing at {manifest_a_path}"
     assert manifest_b_path.exists(), f"Manifest B missing at {manifest_b_path}"
 
-    with open(manifest_a_path, "r", encoding="utf-8") as f:
+    with open(manifest_a_path, encoding="utf-8") as f:
         manifest_a = json.load(f)
-    with open(manifest_b_path, "r", encoding="utf-8") as f:
+    with open(manifest_b_path, encoding="utf-8") as f:
         manifest_b = json.load(f)
 
     # 4. Assert Bit-for-Bit Merkle and Manifest Equality
@@ -89,7 +89,7 @@ def test_ingest_clean_clone_ab_reproducibility_gate(tmp_path: Path):
     assert manifest_b["schema_version"] == "1.0.0"
 
     assert len(manifest_a["parts"]) == len(manifest_b["parts"])
-    for part_a, part_b in zip(manifest_a["parts"], manifest_b["parts"]):
+    for part_a, part_b in zip(manifest_a["parts"], manifest_b["parts"], strict=False):
         assert part_a["part_name"] == part_b["part_name"]
         assert part_a["row_count"] == part_b["row_count"]
         assert part_a["file_sha256"] == part_b["file_sha256"]

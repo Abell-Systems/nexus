@@ -1,10 +1,11 @@
 """Demand sources provider (Innoget, SBIR, CORDIS, Mock)."""
 
-from dataclasses import dataclass
 import json
 import os
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
 from domain.models.runtime_schemas import DemandSignalItem
 
 
@@ -38,7 +39,7 @@ class InnogetDemandDataSource:
                 )
             ]
         try:
-            with open(self.json_path, "r", encoding="utf-8") as f:
+            with open(self.json_path, encoding="utf-8") as f:
                 data = json.load(f)
                 items = data.get("demands", data) if isinstance(data, dict) else data
                 return [

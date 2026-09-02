@@ -1,11 +1,12 @@
 """Formal White-Space and Citation Traction Metrics for Patent Analysis."""
 
-from enum import Enum
+from enum import StrEnum
 from typing import Any
-from domain.models.runtime_schemas import PatentRecord, DemandSignalItem
+
+from domain.models.runtime_schemas import PatentRecord
 
 
-class ExecutionMode(str, Enum):
+class ExecutionMode(StrEnum):
     FIXTURE = "fixture"
     PILOT = "pilot"
     EMPIRICAL = "empirical"
@@ -38,10 +39,7 @@ def compute_citation_traction(
         raw_b = getattr(p, "backward_citation_count", None)
         b_p = float(raw_b) if raw_b is not None else 0.0
 
-        if age > 3:
-            tau_p = f_p / age
-        else:
-            tau_p = (f_p + 0.2 * min(b_p, 5.0)) / 3.0
+        tau_p = f_p / age if age > 3 else (f_p + 0.2 * min(b_p, 5.0)) / 3.0
 
         annualized_rates.append(tau_p)
 

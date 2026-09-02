@@ -1,12 +1,13 @@
 import hashlib
 import json
 from pathlib import Path
+
 import pytest
 
+from application.ingestion.normalizers.oepm_normalizer import OepmNormalizer
 from domain.models.evidence import VerificationStatus
 from domain.protocols.sources import PatentSourceProtocol, RawPayload
 from infrastructure.sources.patent.oepm_raw_source import OepmRawSource
-from application.ingestion.normalizers.oepm_normalizer import OepmNormalizer
 
 
 def test_oepm_raw_source_implements_patent_source_protocol():

@@ -5,7 +5,7 @@ from typing import Any
 
 
 class PipelineProfiler:
-    def __init__(self):
+    def __init__(self) -> None:
         self.start_time = time.time()
         self.stage_timings: dict[str, float] = {}
         self._current_stage: str | None = None
@@ -32,3 +32,6 @@ class PipelineProfiler:
             "total_duration_seconds": round(total_duration, 3),
             "stages": {k: round(v, 3) for k, v in self.stage_timings.items()},
         }
+
+    def print_profile(self) -> None:
+        pass

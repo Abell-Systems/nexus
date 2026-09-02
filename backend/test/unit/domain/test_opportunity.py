@@ -1,6 +1,5 @@
-import pytest
-from domain.models.opportunity import OpportunityScore, OpportunityHypothesis
 from domain.models.demand import DemandSignal
+from domain.models.opportunity import OpportunityHypothesis, OpportunityScore
 
 
 def test_opportunity_measurement_vs_interpretation_separation():

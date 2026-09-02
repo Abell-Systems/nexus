@@ -1,7 +1,9 @@
 import hashlib
 import json
-import pytest
 from pathlib import Path
+
+import pytest
+
 from infrastructure.storage.raw_store import FilesystemRawStore
 
 

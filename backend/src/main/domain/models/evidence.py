@@ -1,10 +1,11 @@
 import re
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
+
 from pydantic import BaseModel, field_validator
 
 
-class VerificationStatus(str, Enum):
+class VerificationStatus(StrEnum):
     SOURCE_REPORTED = "source_reported"
     INDEPENDENTLY_VERIFIED = "independently_verified"
     DERIVED = "derived"

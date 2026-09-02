@@ -1,7 +1,7 @@
-import pytest
 from datetime import datetime
-from domain.models.patent import PatentDocument, PatentFamily, FamilyMembership
+
 from domain.models.evidence import FieldObservation, VerificationStatus
+from domain.models.patent import FamilyMembership, PatentDocument, PatentFamily
 
 
 def test_patent_document_strict_null_preservation():

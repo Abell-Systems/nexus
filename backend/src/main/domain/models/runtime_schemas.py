@@ -1,6 +1,7 @@
 """Shared data contracts passed between agents and returned by API endpoints."""
 
 from typing import Any
+
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 

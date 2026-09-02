@@ -1,6 +1,7 @@
 import pytest
-from domain.models.patent import PatentDocument
+
 from application.ingestion.validator import PatentValidator, ValidationError
+from domain.models.patent import PatentDocument
 
 
 def test_validator_rejects_missing_publication_id():

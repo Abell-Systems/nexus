@@ -1,8 +1,8 @@
-from domain.models.evidence import FieldObservation, VerificationStatus
-from domain.models.patent import PatentDocument, PatentFamily, FamilyMembership
 from domain.models.demand import DemandSignal
-from domain.models.snapshot import RawBatch, DatasetPart, DatasetSnapshot
-from domain.models.opportunity import OpportunityScore, OpportunityHypothesis
+from domain.models.evidence import FieldObservation, VerificationStatus
+from domain.models.opportunity import OpportunityHypothesis, OpportunityScore
+from domain.models.patent import FamilyMembership, PatentDocument, PatentFamily
+from domain.models.snapshot import DatasetPart, DatasetSnapshot, RawBatch
 
 __all__ = [
     "VerificationStatus",

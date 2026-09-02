@@ -1,6 +1,7 @@
 """Patent validation rules and schema enforcement."""
 
 from datetime import datetime
+
 from domain.models.patent import PatentDocument
 
 
@@ -44,7 +45,7 @@ class PatentValidator:
                 except ValueError:
                     raise ValidationError(
                         f"Invalid date format for {field_name}: {date_val}. Expected YYYY-MM-DD"
-                    )
+                    ) from None
 
         # 3. Citation count checks
         if doc.forward_citation_count is not None and doc.forward_citation_count < 0:

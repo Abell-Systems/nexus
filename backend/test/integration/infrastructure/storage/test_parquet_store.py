@@ -1,8 +1,8 @@
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
+
 import pyarrow.parquet as pq
-import pytest
 
 from domain.models.evidence import FieldObservation, VerificationStatus
 from domain.models.patent import PatentDocument
@@ -45,7 +45,7 @@ def _sample_obs(entity_id: str, field_name: str = "title") -> FieldObservation:
         value_type="str",
         source_authority="OEPM BOPI",
         source_uri="https://consultas2.oepm.es/InvenesWeb/",
-        retrieval_timestamp=datetime(2026, 9, 2, 10, 0, 0, tzinfo=timezone.utc),
+        retrieval_timestamp=datetime(2026, 9, 2, 10, 0, 0, tzinfo=UTC),
         raw_payload_sha256="a" * 64,
         extraction_version="1.0.0",
         verification_status=VerificationStatus.SOURCE_REPORTED,
@@ -141,7 +141,7 @@ def test_parquet_store_deterministic_sealing(tmp_path: Path):
 
     assert sha1 == sha2
     assert len(parts1) == len(parts2)
-    for p1, p2 in zip(parts1, parts2):
+    for p1, p2 in zip(parts1, parts2, strict=False):
         assert p1.part_name == p2.part_name
         assert p1.row_count == p2.row_count
         assert p1.file_sha256 == p2.file_sha256

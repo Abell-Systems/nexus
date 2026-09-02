@@ -1,14 +1,15 @@
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
+
 import pytest
 
+from application.ingestion.normalizers.oepm_normalizer import OepmNormalizer
+from application.ingestion.pipeline import IngestionPipeline, IngestionSummary
+from application.ingestion.validator import PatentValidator, ValidationError
 from domain.models.evidence import FieldObservation, VerificationStatus
 from domain.models.patent import PatentDocument
 from domain.protocols.sources import RawPayload
-from application.ingestion.validator import PatentValidator, ValidationError
-from application.ingestion.normalizers.oepm_normalizer import OepmNormalizer
-from application.ingestion.pipeline import IngestionPipeline, IngestionSummary
 
 
 class MockRawStore:
@@ -48,13 +49,12 @@ class MockSource:
                 batch_id="batch_01",
                 payload_bytes=b'{"items": []}',
                 metadata={"source_uri": "https://test.api"},
-                retrieval_timestamp=datetime(2026, 9, 2, 10, 0, 0, tzinfo=timezone.utc),
+                retrieval_timestamp=datetime(2026, 9, 2, 10, 0, 0, tzinfo=UTC),
             )
         ]
 
     def fetch_batches(self):
-        for p in self.payloads:
-            yield p
+        yield from self.payloads
 
 
 class MockNormalizer:
@@ -134,13 +134,13 @@ def test_pipeline_multi_batch_orchestration(tmp_path: Path):
         source_id="src_multi",
         batch_id="batch_01",
         payload_bytes=json.dumps({"publications": [{"publication_id": "ES-001-A1", "title": "T1", "abstract": "A1"}]}).encode("utf-8"),
-        retrieval_timestamp=datetime(2026, 9, 2, 10, 0, 0, tzinfo=timezone.utc),
+        retrieval_timestamp=datetime(2026, 9, 2, 10, 0, 0, tzinfo=UTC),
     )
     payload2 = RawPayload(
         source_id="src_multi",
         batch_id="batch_02",
         payload_bytes=json.dumps({"publications": [{"publication_id": "ES-002-A1", "title": "T2", "abstract": "A2"}]}).encode("utf-8"),
-        retrieval_timestamp=datetime(2026, 9, 2, 10, 5, 0, tzinfo=timezone.utc),
+        retrieval_timestamp=datetime(2026, 9, 2, 10, 5, 0, tzinfo=UTC),
     )
 
     source = MockSource(payloads=[payload1, payload2])
@@ -205,7 +205,7 @@ def test_oepm_normalizer_stream_parsing_and_provenance():
         batch_id="batch_oepm_01",
         payload_bytes=payload_bytes,
         metadata={"source_uri": "https://datos.gob.es/catalogo/oepm"},
-        retrieval_timestamp=datetime(2026, 9, 2, 11, 0, 0, tzinfo=timezone.utc),
+        retrieval_timestamp=datetime(2026, 9, 2, 11, 0, 0, tzinfo=UTC),
     )
 
     results = list(normalizer.normalize_stream(raw_payload))
@@ -274,7 +274,7 @@ def test_oepm_normalizer_handles_plain_list():
         source_id="oepm_plain",
         batch_id="batch_02",
         payload_bytes=payload_bytes,
-        retrieval_timestamp=datetime(2026, 9, 2, tzinfo=timezone.utc),
+        retrieval_timestamp=datetime(2026, 9, 2, tzinfo=UTC),
     )
 
     results = list(normalizer.normalize_stream(raw_payload))
@@ -308,7 +308,7 @@ def test_oepm_normalizer_verification_status_variants():
         source_id="oepm_status",
         batch_id="batch_03",
         payload_bytes=payload_bytes,
-        retrieval_timestamp=datetime(2026, 9, 2, tzinfo=timezone.utc),
+        retrieval_timestamp=datetime(2026, 9, 2, tzinfo=UTC),
     )
 
     results = list(normalizer.normalize_stream(raw_payload))
@@ -353,7 +353,7 @@ def test_pipeline_integration_with_real_oepm_normalizer(tmp_path: Path):
                 source_id="oepm_sample",
                 batch_id="batch_s1",
                 payload_bytes=payload_bytes,
-                retrieval_timestamp=datetime(2026, 9, 2, tzinfo=timezone.utc),
+                retrieval_timestamp=datetime(2026, 9, 2, tzinfo=UTC),
             )
         ]
     )
@@ -396,7 +396,7 @@ def test_pipeline_rejects_invalid_batch_document(tmp_path: Path):
                 source_id="invalid_src",
                 batch_id="batch_inv",
                 payload_bytes=payload_bytes,
-                retrieval_timestamp=datetime(2026, 9, 2, tzinfo=timezone.utc),
+                retrieval_timestamp=datetime(2026, 9, 2, tzinfo=UTC),
             )
         ]
     )

@@ -5,11 +5,12 @@ OepmRawSource -> FilesystemRawStore -> OepmNormalizer -> PatentValidator ->
 ParquetCanonicalStore -> DatasetSnapshot -> DuckDbQueryEngine.
 """
 
-from datetime import datetime, timezone
 import hashlib
 import json
+from collections.abc import Iterator
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Iterator
+
 import pyarrow.parquet as pq
 import pytest
 
@@ -17,7 +18,6 @@ from application.ingestion.normalizers.oepm_normalizer import OepmNormalizer
 from application.ingestion.pipeline import IngestionPipeline, IngestionSummary
 from application.ingestion.validator import PatentValidator, ValidationError
 from domain.models.evidence import VerificationStatus
-from domain.models.snapshot import DatasetSnapshot
 from domain.protocols.sources import RawPayload
 from infrastructure.sources.patent.oepm_raw_source import OepmRawSource
 from infrastructure.storage.duckdb_engine import DuckDbQueryEngine
@@ -299,14 +299,14 @@ def test_lifecycle_multi_batch_provenance_and_partitioning(tmp_path: Path):
                 batch_id="batch_01",
                 payload_bytes=batch1_bytes,
                 metadata={"source_authority": "OEPM Test", "batch": 1},
-                retrieval_timestamp=datetime(2026, 9, 2, 8, 0, 0, tzinfo=timezone.utc),
+                retrieval_timestamp=datetime(2026, 9, 2, 8, 0, 0, tzinfo=UTC),
             )
             yield RawPayload(
                 source_id="multi_source",
                 batch_id="batch_02",
                 payload_bytes=batch2_bytes,
                 metadata={"source_authority": "OEPM Test", "batch": 2},
-                retrieval_timestamp=datetime(2026, 9, 2, 9, 0, 0, tzinfo=timezone.utc),
+                retrieval_timestamp=datetime(2026, 9, 2, 9, 0, 0, tzinfo=UTC),
             )
 
     dataset_id = "multi_batch_dataset"

@@ -1,9 +1,11 @@
 """OEPM (Oficina Española de Patentes y Marcas) patent normalizer."""
 
 import json
-from typing import Any, Iterator
-from domain.models.patent import PatentDocument
+from collections.abc import Iterator
+from typing import Any
+
 from domain.models.evidence import FieldObservation, VerificationStatus
+from domain.models.patent import PatentDocument
 from domain.protocols.sources import RawPayload
 
 
@@ -143,19 +145,28 @@ class OepmNormalizer:
 
             observations: list[FieldObservation] = []
 
-            def _add_obs(field_name: str, value: Any, val_type: str) -> None:
-                observations.append(
+            def _add_obs(
+                field_name: str,
+                value: Any,
+                val_type: str,
+                p_id: str = pub_id,
+                auth: str = source_authority,
+                uri: str = source_uri,
+                v_stat: VerificationStatus = verification_status,
+                obs_list: list[FieldObservation] = observations,
+            ) -> None:
+                obs_list.append(
                     FieldObservation(
-                        entity_id=pub_id,
+                        entity_id=p_id,
                         field_name=field_name,
                         observed_value_json=json.dumps(value, ensure_ascii=False),
                         value_type=val_type,
-                        source_authority=source_authority,
-                        source_uri=source_uri,
+                        source_authority=auth,
+                        source_uri=uri,
                         retrieval_timestamp=raw_payload.retrieval_timestamp,
                         raw_payload_sha256=raw_payload.payload_sha256,
                         extraction_version=self.extraction_version,
-                        verification_status=verification_status,
+                        verification_status=v_stat,
                     )
                 )
 

@@ -1,6 +1,6 @@
-import pytest
 from datetime import datetime
-from domain.models.snapshot import DatasetSnapshot, RawBatch, DatasetPart
+
+from domain.models.snapshot import DatasetPart, DatasetSnapshot, RawBatch
 
 
 def test_dataset_snapshot_stable_batch_identity():

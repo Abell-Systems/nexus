@@ -11,7 +11,8 @@ import os
 import re
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+from typing import Any
 
 from dotenv import load_dotenv
 
@@ -26,32 +27,30 @@ from google.adk.sessions import InMemorySessionService  # noqa: E402
 from google.genai import types  # noqa: E402
 from pydantic import BaseModel, Field, ValidationError  # noqa: E402
 
-from infrastructure.adk.agent import build_invention_pipeline  # noqa: E402
+from application.landscape.clustering import patents_for_demand_signal  # noqa: E402
 from application.landscape.context import is_supported_domain  # noqa: E402
-from infrastructure.llm.provider import LLMProvider  # noqa: E402
 from application.research_service import ResearchService  # noqa: E402
-from infrastructure.storage.job_store import get_job_store  # noqa: E402
-from infrastructure.llm.provider_policy import (  # noqa: E402
-    ProviderPacingPlugin,
-    get_execution_policy,
-)
 from application.state_keys import (  # noqa: E402
     ADVERSARIAL_VERDICTS,
     CANDIDATE_INVENTIONS,
     SCORED_CANDIDATES,
     SELECTED_CLUSTER_CONTEXT,
 )
-from infrastructure.telemetry import PipelineProfiler  # noqa: E402
-from infrastructure.sources.bigquery_patents import get_patents_datasource  # noqa: E402
-from application.landscape.clustering import patents_for_demand_signal  # noqa: E402
-from infrastructure.sources.demand_sources import get_demand_datasource  # noqa: E402
 from domain.models.runtime_schemas import (  # noqa: E402
     AdversarialVerdict,
-    AgentEventItem,
     InventionCandidate,
-    PatentRecord,
     ScoreCard,
 )
+from infrastructure.adk.agent import build_invention_pipeline  # noqa: E402
+from infrastructure.llm.provider import LLMProvider  # noqa: E402
+from infrastructure.llm.provider_policy import (  # noqa: E402
+    ProviderPacingPlugin,
+    get_execution_policy,
+)
+from infrastructure.sources.bigquery_patents import get_patents_datasource  # noqa: E402
+from infrastructure.sources.demand_sources import get_demand_datasource  # noqa: E402
+from infrastructure.storage.job_store import get_job_store  # noqa: E402
+from infrastructure.telemetry import PipelineProfiler  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -255,11 +254,11 @@ def _emit_event(
     event_type: str,
     message: str,
     candidate_id: str | None = None,
-    evidence: dict | None = None,
+    evidence: Any = None,
 ) -> None:
     """Append a structured, typed event to the job's event log."""
-    ts = datetime.now(timezone.utc).isoformat()
-    evt = {
+    ts = datetime.now(UTC).isoformat()
+    evt: dict[str, Any] = {
         "type": event_type,
         "timestamp": ts,
         "message": message,
@@ -292,26 +291,7 @@ def _retry_after_seconds(exc: Exception) -> float | None:
     return float(value) / 1000 if unit == "ms" else float(value)
 
 
-def reconcile_candidate_verdicts(
-    verdicts: list[dict], scorecards: list[dict]
-) -> list[dict]:
-    """Ensures backend produces authoritative verdict: if governor scorecard finds
-    direct anticipation or blocking prior art, force verdict to 'rejected'."""
-    reconciled = []
-    for v in verdicts:
-        v_copy = dict(v)
-        cand_id = v_copy.get("candidate_id")
-        sc = next((s for s in scorecards if isinstance(s, dict) and s.get("candidate_id") == cand_id), None)
-        if sc:
-            summary = (sc.get("summary") or "").lower()
-            if (
-                "directly anticipated" in summary
-                or "no room for novelty" in summary
-                or "cannot be recommended" in summary
-            ):
-                v_copy["verdict"] = "rejected"
-        reconciled.append(v_copy)
-    return reconciled
+from application.synthesis.reconciliation import reconcile_candidate_verdicts
 
 
 async def _execute_analysis(job_id: str, req: AnalyzeRequest) -> dict:
@@ -338,7 +318,7 @@ async def _execute_analysis(job_id: str, req: AnalyzeRequest) -> dict:
 
     await _job_store.set_stage(job_id, "clustering")
     await _job_store.update_progress(job_id, "clustersFound", len(res.clusters))
-    await _job_store.update_job(job_id, {"clusters": [c.model_dump() for c in res.clusters]})
+    _job_store.update_job(job_id, clusters=[c.model_dump() for c in res.clusters])
     _emit_event(
         job_id,
         "landscape_clustered",
@@ -389,7 +369,7 @@ async def _execute_analysis(job_id: str, req: AnalyzeRequest) -> dict:
             curr = await _session_service.get_session(
                 app_name="ip_matchmaker", user_id="web", session_id=session.id
             )
-            state = curr.state or {}
+            state = curr.state if curr and curr.state else {}
 
             cands = _as_list(state.get(CANDIDATE_INVENTIONS))
             if cands:
@@ -404,7 +384,7 @@ async def _execute_analysis(job_id: str, req: AnalyzeRequest) -> dict:
                         cand_id = str(cand.get("candidate_id", "unknown"))
                         cand_title = cand.get("title", "")
                     elif hasattr(cand, "candidate_id"):
-                        cand_id = str(getattr(cand, "candidate_id"))
+                        cand_id = str(cand.candidate_id)
                         cand_title = getattr(cand, "title", "")
                     else:
                         cand_id = str(cand)
@@ -519,7 +499,7 @@ async def _execute_analysis(job_id: str, req: AnalyzeRequest) -> dict:
         final = await _session_service.get_session(
             app_name="ip_matchmaker", user_id="web", session_id=session.id
         )
-        final_state = final.state or {}
+        final_state = final.state if final and final.state else {}
         logger.warning(
             "analyze job %s pre-return snapshot: last_seen_candidates=%r final_state[CANDIDATE_INVENTIONS]=%r "
             "last_seen_verdicts=%r final_state[ADVERSARIAL_VERDICTS]=%r "
@@ -537,7 +517,7 @@ async def _execute_analysis(job_id: str, req: AnalyzeRequest) -> dict:
         raw_scorecards = last_seen_scores or _validated(ScoreCard, final_state.get(SCORED_CANDIDATES))
 
         telemetry = profiler.get_summary()
-        await _job_store.update_job(job_id, {"telemetry_profile": telemetry})
+        _job_store.update_job(job_id, telemetry_profile=telemetry)
         profiler.print_profile()
 
         return {
@@ -574,12 +554,12 @@ async def _run_job(job_id: str, req: AnalyzeRequest) -> None:
             await _job_store.set_result(job_id, result)
         except TimeoutError:
             await _job_store.set_error(job_id, f"Agent run exceeded {_ANALYZE_TIMEOUT_S}s.")
-            await _job_store.update_job(job_id, {"error_type": "timeout", "detail": f"Agent run exceeded {_ANALYZE_TIMEOUT_S}s."})
+            _job_store.update_job(job_id, error_type="timeout", detail=f"Agent run exceeded {_ANALYZE_TIMEOUT_S}s.")
         except Exception as exc:
             logger.exception("analyze job %s failed", job_id)
             err_info = _classify_error(exc)
             await _job_store.set_error(job_id, err_info.get("detail", str(exc)))
-            await _job_store.update_job(job_id, err_info)
+            _job_store.update_job(job_id, **err_info)
 
 
 _ANALYZE_RATE_LIMIT = 3
@@ -609,15 +589,10 @@ async def analyze(req: AnalyzeRequest, request: Request) -> dict:
     if _execution_policy.is_busy():
         raise HTTPException(status_code=503, detail="An analyze run is already in progress.")
     job_id = uuid.uuid4().hex
-    await _job_store.create_job(
-        job_id,
-        {
-            "status": "running",
-            "stage": "queued",
-            "domain": req.domain,
-            "query": req.query,
-            "created_at": datetime.now(timezone.utc).isoformat(),
-        },
+    _job_store.create_job(
+        job_id=job_id,
+        domain=req.domain,
+        query=req.query,
     )
     asyncio.create_task(_run_job(job_id, req))
     return {"job_id": job_id, "status": "running", "stage": "queued"}
@@ -632,7 +607,7 @@ async def list_analyze_jobs() -> dict:
     full result (candidates/verdicts/scorecards), which is already served from
     the job store without re-running anything.
     """
-    jobs = await _job_store.list_jobs()
+    jobs = _job_store.list_jobs()
     return {
         "jobs": [
             {
@@ -658,7 +633,7 @@ async def analyze_status(job_id: str) -> dict:
     candidates/verdicts/scorecards flat on the response -- flatten here
     rather than changing the frontend or the job store's internal shape.
     """
-    job = await _job_store.get_job(job_id)
+    job = _job_store.get_job(job_id)
     if job is None:
         raise HTTPException(status_code=404, detail="Unknown job id.")
     response = dict(job)

@@ -2,9 +2,10 @@
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import UTC
 from pathlib import Path
 from typing import Any
+
 import pyarrow as pa
 import pyarrow.parquet as pq
 
@@ -115,10 +116,7 @@ def _observations_to_table(observations: list[FieldObservation]) -> pa.Table:
         data["source_uri"].append(obs.source_uri)
 
         ts = obs.retrieval_timestamp
-        if ts.tzinfo is None:
-            ts = ts.replace(tzinfo=timezone.utc)
-        else:
-            ts = ts.astimezone(timezone.utc)
+        ts = ts.replace(tzinfo=UTC) if ts.tzinfo is None else ts.astimezone(UTC)
         data["retrieval_timestamp"].append(ts)
 
         data["raw_payload_sha256"].append(obs.raw_payload_sha256)

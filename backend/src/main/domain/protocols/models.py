@@ -1,7 +1,8 @@
 from typing import Any, Protocol
-from domain.models.patent import PatentDocument
+
 from domain.models.demand import DemandSignal
 from domain.models.opportunity import OpportunityScore
+from domain.models.patent import PatentDocument
 
 
 class OpportunityModelProtocol(Protocol):

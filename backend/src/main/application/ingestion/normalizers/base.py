@@ -1,8 +1,10 @@
 """Base normalizer protocol definition."""
 
-from typing import Iterator, Protocol
-from domain.models.patent import PatentDocument
+from collections.abc import Iterator
+from typing import Protocol
+
 from domain.models.evidence import FieldObservation
+from domain.models.patent import PatentDocument
 from domain.protocols.sources import RawPayload
 
 

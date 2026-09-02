@@ -1,6 +1,6 @@
-from domain.protocols.sources import RawPayload, PatentSourceProtocol, DemandSourceProtocol
-from domain.protocols.storage import RawStoreProtocol, CanonicalStoreProtocol, QueryEngineProtocol
 from domain.protocols.models import OpportunityModelProtocol, SensitivityAnalyzerProtocol
+from domain.protocols.sources import DemandSourceProtocol, PatentSourceProtocol, RawPayload
+from domain.protocols.storage import CanonicalStoreProtocol, QueryEngineProtocol, RawStoreProtocol
 
 __all__ = [
     "RawPayload",

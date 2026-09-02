@@ -8,8 +8,8 @@ for p in (repo_root, backend_src):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-from infrastructure.sources.duckdb_patents import DuckDbPatentsDataSource
 from domain.models.runtime_schemas import PatentRecord
+from infrastructure.sources.duckdb_patents import DuckDbPatentsDataSource
 
 SAMPLE_ES_PATENTS = [
     # C11D - Detergents / Chemistry
@@ -86,8 +86,8 @@ def main():
     ds = DuckDbPatentsDataSource(db_path=snapshot_path)
     # Add publication dates and backward citations to sample
     for p in SAMPLE_ES_PATENTS:
-        setattr(p, "publication_date", p.filing_date)
-        setattr(p, "backward_citation_count", max(3, p.citation_count // 2))
+        p.publication_date = p.filing_date
+        p.backward_citation_count = max(3, p.citation_count // 2)
     ds.insert_patents(SAMPLE_ES_PATENTS)
     print(f"✅ Populated DuckDB snapshot at {snapshot_path} with {len(SAMPLE_ES_PATENTS)} ES patents.")
 

@@ -1,7 +1,8 @@
 """Domain taxonomy context and validation."""
 
 from typing import Any
-from domain.models.runtime_schemas import PatentRecord, PatentCluster, DemandSignalItem
+
+from domain.models.runtime_schemas import PatentCluster, PatentRecord
 
 SUPPORTED_DOMAINS = [
     "solid_state_battery",
@@ -71,5 +72,5 @@ def build_cluster_context(
         "is_white_space": cluster.is_white_space,
         "patent_count": len(patents),
         "patents": [p.model_dump() for p in patents],
-        "demands": [getattr(d, "model_dump", lambda: d)() for d in (demands or [])],
+        "demands": [d.model_dump() if hasattr(d, "model_dump") else d for d in (demands or [])],
     }
