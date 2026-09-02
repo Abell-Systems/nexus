@@ -1,9 +1,9 @@
 # Nexus Innovation Intelligence Engine: Clean Architecture & Research Infrastructure Design
 
-**Document Version:** 2.0.0  
+**Document Version:** 2.1.0  
 **Date:** 2026-09-02  
 **Status:** Approved Architectural Specification  
-**Target:** Modular Monolith Clean Architecture for Innovation Analytics & Scientific Research
+**Target:** Sovereign Modular Monolith Clean Architecture for Innovation Analytics & Scientific Research
 
 ---
 
@@ -21,14 +21,14 @@ The fundamental premise of Nexus 2.0 is the complete decoupling between the **Pr
 │   │       DOMINIO CORE        │      │       DATA PLATFORM       │               │
 │   │ PatentDocument, Family,   │      │ Raw Store (Immutable)     │               │
 │   │ DemandSignal, Evidence,   │◄─────┤ Canonical Parquet Datasets│               │
-│   │ OpportunityHypothesis     │      │ In-Memory DuckDB Query    │               │
+│   │ DatasetSnapshot           │      │ In-Memory DuckDB Query    │               │
 │   └─────────────┬─────────────┘      └───────────────────────────┘               │
 │                 │                                                                │
 │                 ▼                                                                │
 │   ┌───────────────────────────┐      ┌───────────────────────────┐               │
 │   │    OPPORTUNITY ENGINE     │      │     AGENTIC SYNTHESIS     │               │
 │   │ Pluggable Models & Math   │─────►│ Propose-Critique Loop     │               │
-│   │ Sensitivity & Ranking     │      │ Grounded Evidence Defense │               │
+│   │ Sensitivity Analyzer      │      │ Grounded Evidence Defense │               │
 │   └─────────────┬─────────────┘      └───────────────────────────┘               │
 └─────────────────┼────────────────────────────────────────────────────────────────┘
                   │ consumes via clean API
@@ -51,27 +51,54 @@ The product does not know about Spain, Innoget, or specific CPC codes. Instead:
 
 ---
 
-## 2. Modular Monolith Directory Structure
+## 2. Technology Stack & Operational Resource Principles
 
-The system is organized following Clean Architecture principles within a single modular Python package:
+### 2.1 Pragmatic Clean Stack
+
+| Layer | Technology | Rationale & Architectural Scope |
+|---|---|---|
+| **Runtime & Language** | **Python 3.12+** | Type hinting, structural pattern matching, robust async I/O. |
+| **Domain Contracts & Validation** | **Pydantic v2** | Boundary validation only (APIs, CLI, ingestion boundaries). |
+| **HTTP Client & API Adapters** | **httpx** | Resilient connection pooling, retry handling, async streaming. |
+| **Raw Ingestion Store** | **Filesystem / S3 Adapter** | Immutable storage of raw HTTP responses, XML payloads, and API metadata. |
+| **Canonical Data Storage** | **Apache Parquet + PyArrow** | Columnar, compressed, typed, content-addressed dataset files. |
+| **Vectorized Analytics Engine** | **DuckDB** | In-memory (`:memory:`) SQL analytics directly over Parquet without Python object overhead. |
+| **CLI Framework** | **Typer** | Type-annotated command line interface for data ops and experiments. |
+| **LLM Inference Provider** | **Groq API** (`httpx`) | Fast inference via OpenAI-compatible API format (CPU VPS friendly). |
+| **Experiment Configuration** | **YAML + Pydantic** | Declarative research configurations validated against Pydantic schemas. |
+| **Scientific Testing & Verification** | **pytest + pytest-asyncio** | Invariant-driven testing, clean-clone verification, SHA validation. |
+
+### 2.2 Operational Efficiency on Sovereign VPS
+
+To ensure low operational cost and deterministic execution on standard compute (e.g. 2 vCPU, 4GB RAM VPS):
+1. **Zero Unnecessary Daemons:** No PostgreSQL, Redis, Kafka, Elasticsearch, or Spark dependencies.
+2. **Streaming Batch Processing:** Ingestion proceeds via `fetch_batch -> normalize -> validate -> write_parquet_chunk -> release_memory -> next_batch` rather than accumulating millions of records in memory.
+3. **No Python Instance Explosion:** Analytics queries run in DuckDB C++ vectorized kernels over Parquet. Pydantic domain models are instantiated strictly at boundary interfaces where domain validation is required.
+
+---
+
+## 3. Modular Monolith Directory Structure
 
 ```text
 nexus/
 ├── domain/                          # Pure business logic and entity contracts (zero external dependencies)
 │   ├── models/
-│   │   ├── patent.py                # PatentDocument, PatentFamily, CitationLink, Classification
+│   │   ├── patent.py                # PatentDocument, PatentFamily, FamilyMembership, CitationLink
 │   │   ├── demand.py                # DemandSignal, DemandRequirement
-│   │   ├── evidence.py              # EvidenceRecord, SourceProvenance, FieldObservation
+│   │   ├── evidence.py              # FieldObservation, SourceProvenance, VerificationStatus
+│   │   ├── snapshot.py              # DatasetSnapshot, SnapshotManifest
 │   │   └── opportunity.py           # OpportunityHypothesis, ClusterMetrics, QuadrantClassification
 │   └── protocols/
 │       ├── sources.py               # PatentSourceProtocol, DemandSourceProtocol
 │       ├── classifiers.py           # ClassificationProtocol
-│       └── models.py                # OpportunityModelProtocol, SensitivityProtocol
+│       ├── storage.py               # RawStoreProtocol, CanonicalStoreProtocol, QueryEngineProtocol
+│       ├── models.py                # OpportunityModelProtocol
+│       └── sensitivity.py           # SensitivityAnalyzerProtocol
 │
 ├── application/                     # Use cases and orchestration workflows
 │   ├── ingestion/
 │   │   ├── pipeline.py              # IngestionPipeline (Fetch -> Raw -> Normalize -> Validate -> Store)
-│   │   └── dataset_freezer.py       # Snapshot freezing, SHA-256 fingerprinting, manifest generation
+│   │   └── dataset_freezer.py       # Dataset freezing, SHA-256 fingerprinting, manifest generation
 │   ├── landscape/
 │   │   └── clusterer.py             # Patent and demand grouping by classification taxonomy
 │   ├── opportunity/
@@ -85,7 +112,7 @@ nexus/
 │   │   ├── patent/
 │   │   │   ├── epo_ops.py           # EPO OPS 3.2 REST client & XML parser
 │   │   │   ├── oepm_bopi.py         # OEPM open data / BOPI adapter
-│   │   │   └── google_patents.py    # Google Patents / BigQuery adapter (optional)
+│   │   │   └── google_patents.py    # Google Patents adapter (optional)
 │   │   └── demand/
 │   │       ├── innoget.py           # Innoget open innovation adapter
 │   │       └── sbir.py              # SBIR/STTR solicitation adapter
@@ -124,9 +151,9 @@ nexus/
 
 ---
 
-## 3. Data Platform & Ingestion Lifecycle
+## 4. Data Platform & Ingestion Lifecycle
 
-### 3.1 Immutable Two-Tier Storage Architecture
+### 4.1 Immutable Two-Tier Storage Architecture
 
 ```text
 [External Authority API / Portal]
@@ -142,12 +169,12 @@ nexus/
    - Parses raw format into `PatentDocument` / `DemandSignal` domain entities
    - Strict validation: missing dates remain `None`, unobserved citations remain `None`
    - Zero synthetic fallbacks (no defaulting to `2020-01-01` or `G06Q`)
-   - Populates embedded `EvidenceRecord` (source URL, primary archive ref, observed fields)
+   - Populates field-level `FieldObservation` entries (source URL, primary archive ref, observed value)
                │
                ▼
 3. CANONICAL PARQUET STORE (`data/canonical/<dataset_id>/corpus.parquet`)
    - Columnar, compressed, version-controlled Parquet dataset
-   - Accompanying Content-Addressed Manifest (`manifest.json`)
+   - Accompanying Content-Addressed `DatasetSnapshot` Manifest (`manifest.json`)
                │
                ▼
 4. ANALYTICAL QUERY ENGINE (`nexus.infrastructure.storage.duckdb_engine`)
@@ -158,23 +185,23 @@ nexus/
 
 ---
 
-## 4. Domain Models & Contracts
+## 5. Domain Models & Contracts
 
-### 4.1 `EvidenceRecord` (First-Class Provenance)
+### 5.1 `FieldObservation` & Provenance
 ```python
-class EvidenceRecord(BaseModel):
-    """Immutable audit trail establishing primary authority provenance for any domain entity."""
-    source_name: str                  # e.g., "OEPM BOPI", "EPO OPS", "Innoget INDUSAC"
-    source_uri: str                   # Direct URL to authority lookup / archive
+class FieldObservation(BaseModel):
+    """Fine-grained provenance record tracking the origin and authority of a specific field observation."""
+    field_name: str
+    observed_value: Any
+    source_authority: str             # e.g., "OEPM BOPI", "EPO OPS"
+    source_uri: str                   # Direct archive / query URL
     retrieval_timestamp: datetime
-    raw_payload_sha256: str           # Hash of untouched payload in Raw Store
-    extraction_rule_version: str      # Git commit / version of normalizer
-    observed_fields: list[str]        # Explicit whitelist of present fields
-    unobserved_fields: list[str]      # Explicit list of missing fields (preserved as None)
+    raw_payload_sha256: str           # SHA-256 of raw response in Raw Store
+    extraction_version: str           # Version/commit of parser rule
     verification_status: str          # "authority_verified", "in_situ_harvested", "unverified_mock"
 ```
 
-### 4.2 `PatentDocument` & `PatentFamily`
+### 5.2 `PatentDocument`, `PatentFamily` & `FamilyMembership`
 ```python
 class PatentDocument(BaseModel):
     """Publication-level patent document representing a specific gazette publication."""
@@ -195,18 +222,24 @@ class PatentDocument(BaseModel):
     forward_citation_count: int | None = None    # None = unobserved; int >= 0 = verified count
     backward_citation_count: int | None = None   # None = unobserved; int >= 0 = verified count
     family_id: str | None = None
-    evidence: EvidenceRecord
+    observations: list[FieldObservation] = Field(default_factory=list)
 
 class PatentFamily(BaseModel):
-    """Group of related patent documents sharing priority claims across jurisdictions."""
+    """Metadata for a family of related patent documents sharing priority claims."""
     family_id: str
-    members: list[PatentDocument]
-    earliest_priority_date: str
-    title_consensus: str
-    family_cpc_codes: list[str]
+    earliest_priority_date: str | None = None
+    title_consensus: str | None = None
+    family_cpc_codes: list[str] = Field(default_factory=list)
+
+class FamilyMembership(BaseModel):
+    """Relational mapping linking a publication document to its family."""
+    family_id: str
+    publication_id: str
+    membership_source: str            # e.g., "EPO DOCDB", "INPADOC"
+    evidence: FieldObservation
 ```
 
-### 4.3 `DemandSignal`
+### 5.3 `DemandSignal`
 ```python
 class DemandSignal(BaseModel):
     """Market-pull requirement extracted from industrial open innovation calls."""
@@ -215,18 +248,32 @@ class DemandSignal(BaseModel):
     title: str
     description: str
     technical_requirements: list[str]
-    origin_country: str               # e.g. "Spain", "Germany"
+    origin_country: str | None = None
     posted_date: str | None = None
     deadline_date: str | None = None
-    classified_cpc_prefixes: list[str] # Primary CPC subclasses assigned
-    evidence: EvidenceRecord
+    classified_cpc_prefixes: list[str] # Primary CPC subclasses assigned (or empty if unclassified)
+    observations: list[FieldObservation] = Field(default_factory=list)
+```
+
+### 5.4 `DatasetSnapshot` (First-Class Research Entity)
+```python
+class DatasetSnapshot(BaseModel):
+    """Content-addressed snapshot representing a frozen, immutable analytical corpus."""
+    dataset_id: str
+    schema_version: str
+    source_batches: list[str]
+    record_count: int
+    content_sha256: str
+    created_at: datetime
+    transformation_version: str
+    provenance_manifest_uri: str
 ```
 
 ---
 
-## 5. Pluggable Opportunity & White-Space Engine
+## 6. Pluggable Opportunity & Sensitivity Architecture
 
-### 5.1 Protocol Abstraction
+### 6.1 Decoupled Protocol Interfaces
 ```python
 class OpportunityModelProtocol(Protocol):
     """Protocol for calculating innovation gap and white-space metrics across clusters."""
@@ -239,14 +286,19 @@ class OpportunityModelProtocol(Protocol):
     ) -> OpportunityHypothesis:
         ...
 
-    def evaluate_sensitivity(
+class SensitivityAnalyzerProtocol(Protocol):
+    """Protocol for evaluating mathematical model robustness and ranking stability."""
+    def evaluate_stability(
         self,
-        cluster_metrics: list[OpportunityHypothesis]
+        model: OpportunityModelProtocol,
+        clusters: list[str],
+        landscape: LandscapeContext,
+        perturbation_regimes: list[WeightRegime]
     ) -> SensitivityReport:
         ...
 ```
 
-### 5.2 Mathematical Formulation & Sensitivity Framework
+### 6.2 Mathematical Formulation
 
 For each cluster $i$:
 1. **Relative Volume Density ($d_i$):**
@@ -257,28 +309,28 @@ For each cluster $i$:
    $$C_i = \frac{|S_{i, obs}|}{n_i}$$
    $$T_i = \begin{cases} \text{clip}\left(\frac{1}{|S_{i, obs}|} \sum_{p \in S_{i, obs}} \frac{\tilde{\tau}_p}{\tau_{max}}, 0, 1\right) & \text{if } |S_{i, obs}| > 0 \\ \text{null / unobserved baseline} & \text{if } |S_{i, obs}| = 0 \end{cases}$$
 4. **Demand Pull Intensity ($q_i$):**
-   $$q_i = \frac{m_i}{\max_j m_j}$$
+   $$q_i = \begin{cases} \frac{m_i}{\max_j m_j} & \text{if } \max_j m_j > 0 \\ 0 & \text{otherwise} \end{cases}$$
 5. **Composite White-Space Metric ($W_i$):**
    $$W_i = w_d(1 - d_i) + w_r r_i + w_T T_i + w_q q_i$$
 
-### 5.3 Automated Statistical Sensitivity Analysis
-To prevent *researcher degrees of freedom*, the engine evaluates 5 distinct mathematical regimes:
+### 6.3 Automated Statistical Sensitivity Analysis
+The `SensitivityAnalyzer` evaluates 5 distinct mathematical regimes configured by the experiment client:
 * **Baseline Regime:** $(0.40, 0.20, 0.15, 0.25)$
 * **Demand-Dominant Regime:** $(0.30, 0.15, 0.15, 0.40)$
 * **IP-Dominant Regime:** $(0.50, 0.20, 0.20, 0.10)$
 * **Traction-Dominant Regime:** $(0.30, 0.20, 0.30, 0.20)$
 * **Equi-Weighted Regime:** $(0.25, 0.25, 0.25, 0.25)$
 
-Calculates Spearman rank correlation ($\rho_s$) across regimes and flags ranking invariance.
+Computes pairwise Spearman rank correlations ($\rho_s$) and ranking invariance metrics across regimes.
 
 ---
 
-## 6. Two-Stage Decoupled Multi-Agent Synthesis
+## 7. Two-Stage Decoupled Multi-Agent Synthesis
 
-### 6.1 Strict Evidence Demarcation
+### 7.1 Strict Evidence Demarcation
 
 ```text
-STAGE 1: DETERMINISTIC QUANTITATIVE GROUND TRUTH
+STAGE 1: DETERMINISTIC EMPIRICAL ANALYSIS
    - Pure mathematical landscape execution (Zero LLM involvement)
    - Outputs: `empirical_metrics_matrix.csv`, `sensitivity_analysis.csv`, `empirical_summary.md`
    - Complete cryptographic provenance and audit trail
@@ -293,9 +345,9 @@ STAGE 2: QUALITATIVE EXPLORATORY SYNTHESIS (OPTIONAL)
 
 ---
 
-## 7. Declarative Research & Experiment Framework
+## 8. Declarative Research & Experiment Framework
 
-### 7.1 Experiment Configuration (`experiments/innoget_es_2026/config.yaml`)
+### 8.1 Experiment Configuration (`experiments/innoget_es_2026/config.yaml`)
 ```yaml
 experiment:
   id: innoget_es_2026_evaluation
@@ -335,12 +387,12 @@ synthesis:
 
 ---
 
-## 8. Migration Roadmap & Execution Phases
+## 9. Migration Roadmap & Execution Phases
 
 | Phase | Objective | Deliverables |
 |---|---|---|
-| **Phase 1: Domain & Ingestion Foundations** | Clean Domain Models & Immutable Raw Data Store | `nexus/domain/models/*`, `nexus/infrastructure/storage/raw_store.py`, `nexus/infrastructure/storage/parquet_store.py` |
-| **Phase 2: Product Opportunity Engine** | Agnostic Opportunity Models & Statistical Sensitivity | `nexus/application/opportunity/*`, `OpportunityModelProtocol`, sensitivity ranking tests |
+| **Phase 1: Domain & Ingestion Foundations** | Clean Domain Models, Field Observations & Immutable Raw Data Store | `nexus/domain/models/*`, `nexus/infrastructure/storage/raw_store.py`, `nexus/infrastructure/storage/parquet_store.py` |
+| **Phase 2: Product Opportunity Engine** | Agnostic Opportunity Models & Decoupled Sensitivity Analyzer | `nexus/application/opportunity/*`, `OpportunityModelProtocol`, `SensitivityAnalyzerProtocol` |
 | **Phase 3: Agentic Synthesis Layer** | Decoupled Propose-Critique Coordinator | `nexus/application/synthesis/*`, `nexus/infrastructure/llm/*` |
 | **Phase 4: Declarative Experiment Client** | Config-driven experiment runner & paper exporter | `experiments/innoget_es_2026/run.py`, CLI integration (`nexus experiment run`) |
-| **Phase 5: Verification & Full CI Suite** | 100% test coverage and CI workflow verification | GitHub Actions CI workflow, clean-clone validation, reproducibility benchmarks |
+| **Phase 5: Invariant-Driven Verification** | Invariant verification, reproducibility validation & clean-clone tests | Full pytest suite testing RAW integrity, schema validation, missing data semantics, and sensitivity determinism |
