@@ -25,8 +25,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-import duckdb
-from backend.patent_agent.tools.schemas import PatentRecord
+from nexus.domain.models.runtime_schemas import PatentRecord
 
 
 def calculate_sha256(file_path: Path | str) -> str:

@@ -21,13 +21,13 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from backend.patent_agent.tools.innoget_datasource import InnogetDemandDataSource
-from backend.patent_agent.tools.duckdb_patents import DuckDbPatentsDataSource
-from backend.patent_agent.tools.metrics import compute_white_space_metrics, ExecutionMode
-from backend.patent_agent.tools.cpc_taxonomy import CPC_TAXONOMY_DICTIONARY
-from backend.patent_agent.groq_client import GroqLlmClient
-from backend.patent_agent.synthesis_engine import InventionSynthesisEngine
-from backend.patent_agent.tools.schemas import InventionCandidate, AdversarialVerdict, ScoreCard
+from nexus.infrastructure.sources.demand_sources import InnogetDemandDataSource
+from nexus.infrastructure.sources.duckdb_patents import DuckDbPatentsDataSource
+from nexus.application.landscape.metrics import compute_white_space_metrics, ExecutionMode
+from nexus.application.landscape.cpc_taxonomy import CPC_TAXONOMY_DICTIONARY
+from nexus.infrastructure.llm.groq_client import GroqClient as GroqLlmClient
+from nexus.application.synthesis.synthesis_engine import SynthesisEngine as InventionSynthesisEngine
+from nexus.domain.models.runtime_schemas import InventionCandidate, AdversarialVerdict, ScoreCard
 
 
 def get_git_commit() -> str:

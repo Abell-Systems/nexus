@@ -26,26 +26,26 @@ from google.adk.sessions import InMemorySessionService  # noqa: E402
 from google.genai import types  # noqa: E402
 from pydantic import BaseModel, Field, ValidationError  # noqa: E402
 
-from patent_agent.agent import build_invention_pipeline  # noqa: E402
-from patent_agent.config import is_supported_domain  # noqa: E402
-from patent_agent.provider import LLMProvider  # noqa: E402
-from patent_agent.services.research_service import get_research_service  # noqa: E402
-from patent_agent.shared.job_store import get_job_store  # noqa: E402
-from patent_agent.shared.provider_policy import (  # noqa: E402
+from nexus.application.synthesis.agent import build_invention_pipeline  # noqa: E402
+from nexus.application.landscape.context import is_supported_domain  # noqa: E402
+from nexus.infrastructure.llm.provider import LLMProvider  # noqa: E402
+from nexus.application.research_service import get_research_service  # noqa: E402
+from nexus.infrastructure.storage.job_store import get_job_store  # noqa: E402
+from nexus.infrastructure.llm.provider_policy import (  # noqa: E402
     ProviderPacingPlugin,
     get_execution_policy,
 )
-from patent_agent.shared.state_keys import (  # noqa: E402
+from nexus.application.state_keys import (  # noqa: E402
     ADVERSARIAL_VERDICTS,
     CANDIDATE_INVENTIONS,
     SCORED_CANDIDATES,
     SELECTED_CLUSTER_CONTEXT,
 )
-from patent_agent.shared.telemetry import PipelineProfiler  # noqa: E402
-from patent_agent.tools.bigquery_patents import get_patents_datasource  # noqa: E402
-from patent_agent.tools.clustering import patents_for_demand_signal  # noqa: E402
-from patent_agent.tools.demand_sources import get_demand_datasource  # noqa: E402
-from patent_agent.tools.schemas import (  # noqa: E402
+from nexus.infrastructure.telemetry import PipelineProfiler  # noqa: E402
+from nexus.infrastructure.sources.bigquery_patents import get_patents_datasource  # noqa: E402
+from nexus.application.landscape.clustering import patents_for_demand_signal  # noqa: E402
+from nexus.infrastructure.sources.demand_sources import get_demand_datasource  # noqa: E402
+from nexus.domain.models.runtime_schemas import (  # noqa: E402
     AdversarialVerdict,
     AgentEventItem,
     InventionCandidate,
