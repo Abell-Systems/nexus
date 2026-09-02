@@ -5,18 +5,24 @@ Enforces:
 1. Canonical directory structure:
    - backend/src/main/{domain,application,infrastructure}
    - backend/test/{unit,integration,e2e}
-   - frontend/src/main/{domain,application,infrastructure}
+   - frontend/src/main/{domain,application,infrastructure,components,App.tsx,main.tsx,index.css}
    - frontend/test/{unit,integration,e2e}
-2. Forbidden legacy directories (nexus, backend/patent_agent, backend/tests, interfaces).
+2. Forbidden legacy directories (nexus, backend/patent_agent, backend/tests, interfaces, root tests).
 3. No production code outside src/main/.
-4. Strict unidirectional layer imports (AST inspection):
-   - domain cannot import application, infrastructure, or heavy external frameworks (FastAPI, Google ADK).
-   - application cannot import infrastructure or Google ADK.
+4. Strict unidirectional layer imports:
+   - Backend (Python AST):
+     - domain cannot import application, infrastructure, or heavy external frameworks (FastAPI, Google ADK, DuckDB, PyArrow).
+     - application cannot import infrastructure or Google ADK.
+   - Frontend (TypeScript / JavaScript imports):
+     - domain (models/types) cannot import application, infrastructure, components, or React.
+     - infrastructure (API client) cannot import application or presentation components.
+     - application (hooks/state) cannot import presentation components.
 """
 
 import ast
 import os
 from pathlib import Path
+import re
 import sys
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -92,6 +98,29 @@ def check_frontend_files(errors: list[str]) -> None:
     if not frontend_dir.exists():
         return
 
+    allowed_root_entries = {
+        "src",
+        "test",
+        "public",
+        "node_modules",
+        "package.json",
+        "package-lock.json",
+        "tsconfig.json",
+        "tsconfig.app.json",
+        "tsconfig.node.json",
+        "vite.config.ts",
+        "index.html",
+        "README.md",
+        "dist",
+        ".env",
+        ".env.example",
+    }
+    for item in frontend_dir.iterdir():
+        if item.name.startswith("."):
+            continue
+        if item.name not in allowed_root_entries:
+            errors.append(f"FAIL: unexpected file/directory in frontend root: frontend/{item.name}")
+
     frontend_src = frontend_dir / "src"
     if frontend_src.exists():
         for item in frontend_src.iterdir():
@@ -116,6 +145,15 @@ def check_frontend_files(errors: list[str]) -> None:
             if item.name not in allowed_layers:
                 errors.append(f"FAIL: invalid entry in frontend/src/main: {item.name}")
 
+    frontend_test = frontend_dir / "test"
+    if frontend_test.exists():
+        allowed_test = {"unit", "integration", "e2e", "__pycache__"}
+        for item in frontend_test.iterdir():
+            if item.name.startswith("."):
+                continue
+            if item.name not in allowed_test:
+                errors.append(f"FAIL: invalid folder in frontend/test: {item.name}")
+
 
 class LayerImportVisitor(ast.NodeVisitor):
     def __init__(self, file_path: Path, current_layer: str):
@@ -134,7 +172,7 @@ class LayerImportVisitor(ast.NodeVisitor):
         self.generic_visit(node)
 
 
-def check_layer_dependencies(errors: list[str]) -> None:
+def check_backend_layer_dependencies(errors: list[str]) -> None:
     backend_main = REPO_ROOT / "backend" / "src" / "main"
     if not backend_main.exists():
         return
@@ -171,7 +209,7 @@ def check_layer_dependencies(errors: list[str]) -> None:
                     errors.append(
                         f"FAIL: forbidden dependency: {rel_file}:{lineno} (domain imports infrastructure: {mod})"
                     )
-                if any(mod.startswith(fw) for fw in ("fastapi", "google.adk", "duckdb", "pyarrow")):
+                if any(mod.startswith(fw) for fw in ("fastapi", "google.adk", "duckdb", "pyarrow", "google.cloud")):
                     errors.append(
                         f"FAIL: forbidden dependency: {rel_file}:{lineno} (domain imports framework: {mod})"
                     )
@@ -188,13 +226,63 @@ def check_layer_dependencies(errors: list[str]) -> None:
                     )
 
 
+TS_IMPORT_PATTERN = re.compile(
+    r'''(?:import\s+(?:type\s+)?(?:(?:[\w*\s{},]+)\s+from\s+)?['"]([^'"]+)['"]|require\(['"]([^'"]+)['"]\))''',
+    re.MULTILINE,
+)
+
+
+def check_frontend_layer_dependencies(errors: list[str]) -> None:
+    frontend_main = REPO_ROOT / "frontend" / "src" / "main"
+    if not frontend_main.exists():
+        return
+
+    for ts_file in frontend_main.rglob("*"):
+        if ts_file.suffix not in (".ts", ".tsx"):
+            continue
+
+        rel_path = ts_file.relative_to(frontend_main)
+        parts = rel_path.parts
+        if not parts:
+            continue
+
+        layer = parts[0]
+        content = ts_file.read_text(encoding="utf-8")
+        rel_file = ts_file.relative_to(REPO_ROOT)
+
+        for match in TS_IMPORT_PATTERN.finditer(content):
+            import_target = match.group(1) or match.group(2) or ""
+
+            # 1. Frontend Domain Layer Invariants: pure models/types, zero dependencies on application, infrastructure, components, react
+            if layer == "domain":
+                if any(k in import_target for k in ("application", "infrastructure", "components", "react")):
+                    errors.append(
+                        f"FAIL: forbidden dependency: {rel_file} (frontend domain imports: {import_target})"
+                    )
+
+            # 2. Frontend Infrastructure Layer Invariants: API fetch client, zero dependencies on application or presentation components
+            if layer == "infrastructure":
+                if any(k in import_target for k in ("application", "components")):
+                    errors.append(
+                        f"FAIL: forbidden dependency: {rel_file} (frontend infrastructure imports: {import_target})"
+                    )
+
+            # 3. Frontend Application Layer Invariants: application hooks/orchestration, zero dependencies on presentation components
+            if layer == "application":
+                if "components" in import_target:
+                    errors.append(
+                        f"FAIL: forbidden dependency: {rel_file} (frontend application imports: {import_target})"
+                    )
+
+
 def main() -> int:
     errors: list[str] = []
 
     check_forbidden_directories(errors)
     check_backend_files(errors)
     check_frontend_files(errors)
-    check_layer_dependencies(errors)
+    check_backend_layer_dependencies(errors)
+    check_frontend_layer_dependencies(errors)
 
     if errors:
         print("\n" + "=" * 70, file=sys.stderr)
