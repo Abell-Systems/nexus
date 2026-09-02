@@ -3,6 +3,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pyarrow.parquet as pq
+import pytest
 
 from domain.models.evidence import FieldObservation, VerificationStatus
 from domain.models.patent import PatentDocument
@@ -145,3 +146,17 @@ def test_parquet_store_deterministic_sealing(tmp_path: Path):
         assert p1.part_name == p2.part_name
         assert p1.row_count == p2.row_count
         assert p1.file_sha256 == p2.file_sha256
+
+
+def test_parquet_store_path_traversal_prevention(tmp_path: Path):
+    store = ParquetCanonicalStore(tmp_path)
+    malicious_id = "../../../etc"
+    doc = _sample_doc("ES-1")
+    obs = [_sample_obs("ES-1")]
+
+    with pytest.raises(ValueError, match="Path traversal detected"):
+        store.write_batch(malicious_id, [doc], obs)
+
+    with pytest.raises(ValueError, match="Path traversal detected"):
+        store.seal_dataset(malicious_id)
+

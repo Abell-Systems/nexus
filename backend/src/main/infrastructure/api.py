@@ -80,7 +80,7 @@ _runner = Runner(
 app = get_fast_api_app(
     agents_dir=AGENTS_DIR,
     allow_origins=_ORIGINS,
-    web=True,
+    web=False,
 )
 
 _patents_datasource = get_patents_datasource()
@@ -200,6 +200,8 @@ def _as_list(value: Any) -> list:
         return []
     if isinstance(value, list):
         return value
+    if isinstance(value, str):
+        return [value]
     if isinstance(value, dict):
         for key in ("items", "candidates", "verdicts", "scorecards"):
             if key in value and isinstance(value[key], list):

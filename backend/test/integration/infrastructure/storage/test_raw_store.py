@@ -98,3 +98,13 @@ def test_raw_store_file_not_found(tmp_path: Path):
 
     with pytest.raises(FileNotFoundError):
         store.verify_payload_integrity(missing_sha)
+
+
+def test_raw_store_path_traversal_prevention(tmp_path: Path):
+    store = FilesystemRawStore(tmp_path)
+    malicious_source = "../../../etc"
+    sample_data = b'{"malicious": "payload"}'
+    
+    with pytest.raises(ValueError, match="Path traversal detected"):
+        store.store_payload(malicious_source, sample_data, {"source": "evil"})
+
