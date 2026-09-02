@@ -1,6 +1,6 @@
 # Nexus Innovation Intelligence Engine: Clean Architecture & Research Infrastructure Design
 
-**Document Version:** 2.2.0 (Final Approved Specification)  
+**Document Version:** 2.3.0 (Scientific Invariants & Streaming Data Platform)  
 **Date:** 2026-09-02  
 **Status:** Approved for Implementation  
 **Target:** Sovereign Modular Monolith Clean Architecture for Innovation Analytics & Scientific Research
@@ -21,7 +21,7 @@ The fundamental premise of Nexus 2.0 is the complete decoupling between the **Pr
 │   │       DOMINIO CORE        │      │       DATA PLATFORM       │               │
 │   │ PatentDocument, Family,   │      │ Raw Store (Immutable)     │               │
 │   │ DemandSignal, Evidence,   │◄─────┤ Canonical Parquet Datasets│               │
-│   │ DatasetSnapshot           │      │ In-Memory DuckDB Query    │               │
+│   │ DatasetSnapshot           │      │ In-Memory DuckDB Views    │               │
 │   └─────────────┬─────────────┘      └───────────────────────────┘               │
 │                 │                                                                │
 │                 ▼                                                                │
@@ -62,18 +62,18 @@ The product does not know about Spain, Innoget, or specific CPC codes. Instead:
 | **HTTP Client & API Adapters** | **httpx** | Resilient connection pooling, retry handling, async streaming. |
 | **Raw Ingestion Store** | **Filesystem / S3 Adapter** | Immutable storage of raw HTTP responses, XML payloads, and API metadata. |
 | **Canonical Data Storage** | **Apache Parquet + PyArrow** | Columnar, compressed, typed, content-addressed dataset files. |
-| **Vectorized Analytics Engine** | **DuckDB** | In-memory (`:memory:`) SQL analytics directly over Parquet without Python object overhead. |
-| **CLI Framework** | **Typer** | Type-annotated command line interface for data ops and experiments. |
+| **Vectorized Analytics Engine** | **DuckDB** | In-memory (`:memory:`) SQL analytics directly over Parquet views without duplicating data in RAM. |
+| **CLI Framework** | **Typer / Argparse** | Type-annotated command line interface for data ops and experiments. |
 | **LLM Inference Provider** | **Groq API** (`httpx`) | Fast inference via OpenAI-compatible API format (CPU VPS friendly). |
 | **Experiment Configuration** | **YAML + Pydantic** | Declarative research configurations validated against Pydantic schemas. |
-| **Scientific Testing & Verification** | **pytest + pytest-asyncio** | Invariant-driven testing, clean-clone verification, SHA validation. |
+| **Scientific Testing & Verification** | **pytest + Hypothesis** | Invariant-driven testing, property-based verification, clean-clone A/B determinism. |
 
 ### 2.2 Operational Efficiency on Sovereign VPS
 
 To ensure low operational cost and deterministic execution on standard compute (e.g. 2 vCPU, 4GB RAM VPS):
 1. **Zero Unnecessary Daemons:** No PostgreSQL, Redis, Kafka, Elasticsearch, or Spark dependencies.
-2. **Streaming Batch Processing:** Ingestion proceeds via `fetch_batch -> normalize -> validate -> write_parquet_chunk -> release_memory -> next_batch` rather than accumulating millions of records in memory.
-3. **No Python Instance Explosion:** Analytics queries run in DuckDB C++ vectorized kernels over Parquet. Pydantic domain models are instantiated strictly at boundary interfaces where domain validation is required.
+2. **Streaming Batch Processing:** Ingestion proceeds via `Iterator[RawPayload] -> normalize_stream -> validate_batch -> write_parquet_chunk -> release_memory -> next_batch` rather than accumulating millions of records in memory.
+3. **No Python Instance Explosion & Zero Memory Duplication:** Analytics queries run in DuckDB C++ vectorized kernels over Parquet via `CREATE VIEW patents AS SELECT * FROM read_parquet(...)`. Pydantic domain models are instantiated strictly at boundary interfaces where domain validation is required.
 
 ---
 
@@ -85,11 +85,11 @@ nexus/
 │   ├── models/
 │   │   ├── patent.py                # PatentDocument, PatentFamily, FamilyMembership, CitationLink
 │   │   ├── demand.py                # DemandSignal, DemandRequirement
-│   │   ├── evidence.py              # FieldObservation, SourceProvenance, VerificationStatus
-│   │   ├── snapshot.py              # DatasetSnapshot, SnapshotManifest
+│   │   ├── evidence.py              # FieldObservation, SourceProvenance, VerificationStatus (Enum)
+│   │   ├── snapshot.py              # DatasetSnapshot, RawBatch, PartManifest, SnapshotManifest
 │   │   └── opportunity.py           # OpportunityScore, OpportunityHypothesis, QuadrantClassification
 │   └── protocols/
-│       ├── sources.py               # PatentSourceProtocol, DemandSourceProtocol
+│       ├── sources.py               # PatentSourceProtocol, DemandSourceProtocol, RawPayload
 │       ├── classifiers.py           # ClassificationProtocol
 │       ├── storage.py               # RawStoreProtocol, CanonicalStoreProtocol, QueryEngineProtocol
 │       ├── models.py                # OpportunityModelProtocol
@@ -97,8 +97,13 @@ nexus/
 │
 ├── application/                     # Use cases and orchestration workflows
 │   ├── ingestion/
-│   │   ├── pipeline.py              # IngestionPipeline (Fetch -> Raw -> Normalize -> Validate -> Store)
-│   │   └── dataset_freezer.py       # Dataset freezing, SHA-256 fingerprinting, manifest generation
+│   │   ├── normalizers/             # Decoupled transformation logic
+│   │   │   ├── base.py              # PatentNormalizerProtocol
+│   │   │   ├── oepm_normalizer.py   # OEPM JSON -> PatentDocument stream
+│   │   │   └── epo_normalizer.py    # EPO XML -> PatentDocument stream
+│   │   ├── validator.py             # PatentValidator (Strict rejection of synthetic defaults)
+│   │   ├── pipeline.py              # Streaming IngestionPipeline (Batched I/O)
+│   │   └── dataset_freezer.py       # Deterministic Parquet & Merkle content-hashing
 │   ├── landscape/
 │   │   └── clusterer.py             # Patent and demand grouping by classification taxonomy
 │   ├── opportunity/
@@ -110,29 +115,24 @@ nexus/
 ├── infrastructure/                  # External adapters, I/O, storage, and API clients
 │   ├── sources/
 │   │   ├── patent/
-│   │   │   ├── epo_ops.py           # EPO OPS 3.2 REST client & XML parser
-│   │   │   ├── oepm_bopi.py         # OEPM open data / BOPI adapter
-│   │   │   └── google_patents.py    # Google Patents adapter (optional)
+│   │   │   ├── epo_ops_client.py    # EPO OPS 3.2 REST client returning raw XML bytes
+│   │   │   └── oepm_raw_source.py   # OEPM open data source returning raw JSON bytes
 │   │   └── demand/
-│   │       ├── innoget.py           # Innoget open innovation adapter
-│   │       └── sbir.py              # SBIR/STTR solicitation adapter
+│   │       └── innoget_source.py    # Innoget demand source adapter
 │   ├── storage/
 │   │   ├── raw_store.py             # Immutable filesystem raw payload store
-│   │   ├── parquet_store.py         # Canonical Parquet dataset repository
-│   │   └── duckdb_engine.py         # Ephemeral / in-memory DuckDB analytical engine
+│   │   ├── parquet_store.py         # Relational Parquet store (patents, observations, memberships)
+│   │   └── duckdb_engine.py         # DuckDB engine creating views over Parquet
 │   ├── classifiers/
-│   │   ├── cpc_taxonomy.py          # Deterministic CPC regex and concordance classifier
-│   │   └── keyword_classifier.py    # Lexical keyword classification
+│   │   └── cpc_taxonomy.py          # Deterministic CPC regex and concordance classifier
 │   └── llm/
 │       ├── groq_client.py           # OpenAI-compatible Groq API client
 │       └── prompts.py               # Versioned system prompts for synthesis & critique
 │
 ├── interfaces/                      # Entrypoints for users and external consumers
-│   ├── cli/
-│   │   ├── main.py                  # Nexus unified CLI (`nexus ingest`, `nexus analyze`, `nexus experiment`)
-│   │   └── formatters.py            # Markdown and terminal table formatters
-│   └── api/
-│       └── server.py                # FastAPI server (optional web UI / headless integration)
+│   └── cli/
+│       ├── main.py                  # Nexus unified CLI (`nexus ingest`, `nexus analyze`, `nexus experiment`)
+│       └── formatters.py            # Markdown and terminal table formatters
 │
 ├── experiments/                     # Research experiment configurations and reports
 │   └── innoget_es_2026/
@@ -142,11 +142,15 @@ nexus/
 │       ├── run.py                   # Lightweight experiment runner script
 │       └── results/                 # Exported empirical metrics, sensitivity tables, and paper summaries
 │
-└── tests/                           # Comprehensive test suite organized by architectural layer
-    ├── unit/domain/
-    ├── unit/application/
-    ├── unit/infrastructure/
-    └── integration/experiments/
+└── tests/                           # 3-Tier Testing Pyramid with Scientific Invariant Gates
+    ├── unit/
+    │   ├── domain/
+    │   └── application/ingestion/
+    ├── integration/
+    │   ├── infrastructure/storage/
+    │   ├── infrastructure/sources/
+    │   └── data_platform/
+    └── e2e/
 ```
 
 ---
@@ -156,51 +160,73 @@ nexus/
 ### 4.1 Immutable Two-Tier Storage Architecture
 
 ```text
-[External Authority API / Portal]
+[External Authority API / Local Archive]
                │
                ▼
-1. RAW STORE (`data/sources/<source_id>/<YYYY-MM-DD>/payload_xxx.json`)
+1. RAW STORE (`data/sources/<source_id>/<YYYY-MM-DD>/<sha256[:16]>.raw.<ext>`)
    - Unmodified HTTP response bytes / raw XML / raw JSON
-   - Query metadata, endpoint URL, timestamp, HTTP status
-   - Immutable SHA-256 fingerprint computed immediately
+   - Query metadata sidecar (`.meta.json`) with strict 64-char hex SHA-256
+   - Immutable content-addressed storage
                │
                ▼
-2. NORMALIZER & VALIDATOR (`nexus.application.ingestion`)
-   - Parses raw format into `PatentDocument` / `DemandSignal` domain entities
-   - Strict validation: missing dates remain `None`, unobserved citations remain `None`
+2. STREAMING NORMALIZER & VALIDATOR (`nexus.application.ingestion`)
+   - `PatentSource` yields `RawPayload(bytes, metadata)`
+   - `PatentNormalizer` yields `Iterator[PatentDocument]` and `Iterator[FieldObservation]`
+   - `PatentValidator` validates records in batches; missing dates/citations remain `None`
    - Zero synthetic fallbacks (no defaulting to `2020-01-01` or `G06Q`)
-   - Populates field-level `FieldObservation` entries (source URL, primary archive ref, observed value)
                │
                ▼
-3. CANONICAL PARQUET STORE (`data/canonical/<dataset_id>/corpus.parquet`)
-   - Columnar, compressed, version-controlled Parquet dataset
-   - Accompanying Content-Addressed `DatasetSnapshot` Manifest (`manifest.json`)
+3. RELATIONAL CANONICAL PARQUET STORE (`data/canonical/<dataset_id>/`)
+   - `patents/part-0000.parquet`: Primary publication attributes
+   - `observations/part-0000.parquet`: Normalized field-level provenance records
+   - `family_memberships/part-0000.parquet`: Cross-jurisdictional family links
+   - Deterministic Dataset Content Hash:
+     $$\text{file\_sha256} = \text{SHA256}(\text{bytes of each part})$$
+     $$\text{dataset\_content\_sha256} = \text{SHA256}(\text{canonical JSON of sorted parts: } (\text{part\_name}, \text{row\_count}, \text{file\_sha256}))$$
                │
                ▼
 4. ANALYTICAL QUERY ENGINE (`nexus.infrastructure.storage.duckdb_engine`)
-   - Ephemeral in-memory DuckDB instance created on demand (`:memory:`)
-   - Reads directly from verified Parquet snapshot (`read_parquet(?)`)
-   - Zero local database drift or cache divergence
+   - Ephemeral in-memory DuckDB instance (`:memory:`)
+   - Creates zero-copy views: `CREATE VIEW patents AS SELECT * FROM read_parquet(...)`
+   - Direct SQL/vectorized operations; zero duplicate RAM allocations
 ```
 
 ---
 
 ## 5. Domain Models & Contracts
 
-### 5.1 `FieldObservation` & Provenance
+### 5.1 `VerificationStatus` & `FieldObservation`
 ```python
+from enum import Enum
+from datetime import datetime
+from pydantic import BaseModel, Field, field_validator
+import re
+
+class VerificationStatus(str, Enum):
+    SOURCE_REPORTED = "source_reported"           # Extracted directly from primary source response
+    INDEPENDENTLY_VERIFIED = "independently_verified" # Cross-checked against external registry
+    DERIVED = "derived"                           # Computed / normalized by an algorithm
+    UNAVAILABLE = "unavailable"                   # Not reported in source
+
 class FieldObservation(BaseModel):
     """Fine-grained provenance record tracking the origin and authority of a specific field observation."""
-    entity_id: str                    # Canonical entity ID: e.g. "ES-2849102-B2"
-    field_name: str                   # e.g. "publication_date", "citation_count"
+    entity_id: str
+    field_name: str
     observed_value_json: str          # Deterministically serialized JSON string of the observed value
     value_type: str                   # e.g. "str", "int", "list[str]"
-    source_authority: str             # e.g., "OEPM BOPI", "EPO OPS"
+    source_authority: str             # e.g. "OEPM BOPI", "EPO OPS"
     source_uri: str                   # Direct archive / query URL
     retrieval_timestamp: datetime
-    raw_payload_sha256: str           # SHA-256 of raw response in Raw Store
-    extraction_version: str           # Version/commit of parser rule
-    verification_status: str          # "authority_verified", "in_situ_harvested", "unverified_mock"
+    raw_payload_sha256: str           # Must match exact 64-char lowercase hex
+    extraction_version: str
+    verification_status: VerificationStatus
+
+    @field_validator("raw_payload_sha256")
+    @classmethod
+    def validate_sha256_format(cls, v: str) -> str:
+        if not re.match(r"^[0-9a-f]{64}$", v):
+            raise ValueError(f"Invalid SHA-256 digest format: {v}")
+        return v
 ```
 
 ### 5.2 `PatentDocument`, `PatentFamily` & `FamilyMembership`
@@ -216,15 +242,14 @@ class PatentDocument(BaseModel):
     abstract: str
     assignees: list[str] = Field(default_factory=list)
     inventors: list[str] = Field(default_factory=list)
-    filing_date: str | None = None
-    publication_date: str | None = None
+    filing_date: str | None = None    # YYYY-MM-DD or None
+    publication_date: str | None = None # YYYY-MM-DD or None
     priority_date: str | None = None
     classifications_cpc: list[str] = Field(default_factory=list)
     classifications_ipc: list[str] = Field(default_factory=list)
     forward_citation_count: int | None = None    # None = unobserved; int >= 0 = verified count
     backward_citation_count: int | None = None   # None = unobserved; int >= 0 = verified count
     family_id: str | None = None
-    observations: list[FieldObservation] = Field(default_factory=list)
 
 class PatentFamily(BaseModel):
     """Metadata for a family of related patent documents sharing priority claims."""
@@ -241,43 +266,35 @@ class FamilyMembership(BaseModel):
     evidence: FieldObservation
 ```
 
-### 5.3 `DemandSignal`
+### 5.3 `DatasetSnapshot` & `RawBatch`
 ```python
-class DemandSignal(BaseModel):
-    """Market-pull requirement extracted from industrial open innovation calls."""
-    demand_id: str                    # e.g. "INNOGET-2292"
-    source_network: str               # e.g. "Innoget", "INDUSAC"
-    title: str
-    description: str
-    technical_requirements: list[str]
-    origin_country: str | None = None
-    posted_date: str | None = None
-    deadline_date: str | None = None
-    classified_cpc_prefixes: list[str] = Field(default_factory=list)
-    observations: list[FieldObservation] = Field(default_factory=list)
-```
+class RawBatch(BaseModel):
+    """Stable, machine-independent identity of an ingested raw batch."""
+    batch_id: str
+    source_id: str
+    retrieval_timestamp: datetime
+    payload_sha256: str
 
-### 5.4 `DatasetSnapshot` (First-Class Research Entity)
-```python
+class DatasetPart(BaseModel):
+    """Metadata for an individual Parquet partition chunk."""
+    part_name: str
+    row_count: int
+    file_sha256: str
+
 class DatasetSnapshot(BaseModel):
-    """Content-addressed snapshot representing a frozen, immutable analytical corpus.
-    
-    Hash Integrity Specification:
-    - content_sha256: SHA-256 digest of the canonical primary Parquet artifact, computed over raw chunk bytes.
-    - manifest_sha256: SHA-256 digest of the frozen JSON manifest documenting the snapshot.
-    """
+    """Content-addressed snapshot representing a frozen, immutable analytical corpus."""
     dataset_id: str
     schema_version: str
-    source_batches: list[str]
+    source_batches: list[RawBatch]
     record_count: int
-    content_sha256: str
+    parts: list[DatasetPart]
+    dataset_content_sha256: str
     manifest_sha256: str
     created_at: datetime
     transformation_version: str
-    provenance_manifest_uri: str
 ```
 
-### 5.5 `OpportunityScore` (Measurement) vs. `OpportunityHypothesis` (Interpretation)
+### 5.4 `OpportunityScore` vs. `OpportunityHypothesis`
 ```python
 class OpportunityScore(BaseModel):
     """Deterministic quantitative measurement of innovation gaps and saturation."""
@@ -286,7 +303,7 @@ class OpportunityScore(BaseModel):
     score_coverage: float             # Ratio of observed signal weight [0.0, 1.0]
     components: dict[str, float | None] # {"density": d_i, "recency": r_i, "traction": T_i, "demand": q_i}
     missing_components: list[str]     # e.g. ["traction"] when forward citations are unobserved
-    model_id: str                     # e.g. "composite_whitespace_v1"
+    model_id: str
     model_version: str
     quadrant: str
 
@@ -345,44 +362,14 @@ For each cluster $i$:
    $$q_i = \begin{cases} \frac{m_i}{\max_j m_j} & \text{if } \max_j m_j > 0 \\ 0 & \text{otherwise} \end{cases}$$
 5. **Composite White-Space Metric ($W_i$):**
    * **Strict Mode:** If any required component (e.g. $T_i$) is `None`, $W_i = \text{None}$ and `missing_components = ["traction"]`.
-   * **Renormalized Mode:** $W_i = \frac{\sum_{k \in \text{observed}} w_k s_k}{\sum_{k \in \text{observed}} w_k}$, and `score_coverage = \sum_{k \in \text{observed}} w_k$.
+   * **Renormalized Mode:** $W_i = \frac{\sum_{k \in \text{observed}} w_k s_k}{\sum_{k \in \text{observed}} w_k}$, and `score_coverage = \sum_{k \in \text{observed}} w_k`.
    * **Zero Silent Imputation:** Missing observations are explicitly tracked and never silently converted to zeros.
 
-### 6.3 Automated Statistical Sensitivity Analysis
-The `SensitivityAnalyzer` evaluates 5 distinct mathematical regimes configured by the experiment client:
-* **Baseline Regime:** $(0.40, 0.20, 0.15, 0.25)$
-* **Demand-Dominant Regime:** $(0.30, 0.15, 0.15, 0.40)$
-* **IP-Dominant Regime:** $(0.50, 0.20, 0.20, 0.10)$
-* **Traction-Dominant Regime:** $(0.30, 0.20, 0.30, 0.20)$
-* **Equi-Weighted Regime:** $(0.25, 0.25, 0.25, 0.25)$
-
-Computes pairwise Spearman rank correlations ($\rho_s$) and ranking invariance metrics across regimes.
-
 ---
 
-## 7. Two-Stage Decoupled Multi-Agent Synthesis
+## 7. Declarative Research & Experiment Framework
 
-### 7.1 Strict Evidence Demarcation
-
-```text
-STAGE 1: DETERMINISTIC EMPIRICAL ANALYSIS
-   - Pure mathematical landscape execution (Zero LLM involvement)
-   - Outputs: `empirical_metrics_matrix.csv`, `sensitivity_analysis.csv`, `empirical_summary.md`
-   - Complete cryptographic provenance and audit trail
-                           │
-                           ▼ (passes top opportunity scores)
-STAGE 2: QUALITATIVE EXPLORATORY SYNTHESIS (OPTIONAL)
-   - Powered by Groq API (`llama-3.3-70b-versatile`)
-   - Propose-Critique loop with European patent-law adversarial persona
-   - Mandatory prior-art evidence citation from retrieved cluster documents
-   - Output: `qualitative_case_studies.json` explicitly tagged as exploratory hypothesis generation
-```
-
----
-
-## 8. Declarative Research & Experiment Framework
-
-### 8.1 Experiment Configuration (`experiments/innoget_es_2026/config.yaml`)
+### 7.1 Experiment Configuration (`experiments/innoget_es_2026/config.yaml`)
 ```yaml
 experiment:
   id: innoget_es_2026_evaluation
@@ -394,7 +381,7 @@ experiment:
 datasets:
   patent_snapshot:
     manifest: "data/snapshots/patents_es_manifest.json"
-    expected_sha256: "c158bdaa2426e71c4aa42db5c1885885dc36607bf6cf5431135bdfa70eee3a2e"
+    expected_dataset_content_sha256: "c158bdaa2426e71c4aa42db5c1885885dc36607bf6cf5431135bdfa70eee3a2e"
     jurisdiction: "ES"
   demand_dataset:
     file: "data/raw/innoget_demands.json"
@@ -422,12 +409,17 @@ synthesis:
 
 ---
 
-## 9. Migration Roadmap & Execution Phases
+## 8. Scientific Invariant Gates
 
-| Phase | Objective | Deliverables |
+The system enforces 8 mandatory scientific invariant gates across Unit, Integration, and E2E tiers:
+
+| Invariant Gate | Description | Verified In |
 |---|---|---|
-| **Phase 1: Domain & Ingestion Foundations** | Clean Domain Models, Field Observations & Immutable Raw Data Store | `nexus/domain/models/*`, `nexus/infrastructure/storage/raw_store.py`, `nexus/infrastructure/storage/parquet_store.py` |
-| **Phase 2: Product Opportunity Engine** | Agnostic Opportunity Models & Decoupled Sensitivity Analyzer | `nexus/application/opportunity/*`, `OpportunityModelProtocol`, `SensitivityAnalyzerProtocol` |
-| **Phase 3: Agentic Synthesis Layer** | Decoupled Propose-Critique Coordinator | `nexus/application/synthesis/*`, `nexus/infrastructure/llm/*` |
-| **Phase 4: Declarative Experiment Client** | Config-driven experiment runner & paper exporter | `experiments/innoget_es_2026/run.py`, CLI integration (`nexus experiment run`) |
-| **Phase 5: Invariant-Driven Verification** | Invariant verification, reproducibility validation & clean-clone tests | Full pytest suite testing RAW integrity, schema validation, missing data semantics, and sensitivity determinism |
+| **Gate 1: `None != 0`** | Unobserved citation counts remain strictly `None` and are excluded from averages without becoming false zeros. | Unit, Integration, E2E |
+| **Gate 2: SHA-256 Strict Hex** | Every raw payload and parquet part verifies against a strictly validated 64-character lowercase hex digest. | Unit, Integration, E2E |
+| **Gate 3: RAW Byte Immutability** | `store_payload()` is idempotent; stored payload bytes match input bytes exactly; corrupted files raise an explicit integrity error. | Integration |
+| **Gate 4: Full Provenance Chain** | Every `FieldObservation` references an existing `raw_payload_sha256` and non-empty authority URI. | Unit, Integration |
+| **Gate 5: Zero Synthetic Defaults** | Parser and validator reject silent date or CPC fallbacks (no defaulting to `2020-01-01` or `G06Q`). | Unit, Integration |
+| **Gate 6: Stable PyArrow Schema** | Canonical Parquet datasets conform to a fixed, typed PyArrow schema regardless of batch size. | Integration |
+| **Gate 7: Clean-Clone A/B Determinism** | Two independent ingestion runs from identical raw bytes produce identical `dataset_content_sha256` and `manifest_sha256`. | E2E |
+| **Gate 8: Zero Corpus Duplication** | DuckDB queries execute over Parquet views without duplicating dataset rows in Python memory. | Integration, E2E |
