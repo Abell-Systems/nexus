@@ -6,6 +6,11 @@ import * as client from "../../src/main/infrastructure/client";
 describe("Frontend Application useAnalyzeJob Hook", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    vi.spyOn(client, "getAnalyzeStatus").mockResolvedValue({
+      job_id: "default",
+      status: "running",
+      stage: "research",
+    });
   });
 
   afterEach(() => {
