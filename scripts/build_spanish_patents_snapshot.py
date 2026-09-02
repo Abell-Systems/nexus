@@ -3,11 +3,13 @@ from pathlib import Path
 
 # Add project root to sys.path if needed
 repo_root = Path(__file__).resolve().parent.parent
-if str(repo_root) not in sys.path:
-    sys.path.insert(0, str(repo_root))
+backend_src = repo_root / "backend" / "src" / "main"
+for p in (repo_root, backend_src):
+    if str(p) not in sys.path:
+        sys.path.insert(0, str(p))
 
-from nexus.infrastructure.sources.duckdb_patents import DuckDbPatentsDataSource
-from nexus.domain.models.runtime_schemas import PatentRecord
+from infrastructure.sources.duckdb_patents import DuckDbPatentsDataSource
+from domain.models.runtime_schemas import PatentRecord
 
 SAMPLE_ES_PATENTS = [
     # C11D - Detergents / Chemistry

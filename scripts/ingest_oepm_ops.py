@@ -22,10 +22,12 @@ import urllib.error
 
 # Add repository root to path
 REPO_ROOT = Path(__file__).resolve().parent.parent
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
+BACKEND_SRC = REPO_ROOT / "backend" / "src" / "main"
+for p in (REPO_ROOT, BACKEND_SRC):
+    if str(p) not in sys.path:
+        sys.path.insert(0, str(p))
 
-from nexus.domain.models.runtime_schemas import PatentRecord
+from domain.models.runtime_schemas import PatentRecord
 
 
 def calculate_sha256(file_path: Path | str) -> str:
