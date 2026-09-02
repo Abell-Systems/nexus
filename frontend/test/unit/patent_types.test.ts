@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import type { PatentRecord, JobStatusResponse } from "../../src/main/domain/patent";
+import type { PatentRecord } from "../../src/main/domain/patent";
 
 describe("Frontend Domain Types", () => {
   it("creates valid patent record object shape", () => {
