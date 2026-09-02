@@ -23,10 +23,36 @@ class DuckDbPatentsDataSource:
         else:
             self.parquet_fallback = parquet_fallback
 
-        Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+        if db_path != ":memory:":
+            Path(db_path).parent.mkdir(parents=True, exist_ok=True)
         self.conn = duckdb.connect(db_path)
         self._init_tables()
         self._bootstrap_if_empty()
+
+    @classmethod
+    def from_parquet(cls, parquet_path: str = "data/snapshots/patents_es_corpus.parquet") -> "DuckDbPatentsDataSource":
+        """Instantiate an ephemeral in-memory data source directly from a verified parquet snapshot."""
+        p = Path(parquet_path)
+        if not p.exists():
+            raise FileNotFoundError(f"Parquet corpus file missing at {parquet_path}")
+
+        instance = cls(db_path=":memory:", parquet_fallback=None)
+        instance.conn.execute("DROP TABLE IF EXISTS patents")
+        instance.conn.execute("""
+            CREATE TABLE patents AS SELECT 
+                publication_number,
+                title,
+                abstract,
+                assignee,
+                filing_date,
+                publication_date,
+                cpc_codes,
+                citation_count,
+                backward_citation_count,
+                COALESCE(country_code, 'ES') as country_code
+            FROM read_parquet(?)
+        """, [str(p)])
+        return instance
 
     def _init_tables(self):
         self.conn.execute("""
@@ -100,18 +126,21 @@ class DuckDbPatentsDataSource:
             cit_count = int(c_val) if pd.notna(c_val) and c_val is not None else None
             b_count = int(b_val) if pd.notna(b_val) and b_val is not None else None
 
+            filing_str = str(row["filing_date"]).split(" ")[0] if pd.notna(row["filing_date"]) else ""
+            pub_str = str(row["publication_date"]).split(" ")[0] if pd.notna(row["publication_date"]) else filing_str
+
             rec = PatentRecord(
-                publication_number=row["publication_number"],
-                title=row["title"],
-                abstract=row["abstract"],
-                assignee=row["assignee"],
-                filing_date=row["filing_date"],
+                publication_number=str(row["publication_number"]),
+                title=str(row["title"]),
+                abstract=str(row["abstract"]),
+                assignee=str(row["assignee"]),
+                filing_date=filing_str,
                 cpc_codes=list(row["cpc_codes"]),
                 citation_count=cit_count,
                 backward_citation_count=b_count,
             )
             # Attach extra properties
-            setattr(rec, "publication_date", row["publication_date"])
+            setattr(rec, "publication_date", pub_str)
             setattr(rec, "country_code", row.get("country_code", "ES"))
             records.append(rec)
         return records

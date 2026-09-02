@@ -1,6 +1,6 @@
 """Canonical CPC Taxonomy and Deterministic Concept-to-CPC Mapping Rules.
 
-Unified mapping engine combining regex patterns and WIPO/EPO concordance dictionary.
+Unified mapping engine combining regex patterns and curated deterministic concept-to-CPC taxonomy dictionary.
 Used across all demand signal sources, landscape clusterers, and empirical experiments.
 """
 
@@ -18,7 +18,7 @@ class CpcTaxonomyEntry:
     regex_pattern: Optional[re.Pattern[str]] = None
 
 
-# Curated WIPO/EPO concordance dictionary for cross-referencing industry demands
+# Curated deterministic concept-to-CPC taxonomy dictionary for cross-referencing industry demands
 CPC_TAXONOMY_DICTIONARY: dict[str, CpcTaxonomyEntry] = {
     # Section A: Human Necessities
     "A47J": CpcTaxonomyEntry(

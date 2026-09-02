@@ -68,17 +68,20 @@ def run_experiment(
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
 
-    # 1. Dataset Verification & Ingestion
+    # 1. Dataset Verification & Ingestion Source-of-Truth
     if mode == ExecutionMode.EMPIRICAL:
         manifest = verify_dataset_manifest(manifest_path)
+        parquet_file = manifest["provenance"]["parquet_file"]
+        # In EMPIRICAL mode, query directly from the SHA-verified Parquet snapshot (in-memory) to prevent stale DuckDB divergence
+        patent_ds = DuckDbPatentsDataSource.from_parquet(parquet_file)
         dataset_status = f"EMPIRICAL (VERIFIED - SHA256: {manifest['sha256_hash'][:12]}...)"
     else:
         manifest = {"sha256_hash": "unverified-fixture-run", "total_records": "N/A"}
+        patent_ds = DuckDbPatentsDataSource(db_path=db_path)
         dataset_status = f"{mode.upper()} (SYNTHETIC / TEST FIXTURE - NOT FOR PUBLICATION)"
 
     demand_ds = InnogetDemandDataSource()
     spanish_demands = demand_ds.get_spanish_demands()
-    patent_ds = DuckDbPatentsDataSource(db_path=db_path)
 
     # Group demands by mapped CPC subclass prefix
     cpc_demands: dict[str, list] = {}
@@ -192,7 +195,7 @@ def run_experiment(
         "total_spanish_demands": len(spanish_demands),
         "total_clusters_analyzed": len(all_clusters),
         "white_space_clusters_found": len(white_space_clusters),
-        "database_path": db_path,
+        "dataset_source": "Verified Parquet Snapshot (In-Memory)" if mode == ExecutionMode.EMPIRICAL else db_path,
     }
     with open(out / "metadata.json", "w", encoding="utf-8") as f:
         json.dump(meta, f, indent=2)

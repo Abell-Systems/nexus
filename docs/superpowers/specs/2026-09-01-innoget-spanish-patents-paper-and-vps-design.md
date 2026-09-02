@@ -1,79 +1,47 @@
-# Design Spec: Empirical Study (Innoget vs. Spanish Patents) & Sovereign VPS Architecture
+# Spanish Innoget Demand vs. Spanish Patents Empirical Research Pipeline & Sovereign VPS Architecture
 
-**Date:** 2026-09-01  
-**Status:** Approved with modifications  
-**Scope:** 
-1. Scientific Methodology & Experiment Pipeline (Innoget Spain vs. Spanish ES Patents).
-2. Decoupled VPS Implementation & Groq Inference Layer.
-
----
-
-## 1. Overview & System Decomposition
-
-This specification establishes:
-1. **The Scientific Methodology Pipeline**: An audit-traceable, reproducible experimental pipeline measuring how domestic patent supply (OEPM / `ES` publications) aligns with industrial open-innovation demand in Spain (Innoget technology calls).
-2. **The Sovereign Execution Layer (VPS)**: A decoupled, lightweight, CPU-only runtime leveraging Groq API via an OpenAI-compatible interface, replacing Google Cloud and Google ADK dependencies.
-
-```text
-=============================================================================
-                      SCIENTIFIC METHODOLOGY PIPELINE (Decoupled)
-=============================================================================
-[Innoget Spain Calls]          [EPO OPS / OEPM ES Patents]
-        │                                   │
-        ▼                                   ▼
- [Snapshot & Normalization]       [Snapshot & Normalization]
-        │                                   │
-        └─────────────────┬─────────────────┘
-                          ▼
-            [Demand ➔ Concept ➔ CPC Mapping] (Deterministic & Rule-Validated)
-                          ▼
-            [Taxonomic & Semantic Clustering]
-                          ▼
-            [Feature Extraction & Citation Traction]
-                          ▼
-            [Demand-Supply Gap & White-Space Metrics]
-                          ▼
-            [Multi-Agent Candidate Synthesis & Adversarial Validation (Groq)]
-                          ▼
-            [Auditable Experiment Results: Tables, Matrices & Artifacts]
-=============================================================================
-                      RUNTIME IMPLEMENTATION LAYER (VPS)
-=============================================================================
-[DuckDB / Parquet Store] ── [FastAPI Engine] ── [Groq OpenAI-Compatible Client]
-```
+**Document Type:** System Architecture & Scientific Experiment Specification  
+**Authors:** Abell Nexus Research & Engineering Team  
+**Date:** 2026-09-01 (Updated 2026-09-02)  
+**Status:** Approved for Implementation  
 
 ---
 
-## 2. Scientific Methodology: Demand-to-Patent Mapping & Metrics
+## 1. Executive Summary & Problem Statement
 
-### 2.1 Formal Mapping Procedure (Innoget Demand ➔ Concepts ➔ CPC ➔ Cluster)
+The goal of this initiative is twofold:
+1. **Scientific & Empirical Pipeline**: Produce reproducible, publication-grade empirical results comparing real Spanish industrial innovation demand signals (extracted from the **Innoget / INDUSAC** network) against the domestic Spanish patent publication corpus (**OEPM** / **EPO OPS** `ES` records).
+2. **Sovereign VPS Architecture**: Transition the Abell Nexus engine away from proprietary Google Cloud services (`google-adk`, Vertex AI, BigQuery) to a sovereign, CPU-only Linux VPS architecture powered by **DuckDB** and the **Groq API** (via OpenAI-compatible abstraction).
 
-To ensure scientific rigor and strict reproducibility:
+---
 
-1. **Step 1: Demand Ingestion & Normalization (`D_k`)**
-   * Input: Raw Innoget call records where `country == "Spain"`.
-   * Extracted fields: `id`, `title`, `description`, `category`, `requirements`, `related_keywords`, `desired_outcome`.
-   * Pre-processing: Lowercase normalization, tokenization, lemmatization, removal of administrative boilerplate.
+## 2. Scientific Methodology: Innoget Demand vs. Spanish Patent State-of-the-Art
 
-2. **Step 2: Technical Concept Extraction (`C_k`)**
-   * Extract key technical noun phrases and functional capabilities from requirements and desired outcomes (e.g., `"energy consumption monitoring"`, `"low-temperature detergent formulation"`, `"lead-free brass machining"`).
+### 2.1 Demand Extraction & Formal CPC Mapping
 
-3. **Step 3: CPC Subclass Mapping & Validation Rules**
-   * Direct lexical and keyword-to-CPC taxonomy mapping based on the WIPO/EPO Concordance Table and official CPC Definitions.
+1. **Dataset Scope**: Real industrial technology demands extracted from Innoget/INDUSAC calls originating in Spain (`country == 'Spain'`) and EU cross-border industrial calls with Spanish enterprise participation.
+2. **Key Demand Solicitations**:
+   * **Call #2292 (INDUSAC / Spain - Consumer Chemistry)**: Project 3in1: Liquid detergent formulations, cold-water enzyme stability, biodegradable surfactants.
+   * **Call #2293 (INDUSAC / Spain - Sanitary & Materials)**: Kitchen sink innovation, greywater recycling, IoT sensor integration, antimicrobial composites.
+   * **Call #2297 (INDUSAC / Spain - Industrial IoT & Energy)**: Real-time machine monitoring, NILM non-intrusive electrical disaggregation, edge energy optimization.
+   * **Call #2245 (INDUSAC / EU-Spain - Green Metallurgy)**: Lead-free brass alloys, high-speed micro-machining, chip evacuation.
+
+3. **Step 3: Curated Deterministic Concept-to-CPC Mapping Rules**
+   * Direct lexical and regex-to-CPC taxonomy mapping based on a curated concordance dictionary and official CPC Definitions.
    * Deterministic scoring:
      $$S(k, c) = w_{title} \cdot \mathbb{I}(c \in C_{title}) + w_{req} \cdot \mathbb{I}(c \in C_{req}) + w_{kw} \cdot \mathbb{I}(c \in C_{kw})$$
-   * Validation rule: At least one primary CPC subclass (e.g., `C11D`, `E03C`, `G05B`, `H02J`, `C22C`) is assigned per demand record. LLM assist (if used for concept expansion) is temperature-zero and validated against a fixed CPC whitelist dictionary.
+   * Validation rule: At least one primary CPC subclass (e.g., `C11D`, `E03C`, `G05B`, `H02J`, `C22C`, `H01M`, `C08L`) is assigned per demand record.
 
 4. **Step 4: Cluster Assignment**
-   * Each cluster $i$ is defined by its primary 4-character CPC subclass (`CPC4`, e.g., `C11D` for Detergent compositions, `G05B` for Monitoring/Control systems).
+   * Each cluster $i$ is defined by its primary 4-character CPC subclass (`CPC4`, e.g., `C11D` for Detergent compositions, `G05B` for Monitoring/Control systems). Cross-sector comparison evaluated across a predefined analytical set: `["C11D", "E03C", "G05B", "C22C", "H01M", "C08L"]`.
 
 ---
 
 ## 2.2 Patent Supply Ingestion (`S_i`)
 
-* **Source**: EPO Open Patent Services (OPS) API / OEPM bulk data for publications with `country_code == 'ES'`.
-* **Fields per record**: `publication_number`, `title`, `abstract`, `cpc_codes`, `filing_date`, `publication_date`, `backward_citations_count`, `forward_citations_count`, `applicant_name`.
-* **Snapshot**: Frozen DuckDB database (`data/snapshots/patents_es_snapshot.duckdb`) ensuring deterministic repeatability.
+* **Source**: EPO Open Patent Services (OPS) API and OEPM open data catalog publications with `country_code == 'ES'`.
+* **Fields per record**: `publication_number`, `title`, `abstract`, `cpc_codes`, `filing_date`, `publication_date`, `citation_count`, `backward_citation_count`, `country_code`.
+* **Snapshot**: Content-addressed Parquet snapshot (`data/snapshots/patents_es_corpus.parquet`) and DuckDB database verified via SHA-256 manifest.
 
 ---
 
@@ -89,15 +57,18 @@ $$d_i = \frac{n_i}{\max_j n_j}$$
 Measures the mean vintage of the domestic patent base against a $Y = 20$-year horizon ($y_{ref} = 2026$):
 $$r_i = \max\left(0, 1 - \frac{\bar{a}_i}{Y}\right), \quad \bar{a}_i = \frac{1}{n_i} \sum_{p \in S_i} \max(1, y_{ref} - y_{filing, p})$$
 
-### C. Citation Traction ($T_i$)
+### C. Citation Traction ($T_i$) & Citation Observation Coverage ($C_i$)
+*Note: Citation Traction ($T_i$) is an experimental composite heuristic metric defined specifically for this study.*
 Distinguishes forward citations (external technology traction) from backward citations (prior-art foundation), avoiding the bias against newly published patents:
-* For each patent $p$, let $f_p$ be forward citations received and $a_p = \max(1, y_{ref} - y_{pub, p})$ be publication age.
+* For each patent $p$ with observed citation data, let $f_p$ be forward citations received and $a_p = \max(1, y_{ref} - y_{pub, p})$ be publication age.
 * **Annualized Forward Citation Rate:** $\tau_p = \frac{f_p}{a_p}$.
 * For young patents ($a_p \le 3$ years), apply a dampening / prior-art foundation boost based on normalized backward citations $b_p$ to prevent denominator distortion:
   $$\tilde{\tau}_p = \begin{cases} \frac{f_p}{a_p} & \text{if } a_p > 3 \\ \frac{f_p + 0.2 \cdot \min(b_p, 5)}{3} & \text{if } a_p \le 3 \end{cases}$$
 * **Cluster Citation Traction ($T_i$):**
-  $$T_i = \text{clip}\left(\frac{1}{n_i} \sum_{p \in S_i} \frac{\tilde{\tau}_p}{\tau_{max}}, 0, 1\right)$$
-  *(Where $\tau_{max} = 5.0$ citations/year serves as scaling ceiling).*
+  $$T_i = \text{clip}\left(\frac{1}{|S_{i, obs}|} \sum_{p \in S_{i, obs}} \frac{\tilde{\tau}_p}{\tau_{max}}, 0, 1\right)$$
+  *(Where $\tau_{max} = 5.0$ citations/year serves as scaling ceiling, and $S_{i, obs}$ denotes the subset of patents with non-null citation observations).*
+* **Citation Observation Coverage ($C_i$):**
+  $$C_i = \frac{|S_{i, obs}|}{n_i}$$
 
 ### D. Industrial Demand Intensity ($q_i$)
 Normalized industrial demand volume for cluster $i$:
@@ -114,22 +85,22 @@ $$W_i = 0.40(1 - d_i) + 0.20 r_i + 0.15 T_i + 0.25 q_i$$
 
 For prioritized white-space clusters:
 1. **Inventor Agent**: Synthesizes structured `InventionCandidate` addressing the unmet requirements of the Innoget demand while differentiating from the retrieved `ES` representative patents.
-2. **Adversarial Agent**: Challenges the candidate using the retrieved domestic and international prior art, requiring mandatory `cited_patents` in the structured verdict (`survives` vs. `rejected`).
+2. **Adversarial Reviewer**: Evaluates novelty and prior-art differentiation against the retrieved domestic prior art evidence subset, requiring mandatory `cited_patents` in the structured verdict (`survives` vs. `rejected`).
 3. **Governor Agent**: Calculates verifiable multi-dimensional scorecards (`novelty`, `prior_art_risk`, `differentiation`, `evidence`).
 
 ---
 
 ## 3. Paper Outputs & Deliverables
 
-The experimental pipeline will generate the following artifacts:
-1. **Dataset Snapshot Metadata**: `data/snapshots/metadata.json` (exact counts, timestamps, query signatures).
-2. **Demand-to-Patent Alignment Matrix**: Table summarizing each Spanish Innoget call, mapped CPC subclass, $n_i$ (patent count), $d_i$, $r_i$, $T_i$, $q_i$, and $W_i$.
+The experimental pipeline generates the following artifacts:
+1. **Dataset Snapshot Metadata**: `data/snapshots/patents_es_manifest.json` (exact counts, timestamps, SHA-256 fingerprints).
+2. **Demand-to-Patent Alignment Matrix**: Table summarizing each Spanish Innoget call, mapped CPC subclass, $n_i$ (patent count), $d_i$, $r_i$, $T_i$, $C_i$, $q_i$, and $W_i$.
 3. **Quadrant Classification**:
-   * *Quadrant I (Unmet Opportunity)*: High Demand ($q_i > 0.5$), Low Domestic IP ($d_i < 0.3$).
-   * *Quadrant II (Co-developed / Saturated)*: High Demand, High Domestic IP.
-   * *Quadrant III (Dormant / Established IP)*: Low Demand, High Domestic IP.
-   * *Quadrant IV (Niche / Emerging)*: Low Demand, Low Domestic IP.
-4. **Synthesized Case Study Briefs**: 2 complete candidate invention logs with verbatim prompt traces, adversarial citation trees, and governor scorecards.
+   * *Quadrant I (Unmet Opportunity)*: High Demand ($q_i \ge 0.5$), Low Domestic IP ($d_i < 0.40$).
+   * *Quadrant II (Co-developed / Saturated)*: High Demand ($q_i \ge 0.5$), High Domestic IP ($d_i \ge 0.40$).
+   * *Quadrant III (Dormant / Established IP)*: Low Demand ($q_i < 0.5$), High Domestic IP ($d_i \ge 0.40$).
+   * *Quadrant IV (Niche / Emerging)*: Low Demand ($q_i < 0.5$), Low Domestic IP ($d_i < 0.40$).
+4. **Synthesized Case Study Briefs**: Candidate invention logs with verbatim prompt traces, adversarial citation trees, and governor scorecards.
 
 ---
 
@@ -139,30 +110,18 @@ The experimental pipeline will generate the following artifacts:
 
 | Role | Component | Justification |
 |---|---|---|
-| **Inference Engine** | **Groq API** (`llama-3.3-70b-versatile` / `mixtral-8x7b-32768`) | Ultra-fast inference, OpenAI-compatible endpoint, low cost, no GPU required. |
-| **Provider Abstraction** | `backend/patent_agent/provider.py` | Universal OpenAI-compatible client (`httpx` / `openai` SDK), swappable via env vars. |
-| **Agent Orchestrator** | Native Async State Machine (`backend/patent_agent/orchestrator.py`) | Replaces `google-adk`, pure Python async/await with Pydantic typing and loop control. |
-| **Storage & Retrieval** | **DuckDB** (`patents_es.duckdb`) | High-speed columnar analytics, zero daemon overhead, embedded in Python process. |
+| **Inference Engine** | **Groq API** (`llama-3.3-70b-versatile`) | Ultra-fast inference, OpenAI-compatible endpoint, low cost, zero local GPU required. |
+| **Provider Abstraction** | `backend/patent_agent/groq_client.py` | Lightweight stdlib client, swappable via env vars. |
+| **Agent Loop Engine** | `backend/patent_agent/synthesis_engine.py` | Decoupled propose-critique loop with Pydantic structured output validation. |
+| **Storage & Retrieval** | **DuckDB** / **Parquet** | Columnar storage, in-memory query capability directly on verified Parquet snapshots. |
 | **API Server** | FastAPI (`backend/main.py`) | Async REST API for pipeline execution and status queries. |
 | **Hosting Target** | Standard CPU VPS (2 vCPU, 4GB RAM) | Runs in standard Linux environment with minimal memory footprint. |
-
-### 4.2 Decoupled Phasing Strategy
-
-* **Phase 1 (Immediate - Paper Focus)**:
-  1. Build EPO OPS / OEPM ingestion script and snapshot DuckDB database.
-  2. Implement Demand $\rightarrow$ CPC mapping engine with validation.
-  3. Implement Citation Traction ($T_i$) and White-Space calculation scripts.
-  4. Implement Groq OpenAI-compatible multi-agent synthesis loop.
-  5. Run experiments, export tables, matrices, and candidate case studies.
-* **Phase 2 (Subsequent - Packaging & Deployment)**:
-  1. Package backend and frontend into self-contained Docker Compose stack.
-  2. Configure reverse proxy (Caddy) and deploy to VPS.
 
 ---
 
 ## 5. Verification & Acceptance Criteria
 
-1. **Deterministic Reproducibility**: Running the experiment script against the frozen DuckDB snapshot with fixed seeds yields identical metric tables.
-2. **Traceability**: Every synthesized candidate in the paper case studies includes non-empty, valid `cited_patents` publication numbers from the Spanish patent corpus.
+1. **Deterministic Reproducibility**: Running the experiment runner against the verified Parquet snapshot yields identical metric tables across fresh checkouts.
+2. **Traceability**: Every synthesized candidate in the paper case studies cites verified publication numbers from the Spanish patent corpus.
 3. **No Google Cloud Lock-in**: Pipeline runs successfully without `google-adk`, Google BigQuery, or Google Vertex AI credentials.
-4. **Audit Log Integrity**: All prompt templates, LLM responses, and metric calculations are logged in `data/experiments/YYYY-MM-DD_run/`.
+4. **Evidence Tier Separation**: Clear, unforgeable tagging distinguishing empirical verified data from synthetic dry-run smoke tests.

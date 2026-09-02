@@ -1,29 +1,29 @@
 # Data Provenance & Experimental Dataset Lineage
 
-**Document Version:** 1.1.0  
+**Document Version:** 1.2.0  
 **Updated:** 2026-09-02  
 **Corpus Authority:** Oficina Española de Patentes y Marcas (OEPM) & European Patent Office (EPO Open Patent Services)
 
 ---
 
-## 1. Overview & Immutable Lineage Architecture
+## 1. Overview & Content-Addressed Lineage Architecture
 
-To guarantee scientific rigor, empirical reproducibility, and verifiable source provenance, all datasets in **Abell Nexus** follow a strict two-tier cryptographic lineage:
+To guarantee scientific rigor, empirical reproducibility, and source fingerprinting, all datasets in **Abell Nexus** follow a strict content-addressed lineage:
 
 ```text
 [Official Authority Catalog / Live API]
                  │
                  ▼
-[Certified Raw Source: data/raw/oepm_open_data_es.json (SHA-256: 68500f25...)]
+[Fingerprinted Raw Baseline: data/raw/oepm_open_data_es.json (SHA-256: 68500f25...)]
                  │
                  ▼
 [Normalized Storage: Parquet / JSONL (SHA-256: c158bdaa...)]
                  │
                  ▼
-[Cryptographic Manifest: data/snapshots/patents_es_manifest.json]
+[Content-Addressed Manifest: data/snapshots/patents_es_manifest.json]
                  │
                  ▼
-[Local Analytical Database: DuckDB]
+[Deterministic Query Engine: In-Memory DuckDB from Verified Parquet]
 ```
 
 ---
@@ -56,22 +56,23 @@ To guarantee scientific rigor, empirical reproducibility, and verifiable source 
 
 ## 3. Spanish Patent Corpus (`patents_es_corpus.parquet`)
 
-* **Primary Catalog Authority:** Oficina Española de Patentes y Marcas (OEPM) - Boletín Oficial de la Propiedad Industrial (BOPI).
+* **Catalog Source:** Oficina Española de Patentes y Marcas (OEPM) - Boletín Oficial de la Propiedad Industrial (BOPI).
 * **Official Data Portal:** [datos.gob.es - Patentes Solicitadas y Concedidas BOPI](https://datos.gob.es/es/catalogo/e05024401-patentes-solicitadas-y-concedidas-bopi) | [OEPM Datos Abiertos](https://www.oepm.es/es/sobre-oepm/datos-abiertos/)
 * **Invenes Official Search Archive:** [OEPM Invenes Portal](https://consultas2.oepm.es/InvenesWeb/)
 * **Live API Engine:** European Patent Office Open Patent Services (EPO OPS 3.2).
+* **Corpus Scope:** *Frozen baseline corpus derived from OEPM-indexed sources; publication-level source verification pending.*
 * **Date Semantics & Inclusion Criteria:**
   * **Publication Jurisdiction:** `country_code == 'ES'` (Spanish National Patents `ES...A1/B1/B2` and European Patents validated in Spain).
-  * **Publication Date (`pd`):** 2016–2024.
+  * **Publication Date (`pd` / `publication_date`):** 2016–2024.
   * **Filing / Application Date (`filing_date`):** 2015–2023.
   * **Classification Scope:** Multi-sector IPC/CPC coverage across Sections A, B, C, E, G, H.
+  * **Analytical Evaluation Set:** Cross-sector comparison evaluated across a predefined analytical set: `["C11D", "E03C", "G05B", "C22C", "H01M", "C08L"]`.
 * **Dataset Artifacts & Cryptographic Checksums:**
-  * **Raw Source File:** `data/raw/oepm_open_data_es.json`  
-    * *SHA-256 Digest:* `68500f2536d65f2c136c06a0c6e0ec9798aa3814581a28e276c06124107c7313`
-  * **Normalized Parquet:** `data/snapshots/patents_es_corpus.parquet`  
+  * **Raw Source Baseline:** `data/raw/oepm_open_data_es.json`  
+    * *SHA-256 Fingerprint:* `68500f2536d65f2c136c06a0c6e0ec9798aa3814581a28e276c06124107c7313`
+  * **Normalized Parquet Snapshot:** `data/snapshots/patents_es_corpus.parquet`  
     * *SHA-256 Digest:* `c158bdaa2426e71c4aa42db5c1885885dc36607bf6cf5431135bdfa70eee3a2e`
-  * **Analytical DuckDB Store:** `data/snapshots/patents_es_snapshot.duckdb`
-  * **Cryptographic Manifest:** `data/snapshots/patents_es_manifest.json`
+  * **Content-Addressed Manifest:** `data/snapshots/patents_es_manifest.json`
 
 ---
 
@@ -79,7 +80,7 @@ To guarantee scientific rigor, empirical reproducibility, and verifiable source 
 
 ### Ingestion CLI (`scripts/ingest_oepm_ops.py`)
 
-* `python3 scripts/ingest_oepm_ops.py --source oepm_raw`: Verified local ingestion from `data/raw/oepm_open_data_es.json` with strict SHA-256 validation.
+* `python3 scripts/ingest_oepm_ops.py --source oepm_raw`: Verified local ingestion from `data/raw/oepm_open_data_es.json` with SHA-256 fingerprinting.
 * `python3 scripts/ingest_oepm_ops.py --source ops`: Queries live EPO OPS published-data REST API via OAuth2 client credentials. **Fails fast if credentials are missing; no silent fallback.**
 
 ### Experiment Runner Modes (`scripts/run_spanish_paper_experiment.py`)
@@ -88,4 +89,9 @@ To guarantee scientific rigor, empirical reproducibility, and verifiable source 
 |---|---|---|---|
 | **`ExecutionMode.FIXTURE`** | `SAMPLE_ES_PATENTS_FIXTURE` (in-memory mock) | Mock Client | ❌ No (Unit Testing Only) |
 | **`ExecutionMode.PILOT`** | Unverified / Local DB | Mock / Dry-Run | ❌ No (Smoke Test Only) |
-| **`ExecutionMode.EMPIRICAL`** | `patents_es_corpus.parquet` (SHA-256 Verified) | Deterministic Math for Metrics; Groq API for Case Studies | ✅ **Yes (Empirical Evidence)** |
+| **`ExecutionMode.EMPIRICAL`** | `patents_es_corpus.parquet` (In-Memory from SHA-256 Verified Snapshot) | Deterministic Math for Metrics; Groq API for Case Studies | ✅ **Yes (Empirical Evidence)** |
+
+In `EMPIRICAL` mode:
+* The runner verifies the SHA-256 of `patents_es_corpus.parquet` against the manifest.
+* The query engine queries the verified Parquet snapshot directly in memory to prevent any stale local `.duckdb` state contamination.
+* Citation traction ($T_i$) is computed as an experimental composite metric over observed citation data, reporting explicit observation coverage ($C_i$).
