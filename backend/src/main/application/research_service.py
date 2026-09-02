@@ -1,5 +1,6 @@
 """Research service orchestrating landscape generation and patent retrieval."""
 
+import asyncio
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -38,6 +39,7 @@ class ResearchService:
         cluster_id: str | None = None,
         profiler: Any = None,
     ) -> ResearchOutput:
+        await asyncio.sleep(0)
         if profiler:
             profiler.start_stage("search_patents")
         patents = self.patents_datasource.search_patents(query=query, domain=domain, limit=max_patents)

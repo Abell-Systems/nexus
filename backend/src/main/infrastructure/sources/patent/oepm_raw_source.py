@@ -22,13 +22,16 @@ class OepmRawSource:
         self.source_id = source_id
         self.batch_id = batch_id
 
-    def fetch_batches(self) -> Iterator[RawPayload]:
-        """Read and yield unmodified raw JSON bytes from OEPM open data snapshot file."""
-        if not self.file_path.exists():
-            raise FileNotFoundError(f"OEPM raw data file not found at: {self.file_path}")
+    def _parse_extraction_timestamp(self, ts_str: Any) -> datetime | None:
+        if not isinstance(ts_str, str):
+            return None
+        try:
+            clean_str = ts_str[:-1] + "+00:00" if ts_str.endswith("Z") else ts_str
+            return datetime.fromisoformat(clean_str)
+        except Exception:
+            return None
 
-        raw_bytes = self.file_path.read_bytes()
-
+    def _build_metadata(self, raw_bytes: bytes) -> tuple[dict[str, Any], datetime]:
         metadata: dict[str, Any] = {
             "source_authority": "Oficina Española de Patentes y Marcas (OEPM / BOPI)",
             "official_catalog_url": "https://datos.gob.es/es/catalogo/e05024401-patentes-solicitadas-y-concedidas-bopi",
@@ -42,22 +45,29 @@ class OepmRawSource:
             parsed = json.loads(raw_bytes.decode("utf-8"))
             if isinstance(parsed, dict):
                 ds_meta = parsed.get("dataset_metadata", {})
-                if "dataset_title" in ds_meta:
-                    metadata["source_authority"] = ds_meta["dataset_title"]
-                if "official_catalog_url" in ds_meta:
-                    metadata["official_catalog_url"] = ds_meta["official_catalog_url"]
-                if "dataset_id" in ds_meta:
-                    metadata["dataset_id"] = ds_meta["dataset_id"]
-                if "extraction_timestamp" in ds_meta:
-                    try:
-                        ts_str = ds_meta["extraction_timestamp"]
-                        if ts_str.endswith("Z"):
-                            ts_str = ts_str[:-1] + "+00:00"
-                        retrieval_timestamp = datetime.fromisoformat(ts_str)
-                    except Exception:
-                        pass
+                for key, meta_key in [
+                    ("dataset_title", "source_authority"),
+                    ("official_catalog_url", "official_catalog_url"),
+                    ("dataset_id", "dataset_id"),
+                ]:
+                    if key in ds_meta:
+                        metadata[meta_key] = ds_meta[key]
+
+                parsed_ts = self._parse_extraction_timestamp(ds_meta.get("extraction_timestamp"))
+                if parsed_ts:
+                    retrieval_timestamp = parsed_ts
         except Exception:
             pass
+
+        return metadata, retrieval_timestamp
+
+    def fetch_batches(self) -> Iterator[RawPayload]:
+        """Read and yield unmodified raw JSON bytes from OEPM open data snapshot file."""
+        if not self.file_path.exists():
+            raise FileNotFoundError(f"OEPM raw data file not found at: {self.file_path}")
+
+        raw_bytes = self.file_path.read_bytes()
+        metadata, retrieval_timestamp = self._build_metadata(raw_bytes)
 
         yield RawPayload(
             source_id=self.source_id,

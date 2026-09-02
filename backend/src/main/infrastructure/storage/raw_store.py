@@ -33,11 +33,16 @@ class FilesystemRawStore(RawStoreProtocol):
         self._validate_sha256(sha256_digest)
 
         ext = file_ext.lstrip(".")
-        target_dir = self.base_dir / source_id if source_id else self.base_dir
+        base_resolved = self.base_dir.resolve()
+        target_dir = (self.base_dir / source_id).resolve() if source_id else base_resolved
+        if not target_dir.is_relative_to(base_resolved):
+            raise ValueError(f"Path traversal detected: {source_id}")
         target_dir.mkdir(parents=True, exist_ok=True)
 
-        payload_path = target_dir / f"{sha256_digest}.{ext}"
-        meta_path = target_dir / f"{sha256_digest}.meta.json"
+        payload_path = (target_dir / f"{sha256_digest}.{ext}").resolve()
+        if not payload_path.is_relative_to(base_resolved):
+            raise ValueError("Invalid target payload path")
+        meta_path = (target_dir / f"{sha256_digest}.meta.json").resolve()
 
         # Write payload
         payload_path.write_bytes(payload_bytes)

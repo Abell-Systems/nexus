@@ -1,5 +1,6 @@
 """Execution policy and pacing plugins for LLM providers."""
 
+import asyncio
 import time
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -63,7 +64,7 @@ class ProviderPacingPlugin(BasePlugin):
         now = time.time()
         elapsed = now - self._last_call_time
         if elapsed < self.policy.cooldown_seconds:
-            time.sleep(self.policy.cooldown_seconds - elapsed)
+            await asyncio.sleep(self.policy.cooldown_seconds - elapsed)
         self._last_call_time = time.time()
 
 

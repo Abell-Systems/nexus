@@ -401,10 +401,12 @@ def test_pipeline_rejects_invalid_batch_document(tmp_path: Path):
         ]
     )
 
+    normalizer = OepmNormalizer()
+    manifest_dir = tmp_path / "manifests"
     with pytest.raises(ValidationError, match="publication_id cannot be empty"):
         pipeline.ingest_patent_source(
             source=source,
-            normalizer=OepmNormalizer(),
+            normalizer=normalizer,
             dataset_id="invalid_dataset",
-            manifest_output_dir=tmp_path / "manifests",
+            manifest_output_dir=manifest_dir,
         )

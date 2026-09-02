@@ -131,6 +131,9 @@ def _observations_to_table(observations: list[FieldObservation]) -> pa.Table:
     return pa.Table.from_pydict(data, schema=OBSERVATIONS_SCHEMA)
 
 
+PARQUET_GLOB = "*.parquet"
+
+
 class ParquetCanonicalStore(CanonicalStoreProtocol):
     """Relational canonical storage organizing patent entities into columnar Parquet files."""
 
@@ -145,33 +148,41 @@ class ParquetCanonicalStore(CanonicalStoreProtocol):
         observations: list[FieldObservation],
     ) -> None:
         """Write a batch of patent documents and field observations as Parquet partition parts."""
-        dataset_dir = self.base_dir / dataset_id
+        base_resolved = self.base_dir.resolve()
+        dataset_dir = (self.base_dir / dataset_id).resolve()
+        if not dataset_dir.is_relative_to(base_resolved):
+            raise ValueError(f"Path traversal detected: {dataset_id}")
+
         patents_dir = dataset_dir / "patents"
         observations_dir = dataset_dir / "observations"
         patents_dir.mkdir(parents=True, exist_ok=True)
         observations_dir.mkdir(parents=True, exist_ok=True)
 
-        existing_patents = len(list(patents_dir.glob("*.parquet")))
-        existing_obs = len(list(observations_dir.glob("*.parquet")))
+        existing_patents = len(list(patents_dir.glob(PARQUET_GLOB)))
+        existing_obs = len(list(observations_dir.glob(PARQUET_GLOB)))
         next_idx = max(existing_patents, existing_obs)
         part_filename = f"part_{next_idx:04d}.parquet"
 
-        if documents or not list(patents_dir.glob("*.parquet")):
+        if documents or not list(patents_dir.glob(PARQUET_GLOB)):
             patents_table = _documents_to_table(documents)
             pq.write_table(patents_table, patents_dir / part_filename)
 
-        if observations or not list(observations_dir.glob("*.parquet")):
+        if observations or not list(observations_dir.glob(PARQUET_GLOB)):
             obs_table = _observations_to_table(observations)
             pq.write_table(obs_table, observations_dir / part_filename)
 
     def seal_dataset(self, dataset_id: str) -> tuple[list[DatasetPart], str]:
         """Seal dataset, compute partition hashes and canonical Merkle dataset content hash."""
-        dataset_dir = self.base_dir / dataset_id
+        base_resolved = self.base_dir.resolve()
+        dataset_dir = (self.base_dir / dataset_id).resolve()
+        if not dataset_dir.is_relative_to(base_resolved):
+            raise ValueError(f"Path traversal detected: {dataset_id}")
+
         if not dataset_dir.exists():
             return [], hashlib.sha256(b"[]").hexdigest()
 
         parts: list[DatasetPart] = []
-        for parquet_file in sorted(dataset_dir.rglob("*.parquet")):
+        for parquet_file in sorted(dataset_dir.rglob(PARQUET_GLOB)):
             rel_name = parquet_file.relative_to(dataset_dir).as_posix()
             file_bytes = parquet_file.read_bytes()
             file_sha256 = hashlib.sha256(file_bytes).hexdigest()

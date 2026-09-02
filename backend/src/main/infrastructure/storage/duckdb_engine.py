@@ -7,6 +7,8 @@ import duckdb
 
 from domain.protocols.storage import QueryEngineProtocol
 
+PARQUET_GLOB = "*.parquet"
+
 
 class DuckDbQueryEngine(QueryEngineProtocol):
     """Analytical query engine executing in-memory zero-copy queries against Parquet datasets."""
@@ -22,22 +24,22 @@ class DuckDbQueryEngine(QueryEngineProtocol):
 
         # Register patents view
         patents_dir = dataset_path / "patents"
-        if patents_dir.is_dir() and list(patents_dir.glob("*.parquet")):
-            patents_pattern = (patents_dir / "*.parquet").as_posix()
+        if patents_dir.is_dir() and list(patents_dir.glob(PARQUET_GLOB)):
+            patents_pattern = (patents_dir / PARQUET_GLOB).as_posix()
             conn.execute(f"CREATE VIEW patents AS SELECT * FROM read_parquet('{patents_pattern}')")
         elif (dataset_path / "patents.parquet").is_file():
             conn.execute(
                 f"CREATE VIEW patents AS SELECT * FROM read_parquet('{(dataset_path / 'patents.parquet').as_posix()}')"
             )
-        elif list(dataset_path.glob("*.parquet")):
+        elif list(dataset_path.glob(PARQUET_GLOB)):
             conn.execute(
-                f"CREATE VIEW patents AS SELECT * FROM read_parquet('{(dataset_path / '*.parquet').as_posix()}')"
+                f"CREATE VIEW patents AS SELECT * FROM read_parquet('{(dataset_path / PARQUET_GLOB).as_posix()}')"
             )
 
         # Register observations view
         observations_dir = dataset_path / "observations"
-        if observations_dir.is_dir() and list(observations_dir.glob("*.parquet")):
-            obs_pattern = (observations_dir / "*.parquet").as_posix()
+        if observations_dir.is_dir() and list(observations_dir.glob(PARQUET_GLOB)):
+            obs_pattern = (observations_dir / PARQUET_GLOB).as_posix()
             conn.execute(f"CREATE VIEW observations AS SELECT * FROM read_parquet('{obs_pattern}')")
         elif (dataset_path / "observations.parquet").is_file():
             conn.execute(

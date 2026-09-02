@@ -1,5 +1,6 @@
 """In-memory and persistent job store for analysis runs."""
 
+import asyncio
 import time
 from typing import Any
 
@@ -44,24 +45,29 @@ class InMemoryJobStore:
         return sorted_jobs[:limit]
 
     async def set_stage(self, job_id: str, stage: str) -> None:
+        await asyncio.sleep(0)
         self.update_job(job_id, stage=stage)
 
     async def update_progress(self, job_id: str, key: str, value: Any) -> None:
+        await asyncio.sleep(0)
         job = self._jobs.get(job_id)
         if job:
             job.setdefault("progress", {})[key] = value
             job["updated_at"] = time.time()
 
     async def append_event(self, job_id: str, event: dict[str, Any]) -> None:
+        await asyncio.sleep(0)
         job = self._jobs.get(job_id)
         if job:
             job.setdefault("events", []).append(event)
             job["updated_at"] = time.time()
 
     async def set_result(self, job_id: str, results: dict[str, Any]) -> None:
+        await asyncio.sleep(0)
         self.update_job(job_id, status="completed", results=results, result=results)
 
     async def set_error(self, job_id: str, error: str, error_type: str = "internal") -> None:
+        await asyncio.sleep(0)
         self.update_job(job_id, status="failed", error=error, error_type=error_type)
 
 

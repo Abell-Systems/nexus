@@ -14,7 +14,13 @@ class MockPatentsDataSource:
 
     def search_patents(self, query: str, domain: str = "", limit: int = 20) -> list[PatentRecord]:
         q = query.lower()
-        matched = [p for p in self.patents if q in p.title.lower() or q in p.abstract.lower()]
+        d = domain.lower()
+        matched = [
+            p
+            for p in self.patents
+            if (q in p.title.lower() or q in p.abstract.lower())
+            and (not d or d in p.title.lower() or d in p.abstract.lower() or any(d in c.lower() for c in p.cpc_codes))
+        ]
         return (matched or self.patents)[:limit]
 
     def get_status(self) -> dict[str, Any]:

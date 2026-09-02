@@ -1,5 +1,6 @@
 """EPO OPS (European Patent Office Open Patent Services 3.2) client adapter."""
 
+import base64
 import os
 from collections.abc import Iterator
 from datetime import UTC, datetime
@@ -8,74 +9,62 @@ from typing import Any
 
 import httpx
 
-from domain.protocols.sources import RawPayload
+from domain.protocols.sources import PatentSourceProtocol, RawPayload
+
+APPLICATION_XML = "application/xml"
 
 
-class EpoOpsClient:
-    """Production client and fixture loader for European Patent Office Open Patent Services (OPS 3.2)."""
+class EpoOpsClient(PatentSourceProtocol):
+    """EPO Open Patent Services (OPS) v3.2 Client implementing PatentSourceProtocol."""
 
     def __init__(
         self,
         consumer_key: str | None = None,
         consumer_secret: str | None = None,
-        base_url: str = "https://ops.epo.org/3.2/rest-services",
-        auth_url: str = "https://ops.epo.org/3.2/auth/accesstoken",
         fixture_path: Path | str | None = None,
-        timeout: float = 30.0,
+        base_url: str = "https://ops.epo.org/3.2/rest-services",
         transport: httpx.BaseTransport | None = None,
     ) -> None:
         self.consumer_key = consumer_key or os.getenv("EPO_OPS_KEY")
         self.consumer_secret = consumer_secret or os.getenv("EPO_OPS_SECRET")
-        self.base_url = base_url.rstrip("/")
-        self.auth_url = auth_url
         self.fixture_path = Path(fixture_path) if fixture_path else None
-        self.timeout = timeout
+        self.base_url = base_url.rstrip("/")
         self.transport = transport
         self._access_token: str | None = None
 
     @classmethod
-    def from_fixture_file(
-        cls,
-        xml_fixture_path: Path | str,
-        base_url: str = "https://ops.epo.org/3.2/rest-services",
-    ) -> "EpoOpsClient":
-        """Factory method to instantiate a client backed deterministically by an XML fixture file."""
-        return cls(fixture_path=xml_fixture_path, base_url=base_url)
+    def from_fixture_file(cls, fixture_path: Path | str) -> "EpoOpsClient":
+        """Factory method to initialize client in offline fixture replay mode."""
+        return cls(fixture_path=fixture_path)
 
-    def authenticate(self, client: httpx.Client | None = None) -> bool:
-        """Obtain OAuth 2.0 bearer token from EPO OPS authorization service."""
+    def authenticate(self, client: httpx.Client) -> bool:
+        """Obtain OAuth 2.0 Client Credentials Bearer Token from EPO OPS."""
         if not self.consumer_key or not self.consumer_secret:
             return False
 
-        auth = (self.consumer_key, self.consumer_secret)
+        auth_header = base64.b64encode(
+            f"{self.consumer_key}:{self.consumer_secret}".encode()
+        ).decode("ascii")
+        url = f"{self.base_url.replace('/rest-services', '')}/auth/accesstoken"
+        headers = {
+            "Authorization": f"Basic {auth_header}",
+            "Content-Type": "application/x-www-form-urlencoded",
+        }
         data = {"grant_type": "client_credentials"}
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
-        def _do_auth(c: httpx.Client) -> bool:
-            try:
-                resp = c.post(
-                    self.auth_url,
-                    auth=auth,
-                    data=data,
-                    headers=headers,
-                    timeout=self.timeout,
-                )
-                if resp.status_code != 200:
-                    return False
+        try:
+            resp = client.post(url, headers=headers, data=data, timeout=30.0)
+            if resp.status_code == 200:
                 payload = resp.json()
                 self._access_token = payload.get("access_token")
-                return bool(self._access_token)
-            except Exception:
-                return False
-
-        if client is not None:
-            return _do_auth(client)
-        with httpx.Client(transport=self.transport) as c:
-            return _do_auth(c)
+                return True
+        except Exception:
+            return False
+        return False
 
     def fetch_batches(
         self,
-        cql_query: str = "pd within '2016 2024' and pn=ES",
+        cql_query: str = 'ta="solid state battery" AND pn="ES"',
         range_start: int = 1,
         range_end: int = 25,
     ) -> Iterator[RawPayload]:
@@ -91,7 +80,7 @@ class EpoOpsClient:
                 "source_type": "fixture",
                 "fixture_path": str(self.fixture_path),
                 "cql_query": cql_query,
-                "content_type": "application/xml",
+                "content_type": APPLICATION_XML,
             }
             yield RawPayload(
                 source_id="epo_ops",
@@ -116,29 +105,27 @@ class EpoOpsClient:
             search_url = f"{self.base_url}/published-data/search/biblio"
             headers = {
                 "Authorization": f"Bearer {self._access_token}",
-                "Accept": "application/xml",
+                "Accept": APPLICATION_XML,
             }
             params = {
                 "q": cql_query,
                 "Range": f"{range_start}-{range_end}",
             }
-
-            try:
-                resp = client.get(search_url, params=params, headers=headers, timeout=self.timeout)
-            except Exception as e:
-                raise RuntimeError(f"EPO OPS Search/Fetch failed: {e}") from e
-
+            resp = client.get(search_url, headers=headers, params=params, timeout=30.0)
             if resp.status_code != 200:
-                raise RuntimeError(f"EPO OPS Search/Fetch failed with status {resp.status_code}: {resp.text}")
+                raise RuntimeError(
+                    f"EPO OPS Search/Fetch failed with status {resp.status_code}: {resp.text}"
+                )
 
             raw_bytes = resp.content
             metadata = {
                 "source_authority": "European Patent Office (EPO OPS 3.2)",
                 "official_catalog_url": "https://ops.epo.org",
-                "source_type": "rest_api",
+                "source_type": "api",
                 "cql_query": cql_query,
                 "range": f"{range_start}-{range_end}",
-                "content_type": "application/xml",
+                "status_code": resp.status_code,
+                "content_type": APPLICATION_XML,
             }
 
             yield RawPayload(

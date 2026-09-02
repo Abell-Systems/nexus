@@ -1,32 +1,23 @@
-"""Demand sources provider (Innoget, SBIR, CORDIS, Mock)."""
+"""Demand data sources (Innoget, SBIR, CORDIS, and Mock signals)."""
 
 import json
 import os
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from domain.models.runtime_schemas import DemandSignalItem
 
 
-@dataclass
-class MatchProvenance:
-    matched_keyword: str
-    target_cpc: str
-    confidence: float
-
-
 class InnogetDemandDataSource:
-    def __init__(self, json_path: str | Path | None = None):
-        if json_path is None:
-            json_path = Path(__file__).parent / "innoget_demands.json"
-            if not json_path.exists():
-                json_path = Path("data/raw/innoget_demands.json")
-        self.json_path = Path(json_path)
-        self._demands = self._load_demands()
+    """Innoget open innovation challenges data source."""
 
-    def _load_demands(self) -> list[DemandSignalItem]:
-        if not self.json_path.exists():
+    def __init__(self, snapshot_path: str = "data/snapshots/innoget_challenges.json"):
+        self.snapshot_path = snapshot_path
+        self._demands = self._load()
+
+    def _load(self) -> list[DemandSignalItem]:
+        p = Path(self.snapshot_path)
+        if not p.exists():
             return [
                 DemandSignalItem(
                     source="innoget",
@@ -36,20 +27,37 @@ class InnogetDemandDataSource:
                     cpc_prefix="C11D",
                     posted_date="2023-05-15",
                     url="https://innoget.com/challenge/2292",
-                )
+                ),
+                DemandSignalItem(
+                    source="innoget",
+                    id="INNOGET-2415",
+                    title="Optimized sink and sanitary plumbing drainage systems",
+                    description="Seeking durable high-flow sanitary drainage and sink fixtures",
+                    cpc_prefix="E03C",
+                    posted_date="2023-09-20",
+                    url="https://innoget.com/challenge/2415",
+                ),
+                DemandSignalItem(
+                    source="innoget",
+                    id="INNOGET-2501",
+                    title="Industrial process automation numerical control software",
+                    description="Seeking program-control algorithms for factory robotics",
+                    cpc_prefix="G05B",
+                    posted_date="2024-01-10",
+                    url="https://innoget.com/challenge/2501",
+                ),
             ]
         try:
-            with open(self.json_path, encoding="utf-8") as f:
-                data = json.load(f)
-                items = data.get("demands", data) if isinstance(data, dict) else data
+            with open(p, encoding="utf-8") as f:
+                items = json.load(f)
                 return [
                     DemandSignalItem(
                         source="innoget",
                         id=d.get("id", f"INNOGET-{i}"),
                         title=d.get("title", ""),
                         description=d.get("description", ""),
-                        cpc_prefix=d.get("cpc_prefix") or d.get("target_cpc_prefix", "C11D"),
-                        posted_date=d.get("posted_date", "2023-01-01"),
+                        cpc_prefix=d.get("cpc_prefix", "H01M"),
+                        posted_date=d.get("posted_date", ""),
                         url=d.get("url", ""),
                     )
                     for i, d in enumerate(items)
@@ -65,7 +73,12 @@ class InnogetDemandDataSource:
 
     def search_demand(self, query: str = "", domain: str = "") -> list[DemandSignalItem]:
         q = query.lower()
-        matched = [d for d in self._demands if q in d.title.lower() or q in d.description.lower()]
+        d = domain.lower()
+        matched = [
+            item for item in self._demands
+            if (not q or q in item.title.lower() or q in item.description.lower())
+            and (not d or d in item.title.lower() or d in item.description.lower() or (item.cpc_prefix and d in item.cpc_prefix.lower()))
+        ]
         return matched or self._demands
 
 
@@ -84,7 +97,14 @@ class SBIRDemandDataSource:
         ]
 
     def search_demand(self, query: str = "", domain: str = "") -> list[DemandSignalItem]:
-        return self.demands
+        q = query.lower()
+        d = domain.lower()
+        matched = [
+            item for item in self.demands
+            if (not q or q in item.title.lower() or q in item.description.lower())
+            and (not d or d in item.title.lower() or d in item.description.lower() or (item.cpc_prefix and d in item.cpc_prefix.lower()))
+        ]
+        return matched or self.demands
 
 
 class CORDISDemandDataSource:
@@ -102,7 +122,14 @@ class CORDISDemandDataSource:
         ]
 
     def search_demand(self, query: str = "", domain: str = "") -> list[DemandSignalItem]:
-        return self.demands
+        q = query.lower()
+        d = domain.lower()
+        matched = [
+            item for item in self.demands
+            if (not q or q in item.title.lower() or q in item.description.lower())
+            and (not d or d in item.title.lower() or d in item.description.lower() or (item.cpc_prefix and d in item.cpc_prefix.lower()))
+        ]
+        return matched or self.demands
 
 
 class MockDemandDataSource:
@@ -130,7 +157,12 @@ class MockDemandDataSource:
 
     def search_demand(self, query: str = "", domain: str = "") -> list[DemandSignalItem]:
         q = query.lower()
-        matched = [d for d in self.demands if q in d.title.lower() or q in d.description.lower()]
+        d = domain.lower()
+        matched = [
+            item for item in self.demands
+            if (not q or q in item.title.lower() or q in item.description.lower())
+            and (not d or d in item.title.lower() or d in item.description.lower() or (item.cpc_prefix and d in item.cpc_prefix.lower()))
+        ]
         return matched or self.demands
 
 

@@ -8,6 +8,8 @@ from domain.models.evidence import FieldObservation, VerificationStatus
 from domain.models.patent import PatentDocument
 from domain.protocols.sources import RawPayload
 
+LIST_STR_TYPE = "list[str]"
+
 
 class OepmNormalizer:
     """Normalizer for Spanish Patent and Trademark Office (OEPM) open data publications."""
@@ -20,7 +22,26 @@ class OepmNormalizer:
     ) -> Iterator[tuple[PatentDocument, list[FieldObservation]]]:
         """Normalize raw JSON payload into stream of PatentDocuments and FieldObservations."""
         payload_data = json.loads(raw_payload.payload_bytes.decode("utf-8"))
+        dataset_metadata, publications = self._extract_payload_meta_and_items(payload_data)
 
+        source_authority = (
+            dataset_metadata.get("dataset_title")
+            or raw_payload.metadata.get("source_authority")
+            or "Spanish Patent and Trademark Office (OEPM)"
+        )
+
+        for item in publications:
+            doc, source_uri, verification_status = self._normalize_single_publication(
+                item, raw_payload, dataset_metadata
+            )
+            observations = self._create_field_observations(
+                doc, raw_payload, source_authority, source_uri, verification_status
+            )
+            yield doc, observations
+
+    def _extract_payload_meta_and_items(
+        self, payload_data: Any
+    ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
         dataset_metadata: dict[str, Any] = {}
         publications: list[dict[str, Any]] = []
 
@@ -35,166 +56,154 @@ class OepmNormalizer:
         elif isinstance(payload_data, list):
             publications = payload_data
 
-        source_authority = (
-            dataset_metadata.get("dataset_title")
-            or raw_payload.metadata.get("source_authority")
-            or "Spanish Patent and Trademark Office (OEPM)"
+        return dataset_metadata, publications
+
+    def _normalize_single_publication(
+        self,
+        item: dict[str, Any],
+        raw_payload: RawPayload,
+        dataset_metadata: dict[str, Any],
+    ) -> tuple[PatentDocument, str, VerificationStatus]:
+        pub_id = item.get("publication_id") or item.get("publication_number") or item.get("id") or ""
+        country_code, doc_number, kind_code = self._parse_biblio_codes(item, pub_id)
+
+        assignees = self._extract_names(item, "assignee", "assignees")
+        inventors = self._extract_names(item, "inventor", "inventors")
+        classifications_cpc = self._extract_classifications(item, "cpc_codes", "classifications_cpc")
+        classifications_ipc = self._extract_classifications(item, "ipc_codes", "classifications_ipc")
+
+        forward_citation_count = self._parse_int_field(item, "forward_citation_count", "citation_count")
+        backward_citation_count = self._parse_int_field(item, "backward_citation_count")
+
+        doc = PatentDocument(
+            publication_id=pub_id,
+            country_code=country_code,
+            doc_number=doc_number,
+            kind_code=kind_code,
+            application_number=item.get("application_number"),
+            title=item.get("title", ""),
+            abstract=item.get("abstract", ""),
+            assignees=assignees,
+            inventors=inventors,
+            filing_date=item.get("filing_date"),
+            publication_date=item.get("publication_date"),
+            priority_date=item.get("priority_date"),
+            classifications_cpc=classifications_cpc,
+            classifications_ipc=classifications_ipc,
+            forward_citation_count=forward_citation_count,
+            backward_citation_count=backward_citation_count,
+            family_id=item.get("family_id"),
         )
 
-        for item in publications:
-            pub_id = (
-                item.get("publication_id")
-                or item.get("publication_number")
-                or item.get("id")
-                or ""
-            )
+        source_uri = (
+            item.get("invenes_url")
+            or raw_payload.metadata.get("source_uri")
+            or dataset_metadata.get("official_catalog_url")
+            or ""
+        )
+        verification_status = self._parse_verification_status(item.get("verification_status"))
+        return doc, source_uri, verification_status
 
-            country_code = item.get("country_code")
-            doc_number = item.get("doc_number")
-            kind_code = item.get("kind_code")
+    def _parse_biblio_codes(self, item: dict[str, Any], pub_id: str) -> tuple[str, str, str]:
+        country_code = item.get("country_code")
+        doc_number = item.get("doc_number")
+        kind_code = item.get("kind_code")
 
-            if pub_id and ("-" in pub_id):
-                parts = pub_id.split("-")
-                if country_code is None and len(parts) >= 1:
-                    country_code = parts[0]
-                if doc_number is None and len(parts) >= 2:
-                    doc_number = parts[1]
-                if kind_code is None and len(parts) >= 3:
-                    kind_code = parts[2]
+        if pub_id and ("-" in pub_id):
+            parts = pub_id.split("-")
+            if country_code is None and len(parts) >= 1:
+                country_code = parts[0]
+            if doc_number is None and len(parts) >= 2:
+                doc_number = parts[1]
+            if kind_code is None and len(parts) >= 3:
+                kind_code = parts[2]
 
-            country_code = country_code or ("ES" if pub_id else "")
-            doc_number = doc_number or pub_id
-            kind_code = kind_code or ""
+        country_code = country_code or ("ES" if pub_id else "")
+        doc_number = doc_number or pub_id
+        kind_code = kind_code or ""
+        return country_code, doc_number, kind_code
 
-            # Assignees parsing
-            assignees: list[str] = []
-            if "assignees" in item and isinstance(item["assignees"], list):
-                assignees = [str(a).strip() for a in item["assignees"] if str(a).strip()]
-            elif "assignees" in item and isinstance(item["assignees"], str):
-                assignees = self._split_names(item["assignees"])
-            elif "assignee" in item and isinstance(item["assignee"], str):
-                assignees = self._split_names(item["assignee"])
+    def _extract_names(self, item: dict[str, Any], singular: str, plural: str) -> list[str]:
+        if plural in item and isinstance(item[plural], list):
+            return [str(a).strip() for a in item[plural] if str(a).strip()]
+        if plural in item and isinstance(item[plural], str):
+            return self._split_names(item[plural])
+        if singular in item and isinstance(item[singular], str):
+            return self._split_names(item[singular])
+        return []
 
-            # Inventors parsing
-            inventors: list[str] = []
-            if "inventors" in item and isinstance(item["inventors"], list):
-                inventors = [str(i).strip() for i in item["inventors"] if str(i).strip()]
-            elif "inventors" in item and isinstance(item["inventors"], str):
-                inventors = self._split_names(item["inventors"])
-            elif "inventor" in item and isinstance(item["inventor"], str):
-                inventors = self._split_names(item["inventor"])
+    def _extract_classifications(self, item: dict[str, Any], raw_key1: str, raw_key2: str) -> list[str]:
+        raw = item.get(raw_key1) or item.get(raw_key2) or []
+        if isinstance(raw, str):
+            raw = [raw]
+        return [str(c).strip() for c in raw if str(c).strip()]
 
-            # CPC / IPC Classifications
-            cpc_raw = item.get("cpc_codes") or item.get("classifications_cpc") or []
-            if isinstance(cpc_raw, str):
-                cpc_raw = [cpc_raw]
-            classifications_cpc = [str(c).strip() for c in cpc_raw if str(c).strip()]
+    def _parse_int_field(self, item: dict[str, Any], *keys: str) -> int | None:
+        for k in keys:
+            if item.get(k) is not None:
+                return int(item[k])
+        return None
 
-            ipc_raw = item.get("ipc_codes") or item.get("classifications_ipc") or []
-            if isinstance(ipc_raw, str):
-                ipc_raw = [ipc_raw]
-            classifications_ipc = [str(i).strip() for i in ipc_raw if str(i).strip()]
+    def _parse_verification_status(self, raw_status: Any) -> VerificationStatus:
+        raw_v = str(raw_status or "").lower()
+        if "verified" in raw_v or raw_v == "independently_verified":
+            return VerificationStatus.INDEPENDENTLY_VERIFIED
+        if raw_v == "derived":
+            return VerificationStatus.DERIVED
+        if raw_v == "unavailable":
+            return VerificationStatus.UNAVAILABLE
+        return VerificationStatus.SOURCE_REPORTED
 
-            # Citations (strict null preservation)
-            forward_citation_count: int | None = None
-            if item.get("forward_citation_count") is not None:
-                forward_citation_count = int(item["forward_citation_count"])
-            elif item.get("citation_count") is not None:
-                forward_citation_count = int(item["citation_count"])
+    def _create_field_observations(
+        self,
+        doc: PatentDocument,
+        raw_payload: RawPayload,
+        source_authority: str,
+        source_uri: str,
+        verification_status: VerificationStatus,
+    ) -> list[FieldObservation]:
+        observations: list[FieldObservation] = []
 
-            backward_citation_count: int | None = None
-            if item.get("backward_citation_count") is not None:
-                backward_citation_count = int(item["backward_citation_count"])
-
-            doc = PatentDocument(
-                publication_id=pub_id,
-                country_code=country_code,
-                doc_number=doc_number,
-                kind_code=kind_code,
-                application_number=item.get("application_number"),
-                title=item.get("title", ""),
-                abstract=item.get("abstract", ""),
-                assignees=assignees,
-                inventors=inventors,
-                filing_date=item.get("filing_date"),
-                publication_date=item.get("publication_date"),
-                priority_date=item.get("priority_date"),
-                classifications_cpc=classifications_cpc,
-                classifications_ipc=classifications_ipc,
-                forward_citation_count=forward_citation_count,
-                backward_citation_count=backward_citation_count,
-                family_id=item.get("family_id"),
-            )
-
-            # Verification status
-            raw_v_status = str(item.get("verification_status", "")).lower()
-            if "verified" in raw_v_status or raw_v_status == "independently_verified":
-                verification_status = VerificationStatus.INDEPENDENTLY_VERIFIED
-            elif raw_v_status == "derived":
-                verification_status = VerificationStatus.DERIVED
-            elif raw_v_status == "unavailable":
-                verification_status = VerificationStatus.UNAVAILABLE
-            else:
-                verification_status = VerificationStatus.SOURCE_REPORTED
-
-            source_uri = (
-                item.get("invenes_url")
-                or raw_payload.metadata.get("source_uri")
-                or dataset_metadata.get("official_catalog_url")
-                or ""
-            )
-
-            observations: list[FieldObservation] = []
-
-            def _add_obs(
-                field_name: str,
-                value: Any,
-                val_type: str,
-                p_id: str = pub_id,
-                auth: str = source_authority,
-                uri: str = source_uri,
-                v_stat: VerificationStatus = verification_status,
-                obs_list: list[FieldObservation] = observations,
-            ) -> None:
-                obs_list.append(
-                    FieldObservation(
-                        entity_id=p_id,
-                        field_name=field_name,
-                        observed_value_json=json.dumps(value, ensure_ascii=False),
-                        value_type=val_type,
-                        source_authority=auth,
-                        source_uri=uri,
-                        retrieval_timestamp=raw_payload.retrieval_timestamp,
-                        raw_payload_sha256=raw_payload.payload_sha256,
-                        extraction_version=self.extraction_version,
-                        verification_status=v_stat,
-                    )
+        def _add(field_name: str, value: Any, val_type: str) -> None:
+            observations.append(
+                FieldObservation(
+                    entity_id=doc.publication_id,
+                    field_name=field_name,
+                    observed_value_json=json.dumps(value, ensure_ascii=False),
+                    value_type=val_type,
+                    source_authority=source_authority,
+                    source_uri=source_uri,
+                    retrieval_timestamp=raw_payload.retrieval_timestamp,
+                    raw_payload_sha256=raw_payload.payload_sha256,
+                    extraction_version=self.extraction_version,
+                    verification_status=verification_status,
                 )
+            )
 
-            if doc.title:
-                _add_obs("title", doc.title, "str")
-            if doc.abstract:
-                _add_obs("abstract", doc.abstract, "str")
-            if doc.publication_date is not None:
-                _add_obs("publication_date", doc.publication_date, "str")
-            if doc.filing_date is not None:
-                _add_obs("filing_date", doc.filing_date, "str")
-            if doc.priority_date is not None:
-                _add_obs("priority_date", doc.priority_date, "str")
-            if doc.assignees:
-                _add_obs("assignees", doc.assignees, "list[str]")
-            if doc.inventors:
-                _add_obs("inventors", doc.inventors, "list[str]")
-            if doc.classifications_cpc:
-                _add_obs("classifications_cpc", doc.classifications_cpc, "list[str]")
-            if doc.classifications_ipc:
-                _add_obs("classifications_ipc", doc.classifications_ipc, "list[str]")
-            if doc.forward_citation_count is not None:
-                _add_obs("forward_citation_count", doc.forward_citation_count, "int")
-            if doc.backward_citation_count is not None:
-                _add_obs("backward_citation_count", doc.backward_citation_count, "int")
+        if doc.title:
+            _add("title", doc.title, "str")
+        if doc.abstract:
+            _add("abstract", doc.abstract, "str")
+        if doc.publication_date is not None:
+            _add("publication_date", doc.publication_date, "str")
+        if doc.filing_date is not None:
+            _add("filing_date", doc.filing_date, "str")
+        if doc.priority_date is not None:
+            _add("priority_date", doc.priority_date, "str")
+        if doc.assignees:
+            _add("assignees", doc.assignees, LIST_STR_TYPE)
+        if doc.inventors:
+            _add("inventors", doc.inventors, LIST_STR_TYPE)
+        if doc.classifications_cpc:
+            _add("classifications_cpc", doc.classifications_cpc, LIST_STR_TYPE)
+        if doc.classifications_ipc:
+            _add("classifications_ipc", doc.classifications_ipc, LIST_STR_TYPE)
+        if doc.forward_citation_count is not None:
+            _add("forward_citation_count", doc.forward_citation_count, "int")
+        if doc.backward_citation_count is not None:
+            _add("backward_citation_count", doc.backward_citation_count, "int")
 
-            yield doc, observations
+        return observations
 
     def _split_names(self, raw_str: str) -> list[str]:
         """Split a string containing one or more entity names."""
@@ -203,7 +212,7 @@ class OepmNormalizer:
             return []
         if " / " in raw_str:
             return [part.strip() for part in raw_str.split(" / ") if part.strip()]
-        if "/" in raw_str and not (raw_str.startswith("http://") or raw_str.startswith("https://")):
+        if "/" in raw_str and not raw_str.startswith(("http://", "https://")):
             return [part.strip() for part in raw_str.split("/") if part.strip()]
         if ";" in raw_str:
             return [part.strip() for part in raw_str.split(";") if part.strip()]

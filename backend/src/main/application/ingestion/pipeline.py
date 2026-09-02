@@ -132,9 +132,16 @@ class IngestionPipeline:
         )
 
         # Persist manifest to disk
-        manifest_dir.mkdir(parents=True, exist_ok=True)
-        (manifest_dir / "manifest.json").write_text(snapshot.model_dump_json(indent=2))
-        (manifest_dir / f"{dataset_id}_manifest.json").write_text(snapshot.model_dump_json(indent=2))
+        resolved_manifest_dir = manifest_dir.resolve()
+        resolved_manifest_dir.mkdir(parents=True, exist_ok=True)
+        manifest_file = (resolved_manifest_dir / "manifest.json").resolve()
+        named_manifest_file = (resolved_manifest_dir / f"{dataset_id}_manifest.json").resolve()
+        if not named_manifest_file.is_relative_to(resolved_manifest_dir):
+            raise ValueError(f"Invalid dataset_id in manifest output: {dataset_id}")
+
+        manifest_json = snapshot.model_dump_json(indent=2)
+        manifest_file.write_text(manifest_json, encoding="utf-8")
+        named_manifest_file.write_text(manifest_json, encoding="utf-8")
 
         return IngestionSummary(
             snapshot=snapshot,

@@ -24,8 +24,13 @@ class DuckDbPatentsDataSource:
 
     def search_patents(self, query: str, domain: str = "", limit: int = 50) -> list[PatentRecord]:
         try:
-            sql = "SELECT * FROM patents WHERE title ILIKE ? OR abstract ILIKE ? LIMIT ?"
-            df = self._conn.execute(sql, [f"%{query}%", f"%{query}%", limit]).df()
+            if domain:
+                sql = "SELECT * FROM patents WHERE (title ILIKE ? OR abstract ILIKE ?) AND (title ILIKE ? OR abstract ILIKE ?) LIMIT ?"
+                params = [f"%{query}%", f"%{query}%", f"%{domain}%", f"%{domain}%", limit]
+            else:
+                sql = "SELECT * FROM patents WHERE title ILIKE ? OR abstract ILIKE ? LIMIT ?"
+                params = [f"%{query}%", f"%{query}%", limit]
+            df = self._conn.execute(sql, params).df()
             records = []
             for _, row in df.iterrows():
                 row_dict = row.to_dict()

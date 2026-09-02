@@ -34,4 +34,7 @@ class PipelineProfiler:
         }
 
     def print_profile(self) -> None:
-        pass
+        summary = self.get_summary()
+        print(f"[Profiler] Total Duration: {summary['total_duration_seconds']}s")
+        for stage, duration in summary.get("stages", {}).items():
+            print(f"  - {stage}: {duration}s")

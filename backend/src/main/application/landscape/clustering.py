@@ -42,7 +42,7 @@ def cluster_patents(
         clusters.append(
             PatentCluster(
                 cluster_id=c_id,
-                label=f"Technology Cluster {c_id}",
+                label=f"{domain.replace('_', ' ').title()} - {c_id}",
                 representative_patents=[p.publication_number for p in grp[:3]],
                 patent_count=len(grp),
                 white_space_score=metrics["white_space_score"],
@@ -59,4 +59,5 @@ def patents_for_demand_signal(
     patents_datasource: Any,
     max_results: int = 20,
 ) -> list[PatentRecord]:
-    return patents_datasource.search_patents(query=signal.title, domain=domain, limit=max_results)
+    cpc_prefix = getattr(signal, "cpc_prefix", None) or "H01M"
+    return patents_datasource.search_patents(query=cpc_prefix, domain=domain, limit=max_results)
