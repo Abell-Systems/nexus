@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ops:world-patent-data xmlns:ops="http://ops.epo.org" xmlns="http://www.epo.org/exchange" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <ops:meta name="elapsed-time" value="45"/>
+  <ops:biblio-search total-result-count="2">
+    <ops:query syntax="cql">pn=ES and pd within '2016 2024'</ops:query>
+    <ops:range begin="1" end="2"/>
+    <ops:search-result>
+      <ops:publication-reference>
+        <document-id document-id-type="epodoc">
+          <doc-number>ES2849102</doc-number>
+        </document-id>
+      </ops:publication-reference>
+      <ops:publication-reference>
+        <document-id document-id-type="epodoc">
+          <doc-number>ES2715482</doc-number>
+        </document-id>
+      </ops:publication-reference>
+    </ops:search-result>
+  </ops:biblio-search>
+  <exchange-documents>
+    <exchange-document country="ES" doc-number="2849102" kind="B2">
+      <bibliographic-data>
+        <publication-reference>
+          <document-id document-id-type="epodoc">
+            <doc-number>ES2849102</doc-number>
+            <date>20211125</date>
+          </document-id>
+        </publication-reference>
+        <application-reference>
+          <document-id document-id-type="epodoc">
+            <doc-number>P202030431</doc-number>
+            <date>20200512</date>
+          </document-id>
+        </application-reference>
+        <invention-title lang="es">Formulación detergente enzimática líquida biodegradable para lavado textil a temperatura ambiente</invention-title>
+        <parties>
+          <applicants>
+            <applicant sequence="1">
+              <applicant-name>
+                <name>Laboratorios Bilper S.A.</name>
+              </applicant-name>
+            </applicant>
+          </applicants>
+          <inventors>
+            <inventor sequence="1">
+              <inventor-name>
+                <name>García Pérez, Elena</name>
+              </inventor-name>
+            </inventor>
+            <inventor sequence="2">
+              <inventor-name>
+                <name>Martínez Soto, Iñigo</name>
+              </inventor-name>
+            </inventor>
+          </inventors>
+        </parties>
+        <patent-classifications>
+          <patent-classification>
+            <classification-symbol>C11D1/00</classification-symbol>
+          </patent-classification>
+          <patent-classification>
+            <classification-symbol>C11D3/386</classification-symbol>
+          </patent-classification>
+        </patent-classifications>
+      </bibliographic-data>
+      <abstract lang="es">
+        <p>Composición detergente acuosa concentrada con tensioactivos no iónicos derivados de poliglucósidos de alquilo.</p>
+      </abstract>
+    </exchange-document>
+    <exchange-document country="ES" doc-number="2715482" kind="B2">
+      <bibliographic-data>
+        <publication-reference>
+          <document-id document-id-type="epodoc">
+            <doc-number>ES2715482</doc-number>
+            <date>20200315</date>
+          </document-id>
+        </publication-reference>
+        <application-reference>
+          <document-id document-id-type="epodoc">
+            <doc-number>P201830876</doc-number>
+            <date>20180910</date>
+          </document-id>
+        </application-reference>
+        <invention-title lang="es">Procedimiento de microencapsulación de fragancias y agentes bioactivos estables en formulaciones detergentes acuosas</invention-title>
+        <parties>
+          <applicants>
+            <applicant sequence="1">
+              <applicant-name>
+                <name>Consejo Superior de Investigaciones Científicas (CSIC)</name>
+              </applicant-name>
+            </applicant>
+          </applicants>
+          <inventors>
+            <inventor sequence="1">
+              <inventor-name>
+                <name>Rodríguez Cabello, Carlos</name>
+              </inventor-name>
+            </inventor>
+            <inventor sequence="2">
+              <inventor-name>
+                <name>Fernández Colino, Alicia</name>
+              </inventor-name>
+            </inventor>
+          </inventors>
+        </parties>
+        <patent-classifications>
+          <patent-classification>
+            <classification-symbol>C11D3/50</classification-symbol>
+          </patent-classification>
+          <patent-classification>
+            <classification-symbol>B01J13/02</classification-symbol>
+          </patent-classification>
+        </patent-classifications>
+      </bibliographic-data>
+      <abstract lang="es">
+        <p>Método para encapsular aceites esenciales y fragancias en matrices poliméricas biocompatibles.</p>
+      </abstract>
+    </exchange-document>
+  </exchange-documents>
+</ops:world-patent-data>

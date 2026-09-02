@@ -1,6 +1,6 @@
 import hashlib
 from datetime import datetime, timezone
-from typing import Any, Iterator, Protocol
+from typing import Any, Iterator, Protocol, runtime_checkable
 from pydantic import BaseModel, Field
 
 
@@ -18,6 +18,7 @@ class RawPayload(BaseModel):
         return hashlib.sha256(self.payload_bytes).hexdigest()
 
 
+@runtime_checkable
 class PatentSourceProtocol(Protocol):
     """Protocol for patent data sources yielding streaming raw batches."""
 
@@ -25,8 +26,10 @@ class PatentSourceProtocol(Protocol):
         ...
 
 
+@runtime_checkable
 class DemandSourceProtocol(Protocol):
     """Protocol for technological demand data sources."""
 
     def fetch_demands(self) -> Iterator[Any]:
         ...
+
