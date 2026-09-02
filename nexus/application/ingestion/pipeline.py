@@ -43,6 +43,7 @@ class IngestionPipeline:
         dataset_id: str,
         manifest_output_dir: Path | str,
         transformation_version: str = "1.0.0",
+        created_at: datetime | None = None,
     ) -> IngestionSummary:
         """Stream raw batches from source, store payloads, normalize, validate, and seal dataset."""
         manifest_dir = Path(manifest_output_dir)
@@ -99,7 +100,11 @@ class IngestionPipeline:
             elif isinstance(p, dict):
                 parts.append(DatasetPart(**p))
 
-        created_at = datetime.now(timezone.utc)
+        if created_at is None:
+            if source_batches:
+                created_at = max(b.retrieval_timestamp for b in source_batches)
+            else:
+                created_at = datetime.now(timezone.utc)
 
         # Compute deterministic manifest SHA256
         snapshot_dict = {
