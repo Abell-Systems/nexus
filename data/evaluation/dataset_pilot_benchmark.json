@@ -1,8 +1,8 @@
 {
-  "dataset_id": "nexus-pilot-16-v1",
+  "dataset_id": "nexus-pilot-16-evaluation-corpus-v1",
   "schema_version": "1.0.0",
   "dataset_version": "1.0.0",
-  "description": "Nexus Pilot-16 canonical benchmark dataset for empirical matching evaluation",
+  "description": "Nexus Pilot-16 annotated evaluation corpus for empirical matching evaluation",
   "demands": [
     {
       "demand_id": "INNOGET-2415",
@@ -13,7 +13,6 @@
         "E03C",
         "A47J"
       ],
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "innoget",
         "source_uri": "https://www.innoget.com/technology-calls/2415",
@@ -30,7 +29,6 @@
       "target_cpc_prefixes": [
         "C11D"
       ],
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "innoget",
         "source_uri": "https://www.innoget.com/technology-calls/2292",
@@ -47,7 +45,6 @@
       "target_cpc_prefixes": [
         "G05B"
       ],
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "innoget",
         "source_uri": "https://www.innoget.com/technology-calls/2501",
@@ -68,7 +65,6 @@
       ],
       "title": "Grifería electrónica inteligente con sensorización óptica de proximidad y mezcla térmica termostática instantánea",
       "abstract": "Válvula mezcladora inteligente para fregaderos y lavabos que integra sensor de infrarrojos modulado, control PID de temperatura y conectividad inalámbrica para perfiles de usuario personalizados.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2901234-A1",
@@ -88,7 +84,6 @@
       ],
       "title": "Superficie de encimera y fregadero integrado fabricada con material compuesto polimérico antibacteriano e hidrofóbico",
       "abstract": "Encimera monobloque con fregadero embutido compuesta por matriz de resina acrílica reforzada con nanopartículas de sílice funcionalizadas con iones de plata y silanos hidrofóbicos.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2754890-B2",
@@ -108,7 +103,6 @@
       ],
       "title": "Fregadero modular con sistema integrado de recirculación, filtración por etapas y desinfección de aguas grises",
       "abstract": "Dispositivo sanitario de cocina que incorpora sensor ultrasónico de caudal, módulo de filtración electroquímica para reutilización de aguas grises en lavavajillas y control IoT de consumo hídrico.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2684913-B1",
@@ -127,7 +121,6 @@
       ],
       "title": "Composición desinfectante y detergente de superficies duras basada en biosurfactantes de origen microbiano",
       "abstract": "Formulación para limpieza industrial y doméstica conteniendo ramnolípidos y soforolípidos producidos por fermentación bacteriana con alta actividad antimicrobiana a pH neutro.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2634129-B1",
@@ -147,7 +140,6 @@
       ],
       "title": "Sistema ciberfísico para optimización del consumo eléctrico en líneas de manufactura continua mediante gemelo digital y machine learning",
       "abstract": "Arquitectura IoT industrial con red de sensores edge computing para monitorización en tiempo real de potencia activa/reactiva y modelos predictivos de eficiencia energética en maquinaria rotativa.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2895412-B1",
@@ -167,7 +159,6 @@
       ],
       "title": "Membrana polimérica híbrida ionoconductora con sales de bis(fluorosulfonil)imida para baterías de estado sólido flexibles",
       "abstract": "Capa interfacial electrolítica polimérica compuesta por poli(fluoruro de vinilideno-co-hexafluoropropileno) y nanopartículas cerámicas de LLZO para celdas electroquímicas de alta densidad energética.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2789123-B2",
@@ -187,7 +178,6 @@
       ],
       "title": "Formulación detergente enzimática líquida biodegradable para lavado textil a temperatura ambiente",
       "abstract": "Composición detergente acuosa concentrada con tensioactivos no iónicos derivados de poliglucósidos de alquilo y complejo enzimático estabilizado con proteasas y amilasas optimizadas para lavado entre 15°C y 25°C sin fosfatos.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2849102-B2",
@@ -207,7 +197,6 @@
       ],
       "title": "Aleación de latón ecológica libre de plomo con adición de bismuto y silicio para decoletaje de alta velocidad",
       "abstract": "Aleación ternaria Cu-Zn con contenido de plomo inferior a 100 ppm, adicionada con 0.8-1.5% de bismuto y 0.2-0.5% de silicio para optimizar la fragmentación de viruta y durabilidad de herramienta.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2654981-B1",
@@ -227,7 +216,6 @@
       ],
       "title": "Dispositivo de monitorización no intrusiva de cargas eléctricas industriales (NILM) con desagregación armónica de alta frecuencia",
       "abstract": "Hardware y algoritmo embebido para identificación y desagregación de consumos de motores individuales a partir de la firma armónica transitoria en el cuadro general de distribución.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2765431-B2",
@@ -247,7 +235,6 @@
       ],
       "title": "Sistema de gestión electrónica de baterías (BMS) con balanceo activo inductivo y estimación de estado de salud (SOH) por impedanciometría",
       "abstract": "Circuito integrado y metodología de cálculo de degradación electroquímica para paquetes de baterías de tracción en autobuses eléctricos y almacenamiento estacionario.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2876540-B1",
@@ -267,7 +254,6 @@
       ],
       "title": "Proceso catalítico de valorización de residuos de biomasa lignocelulósica para obtención de ácido 2,5-furandicarboxílico (FDCA)",
       "abstract": "Ruta sintética heterogénea empleando catalizadores bifuncionales de rutenio soportado en sílice mesoporosa para la síntesis verde de monómeros de PEF biodegradables.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2856789-A1",
@@ -287,7 +273,6 @@
       ],
       "title": "Procedimiento de mecanizado de ultraprecisión con recubrimiento autolubricante de diamante nanocristalino en herramientas de microdecoletaje",
       "abstract": "Método para torneado de cilindros micrométricos en aleaciones de baja ductilidad empleando fresas recubiertas de CVD nanocristalino dopado con boro para evacuación rápida de viruta.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2739812-B2",
@@ -307,7 +292,6 @@
       ],
       "title": "Biopolímero termoplástico compostable derivado de almidón modificado y poli(succinato de butileno) para packaging sostenible",
       "abstract": "Mezcla polimérica biodegradable con compatibilizante de anhídrido maleico injertado para películas de envasado alimentario con alta barrera a vapor de agua y oxígeno.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2798124-B1",
@@ -327,7 +311,6 @@
       ],
       "title": "Electrolito sólido cerámico nanoestructurado de tipo NASICON con alta conductividad iónica para celdas de ion-litio y litio-metal",
       "abstract": "Material electrolítico sólido inorgánico basado en Li1.5Al0.5Ti1.5(PO4)3 sintetizado por sol-gel con microestructura densificada para inhibición dendrítica a densidades de corriente superiores a 2 mA/cm2.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2812345-B1",
@@ -346,7 +329,6 @@
       ],
       "title": "Procedimiento de microencapsulación de fragancias y agentes bioactivos estables en formulaciones detergentes acuosas",
       "abstract": "Método para encapsular aceites esenciales y fragancias en matrices poliméricas biocompatibles de alginato-quitosano para liberación prolongada durante el ciclo de aclarado textil.",
-      "is_synthetic": false,
       "provenance": {
         "source_authority": "oepm",
         "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2715482-B2",

@@ -1,5 +1,5 @@
 {
-  "dataset_id": "nexus-pilot-16-v1",
+  "dataset_id": "nexus-pilot-16-evaluation-corpus-v1",
   "schema_version": "1.0.0",
   "dataset_version": "1.0.0",
   "source_authorities": [
@@ -9,5 +9,5 @@
   "demand_count": 3,
   "patent_count": 15,
   "annotation_count": 23,
-  "content_sha256": "46f136065647c986f8fb141d35e0f3b1c8e0b713c8ef8ecd50e58a9af5eb69a5"
+  "content_sha256": "bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453"
 }

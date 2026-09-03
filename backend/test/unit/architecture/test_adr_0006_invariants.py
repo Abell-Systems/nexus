@@ -42,8 +42,8 @@ def test_dataset_loader_requires_explicit_path_injection_without_fallbacks():
     loader = DefaultEvaluationDatasetLoader()
     sig = inspect.signature(loader.load_validated_dataset)
 
-    # dataset_path and checksum_path must be required (no default value)
-    for param_name in ("dataset_path", "checksum_path"):
+    # dataset_path, checksum_path, and manifest_path must all be strictly required without defaults
+    for param_name in ("dataset_path", "checksum_path", "manifest_path"):
         param = sig.parameters.get(param_name)
         assert param is not None, f"Missing expected parameter '{param_name}'"
         assert param.default is inspect.Parameter.empty, (
@@ -75,20 +75,24 @@ def test_tamper_rejection_on_canonical_benchmark_file(tmp_path):
     repo_root = Path(__file__).resolve().parents[4]
     real_dataset = repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.json"
     real_checksum = repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.sha256"
+    real_manifest = repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.manifest.json"
 
     # Copy files to tmp_path
     tampered_dataset = tmp_path / "dataset_pilot_benchmark.json"
     tampered_checksum = tmp_path / "dataset_pilot_benchmark.sha256"
+    valid_manifest = tmp_path / "dataset_pilot_benchmark.manifest.json"
 
     raw_bytes = bytearray(real_dataset.read_bytes())
     # Alter exactly 1 byte
     raw_bytes[50] = ord("Z") if raw_bytes[50] != ord("Z") else ord("W")
     tampered_dataset.write_bytes(raw_bytes)
     tampered_checksum.write_text(real_checksum.read_text(encoding="utf-8"))
+    valid_manifest.write_text(real_manifest.read_text(encoding="utf-8"))
 
     loader = DefaultEvaluationDatasetLoader()
     with pytest.raises(ValueError, match="Cryptographic integrity verification failed"):
         loader.load_validated_dataset(
             dataset_path=tampered_dataset,
             checksum_path=tampered_checksum,
+            manifest_path=valid_manifest,
         )

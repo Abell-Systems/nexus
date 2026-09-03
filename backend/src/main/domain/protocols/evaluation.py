@@ -14,7 +14,7 @@ class EvaluationDatasetLoader(Protocol):
         self,
         dataset_path: Path,
         checksum_path: Path,
-        manifest_path: Path | None = None,
+        manifest_path: Path,
     ) -> ValidatedDataset:
         """Loads dataset from exact paths, verifies byte-exact SHA-256 and manifest, returning ValidatedDataset."""
         ...

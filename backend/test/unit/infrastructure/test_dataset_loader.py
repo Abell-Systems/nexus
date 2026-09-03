@@ -104,6 +104,9 @@ def test_loader_success(dataset_bundle):
     dataset_path, checksum_path, manifest_path = dataset_bundle
     loader = DefaultEvaluationDatasetLoader()
 
+    raw_bytes = dataset_path.read_bytes()
+    expected_hash = hashlib.sha256(raw_bytes).hexdigest()
+
     validated = loader.load_validated_dataset(
         dataset_path=dataset_path,
         checksum_path=checksum_path,
@@ -113,7 +116,7 @@ def test_loader_success(dataset_bundle):
     assert len(validated.dataset.demands) == 1
     assert len(validated.dataset.patents) == 1
     assert len(validated.dataset.annotations) == 1
-    assert validated.manifest.content_sha256 == validated.manifest.content_sha256
+    assert validated.manifest.content_sha256 == expected_hash
 
 
 def test_loader_fails_on_missing_dataset(tmp_path):
@@ -122,16 +125,29 @@ def test_loader_fails_on_missing_dataset(tmp_path):
         loader.load_validated_dataset(
             dataset_path=tmp_path / "non_existent.json",
             checksum_path=tmp_path / "any.sha256",
+            manifest_path=tmp_path / "any.manifest.json",
         )
 
 
-def test_loader_fails_on_missing_checksum(dataset_bundle):
-    dataset_path, _, _ = dataset_bundle
+def test_loader_fails_on_missing_checksum(dataset_bundle, tmp_path):
+    dataset_path, _, manifest_path = dataset_bundle
     loader = DefaultEvaluationDatasetLoader()
     with pytest.raises(FileNotFoundError, match="Checksum file not found"):
         loader.load_validated_dataset(
             dataset_path=dataset_path,
-            checksum_path=Path("/tmp/missing_checksum.sha256"),
+            checksum_path=tmp_path / "missing_checksum.sha256",
+            manifest_path=manifest_path,
+        )
+
+
+def test_loader_fails_on_missing_manifest(dataset_bundle, tmp_path):
+    dataset_path, checksum_path, _ = dataset_bundle
+    loader = DefaultEvaluationDatasetLoader()
+    with pytest.raises(FileNotFoundError, match="Manifest file not found"):
+        loader.load_validated_dataset(
+            dataset_path=dataset_path,
+            checksum_path=checksum_path,
+            manifest_path=tmp_path / "missing_manifest.json",
         )
 
 
@@ -168,7 +184,7 @@ def test_loader_fails_on_tampered_checksum(dataset_bundle):
 
 
 def test_loader_fails_on_malformed_checksum_file(dataset_bundle):
-    dataset_path, checksum_path, _ = dataset_bundle
+    dataset_path, checksum_path, manifest_path = dataset_bundle
     loader = DefaultEvaluationDatasetLoader()
 
     checksum_path.write_text("invalid checksum content without hex digest\n", encoding="utf-8")
@@ -176,6 +192,24 @@ def test_loader_fails_on_malformed_checksum_file(dataset_bundle):
         loader.load_validated_dataset(
             dataset_path=dataset_path,
             checksum_path=checksum_path,
+            manifest_path=manifest_path,
+        )
+
+
+def test_loader_fails_on_checksum_filename_mismatch(dataset_bundle):
+    dataset_path, checksum_path, manifest_path = dataset_bundle
+    loader = DefaultEvaluationDatasetLoader()
+
+    # Valid digest but points to other_file.json
+    raw_bytes = dataset_path.read_bytes()
+    digest = hashlib.sha256(raw_bytes).hexdigest()
+    checksum_path.write_text(f"{digest}  other_file.json\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="references target filename 'other_file.json'"):
+        loader.load_validated_dataset(
+            dataset_path=dataset_path,
+            checksum_path=checksum_path,
+            manifest_path=manifest_path,
         )
 
 

@@ -13,7 +13,7 @@ Invariants:
 """
 
 import re
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from enum import Enum, StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -78,16 +78,9 @@ class EvaluationDemand(BaseModel):
     demand_id: str = Field(min_length=1)
     title: str = Field(min_length=1)
     description: str = Field(min_length=1)
-    posted_date: str | None = None
+    posted_date: date | None = None
     target_cpc_prefixes: list[str] = Field(default_factory=list)
-    is_synthetic: bool = False
     provenance: EvaluationProvenance
-
-    @model_validator(mode="after")
-    def validate_modality_consistency(self) -> "EvaluationDemand":
-        if self.is_synthetic and self.provenance.modality != DataModality.SYNTHETIC_CONTROL:
-            raise ValueError("Synthetic data must explicitly declare modality SYNTHETIC_CONTROL")
-        return self
 
 
 class EvaluationPatent(BaseModel):
@@ -96,18 +89,11 @@ class EvaluationPatent(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     publication_id: str = Field(min_length=1)
-    publication_date: str | None = None
+    publication_date: date | None = None
     classifications_cpc: list[str] = Field(default_factory=list)
     title: str = Field(min_length=1)
     abstract: str = Field(min_length=1)
-    is_synthetic: bool = False
     provenance: EvaluationProvenance
-
-    @model_validator(mode="after")
-    def validate_modality_consistency(self) -> "EvaluationPatent":
-        if self.is_synthetic and self.provenance.modality != DataModality.SYNTHETIC_CONTROL:
-            raise ValueError("Synthetic data must explicitly declare modality SYNTHETIC_CONTROL")
-        return self
 
 
 class EvaluationAnnotation(BaseModel):
@@ -120,7 +106,7 @@ class EvaluationAnnotation(BaseModel):
     grade: RelevanceGrade
     annotator_role: str = Field(min_length=1)
     notes: str = ""
-    modality: DataModality = DataModality.EXPERT_LABELLED
+    modality: DataModality
 
 
 class EvaluationDataset(BaseModel):
