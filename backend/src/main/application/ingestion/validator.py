@@ -1,7 +1,13 @@
-"""Patent validation rules and schema enforcement."""
+"""Patent validation rules, deduplication tracking, and schema enforcement."""
 
 from datetime import datetime
 
+from domain.models.ingestion import (
+    NormalizationResult,
+    QuarantinedRecord,
+    QuarantineReason,
+    RecordDisposition,
+)
 from domain.models.patent import PatentDocument
 
 
@@ -10,7 +16,61 @@ class ValidationError(Exception):
 
 
 class PatentValidator:
-    """Validator enforcing integrity and quality constraints on patent documents."""
+    """Validator enforcing integrity, deduplication, and quality constraints on patent documents."""
+
+    def __init__(self) -> None:
+        self._seen_publication_ids: set[str] = set()
+
+    def reset_deduplication(self) -> None:
+        """Reset internal deduplication state across pipeline runs."""
+        self._seen_publication_ids.clear()
+
+    def is_duplicate(self, publication_id: str) -> bool:
+        """Check if publication_id has already been processed and track it."""
+        if not publication_id or not publication_id.strip():
+            return False
+        clean_id = publication_id.strip()
+        if clean_id in self._seen_publication_ids:
+            return True
+        self._seen_publication_ids.add(clean_id)
+        return False
+
+    def validate_normalization_result(
+        self, result: NormalizationResult
+    ) -> NormalizationResult:
+        """Validate and classify a NormalizationResult enforcing deduplication and critical constraints.
+
+        If a document is INCLUDED but its publication_id has already been processed,
+        it is re-classified as DUPLICATE.
+        """
+        if result.disposition == RecordDisposition.INCLUDED and result.document is not None:
+            # 1. Check publication_id deduplication
+            if self.is_duplicate(result.document.publication_id):
+                return NormalizationResult(
+                    disposition=RecordDisposition.DUPLICATE,
+                    document=result.document,
+                    observations=result.observations,
+                )
+
+            # 2. Strict document validation
+            try:
+                self.validate_document(result.document)
+            except ValidationError as e:
+                # Quarantines invalid document
+                return NormalizationResult(
+                    disposition=RecordDisposition.QUARANTINED,
+                    quarantined=QuarantinedRecord(
+                        raw_identifier=result.document.publication_id,
+                        reason=QuarantineReason.UNVERIFIABLE_METADATA,
+                        error_message=f"Validation failed: {e}",
+                        raw_snippet=f"publication_id={result.document.publication_id}",
+                        detected_at=datetime.now(),
+                        source_uri="",
+                    ),
+                    observations=result.observations,
+                )
+
+        return result
 
     def _validate_date(self, date_val: str | None, field_name: str) -> None:
         if date_val is None:
