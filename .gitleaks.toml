@@ -1,0 +1,10 @@
+# Gitleaks security configuration for Abell Nexus
+
+[allowlist]
+  description = "Scoped allowlist for verified public client tokens in canonical fixtures"
+  paths = [
+    '''backend/test/fixtures/innoget_sample_call_2446\.html''',
+  ]
+  regexes = [
+    '''6Lc5ABoUAAAAANfAH1HvDcZeWz3EdtBxwdaNyB_Q''',
+  ]
