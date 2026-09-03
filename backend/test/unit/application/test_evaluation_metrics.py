@@ -172,16 +172,25 @@ def test_mrr_global_vs_mrr_at_k():
     assert mrr_at_k(ranking, irrelevant_judgements, k=5, relevance_fn=is_relevant_strict) == 0.0
 
 
-def test_mrr_skips_uncertain_in_rank():
-    # If rank 1 is UNCERTAIN, rank 2 is relevant:
-    # Ranked: [P_unc, P_rel]
-    # Judged sequence: [P_rel] -> rank in judged sequence is 1 -> MRR = 1/1 = 1.0
-    ranking = ["P_unc", "P_rel"]
+def test_mrr_preserves_original_system_rank_adversarial():
+    # Adversarial test: system places UNCERTAIN items ahead of a relevant item
+    # Original ranking:
+    # 1. P_unc1 (UNCERTAIN)
+    # 2. P_unc2 (UNCERTAIN)
+    # 3. P_rel  (GRADE_3)
+    # Under ADR 0007 §4, the relevant item was retrieved at original system position 3.
+    # Therefore, MRR = 1/3 = ~0.33333, and MRR@2 = 0.0 (cutoff before rank 3), MRR@5 = 1/3
+    ranking = ["P_unc1", "P_unc2", "P_rel", "P_other"]
     judgements = {
-        "P_unc": RelevanceGrade.UNCERTAIN,
+        "P_unc1": RelevanceGrade.UNCERTAIN,
+        "P_unc2": RelevanceGrade.UNCERTAIN,
         "P_rel": RelevanceGrade.GRADE_3,
+        "P_other": RelevanceGrade.GRADE_0,
     }
-    assert mrr(ranking, judgements, relevance_fn=is_relevant_strict) == 1.0
+
+    assert math.isclose(mrr(ranking, judgements, relevance_fn=is_relevant_strict), 1.0 / 3.0)
+    assert mrr_at_k(ranking, judgements, k=2, relevance_fn=is_relevant_strict) == 0.0
+    assert math.isclose(mrr_at_k(ranking, judgements, k=5, relevance_fn=is_relevant_strict), 1.0 / 3.0)
 
 
 def test_ndcg_exact():

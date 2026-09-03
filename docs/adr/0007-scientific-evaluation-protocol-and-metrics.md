@@ -88,10 +88,12 @@ Under the core invariant **`UNKNOWN != NEGATIVE`** (AGENTS.md §3):
 
 #### Reciprocal Rank: Global MRR vs. MRR@K
 1. **Global MRR (Primary Metric):**  
-   $$\text{RR}(d, \tau) = \begin{cases} \frac{1}{\text{rank}_{\text{judged}}(p^*)} & \text{where } p^* \text{ is the first relevant item in the judged ranking} \\ 0.0 & \text{if no relevant item exists in the judged ranking} \end{cases}$$
+   Evaluates the reciprocal rank of the first relevant candidate according to its **true position in the system's original ranked candidate list**:
+   $$\text{RR}(d, \tau) = \begin{cases} \frac{1}{\text{rank}_{\text{orig}}(p^*)} & \text{where } p^* \text{ is the first relevant item in the system's ranked list} \\ 0.0 & \text{if no relevant item is retrieved} \end{cases}$$
+   where $\text{rank}_{\text{orig}}(p^*) \in \{1, 2, \dots, N\}$ represents the original 1-indexed retrieval position produced by the engine. Items flagged as `UNCERTAIN` preceding $p^*$ are NOT skipped or collapsed for position indexing: if an engine places an uncertain item at rank 1 and a relevant item at rank 2, the relevant item is at system rank 2 ($\text{RR} = 1/2 = 0.5$).
 2. **Rank-Truncated MRR@K (Secondary Metric):**  
-   $$\text{RR}@K(d, \tau) = \begin{cases} \frac{1}{\text{rank}_{\text{judged}}(p^*)} & \text{if } \text{rank}_{\text{judged}}(p^*) \le K \\ 0.0 & \text{otherwise} \end{cases}$$
-   When the metric is named `MRR`, it refers exclusively to Global MRR across the full judged pool.
+   $$\text{RR}@K(d, \tau) = \begin{cases} \frac{1}{\text{rank}_{\text{orig}}(p^*)} & \text{if } \text{rank}_{\text{orig}}(p^*) \le K \\ 0.0 & \text{otherwise} \end{cases}$$
+   When the metric is named `MRR`, it refers exclusively to Global MRR across the full original ranking.
 
 ---
 

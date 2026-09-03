@@ -127,16 +127,16 @@ def mrr(
     judgements: dict[str, RelevanceGrade],
     relevance_fn: Callable[[RelevanceGrade], bool],
 ) -> float:
-    """Computes Global Mean Reciprocal Rank over the full judged sequence (ADR 0007 §4)."""
-    judged_rank = 0
-    for pub_id in ranked_ids:
+    """Computes Global Mean Reciprocal Rank over original system retrieval ranks (ADR 0007 §4).
+
+    The rank is the 1-indexed position in the system's ranked_ids.
+    Preceding UNCERTAIN or irrelevant items are not collapsed.
+    """
+    for idx, pub_id in enumerate(ranked_ids):
+        orig_rank = idx + 1
         grade = judgements.get(pub_id)
-        if not is_judged(grade):
-            continue
-        assert grade is not None
-        judged_rank += 1
-        if relevance_fn(grade):
-            return 1.0 / judged_rank
+        if grade is not None and grade != RelevanceGrade.UNCERTAIN and relevance_fn(grade):
+            return 1.0 / orig_rank
     return 0.0
 
 
@@ -146,21 +146,15 @@ def mrr_at_k(
     k: int,
     relevance_fn: Callable[[RelevanceGrade], bool],
 ) -> float:
-    """Computes Rank-Truncated Reciprocal Rank within top-k judged items (ADR 0007 §4)."""
+    """Computes Rank-Truncated Reciprocal Rank within top-k original system positions (ADR 0007 §4)."""
     if k <= 0:
         return 0.0
 
-    judged_rank = 0
-    for pub_id in ranked_ids:
+    for idx, pub_id in enumerate(ranked_ids[:k]):
+        orig_rank = idx + 1
         grade = judgements.get(pub_id)
-        if not is_judged(grade):
-            continue
-        assert grade is not None
-        judged_rank += 1
-        if judged_rank > k:
-            break
-        if relevance_fn(grade):
-            return 1.0 / judged_rank
+        if grade is not None and grade != RelevanceGrade.UNCERTAIN and relevance_fn(grade):
+            return 1.0 / orig_rank
     return 0.0
 
 
