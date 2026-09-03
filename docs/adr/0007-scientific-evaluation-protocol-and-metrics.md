@@ -8,44 +8,34 @@
 
 ## Context
 
-Under ADR 0004 (Matching Engine Contract & Evidence Assessment), ADR 0005 (Explicit Policy Injection & No Implicit Configuration), and ADR 0006 (Scientific Validation Dataset, Schema, and Evaluation Provenance), Nexus formalizes a strict decoupling between:
-1. Authentic observed facts from primary patent and demand sources (`DataModality.OBSERVED`),
-2. Versioned, externalized matching policies (`MatchingPolicyConfig`),
-3. Cryptographically sealed, immutable evaluation datasets (`ValidatedDataset`), and
-4. The deterministic matching engine (`MatchingEngine`).
+Under ADR 0004 (Matching Engine Contract & Evidence Assessment), ADR 0005 (Explicit Policy Injection & No Implicit Configuration), and ADR 0006 (Scientific Validation Dataset, Schema, and Evaluation Provenance), Nexus formalizes a strict decoupling between authentic observed facts, externalized matching policies, immutable evaluation datasets, and the deterministic matching engine.
 
-While ADR 0006 provided the schema, integrity loader, and pilot corpus for evaluation datasets, it intentionally postponed the **evaluation execution protocol**, the **formal treatment of human annotation grades**, and the **mathematical definition of evaluation metrics**.
+However, an evaluation protocol cannot be scientifically defensible if its statistical framing, metric definitions, and boundary conditions are ambiguous. Specifically:
+1. **Unbounded Recall Denominators:** If Recall is defined without declaring whether evaluation is *pooled* or *open-universe*, the metric vacillates between measuring recovery over a curated subset vs. population recall across millions of patents.
+2. **Epistemic Distortion in Precision & Uncertainty:** Coercing `RelevanceGrade.UNCERTAIN = -1` to negative ($0$) or penalizing a ranker for encountering unjudged items conflates absence of expert knowledge with verified irrelevance (`UNKNOWN != NEGATIVE`).
+3. **Multilevel Ranking Ambiguity under Incomplete Judgements:** Standard nDCG formulations break down when encountering unjudged items, or when a demand possesses zero relevant items ($IDCG = 0$).
+4. **Rank-cutoff Confusion in Reciprocal Rank:** Conflating global Mean Reciprocal Rank (MRR) with rank-truncated MRR@K creates irreproducible baselines.
+5. **Implicit Runtime Discovery of Engine Commit:** Requiring the evaluation runner to discover Git commits via shell commands (`git rev-parse`) or inspect filesystem metadata violates ADR 0005's zero-implicit-resolution invariant.
 
-Without a binding engineering and scientific contract for the evaluation protocol:
-1. **Ad-hoc or Shifting Relevance Binarization:** Developers might opportunistically adjust the threshold of what counts as "relevant" (e.g. including grade 1 as positive to artificially inflate recall, or excluding grade 2 to artificially inflate precision).
-2. **Improper Handling of Epistemic Uncertainty (`UNCERTAIN`):** Treating annotator uncertainty (`RelevanceGrade.UNCERTAIN = -1`) as a negative/irrelevant label commits an epistemic fallacy (`UNKNOWN != NEGATIVE`), biasing evaluation metrics.
-3. **Loss of Scientific Provenance:** Evaluation results produced without recording the exact Git commit, dataset SHA-256, and policy SHA-256 cannot be independently audited or reproduced.
-4. **Coupling to Filesystem & Engine Corruption:** If the evaluation runner or metrics calculator accesses the filesystem directly, loads default files, or modifies the engine/policy to obtain higher scores, the benchmark ceases to be an independent measurement instrument.
+This ADR establishes the rigorous mathematical and architectural contract for scientific matching evaluation in Nexus.
 
 ---
 
 ## Decision
 
-### 1. Fundamental Principle of Metric and Runner Independence
+### 1. Fundamental Evaluation Framing: Pooled Evaluation over Sealed Candidate Universe
 
-> **The evaluator is an independent auditor, not a component of the matching engine.**
+Nexus adopts the **Pooled Benchmark Evaluation Methodology** (Cranfield / TREC paradigm):
 
-1. The evaluation suite MUST measure the matching engine from the outside via explicit dependency injection.
-2. The evaluator MUST NOT modify the benchmark dataset, fabricate labels, adjust policy parameters, or alter engine heuristics to improve scores.
-3. Metrics calculation MUST be housed in an independent module decoupled from `domain/models/matching.py` and `application/matching/`.
-
----
-
-### 2. Evaluation Unit and Alignment Pairs
-
-The fundamental unit of evaluation is the **Demand-Patent Evaluation Item** $(d, p) \in \mathcal{D} \times \mathcal{P}$:
-* A demand $d \in \mathcal{D}$ represents an authentic technological need.
-* A candidate patent $p \in \mathcal{P}$ represents a published invention assessed against demand $d$.
-* The ground of comparison is the set of expert annotations $\mathcal{A}$ associated with $(d, p)$, declared under `DataModality.EXPERT_LABELLED`.
+1. For each demand $d \in \mathcal{D}$ in an evaluation dataset, the set of candidates $\mathcal{P}_d$ present in `EvaluationDataset.patents` defines the **sealed, exhaustive candidate universe** for that benchmark.
+2. The engine's ranker is evaluated strictly on its ability to order candidates within this pooled universe $\mathcal{P}_d$.
+3. **Recall Denominator Definition:**  
+   $$\text{TotalRelevant}(d, \tau) = \left| \{ p \in \mathcal{P}_d : \text{grade}(d, p) \text{ is judegable and } \text{IsRelevant}(d, p, \tau) \} \right|$$
+   Recall measures the fraction of all known relevant items within the pooled candidate universe that are recovered in top-$K$. It is explicitly bounded and closed under the dataset.
 
 ---
 
-### 3. Relevance Grade Semantics & Dual Operational Thresholds
+### 2. Relevance Grade Semantics & Dual Operational Projections
 
 Under ADR 0006, `RelevanceGrade` defines a 4-point discrete ordinal scale plus epistemic uncertainty:
 * **Grade 0 (`IRRELEVANT`):** Out of domain, or unrelated technology.
@@ -54,97 +44,97 @@ Under ADR 0006, `RelevanceGrade` defines a 4-point discrete ordinal scale plus e
 * **Grade 3 (`DIRECTLY_ADDRESSING`):** Directly targets the specific technical solution sought by the demand.
 * **Grade -1 (`UNCERTAIN`):** Ambiguous prior art or insufficient expert consensus requiring deeper investigation.
 
-To prevent opportunistic goalpost-shifting, Nexus defines two canonical, deterministic binary projections:
+To prevent opportunistic goalpost-shifting, two canonical binary projections are established:
 
 1. **Strict Target Alignment ($\tau_{\text{strict}}$):**
    $$\text{IsRelevant}_{\text{strict}}(g) = \begin{cases} \text{True} & \text{if } g = 3 \\ \text{False} & \text{if } g \in \{0, 1, 2\} \end{cases}$$
 2. **Broad Technological Alignment ($\tau_{\text{broad}}$):**
    $$\text{IsRelevant}_{\text{broad}}(g) = \begin{cases} \text{True} & \text{if } g \in \{2, 3\} \\ \text{False} & \text{if } g \in \{0, 1\} \end{cases}$$
 
-No in-code heuristic may invent custom thresholds outside these two canonical definitions.
+---
+
+### 3. Epistemological Invariant: Explicit Handling of `UNCERTAIN` (-1)
+
+Under the core invariant **`UNKNOWN != NEGATIVE`** (AGENTS.md §3):
+
+1. **No Coercion:** `RelevanceGrade.UNCERTAIN` (-1) MUST NEVER be coerced to $0$ or treated as negative.
+2. **Judged-Item Precision@K ($P@K$):**  
+   Precision is computed strictly over **judged/known candidates** in the top-$K$:
+   $$P@K = \begin{cases} \frac{\text{TP}_K}{\text{TP}_K + \text{FP}_K} & \text{if } (\text{TP}_K + \text{FP}_K) > 0 \\ 0.0 & \text{if } (\text{TP}_K + \text{FP}_K) = 0 \end{cases}$$
+   where:
+   * $\text{TP}_K = |\{ p \in \text{TopK}(d) : \text{grade}(p) \neq \text{UNCERTAIN} \land \text{IsRelevant}(p, \tau) \}|$
+   * $\text{FP}_K = |\{ p \in \text{TopK}(d) : \text{grade}(p) \neq \text{UNCERTAIN} \land \neg \text{IsRelevant}(p, \tau) \}|$
+3. **Judged Coverage at K ($Judged@K$):**  
+   To prevent gaming precision by retrieving unjudged candidates, every evaluation MUST concurrently report:
+   $$\text{Judged}@K = \frac{|\{ p \in \text{TopK}(d) : \text{grade}(p) \neq \text{UNCERTAIN} \}|}{K}$$
+4. **Dataset Uncertainty Rate:**  
+   $$\text{UncertaintyRate} = \frac{|\{ a \in \mathcal{A} : a.\text{grade} = \text{UNCERTAIN} \}|}{|\mathcal{A}|}$$
 
 ---
 
-### 4. Epistemological Invariant: Strict Treatment of `UNCERTAIN` (-1)
+### 4. Ranking Metrics: nDCG and Reciprocal Rank
 
-Under the core invariant **`UNKNOWN != NEGATIVE`** (ADR 0003, AGENTS.md §3):
-1. Pairs labeled `RelevanceGrade.UNCERTAIN` (-1) represent absence of definitive expert evidence, NOT confirmed negative relevance.
-2. For all standard precision, recall, and ranking metrics, items with grade `UNCERTAIN` MUST be **excluded from both true-positive and false-positive evaluation tallies**.
-3. Every evaluation report MUST explicitly compute and report the **Uncertainty Rate** ($\text{UncertaintyRate} = \frac{|\mathcal{A}_{\text{uncertain}}|}{|\mathcal{A}|}$) as a primary epistemic health metric.
-4. Any evaluation implementation that silently coerces `UNCERTAIN` to $0$ or treats it as negative is non-compliant and MUST raise an architectural test failure.
+#### Graded Relevance Ranking: nDCG@K
+1. **Filtering:** Candidates with grade `UNCERTAIN` are excluded from the evaluated sequence before computing DCG.
+2. **DCG Formulation:** For the remaining judged sequence in top-$K$ with grades $g_i \in \{0, 1, 2, 3\}$:
+   $$\text{DCG}@K = \sum_{i=1}^{\min(K, N_{\text{judged}})} \frac{2^{g_i} - 1}{\log_2(i + 1)}$$
+3. **Ideal DCG (IDCG):** Computed by sorting all judged candidates for demand $d$ in descending order of grade:
+   $$\text{IDCG}@K = \sum_{i=1}^{\min(K, N_{\text{judged}})} \frac{2^{g_i^*} - 1}{\log_2(i + 1)}$$
+4. **Boundary Condition ($\text{IDCG}@K = 0$):**  
+   If all judged candidates for demand $d$ have grade $0$ (meaning no relevant items exist in the candidate pool for this demand), $\text{IDCG}@K = 0.0$.  
+   In this case, the ranking task is non-informative for graded relevance. By definition:
+   $$\text{nDCG}@K = 1.0 \quad \text{if } \text{IDCG}@K = 0 \land \text{DCG}@K = 0$$
+   $$\text{nDCG}@K = 0.0 \quad \text{if } \text{IDCG}@K = 0 \land \text{DCG}@K > 0 \quad (\text{mathematically impossible})$$
 
----
-
-### 5. Primary and Secondary Evaluation Metrics
-
-The evaluation protocol calculates deterministic metrics per demand $d$ and aggregates them macro-averaged across all demands:
-
-#### Primary Metrics
-1. **Precision@K ($P@K$):** Proportion of top-$K$ ranked patents that are relevant under threshold $\tau$:
-   $$P@K = \frac{|\{p \in \text{TopK}(d) : \text{IsRelevant}(p)\}|}{K}$$
-   Canonical evaluation MUST report $P@1$, $P@3$, and $P@5$.
-2. **Recall@K ($R@K$):** Proportion of all known relevant patents for demand $d$ retrieved in the top-$K$:
-   $$R@K = \frac{|\{p \in \text{TopK}(d) : \text{IsRelevant}(p)\}|}{|\{p \in \mathcal{P}_d : \text{IsRelevant}(p)\}|}$$
-3. **Mean Reciprocal Rank (MRR):** Reciprocal rank of the first relevant candidate:
-   $$\text{RR}(d) = \frac{1}{\min \{ \text{rank}(p) : p \in \text{TopK}(d) \land \text{IsRelevant}(p) \}}$$
-   ($\text{RR} = 0.0$ if no relevant candidate is ranked).
-4. **Normalized Discounted Cumulative Gain (nDCG@K):** Evaluates multi-level graded relevance ($g \in \{0, 1, 2, 3\}$) using logarithmic discount:
-   $$\text{DCG}@K = \sum_{i=1}^K \frac{2^{g_i} - 1}{\log_2(i + 1)}, \quad \text{nDCG}@K = \frac{\text{DCG}@K}{\text{IDCG}@K}$$
-
-#### Secondary Metrics
-1. **Sufficiency Pass Rate:** Percentage of top-$K$ candidates classified as `EvidenceSufficiency.SUFFICIENT` by the engine.
-2. **Uncertainty Coverage Rate:** Fraction of evaluation pairs flagged as `UNCERTAIN`.
+#### Reciprocal Rank: Global MRR vs. MRR@K
+1. **Global MRR (Primary Metric):**  
+   $$\text{RR}(d, \tau) = \begin{cases} \frac{1}{\text{rank}_{\text{judged}}(p^*)} & \text{where } p^* \text{ is the first relevant item in the judged ranking} \\ 0.0 & \text{if no relevant item exists in the judged ranking} \end{cases}$$
+2. **Rank-Truncated MRR@K (Secondary Metric):**  
+   $$\text{RR}@K(d, \tau) = \begin{cases} \frac{1}{\text{rank}_{\text{judged}}(p^*)} & \text{if } \text{rank}_{\text{judged}}(p^*) \le K \\ 0.0 & \text{otherwise} \end{cases}$$
+   When the metric is named `MRR`, it refers exclusively to Global MRR across the full judged pool.
 
 ---
 
-### 6. Architecture of the Evaluation Runner (`EvaluationRunner`)
+### 5. Architectural Contract: Explicit Execution Context & Zero Implicit Discovery
 
-The runner executes as an independent application-layer orchestrator:
+Under ADR 0005:
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                    EvaluationRunner                         │
-│                                                             │
-│ Inputs (Explicit Injection ONLY):                           │
-│   - dataset: ValidatedDataset                               │
-│   - engine: MatchingEngine                                  │
-│   - policy: MatchingPolicyConfig                            │
-│                                                             │
-│ Execution:                                                  │
-│   For each demand in dataset.dataset.demands:               │
-│     1. Construct CandidatePool from dataset.patents         │
-│     2. Invoke engine.evaluate(demand, pool, policy)         │
-│     3. Align engine MatchAssessments with annotations       │
-│     4. Compute per-demand metrics (P@K, R@K, MRR, nDCG@K)   │
-│   Compute macro-averaged summary                            │
-│                                                             │
-│ Output:                                                     │
-│   EvaluationRunReport (Frozen, Full Provenance Audit)       │
-└─────────────────────────────────────────────────────────────┘
-```
-
-#### Invariants of `EvaluationRunner`:
-1. **Zero Filesystem Access:** The runner receives `ValidatedDataset`, `MatchingEngine`, and `MatchingPolicyConfig` exclusively via method arguments. It contains no `open()`, `Path.read_*()`, or directory scanners.
-2. **Immutable Output (`EvaluationRunReport`):** The output model is frozen and records:
-   * `run_id`: Unique execution identifier.
-   * `timestamp`: ISO 8601 UTC timestamp.
-   * `engine_commit_hash`: Git commit SHA of the codebase executing the evaluation.
-   * `dataset_id`, `dataset_version`, `dataset_sha256`: Cryptographic fingerprint of the dataset.
-   * `policy_id`, `policy_version`, `policy_sha256`: Cryptographic fingerprint of the matching policy.
-   * `demand_reports`: Dict of per-demand metrics.
-   * `macro_summary`: Overall aggregated metrics for strict and broad thresholds.
+1. **`EvaluationExecutionContext` Model:**  
+   The runner does NOT execute Git commands, inspect `.git`, or read filesystem timestamps. All execution environment coordinates MUST be injected explicitly:
+   ```python
+   class EvaluationExecutionContext(BaseModel):
+       engine_name: str
+       engine_version: str
+       engine_commit_hash: str = Field(min_length=7, max_length=40)
+       execution_timestamp: datetime
+       environment: str  # e.g., "ci", "local", "benchmarking"
+   ```
+2. **Runner Protocol Signature:**
+   ```python
+   class EvaluationRunner(Protocol):
+       def run_evaluation(
+           self,
+           dataset: ValidatedDataset,
+           engine: MatchingEngine,
+           policy: MatchingPolicyConfig,
+           context: EvaluationExecutionContext,
+       ) -> EvaluationRunReport:
+           ...
+   ```
+3. **Pure Audit Decoupling:**  
+   The runner depends strictly on the `MatchingEngine` protocol, never on concrete implementation classes (`DefaultMatchingEngine`). It performs **zero** filesystem I/O.
 
 ---
 
 ## Consequences
 
 ### Positive
-* **Scientific Reproducibility:** Anyone possessing the Git commit, dataset SHA, and policy SHA can reproduce the exact decimal metric values deterministically.
-* **Anti-Gaming Invariant:** Strict mathematical separation of broad vs. strict relevance and exclusion of `UNCERTAIN` prevents inflation of accuracy figures.
-* **Architectural Decoupling:** The matching engine knows nothing about the evaluation runner or metric formulas.
+* **Mathematical Precision:** No ambiguous denominators; exact formulas for $P@K$ under uncertainty, $Judged@K$, $IDCG = 0$, and global $MRR$.
+* **Honest Scientific Reporting:** High precision achieved by avoiding unjudged items is immediately revealed by low $Judged@K$.
+* **CWD & Tooling Independence:** Execution is 100% reproducible without Git repository presence or disk access.
 
 ### Negative
-* Stricter CI / validation burden: modifying engine scoring without verifying metrics will immediately highlight regressions in evaluation benchmarks.
+* Higher metric verbosity: reports must present $P@K$, $R@K$, $Judged@K$, $nDCG@K$, and $UncertaintyRate$ across both $\tau_{\text{strict}}$ and $\tau_{\text{broad}}$.
 
 ---
 
@@ -152,15 +142,15 @@ The runner executes as an independent application-layer orchestrator:
 
 A Pull Request is **non-compliant** and MUST NOT be merged if:
 
-1. The evaluation runner or metrics calculator imports or invokes filesystem operations (`Path("...")`, `open()`, etc.).
-2. The evaluation protocol treats `RelevanceGrade.UNCERTAIN` (-1) as $0$ or negative in precision/recall calculations.
-3. The evaluation runner accepts optional `dataset=None` or `policy=None` and loads fallbacks from disk.
-4. An evaluation report omits the `dataset_sha256`, `policy_sha256`, or `engine_commit_hash`.
-5. The matching engine is modified or tuned specifically against the pilot benchmark dataset in the same PR.
+1. `RelevanceGrade.UNCERTAIN` is coerced to $0$ or included in true-negative / false-positive counts.
+2. $P@K$ is computed with unjudged items treated as negatives without reporting $Judged@K$.
+3. The evaluation runner touches disk, executes Git commands, or resolves file paths.
+4. The runner accepts optional `dataset=None`, `engine=None`, `policy=None`, or `context=None`.
+5. $\text{IDCG} = 0$ results in a divide-by-zero exception rather than handling the boundary condition deterministically.
 
 ### Automated Test Requirements
 The test suite MUST verify:
-1. **Uncertainty Independence Test:** Proves that adding `UNCERTAIN` annotations does not degrade or inflate Precision@K or Recall@K.
-2. **CWD & Filesystem Independence Test:** Proves that `EvaluationRunner` executes without touching disk and succeeds inside a read-only sandboxed environment.
-3. **Deterministic Metric Verification:** Proves that known demand rankings produce exact mathematical P@K, MRR, and nDCG values.
-4. **Provenance Audit Test:** Verifies that every `EvaluationRunReport` carries verified SHAs matching the injected dataset and policy.
+1. **Uncertainty Isolation Test:** Adding `UNCERTAIN` annotations modifies $Judged@K$ and $UncertaintyRate$, but does NOT alter $P@K$ over the remaining judged items.
+2. **Zero IDCG Boundary Test:** Evaluation of a demand with 0 relevant items produces $\text{nDCG} = 1.0$ deterministically without division errors.
+3. **CWD & Pure Memory Test:** `EvaluationRunner` completes cleanly in a sandbox where filesystem read/write is completely disabled.
+4. **Provenance Integrity Test:** Injected `EvaluationExecutionContext`, `ValidatedDataset.manifest.content_sha256`, and `policy.policy_sha256` are strictly stamped into `EvaluationRunReport`.
