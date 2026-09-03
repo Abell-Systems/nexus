@@ -128,6 +128,13 @@ The following parameters are externalized into version-controlled, cryptographic
 * **Strict Null Semantics:** Missing abstract, unobserved dates, or missing CPC codes remain `None` and produce zero contribution to the corresponding feature; they are never imputed with synthetic default strings or fake zero timestamps.
 * **Ineligible Documents:** If a patent violates prior-art temporality ($t_{\text{pub}} \ge t_{\text{demand}}$) or jurisdiction, the engine evaluates `sufficiency = INELIGIBLE_TEMPORAL`, flags `overall_score = 0.0`, and records the exact temporal difference in `MatchFeatures`.
 
+#### 4.1 Min-Max Normalization Semantics when $\max == \min$ (Zero Spread)
+
+In second-stage ranking (`min_max_normalize()`), when all candidate scores in a pool are identical ($\max = \min$):
+* **Operational Behavior:** The normalizer maps all values to `0.0` rather than dividing by zero or synthesizing arbitrary rankings.
+* **Scientific Semantics:** This outcome explicitly signifies that **the signal provides zero discriminative power (zero variance) across the candidate pool**, rather than implying that candidates have zero intrinsic relevance.
+* **Protocol Justification:** In additive linear fusion ($S_{\text{hybrid}} = \alpha S_{\text{lex}} + \beta S_{\text{sem}} + \gamma S_{\text{cpc}}$), a non-discriminative signal that mapped to `1.0` would act as an artificial intercept boosting all candidates equally, distorting relative contributions of the remaining discriminative signals. Assigning `0.0` ensures that non-discriminative signals neither penalize nor artificially inflate candidates, preserving the relative ranking established by discriminative signals. Ties are broken deterministically by canonical publication ID (`publication_id ASC`).
+
 ---
 
 ### 5. Architectural Alignment with ADR 0001 / 0002 / 0003

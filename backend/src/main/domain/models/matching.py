@@ -289,22 +289,22 @@ class MatchAssessment(BaseModel):
 
 
 class CPCConcordanceLevels(BaseModel):
-    subgroup: float = 1.00
-    main_group: float = 0.75
-    subclass: float = 0.50
-    section: float = 0.25
-    none: float = 0.00
+    subgroup: float
+    main_group: float
+    subclass: float
+    section: float
+    none: float
 
 
 class ConfidenceThresholds(BaseModel):
-    strong: float = 0.70
-    moderate: float = 0.40
-    weak: float = 0.10
+    strong: float
+    moderate: float
+    weak: float
 
 
 class SufficiencyRules(BaseModel):
-    min_active_signals: int = 1
-    require_temporal_validity: bool = True
+    min_active_signals: int
+    require_temporal_validity: bool
 
 
 class MatchingPolicyConfig(BaseModel):
@@ -314,11 +314,11 @@ class MatchingPolicyConfig(BaseModel):
     policy_version: str
     description: str = ""
     weights: RankerWeights
-    cpc_concordance_levels: CPCConcordanceLevels = Field(default_factory=CPCConcordanceLevels)
-    confidence_thresholds: ConfidenceThresholds = Field(default_factory=ConfidenceThresholds)
-    sufficiency_rules: SufficiencyRules = Field(default_factory=SufficiencyRules)
-    concept_to_cpc_taxonomy: dict[str, list[str]] = Field(default_factory=dict)
-    policy_sha256: str = Field(default="", min_length=0, max_length=64)
+    cpc_concordance_levels: CPCConcordanceLevels
+    confidence_thresholds: ConfidenceThresholds
+    sufficiency_rules: SufficiencyRules
+    concept_to_cpc_taxonomy: dict[str, list[str]]
+    policy_sha256: str = Field(min_length=64, max_length=64)
 
     @classmethod
     def load_from_json(cls, file_path: str | Any) -> "MatchingPolicyConfig":
@@ -337,11 +337,17 @@ class MatchingPolicyConfig(BaseModel):
             raise ValueError(f"Corrupt matching policy JSON: {path}") from err
 
         declared_sha = data.pop("policy_sha256", None)
+        if not declared_sha:
+            raise ValueError(
+                f"Cryptographic integrity verification failed for {path}: "
+                f"missing mandatory declared 'policy_sha256'"
+            )
+
         # Compute canonical hash over rest of payload
         canonical_bytes = json.dumps(data, sort_keys=True, indent=2).encode("utf-8")
         computed_sha = hashlib.sha256(canonical_bytes).hexdigest()
 
-        if declared_sha and declared_sha.lower() != computed_sha.lower():
+        if declared_sha.lower() != computed_sha.lower():
             raise ValueError(
                 f"Cryptographic integrity verification failed for {path}: "
                 f"declared {declared_sha}, computed {computed_sha}"

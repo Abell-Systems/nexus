@@ -108,6 +108,21 @@ def test_matching_policy_config_fail_fast_on_tampered_digest(tmp_path):
         MatchingPolicyConfig.load_from_json(tampered_file)
 
 
+def test_matching_policy_config_fail_fast_on_missing_declared_digest(tmp_path):
+    policy_path = Path("config/policies/matching/default_matching_policy.json")
+    with open(policy_path, encoding="utf-8") as f:
+        data = json.load(f)
+
+    # Remove declared policy_sha256
+    del data["policy_sha256"]
+    missing_sha_file = tmp_path / "missing_sha_policy.json"
+    with open(missing_sha_file, "w", encoding="utf-8") as f:
+        json.dump(data, f)
+
+    with pytest.raises(ValueError, match="missing mandatory declared 'policy_sha256'"):
+        MatchingPolicyConfig.load_from_json(missing_sha_file)
+
+
 def test_match_features_model_contracts():
     features = MatchFeatures(
         lexical_score=0.85,
