@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tomo2 xmlns="https://sede.oepm.gob.es/bopiweb/xsd/Tomo2.xsd">
+  <!-- Case 1: Standard National Granted Patent (B2), dd/MM/yyyy date, standard order -->
+  <PatenteNacional>
+    <PublicacionConcesion>
+      <p11_NumPatenteCCP>2849102</p11_NumPatenteCCP>
+      <Pais>ES</Pais>
+      <Kind>B2</Kind>
+      <p21_NumSolicitud>P202030431</p21_NumSolicitud>
+      <p22_FechaSolicitud>12/05/2020</p22_FechaSolicitud>
+      <p45_FechaPublicacionDeLaConcesion>25/11/2021</p45_FechaPublicacionDeLaConcesion>
+      <p54_TituloInvencion>Formulación detergente enzimática líquida biodegradable</p54_TituloInvencion>
+      <p57_ResumenOReivindicacion>Composición acuosa con tensioactivos biodegradables y enzimas estabilizadas.</p57_ResumenOReivindicacion>
+      <p73_NombreTitular>Laboratorios Bilper S.A.</p73_NombreTitular>
+      <p72_NombreInventor>García Pérez, Elena</p72_NombreInventor>
+      <p51_ClasificacionInternacionalPatentes>C11D 1/00</p51_ClasificacionInternacionalPatentes>
+      <p51_ClasificacionInternacionalPatentes>C11D 3/386</p51_ClasificacionInternacionalPatentes>
+    </PublicacionConcesion>
+  </PatenteNacional>
+
+  <!-- Case 2: European Patent Translation (T3) with Claims fallback (no abstract tag) -->
+  <SolicitudesPatentesEuropeasEfectosEspanha>
+    <Publicacion>
+      <PublicacionId>ES2715482T3</PublicacionId>
+      <p45_FechaPublicacionDeLaConcesion>15/03/2020</p45_FechaPublicacionDeLaConcesion>
+      <p54_TituloInvencion>Procedimiento de microencapsulación de fragancias</p54_TituloInvencion>
+      <Claims>Reivindicación 1: Microcápsulas poliméricas biocompatibles que comprenden un núcleo oleoso.</Claims>
+      <p73_NombreTitular>Consejo Superior de Investigaciones Científicas (CSIC)</p73_NombreTitular>
+      <p51_ClasificacionInternacionalPatentes>C11D 3/50</p51_ClasificacionInternacionalPatentes>
+    </Publicacion>
+  </SolicitudesPatentesEuropeasEfectosEspanha>
+
+  <!-- Case 3: Utility Model (U) with inverted tag order (order independence check) -->
+  <ModelosUtilidad>
+    <Publicacion>
+      <p54_TituloInvencion>Dispositivo dosificador ergonómico para envases de detergente</p54_TituloInvencion>
+      <p73_NombreTitular>Envases Innovadores S.L.</p73_NombreTitular>
+      <p57_ResumenOReivindicacion>Dispositivo dosificador con válvula antiretorno.</p57_ResumenOReivindicacion>
+      <p45_FechaPublicacionDeLaConcesion>10/06/2019</p45_FechaPublicacionDeLaConcesion>
+      <p11_NumPatenteCCP>1087654</p11_NumPatenteCCP>
+      <Kind>U</Kind>
+      <p51_ClasificacionInternacionalPatentes>B65D 47/00</p51_ClasificacionInternacionalPatentes>
+    </Publicacion>
+  </ModelosUtilidad>
+
+  <!-- Case 4: Excluded Record - Unsupported Kind Code (T1 - Provisional Translation) -->
+  <SolicitudesPatentesEuropeasEfectosEspanha>
+    <Publicacion>
+      <p11_NumPatenteCCP>2999001</p11_NumPatenteCCP>
+      <Kind>T1</Kind>
+      <p45_FechaPublicacionDeLaConcesion>01/02/2022</p45_FechaPublicacionDeLaConcesion>
+      <p54_TituloInvencion>Traducción provisional de reivindicaciones sobre catalizadores</p54_TituloInvencion>
+    </Publicacion>
+  </SolicitudesPatentesEuropeasEfectosEspanha>
+
+  <!-- Case 5: Excluded Record - Out of Temporal Window (Year 2012 < 2016) -->
+  <PatenteNacional>
+    <Publicacion>
+      <p11_NumPatenteCCP>2345678</p11_NumPatenteCCP>
+      <Kind>B1</Kind>
+      <p45_FechaPublicacionDeLaConcesion>14/04/2012</p45_FechaPublicacionDeLaConcesion>
+      <p54_TituloInvencion>Antigua patente de formulaciones textiles</p54_TituloInvencion>
+    </Publicacion>
+  </PatenteNacional>
+
+  <!-- Case 6: Quarantined Record - Missing Publication Identifier -->
+  <PatenteNacional>
+    <Publicacion>
+      <Kind>B2</Kind>
+      <p45_FechaPublicacionDeLaConcesion>15/05/2023</p45_FechaPublicacionDeLaConcesion>
+      <p54_TituloInvencion>Patente sin número de concesión ni expediente</p54_TituloInvencion>
+    </Publicacion>
+  </PatenteNacional>
+
+  <!-- Case 7: Quarantined Record - Invalid Malformed Date Format -->
+  <PatenteNacional>
+    <Publicacion>
+      <p11_NumPatenteCCP>2899999</p11_NumPatenteCCP>
+      <Kind>B2</Kind>
+      <p45_FechaPublicacionDeLaConcesion>FECHA_INVALIDA_2021</p45_FechaPublicacionDeLaConcesion>
+      <p54_TituloInvencion>Patente con fecha errónea en gacetilla</p54_TituloInvencion>
+    </Publicacion>
+  </PatenteNacional>
+</Tomo2>
