@@ -99,7 +99,12 @@ def test_complete_matching_pipeline_e2e_acceptance():
         posted_date="2022-01-01",
     )
 
-    result = service.match(demand)
+    from pathlib import Path
+
+    from domain.models.matching import MatchingPolicyConfig
+    policy = MatchingPolicyConfig.load_from_json(Path("config/policies/matching/default_matching_policy.json"))
+
+    result = service.match(demand, policy=policy)
 
     # Observable Acceptance Assertions
     # 1. Temporal filtering: ineligible patent 2025 is excluded

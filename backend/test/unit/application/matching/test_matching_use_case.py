@@ -103,7 +103,12 @@ def test_matching_service_orchestrates_shared_pool_and_passes_identical_pool_to_
         posted_date="2022-01-01",
     )
 
-    result = service.match(demand)
+    from pathlib import Path
+
+    from domain.models.matching import MatchingPolicyConfig
+    policy = MatchingPolicyConfig.load_from_json(Path("config/policies/matching/default_matching_policy.json"))
+
+    result = service.match(demand, policy=policy)
 
     # Assert 1: Exactly 3 retriever calls with identical demand
     assert lex_stub.retrieve_call_count == 1

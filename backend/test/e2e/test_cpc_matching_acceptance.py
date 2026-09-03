@@ -68,7 +68,12 @@ def test_cpc_matching_acceptance_flow():
         ],
     )
 
-    cpc_retriever = DuckDbCPCRetriever(connection=con)
+    from pathlib import Path
+
+    from domain.models.matching import MatchingPolicyConfig
+    policy = MatchingPolicyConfig.load_from_json(Path("config/policies/matching/default_matching_policy.json"))
+
+    cpc_retriever = DuckDbCPCRetriever(connection=con, policy=policy)
     lexical_stub = EmptyStubRetriever()
     semantic_stub = EmptyStubRetriever()
 
@@ -94,7 +99,7 @@ def test_cpc_matching_acceptance_flow():
     )
 
     # Act
-    result = service.match(demand)
+    result = service.match(demand, policy=policy)
 
     # Assert
     # 1. ES-2900000-A1 excluded temporally

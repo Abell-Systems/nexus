@@ -3,7 +3,7 @@ from typing import Protocol, runtime_checkable
 
 import duckdb
 
-from domain.models.demand import DemandSignal
+from domain.models.demand import DemandRecord, DemandSignal
 from domain.models.matching import (
     Candidate,
     EligibilityReason,
@@ -61,7 +61,7 @@ class DuckDbDenseSemanticRetriever(PatentCandidateRetriever):
 
     def retrieve(
         self,
-        demand: DemandSignal,
+        demand: DemandRecord | DemandSignal,
         *,
         limit: int = 100,
     ) -> list[Candidate]:

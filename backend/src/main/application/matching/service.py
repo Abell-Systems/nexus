@@ -1,8 +1,9 @@
 from typing import Any
 
-from domain.models.demand import DemandSignal
+from domain.models.demand import DemandRecord, DemandSignal
 from domain.models.matching import (
     CandidatePool,
+    MatchingPolicyConfig,
     MatchingResult,
     RankedCandidate,
 )
@@ -38,16 +39,27 @@ class CandidateMatchingService:
 
     def match(
         self,
-        demand: DemandSignal,
+        demand: DemandRecord | DemandSignal,
         *,
-        retrieval_limit: int = 100,
+        policy: MatchingPolicyConfig,
     ) -> MatchingResult:
-        lexical_candidates = self._lexical_retriever.retrieve(demand, limit=retrieval_limit)
-        semantic_candidates = self._semantic_retriever.retrieve(demand, limit=retrieval_limit)
-        cpc_candidates = self._cpc_retriever.retrieve(demand, limit=retrieval_limit)
+        if not isinstance(demand, (DemandRecord, DemandSignal)):
+            raise TypeError(
+                f"Expected DemandRecord or DemandSignal, got {type(demand).__name__}"
+            )
+        if policy is None:
+            raise ValueError("MatchingPolicyConfig must be explicitly provided to CandidateMatchingService.match()")
 
+        # Operational limit is strictly governed by the injected policy (ADR 0004 / ADR 0005)
+        limit = policy.operational_limits.retrieval_limit
+
+        lexical_candidates = self._lexical_retriever.retrieve(demand, limit=limit)
+        semantic_candidates = self._semantic_retriever.retrieve(demand, limit=limit)
+        cpc_candidates = self._cpc_retriever.retrieve(demand, limit=limit)
+
+        demand_id = demand.demand_id
         pool = CandidatePool.from_retrievals(
-            demand_id=demand.demand_id,
+            demand_id=demand_id,
             lexical_candidates=lexical_candidates,
             semantic_candidates=semantic_candidates,
             cpc_candidates=cpc_candidates,
@@ -58,16 +70,18 @@ class CandidateMatchingService:
             rankings[strategy_name] = ranker.rank(pool)
 
         metadata: dict[str, Any] = {
-            "retrieval_limit": retrieval_limit,
+            "retrieval_limit": limit,
             "pool_size": len(pool.candidates),
             "lexical_count": len(lexical_candidates),
             "semantic_count": len(semantic_candidates),
             "cpc_count": len(cpc_candidates),
             "ranker_strategies": list(self._rankers.keys()),
+            "policy_id": policy.policy_id,
+            "policy_sha256": policy.policy_sha256,
         }
 
         return MatchingResult(
-            demand_id=demand.demand_id,
+            demand_id=demand_id,
             pool=pool,
             rankings=rankings,
             metadata=metadata,

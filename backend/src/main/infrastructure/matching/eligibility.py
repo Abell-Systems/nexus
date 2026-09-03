@@ -1,6 +1,6 @@
 from datetime import date
 
-from domain.models.demand import DemandSignal
+from domain.models.demand import DemandRecord, DemandSignal
 from domain.models.matching import (
     EligibilityReason,
     EligibilityResult,
@@ -28,7 +28,7 @@ class DefaultPatentEligibilityPolicy(PatentEligibilityPolicy):
     def evaluate(
         self,
         patent: PatentDocument,
-        demand: DemandSignal,
+        demand: DemandRecord | DemandSignal,
     ) -> EligibilityResult:
         pub_id = patent.publication_id
 

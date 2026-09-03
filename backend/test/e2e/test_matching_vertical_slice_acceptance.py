@@ -96,8 +96,13 @@ def test_matching_first_vertical_slice_acceptance():
         posted_date="2022-01-01",
     )
 
+    from pathlib import Path
+
+    from domain.models.matching import MatchingPolicyConfig
+    policy = MatchingPolicyConfig.load_from_json(Path("config/policies/matching/default_matching_policy.json"))
+
     # Act: Run complete matching flow
-    result = service.match(demand)
+    result = service.match(demand, policy=policy)
 
     # Assert:
     # 1. ES-2900000-A1 excluded temporally

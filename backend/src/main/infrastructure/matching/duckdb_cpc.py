@@ -1,14 +1,17 @@
 import json
+from typing import Any
 
 import duckdb
 
 from application.landscape.cpc_taxonomy import map_concept_to_cpc
-from domain.models.demand import DemandSignal
+from domain.models.demand import DemandRecord, DemandSignal
 from domain.models.matching import (
     Candidate,
+    CPCConcordanceLevels,
     CPCModality,
     DemandCPC,
     EligibilityReason,
+    MatchingPolicyConfig,
     RetrievalMethod,
     compute_max_cpc_similarity,
 )
@@ -22,10 +25,10 @@ from .duckdb_helpers import resolve_patent_columns
 from .eligibility import DefaultPatentEligibilityPolicy
 
 
-def extract_demand_cpc_auto(demand: DemandSignal) -> DemandCPC:
+def extract_demand_cpc_auto(demand: DemandRecord | DemandSignal, policy: Any | None = None) -> DemandCPC:
     """Extracts automated CPC classification symbols (C_d^auto) from demand text."""
     combined_text = f"{demand.title} {demand.description}"
-    symbols = map_concept_to_cpc(combined_text)
+    symbols = map_concept_to_cpc(combined_text, policy=policy) if policy else []
     return DemandCPC(
         symbols=symbols,
         modality=CPCModality.AUTO,
@@ -51,22 +54,35 @@ class DuckDbCPCRetriever(PatentCandidateRetriever):
         table_name: str = "patents",
         eligibility_policy: PatentEligibilityPolicy | None = None,
         demand_cpc: DemandCPC | None = None,
-        min_threshold: float = 0.25,
+        policy: MatchingPolicyConfig | None = None,
+        min_threshold: float | None = None,
     ) -> None:
         self._con = connection
         self._table_name = table_name
         self._eligibility_policy = eligibility_policy or DefaultPatentEligibilityPolicy()
         self._demand_cpc = demand_cpc
-        self._min_threshold = min_threshold
+        self._policy = policy
+        self._levels = (
+            policy.cpc_concordance_levels
+            if policy
+            else CPCConcordanceLevels(
+                subgroup=1.0, main_group=0.75, subclass=0.5, section=0.25, none=0.0
+            )
+        )
+        self._min_threshold = (
+            min_threshold
+            if min_threshold is not None
+            else self._levels.section
+        )
 
     def retrieve(
         self,
-        demand: DemandSignal,
+        demand: DemandRecord | DemandSignal,
         *,
         limit: int = 100,
     ) -> list[Candidate]:
         # 1. Determine demand CPC representation
-        demand_cpc = self._demand_cpc or extract_demand_cpc_auto(demand)
+        demand_cpc = self._demand_cpc or extract_demand_cpc_auto(demand, policy=self._policy)
         if not demand_cpc.symbols:
             return []
 
@@ -114,7 +130,7 @@ class DuckDbCPCRetriever(PatentCandidateRetriever):
                 except (json.JSONDecodeError, ValueError):
                     patent_cpcs = [c.strip() for c in raw_cpc.split(",") if c.strip()]
 
-            similarity = compute_max_cpc_similarity(demand_cpc.symbols, patent_cpcs)
+            similarity = compute_max_cpc_similarity(demand_cpc.symbols, patent_cpcs, levels=self._levels)
             if similarity >= self._min_threshold:
                 scored_candidates.append((pub_id, round(similarity, 4)))
 

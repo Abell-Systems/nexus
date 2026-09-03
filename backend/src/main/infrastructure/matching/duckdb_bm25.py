@@ -4,7 +4,7 @@ from collections import Counter
 
 import duckdb
 
-from domain.models.demand import DemandSignal
+from domain.models.demand import DemandRecord, DemandSignal
 from domain.models.matching import (
     Candidate,
     EligibilityReason,
@@ -71,7 +71,7 @@ class DuckDbBM25Retriever(PatentCandidateRetriever):
 
     def retrieve(
         self,
-        demand: DemandSignal,
+        demand: DemandRecord | DemandSignal,
         *,
         limit: int = 100,
     ) -> list[Candidate]:

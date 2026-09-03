@@ -92,8 +92,13 @@ def test_matching_execution_to_telemetry_and_api_ui_consumption(tmp_path):
         posted_date="2022-01-01",
     )
 
+    from pathlib import Path
+
+    from domain.models.matching import MatchingPolicyConfig
+    policy = MatchingPolicyConfig.load_from_json(Path("config/policies/matching/default_matching_policy.json"))
+
     # Act 1: Run matching use case
-    result = service.match(demand)
+    result = service.match(demand, policy=policy)
 
     # Act 2: Record telemetry via sink
     sink = FileSystemMatchingTelemetrySink(base_dir=tmp_path)
