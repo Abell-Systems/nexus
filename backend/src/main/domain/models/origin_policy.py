@@ -42,8 +42,15 @@ class OriginPolicyConfig(BaseModel):
         return self
 
     @classmethod
-    def load_from_json(cls, policy_path: Path | str) -> "OriginPolicyConfig":
-        """Load policy JSON and compute its deterministic SHA-256 digest."""
+    def compute_digest(cls, data: dict) -> str:
+        """Compute bit-exact deterministic SHA-256 digest over canonical policy data."""
+        data_no_sha = {k: v for k, v in data.items() if k != "policy_sha256"}
+        canonical_json = json.dumps(data_no_sha, sort_keys=True)
+        return hashlib.sha256(canonical_json.encode("utf-8")).hexdigest()
+
+    @classmethod
+    def load_from_json(cls, policy_path: Path | str, verify_declared_sha: bool = True) -> "OriginPolicyConfig":
+        """Load policy JSON, compute its deterministic digest, and optionally verify declared digest."""
         path = Path(policy_path)
         if not path.exists():
             raise FileNotFoundError(f"Origin policy configuration file does not exist: {path}")
@@ -53,11 +60,17 @@ class OriginPolicyConfig(BaseModel):
         except Exception as e:
             raise ValueError(f"Corrupted or invalid origin policy JSON in {path}: {e}") from e
 
-        data_no_sha = {k: v for k, v in data.items() if k != "policy_sha256"}
-        canonical_json = json.dumps(data_no_sha, sort_keys=True)
-        computed_sha256 = hashlib.sha256(canonical_json.encode("utf-8")).hexdigest()
+        computed_sha256 = cls.compute_digest(data)
 
-        return cls(**data, policy_sha256=computed_sha256)
+        declared_sha = data.get("policy_sha256")
+        if verify_declared_sha and declared_sha and declared_sha != computed_sha256:
+                raise ValueError(
+                    f"Cryptographic integrity error: declared policy_sha256 '{declared_sha}' "
+                    f"does not match computed digest '{computed_sha256}' in {path}"
+                )
+
+        data_clean = {k: v for k, v in data.items() if k != "policy_sha256"}
+        return cls(**data_clean, policy_sha256=computed_sha256)
 
     def resolve_jurisdiction(self, raw_token: str | None) -> str | None:
         """Resolve a raw string token to an ISO 2-letter country code if recognized."""

@@ -27,11 +27,14 @@ class MockMercantileRegistryVerifier(ExternalRegistryVerifier):
     def __init__(self, certified_entities: dict[str, str]) -> None:
         self.certified_entities = certified_entities
 
-    def is_registered_spanish_entity(self, organization_name: str) -> tuple[bool, str]:
+    def is_registered_entity(self, organization_name: str, jurisdiction: str) -> tuple[bool, str]:
         clean = organization_name.strip().lower()
-        if clean in self.certified_entities:
+        if jurisdiction == "ES" and clean in self.certified_entities:
             return True, self.certified_entities[clean]
         return False, ""
+
+    def is_registered_spanish_entity(self, organization_name: str) -> tuple[bool, str]:
+        return self.is_registered_entity(organization_name, "ES")
 
 
 def test_origin_policy_loading_and_sha256() -> None:
@@ -241,3 +244,23 @@ def test_unrecognized_country_yields_unverified_not_non_spanish(default_resolver
     assert assessment.is_target_origin is False
     assert assessment.resolved_jurisdiction_code is None
     assert len(assessment.evidence_observations) == 0
+
+
+def test_origin_policy_validates_declared_sha_integrity(tmp_path: Path) -> None:
+    # Generate policy JSON with incorrect declared hash
+    bad_policy_json = tmp_path / "tampered_policy.json"
+    bad_policy_json.write_text(
+        """{
+  "policy_id": "TAMPERED_POLICY",
+  "policy_version": "1.0.0",
+  "target_jurisdiction": "ES",
+  "recognized_jurisdictions": {
+    "ES": {"canonical_name": "Spain", "aliases": ["es"]}
+  },
+  "policy_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+}""",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="Cryptographic integrity error: declared policy_sha256"):
+        OriginPolicyConfig.load_from_json(bad_policy_json, verify_declared_sha=True)

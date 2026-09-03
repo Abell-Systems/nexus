@@ -51,19 +51,19 @@ RawExtractedDemandFields              ▼
 ### 1. Externalized, Cryptographically Versioned Policy (`OriginPolicyConfig`)
 - All jurisdiction definitions, canonical names, and linguistic aliases are declared in version-controlled JSON (`config/policies/data/jurisdiction_policy.json`).
 - Production code contains **zero hardcoded country lists, organization lists, or corporate suffixes**.
-- `OriginPolicyConfig` computes a bit-exact SHA-256 digest (`policy_sha256`) over canonical JSON upon loading.
-- **Fail-Fast Invariant:** If the configuration file is missing or invalid, system initialization immediately raises an error (`FileNotFoundError` / `ValueError`). No synthetic in-memory policy is fabricated.
+- `OriginPolicyConfig` computes a bit-exact SHA-256 digest (`policy_sha256`) over canonical JSON upon loading and **strictly validates any declared SHA-256** to guarantee tamper-proof cryptographic integrity.
+- **Fail-Fast Invariant:** If the configuration file is missing, invalid, or its declared hash does not match computed content, system initialization immediately raises an error (`FileNotFoundError` / `ValueError`). No synthetic in-memory policy is fabricated.
 
 ### 2. Symmetrical Tripartite Classification (`UNKNOWN != FOREIGN`)
 - **Direct Target Match:** Factual country token matches target jurisdiction (`policy.target_jurisdiction`) $\to$ `LEVEL_1_DIRECT_METADATA` ($\to$ `INCLUDED`).
 - **Foreign Jurisdiction Match:** Factual country token matches another recognized jurisdiction in policy $\to$ `NON_SPANISH` ($\to$ `EXCLUDED_NON_SPANISH`).
 - **Unrecognized / Missing Tokens:** Missing country, corrupted tokens, or unrecognized country names map strictly to `UNVERIFIED` ($\to$ `EXCLUDED_UNVERIFIED_ORIGIN`). Unknown data is never assumed to be foreign.
 
-### 3. Concrete Level Hierarchy and Level 3 Boundary
+### 3. Concrete Level Hierarchy and Level 3 Scope Boundary
 - **Level 1:** Direct platform metadata explicitly proves target jurisdiction.
 - **Level 2:** Sponsoring organization location metadata explicitly proves target jurisdiction (`organization_location_raw`).
-- **Level 3:** Independent authoritative registry cross-check (`ExternalRegistryVerifier` protocol). Textual corporate forms (`S.L.`, `S.A.`) alone **never** confer Level 3 status.
-- **Scope Boundary:** This PR defines the `ExternalRegistryVerifier` contract and tests it using test doubles. Production integrations with the Spanish Mercantile Registry (RMC) or EU VIES registry are intentionally scheduled for future data platform iterations.
+- **Level 3:** Independent authoritative registry cross-check (`ExternalRegistryVerifier` protocol: `is_registered_entity(org, target_jurisdiction)`). Textual corporate forms (`S.L.`, `S.A.`) alone **never** confer Level 3 status.
+- **Deliberate Study Scope Boundary:** For UC1 of the prevailing empirical benchmark, the engine is applied specifically to Spanish enterprise demands (`target_jurisdiction: "ES"`). The resolution algorithm is structurally jurisdiction-agnostic, parameterized by `OriginPolicyConfig.target_jurisdiction`. Level 3 defines the generic verification port, with production integrations for commercial registries (e.g., Spanish Mercantile Registry / EU VIES) scheduled for Phase 3.
 
 ### 4. Unified Provenance via `FieldObservation`
 - The system eliminates redundant evidence models. All evidentiary justifications are stored as typed `FieldObservation` records referencing:
@@ -80,7 +80,8 @@ RawExtractedDemandFields              ▼
 
 ### Positive
 - **Reproducibility:** Any historical extraction can be reconstructed bit-for-bit using `raw_payload_sha256` + `policy_sha256` + `extraction_version`.
-- **Portability:** Nexus can target alternative jurisdictions (e.g. Germany `DE`, France `FR`) solely by providing an alternative policy JSON without modifying Python code.
+- **Integrity:** `OriginPolicyConfig.load_from_json()` actively verifies declared digests, preventing silent drift or modification of policy files.
+- **Portability:** Nexus can evaluate alternative jurisdictions (e.g. Germany `DE`, France `FR`) solely by selecting an alternative versioned policy JSON without modifying Python code.
 - **Auditable Integrity:** Zero synthetic data or speculative heuristics in production pipelines.
 
 ### Negative / Trade-offs

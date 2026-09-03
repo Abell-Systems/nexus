@@ -3,45 +3,96 @@
   "policy_version": "1.0.0",
   "target_jurisdiction": "ES",
   "recognized_jurisdictions": {
-    "ES": {
-      "canonical_name": "Spain",
-      "aliases": ["spain", "españa", "espanya", "es", "esp"]
-    },
-    "US": {
-      "canonical_name": "United States",
-      "aliases": ["united states", "usa", "us", "estados unidos"]
-    },
-    "GB": {
-      "canonical_name": "United Kingdom",
-      "aliases": ["united kingdom", "uk", "great britain", "reino unido"]
+    "CH": {
+      "aliases": [
+        "switzerland",
+        "schweiz",
+        "ch",
+        "suiza"
+      ],
+      "canonical_name": "Switzerland"
     },
     "DE": {
-      "canonical_name": "Germany",
-      "aliases": ["germany", "deutschland", "de", "alemania"]
+      "aliases": [
+        "germany",
+        "deutschland",
+        "de",
+        "alemania"
+      ],
+      "canonical_name": "Germany"
+    },
+    "ES": {
+      "aliases": [
+        "spain",
+        "españa",
+        "espanya",
+        "es",
+        "esp"
+      ],
+      "canonical_name": "Spain"
     },
     "FR": {
-      "canonical_name": "France",
-      "aliases": ["france", "fr", "francia"]
+      "aliases": [
+        "france",
+        "fr",
+        "francia"
+      ],
+      "canonical_name": "France"
+    },
+    "GB": {
+      "aliases": [
+        "united kingdom",
+        "uk",
+        "great britain",
+        "reino unido"
+      ],
+      "canonical_name": "United Kingdom"
     },
     "IT": {
-      "canonical_name": "Italy",
-      "aliases": ["italy", "italia", "it"]
-    },
-    "PL": {
-      "canonical_name": "Poland",
-      "aliases": ["poland", "polska", "pl", "polonia"]
-    },
-    "NL": {
-      "canonical_name": "Netherlands",
-      "aliases": ["netherlands", "holland", "nl", "paises bajos", "países bajos"]
-    },
-    "CH": {
-      "canonical_name": "Switzerland",
-      "aliases": ["switzerland", "schweiz", "ch", "suiza"]
+      "aliases": [
+        "italy",
+        "italia",
+        "it"
+      ],
+      "canonical_name": "Italy"
     },
     "JP": {
-      "canonical_name": "Japan",
-      "aliases": ["japan", "jp", "japón", "japon"]
+      "aliases": [
+        "japan",
+        "jp",
+        "japón",
+        "japon"
+      ],
+      "canonical_name": "Japan"
+    },
+    "NL": {
+      "aliases": [
+        "netherlands",
+        "holland",
+        "nl",
+        "paises bajos",
+        "países bajos"
+      ],
+      "canonical_name": "Netherlands"
+    },
+    "PL": {
+      "aliases": [
+        "poland",
+        "polska",
+        "pl",
+        "polonia"
+      ],
+      "canonical_name": "Poland"
+    },
+    "US": {
+      "aliases": [
+        "united states",
+        "usa",
+        "us",
+        "estados unidos"
+      ],
+      "canonical_name": "United States"
     }
-  }
+  },
+  "policy_sha256": "48cfa58908f7ffe0bd6b1120f2d8fb5921d88f19a5855ebcbf570ff87878e51a"
 }

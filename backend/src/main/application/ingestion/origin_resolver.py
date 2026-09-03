@@ -19,12 +19,16 @@ from domain.models.origin_policy import OriginPolicyConfig
 class ExternalRegistryVerifier(Protocol):
     """Protocol for Level 3 authoritative external registry verification (Mercantile Registry / VIES)."""
 
-    def is_registered_spanish_entity(self, organization_name: str) -> tuple[bool, str]:
-        """Verify if an entity is an authenticated Spanish legal entity.
+    def is_registered_entity(self, organization_name: str, jurisdiction: str) -> tuple[bool, str]:
+        """Verify if an entity is an authenticated legal entity in the specified jurisdiction.
 
         Returns (is_verified, registry_reference).
         """
         ...
+
+    def is_registered_spanish_entity(self, organization_name: str) -> tuple[bool, str]:
+        """Convenience method for Spanish registry verification (backward compatibility)."""
+        return self.is_registered_entity(organization_name, "ES")
 
 
 class DefaultOriginResolver:
@@ -139,7 +143,14 @@ class DefaultOriginResolver:
 
         # Rule 4: Level 3 - Authoritative external registry cross-check
         if self.registry_verifier and org_raw:
-            is_reg, ref = self.registry_verifier.is_registered_spanish_entity(org_raw)
+            # Check target jurisdiction in external registry
+            is_reg = False
+            ref = ""
+            if hasattr(self.registry_verifier, "is_registered_entity"):
+                is_reg, ref = self.registry_verifier.is_registered_entity(org_raw, self.policy.target_jurisdiction)
+            elif hasattr(self.registry_verifier, "is_registered_spanish_entity"):
+                is_reg, ref = self.registry_verifier.is_registered_spanish_entity(org_raw)
+
             if is_reg:
                 obs = FieldObservation(
                     entity_id=entity_id,
@@ -157,7 +168,7 @@ class DefaultOriginResolver:
                     level=SpanishOriginLevel.LEVEL_3_REGISTRY_CROSS_CHECK,
                     is_target_origin=True,
                     resolved_jurisdiction_code=self.policy.target_jurisdiction,
-                    rationale=f"Organization '{org_raw}' verified via external registry: {ref}",
+                    rationale=f"Organization '{org_raw}' verified via external registry in '{self.policy.target_jurisdiction}': {ref}",
                     policy_id=self.policy.policy_id,
                     policy_version=self.policy.policy_version,
                     policy_sha256=self.policy.policy_sha256,
