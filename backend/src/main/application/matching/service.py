@@ -1,7 +1,9 @@
 from typing import Any
 
+from domain.models.demand import DemandRecord, DemandSignal
 from domain.models.matching import (
     CandidatePool,
+    MatchingPolicyConfig,
     MatchingResult,
     RankedCandidate,
 )
@@ -37,22 +39,25 @@ class CandidateMatchingService:
 
     def match(
         self,
-        demand: Any,  # DemandRecord or DemandSignal
+        demand: DemandRecord | DemandSignal,
         *,
-        policy: Any,  # MatchingPolicyConfig
-        retrieval_limit: int | None = None,
+        policy: MatchingPolicyConfig,
     ) -> MatchingResult:
+        if not isinstance(demand, (DemandRecord, DemandSignal)):
+            raise TypeError(
+                f"Expected DemandRecord or DemandSignal, got {type(demand).__name__}"
+            )
         if policy is None:
             raise ValueError("MatchingPolicyConfig must be explicitly provided to CandidateMatchingService.match()")
 
-        # Operational limit is strictly governed by policy unless an explicit administrative limit is passed
-        limit = retrieval_limit if retrieval_limit is not None else policy.operational_limits.retrieval_limit
+        # Operational limit is strictly governed by the injected policy (ADR 0004 / ADR 0005)
+        limit = policy.operational_limits.retrieval_limit
 
         lexical_candidates = self._lexical_retriever.retrieve(demand, limit=limit)
         semantic_candidates = self._semantic_retriever.retrieve(demand, limit=limit)
         cpc_candidates = self._cpc_retriever.retrieve(demand, limit=limit)
 
-        demand_id = getattr(demand, "demand_id", str(getattr(demand, "id", "")))
+        demand_id = demand.demand_id
         pool = CandidatePool.from_retrievals(
             demand_id=demand_id,
             lexical_candidates=lexical_candidates,

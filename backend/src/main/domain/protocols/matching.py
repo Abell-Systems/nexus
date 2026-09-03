@@ -1,10 +1,13 @@
 from typing import Any, Protocol, runtime_checkable
 
-from domain.models.demand import DemandSignal
+from domain.models.demand import DemandRecord, DemandSignal
 from domain.models.matching import (
     Candidate,
     CandidatePool,
     EligibilityResult,
+    MatchAssessment,
+    MatchFeatures,
+    MatchingPolicyConfig,
     MatchingResult,
     RankedCandidate,
 )
@@ -17,7 +20,7 @@ class PatentCandidateRetriever(Protocol):
 
     def retrieve(
         self,
-        demand: DemandSignal,
+        demand: DemandRecord | DemandSignal,
         *,
         limit: int = 100,
     ) -> list[Candidate]:
@@ -32,7 +35,7 @@ class PatentEligibilityPolicy(Protocol):
     def evaluate(
         self,
         patent: PatentDocument,
-        demand: DemandSignal,
+        demand: DemandRecord | DemandSignal,
     ) -> EligibilityResult:
         """Evaluates whether a patent publication is eligible as a candidate for a demand."""
         ...
@@ -70,9 +73,9 @@ class MatchingFeatureExtractor(Protocol):
 
     def extract_features(
         self,
-        demand: Any,  # DemandRecord or DemandSignal
+        demand: DemandRecord | DemandSignal,
         patent: PatentDocument,
-    ) -> Any:  # MatchFeatures
+    ) -> MatchFeatures:
         """Extracts deterministic MatchFeatures between the demand and the candidate patent."""
         ...
 
@@ -83,9 +86,9 @@ class TechnologyMatcher(Protocol):
 
     def assess_match(
         self,
-        demand: Any,  # DemandRecord or DemandSignal
+        demand: DemandRecord | DemandSignal,
         patent: PatentDocument,
-    ) -> Any:  # MatchAssessment
+    ) -> MatchAssessment:
         """Evaluates compatibility and returns an auditable, explainable MatchAssessment."""
         ...
 
@@ -96,9 +99,9 @@ class MatchingEngine(Protocol):
 
     def evaluate(
         self,
-        demand: Any,  # DemandRecord or DemandSignal
+        demand: DemandRecord | DemandSignal,
         candidates: CandidatePool,
-        policy: Any,  # MatchingPolicyConfig
-    ) -> list[Any]:  # list[MatchAssessment]
+        policy: MatchingPolicyConfig,
+    ) -> list[MatchAssessment]:
         """Evaluates and produces an explainable MatchAssessment for each candidate in the pool."""
         ...

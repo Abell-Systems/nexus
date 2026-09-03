@@ -4,7 +4,7 @@ from typing import Any
 import duckdb
 
 from application.landscape.cpc_taxonomy import map_concept_to_cpc
-from domain.models.demand import DemandSignal
+from domain.models.demand import DemandRecord, DemandSignal
 from domain.models.matching import (
     Candidate,
     CPCConcordanceLevels,
@@ -25,7 +25,7 @@ from .duckdb_helpers import resolve_patent_columns
 from .eligibility import DefaultPatentEligibilityPolicy
 
 
-def extract_demand_cpc_auto(demand: DemandSignal, policy: Any | None = None) -> DemandCPC:
+def extract_demand_cpc_auto(demand: DemandRecord | DemandSignal, policy: Any | None = None) -> DemandCPC:
     """Extracts automated CPC classification symbols (C_d^auto) from demand text."""
     combined_text = f"{demand.title} {demand.description}"
     symbols = map_concept_to_cpc(combined_text, policy=policy) if policy else []
@@ -77,7 +77,7 @@ class DuckDbCPCRetriever(PatentCandidateRetriever):
 
     def retrieve(
         self,
-        demand: DemandSignal,
+        demand: DemandRecord | DemandSignal,
         *,
         limit: int = 100,
     ) -> list[Candidate]:
