@@ -1,0 +1,545 @@
+{
+  "dataset_id": "nexus-pilot-16-v1",
+  "schema_version": "1.0.0",
+  "dataset_version": "1.0.0",
+  "description": "Nexus Pilot-16 canonical benchmark dataset for empirical matching evaluation",
+  "demands": [
+    {
+      "demand_id": "INNOGET-2415",
+      "title": "Optimized sink and sanitary plumbing drainage systems",
+      "description": "Seeking durable high-flow sanitary drainage and sink fixtures",
+      "posted_date": "2023-01-10",
+      "target_cpc_prefixes": [
+        "E03C",
+        "A47J"
+      ],
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/2415",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "932f189e76e400aa69e8846fe0c6074dcab3116a5cb7d55b7f4ee3577f909098",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "title": "Industrial formulation for concentrated detergent",
+      "description": "Seeking enzymatic biodegradable surfactant formulations",
+      "posted_date": "2023-02-15",
+      "target_cpc_prefixes": [
+        "C11D"
+      ],
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/2292",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "cc8cc91472cc679a5900094d3e076c27e8dbcbace772b72984cab3651bb254d6",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-2501",
+      "title": "Industrial process automation numerical control software",
+      "description": "Seeking program-control algorithms for factory robotics",
+      "posted_date": "2023-03-20",
+      "target_cpc_prefixes": [
+        "G05B"
+      ],
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/2501",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "98915fc817f04ac76949fcfe957eedf915f03ea13cae594ba4603ee0fbed50a9",
+        "modality": "observed"
+      }
+    }
+  ],
+  "patents": [
+    {
+      "publication_id": "ES-2901234-A1",
+      "publication_date": "2023-04-20",
+      "classifications_cpc": [
+        "E03C1/05",
+        "G05D23/13",
+        "F16K11/00"
+      ],
+      "title": "Grifería electrónica inteligente con sensorización óptica de proximidad y mezcla térmica termostática instantánea",
+      "abstract": "Válvula mezcladora inteligente para fregaderos y lavabos que integra sensor de infrarrojos modulado, control PID de temperatura y conectividad inalámbrica para perfiles de usuario personalizados.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2901234-A1",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "790381647240634430b91490f158811993a1767cfd4171ab0cd15711eba11612",
+        "modality": "observed"
+      }
+    },
+    {
+      "publication_id": "ES-2754890-B2",
+      "publication_date": "2020-08-18",
+      "classifications_cpc": [
+        "A47J47/00",
+        "E03C1/18",
+        "C08L33/08",
+        "C08K3/36"
+      ],
+      "title": "Superficie de encimera y fregadero integrado fabricada con material compuesto polimérico antibacteriano e hidrofóbico",
+      "abstract": "Encimera monobloque con fregadero embutido compuesta por matriz de resina acrílica reforzada con nanopartículas de sílice funcionalizadas con iones de plata y silanos hidrofóbicos.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2754890-B2",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "514c458d1e98decdfbc6ac45b911784f612a225be3d846378544fd98182f74a3",
+        "modality": "observed"
+      }
+    },
+    {
+      "publication_id": "ES-2684913-B1",
+      "publication_date": "2018-09-14",
+      "classifications_cpc": [
+        "E03C1/18",
+        "E03C1/04",
+        "C02F1/00",
+        "A47J47/00"
+      ],
+      "title": "Fregadero modular con sistema integrado de recirculación, filtración por etapas y desinfección de aguas grises",
+      "abstract": "Dispositivo sanitario de cocina que incorpora sensor ultrasónico de caudal, módulo de filtración electroquímica para reutilización de aguas grises en lavavajillas y control IoT de consumo hídrico.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2684913-B1",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "0e2e2529f16ecabb52f353ac8e3480734356747efa5f188a948dda660c3a3ca2",
+        "modality": "observed"
+      }
+    },
+    {
+      "publication_id": "ES-2634129-B1",
+      "publication_date": "2017-10-30",
+      "classifications_cpc": [
+        "C11D1/66",
+        "C11D3/48",
+        "A01N63/00"
+      ],
+      "title": "Composición desinfectante y detergente de superficies duras basada en biosurfactantes de origen microbiano",
+      "abstract": "Formulación para limpieza industrial y doméstica conteniendo ramnolípidos y soforolípidos producidos por fermentación bacteriana con alta actividad antimicrobiana a pH neutro.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2634129-B1",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "30b3afcd76157be5ddd3f94f92c973b891ffca35fba4a5bfcf039dd0fd262e54",
+        "modality": "observed"
+      }
+    },
+    {
+      "publication_id": "ES-2895412-B1",
+      "publication_date": "2023-01-15",
+      "classifications_cpc": [
+        "G05B19/418",
+        "G05B23/02",
+        "H02J13/00",
+        "G06N20/00"
+      ],
+      "title": "Sistema ciberfísico para optimización del consumo eléctrico en líneas de manufactura continua mediante gemelo digital y machine learning",
+      "abstract": "Arquitectura IoT industrial con red de sensores edge computing para monitorización en tiempo real de potencia activa/reactiva y modelos predictivos de eficiencia energética en maquinaria rotativa.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2895412-B1",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "bbeb964516824df0fb3e927e80e18f33d85a6752627f0fae7889be3f9d8ae271",
+        "modality": "observed"
+      }
+    },
+    {
+      "publication_id": "ES-2789123-B2",
+      "publication_date": "2020-04-22",
+      "classifications_cpc": [
+        "H01M10/0565",
+        "H01M10/052",
+        "C08L27/16",
+        "H01B1/12"
+      ],
+      "title": "Membrana polimérica híbrida ionoconductora con sales de bis(fluorosulfonil)imida para baterías de estado sólido flexibles",
+      "abstract": "Capa interfacial electrolítica polimérica compuesta por poli(fluoruro de vinilideno-co-hexafluoropropileno) y nanopartículas cerámicas de LLZO para celdas electroquímicas de alta densidad energética.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2789123-B2",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "1d47e9547c2f264bd46d4aa47f8d950c57e37bbdda961936133d3f17a8480a86",
+        "modality": "observed"
+      }
+    },
+    {
+      "publication_id": "ES-2849102-B2",
+      "publication_date": "2021-11-25",
+      "classifications_cpc": [
+        "C11D1/00",
+        "C11D3/386",
+        "C11D3/20",
+        "C11D11/00"
+      ],
+      "title": "Formulación detergente enzimática líquida biodegradable para lavado textil a temperatura ambiente",
+      "abstract": "Composición detergente acuosa concentrada con tensioactivos no iónicos derivados de poliglucósidos de alquilo y complejo enzimático estabilizado con proteasas y amilasas optimizadas para lavado entre 15°C y 25°C sin fosfatos.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2849102-B2",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "d2452707ae4cec6da103be97373437cb506cc7008d0cdd518bd121bb46959508",
+        "modality": "observed"
+      }
+    },
+    {
+      "publication_id": "ES-2654981-B1",
+      "publication_date": "2019-05-20",
+      "classifications_cpc": [
+        "C22C9/04",
+        "B23B1/00",
+        "B23B27/00",
+        "C22F1/08"
+      ],
+      "title": "Aleación de latón ecológica libre de plomo con adición de bismuto y silicio para decoletaje de alta velocidad",
+      "abstract": "Aleación ternaria Cu-Zn con contenido de plomo inferior a 100 ppm, adicionada con 0.8-1.5% de bismuto y 0.2-0.5% de silicio para optimizar la fragmentación de viruta y durabilidad de herramienta.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2654981-B1",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "f1e77282534673e74df11ae9ba78d9e49fa1e087e69204826257933e74007d35",
+        "modality": "observed"
+      }
+    },
+    {
+      "publication_id": "ES-2765431-B2",
+      "publication_date": "2021-04-12",
+      "classifications_cpc": [
+        "G01R31/00",
+        "G05B17/02",
+        "H02J3/00",
+        "G01R21/00"
+      ],
+      "title": "Dispositivo de monitorización no intrusiva de cargas eléctricas industriales (NILM) con desagregación armónica de alta frecuencia",
+      "abstract": "Hardware y algoritmo embebido para identificación y desagregación de consumos de motores individuales a partir de la firma armónica transitoria en el cuadro general de distribución.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2765431-B2",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "418a5dd297b6f4d525248f9a03afba053c9bb5a78e9ff736ad9128f9cd3f2517",
+        "modality": "observed"
+      }
+    },
+    {
+      "publication_id": "ES-2876540-B1",
+      "publication_date": "2021-10-05",
+      "classifications_cpc": [
+        "H01M10/42",
+        "H02J7/00",
+        "G01R31/382",
+        "B60L58/12"
+      ],
+      "title": "Sistema de gestión electrónica de baterías (BMS) con balanceo activo inductivo y estimación de estado de salud (SOH) por impedanciometría",
+      "abstract": "Circuito integrado y metodología de cálculo de degradación electroquímica para paquetes de baterías de tracción en autobuses eléctricos y almacenamiento estacionario.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2876540-B1",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "00e012b7688d6180f4c759c30bf8248ee95c893e29645350eaa7dce3c055d3fa",
+        "modality": "observed"
+      }
+    },
+    {
+      "publication_id": "ES-2856789-A1",
+      "publication_date": "2023-03-25",
+      "classifications_cpc": [
+        "C07D307/68",
+        "B01J23/46",
+        "B01J35/10",
+        "C08G63/16"
+      ],
+      "title": "Proceso catalítico de valorización de residuos de biomasa lignocelulósica para obtención de ácido 2,5-furandicarboxílico (FDCA)",
+      "abstract": "Ruta sintética heterogénea empleando catalizadores bifuncionales de rutenio soportado en sílice mesoporosa para la síntesis verde de monómeros de PEF biodegradables.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2856789-A1",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "bfd1f6c24c951a4a6075df6870ce5cf3e2d6800c52bd30a1962ff3be599eda38",
+        "modality": "observed"
+      }
+    },
+    {
+      "publication_id": "ES-2739812-B2",
+      "publication_date": "2020-12-14",
+      "classifications_cpc": [
+        "B23B1/00",
+        "B23B27/14",
+        "C23C16/27",
+        "C22C9/00"
+      ],
+      "title": "Procedimiento de mecanizado de ultraprecisión con recubrimiento autolubricante de diamante nanocristalino en herramientas de microdecoletaje",
+      "abstract": "Método para torneado de cilindros micrométricos en aleaciones de baja ductilidad empleando fresas recubiertas de CVD nanocristalino dopado con boro para evacuación rápida de viruta.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2739812-B2",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "e32e21d0d1acebc07db2d659cf7bf2a4a5c7d0aa0b31dc3b35877ff7984dbc2a",
+        "modality": "observed"
+      }
+    },
+    {
+      "publication_id": "ES-2798124-B1",
+      "publication_date": "2021-02-18",
+      "classifications_cpc": [
+        "C08L67/02",
+        "C08L3/02",
+        "B65D65/46",
+        "C08K5/09"
+      ],
+      "title": "Biopolímero termoplástico compostable derivado de almidón modificado y poli(succinato de butileno) para packaging sostenible",
+      "abstract": "Mezcla polimérica biodegradable con compatibilizante de anhídrido maleico injertado para películas de envasado alimentario con alta barrera a vapor de agua y oxígeno.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2798124-B1",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "a1d9496f9f94c1a879821f005208bf8209d5bda8f82e2b44f193b3a30b64e13a",
+        "modality": "observed"
+      }
+    },
+    {
+      "publication_id": "ES-2812345-B1",
+      "publication_date": "2021-06-18",
+      "classifications_cpc": [
+        "H01M10/0562",
+        "H01M10/0525",
+        "C01B25/45",
+        "H01M4/13"
+      ],
+      "title": "Electrolito sólido cerámico nanoestructurado de tipo NASICON con alta conductividad iónica para celdas de ion-litio y litio-metal",
+      "abstract": "Material electrolítico sólido inorgánico basado en Li1.5Al0.5Ti1.5(PO4)3 sintetizado por sol-gel con microestructura densificada para inhibición dendrítica a densidades de corriente superiores a 2 mA/cm2.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2812345-B1",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "160104760d96c78e9670f9ed5c7fdaa95af39b6f33d0f6efef5aeb6290bf69f2",
+        "modality": "observed"
+      }
+    },
+    {
+      "publication_id": "ES-2715482-B2",
+      "publication_date": "2020-03-15",
+      "classifications_cpc": [
+        "C11D3/50",
+        "B01J13/02",
+        "C11D3/22"
+      ],
+      "title": "Procedimiento de microencapsulación de fragancias y agentes bioactivos estables en formulaciones detergentes acuosas",
+      "abstract": "Método para encapsular aceites esenciales y fragancias en matrices poliméricas biocompatibles de alginato-quitosano para liberación prolongada durante el ciclo de aclarado textil.",
+      "is_synthetic": false,
+      "provenance": {
+        "source_authority": "oepm",
+        "source_uri": "https://consultas2.oepm.es/ceo/jsp/busqueda/consultaDetalle.xhtml?numExp=ES-2715482-B2",
+        "extraction_timestamp": "2026-03-01T12:00:00Z",
+        "raw_payload_sha256": "962de897dffcf5049a67760e80c4ab9ee7a415da61dccdee188447c1ca558116",
+        "modality": "observed"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "demand_id": "INNOGET-2415",
+      "publication_id": "ES-2901234-A1",
+      "grade": 2,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2415 and ES-2901234-A1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2415",
+      "publication_id": "ES-2754890-B2",
+      "grade": 3,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2415 and ES-2754890-B2",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2684913-B1",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2292 and ES-2684913-B1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2415",
+      "publication_id": "ES-2684913-B1",
+      "grade": 3,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2415 and ES-2684913-B1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2754890-B2",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2292 and ES-2754890-B2",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2415",
+      "publication_id": "ES-2634129-B1",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2415 and ES-2634129-B1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2501",
+      "publication_id": "ES-2634129-B1",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2501 and ES-2634129-B1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2895412-B1",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2292 and ES-2895412-B1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2501",
+      "publication_id": "ES-2901234-A1",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2501 and ES-2901234-A1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2789123-B2",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2292 and ES-2789123-B2",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2849102-B2",
+      "grade": 3,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2292 and ES-2849102-B2",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2654981-B1",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2292 and ES-2654981-B1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2501",
+      "publication_id": "ES-2765431-B2",
+      "grade": 1,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2501 and ES-2765431-B2",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2876540-B1",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2292 and ES-2876540-B1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2856789-A1",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2292 and ES-2856789-A1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2501",
+      "publication_id": "ES-2895412-B1",
+      "grade": 2,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2501 and ES-2895412-B1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2739812-B2",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2292 and ES-2739812-B2",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2501",
+      "publication_id": "ES-2684913-B1",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2501 and ES-2684913-B1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2798124-B1",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2292 and ES-2798124-B1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2812345-B1",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2292 and ES-2812345-B1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2634129-B1",
+      "grade": 2,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2292 and ES-2634129-B1",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2715482-B2",
+      "grade": 2,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2292 and ES-2715482-B2",
+      "modality": "expert_labelled"
+    },
+    {
+      "demand_id": "INNOGET-2501",
+      "publication_id": "ES-2876540-B1",
+      "grade": 0,
+      "annotator_role": "senior_patent_examiner",
+      "notes": "Annotated alignment between INNOGET-2501 and ES-2876540-B1",
+      "modality": "expert_labelled"
+    }
+  ]
+}
