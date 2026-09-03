@@ -239,25 +239,16 @@ def compute_cpc_symbol_similarity_from_levels(
 def compute_cpc_symbol_similarity(
     sym_a: str,
     sym_b: str,
-    levels: CPCConcordanceLevels | None = None,
+    levels: CPCConcordanceLevels,
 ) -> float:
-    """Computes hierarchical CPC similarity.
-    
-    If levels is None, loads canonical levels from the active default policy file to prevent duplication.
-    """
-    if levels is None:
-        from pathlib import Path
-        policy = MatchingPolicyConfig.load_from_json(
-            Path("config/policies/matching/default_matching_policy.json")
-        )
-        levels = policy.cpc_concordance_levels
+    """Computes hierarchical CPC similarity using explicitly injected policy levels."""
     return compute_cpc_symbol_similarity_from_levels(sym_a, sym_b, levels)
 
 
 def compute_max_cpc_similarity(
     demand_symbols: list[str],
     patent_symbols: list[str],
-    levels: CPCConcordanceLevels | None = None,
+    levels: CPCConcordanceLevels,
 ) -> float:
     """Computes the maximum hierarchical concordance between a demand and a patent."""
     if not demand_symbols or not patent_symbols:
@@ -327,6 +318,7 @@ class ConfidenceThresholds(BaseModel):
 
 class SufficiencyRules(BaseModel):
     min_active_signals: int
+    min_signals_for_sufficient: int
     require_temporal_validity: bool
 
 

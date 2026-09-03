@@ -121,7 +121,15 @@ def memory_duckdb_cpc_patents():
     return con
 
 
-def test_duckdb_cpc_retriever_hierarchical_scoring_and_invariants(memory_duckdb_cpc_patents):
+@pytest.fixture
+def matching_policy():
+    from pathlib import Path
+
+    from domain.models.matching import MatchingPolicyConfig
+    return MatchingPolicyConfig.load_from_json(Path("config/policies/matching/default_matching_policy.json"))
+
+
+def test_duckdb_cpc_retriever_hierarchical_scoring_and_invariants(memory_duckdb_cpc_patents, matching_policy):
     # Demand with curated/exact CPC C11D1/02
     demand_cpc = DemandCPC(
         symbols=["C11D1/02"],
@@ -131,6 +139,7 @@ def test_duckdb_cpc_retriever_hierarchical_scoring_and_invariants(memory_duckdb_
     retriever = DuckDbCPCRetriever(
         connection=memory_duckdb_cpc_patents,
         demand_cpc=demand_cpc,
+        policy=matching_policy,
     )
 
     demand = DemandSignal(
@@ -168,7 +177,7 @@ def test_duckdb_cpc_retriever_hierarchical_scoring_and_invariants(memory_duckdb_
     assert cand_2004.retrieval_scores[RetrievalMethod.CPC] == 0.25
 
 
-def test_extract_demand_cpc_auto():
+def test_extract_demand_cpc_auto(matching_policy):
     demand = DemandSignal(
         demand_id="D-1",
         source_network="InnoGet",
@@ -176,7 +185,7 @@ def test_extract_demand_cpc_auto():
         description="Liquid cleaning formulation for washing",
         posted_date="2022-01-01",
     )
-    cpc = extract_demand_cpc_auto(demand)
+    cpc = extract_demand_cpc_auto(demand, policy=matching_policy)
     assert cpc.modality == CPCModality.AUTO
-    # Matches 'detergent', 'surfactant' in CPC_TAXONOMY_MAP
+    # Matches 'detergent', 'surfactant' in concept_to_cpc_taxonomy from policy
     assert any("C11D" in s for s in cpc.symbols)

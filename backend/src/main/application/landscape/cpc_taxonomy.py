@@ -1,29 +1,22 @@
 """Policy-driven concept-to-CPC dictionary for transparent patent taxonomy mapping.
 
-In accordance with Section 3 of AGENTS.md and ADR 0004:
+In accordance with Section 3 of AGENTS.md, ADR 0004, and ADR 0005:
 - Zero hardcoded dictionaries in code.
-- All taxonomy mappings and descriptions load dynamically from the active MatchingPolicyConfig.
+- Zero implicit filesystem loading or repository-relative paths.
+- All taxonomy mappings and descriptions require an explicitly injected MatchingPolicyConfig.
 """
 
 import re
-from pathlib import Path
 
 from domain.models.matching import MatchingPolicyConfig
 
 
-def _get_active_policy() -> MatchingPolicyConfig:
-    """Loads active matching policy from externalized configuration."""
-    policy_path = Path("config/policies/matching/default_matching_policy.json")
-    return MatchingPolicyConfig.load_from_json(policy_path)
-
-
 def get_cpc_description(
     cpc_code: str,
-    policy: MatchingPolicyConfig | None = None,
+    policy: MatchingPolicyConfig,
 ) -> str:
-    """Returns canonical description for a CPC code from active policy."""
-    p = policy or _get_active_policy()
-    entry = p.cpc_taxonomy_descriptions.get(cpc_code)
+    """Returns canonical description for a CPC code from the explicitly injected policy."""
+    entry = policy.cpc_taxonomy_descriptions.get(cpc_code)
     if entry and "description" in entry:
         return entry["description"]
     return f"CPC Classification {cpc_code}"
@@ -31,14 +24,13 @@ def get_cpc_description(
 
 def map_concept_to_cpc(
     concept_or_query: str,
-    policy: MatchingPolicyConfig | None = None,
+    policy: MatchingPolicyConfig,
 ) -> list[str]:
-    """Maps a concept or text query to matching CPC codes defined by policy taxonomy."""
-    p = policy or _get_active_policy()
+    """Maps a concept or text query to matching CPC codes defined by the injected policy taxonomy."""
     normalized = concept_or_query.lower()
     matched_codes: list[str] = []
 
-    for concept, cpc_list in p.concept_to_cpc_taxonomy.items():
+    for concept, cpc_list in policy.concept_to_cpc_taxonomy.items():
         pattern = r"\b" + re.escape(concept) + r"\b"
         if re.search(pattern, normalized):
             for cpc in cpc_list:
@@ -50,15 +42,14 @@ def map_concept_to_cpc(
 
 def map_demand_to_cpc(
     demand_title: str,
-    demand_description: str = "",
-    policy: MatchingPolicyConfig | None = None,
+    demand_description: str,
+    policy: MatchingPolicyConfig,
 ) -> list[str]:
-    """Extracts 4-character CPC subclass prefixes from demand text based on policy taxonomy."""
-    p = policy or _get_active_policy()
+    """Extracts 4-character CPC subclass prefixes from demand text based on the injected policy taxonomy."""
     text = f"{demand_title} {demand_description}".lower()
     matched_prefixes: list[str] = []
 
-    for concept, cpc_list in p.concept_to_cpc_taxonomy.items():
+    for concept, cpc_list in policy.concept_to_cpc_taxonomy.items():
         pattern = r"\b" + re.escape(concept) + r"\b"
         if re.search(pattern, text):
             for cpc in cpc_list:
@@ -71,8 +62,8 @@ def map_demand_to_cpc(
 
 def map_cpc_prefix(
     query: str,
-    policy: MatchingPolicyConfig | None = None,
+    policy: MatchingPolicyConfig,
 ) -> str | None:
-    """Maps query to the primary 4-character CPC prefix."""
+    """Maps query to the primary 4-character CPC prefix using the injected policy."""
     codes = map_concept_to_cpc(query, policy=policy)
     return codes[0][:4] if codes else None

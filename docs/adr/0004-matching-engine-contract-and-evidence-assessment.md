@@ -153,6 +153,17 @@ When all candidate scores in a pool are identical, `min_max_normalize()` maps th
 
 This represents zero discriminative power, not zero intrinsic relevance. It prevents a non-discriminative signal from becoming an artificial additive intercept in hybrid fusion. Deterministic publication-ID ordering resolves ties.
 
+#### 4.2 Dual-Source CPC Concordance Resolution Semantics
+
+In `DefaultMatchingEngine`, the CPC concordance signal $S_{\text{cpc}}$ may originate from two complementary observational paths:
+1. **First-Stage Retrieval Score:** The pre-computed or indexed concordance produced during candidate retrieval ($S_{\text{cpc}}^{\text{retrieval}} \in [0, 1]$).
+2. **Metadata-Derived Concordance:** Direct evaluation between the demand's target CPC prefix and the candidate's canonical `classifications_cpc` metadata using `compute_cpc_symbol_similarity_from_levels(d_cpc, p_cpc, policy.cpc_concordance_levels)`.
+
+**Methodological Resolution:**
+$$S_{\text{cpc}} = \max\left(S_{\text{cpc}}^{\text{retrieval}}, S_{\text{cpc}}^{\text{metadata}}\right)$$
+
+*Rationale:* Both observations measure the exact same underlying epistemological fact: the highest taxonomic concordance between the demand's technology domain and the patent's registered classifications. Taking the supremum ($\max$) guarantees that candidates retrieved primarily via lexical or dense semantic channels whose rich classification metadata subsequently demonstrates strong CPC concordance are not penalized by an absent or unrecorded retrieval score ($0.0$), while preventing double-counting in linear fusion.
+
 ---
 
 ### 5. Architectural Alignment

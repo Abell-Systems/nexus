@@ -101,8 +101,13 @@ def test_semantic_matching_acceptance_flow():
         posted_date="2022-01-01",
     )
 
+    from pathlib import Path
+
+    from domain.models.matching import MatchingPolicyConfig
+    policy = MatchingPolicyConfig.load_from_json(Path("config/policies/matching/default_matching_policy.json"))
+
     # Act
-    result = service.match(demand)
+    result = service.match(demand, policy=policy)
 
     # Assert
     # 1. ES-3003-A1 excluded temporally

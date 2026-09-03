@@ -22,6 +22,7 @@
   },
   "sufficiency_rules": {
     "min_active_signals": 1,
+    "min_signals_for_sufficient": 2,
     "require_temporal_validity": true
   },
   "concept_to_cpc_taxonomy": {
@@ -180,5 +181,5 @@
       "description": "Non-ferrous and ferrous metallurgical alloy compositions"
     }
   },
-  "policy_sha256": "a73f81c02eae4c8113a5966001fe5bf5d32f92be71f1a270111104ea3e7a6f5e"
+  "policy_sha256": "701f0c71524fc8c3faa7b03d082801559723260fae789918e60c962477e58afa"
 }

@@ -10,6 +10,8 @@ Invariants verified:
 
 
 
+import pytest
+
 from domain.models.demand import DemandRecord, SpanishOriginLevel
 from domain.models.matching import (
     Candidate,
@@ -163,3 +165,44 @@ def test_default_matching_engine_full_evaluation_and_determinism():
     # Verify bit-exact determinism across duplicate run
     assessments_second_run = engine.evaluate(demand, pool, policy, patent_metadata=metadata)
     assert assessments == assessments_second_run
+
+
+def test_matching_engine_sufficiency_rule_governed_strictly_by_policy():
+    """ADR 0004 & ADR 0005: min_signals_for_sufficient must come from policy, not in-code literals."""
+    from application.matching.engine import DefaultMatchingEngine
+
+    engine = DefaultMatchingEngine()
+    policy = MatchingPolicyConfig.load_from_json("config/policies/matching/default_matching_policy.json")
+    demand = _make_demand()
+
+    # Candidate with exactly 1 active signal (e.g. lexical only)
+    cand = Candidate(
+        publication_id="ES-1234567-B2",
+        retrieval_scores={RetrievalMethod.LEXICAL: 0.80},
+    )
+    pool = CandidatePool(demand_id=demand.demand_id, candidates=[cand])
+    metadata = {
+        "ES-1234567-B2": {"publication_date": "2020-01-01"},
+    }
+
+    # Under standard policy, min_signals_for_sufficient is 2, so 1 active signal -> PARTIAL
+    assessments = engine.evaluate(demand, pool, policy, patent_metadata=metadata)
+    assert assessments[0].sufficiency == EvidenceSufficiency.PARTIAL
+
+    # Alter policy dynamically so that 1 signal is sufficient
+    altered_policy = policy.model_copy(deep=True)
+    altered_policy.sufficiency_rules.min_signals_for_sufficient = 1
+    altered_assessments = engine.evaluate(demand, pool, altered_policy, patent_metadata=metadata)
+    assert altered_assessments[0].sufficiency == EvidenceSufficiency.SUFFICIENT
+
+
+def test_matching_engine_rejects_incompatible_demand_type():
+    """MatchingEngine should reject arbitrary non-demand objects instead of duck-typing blindly."""
+    from application.matching.engine import DefaultMatchingEngine
+
+    engine = DefaultMatchingEngine()
+    policy = MatchingPolicyConfig.load_from_json("config/policies/matching/default_matching_policy.json")
+    pool = CandidatePool(demand_id="D-1", candidates=[])
+
+    with pytest.raises(TypeError, match="Expected DemandRecord or DemandSignal"):
+        engine.evaluate("not-a-demand", pool, policy)

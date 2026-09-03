@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import duckdb
 
 from application.matching.rankers import (
@@ -11,6 +13,7 @@ from domain.models.demand import DemandSignal
 from domain.models.matching import (
     CPCModality,
     DemandCPC,
+    MatchingPolicyConfig,
     RankerWeights,
     RetrievalMethod,
 )
@@ -165,8 +168,10 @@ def test_complete_matching_pipeline_integration_partially_overlapping():
         posted_date="2022-01-01",
     )
 
+    policy = MatchingPolicyConfig.load_from_json(Path("config/policies/matching/default_matching_policy.json"))
+
     # Act
-    result = service.match(demand)
+    result = service.match(demand, policy=policy)
 
     # Assert 1: Ineligible patent ES-4006 must never appear in CandidatePool
     pool_ids = {c.publication_id for c in result.pool.candidates}

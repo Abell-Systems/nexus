@@ -39,12 +39,14 @@ class CandidateMatchingService:
         self,
         demand: Any,  # DemandRecord or DemandSignal
         *,
-        policy: Any | None = None,  # MatchingPolicyConfig
+        policy: Any,  # MatchingPolicyConfig
         retrieval_limit: int | None = None,
     ) -> MatchingResult:
-        limit = retrieval_limit
-        if limit is None:
-            limit = policy.operational_limits.retrieval_limit if policy else 100
+        if policy is None:
+            raise ValueError("MatchingPolicyConfig must be explicitly provided to CandidateMatchingService.match()")
+
+        # Operational limit is strictly governed by policy unless an explicit administrative limit is passed
+        limit = retrieval_limit if retrieval_limit is not None else policy.operational_limits.retrieval_limit
 
         lexical_candidates = self._lexical_retriever.retrieve(demand, limit=limit)
         semantic_candidates = self._semantic_retriever.retrieve(demand, limit=limit)
@@ -69,8 +71,8 @@ class CandidateMatchingService:
             "semantic_count": len(semantic_candidates),
             "cpc_count": len(cpc_candidates),
             "ranker_strategies": list(self._rankers.keys()),
-            "policy_id": policy.policy_id if policy else None,
-            "policy_sha256": policy.policy_sha256 if policy else None,
+            "policy_id": policy.policy_id,
+            "policy_sha256": policy.policy_sha256,
         }
 
         return MatchingResult(

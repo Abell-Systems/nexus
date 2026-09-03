@@ -33,8 +33,8 @@ def _parse_iso_date(date_str: str | None) -> date | None:
         return None
 
 
-def _extract_demand_fields(demand: Any) -> tuple[str, str, str, str | None, str | None]:
-    """Extracts (demand_id, title, description, posted_date, cpc_prefix) cleanly."""
+def _extract_demand_fields(demand: DemandRecord | DemandSignal) -> tuple[str, str, str, str | None, str | None]:
+    """Extracts (demand_id, title, description, posted_date, cpc_prefix) strictly from canonical demand records."""
     if isinstance(demand, DemandRecord):
         return (
             demand.demand_id,
@@ -52,13 +52,8 @@ def _extract_demand_fields(demand: Any) -> tuple[str, str, str, str | None, str 
             demand.posted_date,
             cpc,
         )
-    # Generic attribute duck typing
-    return (
-        getattr(demand, "demand_id", str(getattr(demand, "id", ""))),
-        getattr(demand, "title", ""),
-        getattr(demand, "description", ""),
-        getattr(demand, "posted_date", None),
-        getattr(demand, "cpc_prefix", None),
+    raise TypeError(
+        f"Expected DemandRecord or DemandSignal, got incompatible object of type {type(demand).__name__}"
     )
 
 
@@ -67,7 +62,7 @@ class DefaultMatchingEngine(MatchingEngine):
 
     def evaluate(
         self,
-        demand: Any,
+        demand: DemandRecord | DemandSignal,
         candidates: CandidatePool,
         policy: MatchingPolicyConfig,
         patent_metadata: dict[str, dict[str, Any]] | None = None,
@@ -145,8 +140,9 @@ class DefaultMatchingEngine(MatchingEngine):
                 confidence = MatchConfidence.NONE
                 rationale = "No measurable signals active across lexical, semantic, or taxonomic dimensions"
             else:
+                is_sufficient = active_signals >= policy.sufficiency_rules.min_signals_for_sufficient
                 sufficiency = (
-                    EvidenceSufficiency.SUFFICIENT if active_signals >= 2 else EvidenceSufficiency.PARTIAL
+                    EvidenceSufficiency.SUFFICIENT if is_sufficient else EvidenceSufficiency.PARTIAL
                 )
                 w = policy.weights
                 raw_score = w.alpha * s_lex + w.beta * s_sem + w.gamma * s_cpc
