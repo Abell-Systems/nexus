@@ -1,0 +1,43 @@
+"""Fixture datasets for unit tests and local mock execution."""
+
+FIXTURE_PATENTS = [
+    {
+        "publication_number": "US-11223001-B2",
+        "title": "Solid state battery with sulfide solid electrolyte",
+        "abstract": "A solid state battery comprising a positive electrode, a negative electrode, and a sulfide solid electrolyte layer disposed between the positive electrode and the negative electrode.",
+        "assignee": ["Toyota Motor Corp"],
+        "inventors": ["Tanaka Kenji", "Sato Hiroshi"],
+        "filing_date": "2020-03-15",
+        "publication_date": "2022-01-11",
+        "country_code": "US",
+        "cpc_codes": ["H01M10/0562", "H01M10/0525"],
+        "citation_count": 8,
+        "backward_citation_count": 12,
+    },
+    {
+        "publication_number": "US-11456502-B2",
+        "title": "Garnet-type solid electrolyte and lithium secondary battery",
+        "abstract": "A garnet-type solid electrolyte represented by Li7La3Zr2O12 doped with Al and Ta having high ionic conductivity.",
+        "assignee": ["QuantumScape Corp"],
+        "inventors": ["Singh Jagdeep", "Holme Tim"],
+        "filing_date": "2019-07-22",
+        "publication_date": "2022-09-27",
+        "country_code": "US",
+        "cpc_codes": ["H01M10/0562", "C04B35/00"],
+        "citation_count": 15,
+        "backward_citation_count": 20,
+    },
+    {
+        "publication_number": "US-11784321-B2",
+        "title": "Polymer-inorganic composite solid electrolyte",
+        "abstract": "A composite solid electrolyte comprising a polymer matrix of polyethylene oxide and inorganic particles dispersed therein.",
+        "assignee": ["Samsung SDI Co Ltd"],
+        "inventors": ["Kim Min-Jun", "Park Ji-Hoon"],
+        "filing_date": "2021-01-10",
+        "publication_date": "2023-10-10",
+        "country_code": "US",
+        "cpc_codes": ["H01M10/0565", "C08L1/00"],
+        "citation_count": 3,
+        "backward_citation_count": 9,
+    },
+]

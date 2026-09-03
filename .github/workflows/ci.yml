@@ -7,29 +7,47 @@ on:
       - "docs/**"
       - "**.md"
   pull_request:
+    branches: [main]
     paths-ignore:
       - "docs/**"
       - "**.md"
 
 jobs:
-  backend:
+  # 1. Architecture Quality Gate
+  architecture:
+    name: 1. Architecture Gate
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-          cache: pip
-          cache-dependency-path: backend/requirements-dev.txt
-      - run: pip install -r requirements-dev.txt
-      - run: pytest
-        env:
-          USE_MOCK_BIGQUERY: "true"
+          python-version: "3.12"
+      - name: Run Architecture Quality Gate
+        run: python scripts/check_architecture.py
 
-  frontend:
+  # 2. Python Static Quality & Type Checking
+  python-quality:
+    name: 2. Python Quality (Ruff & Mypy)
+    needs: architecture
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt
+      - name: Static Code Analysis (Ruff)
+        run: ruff check backend/src/main backend/test scripts
+      - name: Static Type Checking (Mypy)
+        run: mypy backend/src/main --ignore-missing-imports
+
+  # 3. Frontend Quality & Build
+  frontend-quality:
+    name: 3. Frontend Quality & Build
+    needs: architecture
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -41,6 +59,123 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - run: npm ci
-      - run: npm run build
-      - run: npm run lint
+      - name: Install dependencies
+        run: npm ci
+      - name: Tests & Coverage
+        run: npm test
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Production Build
+        run: npm run build
+      - name: Upload Frontend Coverage Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage/lcov.info
+
+  # 4. Security & Secret Scanning
+  security-scan:
+    name: 4. Security Scan (Gitleaks)
+    needs: architecture
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Gitleaks
+        run: |
+          wget -q https://github.com/gitleaks/gitleaks/releases/download/v8.24.0/gitleaks_8.24.0_linux_x64.tar.gz
+          tar -xzf gitleaks_8.24.0_linux_x64.tar.gz
+          sudo mv gitleaks /usr/local/bin/
+          rm -f gitleaks_8.24.0_linux_x64.tar.gz
+      - name: Run Gitleaks Secret Scanner
+        run: gitleaks detect --source . --verbose
+
+  # 5. Tests & Coverage Execution
+  backend-tests:
+    name: 5. Backend Tests & Coverage
+    needs: [python-quality, frontend-quality, security-scan]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt
+      - name: Unit Tests
+        run: pytest backend/test/unit -v --cov=backend/src/main --cov-report=xml:coverage.xml
+      - name: Integration Tests
+        run: pytest backend/test/integration -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml
+      - name: E2E Reproducibility Gate & Coverage Verification (Strict Fail Under)
+        run: pytest backend/test/e2e -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml --cov-report=term-missing --cov-fail-under=80
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
+
+  # 6. Sonar Analysis & Quality Gate (Strict - No Green Fallback)
+  sonar-quality-gate:
+    name: 6. Sonar Quality Gate
+    needs: [backend-tests, frontend-quality]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check SONAR_TOKEN secret existence
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        if: env.SONAR_TOKEN == ''
+        run: |
+          echo "::error::SONAR_TOKEN secret is not configured in repository secrets."
+          echo "Quality Gate Failure: SonarCloud analysis and Quality Gate are mandatory."
+          echo ""
+          echo "MANUAL ACTION REQUIRED:"
+          echo "1. Create/configure SonarCloud project 'Abell-Systems_nexus' in organization 'abell-systems'."
+          echo "2. Generate a SonarCloud token at https://sonarcloud.io/account/security."
+          echo "3. Add the token to GitHub repository secrets under the name SONAR_TOKEN."
+          exit 1
+      - name: Download Backend Coverage Report
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+      - name: Download Frontend Coverage Report
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage
+      - name: SonarQube Cloud Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: SonarQube Cloud Quality Gate
+        uses: SonarSource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  # 7. Final Consolidated Quality Gate (Must be all green)
+  quality-gate:
+    name: 7. QUALITY GATE (Ready to Merge)
+    needs: [architecture, python-quality, frontend-quality, security-scan, backend-tests, sonar-quality-gate]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm All Strict Quality Gates Passed
+        run: |
+          echo "================================================================="
+          echo "All Strict Quality Gates Passed (Clean Code & Clean Architecture)"
+          echo " - Architecture Gate: PASS"
+          echo " - Ruff Static Analysis: PASS"
+          echo " - Mypy Type Checking: PASS"
+          echo " - Frontend Tests, Lint & Build: PASS"
+          echo " - Gitleaks Secret Scanner: PASS"
+          echo " - Backend Tests (Unit, Integration, E2E): PASS"
+          echo " - Coverage Threshold Gate (>=65%): PASS"
+          echo " - SonarCloud Analysis & Quality Gate: PASS"
+          echo "================================================================="

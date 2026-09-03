@@ -14,8 +14,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ .
 COPY --from=frontend-builder /app/frontend/dist ./static
 
+ENV PYTHONPATH=/app/src/main
 ENV PORT=8080
 EXPOSE 8080
 
-# Shell form so $PORT is expanded — hosts like Render assign their own port.
-CMD uvicorn main:app --host 0.0.0.0 --port ${PORT}
+CMD uvicorn main:app --app-dir /app/src/main --host 0.0.0.0 --port ${PORT}

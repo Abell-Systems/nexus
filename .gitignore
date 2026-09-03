@@ -5,11 +5,16 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+.coverage
+coverage.xml
+coverage/
+htmlcov/
 
 # --- Node / frontend ---
 node_modules/
 dist/
 frontend/dist/
+frontend/coverage/
 
 # --- Env / secrets ---
 .env
@@ -23,6 +28,11 @@ frontend/.env
 # --- Ad-hoc validation/judge result dumps ---
 backend/*_results.json
 backend/*judge_results.json
+*.duckdb
+data/*
+!data/snapshots/
+!data/raw/
+data/experiments/
 
 # --- OS / IDE ---
 .DS_Store
