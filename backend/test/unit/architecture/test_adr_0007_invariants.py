@@ -26,14 +26,10 @@ from application.evaluation.metrics import precision_at_k
 from application.evaluation.runner import DefaultEvaluationRunner
 from domain.models.evaluation import (
     DataModality,
-    EvaluationAnnotation,
-    EvaluationDataset,
-    EvaluationDatasetManifest,
     EvaluationDemand,
     EvaluationPatent,
     EvaluationProvenance,
     RelevanceGrade,
-    ValidatedDataset,
 )
 from domain.protocols.evaluation import EvaluationRankingPort, EvaluationRunner
 
@@ -281,10 +277,10 @@ def test_only_adapter_imports_matching_domain_in_evaluation():
 @pytest.fixture
 def _fake_engine_and_call_record():
     """Returns a fake engine that records calls and assertions about what it received."""
-    from unittest.mock import MagicMock
     from domain.models.matching import (
         ConfidenceThresholds,
         CPCConcordanceLevels,
+        EvidenceSufficiency,
         MatchAssessment,
         MatchConfidence,
         MatchFeatures,
@@ -292,7 +288,6 @@ def _fake_engine_and_call_record():
         OperationalLimits,
         RankerWeights,
         SufficiencyRules,
-        EvidenceSufficiency,
     )
 
     policy = MatchingPolicyConfig(

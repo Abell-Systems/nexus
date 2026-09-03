@@ -9,6 +9,7 @@ from domain.models.matching import (
     MatchFeatures,
     MatchingPolicyConfig,
     MatchingResult,
+    PatentCandidateEvidence,
     RankedCandidate,
 )
 from domain.models.patent import PatentDocument
@@ -102,6 +103,7 @@ class MatchingEngine(Protocol):
         demand: DemandRecord | DemandSignal,
         candidates: CandidatePool,
         policy: MatchingPolicyConfig,
+        patent_metadata: dict[str, Any] | list[PatentCandidateEvidence] | None = None,
     ) -> list[MatchAssessment]:
         """Evaluates and produces an explainable MatchAssessment for each candidate in the pool."""
         ...

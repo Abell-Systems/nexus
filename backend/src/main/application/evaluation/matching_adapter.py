@@ -34,7 +34,6 @@ from domain.models.matching import (
     MatchingPolicyConfig,
     PatentCandidateEvidence,
 )
-from domain.protocols.evaluation import EvaluationRankingPort
 from domain.protocols.matching import MatchingEngine
 
 
