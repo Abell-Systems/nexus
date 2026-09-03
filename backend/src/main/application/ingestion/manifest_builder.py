@@ -152,7 +152,7 @@ class EnhancedManifestBuilder:
         manifest = self.build_manifest(files_and_hashes, canonical_sha256)
         out_path = Path(output_dir)
         out_path.mkdir(parents=True, exist_ok=True)
-        manifest_file = out_path / "manifest.json"
+        manifest_file = out_path / "enhanced_manifest.json"
         manifest_json = manifest.model_dump_json(by_alias=True, indent=2)
         manifest_file.write_text(manifest_json, encoding="utf-8")
         return manifest, manifest_file
