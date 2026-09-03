@@ -16,7 +16,7 @@ def cosine_similarity(v1: list[float], v2: list[float]) -> float:
     norm_v1 = math.sqrt(sum(a * a for a in v1))
     norm_v2 = math.sqrt(sum(b * b for b in v2))
 
-    if norm_v1 == 0.0 or norm_v2 == 0.0:
+    if norm_v1 <= 1e-9 or norm_v2 <= 1e-9:
         return 0.0
 
     raw_cos = dot_product / (norm_v1 * norm_v2)

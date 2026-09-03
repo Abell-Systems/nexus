@@ -1,3 +1,4 @@
+import math
 import re
 from enum import StrEnum
 from typing import Any
@@ -119,7 +120,7 @@ class RankerWeights(BaseModel):
                 f"Ranker weights must be non-negative, got alpha={self.alpha}, beta={self.beta}, gamma={self.gamma}"
             )
         total = self.alpha + self.beta + self.gamma
-        if round(total, 6) != 1.0:
+        if not math.isclose(total, 1.0, rel_tol=1e-5, abs_tol=1e-5):
             raise ValueError(f"Ranker weights must sum exactly to 1.0, got {total}")
         return self
 
