@@ -1,4 +1,4 @@
-"""Unit tests for InnogetHtmlNormalizer verifying extraction and 4-level Spanish origin hierarchy."""
+"""Unit tests for InnogetHtmlNormalizer verifying extraction and evidence-backed origin classification."""
 
 from datetime import UTC, datetime
 from pathlib import Path
@@ -57,6 +57,11 @@ def test_innoget_normalizer_level_1_spanish_origin(spanish_call_payload: RawPayl
     assert demand.deadline_date == "2024-12-15"
     assert "100,000 - 250,000 €" in (demand.budget_range or "")
 
+    # Check evidence attached
+    assert len(res.origin_assessment.evidence) == 1
+    assert res.origin_assessment.evidence[0].field_name == "origin_country"
+    assert res.origin_assessment.evidence[0].observed_value == "Spain"
+
 
 def test_innoget_normalizer_excludes_us_call(pg_us_payload: RawPayload) -> None:
     normalizer = InnogetHtmlNormalizer()
@@ -75,33 +80,27 @@ def test_innoget_normalizer_excludes_us_call(pg_us_payload: RawPayload) -> None:
     assert "The Procter & Gamble Company" in demand.requesting_organization
 
 
-def test_innoget_normalizer_level_2_organization_metadata() -> None:
-    html_csic = b"""<!DOCTYPE html><html><head>
-    <title>Desarrollo de catalizadores solares</title>
-    <meta name="description" content="Investigacion en fotocatalisis avanzada para produccion de hidrogeno." />
-    </head><body>
-    <div class="user-meta">Posted by CSIC 120 Followers</div>
-    <ul class="details"><li>CSIC</li></ul>
-    </body></html>"""
-
+def test_innoget_normalizer_quarantines_invalid_utf8() -> None:
+    bad_bytes = b"\xff\xfe\x00\x00\x80\x81malformed"
     payload = RawPayload(
         source_id="innoget_web",
-        batch_id="call_csic_9999",
-        payload_bytes=html_csic,
-        metadata={"url": "https://www.innoget.com/technology-calls/9999/solar-catalysts"},
+        batch_id="corrupt_batch",
+        payload_bytes=bad_bytes,
+        metadata={"url": "https://www.innoget.com/technology-calls/7777/corrupt"},
         retrieval_timestamp=datetime.now(UTC),
     )
 
     normalizer = InnogetHtmlNormalizer()
     results = list(normalizer.normalize_results(payload))
     assert len(results) == 1
-    assert results[0].disposition == DemandDisposition.INCLUDED
-    assert results[0].origin_level == SpanishOriginLevel.LEVEL_2_ORGANIZATION_METADATA
+    assert results[0].disposition == DemandDisposition.QUARANTINED_MALFORMED
+    assert "Unicode decoding failed" in (results[0].error_detail or "")
 
 
 def test_innoget_normalizer_missing_critical_text() -> None:
     html_no_desc = b"""<!DOCTYPE html><html><head>
     <title>Solo titulo sin descripcion</title>
+    <meta property="og:url" content="https://www.innoget.com/technology-calls/8888/no-desc" />
     </head><body><div class="user-meta">Posted by Repsol</div></body></html>"""
 
     payload = RawPayload(
@@ -118,7 +117,9 @@ def test_innoget_normalizer_missing_critical_text() -> None:
     assert results[0].disposition == DemandDisposition.EXCLUDED_MISSING_TEXT
 
 
-def test_innoget_normalize_stream_yields_only_included(spanish_call_payload: RawPayload, pg_us_payload: RawPayload) -> None:
+def test_innoget_normalize_stream_yields_only_included(
+    spanish_call_payload: RawPayload, pg_us_payload: RawPayload
+) -> None:
     normalizer = InnogetHtmlNormalizer()
 
     # Spanish call -> yields 1
