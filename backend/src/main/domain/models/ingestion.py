@@ -3,7 +3,7 @@
 from datetime import datetime
 from enum import StrEnum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from domain.models.evidence import FieldObservation
 from domain.models.patent import PatentDocument
@@ -68,3 +68,50 @@ class NormalizationResult(BaseModel):
     excluded: ExcludedRecord | None = None
     quarantined: QuarantinedRecord | None = None
     observations: list[FieldObservation] = Field(default_factory=list)
+
+
+class TemporalWindow(BaseModel):
+    start_date: str
+    end_date: str
+
+
+class AttritionCounts(BaseModel):
+    raw_payload_count: int = 0
+    normalized_record_count: int = 0
+    included_record_count: int = 0
+    quarantined_record_count: int = 0
+    excluded_record_count: int = 0
+    duplicate_count: int = 0
+
+
+class ExecutionEnvironment(BaseModel):
+    git_commit: str
+    normalizer_version: str
+    python_version: str
+    platform: str
+
+
+class EnhancedManifest(BaseModel):
+    """Authoritative cryptographic and attrition manifest for certified datasets."""
+
+    schema_uri: str = Field(default="https://nexus.abell.ai/schemas/dataset-manifest-v2.json", alias="$schema")
+    dataset_id: str
+    dataset_version: str = "1.0.0"
+    created_at: datetime
+    source_authority: str
+    source_release_id: str
+    source_uri: str
+    acquisition_started_at: datetime
+    acquisition_finished_at: datetime
+    canonical_sha256: str
+    manifest_sha256: str = ""
+    counts: AttritionCounts
+    exclusion_reasons: dict[str, int] = Field(default_factory=dict)
+    quarantine_reasons: dict[str, int] = Field(default_factory=dict)
+    jurisdiction: str = "ES"
+    temporal_window: TemporalWindow
+    kind_code_distribution: dict[str, int] = Field(default_factory=dict)
+    files: dict[str, str] = Field(default_factory=dict)
+    environment: ExecutionEnvironment
+
+    model_config = ConfigDict(populate_by_name=True)
