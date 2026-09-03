@@ -11,8 +11,10 @@ from .metrics import (
     recall_at_k,
     uncertainty_rate,
 )
+from .runner import DefaultEvaluationRunner
 
 __all__ = [
+    "DefaultEvaluationRunner",
     "compute_demand_metrics",
     "is_judged",
     "is_relevant_broad",
