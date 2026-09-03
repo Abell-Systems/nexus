@@ -206,3 +206,42 @@ def test_matching_engine_rejects_incompatible_demand_type():
 
     with pytest.raises(TypeError, match="Expected DemandRecord or DemandSignal"):
         engine.evaluate("not-a-demand", pool, policy)
+
+
+def test_matching_engine_with_canonical_patent_candidate_evidence_objects():
+    """Verifies that MatchingEngine seamlessly consumes canonical PatentCandidateEvidence objects."""
+    from application.matching.engine import DefaultMatchingEngine
+    from domain.models.matching import PatentCandidateEvidence
+
+    engine = DefaultMatchingEngine()
+    policy = MatchingPolicyConfig.load_from_json("config/policies/matching/default_matching_policy.json")
+    demand = _make_demand()
+
+    # Demand with target CPC symbol H01M10/0562
+    demand = _make_demand().model_copy(update={"cpc_prefix": "H01M10/0562"})
+
+    cand = Candidate(
+        publication_id="ES-2849102-B2",
+        retrieval_scores={RetrievalMethod.LEXICAL: 0.70, RetrievalMethod.SEMANTIC: 0.80},
+    )
+    pool = CandidatePool(demand_id=demand.demand_id, candidates=[cand])
+
+    # Strongly typed canonical evidence list
+    evidence_list = [
+        PatentCandidateEvidence(
+            publication_id="ES-2849102-B2",
+            publication_date="2022-05-10",
+            classifications_cpc=["H01M10/0562"],
+            shared_terms=("solid-state", "electrolyte"),
+            title="Electrolito sólido para baterías",
+            abstract="Composición de electrolito inorgánico.",
+        )
+    ]
+
+    assessments = engine.evaluate(demand, pool, policy, patent_metadata=evidence_list)
+    assert len(assessments) == 1
+    top = assessments[0]
+    assert top.publication_id == "ES-2849102-B2"
+    assert top.sufficiency == EvidenceSufficiency.SUFFICIENT
+    assert top.features.shared_terms == ("solid-state", "electrolyte")
+    assert top.features.cpc_concordance == 1.0  # Exact subgroup match

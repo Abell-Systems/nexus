@@ -278,6 +278,17 @@ class EvidenceSufficiency(StrEnum):
     INELIGIBLE_JURISDICTION = "ineligible_jurisdiction"
 
 
+class PatentCandidateEvidence(BaseModel):
+    """Canonical model for patent candidate evidence observed during matching."""
+
+    publication_id: str
+    publication_date: str | None = None
+    classifications_cpc: list[str] = Field(default_factory=list)
+    shared_terms: tuple[str, ...] = Field(default_factory=tuple)
+    title: str = ""
+    abstract: str = ""
+
+
 class MatchFeatures(BaseModel):
     """Deterministic, explainable features extracted between a demand and a patent."""
 
