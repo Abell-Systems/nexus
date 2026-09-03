@@ -193,3 +193,88 @@ class ValidatedDataset(BaseModel):
                 f"Manifest annotation_count ({self.manifest.annotation_count}) does not match dataset ({len(self.dataset.annotations)})"
             )
         return self
+
+
+class EvaluationExecutionContext(BaseModel):
+    """Externalized execution environment context under ADR 0007 §5."""
+
+    model_config = ConfigDict(frozen=True)
+
+    engine_name: str = Field(min_length=1)
+    engine_version: str = Field(min_length=1)
+    engine_commit_hash: str = Field(min_length=7, max_length=40)
+    execution_timestamp: datetime
+    environment: str = Field(min_length=1)
+
+    @field_validator("engine_commit_hash")
+    @classmethod
+    def validate_commit_hash(cls, v: str) -> str:
+        if not re.match(r"^[0-9a-fA-F]{7,40}$", v):
+            raise ValueError(f"Invalid git commit hash: '{v}'. Expected 7-40 hexadecimal characters.")
+        return v.lower()
+
+    @field_validator("execution_timestamp")
+    @classmethod
+    def validate_tz_aware(cls, v: datetime) -> datetime:
+        if v.tzinfo is None:
+            raise ValueError("execution_timestamp must be timezone-aware (UTC)")
+        return v
+
+
+class MetricSet(BaseModel):
+    """Immutable set of standard evaluation metrics under ADR 0007 §4."""
+
+    model_config = ConfigDict(frozen=True)
+
+    precision_at_1: float = Field(ge=0.0, le=1.0)
+    precision_at_3: float = Field(ge=0.0, le=1.0)
+    precision_at_5: float = Field(ge=0.0, le=1.0)
+    recall_at_1: float = Field(ge=0.0, le=1.0)
+    recall_at_3: float = Field(ge=0.0, le=1.0)
+    recall_at_5: float = Field(ge=0.0, le=1.0)
+    mrr: float = Field(ge=0.0, le=1.0)
+    mrr_at_5: float = Field(ge=0.0, le=1.0)
+    ndcg_at_5: float = Field(ge=0.0, le=1.0)
+    judged_at_1: float = Field(ge=0.0, le=1.0)
+    judged_at_3: float = Field(ge=0.0, le=1.0)
+    judged_at_5: float = Field(ge=0.0, le=1.0)
+
+
+class DemandMetricsReport(BaseModel):
+    """Evaluation metrics for a single demand under strict and broad relevance thresholds."""
+
+    model_config = ConfigDict(frozen=True)
+
+    demand_id: str = Field(min_length=1)
+    candidate_count: int = Field(ge=0)
+    judged_count: int = Field(ge=0)
+    uncertain_count: int = Field(ge=0)
+    strict_metrics: MetricSet
+    broad_metrics: MetricSet
+
+
+class EvaluationRunReport(BaseModel):
+    """Sealed, immutable evaluation report preserving complete provenance and metrics under ADR 0007."""
+
+    model_config = ConfigDict(frozen=True)
+
+    run_id: str = Field(min_length=1)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    context: EvaluationExecutionContext
+    dataset_id: str = Field(min_length=1)
+    dataset_version: str = Field(min_length=1)
+    dataset_sha256: str = Field(min_length=64, max_length=64)
+    policy_id: str = Field(min_length=1)
+    policy_version: str = Field(min_length=1)
+    policy_sha256: str = Field(min_length=64, max_length=64)
+    demand_reports: list[DemandMetricsReport]
+    macro_strict: MetricSet
+    macro_broad: MetricSet
+    uncertainty_rate: float = Field(ge=0.0, le=1.0)
+
+    @field_validator("dataset_sha256", "policy_sha256")
+    @classmethod
+    def validate_sha256(cls, v: str) -> str:
+        if not re.match(r"^[0-9a-f]{64}$", v.lower()):
+            raise ValueError(f"Invalid SHA-256 digest format: {v}")
+        return v.lower()

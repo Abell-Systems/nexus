@@ -3,7 +3,13 @@
 from pathlib import Path
 from typing import Protocol, runtime_checkable
 
-from domain.models.evaluation import ValidatedDataset
+from domain.models.evaluation import (
+    EvaluationExecutionContext,
+    EvaluationRunReport,
+    ValidatedDataset,
+)
+from domain.models.matching import MatchingPolicyConfig
+from domain.protocols.matching import MatchingEngine
 
 
 @runtime_checkable
@@ -17,4 +23,19 @@ class EvaluationDatasetLoader(Protocol):
         manifest_path: Path,
     ) -> ValidatedDataset:
         """Loads dataset from exact paths, verifies byte-exact SHA-256 and manifest, returning ValidatedDataset."""
+        ...
+
+
+@runtime_checkable
+class EvaluationRunner(Protocol):
+    """Port for running scientific evaluation over a validated dataset and matching engine."""
+
+    def run_evaluation(
+        self,
+        dataset: ValidatedDataset,
+        engine: MatchingEngine,
+        policy: MatchingPolicyConfig,
+        context: EvaluationExecutionContext,
+    ) -> EvaluationRunReport:
+        """Executes full evaluation run, producing a sealed, reproducible EvaluationRunReport."""
         ...
