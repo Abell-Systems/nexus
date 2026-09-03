@@ -23,10 +23,8 @@ class InnoGetExtractor:
         # 1. Canonical URL & Challenge ID Extraction
         og_url_tag = soup.find("meta", property="og:url")
         canonical_uri_observed: str | None = None
-        if og_url_tag is not None and og_url_tag.has_attr("content"):
-            raw_content = og_url_tag["content"]
-            if raw_content:
-                canonical_uri_observed = str(raw_content).strip()
+        if og_url_tag:
+            canonical_uri_observed = self._get_attr_str(og_url_tag.attrs, "content")
 
         demand_id: str | None = None
         id_source = ExtractionSourceKind.PAYLOAD_METADATA
@@ -48,34 +46,28 @@ class InnoGetExtractor:
         # 2. Title Extraction
         title: str | None = None
         og_title = soup.find("meta", property="og:title")
-        if og_title is not None and og_title.has_attr("content"):
-            title_content = og_title["content"]
-            if title_content:
-                title = str(title_content).strip()
+        if og_title:
+            title = self._get_attr_str(og_title.attrs, "content")
 
-        if not title and soup.title is not None and soup.title.string:
+        if not title and soup.title and soup.title.string:
             title = soup.title.string.strip()
 
         # 3. Description Extraction
         description: str | None = None
         og_desc = soup.find("meta", property="og:description")
-        if og_desc is not None and og_desc.has_attr("content"):
-            desc_content = og_desc["content"]
-            if desc_content:
-                description = str(desc_content).strip()
+        if og_desc:
+            description = self._get_attr_str(og_desc.attrs, "content")
 
         if not description:
             meta_desc = soup.find("meta", attrs={"name": "description"})
-            if meta_desc is not None and meta_desc.has_attr("content"):
-                meta_desc_content = meta_desc["content"]
-                if meta_desc_content:
-                    description = str(meta_desc_content).strip()
+            if meta_desc:
+                description = self._get_attr_str(meta_desc.attrs, "content")
 
         if not description or len(description) < 30:
             main_block = soup.find(
                 "div", class_=re.compile(r"challenge-content|description|content-text", re.I)
             )
-            if main_block is not None:
+            if main_block:
                 text_val = main_block.get_text(separator=" ", strip=True)
                 if len(text_val) >= 30:
                     description = text_val
@@ -88,7 +80,7 @@ class InnoGetExtractor:
         deadline_raw: str | None = None
 
         details_ul = soup.find("ul", class_=re.compile(r"details|challenge-details", re.I))
-        if details_ul is not None:
+        if details_ul:
             lis = details_ul.find_all("li")
             if lis and not organization:
                 first_text = lis[0].get_text(separator=" ", strip=True)
@@ -107,7 +99,7 @@ class InnoGetExtractor:
                         deadline_raw = m_date.group(1)
 
         user_meta = soup.find("div", class_=re.compile(r"user-meta|company-name|posted-by", re.I))
-        if user_meta is not None and not organization:
+        if user_meta and not organization:
             raw_user = user_meta.get_text(separator=" ", strip=True)
             m_org = re.match(r"^(?:posted by\s+)?([^0-9]+?)(?:\s+\d+\s+followers)?$", raw_user, re.I)
             if m_org:
@@ -127,3 +119,9 @@ class InnoGetExtractor:
             extraction_timestamp=datetime.now(UTC),
             source_uri=source_uri,
         )
+
+    def _get_attr_str(self, attrs: dict, key: str) -> str | None:
+        val = attrs.get(key)
+        if isinstance(val, list):
+            val = " ".join(val)
+        return str(val).strip() if val is not None and str(val).strip() else None
