@@ -64,8 +64,24 @@ class OepmXmlNormalizer:
             "source_authority", "Oficina Española de Patentes y Marcas (OEPM)"
         )
 
+        # Defend against external entity expansion and malicious DTD injections
+        raw_bytes = raw_payload.payload_bytes
+        if b"<!ENTITY" in raw_bytes or b"SYSTEM" in raw_bytes and b"<!DOCTYPE" in raw_bytes:
+            yield NormalizationResult(
+                disposition=RecordDisposition.QUARANTINED,
+                quarantined=QuarantinedRecord(
+                    raw_identifier=raw_payload.batch_id,
+                    reason=QuarantineReason.MALFORMED_XML_SYNTAX,
+                    error_message="Security Violation: XML contains disallowed external entities or DTD declarations",
+                    raw_snippet=raw_bytes[:300].decode("utf-8", errors="replace"),
+                    detected_at=datetime.now(UTC),
+                    source_uri=source_uri,
+                ),
+            )
+            return
+
         try:
-            root = ET.fromstring(raw_payload.payload_bytes)
+            root = ET.fromstring(raw_bytes)
         except ET.ParseError as e:
             raw_snippet = raw_payload.payload_bytes[:300].decode("utf-8", errors="replace")
             yield NormalizationResult(
@@ -91,23 +107,29 @@ class OepmXmlNormalizer:
             yield self._normalize_single_element(elem, raw_payload, source_authority, source_uri)
 
     def _find_publication_elements(self, root: ET.Element) -> list[ET.Element]:
-        """Locate individual publication elements regardless of chapter hierarchy."""
+        """Locate individual publication elements strictly avoiding nested double-counting.
+        
+        Searches top-down and does not descend into matched publication elements.
+        """
         matches: list[ET.Element] = []
-        # Support both Tomo2 chapter hierarchy and WIPO/EPO exchange-document structures
         target_tags = {
             "publicacion",
             "publicacionconcesion",
             "patente",
             "modeloutilidad",
-            "solicitud",
             "exchange-document",
-            "document",
         }
-        for elem in root.iter():
-            tag_local = self._clean_tag(elem.tag).lower()
+        
+        def traverse(node: ET.Element) -> None:
+            tag_local = self._clean_tag(node.tag).lower()
             if tag_local in target_tags:
-                matches.append(elem)
+                matches.append(node)
+                # Do not recurse into child elements of an already identified publication unit
+                return
+            for child in node:
+                traverse(child)
 
+        traverse(root)
         return matches
 
     def _clean_tag(self, tag: str) -> str:
@@ -262,19 +284,29 @@ class OepmXmlNormalizer:
         )
         norm_priority_date = self._normalize_date(priority_date_raw)
 
-        # 5. Text fields extraction with T3 fallback
+        # 5. Text fields extraction with explicit deterministic hierarchy (Abstract > Claims > Description)
         title = self._get_element_text(
             elem, ["p54_tituloinvencion", "titulo", "tituloinvencion", "invention-title", "title"]
         )
+        
+        # Primary: Look exclusively for formal abstract tags first
         abstract = self._get_element_text(
-            elem, ["p57_resumenoreivindicacion", "resumen", "abstract", "reivindicacion", "claims"]
+            elem, ["p57_resumenoreivindicacion", "resumen", "abstract"]
         )
 
-        # Fallback rule: if T3 translation lacks abstract, inspect claims or description
+        # Fallback hierarchy for T3 (European translations) when formal abstract is omitted
         if not abstract and kind_code == "T3":
-            claims_text = self._get_element_text(elem, ["claims", "reivindicaciones", "p57_reivindicaciones"])
+            claims_text = self._get_element_text(
+                elem, ["claims", "reivindicaciones", "p57_reivindicaciones", "reivindicacion"]
+            )
             if claims_text:
                 abstract = claims_text
+            else:
+                desc_text = self._get_element_text(
+                    elem, ["description", "memoria_descriptiva", "p57_memoria"]
+                )
+                if desc_text:
+                    abstract = desc_text
 
         # 6. Metadata: Assignees, Inventors, CPC, IPC
         assignees = self._get_all_element_texts(
@@ -295,14 +327,28 @@ class OepmXmlNormalizer:
             elem, ["p21_numsolicitud", "p21_numeroexpediente", "numsolicitud", "application_number"]
         )
 
+        # Rule: Critical text completeness (must possess non-empty title and abstract/claims)
+        if not title or not title.strip() or not abstract or not abstract.strip():
+            return NormalizationResult(
+                disposition=RecordDisposition.EXCLUDED,
+                excluded=ExcludedRecord(
+                    publication_id=canonical_pub_id,
+                    country_code=country_code,
+                    kind_code=kind_code,
+                    reason=ExclusionReason.MISSING_CRITICAL_TEXT,
+                    detail=f"Missing essential technical text: title='{bool(title and title.strip())}', abstract='{bool(abstract and abstract.strip())}'",
+                    source_uri=source_uri,
+                ),
+            )
+
         doc = PatentDocument(
             publication_id=canonical_pub_id,
             country_code=country_code,
             doc_number=doc_number,
             kind_code=kind_code,
             application_number=app_num or None,
-            title=title or "Sin título registrado",
-            abstract=abstract or "",
+            title=title.strip(),
+            abstract=abstract.strip(),
             assignees=assignees,
             inventors=inventors,
             filing_date=norm_filing_date,

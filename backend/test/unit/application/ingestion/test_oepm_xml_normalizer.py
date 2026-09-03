@@ -174,3 +174,140 @@ def test_backward_compatibility_normalize_stream(sample_payload: RawPayload) -> 
     for doc, obs in stream_output:
         assert doc.kind_code in {"B2", "T3", "U"}
         assert len(obs) > 0
+
+
+def test_t3_explicit_fallback_hierarchy() -> None:
+    # 1. Abstract present -> Abstract chosen
+    xml_with_both = b"""<Tomo2 xmlns="https://sede.oepm.gob.es/bopiweb/xsd/Tomo2.xsd">
+      <SolicitudesPatentesEuropeasEfectosEspanha>
+        <Publicacion>
+          <PublicacionId>ES2700001T3</PublicacionId>
+          <p45_FechaPublicacionDeLaConcesion>15/03/2020</p45_FechaPublicacionDeLaConcesion>
+          <p54_TituloInvencion>Invencion con abstract y claims</p54_TituloInvencion>
+          <p57_ResumenOReivindicacion>Texto de resumen primario oficial.</p57_ResumenOReivindicacion>
+          <Claims>Texto de reivindicaciones secundario.</Claims>
+        </Publicacion>
+      </SolicitudesPatentesEuropeasEfectosEspanha>
+    </Tomo2>"""
+    payload = RawPayload(
+        source_id="oepm_test",
+        batch_id="test_b1",
+        payload_bytes=xml_with_both,
+        metadata={},
+        retrieval_timestamp=datetime.now(UTC),
+    )
+    normalizer = OepmXmlNormalizer()
+    res = list(normalizer.normalize_results(payload))[0]
+    assert res.document is not None
+    assert res.document.abstract == "Texto de resumen primario oficial."
+
+    # 2. Abstract absent, claims present -> Claims chosen
+    xml_claims_only = b"""<Tomo2 xmlns="https://sede.oepm.gob.es/bopiweb/xsd/Tomo2.xsd">
+      <SolicitudesPatentesEuropeasEfectosEspanha>
+        <Publicacion>
+          <PublicacionId>ES2700002T3</PublicacionId>
+          <p45_FechaPublicacionDeLaConcesion>15/03/2020</p45_FechaPublicacionDeLaConcesion>
+          <p54_TituloInvencion>Invencion sin abstract</p54_TituloInvencion>
+          <Claims>Texto de reivindicaciones como fallback.</Claims>
+        </Publicacion>
+      </SolicitudesPatentesEuropeasEfectosEspanha>
+    </Tomo2>"""
+    payload2 = RawPayload(
+        source_id="oepm_test",
+        batch_id="test_b2",
+        payload_bytes=xml_claims_only,
+        metadata={},
+        retrieval_timestamp=datetime.now(UTC),
+    )
+    res2 = list(normalizer.normalize_results(payload2))[0]
+    assert res2.document is not None
+    assert res2.document.abstract == "Texto de reivindicaciones como fallback."
+
+
+def test_critical_text_completeness_rule() -> None:
+    # A record with valid kind code and date, but empty title/abstract -> EXCLUDED (MISSING_CRITICAL_TEXT)
+    xml_missing_text = b"""<Tomo2 xmlns="https://sede.oepm.gob.es/bopiweb/xsd/Tomo2.xsd">
+      <PatenteNacional>
+        <Publicacion>
+          <PublicacionId>ES2800001B2</PublicacionId>
+          <p45_FechaPublicacionDeLaConcesion>15/03/2020</p45_FechaPublicacionDeLaConcesion>
+        </Publicacion>
+      </PatenteNacional>
+    </Tomo2>"""
+    payload = RawPayload(
+        source_id="oepm_test",
+        batch_id="test_b3",
+        payload_bytes=xml_missing_text,
+        metadata={},
+        retrieval_timestamp=datetime.now(UTC),
+    )
+    normalizer = OepmXmlNormalizer()
+    res = list(normalizer.normalize_results(payload))[0]
+    assert res.disposition == RecordDisposition.EXCLUDED
+    assert res.excluded is not None
+    assert res.excluded.reason == ExclusionReason.MISSING_CRITICAL_TEXT
+
+
+def test_secure_xml_parsing_defense() -> None:
+    # Malicious XML with DTD / external entity injection
+    malicious_xml = b"""<?xml version="1.0"?>
+    <!DOCTYPE foo [ <!ENTITY xxe SYSTEM "file:///etc/passwd"> ]>
+    <Tomo2><PatenteNacional>&xxe;</PatenteNacional></Tomo2>"""
+    payload = RawPayload(
+        source_id="oepm_test",
+        batch_id="test_xxe",
+        payload_bytes=malicious_xml,
+        metadata={},
+        retrieval_timestamp=datetime.now(UTC),
+    )
+    normalizer = OepmXmlNormalizer()
+    res = list(normalizer.normalize_results(payload))[0]
+    assert res.disposition == RecordDisposition.QUARANTINED
+    assert res.quarantined is not None
+    assert "disallowed external entities or DTD" in res.quarantined.error_message
+
+
+def test_nested_publication_elements_avoid_double_counting() -> None:
+    # XML where a publication contains an inner element that might match a tag name
+    xml_nested = b"""<Tomo2 xmlns="https://sede.oepm.gob.es/bopiweb/xsd/Tomo2.xsd">
+      <PatenteNacional>
+        <PublicacionConcesion>
+          <p11_NumPatenteCCP>2849102</p11_NumPatenteCCP>
+          <Kind>B2</Kind>
+          <p45_FechaPublicacionDeLaConcesion>25/11/2021</p45_FechaPublicacionDeLaConcesion>
+          <p54_TituloInvencion>Titulo principal</p54_TituloInvencion>
+          <p57_ResumenOReivindicacion>Resumen principal</p57_ResumenOReivindicacion>
+          <Detalle>
+            <Patente>
+              <Nota>Referencia secundaria interna</Nota>
+            </Patente>
+          </Detalle>
+        </PublicacionConcesion>
+      </PatenteNacional>
+    </Tomo2>"""
+    payload = RawPayload(
+        source_id="oepm_test",
+        batch_id="test_nested",
+        payload_bytes=xml_nested,
+        metadata={},
+        retrieval_timestamp=datetime.now(UTC),
+    )
+    normalizer = OepmXmlNormalizer()
+    results = list(normalizer.normalize_results(payload))
+    # Must identify strictly 1 publication, not 2
+    assert len(results) == 1
+    assert results[0].document is not None
+    assert results[0].document.publication_id == "ES2849102B2"
+
+
+def test_normalize_stream_exact_projection_of_normalize_results(sample_payload: RawPayload) -> None:
+    normalizer = OepmXmlNormalizer()
+    all_results = list(normalizer.normalize_results(sample_payload))
+    stream_results = list(normalizer.normalize_stream(sample_payload))
+
+    included_from_results = [r.document for r in all_results if r.disposition == RecordDisposition.INCLUDED]
+    included_from_stream = [doc for doc, _ in stream_results]
+
+    assert len(included_from_results) == len(included_from_stream)
+    for doc_r, doc_s in zip(included_from_results, included_from_stream, strict=True):
+        assert doc_r == doc_s
