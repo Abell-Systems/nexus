@@ -109,16 +109,16 @@ def test_sprint_a_full_end_to_end_ingestion_and_sealing(tmp_path: Path) -> None:
     assert manifest_file.exists()
 
     persisted_manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
-    assert persisted_manifest["dataset_id"] == dataset_id
-    assert persisted_manifest["counts"]["raw_payload_count"] == 1
-    assert persisted_manifest["counts"]["normalized_record_count"] == 7
-    assert persisted_manifest["counts"]["included_record_count"] == 3
-    assert persisted_manifest["counts"]["excluded_record_count"] == 2
-    assert persisted_manifest["counts"]["quarantined_record_count"] == 2
-    assert persisted_manifest["counts"]["duplicate_count"] == 0
+    assert persisted_manifest["content_identity"]["dataset_id"] == dataset_id
+    assert persisted_manifest["content_identity"]["counts"]["raw_payload_count"] == 1
+    assert persisted_manifest["content_identity"]["counts"]["normalized_record_count"] == 7
+    assert persisted_manifest["content_identity"]["counts"]["included_record_count"] == 3
+    assert persisted_manifest["content_identity"]["counts"]["excluded_record_count"] == 2
+    assert persisted_manifest["content_identity"]["counts"]["quarantined_record_count"] == 2
+    assert persisted_manifest["content_identity"]["counts"]["duplicate_count"] == 0
 
     # Verify strict attrition sum
-    counts = persisted_manifest["counts"]
+    counts = persisted_manifest["content_identity"]["counts"]
     assert counts["included_record_count"] + counts["excluded_record_count"] + counts["quarantined_record_count"] + counts["duplicate_count"] == counts["normalized_record_count"]
 
     # Verify files manifest contains parquet parts and their hashes
