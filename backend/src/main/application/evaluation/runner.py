@@ -1,56 +1,39 @@
 """Clean Architecture EvaluationRunner implementation under ADR 0007.
 
 Invariants:
-- Evaluator acts as an independent auditor; contains NO matching or heuristic logic.
-- Pure dependency injection: accepts ValidatedDataset, EvaluatableEngine, EvaluationPolicyIdentity,
-  and EvaluationExecutionContext explicitly via arguments. No concrete matching types in signature.
+- Pure independent auditor: this module imports NOTHING from domain.models.matching,
+  domain.protocols.matching, or application.matching. It knows no matching-domain type.
 - Zero filesystem access: does not open files, discover paths, or query Git.
-- Preserves the engine's original candidate ranking order strictly without re-sorting.
-- Delegates all mathematical calculations to application.evaluation.metrics.
-- Produces a sealed, immutable EvaluationRunReport preserving full provenance audit stamps.
-- Sealed candidate pool: retrieval_scores={} (no synthetic evidence); patent evidence is built
-  from EvaluationDataset.patents real data and passed via PatentCandidateEvidence — the domain
-  abstraction designed to carry this information to the engine without inventing new channels.
+- Ranking is delegated entirely to EvaluationRankingPort (implemented by DefaultMatchingAdapter).
+  The runner receives a list[str] of ranked publication_ids — nothing more.
+- All mathematical calculations are delegated to application.evaluation.metrics.
+- The ranked list is accepted as-is; the runner never re-sorts it (ADR 0007 §4).
+- Produces a sealed, immutable EvaluationRunReport stamped with provenance.
+
+Dependency graph:
+    application.evaluation.runner
+        ← domain.models.evaluation   (all inputs/outputs are evaluation-domain types)
+        ← domain.protocols.evaluation (EvaluationRankingPort, EvaluationPolicyIdentity)
+        ← application.evaluation.metrics (pure math functions)
 """
 
 import uuid
 from datetime import UTC, datetime
 
 from application.evaluation.metrics import compute_demand_metrics
-from domain.models.demand import DemandSignal
 from domain.models.evaluation import (
     DemandMetricsReport,
     EvaluationExecutionContext,
-    EvaluationPatent,
     EvaluationRunReport,
     MetricSet,
     RelevanceGrade,
     ValidatedDataset,
 )
-from domain.models.matching import (
-    Candidate,
-    CandidatePool,
-    PatentCandidateEvidence,
-)
 from domain.protocols.evaluation import (
-    EvaluatableEngine,
     EvaluationPolicyIdentity,
+    EvaluationRankingPort,
     EvaluationRunner,
 )
-
-
-def _build_patent_evidence(patent: EvaluationPatent) -> PatentCandidateEvidence:
-    """Constructs canonical PatentCandidateEvidence from an EvaluationPatent record.
-
-    Uses only data observed in the evaluation benchmark. No synthetic scores are introduced.
-    """
-    return PatentCandidateEvidence(
-        publication_id=patent.publication_id,
-        publication_date=patent.publication_date.isoformat() if patent.publication_date else None,
-        classifications_cpc=list(patent.classifications_cpc),
-        title=patent.title,
-        abstract=patent.abstract,
-    )
 
 
 def _macro_average_metric_sets(metric_sets: list[MetricSet]) -> MetricSet:
@@ -89,12 +72,23 @@ def _macro_average_metric_sets(metric_sets: list[MetricSet]) -> MetricSet:
 
 
 class DefaultEvaluationRunner(EvaluationRunner):
-    """Reference implementation of the EvaluationRunner protocol."""
+    """Reference implementation of the EvaluationRunner protocol.
+
+    The runner is a pure orchestrator:
+    1. Iterates over demands in the sealed dataset.
+    2. Asks EvaluationRankingPort to rank the candidate patent universe for each demand.
+    3. Aligns ranked ids with expert annotations.
+    4. Delegates metric computation to metrics.py.
+    5. Assembles and stamps EvaluationRunReport.
+
+    The runner never constructs CandidatePool, Candidate, PatentCandidateEvidence, or any
+    matching-domain type. That translation is done by the adapter (DefaultMatchingAdapter).
+    """
 
     def run_evaluation(
         self,
         dataset: ValidatedDataset,
-        engine: EvaluatableEngine,
+        ranking_port: EvaluationRankingPort,
         policy: EvaluationPolicyIdentity,
         context: EvaluationExecutionContext,
     ) -> EvaluationRunReport:
@@ -102,7 +96,7 @@ class DefaultEvaluationRunner(EvaluationRunner):
         eval_dataset = dataset.dataset
         manifest = dataset.manifest
 
-        # Map annotations by (demand_id, publication_id) -> RelevanceGrade
+        # Map annotations by demand_id → {publication_id → RelevanceGrade}
         annotations_by_demand: dict[str, dict[str, RelevanceGrade]] = {}
         all_grades: list[RelevanceGrade] = []
 
@@ -112,64 +106,33 @@ class DefaultEvaluationRunner(EvaluationRunner):
             annotations_by_demand[anno.demand_id][anno.publication_id] = anno.grade
             all_grades.append(anno.grade)
 
-        # Sealed candidate universe: all patents in dataset.
-        # retrieval_scores={} — no synthetic retrieval evidence is fabricated (ADR 0007).
-        # PatentCandidateEvidence is constructed from the benchmark's real observed data
-        # (title, abstract, CPC, publication_date) using the existing domain abstraction
-        # designed to carry patent content to the engine. This is honest, observable data —
-        # not a surrogate for missing retrieval signal.
-        evidence_by_id: list[PatentCandidateEvidence] = [
-            _build_patent_evidence(p) for p in eval_dataset.patents
-        ]
-        universe_candidates = [
-            Candidate(publication_id=p.publication_id, retrieval_scores={})
-            for p in eval_dataset.patents
-        ]
+        # Sealed candidate universe: all patents in the dataset
+        patent_universe = eval_dataset.patents
 
         demand_reports: list[DemandMetricsReport] = []
 
         for eval_demand in eval_dataset.demands:
             d_id = eval_demand.demand_id
-            pool = CandidatePool(demand_id=d_id, candidates=universe_candidates)
 
-            demand_signal = DemandSignal(
-                demand_id=d_id,
-                source_network=eval_demand.provenance.source_authority,
-                title=eval_demand.title,
-                description=eval_demand.description,
-                posted_date=eval_demand.posted_date.isoformat() if eval_demand.posted_date else None,
-                classified_cpc_prefixes=eval_demand.target_cpc_prefixes,
-            )
+            # 1. Delegate ranking to port — receives only evaluation-domain objects,
+            #    returns ranked publication_ids in engine's original order.
+            ranked_ids = ranking_port.rank_candidates(eval_demand, patent_universe)
 
-            # 1. Evaluate demand using injected engine.
-            # policy is passed as EvaluationPolicyIdentity (structurally satisfies MatchingPolicyConfig).
-            # patent_metadata carries real patent content (title, abstract, CPC) from the benchmark dataset
-            # so the engine can compute CPC concordance and text features from authentic observed data.
-            assessments = engine.evaluate(
-                demand=demand_signal,
-                candidates=pool,
-                policy=policy,
-                patent_metadata=evidence_by_id,
-            )
-
-            # 2. Extract engine ranking strictly preserving original order (ADR 0007 §4)
-            ranked_ids = [a.publication_id for a in assessments]
-
-            # 3. Align with judgements and compute per-demand metrics
+            # 2. Align with expert annotations and compute per-demand metrics
             judgements = annotations_by_demand.get(d_id, {})
             demand_report = compute_demand_metrics(
                 demand_id=d_id,
                 ranked_publication_ids=ranked_ids,
                 judgements=judgements,
-                candidate_universe_size=len(universe_candidates),
+                candidate_universe_size=len(patent_universe),
             )
             demand_reports.append(demand_report)
 
-        # 4. Compute macro summaries
+        # 3. Compute macro summaries
         macro_strict = _macro_average_metric_sets([r.strict_metrics for r in demand_reports])
         macro_broad = _macro_average_metric_sets([r.broad_metrics for r in demand_reports])
 
-        # 5. Compute global uncertainty rate
+        # 4. Compute global uncertainty rate
         unc_count = sum(1 for g in all_grades if g == RelevanceGrade.UNCERTAIN)
         total_anno = len(all_grades)
         overall_uncertainty_rate = (unc_count / total_anno) if total_anno > 0 else 0.0

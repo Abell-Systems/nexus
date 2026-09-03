@@ -58,6 +58,14 @@ class CandidatePool(BaseModel):
             seen_ids.add(cand.publication_id)
         if len(self.candidates) > 300:
             raise ValueError(f"CandidatePool exceeds maximum capacity of 300 candidates (got {len(self.candidates)})")
+            # NOTE: This 300 is a STRUCTURAL CAPACITY LIMIT of the model — an absolute maximum
+            # that prevents memory abuse regardless of policy. It is NOT the same as
+            # MatchingPolicyConfig.operational_limits.max_candidate_pool_size, which is an
+            # OPERATIONAL LIMIT that configures how many candidates the matching service retrieves
+            # at runtime. Two distinct concepts:
+            #   - 300 (structural): "a CandidatePool cannot physically hold more than this"
+            #   - max_candidate_pool_size (policy): "the service should not construct pools larger than this"
+            # The operational limit should always be <= 300 to avoid triggering the structural limit.
         return self
 
     @classmethod

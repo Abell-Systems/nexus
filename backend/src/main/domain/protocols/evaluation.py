@@ -3,55 +3,24 @@
 Invariants:
 - The evaluation subsystem is an INDEPENDENT AUDITOR of the matching subsystem.
 - domain/protocols/evaluation.py MUST NOT import from domain.protocols.matching or domain.models.matching.
-- Structural protocols (EvaluationAssessment, EvaluationCandidatePool, EvaluatableEngine,
-  EvaluationPolicyIdentity) express only what the evaluation subsystem needs from its collaborators,
-  using types from domain.models.demand and locally-defined evaluation-owned protocols.
-- Concrete matching types (CandidatePool, MatchAssessment, MatchingPolicyConfig) satisfy these
-  protocols via structural subtyping — the coupling lives only in the application/evaluation layer
-  where it constructs those objects.
+- Protocols are expressed exclusively in evaluation-domain and demand-domain types.
+- No `Any` is used to bridge bounded contexts. Impedance mismatch between evaluation types and
+  matching types is resolved by an explicit adapter in application/evaluation/matching_adapter.py.
+- The `EvaluationRankingPort` protocol defines the collaboration contract between the runner
+  and any engine, using only types from domain.models.evaluation and domain.models.demand.
 """
 
-from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Protocol, runtime_checkable
+from typing import Protocol, runtime_checkable
 
 from domain.models.demand import DemandRecord, DemandSignal
 from domain.models.evaluation import (
+    EvaluationDemand,
     EvaluationExecutionContext,
+    EvaluationPatent,
     EvaluationRunReport,
     ValidatedDataset,
 )
-
-
-@runtime_checkable
-class EvaluationAssessment(Protocol):
-    """Minimal structural view of what the EvaluationRunner reads from engine output.
-
-    MatchAssessment from domain.models.matching satisfies this protocol.
-    The evaluation runner only needs publication_id to reconstruct the ranked list.
-    """
-
-    publication_id: str
-
-
-@runtime_checkable
-class EvaluationCandidate(Protocol):
-    """Minimal structural view of a candidate entry in the pool, as seen by the evaluation port."""
-
-    publication_id: str
-
-
-@runtime_checkable
-class EvaluationCandidatePool(Protocol):
-    """Minimal structural view of the candidate pool, as seen by the evaluation port.
-
-    CandidatePool from domain.models.matching satisfies this protocol via structural subtyping.
-    The `candidates` field is typed as Sequence[Any] at this abstraction level to avoid mypy
-    covariance issues with list[Candidate] — the concrete layer enforces individual item types.
-    """
-
-    demand_id: str
-    candidates: Sequence[Any]
 
 
 @runtime_checkable
@@ -59,7 +28,8 @@ class EvaluationPolicyIdentity(Protocol):
     """Minimal structural protocol for what the evaluation subsystem needs from a policy object.
 
     Only the identity/provenance fields required to stamp the EvaluationRunReport are declared here.
-    The full MatchingPolicyConfig satisfies this protocol via structural subtyping.
+    The full MatchingPolicyConfig from the matching bounded context satisfies this protocol via
+    structural subtyping. The evaluation runner never imports MatchingPolicyConfig directly.
     """
 
     policy_id: str
@@ -68,36 +38,31 @@ class EvaluationPolicyIdentity(Protocol):
 
 
 @runtime_checkable
-class EvaluatableEngine(Protocol):
-    """Minimal structural protocol for any engine that the EvaluationRunner can invoke.
+class EvaluationRankingPort(Protocol):
+    """Port for ranking candidate patents against a demand, as seen by the evaluation auditor.
 
-    Deliberately avoids importing MatchingEngine, CandidatePool, MatchAssessment, or any
-    matching-domain type. The evaluation subsystem's port expresses the collaboration in terms
-    of evaluation-owned abstractions and the demand model (which is cross-cutting, not matching-specific).
+    This protocol is expressed exclusively in evaluation-domain types (EvaluationDemand,
+    EvaluationPatent) — no matching-domain types appear here. The impedance mismatch between
+    evaluation types and matching types (CandidatePool, PatentCandidateEvidence, etc.) is
+    resolved by an explicit adapter in application/evaluation/matching_adapter.py, which is
+    the only module permitted to import matching-domain models on behalf of evaluation.
 
-    The `candidates` parameter uses `Any` because Pydantic model fields are invariant for mypy,
-    which prevents `CandidatePool` (with `candidates: list[Candidate]`) from formally satisfying
-    `EvaluationCandidatePool` (with `candidates: Sequence[Any]`) at the type-checker level.
-    The runtime structural compatibility is correct; the Any is a precise, documented concession
-    to mypy's Pydantic invariance — not a loss of domain clarity.
+    The contract:
+    - Input: a demand and the sealed patent universe from the benchmark
+    - Output: publication_ids ordered by descending relevance (the engine's ranking)
 
-    The patent_metadata parameter is declared here because the evaluation runner ALWAYS passes
-    real patent content (title, abstract, CPC) from the benchmark dataset so the engine can
-    compute CPC concordance and text features from authentic observed data. It is typed as
-    Sequence[Any] at this protocol level — the concrete implementation (DefaultMatchingEngine)
-    accepts list[PatentCandidateEvidence], which satisfies this via structural subtyping.
-
-    DefaultMatchingEngine satisfies this protocol via structural subtyping.
+    The concrete DefaultMatchingAdapter satisfies this protocol via structural subtyping.
     """
 
-    def evaluate(
+    def rank_candidates(
         self,
-        demand: DemandRecord | DemandSignal,
-        candidates: Any,
-        policy: EvaluationPolicyIdentity,
-        patent_metadata: Sequence[Any] | None = None,
-    ) -> Sequence[EvaluationAssessment]:
-        """Evaluates candidates for a demand under a policy, returning ordered assessments."""
+        demand: EvaluationDemand,
+        patents: list[EvaluationPatent],
+    ) -> list[str]:
+        """Returns publication_ids ranked by the engine in descending relevance order.
+
+        The ranking must preserve the engine's original ordering without re-sorting.
+        """
         ...
 
 
@@ -117,21 +82,38 @@ class EvaluationDatasetLoader(Protocol):
 
 @runtime_checkable
 class EvaluationRunner(Protocol):
-    """Port for running scientific evaluation over a validated dataset and matching engine.
+    """Port for running scientific evaluation over a validated dataset and a ranking port.
 
-    The engine and policy parameters are typed as EvaluatableEngine and EvaluationPolicyIdentity
-    — minimal structural protocols owned by the evaluation subsystem — so that the evaluation port
-    is architecturally independent of the matching bounded context.
+    The runner is a pure auditor: it knows nothing about CandidatePool, MatchAssessment,
+    PatentCandidateEvidence, MatchingPolicyConfig, or any other matching-domain type.
 
-    The concrete DefaultMatchingEngine and MatchingPolicyConfig satisfy these structural protocols.
+    Ranking is delegated to EvaluationRankingPort, which abstracts the matching subsystem
+    completely. The adapter pattern keeps the coupling at the correct layer (application).
+
+    EvaluationPolicyIdentity is accepted only for provenance stamping in the report;
+    the runner never uses it for ranking decisions.
     """
 
     def run_evaluation(
         self,
         dataset: ValidatedDataset,
-        engine: EvaluatableEngine,
+        ranking_port: EvaluationRankingPort,
         policy: EvaluationPolicyIdentity,
         context: EvaluationExecutionContext,
     ) -> EvaluationRunReport:
         """Executes full evaluation run, producing a sealed, reproducible EvaluationRunReport."""
         ...
+
+
+# DemandRecord / DemandSignal are imported above but only used in other protocols
+# that may be extended in the future. Keep the import explicit.
+__all__ = [
+    "EvaluationPolicyIdentity",
+    "EvaluationRankingPort",
+    "EvaluationDatasetLoader",
+    "EvaluationRunner",
+]
+
+# Suppressed: DemandRecord, DemandSignal are available for future protocol extensions
+# without adding new imports to this file.
+_ = (DemandRecord, DemandSignal)

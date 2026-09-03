@@ -22,6 +22,7 @@ from pathlib import Path
 repo_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(repo_root / "backend" / "src" / "main"))
 
+from application.evaluation.matching_adapter import DefaultMatchingAdapter
 from application.evaluation.runner import DefaultEvaluationRunner
 from application.matching.engine import DefaultMatchingEngine
 from domain.models.evaluation import EvaluationExecutionContext
@@ -166,15 +167,18 @@ def main() -> int:
     )
     print(f"✓ Execution Context:   Engine commit {commit_hash[:7]} at {context.execution_timestamp.isoformat()}")
 
-    # 4. Instantiate engine in CLI layer
+    # 4. Instantiate engine and adapter in CLI layer (the appropriate place for concrete wiring)
+    # DefaultMatchingAdapter is the single adapter between evaluation-domain and matching-domain types.
     engine = DefaultMatchingEngine()
+    ranking_port = DefaultMatchingAdapter(engine=engine, policy=policy)
 
     # 5. Execute evaluation via in-memory runner
+    # The runner receives only the EvaluationRankingPort — it never sees CandidatePool or MatchingPolicyConfig.
     runner = DefaultEvaluationRunner()
     print("\nRunning evaluation across closed candidate universe...")
     report = runner.run_evaluation(
         dataset=validated_dataset,
-        engine=engine,
+        ranking_port=ranking_port,
         policy=policy,
         context=context,
     )

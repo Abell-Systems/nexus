@@ -202,7 +202,7 @@ def ndcg_at_k(
         idcg += gain / discount
 
     # Boundary handling (ADR 0007 §4)
-    if idcg == 0.0:
+    if idcg <= 0.0:
         return 1.0
 
     return min(1.0, dcg / idcg)

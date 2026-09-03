@@ -1,17 +1,18 @@
 """Unit tests for EvaluationRunner orchestrator under ADR 0007.
 
 Invariants verified:
-- Runner delegates exclusively to EvaluatableEngine.evaluate().
-- Runner passes EvaluationPolicyIdentity without modification.
+- Runner delegates exclusively to EvaluationRankingPort.rank_candidates().
+- Runner is independent of matching-domain types (no CandidatePool, MatchAssessment, etc.).
 - Runner uses the closed candidate universe defined in ValidatedDataset.
-- Runner preserves the engine's original ranking order without re-sorting.
+- Runner preserves the port's original ranking order without re-sorting.
 - Runner delegates all metric calculations to metrics.py.
 - Runner produces sealed EvaluationRunReport with exact dataset and policy SHAs.
 - Runner stamps injected EvaluationExecutionContext without filesystem or Git lookups.
 - Runner does not mutate the dataset or policy.
 - Runner operates purely in memory with zero filesystem access.
-- Candidates in the pool have retrieval_scores={} — no synthetic evidence.
-- Real patent metadata (PatentCandidateEvidence) is passed to the engine from benchmark data.
+
+The FakeRankingPort below implements EvaluationRankingPort without any matching-domain type,
+mirroring the clean boundary that DefaultMatchingAdapter provides in production.
 """
 
 from datetime import UTC, date, datetime
@@ -19,7 +20,6 @@ from datetime import UTC, date, datetime
 import pytest
 
 from application.evaluation.runner import DefaultEvaluationRunner
-from domain.models.demand import DemandRecord, DemandSignal
 from domain.models.evaluation import (
     DataModality,
     EvaluationAnnotation,
@@ -33,63 +33,39 @@ from domain.models.evaluation import (
     ValidatedDataset,
 )
 from domain.models.matching import (
-    CandidatePool,
     ConfidenceThresholds,
     CPCConcordanceLevels,
-    EvidenceSufficiency,
-    MatchAssessment,
-    MatchConfidence,
-    MatchFeatures,
     MatchingPolicyConfig,
     OperationalLimits,
     RankerWeights,
     SufficiencyRules,
 )
+from domain.protocols.evaluation import EvaluationRankingPort
 
 
-class FakeDeterministicMatchingEngine:
-    """Explicit fake implementing the EvaluatableEngine protocol without using DefaultMatchingEngine."""
+class FakeRankingPort:
+    """Explicit fake implementing EvaluationRankingPort.
+
+    Simulates the boundary that DefaultMatchingAdapter provides in production.
+    The runner should call rank_candidates() with EvaluationDemand and list[EvaluationPatent].
+    This fake records the calls and returns a deterministic fixed ranking.
+    """
 
     def __init__(self, fixed_order: list[str]) -> None:
         self.fixed_order = fixed_order
-        self.received_demands: list[DemandRecord | DemandSignal] = []
-        self.received_pools: list[CandidatePool] = []
-        self.received_policies: list[MatchingPolicyConfig] = []
-        self.received_patent_metadata: list[object] = []
+        self.received_demands: list[EvaluationDemand] = []
+        self.received_patents: list[list[EvaluationPatent]] = []
 
-    def evaluate(
+    def rank_candidates(
         self,
-        demand: DemandRecord | DemandSignal,
-        candidates: CandidatePool,
-        policy: MatchingPolicyConfig,
-        patent_metadata: object = None,
-    ) -> list[MatchAssessment]:
+        demand: EvaluationDemand,
+        patents: list[EvaluationPatent],
+    ) -> list[str]:
         self.received_demands.append(demand)
-        self.received_pools.append(candidates)
-        self.received_policies.append(policy)
-        self.received_patent_metadata.append(patent_metadata)
-
-        assessments: list[MatchAssessment] = []
-        pool_ids = {c.publication_id for c in candidates.candidates}
-
-        # Return assessments in self.fixed_order (which determines the system ranking)
-        for pub_id in self.fixed_order:
-            if pub_id in pool_ids:
-                assessments.append(
-                    MatchAssessment(
-                        demand_id=demand.demand_id,
-                        publication_id=pub_id,
-                        overall_score=0.85,
-                        confidence=MatchConfidence.STRONG,
-                        sufficiency=EvidenceSufficiency.SUFFICIENT,
-                        features=MatchFeatures(),
-                        rationale="Fake assessment",
-                        policy_id=policy.policy_id,
-                        policy_version=policy.policy_version,
-                        policy_sha256=policy.policy_sha256,
-                    )
-                )
-        return assessments
+        self.received_patents.append(patents)
+        universe_ids = {p.publication_id for p in patents}
+        # Return fixed_order preserving only those in the universe
+        return [pub_id for pub_id in self.fixed_order if pub_id in universe_ids]
 
 
 @pytest.fixture
@@ -203,7 +179,7 @@ def sample_validated_dataset() -> ValidatedDataset:
 @pytest.fixture
 def sample_context() -> EvaluationExecutionContext:
     return EvaluationExecutionContext(
-        engine_name="FakeDeterministicMatchingEngine",
+        engine_name="FakeRankingPort",
         engine_version="1.0.0",
         engine_commit_hash="a321b0c",
         execution_timestamp=datetime(2026, 9, 3, 14, 0, 0, tzinfo=UTC),
@@ -214,61 +190,65 @@ def sample_context() -> EvaluationExecutionContext:
 def test_runner_delegates_and_preserves_engine_ranking(
     sample_validated_dataset, sample_policy, sample_context
 ):
-    # System returns ranking: [P-2 (UNCERTAIN), P-3 (GRADE_3), P-1 (GRADE_0), P-4 (GRADE_2), P-5 (GRADE_0)]
-    engine_order = ["P-2", "P-3", "P-1", "P-4", "P-5"]
-    engine = FakeDeterministicMatchingEngine(fixed_order=engine_order)
-    from domain.protocols.evaluation import EvaluatableEngine
-    assert isinstance(engine, EvaluatableEngine)
+    """Verifies ranking delegation and invariant preservation end-to-end."""
+    # Port returns: [P-2 (UNCERTAIN), P-3 (GRADE_3), P-1 (GRADE_0), P-4 (GRADE_2), P-5 (GRADE_0)]
+    ranking_port = FakeRankingPort(fixed_order=["P-2", "P-3", "P-1", "P-4", "P-5"])
+    assert isinstance(ranking_port, EvaluationRankingPort)
 
     runner = DefaultEvaluationRunner()
     report = runner.run_evaluation(
         dataset=sample_validated_dataset,
-        engine=engine,
+        ranking_port=ranking_port,
         policy=sample_policy,
         context=sample_context,
     )
 
-    # 1. Verification of delegation
-    assert len(engine.received_demands) == 1
-    assert engine.received_demands[0].demand_id == "D-1"
-    assert len(engine.received_pools[0].candidates) == 5
-    assert engine.received_policies[0] is sample_policy
+    # 1. Verify delegation: port received the correct evaluation-domain objects
+    assert len(ranking_port.received_demands) == 1
+    assert ranking_port.received_demands[0].demand_id == "D-1"
+    assert len(ranking_port.received_patents[0]) == 5
 
-    # 1b. Verification: candidates have retrieval_scores={} (no synthetic evidence)
-    for candidate in engine.received_pools[0].candidates:
-        assert candidate.retrieval_scores == {}, (
-            f"Candidate {candidate.publication_id} must have retrieval_scores={{}} — "
-            "fabricating synthetic scores is prohibited by ADR 0007."
-        )
-
-    # 1c. Verification: real patent metadata was passed to the engine
-    assert engine.received_patent_metadata[0] is not None, (
-        "Runner must pass patent_metadata to the engine so it can compute CPC concordance "
-        "from real benchmark data."
-    )
-    assert len(engine.received_patent_metadata[0]) == 5, (
-        "patent_metadata must contain one PatentCandidateEvidence per patent in the dataset."
-    )
-
-    # 2. Verification of provenance and stamping
+    # 2. Verify provenance stamping
     assert report.dataset_sha256 == sample_validated_dataset.manifest.content_sha256
     assert report.policy_sha256 == sample_policy.policy_sha256
     assert report.context.engine_commit_hash == sample_context.engine_commit_hash
     assert report.context.engine_name == sample_context.engine_name
 
-    # 3. Verification of demand metrics
+    # 3. Verify demand metrics
     assert len(report.demand_reports) == 1
     d_rep = report.demand_reports[0]
     assert d_rep.candidate_count == 5
     assert d_rep.judged_count == 4
     assert d_rep.uncertain_count == 1
 
-    # 4. Invariant: Engine ranking order is preserved!
-    # Engine output: P-2 (UNCERTAIN), P-3 (GRADE_3), P-1 (GRADE_0), ...
-    # Under strict, P-3 is at original system rank 2!
-    # Therefore, strict MRR = 1/2 = 0.50!
+    # 4. Invariant: ranking order is preserved!
+    # Port returned: P-2 (UNCERTAIN), P-3 (GRADE_3), P-1 (GRADE_0), ...
+    # Under strict, P-3 is at original rank 2! => MRR = 1/2 = 0.50
     assert d_rep.strict_metrics.mrr == 0.50
     assert d_rep.strict_metrics.mrr_at_5 == 0.50
+
+
+def test_runner_passes_full_patent_universe_to_port(
+    sample_validated_dataset, sample_policy, sample_context
+):
+    """Verifies runner passes the sealed patent universe to the ranking port, not a subset."""
+    ranking_port = FakeRankingPort(fixed_order=["P-1", "P-2", "P-3", "P-4", "P-5"])
+    runner = DefaultEvaluationRunner()
+
+    runner.run_evaluation(
+        dataset=sample_validated_dataset,
+        ranking_port=ranking_port,
+        policy=sample_policy,
+        context=sample_context,
+    )
+
+    # The port must receive all patents from the sealed dataset universe
+    expected_ids = {p.publication_id for p in sample_validated_dataset.dataset.patents}
+    received_ids = {p.publication_id for p in ranking_port.received_patents[0]}
+    assert received_ids == expected_ids, (
+        "Runner must pass the complete sealed patent universe to the ranking port."
+    )
+    assert len(ranking_port.received_patents[0]) == 5
 
 
 def test_runner_never_reads_filesystem(
@@ -282,12 +262,12 @@ def test_runner_never_reads_filesystem(
 
     monkeypatch.setattr(builtins, "open", forbidden_open)
 
-    engine = FakeDeterministicMatchingEngine(fixed_order=["P-1", "P-2", "P-3", "P-4", "P-5"])
+    ranking_port = FakeRankingPort(fixed_order=["P-1", "P-2", "P-3", "P-4", "P-5"])
     runner = DefaultEvaluationRunner()
 
     report = runner.run_evaluation(
         dataset=sample_validated_dataset,
-        engine=engine,
+        ranking_port=ranking_port,
         policy=sample_policy,
         context=sample_context,
     )
@@ -300,12 +280,12 @@ def test_runner_does_not_mutate_dataset_or_policy(
     dataset_copy = sample_validated_dataset.model_dump()
     policy_copy = sample_policy.model_dump()
 
-    engine = FakeDeterministicMatchingEngine(fixed_order=["P-1", "P-2", "P-3", "P-4", "P-5"])
+    ranking_port = FakeRankingPort(fixed_order=["P-1", "P-2", "P-3", "P-4", "P-5"])
     runner = DefaultEvaluationRunner()
 
     runner.run_evaluation(
         dataset=sample_validated_dataset,
-        engine=engine,
+        ranking_port=ranking_port,
         policy=sample_policy,
         context=sample_context,
     )
@@ -326,12 +306,12 @@ def test_runner_never_invokes_git(
     monkeypatch.setattr(subprocess, "run", forbidden_run)
     monkeypatch.setattr(subprocess, "Popen", forbidden_run)
 
-    engine = FakeDeterministicMatchingEngine(fixed_order=["P-1", "P-2", "P-3", "P-4", "P-5"])
+    ranking_port = FakeRankingPort(fixed_order=["P-1", "P-2", "P-3", "P-4", "P-5"])
     runner = DefaultEvaluationRunner()
 
     report = runner.run_evaluation(
         dataset=sample_validated_dataset,
-        engine=engine,
+        ranking_port=ranking_port,
         policy=sample_policy,
         context=sample_context,
     )
@@ -341,35 +321,35 @@ def test_runner_never_invokes_git(
 def test_runner_uses_closed_candidate_universe(
     sample_validated_dataset, sample_policy, sample_context
 ):
-    """Verifies that the CandidatePool passed to engine.evaluate contains strictly the dataset patents."""
-    engine = FakeDeterministicMatchingEngine(fixed_order=["P-1", "P-2", "P-3", "P-4", "P-5"])
+    """Verifies that the port receives strictly the dataset patents as the candidate universe."""
+    ranking_port = FakeRankingPort(fixed_order=["P-1", "P-2", "P-3", "P-4", "P-5"])
     runner = DefaultEvaluationRunner()
 
     runner.run_evaluation(
         dataset=sample_validated_dataset,
-        engine=engine,
+        ranking_port=ranking_port,
         policy=sample_policy,
         context=sample_context,
     )
 
-    received_pool = engine.received_pools[0]
+    received_patents = ranking_port.received_patents[0]
     expected_ids = {p.publication_id for p in sample_validated_dataset.dataset.patents}
-    actual_ids = {c.publication_id for c in received_pool.candidates}
+    actual_ids = {p.publication_id for p in received_patents}
     assert actual_ids == expected_ids
-    assert len(received_pool.candidates) == len(sample_validated_dataset.dataset.patents)
+    assert len(received_patents) == len(sample_validated_dataset.dataset.patents)
 
 
 def test_runner_produces_strict_and_broad_metrics(
     sample_validated_dataset, sample_policy, sample_context
 ):
     """Verifies that both strict and broad metrics are computed and distinct."""
-    # Engine ranking: P-3 (GRADE_3), P-4 (GRADE_2), P-1 (GRADE_0), P-2 (UNCERTAIN), P-5 (GRADE_0)
-    engine = FakeDeterministicMatchingEngine(fixed_order=["P-3", "P-4", "P-1", "P-2", "P-5"])
+    # Ranking: P-3 (GRADE_3), P-4 (GRADE_2), P-1 (GRADE_0), P-2 (UNCERTAIN), P-5 (GRADE_0)
+    ranking_port = FakeRankingPort(fixed_order=["P-3", "P-4", "P-1", "P-2", "P-5"])
     runner = DefaultEvaluationRunner()
 
     report = runner.run_evaluation(
         dataset=sample_validated_dataset,
-        engine=engine,
+        ranking_port=ranking_port,
         policy=sample_policy,
         context=sample_context,
     )
@@ -378,7 +358,7 @@ def test_runner_produces_strict_and_broad_metrics(
     # Under Strict: only P-3 is relevant (1 total in universe)
     # Under Broad: P-3 and P-4 are relevant (2 total in universe)
     assert d_rep.strict_metrics.precision_at_1 == 1.0
-    assert d_rep.strict_metrics.precision_at_3 == 1 / 3  # P-3, P-4, P-1 -> only P-3 strict relevant
-    assert d_rep.broad_metrics.precision_at_3 == 2 / 3  # P-3, P-4, P-1 -> P-3 and P-4 broad relevant
+    assert d_rep.strict_metrics.precision_at_3 == 1 / 3  # P-3, P-4, P-1 → only P-3 strict relevant
+    assert d_rep.broad_metrics.precision_at_3 == 2 / 3  # P-3, P-4, P-1 → P-3 and P-4 broad relevant
     assert report.macro_strict.precision_at_1 == 1.0
     assert report.macro_broad.precision_at_1 == 1.0
