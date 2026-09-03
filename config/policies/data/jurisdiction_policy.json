@@ -1,0 +1,47 @@
+{
+  "policy_id": "SPAIN_DEMAND_ORIGIN_POLICY",
+  "policy_version": "1.0.0",
+  "target_jurisdiction": "ES",
+  "recognized_jurisdictions": {
+    "ES": {
+      "canonical_name": "Spain",
+      "aliases": ["spain", "españa", "espanya", "es", "esp"]
+    },
+    "US": {
+      "canonical_name": "United States",
+      "aliases": ["united states", "usa", "us", "estados unidos"]
+    },
+    "GB": {
+      "canonical_name": "United Kingdom",
+      "aliases": ["united kingdom", "uk", "great britain", "reino unido"]
+    },
+    "DE": {
+      "canonical_name": "Germany",
+      "aliases": ["germany", "deutschland", "de", "alemania"]
+    },
+    "FR": {
+      "canonical_name": "France",
+      "aliases": ["france", "fr", "francia"]
+    },
+    "IT": {
+      "canonical_name": "Italy",
+      "aliases": ["italy", "italia", "it"]
+    },
+    "PL": {
+      "canonical_name": "Poland",
+      "aliases": ["poland", "polska", "pl", "polonia"]
+    },
+    "NL": {
+      "canonical_name": "Netherlands",
+      "aliases": ["netherlands", "holland", "nl", "paises bajos", "países bajos"]
+    },
+    "CH": {
+      "canonical_name": "Switzerland",
+      "aliases": ["switzerland", "schweiz", "ch", "suiza"]
+    },
+    "JP": {
+      "canonical_name": "Japan",
+      "aliases": ["japan", "jp", "japón", "japon"]
+    }
+  }
+}

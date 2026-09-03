@@ -1,9 +1,11 @@
-"""Unit tests for DefaultOriginResolver: deterministic evidence-backed origin classification."""
+"""Unit tests for DefaultOriginResolver: policy-driven, evidence-backed origin classification."""
 
 from datetime import UTC, datetime
 
 from application.ingestion.origin_resolver import DefaultOriginResolver, ExternalRegistryVerifier
-from domain.models.demand import RawExtractedDemandFields, SpanishOriginLevel
+from domain.models.demand import ExtractionSourceKind, RawExtractedDemandFields, SpanishOriginLevel
+from domain.models.evidence import VerificationStatus
+from domain.models.origin_policy import OriginPolicyConfig
 
 
 class MockMercantileRegistryVerifier(ExternalRegistryVerifier):
@@ -17,10 +19,23 @@ class MockMercantileRegistryVerifier(ExternalRegistryVerifier):
         return False, ""
 
 
+def test_origin_policy_loading_and_sha256() -> None:
+    policy = OriginPolicyConfig.load_from_json("config/policies/data/jurisdiction_policy.json")
+    assert policy.policy_id == "SPAIN_DEMAND_ORIGIN_POLICY"
+    assert policy.policy_version == "1.0.0"
+    assert policy.target_jurisdiction == "ES"
+    assert len(policy.policy_sha256) == 64
+    assert policy.resolve_jurisdiction("Spain") == "ES"
+    assert policy.resolve_jurisdiction("España") == "ES"
+    assert policy.resolve_jurisdiction("Deutschland") == "DE"
+    assert policy.resolve_jurisdiction("Unknownland") is None
+
+
 def test_level_1_direct_platform_country_metadata() -> None:
     resolver = DefaultOriginResolver()
     fields = RawExtractedDemandFields(
         demand_id="INNOGET-2292",
+        demand_id_source=ExtractionSourceKind.META_TAG,
         title="Valid Title",
         description="Valid description of challenge",
         country_raw="Spain",
@@ -29,20 +44,24 @@ def test_level_1_direct_platform_country_metadata() -> None:
         source_uri="https://www.innoget.com/technology-calls/2292",
     )
 
-    assessment = resolver.assess_origin(fields)
+    assessment = resolver.assess_origin(fields, raw_payload_sha256="aabbcc")
     assert assessment.level == SpanishOriginLevel.LEVEL_1_DIRECT_METADATA
     assert assessment.is_target_origin is True
-    assert len(assessment.evidence) == 1
-    ev = assessment.evidence[0]
+    assert assessment.resolved_jurisdiction_code == "ES"
+    assert len(assessment.evidence_observations) == 1
+
+    ev = assessment.evidence_observations[0]
     assert ev.field_name == "origin_country"
-    assert ev.observed_value == "Spain"
-    assert ev.verification_source == "platform_metadata"
+    assert ev.observed_value_json == '"Spain"'
+    assert ev.verification_status == VerificationStatus.SOURCE_REPORTED
+    assert len(assessment.policy_sha256) == 64
 
 
 def test_explicit_foreign_country_is_proven_non_spanish() -> None:
     resolver = DefaultOriginResolver()
     fields = RawExtractedDemandFields(
         demand_id="INNOGET-2446",
+        demand_id_source=ExtractionSourceKind.META_TAG,
         title="Valid Title",
         description="Valid description of challenge",
         country_raw="United States",
@@ -54,8 +73,33 @@ def test_explicit_foreign_country_is_proven_non_spanish() -> None:
     assessment = resolver.assess_origin(fields)
     assert assessment.level == SpanishOriginLevel.NON_SPANISH
     assert assessment.is_target_origin is False
-    assert len(assessment.evidence) == 1
-    assert assessment.evidence[0].observed_value == "United States"
+    assert assessment.resolved_jurisdiction_code == "US"
+    assert len(assessment.evidence_observations) == 1
+    assert assessment.evidence_observations[0].observed_value_json == '"United States"'
+
+
+def test_level_2_organization_metadata_designation() -> None:
+    # Country raw omitted or ambiguous, but source provides explicit organization location in Spain
+    resolver = DefaultOriginResolver()
+    fields = RawExtractedDemandFields(
+        demand_id="INNOGET-2295",
+        demand_id_source=ExtractionSourceKind.META_TAG,
+        title="Reto de Biotecnología",
+        description="Descripción técnica de reto industrial",
+        country_raw="",  # Country omitted in call
+        organization_raw="Centro Tecnológico de Valencia",
+        organization_location_raw="España",  # Organization designated in Spain
+        extraction_timestamp=datetime.now(UTC),
+        source_uri="https://www.innoget.com/technology-calls/2295",
+    )
+
+    assessment = resolver.assess_origin(fields)
+    assert assessment.level == SpanishOriginLevel.LEVEL_2_ORGANIZATION_METADATA
+    assert assessment.is_target_origin is True
+    assert assessment.resolved_jurisdiction_code == "ES"
+    assert len(assessment.evidence_observations) == 1
+    assert assessment.evidence_observations[0].field_name == "organization_location"
+    assert assessment.evidence_observations[0].verification_status == VerificationStatus.SOURCE_REPORTED
 
 
 def test_level_3_requires_authoritative_registry_cross_check() -> None:
@@ -63,6 +107,7 @@ def test_level_3_requires_authoritative_registry_cross_check() -> None:
     resolver_without_registry = DefaultOriginResolver()
     fields = RawExtractedDemandFields(
         demand_id="INNOGET-3001",
+        demand_id_source=ExtractionSourceKind.META_TAG,
         title="Valid Title",
         description="Valid description",
         country_raw="",  # Country omitted in call
@@ -85,17 +130,21 @@ def test_level_3_requires_authoritative_registry_cross_check() -> None:
 
     assert verified_assessment.level == SpanishOriginLevel.LEVEL_3_REGISTRY_CROSS_CHECK
     assert verified_assessment.is_target_origin is True
-    assert len(verified_assessment.evidence) == 1
-    assert "Registro Mercantil Central" in verified_assessment.evidence[0].rule_applied
+    assert len(verified_assessment.evidence_observations) == 1
+    obs = verified_assessment.evidence_observations[0]
+    assert obs.verification_status == VerificationStatus.INDEPENDENTLY_VERIFIED
+    assert obs.source_authority == "Authoritative Commercial Registry"
 
 
-def test_unverified_origin_when_no_evidence_exists() -> None:
+def test_unrecognized_country_yields_unverified_not_non_spanish() -> None:
+    # Invariant: country != target DOES NOT mean NON_SPANISH if token is unrecognized/corrupt!
     resolver = DefaultOriginResolver()
     fields = RawExtractedDemandFields(
         demand_id="INNOGET-4001",
+        demand_id_source=ExtractionSourceKind.META_TAG,
         title="Unknown Call",
         description="Valid description",
-        country_raw="",
+        country_raw="Unknownland",  # Unrecognized country
         organization_raw="Anonymous Research Group",
         extraction_timestamp=datetime.now(UTC),
         source_uri="https://www.innoget.com/technology-calls/4001",
@@ -104,4 +153,5 @@ def test_unverified_origin_when_no_evidence_exists() -> None:
     assessment = resolver.assess_origin(fields)
     assert assessment.level == SpanishOriginLevel.UNVERIFIED
     assert assessment.is_target_origin is False
-    assert len(assessment.evidence) == 0
+    assert assessment.resolved_jurisdiction_code is None
+    assert len(assessment.evidence_observations) == 0

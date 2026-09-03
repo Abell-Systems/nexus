@@ -58,9 +58,9 @@ def test_innoget_normalizer_level_1_spanish_origin(spanish_call_payload: RawPayl
     assert "100,000 - 250,000 €" in (demand.budget_range or "")
 
     # Check evidence attached
-    assert len(res.origin_assessment.evidence) == 1
-    assert res.origin_assessment.evidence[0].field_name == "origin_country"
-    assert res.origin_assessment.evidence[0].observed_value == "Spain"
+    assert len(res.origin_assessment.evidence_observations) == 1
+    assert res.origin_assessment.evidence_observations[0].field_name == "origin_country"
+    assert res.origin_assessment.evidence_observations[0].observed_value_json == '"Spain"'
 
 
 def test_innoget_normalizer_excludes_us_call(pg_us_payload: RawPayload) -> None:

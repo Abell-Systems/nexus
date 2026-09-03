@@ -42,30 +42,30 @@ class DemandDiscoveryChannel(StrEnum):
     EXTERNAL_REFERENCE = "external_reference"
 
 
+class ExtractionSourceKind(StrEnum):
+    """Origin locator type identifying where a factual demand field was extracted from."""
+
+    META_TAG = "meta_tag"
+    DOM_ELEMENT = "dom_element"
+    SOURCE_URI = "source_uri"
+    PAYLOAD_METADATA = "payload_metadata"
+
+
 class RawExtractedDemandFields(BaseModel):
     """Factual, uninterpreted fields extracted directly from raw demand source markup."""
 
     demand_id: str | None = None
+    demand_id_source: ExtractionSourceKind = ExtractionSourceKind.PAYLOAD_METADATA
     title: str | None = None
     description: str | None = None
     organization_raw: str | None = None
+    organization_location_raw: str | None = None
     country_raw: str | None = None
     deadline_date_raw: str | None = None
     budget_range_raw: str | None = None
-    canonical_url: str | None = None
+    canonical_uri_observed: str | None = None
     extraction_timestamp: datetime
     source_uri: str
-
-
-class OriginEvidence(BaseModel):
-    """Verifiable proof supporting an origin classification decision."""
-
-    level: SpanishOriginLevel
-    field_name: str
-    observed_value: str
-    verification_source: str
-    rule_applied: str
-    is_authoritative: bool = True
 
 
 class OriginAssessment(BaseModel):
@@ -73,8 +73,12 @@ class OriginAssessment(BaseModel):
 
     level: SpanishOriginLevel
     is_target_origin: bool
+    resolved_jurisdiction_code: str | None = None
     rationale: str
-    evidence: list[OriginEvidence] = Field(default_factory=list)
+    policy_id: str
+    policy_version: str
+    policy_sha256: str
+    evidence_observations: list[FieldObservation] = Field(default_factory=list)
 
 
 class DemandRecord(BaseModel):
