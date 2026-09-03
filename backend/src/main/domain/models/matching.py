@@ -202,42 +202,68 @@ class ParsedCPCSymbol(BaseModel):
         )
 
 
-def compute_cpc_symbol_similarity(sym_a: str, sym_b: str) -> float:
-    """Computes hierarchical CPC similarity between two classification symbols.
+class CPCConcordanceLevels(BaseModel):
+    subgroup: float
+    main_group: float
+    subclass: float
+    section: float
+    none: float
 
-    Returns:
-    - 1.00: if exact subgroup match (e.g., C11D1/02 == C11D1/02)
-    - 0.75: if same main group (e.g., C11D1 == C11D1)
-    - 0.50: if same subclass (e.g., C11D == C11D)
-    - 0.25: if same section (e.g., C == C)
-    - 0.00: otherwise
+
+def compute_cpc_symbol_similarity_from_levels(
+    sym_a: str,
+    sym_b: str,
+    levels: CPCConcordanceLevels,
+) -> float:
+    """Computes hierarchical CPC similarity between two classification symbols using policy levels.
+
+    Levels are injected strictly from MatchingPolicyConfig (single source of truth).
     """
     pa = ParsedCPCSymbol.from_symbol(sym_a)
     pb = ParsedCPCSymbol.from_symbol(sym_b)
 
     if not pa.section or not pb.section:
-        return 0.0
+        return levels.none
 
     if pa.subgroup and pb.subgroup and pa.subgroup == pb.subgroup:
-        return 1.00
+        return levels.subgroup
     if pa.main_group and pb.main_group and pa.main_group == pb.main_group:
-        return 0.75
+        return levels.main_group
     if pa.subclass and pb.subclass and pa.subclass == pb.subclass:
-        return 0.50
+        return levels.subclass
     if pa.section == pb.section:
-        return 0.25
-    return 0.00
+        return levels.section
+    return levels.none
 
 
-def compute_max_cpc_similarity(demand_symbols: list[str], patent_symbols: list[str]) -> float:
-    """Computes the maximum hierarchical concordance between a demand and a patent.
+def compute_cpc_symbol_similarity(
+    sym_a: str,
+    sym_b: str,
+    levels: CPCConcordanceLevels | None = None,
+) -> float:
+    """Computes hierarchical CPC similarity.
     
-    sim(C_d, C_p) = max_{c1 in C_d, c2 in C_p} sim(c1, c2)
+    If levels is None, loads canonical levels from the active default policy file to prevent duplication.
     """
+    if levels is None:
+        from pathlib import Path
+        policy = MatchingPolicyConfig.load_from_json(
+            Path("config/policies/matching/default_matching_policy.json")
+        )
+        levels = policy.cpc_concordance_levels
+    return compute_cpc_symbol_similarity_from_levels(sym_a, sym_b, levels)
+
+
+def compute_max_cpc_similarity(
+    demand_symbols: list[str],
+    patent_symbols: list[str],
+    levels: CPCConcordanceLevels | None = None,
+) -> float:
+    """Computes the maximum hierarchical concordance between a demand and a patent."""
     if not demand_symbols or not patent_symbols:
         return 0.0
     return max(
-        (compute_cpc_symbol_similarity(d_sym, p_sym) for d_sym in demand_symbols for p_sym in patent_symbols),
+        (compute_cpc_symbol_similarity(d_sym, p_sym, levels) for d_sym in demand_symbols for p_sym in patent_symbols),
         default=0.0,
     )
 
@@ -288,12 +314,9 @@ class MatchAssessment(BaseModel):
     policy_sha256: str = Field(min_length=64, max_length=64)
 
 
-class CPCConcordanceLevels(BaseModel):
-    subgroup: float
-    main_group: float
-    subclass: float
-    section: float
-    none: float
+class OperationalLimits(BaseModel):
+    retrieval_limit: int = Field(ge=1, le=1000)
+    max_candidate_pool_size: int = Field(ge=1, le=1000)
 
 
 class ConfidenceThresholds(BaseModel):
@@ -314,10 +337,12 @@ class MatchingPolicyConfig(BaseModel):
     policy_version: str
     description: str = ""
     weights: RankerWeights
+    operational_limits: OperationalLimits
     cpc_concordance_levels: CPCConcordanceLevels
     confidence_thresholds: ConfidenceThresholds
     sufficiency_rules: SufficiencyRules
     concept_to_cpc_taxonomy: dict[str, list[str]]
+    cpc_taxonomy_descriptions: dict[str, dict[str, str]] = Field(default_factory=dict)
     policy_sha256: str = Field(min_length=64, max_length=64)
 
     @classmethod

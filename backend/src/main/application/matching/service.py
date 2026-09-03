@@ -1,6 +1,5 @@
 from typing import Any
 
-from domain.models.demand import DemandSignal
 from domain.models.matching import (
     CandidatePool,
     MatchingResult,
@@ -38,16 +37,22 @@ class CandidateMatchingService:
 
     def match(
         self,
-        demand: DemandSignal,
+        demand: Any,  # DemandRecord or DemandSignal
         *,
-        retrieval_limit: int = 100,
+        policy: Any | None = None,  # MatchingPolicyConfig
+        retrieval_limit: int | None = None,
     ) -> MatchingResult:
-        lexical_candidates = self._lexical_retriever.retrieve(demand, limit=retrieval_limit)
-        semantic_candidates = self._semantic_retriever.retrieve(demand, limit=retrieval_limit)
-        cpc_candidates = self._cpc_retriever.retrieve(demand, limit=retrieval_limit)
+        limit = retrieval_limit
+        if limit is None:
+            limit = policy.operational_limits.retrieval_limit if policy else 100
 
+        lexical_candidates = self._lexical_retriever.retrieve(demand, limit=limit)
+        semantic_candidates = self._semantic_retriever.retrieve(demand, limit=limit)
+        cpc_candidates = self._cpc_retriever.retrieve(demand, limit=limit)
+
+        demand_id = getattr(demand, "demand_id", str(getattr(demand, "id", "")))
         pool = CandidatePool.from_retrievals(
-            demand_id=demand.demand_id,
+            demand_id=demand_id,
             lexical_candidates=lexical_candidates,
             semantic_candidates=semantic_candidates,
             cpc_candidates=cpc_candidates,
@@ -58,16 +63,18 @@ class CandidateMatchingService:
             rankings[strategy_name] = ranker.rank(pool)
 
         metadata: dict[str, Any] = {
-            "retrieval_limit": retrieval_limit,
+            "retrieval_limit": limit,
             "pool_size": len(pool.candidates),
             "lexical_count": len(lexical_candidates),
             "semantic_count": len(semantic_candidates),
             "cpc_count": len(cpc_candidates),
             "ranker_strategies": list(self._rankers.keys()),
+            "policy_id": policy.policy_id if policy else None,
+            "policy_sha256": policy.policy_sha256 if policy else None,
         }
 
         return MatchingResult(
-            demand_id=demand.demand_id,
+            demand_id=demand_id,
             pool=pool,
             rankings=rankings,
             metadata=metadata,

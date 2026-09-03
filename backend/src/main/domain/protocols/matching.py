@@ -88,3 +88,17 @@ class TechnologyMatcher(Protocol):
     ) -> Any:  # MatchAssessment
         """Evaluates compatibility and returns an auditable, explainable MatchAssessment."""
         ...
+
+
+@runtime_checkable
+class MatchingEngine(Protocol):
+    """Core domain contract for evaluating candidates for a demand under a matching policy."""
+
+    def evaluate(
+        self,
+        demand: Any,  # DemandRecord or DemandSignal
+        candidates: CandidatePool,
+        policy: Any,  # MatchingPolicyConfig
+    ) -> list[Any]:  # list[MatchAssessment]
+        """Evaluates and produces an explainable MatchAssessment for each candidate in the pool."""
+        ...

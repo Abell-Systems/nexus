@@ -126,7 +126,59 @@
       "C08L67/04",
       "C08L1/02",
       "C08B37/00"
+    ],
+    "power grid": [
+      "H02J3/00",
+      "H02J13/00",
+      "H02J7/00"
+    ],
+    "energy storage system": [
+      "H02J7/00",
+      "H02J15/00",
+      "H01M10/0525"
     ]
   },
-  "policy_sha256": "c7aec29433975db6a2503cf216554a6d5ade701a69b14f0230710542fd519541"
+  "operational_limits": {
+    "retrieval_limit": 100,
+    "max_candidate_pool_size": 300
+  },
+  "cpc_taxonomy_descriptions": {
+    "H01M10/0562": {
+      "subclass_title": "Solid electrolytes",
+      "description": "Solid state inorganic electrolytes including sulfides and oxides"
+    },
+    "H01M10/0525": {
+      "subclass_title": "Lithium secondary batteries",
+      "description": "Secondary batteries with lithium ion chemistry"
+    },
+    "H01M10/0565": {
+      "subclass_title": "Polymeric electrolytes",
+      "description": "Solid or gel polymer electrolyte membranes"
+    },
+    "H01M4/13": {
+      "subclass_title": "Electrodes",
+      "description": "Electrodes for secondary lithium batteries"
+    },
+    "C11D1/00": {
+      "subclass_title": "Detergent compositions",
+      "description": "Surface-active agent formulations for cleaning"
+    },
+    "C11D3/386": {
+      "subclass_title": "Enzymatic detergents",
+      "description": "Detergent compositions containing enzymes"
+    },
+    "E03C1/00": {
+      "subclass_title": "Sanitary plumbing",
+      "description": "Plumbing fixtures, wash-basins, and drainage systems"
+    },
+    "G05B19/00": {
+      "subclass_title": "Program-control systems",
+      "description": "Industrial process automation and numerical control"
+    },
+    "C22C1/00": {
+      "subclass_title": "Alloys",
+      "description": "Non-ferrous and ferrous metallurgical alloy compositions"
+    }
+  },
+  "policy_sha256": "a73f81c02eae4c8113a5966001fe5bf5d32f92be71f1a270111104ea3e7a6f5e"
 }
