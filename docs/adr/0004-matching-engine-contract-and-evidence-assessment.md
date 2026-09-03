@@ -12,9 +12,10 @@ Under ADR 0001 (Testing Strategy), ADR 0002 (Minimal Clean Code & SOLID), and AD
 Previously, early prototypes suffered from:
 1. Conflating retrieval similarity (a bare `float`) with decision and explainability.
 2. Inconsistent demand representations (`DemandSignal` vs `DemandRecord`), allowing unnormalized HTML or raw metadata to bleed into matching.
-3. Hardcoded keyword taxonomies (`CPC_TAXONOMY_MAP` in `cpc_taxonomy.py`) embedded directly in Python code.
+3. Hardcoded keyword taxonomies embedded directly in Python code.
 4. Conflating candidate generation (retrieval recall) with scoring and ranking (precision).
-5. Lack of a formal assessment contract explaining *why* a candidate matched, *which features* contributed to the match, and whether evidence is sufficient to justify a decision.
+5. Lack of a formal assessment contract explaining why a candidate matched, which features contributed, and whether evidence is sufficient.
+6. Externalized policy being undermined by implicit filesystem loading and business-value fallbacks inside matching code.
 
 ## Decision
 
@@ -33,28 +34,13 @@ We establish an immutable Clean Architecture contract for the Nexus Matching Eng
                                  │
                                  ▼
                            MatchFeatures
-       ┌───────────────────────────────────────────────────┐
-       │ • Lexical: token_overlap_ratio, bm25_score        │
-       │ • Semantic: dense_cosine_similarity               │
-       │ • Taxonomic: cpc_concordance_level (0.0 to 1.0)   │
-       │ • Temporal: delta_days (t_demand - t_pub)         │
-       │ • Eligibility: is_prior_art, is_jurisdiction_match│
-       └─────────────────────────┬─────────────────────────┘
                                  │
                                  ▼
                       MatchingEngine (Matcher)
-                   (Injects MatchingPolicyConfig)
+                   (Consumes MatchingPolicyConfig)
                                  │
                                  ▼
                           MatchAssessment
-       ┌───────────────────────────────────────────────────┐
-       │ • overall_score: float [0.0, 1.0]                 │
-       │ • confidence: MatchConfidence (STRONG / MED / LOW)│
-       │ • features: MatchFeatures                         │
-       │ • evidence_summary: tuple of explainable tokens   │
-       │ • sufficiency: EvidenceSufficiency (SUFFICIENT...)│
-       │ • policy_sha256: 64-char hex of active policy     │
-       └─────────────────────────┬─────────────────────────┘
                                  │
                                  ▼
                  Second-Stage CandidateRanker
@@ -67,86 +53,127 @@ We establish an immutable Clean Architecture contract for the Nexus Matching Eng
 
 A match is **not** a raw float and **not** a judicial verdict of legal patentability.
 
-A match is an **evidence-based assessment (`MatchAssessment`)** measuring the technological problem-solution alignment between a verified industrial demand and an eligible domestic patent publication:
-* **Factual Evidence:** Concrete tokens, concepts, taxonomic codes, and dates observed in both documents.
-* **Derived Features (`MatchFeatures`):** Deterministic, reproducible metrics calculated across lexical, dense semantic, taxonomic, and temporal dimensions.
-* **Explainable Assessment (`MatchAssessment`):** A structured verdict containing the normalized score, confidence level, evidence tokens, evidence sufficiency classification, and cryptographic policy stamp.
-* **Separation from Decision:** The matching engine assesses compatibility and affinity. Business actions (shortlisting, notification, commercial outreach, research investment) are decoupled downstream decisions.
+A match is an **evidence-based assessment (`MatchAssessment`)** measuring technological problem-solution alignment between a verified industrial demand and an eligible domestic patent publication.
+
+The assessment contains factual evidence, deterministic derived features, an explainable score/confidence classification, evidence sufficiency, and the exact policy identity used for evaluation.
+
+Business actions such as shortlisting, notification, commercial outreach, or research investment remain downstream decisions.
 
 ---
 
-### 2. The Input / Output Data Contract
+### 2. Input / Output Data Contract
 
-#### Inputs:
-1. **Demand Document (`DemandRecord`):** The clean, normalized domain entity produced by the ingestion pipeline (complying with ADR 0003). It contains canonical text, verified origin level, and optional taxonomic indicators.
-2. **Patent Document (`PatentDocument`):** The validated, canonical patent document (complying with ADR 0001/0002).
-3. **Matching Configuration (`MatchingPolicyConfig`):** Injected versioned policy containing weights, thresholds, concordance matrices, and vocabulary tables.
+#### Inputs
 
-#### Outputs:
-1. **`MatchFeatures`:**
-   * `lexical_score`: float $\ge 0.0$ (normalized to $[0, 1]$ in context or raw BM25).
-   * `semantic_score`: float $\in [0, 1]$ (scaled cosine similarity).
-   * `cpc_concordance`: float $\in \{0.0, 0.25, 0.50, 0.75, 1.0\}$.
-   * `temporal_valid`: bool (True if $t_{\text{pub}} < t_{\text{demand}}$).
-   * `delta_days`: int | None.
-   * `shared_terms`: tuple[str, ...] (concrete overlapping technical stems/keywords).
-   * `concordant_cpc_pairs`: tuple[tuple[str, str], ...] (matched demand vs patent symbols).
+1. **Demand Document:** a clean, normalized domain entity produced by the ingestion pipeline.
+2. **Patent Document:** a validated, canonical patent document.
+3. **Matching Configuration (`MatchingPolicyConfig`):** an explicitly injected, versioned, cryptographically sealed policy containing weights, thresholds, concordance levels, operational limits, and vocabulary/taxonomy tables.
 
-2. **`MatchAssessment`:**
-   * `demand_id`: str.
-   * `publication_id`: str.
-   * `overall_score`: float $\in [0.0, 1.0]$.
-   * `confidence`: `MatchConfidence` (`STRONG`, `MODERATE`, `WEAK`, `NONE`).
-   * `sufficiency`: `EvidenceSufficiency` (`SUFFICIENT`, `PARTIAL`, `INSUFFICIENT_EVIDENCE`, `INELIGIBLE_TEMPORAL`).
-   * `features`: `MatchFeatures`.
-   * `rationale`: str (human-readable, audit-verifiable synthesis of observed alignments).
-   * `policy_id`: str.
-   * `policy_version`: str.
-   * `policy_sha256`: str (64-character hexadecimal SHA-256 digest).
+#### Outputs
+
+`MatchFeatures` contains the lexical, semantic, taxonomic, temporal, and evidence-alignment features defined by the matching contract.
+
+`MatchAssessment` contains:
+
+- `demand_id`;
+- `publication_id`;
+- `overall_score` in `[0.0, 1.0]`;
+- `confidence`;
+- `sufficiency`;
+- `features`;
+- `rationale`;
+- `policy_id`;
+- `policy_version`;
+- `policy_sha256`.
 
 ---
 
 ### 3. Configuration Over Hardcoding
 
-In accordance with Section 3 of `AGENTS.md`, **no business lists, keyword taxonomies, or scoring heuristics are hardcoded in matching algorithm classes**.
+In accordance with Section 3 of `AGENTS.md`, **no business lists, keyword taxonomies, scoring heuristics, operational limits, or scientific interpretation parameters are hardcoded in matching algorithm classes**.
 
-The following parameters are externalized into version-controlled, cryptographically sealed configuration (`config/policies/matching/`):
-1. **Fusion Weights:** $\alpha$ (lexical), $\beta$ (semantic), $\gamma$ (taxonomic CPC), constrained to $\alpha + \beta + \gamma = 1.0$.
-2. **Hierarchical CPC Concordance Levels:** Exact values for subgroup ($1.00$), main group ($0.75$), subclass ($0.50$), section ($0.25$).
-3. **Confidence Thresholds:** Minimum scores required for `STRONG` (e.g. $\ge 0.70$), `MODERATE` ($\ge 0.40$), `WEAK` ($> 0.0$).
-4. **Sufficiency Constraints:** Minimum required signals (e.g., must have non-zero semantic or lexical signal to be `SUFFICIENT`).
-5. **Taxonomic Concordance Mappings:** Externalized concept-to-CPC dictionary tables loaded from JSON/YAML, eliminating the in-code `CPC_TAXONOMY_MAP`.
-6. **Stopwords and Normalization Rules:** Externalized linguistic resources.
+The following are externalized into version-controlled, cryptographically sealed configuration (`config/policies/matching/`):
 
-**Fail-Fast Invariant:** Missing, corrupt, or tampered matching policy files raise immediate explicit errors (`FileNotFoundError`, `ValueError`). The engine **never synthesizes an in-memory fallback policy**.
+1. Fusion weights.
+2. Hierarchical CPC concordance levels.
+3. Confidence thresholds.
+4. Evidence/sufficiency constraints.
+5. Operational limits such as retrieval and candidate-pool limits.
+6. Taxonomic concept-to-CPC mappings and descriptions.
+7. Other vocabulary and normalization resources that materially alter matching behavior.
+
+### 3.1 Explicit Policy Injection — Mandatory
+
+Every production matching component whose behavior depends on matching policy MUST receive the active `MatchingPolicyConfig` explicitly from its caller.
+
+The matching layer MUST NOT:
+
+- load `default_matching_policy.json` itself;
+- resolve configuration from a repository-relative path;
+- use the process working directory to locate policy;
+- create a default policy when none is supplied;
+- substitute a business-relevant literal when policy is absent.
+
+Policy loading, validation, SHA-256 verification, and selection belong to the application bootstrap/composition boundary. The resulting policy object is then injected through the complete evaluation path.
+
+A public API with `policy=None` is non-compliant when omission changes matching behavior.
+
+### 3.2 No Second Source of Truth
+
+A value appearing in policy MUST NOT be duplicated as an independent executable literal elsewhere when changing that value could change matching behavior.
+
+This includes, but is not limited to, CPC concordance scores, confidence thresholds, retrieval limits, candidate-pool limits, and sufficiency thresholds.
+
+If a value is a mathematical invariant rather than policy, the code and ADR MUST state why it is immutable and why externalizing it would not represent a meaningful policy choice.
+
+### 3.3 No Hidden Sufficiency Rules
+
+Every rule that changes `EvidenceSufficiency` MUST be either:
+
+- explicitly represented in `MatchingPolicyConfig`; or
+- explicitly defined as an immutable algorithmic invariant in this ADR and covered by contract tests.
+
+A threshold such as `active_signals >= 2` MUST NOT appear as an unexplained literal in the matching engine.
+
+**Fail-Fast Invariant:** missing, corrupt, or tampered mandatory policy raises an explicit error. The engine never synthesizes an in-memory fallback policy.
 
 ---
 
 ### 4. Determinism & Null Semantics
 
-* **Determinism:** Given identical `(DemandRecord, PatentDocument, MatchingPolicyConfig)`, the engine must produce bit-exact identical `MatchAssessment` across all runs and platforms.
-* **Strict Null Semantics:** Missing abstract, unobserved dates, or missing CPC codes remain `None` and produce zero contribution to the corresponding feature; they are never imputed with synthetic default strings or fake zero timestamps.
-* **Ineligible Documents:** If a patent violates prior-art temporality ($t_{\text{pub}} \ge t_{\text{demand}}$) or jurisdiction, the engine evaluates `sufficiency = INELIGIBLE_TEMPORAL`, flags `overall_score = 0.0`, and records the exact temporal difference in `MatchFeatures`.
+Given identical `(DemandRecord, PatentDocument, MatchingPolicyConfig)`, the engine must produce bit-exact identical `MatchAssessment` across all supported runs and platforms.
 
-#### 4.1 Min-Max Normalization Semantics when $\max == \min$ (Zero Spread)
+Missing observations remain absent; they are never imputed with synthetic evidence.
 
-In second-stage ranking (`min_max_normalize()`), when all candidate scores in a pool are identical ($\max = \min$):
-* **Operational Behavior:** The normalizer maps all values to `0.0` rather than dividing by zero or synthesizing arbitrary rankings.
-* **Scientific Semantics:** This outcome explicitly signifies that **the signal provides zero discriminative power (zero variance) across the candidate pool**, rather than implying that candidates have zero intrinsic relevance.
-* **Protocol Justification:** In additive linear fusion ($S_{\text{hybrid}} = \alpha S_{\text{lex}} + \beta S_{\text{sem}} + \gamma S_{\text{cpc}}$), a non-discriminative signal that mapped to `1.0` would act as an artificial intercept boosting all candidates equally, distorting relative contributions of the remaining discriminative signals. Assigning `0.0` ensures that non-discriminative signals neither penalize nor artificially inflate candidates, preserving the relative ranking established by discriminative signals. Ties are broken deterministically by canonical publication ID (`publication_id ASC`).
+Ineligible documents are explicitly marked and cannot silently become positive matches.
+
+#### 4.1 Min-Max Normalization Semantics when `max == min`
+
+When all candidate scores in a pool are identical, `min_max_normalize()` maps the values to `0.0`.
+
+This represents zero discriminative power, not zero intrinsic relevance. It prevents a non-discriminative signal from becoming an artificial additive intercept in hybrid fusion. Deterministic publication-ID ordering resolves ties.
 
 ---
 
-### 5. Architectural Alignment with ADR 0001 / 0002 / 0003
+### 5. Architectural Alignment
 
-* **ADR 0001 (Testing Strategy):**
-  * Domain contracts and calculations (`MatchFeatures`, `compute_cpc_similarity`, `MatchAssessment`) tested with fast, isolated unit tests.
-  * Matching orchestrators (`CandidateMatchingService`) tested with stubs.
-  * Real retrieval vertical slices (DuckDB BM25, MPNet dense vector, CPC hierarchy) tested in infrastructure tests with real database connections and deterministic fixtures.
-  * E2E acceptance tests verify complete flow from `DemandRecord` to `MatchingResult` and telemetry artifacts.
-* **ADR 0002 (Minimal Clean Code & SOLID):**
-  * Single responsibility: feature extraction is decoupled from scoring; scoring is decoupled from ranking.
-  * Zero speculative abstractions: no generic multi-objective optimization frameworks or paper-specific wrappers.
-* **ADR 0003 (Externalized Policy & Provenance):**
-  * Uses canonical cryptographic digest checking (`policy_sha256`).
-  * Emits canonical `FieldObservation` provenance for verified alignments.
+**ADR 0001:** domain calculations and contracts are tested in isolation; orchestrators use stubs; infrastructure and E2E paths use deterministic fixtures.
+
+**ADR 0002:** feature extraction, scoring, ranking, and configuration loading remain separate responsibilities.
+
+**ADR 0003:** policy identity and provenance are cryptographically traceable.
+
+**ADR 0005:** defines the mandatory runtime dependency-injection boundary and explicitly prohibits implicit configuration resolution and business fallbacks.
+
+## Enforcement
+
+A PR modifying matching behavior MUST be rejected if it introduces any of the following without an explicit ADR update and contract tests:
+
+1. A business-policy literal in executable matching code.
+2. Repository-relative policy loading outside the composition/bootstrap layer.
+3. `policy=None` that silently selects a default policy.
+4. A fallback operational limit or threshold.
+5. A second executable representation of a policy value.
+6. An undocumented sufficiency or evidence rule.
+
+The test suite SHOULD contain a structural guard against these patterns in addition to behavioral tests.
