@@ -1,0 +1,183 @@
+#!/usr/bin/env python3
+"""CLI Bootstrap for Scientific Evaluation under ADR 0006 and ADR 0007.
+
+Invariants:
+- CLI bootstrap handles all filesystem, argument resolution, and environment discovery.
+- EvaluationRunner executes in-memory without filesystem access.
+- Mandatory explicit paths for dataset, checksum, manifest, and matching policy.
+- Zero tuning or multi-policy search: executes a single sealed evaluation run.
+- Prints honest, unedited scientific report and optionally writes JSON artifact.
+"""
+
+import argparse
+import subprocess
+import sys
+from datetime import UTC, datetime
+from pathlib import Path
+
+# Ensure backend/src/main is in python path
+repo_root = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(repo_root / "backend" / "src" / "main"))
+
+from application.evaluation.runner import DefaultEvaluationRunner
+from application.matching.engine import DefaultMatchingEngine
+from domain.models.evaluation import EvaluationExecutionContext
+from domain.models.matching import MatchingPolicyConfig
+from infrastructure.evaluation.dataset_loader import DefaultEvaluationDatasetLoader
+
+
+def _get_git_commit(cwd: Path) -> str:
+    """Discovers current git commit hash in the CLI bootstrap layer."""
+    try:
+        res = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=cwd,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        return res.stdout.strip()
+    except Exception:
+        # Fallback for environments where .git is stripped
+        return "0000000"
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Run scientific matching evaluation benchmark")
+    parser.add_argument(
+        "--dataset",
+        type=Path,
+        default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.json",
+        help="Path to evaluation dataset JSON",
+    )
+    parser.add_argument(
+        "--checksum",
+        type=Path,
+        default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.sha256",
+        help="Path to dataset .sha256 file",
+    )
+    parser.add_argument(
+        "--manifest",
+        type=Path,
+        default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.manifest.json",
+        help="Path to dataset .manifest.json file",
+    )
+    parser.add_argument(
+        "--policy",
+        type=Path,
+        default=repo_root / "config" / "policies" / "matching" / "default_matching_policy.json",
+        help="Path to matching policy JSON",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Optional path to save serialized EvaluationRunReport JSON",
+    )
+    parser.add_argument(
+        "--environment",
+        type=str,
+        default="local_benchmark",
+        help="Execution environment tag (e.g. ci, local_benchmark)",
+    )
+
+    args = parser.parse_args()
+
+    print("================================================================================")
+    print("Nexus Matching Engine — Scientific Evaluation Benchmark (ADR 0006 / ADR 0007)")
+    print("================================================================================")
+    print(f"Loading dataset from:  {args.dataset}")
+    print(f"Verifying checksum:    {args.checksum}")
+    print(f"Verifying manifest:    {args.manifest}")
+    print(f"Loading policy from:   {args.policy}")
+
+    # 1. Load and cryptographically verify dataset
+    loader = DefaultEvaluationDatasetLoader()
+    validated_dataset = loader.load_validated_dataset(
+        dataset_path=args.dataset,
+        checksum_path=args.checksum,
+        manifest_path=args.manifest,
+    )
+    print(f"✓ Dataset verified:    {validated_dataset.dataset.dataset_id} (SHA: {validated_dataset.manifest.content_sha256[:12]}...)")
+    print(f"  Demands: {len(validated_dataset.dataset.demands)}, "
+          f"Patents: {len(validated_dataset.dataset.patents)}, "
+          f"Annotations: {len(validated_dataset.dataset.annotations)}")
+
+    # 2. Load matching policy
+    policy = MatchingPolicyConfig.load_from_json(args.policy)
+    print(f"✓ Policy verified:     {policy.policy_id} v{policy.policy_version} (SHA: {policy.policy_sha256[:12]}...)")
+
+    # 3. Discover commit hash in CLI bootstrap layer
+    commit_hash = _get_git_commit(repo_root)
+    context = EvaluationExecutionContext(
+        engine_name="DefaultMatchingEngine",
+        engine_version="0.2.0",
+        engine_commit_hash=commit_hash,
+        execution_timestamp=datetime.now(UTC),
+        environment=args.environment,
+    )
+    print(f"✓ Execution Context:   Engine commit {commit_hash[:7]} at {context.execution_timestamp.isoformat()}")
+
+    # 4. Instantiate engine in CLI layer
+    engine = DefaultMatchingEngine()
+
+    # 5. Execute evaluation via in-memory runner
+    runner = DefaultEvaluationRunner()
+    print("\nRunning evaluation across closed candidate universe...")
+    report = runner.run_evaluation(
+        dataset=validated_dataset,
+        engine=engine,
+        policy=policy,
+        context=context,
+    )
+
+    # 6. Display Honest Scientific Report
+    print("\n================================================================================")
+    print(f"EVALUATION REPORT: {report.run_id}")
+    print("================================================================================")
+    print(f"Dataset SHA-256:       {report.dataset_sha256}")
+    print(f"Policy SHA-256:        {report.policy_sha256}")
+    print(f"Engine Commit:         {report.context.engine_commit_hash}")
+    print(f"Uncertainty Rate:      {report.uncertainty_rate:.2%}")
+    print("--------------------------------------------------------------------------------")
+    print(f"{'Demand ID':<16} {'Cand':<5} {'Judged':<7} {'P@1 (S)':<8} {'P@3 (S)':<8} {'R@3 (S)':<8} {'MRR (S)':<8} {'nDCG@5':<8}")
+    print("--------------------------------------------------------------------------------")
+
+    for d_rep in report.demand_reports:
+        s = d_rep.strict_metrics
+        print(
+            f"{d_rep.demand_id:<16} "
+            f"{d_rep.candidate_count:<5} "
+            f"{d_rep.judged_count:<7} "
+            f"{s.precision_at_1:<8.2f} "
+            f"{s.precision_at_3:<8.2f} "
+            f"{s.recall_at_3:<8.2f} "
+            f"{s.mrr:<8.2f} "
+            f"{s.ndcg_at_5:<8.2f}"
+        )
+
+    print("--------------------------------------------------------------------------------")
+    ms = report.macro_strict
+    mb = report.macro_broad
+    print("MACRO-AVERAGES:")
+    print("  Strict Alignment (Grade 3):")
+    print(f"    Precision: P@1 = {ms.precision_at_1:.2f}, P@3 = {ms.precision_at_3:.2f}, P@5 = {ms.precision_at_5:.2f}")
+    print(f"    Recall:    R@1 = {ms.recall_at_1:.2f}, R@3 = {ms.recall_at_3:.2f}, R@5 = {ms.recall_at_5:.2f}")
+    print(f"    Ranking:   MRR = {ms.mrr:.2f}, MRR@5 = {ms.mrr_at_5:.2f}, nDCG@5 = {ms.ndcg_at_5:.2f}")
+    print(f"    Coverage:  Judged@1 = {ms.judged_at_1:.2f}, Judged@3 = {ms.judged_at_3:.2f}, Judged@5 = {ms.judged_at_5:.2f}")
+    print("  Broad Alignment (Grades 2 & 3):")
+    print(f"    Precision: P@1 = {mb.precision_at_1:.2f}, P@3 = {mb.precision_at_3:.2f}, P@5 = {mb.precision_at_5:.2f}")
+    print(f"    Recall:    R@1 = {mb.recall_at_1:.2f}, R@3 = {mb.recall_at_3:.2f}, R@5 = {mb.recall_at_5:.2f}")
+    print(f"    Ranking:   MRR = {mb.mrr:.2f}, MRR@5 = {mb.mrr_at_5:.2f}, nDCG@5 = {mb.ndcg_at_5:.2f}")
+    print("================================================================================")
+
+    if args.output is not None:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(report.model_dump_json(indent=2), encoding="utf-8")
+        print(f"Report JSON saved to: {args.output}")
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
