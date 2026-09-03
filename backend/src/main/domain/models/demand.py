@@ -87,8 +87,8 @@ class DemandRecord(BaseModel):
     demand_id: str
     title: str
     description: str
-    requesting_organization: str
-    origin_country: str
+    requesting_organization: str | None = None
+    origin_country: str | None = None
     spanish_origin_level: SpanishOriginLevel
     is_spanish_demand: bool
     cpc_prefix: str | None = None

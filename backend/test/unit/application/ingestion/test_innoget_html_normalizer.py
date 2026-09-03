@@ -6,16 +6,27 @@ from pathlib import Path
 import pytest
 
 from application.ingestion.normalizers.innoget_html_normalizer import InnogetHtmlNormalizer
+from application.ingestion.origin_resolver import DefaultOriginResolver
 from domain.models.demand import (
     DemandDisposition,
     SpanishOriginLevel,
 )
+from domain.models.origin_policy import OriginPolicyConfig
 from domain.protocols.sources import RawPayload
+
+CANONICAL_POLICY_PATH = Path("config/policies/data/jurisdiction_policy.json")
+
+
+@pytest.fixture
+def origin_resolver() -> DefaultOriginResolver:
+    policy = OriginPolicyConfig.load_from_json(CANONICAL_POLICY_PATH)
+    return DefaultOriginResolver(policy=policy)
 
 
 @pytest.fixture
 def pg_us_payload() -> RawPayload:
-    fixture_path = Path("data/verification/innoget/sample_call_2446.html")
+    # Uses clean, canonical version-controlled fixture
+    fixture_path = Path("backend/test/fixtures/innoget_sample_call_2446.html")
     return RawPayload(
         source_id="innoget_web",
         batch_id="innoget_call_2446",
@@ -37,8 +48,10 @@ def spanish_call_payload() -> RawPayload:
     )
 
 
-def test_innoget_normalizer_level_1_spanish_origin(spanish_call_payload: RawPayload) -> None:
-    normalizer = InnogetHtmlNormalizer()
+def test_innoget_normalizer_level_1_spanish_origin(
+    origin_resolver: DefaultOriginResolver, spanish_call_payload: RawPayload
+) -> None:
+    normalizer = InnogetHtmlNormalizer(origin_resolver=origin_resolver)
     results = list(normalizer.normalize_results(spanish_call_payload))
     assert len(results) == 1
 
@@ -63,8 +76,10 @@ def test_innoget_normalizer_level_1_spanish_origin(spanish_call_payload: RawPayl
     assert res.origin_assessment.evidence_observations[0].observed_value_json == '"Spain"'
 
 
-def test_innoget_normalizer_excludes_us_call(pg_us_payload: RawPayload) -> None:
-    normalizer = InnogetHtmlNormalizer()
+def test_innoget_normalizer_excludes_us_call(
+    origin_resolver: DefaultOriginResolver, pg_us_payload: RawPayload
+) -> None:
+    normalizer = InnogetHtmlNormalizer(origin_resolver=origin_resolver)
     results = list(normalizer.normalize_results(pg_us_payload))
     assert len(results) == 1
 
@@ -77,10 +92,10 @@ def test_innoget_normalizer_excludes_us_call(pg_us_payload: RawPayload) -> None:
     assert demand.demand_id == "INNOGET-2446"
     assert demand.origin_country == "United States"
     assert demand.is_spanish_demand is False
-    assert "The Procter & Gamble Company" in demand.requesting_organization
+    assert demand.requesting_organization == "The Procter & Gamble Company"
 
 
-def test_innoget_normalizer_quarantines_invalid_utf8() -> None:
+def test_innoget_normalizer_quarantines_invalid_utf8(origin_resolver: DefaultOriginResolver) -> None:
     bad_bytes = b"\xff\xfe\x00\x00\x80\x81malformed"
     payload = RawPayload(
         source_id="innoget_web",
@@ -90,14 +105,14 @@ def test_innoget_normalizer_quarantines_invalid_utf8() -> None:
         retrieval_timestamp=datetime.now(UTC),
     )
 
-    normalizer = InnogetHtmlNormalizer()
+    normalizer = InnogetHtmlNormalizer(origin_resolver=origin_resolver)
     results = list(normalizer.normalize_results(payload))
     assert len(results) == 1
     assert results[0].disposition == DemandDisposition.QUARANTINED_MALFORMED
     assert "Unicode decoding failed" in (results[0].error_detail or "")
 
 
-def test_innoget_normalizer_missing_critical_text() -> None:
+def test_innoget_normalizer_missing_critical_text(origin_resolver: DefaultOriginResolver) -> None:
     html_no_desc = b"""<!DOCTYPE html><html><head>
     <title>Solo titulo sin descripcion</title>
     <meta property="og:url" content="https://www.innoget.com/technology-calls/8888/no-desc" />
@@ -111,16 +126,18 @@ def test_innoget_normalizer_missing_critical_text() -> None:
         retrieval_timestamp=datetime.now(UTC),
     )
 
-    normalizer = InnogetHtmlNormalizer()
+    normalizer = InnogetHtmlNormalizer(origin_resolver=origin_resolver)
     results = list(normalizer.normalize_results(payload))
     assert len(results) == 1
     assert results[0].disposition == DemandDisposition.EXCLUDED_MISSING_TEXT
 
 
 def test_innoget_normalize_stream_yields_only_included(
-    spanish_call_payload: RawPayload, pg_us_payload: RawPayload
+    origin_resolver: DefaultOriginResolver,
+    spanish_call_payload: RawPayload,
+    pg_us_payload: RawPayload,
 ) -> None:
-    normalizer = InnogetHtmlNormalizer()
+    normalizer = InnogetHtmlNormalizer(origin_resolver=origin_resolver)
 
     # Spanish call -> yields 1
     spanish_stream = list(normalizer.normalize_stream(spanish_call_payload))

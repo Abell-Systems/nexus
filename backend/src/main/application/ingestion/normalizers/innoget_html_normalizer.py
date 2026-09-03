@@ -29,12 +29,14 @@ class InnogetHtmlNormalizer:
 
     def __init__(
         self,
+        origin_resolver: DefaultOriginResolver,
         extractor: InnoGetExtractor | None = None,
-        origin_resolver: DefaultOriginResolver | None = None,
         extraction_version: str = "2.0.0",
     ) -> None:
+        if origin_resolver is None:
+            raise ValueError("origin_resolver must be provided to InnogetHtmlNormalizer")
+        self.origin_resolver = origin_resolver
         self.extractor = extractor or InnoGetExtractor()
-        self.origin_resolver = origin_resolver or DefaultOriginResolver()
         self.extraction_version = extraction_version
 
     def normalize_stream(self, raw_payload: RawPayload) -> Iterator[DemandRecord]:
@@ -134,8 +136,8 @@ class InnogetHtmlNormalizer:
             demand_id=fields.demand_id,
             title=fields.title,
             description=fields.description,
-            requesting_organization=fields.organization_raw or "Unknown Organization",
-            origin_country=fields.country_raw or ("Spain" if origin_assessment.is_target_origin else "Unverified"),
+            requesting_organization=fields.organization_raw,
+            origin_country=fields.country_raw,
             spanish_origin_level=origin_assessment.level,
             is_spanish_demand=origin_assessment.is_target_origin,
             cpc_prefix=raw_payload.metadata.get("cpc_prefix"),

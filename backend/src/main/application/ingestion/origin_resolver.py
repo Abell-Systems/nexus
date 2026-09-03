@@ -5,7 +5,6 @@ Returns a deterministic OriginAssessment containing explicit FieldObservation ev
 Distinguishes strictly between target jurisdiction, verified foreign jurisdiction, and UNVERIFIED.
 """
 
-from pathlib import Path
 from typing import Protocol
 
 from domain.models.demand import (
@@ -28,29 +27,21 @@ class ExternalRegistryVerifier(Protocol):
         ...
 
 
-DEFAULT_POLICY_PATH = Path(__file__).parents[5] / "config/policies/data/jurisdiction_policy.json"
-
-
 class DefaultOriginResolver:
-    """Deterministic, policy-driven Spanish Origin Resolver with cryptographic policy versioning."""
+    """Deterministic, policy-driven Spanish Origin Resolver with cryptographic policy versioning.
+
+    Requires an explicit OriginPolicyConfig injected via constructor.
+    Fail-fast: does not guess filesystem paths or synthesize fake policies.
+    """
 
     def __init__(
         self,
-        policy: OriginPolicyConfig | None = None,
+        policy: OriginPolicyConfig,
         registry_verifier: ExternalRegistryVerifier | None = None,
     ) -> None:
-        if policy is not None:
-            self.policy = policy
-        elif DEFAULT_POLICY_PATH.exists():
-            self.policy = OriginPolicyConfig.load_from_json(DEFAULT_POLICY_PATH)
-        else:
-            # Fallback policy for isolated tests without full workspace paths
-            self.policy = OriginPolicyConfig(
-                policy_id="DEFAULT_FALLBACK_POLICY",
-                policy_version="1.0.0",
-                target_jurisdiction="ES",
-                policy_sha256="0000000000000000000000000000000000000000000000000000000000000000",
-            )
+        if policy is None:
+            raise ValueError("policy must be provided as a valid OriginPolicyConfig")
+        self.policy = policy
         self.registry_verifier = registry_verifier
 
     def assess_origin(
@@ -58,8 +49,8 @@ class DefaultOriginResolver:
         fields: RawExtractedDemandFields,
         raw_payload_sha256: str = "",
     ) -> OriginAssessment:
-        sha = raw_payload_sha256 if len(raw_payload_sha256) == 64 else ("0" * 64)
         """Evaluate raw demand facts against the versioned policy and return OriginAssessment."""
+        sha = raw_payload_sha256 if len(raw_payload_sha256) == 64 else ("0" * 64)
         country_raw = (fields.country_raw or "").strip()
         org_raw = (fields.organization_raw or "").strip()
         org_loc_raw = (fields.organization_location_raw or "").strip()
@@ -70,7 +61,7 @@ class DefaultOriginResolver:
         # 1. Resolve country token through versioned policy
         resolved_country_code = self.policy.resolve_jurisdiction(country_raw)
 
-        # Rule 1: Level 1 - Direct Platform Country Metadata matches target jurisdiction (ES)
+        # Rule 1: Level 1 - Direct Platform Country Metadata matches target jurisdiction
         if resolved_country_code == self.policy.target_jurisdiction:
             obs = FieldObservation(
                 entity_id=entity_id,
@@ -95,7 +86,7 @@ class DefaultOriginResolver:
                 evidence_observations=[obs],
             )
 
-        # Rule 2: Verified Foreign Country (country is known in policy, but is NOT the target jurisdiction)
+        # Rule 2: Verified Foreign Country (country is recognized in policy, but is NOT the target jurisdiction)
         if resolved_country_code is not None and resolved_country_code != self.policy.target_jurisdiction:
             obs = FieldObservation(
                 entity_id=entity_id,
@@ -120,8 +111,7 @@ class DefaultOriginResolver:
                 evidence_observations=[obs],
             )
 
-        # Rule 3: Level 2 - Sponsoring organization designated in Spain by source metadata
-        # Evaluates explicit organization location metadata provided by the source
+        # Rule 3: Level 2 - Sponsoring organization designated in target jurisdiction by source metadata
         resolved_org_loc = self.policy.resolve_jurisdiction(org_loc_raw)
         if resolved_org_loc == self.policy.target_jurisdiction:
             obs = FieldObservation(
@@ -176,7 +166,6 @@ class DefaultOriginResolver:
 
         # Rule 5: Default Fallback -> UNVERIFIED
         # When neither target jurisdiction nor foreign jurisdiction is definitively proven.
-        # (E.g. country was empty, corrupted, or an unrecognized token like 'Unknownland').
         return OriginAssessment(
             level=SpanishOriginLevel.UNVERIFIED,
             is_target_origin=False,
