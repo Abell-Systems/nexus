@@ -91,27 +91,88 @@ class ExecutionEnvironment(BaseModel):
     platform: str
 
 
+class DatasetContentIdentity(BaseModel):
+    """Deterministic, execution-independent identity of the analytical corpus.
+    
+    Excludes runtime timestamps and volatile host environment to guarantee bit-exact reproducibility.
+    """
+
+    dataset_id: str
+    dataset_version: str
+    source_authority: str
+    source_release_id: str
+    source_uri: str
+    jurisdiction: str
+    temporal_window: TemporalWindow
+    canonical_sha256: str
+    counts: AttritionCounts
+    exclusion_reasons: dict[str, int] = Field(default_factory=dict)
+    quarantine_reasons: dict[str, int] = Field(default_factory=dict)
+    kind_code_distribution: dict[str, int] = Field(default_factory=dict)
+    files: dict[str, str] = Field(default_factory=dict)
+
+
+class ExecutionProvenance(BaseModel):
+    """Runtime audit trail recording timestamps and execution environment."""
+
+    created_at: datetime
+    acquisition_started_at: datetime
+    acquisition_finished_at: datetime
+    environment: ExecutionEnvironment
+
+
 class EnhancedManifest(BaseModel):
     """Authoritative cryptographic and attrition manifest for certified datasets."""
 
     schema_uri: str = Field(default="https://nexus.abell.ai/schemas/dataset-manifest-v2.json", alias="$schema")
-    dataset_id: str
-    dataset_version: str = "1.0.0"
-    created_at: datetime
-    source_authority: str
-    source_release_id: str
-    source_uri: str
-    acquisition_started_at: datetime
-    acquisition_finished_at: datetime
-    canonical_sha256: str
+    content_identity: DatasetContentIdentity
+    content_identity_sha256: str = ""
+    execution_provenance: ExecutionProvenance
     manifest_sha256: str = ""
-    counts: AttritionCounts
-    exclusion_reasons: dict[str, int] = Field(default_factory=dict)
-    quarantine_reasons: dict[str, int] = Field(default_factory=dict)
-    jurisdiction: str = "ES"
-    temporal_window: TemporalWindow
-    kind_code_distribution: dict[str, int] = Field(default_factory=dict)
-    files: dict[str, str] = Field(default_factory=dict)
-    environment: ExecutionEnvironment
 
     model_config = ConfigDict(populate_by_name=True)
+
+    # Convenience properties for backward compatibility with root-level accessors
+    @property
+    def dataset_id(self) -> str:
+        return self.content_identity.dataset_id
+
+    @property
+    def dataset_version(self) -> str:
+        return self.content_identity.dataset_version
+
+    @property
+    def source_authority(self) -> str:
+        return self.content_identity.source_authority
+
+    @property
+    def source_release_id(self) -> str:
+        return self.content_identity.source_release_id
+
+    @property
+    def source_uri(self) -> str:
+        return self.content_identity.source_uri
+
+    @property
+    def canonical_sha256(self) -> str:
+        return self.content_identity.canonical_sha256
+
+    @property
+    def counts(self) -> AttritionCounts:
+        return self.content_identity.counts
+
+    @property
+    def files(self) -> dict[str, str]:
+        return self.content_identity.files
+
+    @property
+    def kind_code_distribution(self) -> dict[str, int]:
+        return self.content_identity.kind_code_distribution
+
+    @property
+    def exclusion_reasons(self) -> dict[str, int]:
+        return self.content_identity.exclusion_reasons
+
+    @property
+    def quarantine_reasons(self) -> dict[str, int]:
+        return self.content_identity.quarantine_reasons

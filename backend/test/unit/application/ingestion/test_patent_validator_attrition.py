@@ -139,3 +139,61 @@ def test_manifest_builder_records_attrition_counts(tmp_path: Path) -> None:
     assert manifest.quarantine_reasons == {"QUARANTINED_MISSING_REQUIRED_IDENTIFIER": 1}
     assert len(manifest.manifest_sha256) == 64
     assert len(manifest.canonical_sha256) == 64
+
+
+def test_manifest_content_identity_is_reproducible_across_different_timestamps() -> None:
+    # Set up builder A with timestamp 1
+    builder_a = EnhancedManifestBuilder(
+        dataset_id="OEPM-TEST-REPRODUCIBLE",
+        dataset_version="1.0.0",
+        source_release_id="BOPI-2021-TEST",
+    )
+    # Set up builder B with timestamp 2
+    builder_b = EnhancedManifestBuilder(
+        dataset_id="OEPM-TEST-REPRODUCIBLE",
+        dataset_version="1.0.0",
+        source_release_id="BOPI-2021-TEST",
+    )
+
+    doc = PatentDocument(
+        publication_id="ES2849102B2",
+        country_code="ES",
+        doc_number="2849102",
+        kind_code="B2",
+        title="Title B2",
+        abstract="Abstract B2",
+        publication_date="2021-11-25",
+    )
+    res = NormalizationResult(disposition=RecordDisposition.INCLUDED, document=doc)
+
+    builder_a.record_raw_payload()
+    builder_a.record_normalization_result(res)
+
+    builder_b.record_raw_payload()
+    builder_b.record_normalization_result(res)
+
+    files = {"patents.parquet": "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"}
+
+    # Build manifest A with time 2021
+    manifest_a = builder_a.build_manifest(
+        files_and_hashes=files,
+        acquisition_started_at=datetime(2021, 1, 1, 10, 0, 0, tzinfo=UTC),
+        acquisition_finished_at=datetime(2021, 1, 1, 11, 0, 0, tzinfo=UTC),
+        git_commit="commit_aaa",
+    )
+
+    # Build manifest B with completely different timestamps and commit
+    manifest_b = builder_b.build_manifest(
+        files_and_hashes=files,
+        acquisition_started_at=datetime(2024, 8, 15, 15, 30, 0, tzinfo=UTC),
+        acquisition_finished_at=datetime(2024, 8, 15, 16, 45, 0, tzinfo=UTC),
+        git_commit="commit_bbb",
+    )
+
+    # Invariant: Scientific content identity hash MUST BE BIT-EXACT IDENTICAL
+    assert manifest_a.content_identity_sha256 == manifest_b.content_identity_sha256
+    assert len(manifest_a.content_identity_sha256) == 64
+
+    # Execution provenance will differ
+    assert manifest_a.manifest_sha256 != manifest_b.manifest_sha256
+    assert manifest_a.execution_provenance.environment.git_commit != manifest_b.execution_provenance.environment.git_commit

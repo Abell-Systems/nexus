@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import os
 import platform
 import subprocess
 import sys
@@ -11,8 +12,10 @@ from pathlib import Path
 
 from domain.models.ingestion import (
     AttritionCounts,
+    DatasetContentIdentity,
     EnhancedManifest,
     ExecutionEnvironment,
+    ExecutionProvenance,
     NormalizationResult,
     RecordDisposition,
     TemporalWindow,
@@ -77,13 +80,22 @@ class EnhancedManifestBuilder:
         except Exception:
             return "unknown_commit"
 
+    def compute_content_identity_hash(self, content_identity: DatasetContentIdentity) -> str:
+        """Compute bit-exact deterministic hash over the content identity (independent of execution timestamps)."""
+        content_dict = content_identity.model_dump(mode="json")
+        canonical_bytes = json.dumps(content_dict, sort_keys=True).encode("utf-8")
+        return hashlib.sha256(canonical_bytes).hexdigest()
+
     def build_manifest(
         self,
         files_and_hashes: dict[str, str],
         canonical_sha256: str = "",
+        acquisition_started_at: datetime | None = None,
         acquisition_finished_at: datetime | None = None,
+        git_commit: str | None = None,
     ) -> EnhancedManifest:
-        """Construct the EnhancedManifest model, calculate deterministic manifest_sha256, and return."""
+        """Construct the EnhancedManifest model with decoupled content identity and execution provenance."""
+        started_at = acquisition_started_at or self.acquisition_started_at
         finished_at = acquisition_finished_at or datetime.now(UTC)
 
         total_normalized = sum(self.disposition_counts.values())
@@ -96,13 +108,6 @@ class EnhancedManifestBuilder:
             duplicate_count=self.disposition_counts[RecordDisposition.DUPLICATE],
         )
 
-        environment = ExecutionEnvironment(
-            git_commit=self._get_git_commit(),
-            normalizer_version=self.normalizer_version,
-            python_version=platform.python_version(),
-            platform=sys.platform,
-        )
-
         temporal_window = TemporalWindow(
             start_date=self.temporal_start_date,
             end_date=self.temporal_end_date,
@@ -113,28 +118,48 @@ class EnhancedManifestBuilder:
             combined = "".join(f"{k}:{v}" for k, v in sorted(files_and_hashes.items()))
             canonical_sha256 = hashlib.sha256(combined.encode("utf-8")).hexdigest()
 
-        manifest = EnhancedManifest(
+        # 1. Scientific Content Identity (Reproducible across runs and environments)
+        content_identity = DatasetContentIdentity(
             dataset_id=self.dataset_id,
             dataset_version=self.dataset_version,
-            created_at=finished_at,
             source_authority=self.source_authority,
             source_release_id=self.source_release_id,
             source_uri=self.source_uri,
-            acquisition_started_at=self.acquisition_started_at,
-            acquisition_finished_at=finished_at,
+            jurisdiction="ES",
+            temporal_window=temporal_window,
             canonical_sha256=canonical_sha256,
-            manifest_sha256="",  # calculated below
             counts=counts,
             exclusion_reasons=dict(self.exclusion_reasons),
             quarantine_reasons=dict(self.quarantine_reasons),
-            jurisdiction="ES",
-            temporal_window=temporal_window,
             kind_code_distribution=dict(self.kind_code_distribution),
             files=files_and_hashes,
+        )
+
+        content_identity_sha256 = self.compute_content_identity_hash(content_identity)
+
+        # 2. Execution Provenance (Runtime audit trail)
+        environment = ExecutionEnvironment(
+            git_commit=git_commit or self._get_git_commit(),
+            normalizer_version=self.normalizer_version,
+            python_version=platform.python_version(),
+            platform=sys.platform,
+        )
+
+        execution_provenance = ExecutionProvenance(
+            created_at=finished_at,
+            acquisition_started_at=started_at,
+            acquisition_finished_at=finished_at,
             environment=environment,
         )
 
-        # Compute deterministic manifest digest over canonical JSON representation
+        manifest = EnhancedManifest(
+            content_identity=content_identity,
+            content_identity_sha256=content_identity_sha256,
+            execution_provenance=execution_provenance,
+            manifest_sha256="",
+        )
+
+        # Compute full manifest digest
         manifest_dict = manifest.model_dump(by_alias=True, mode="json")
         manifest_dict["manifest_sha256"] = ""
         manifest_bytes = json.dumps(manifest_dict, sort_keys=True).encode("utf-8")
@@ -148,11 +173,14 @@ class EnhancedManifestBuilder:
         files_and_hashes: dict[str, str],
         canonical_sha256: str = "",
     ) -> tuple[EnhancedManifest, Path]:
-        """Build and write manifest.json atomically to output directory."""
+        """Build and atomically write enhanced_manifest.json via temporary file rename."""
         manifest = self.build_manifest(files_and_hashes, canonical_sha256)
         out_path = Path(output_dir)
         out_path.mkdir(parents=True, exist_ok=True)
-        manifest_file = out_path / "manifest.json"
+        manifest_file = out_path / "enhanced_manifest.json"
+        temp_file = out_path / f".enhanced_manifest.json.tmp_{os.getpid()}"
+
         manifest_json = manifest.model_dump_json(by_alias=True, indent=2)
-        manifest_file.write_text(manifest_json, encoding="utf-8")
+        temp_file.write_text(manifest_json, encoding="utf-8")
+        temp_file.replace(manifest_file)  # Atomic rename on POSIX filesystems
         return manifest, manifest_file
