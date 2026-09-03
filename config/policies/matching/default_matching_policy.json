@@ -1,0 +1,132 @@
+{
+  "$schema": "https://nexus.abell.ai/schemas/matching-policy-v1.json",
+  "policy_id": "NEXUS-MATCHING-POLICY-UC1-DEFAULT",
+  "policy_version": "1.0.0",
+  "description": "Versioned scoring weights, thresholds, concordance levels, and concept taxonomy for technological problem-solution matching.",
+  "weights": {
+    "alpha": 0.35,
+    "beta": 0.45,
+    "gamma": 0.2
+  },
+  "cpc_concordance_levels": {
+    "subgroup": 1.0,
+    "main_group": 0.75,
+    "subclass": 0.5,
+    "section": 0.25,
+    "none": 0.0
+  },
+  "confidence_thresholds": {
+    "strong": 0.7,
+    "moderate": 0.4,
+    "weak": 0.1
+  },
+  "sufficiency_rules": {
+    "min_active_signals": 1,
+    "require_temporal_validity": true
+  },
+  "concept_to_cpc_taxonomy": {
+    "solid electrolyte": [
+      "H01M10/0562",
+      "H01M10/0525",
+      "H01M4/13"
+    ],
+    "solid-state battery": [
+      "H01M10/0562",
+      "H01M10/0525",
+      "H01M10/058"
+    ],
+    "sulfide electrolyte": [
+      "H01M10/0562",
+      "H01M10/0525",
+      "C01B17/00"
+    ],
+    "oxide electrolyte": [
+      "H01M10/0562",
+      "H01M10/0525",
+      "C04B35/00"
+    ],
+    "polymer electrolyte": [
+      "H01M10/0565",
+      "H01M10/0525",
+      "C08L1/00"
+    ],
+    "lithium anode": [
+      "H01M4/134",
+      "H01M4/382",
+      "H01M10/052"
+    ],
+    "battery separator": [
+      "H01M50/40",
+      "H01M10/0525"
+    ],
+    "interfacial layer": [
+      "H01M10/0562",
+      "H01M4/02",
+      "H01M4/62"
+    ],
+    "detergent": [
+      "C11D1/00",
+      "C11D3/00",
+      "C11D7/00"
+    ],
+    "cleaning composition": [
+      "C11D1/00",
+      "C11D3/386"
+    ],
+    "surfactant": [
+      "C11D1/02",
+      "C11D1/66",
+      "B01F17/00"
+    ],
+    "sanitary": [
+      "E03C1/00",
+      "E03D1/00",
+      "A47K1/00"
+    ],
+    "sink": [
+      "E03C1/18",
+      "E03C1/33"
+    ],
+    "drain": [
+      "E03C1/22",
+      "E03C1/26"
+    ],
+    "control system": [
+      "G05B19/00",
+      "G05B15/02",
+      "G05B13/02"
+    ],
+    "industrial control": [
+      "G05B19/05",
+      "G05B19/418"
+    ],
+    "process automation": [
+      "G05B19/418",
+      "G05B17/02"
+    ],
+    "alloy": [
+      "C22C1/00",
+      "C22C9/00",
+      "C22C19/00"
+    ],
+    "metallic composition": [
+      "C22C1/02",
+      "C22C5/00"
+    ],
+    "high-strength steel": [
+      "C22C38/00",
+      "C21D8/00"
+    ],
+    "composite material": [
+      "C08L1/00",
+      "C08K3/00",
+      "C08J5/00"
+    ],
+    "biopolymer": [
+      "C08L67/04",
+      "C08L1/02",
+      "C08B37/00"
+    ]
+  },
+  "policy_sha256": "c7aec29433975db6a2503cf216554a6d5ade701a69b14f0230710542fd519541"
+}
