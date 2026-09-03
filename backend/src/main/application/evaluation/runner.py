@@ -2,12 +2,15 @@
 
 Invariants:
 - Evaluator acts as an independent auditor; contains NO matching or heuristic logic.
-- Pure dependency injection: accepts ValidatedDataset, MatchingEngine, MatchingPolicyConfig,
-  and EvaluationExecutionContext explicitly via arguments.
+- Pure dependency injection: accepts ValidatedDataset, EvaluatableEngine, EvaluationPolicyIdentity,
+  and EvaluationExecutionContext explicitly via arguments. No concrete matching types in signature.
 - Zero filesystem access: does not open files, discover paths, or query Git.
 - Preserves the engine's original candidate ranking order strictly without re-sorting.
 - Delegates all mathematical calculations to application.evaluation.metrics.
 - Produces a sealed, immutable EvaluationRunReport preserving full provenance audit stamps.
+- Sealed candidate pool: retrieval_scores={} (no synthetic evidence); patent evidence is built
+  from EvaluationDataset.patents real data and passed via PatentCandidateEvidence — the domain
+  abstraction designed to carry this information to the engine without inventing new channels.
 """
 
 import uuid
@@ -18,6 +21,7 @@ from domain.models.demand import DemandSignal
 from domain.models.evaluation import (
     DemandMetricsReport,
     EvaluationExecutionContext,
+    EvaluationPatent,
     EvaluationRunReport,
     MetricSet,
     RelevanceGrade,
@@ -26,11 +30,27 @@ from domain.models.evaluation import (
 from domain.models.matching import (
     Candidate,
     CandidatePool,
-    MatchingPolicyConfig,
-    RetrievalMethod,
+    PatentCandidateEvidence,
 )
-from domain.protocols.evaluation import EvaluationRunner
-from domain.protocols.matching import MatchingEngine
+from domain.protocols.evaluation import (
+    EvaluatableEngine,
+    EvaluationPolicyIdentity,
+    EvaluationRunner,
+)
+
+
+def _build_patent_evidence(patent: EvaluationPatent) -> PatentCandidateEvidence:
+    """Constructs canonical PatentCandidateEvidence from an EvaluationPatent record.
+
+    Uses only data observed in the evaluation benchmark. No synthetic scores are introduced.
+    """
+    return PatentCandidateEvidence(
+        publication_id=patent.publication_id,
+        publication_date=patent.publication_date.isoformat() if patent.publication_date else None,
+        classifications_cpc=list(patent.classifications_cpc),
+        title=patent.title,
+        abstract=patent.abstract,
+    )
 
 
 def _macro_average_metric_sets(metric_sets: list[MetricSet]) -> MetricSet:
@@ -74,8 +94,8 @@ class DefaultEvaluationRunner(EvaluationRunner):
     def run_evaluation(
         self,
         dataset: ValidatedDataset,
-        engine: MatchingEngine,
-        policy: MatchingPolicyConfig,
+        engine: EvaluatableEngine,
+        policy: EvaluationPolicyIdentity,
         context: EvaluationExecutionContext,
     ) -> EvaluationRunReport:
         """Executes full evaluation run, producing a sealed, reproducible EvaluationRunReport."""
@@ -92,9 +112,17 @@ class DefaultEvaluationRunner(EvaluationRunner):
             annotations_by_demand[anno.demand_id][anno.publication_id] = anno.grade
             all_grades.append(anno.grade)
 
-        # Sealed candidate universe: all patents in dataset
+        # Sealed candidate universe: all patents in dataset.
+        # retrieval_scores={} — no synthetic retrieval evidence is fabricated (ADR 0007).
+        # PatentCandidateEvidence is constructed from the benchmark's real observed data
+        # (title, abstract, CPC, publication_date) using the existing domain abstraction
+        # designed to carry patent content to the engine. This is honest, observable data —
+        # not a surrogate for missing retrieval signal.
+        evidence_by_id: list[PatentCandidateEvidence] = [
+            _build_patent_evidence(p) for p in eval_dataset.patents
+        ]
         universe_candidates = [
-            Candidate(publication_id=p.publication_id, retrieval_scores={RetrievalMethod.LEXICAL: 1.0})
+            Candidate(publication_id=p.publication_id, retrieval_scores={})
             for p in eval_dataset.patents
         ]
 
@@ -113,11 +141,15 @@ class DefaultEvaluationRunner(EvaluationRunner):
                 classified_cpc_prefixes=eval_demand.target_cpc_prefixes,
             )
 
-            # 1. Evaluate demand using injected MatchingEngine
+            # 1. Evaluate demand using injected engine.
+            # policy is passed as EvaluationPolicyIdentity (structurally satisfies MatchingPolicyConfig).
+            # patent_metadata carries real patent content (title, abstract, CPC) from the benchmark dataset
+            # so the engine can compute CPC concordance and text features from authentic observed data.
             assessments = engine.evaluate(
                 demand=demand_signal,
                 candidates=pool,
                 policy=policy,
+                patent_metadata=evidence_by_id,
             )
 
             # 2. Extract engine ranking strictly preserving original order (ADR 0007 §4)

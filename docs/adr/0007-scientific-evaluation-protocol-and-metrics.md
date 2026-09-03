@@ -111,20 +111,39 @@ Under ADR 0005:
        execution_timestamp: datetime
        environment: str  # e.g., "ci", "local", "benchmarking"
    ```
-2. **Runner Protocol Signature:**
+2. **Runner Protocol Signature — Independent Auditor Invariant:**  
+   The evaluation subsystem MUST NOT import `MatchingEngine` or `MatchingPolicyConfig` from the matching bounded context. Instead, `domain/protocols/evaluation.py` defines **minimal structural protocols** that the matching concrete types satisfy via structural subtyping:
    ```python
+   class EvaluationPolicyIdentity(Protocol):
+       """Only the provenance fields needed to stamp the report."""
+       policy_id: str
+       policy_version: str
+       policy_sha256: str
+
+   class EvaluatableEngine(Protocol):
+       """Minimal engine contract expressed in evaluation-domain types."""
+       def evaluate(
+           self,
+           demand: DemandRecord | DemandSignal,
+           candidates: EvaluationCandidatePool,
+           policy: EvaluationPolicyIdentity,
+           patent_metadata: Sequence[Any] | None = None,
+       ) -> Sequence[EvaluationAssessment]: ...
+
    class EvaluationRunner(Protocol):
        def run_evaluation(
            self,
            dataset: ValidatedDataset,
-           engine: MatchingEngine,
-           policy: MatchingPolicyConfig,
+           engine: EvaluatableEngine,
+           policy: EvaluationPolicyIdentity,
            context: EvaluationExecutionContext,
-       ) -> EvaluationRunReport:
-           ...
+       ) -> EvaluationRunReport: ...
    ```
+   `DefaultMatchingEngine` and `MatchingPolicyConfig` satisfy `EvaluatableEngine` and `EvaluationPolicyIdentity` via Python's structural subtyping. The coupling from evaluation to matching types lives exclusively in the application layer (`application/evaluation/runner.py`), which constructs `CandidatePool` and `PatentCandidateEvidence` objects using real benchmark data.
 3. **Pure Audit Decoupling:**  
-   The runner depends strictly on the `MatchingEngine` protocol, never on concrete implementation classes (`DefaultMatchingEngine`). It performs **zero** filesystem I/O.
+   The runner depends strictly on the `EvaluatableEngine` structural protocol, never on `DefaultMatchingEngine` or `MatchingPolicyConfig`. It performs **zero** filesystem I/O. Patent evidence (`PatentCandidateEvidence`) is constructed from `EvaluationDataset.patents` real observed data — no synthetic retrieval scores are fabricated.
+4. **Git Provenance — Fail-Fast Invariant:**  
+   The CLI bootstrap layer (not the runner) is responsible for resolving the engine commit hash. If `git rev-parse HEAD` fails and no `--engine-commit` override is provided, the CLI MUST raise a `RuntimeError` immediately. The sentinel value `"0000000"` is **strictly prohibited**. Any `--engine-commit` value MUST be validated against `^[0-9a-fA-F]{7,40}$` (same contract as `EvaluationExecutionContext.engine_commit_hash`).
 
 ---
 

@@ -104,7 +104,7 @@ def test_metrics_module_decoupled_from_matching_and_infrastructure():
 
 
 def test_runner_depends_only_on_matching_engine_protocol():
-    """ADR 0007 §5: EvaluationRunner must not import concrete DefaultMatchingEngine."""
+    """ADR 0007 §5: EvaluationRunner must not import concrete DefaultMatchingEngine or MatchingPolicyConfig."""
     runner_file = (
         _get_repo_root()
         / "backend"
@@ -114,10 +114,24 @@ def test_runner_depends_only_on_matching_engine_protocol():
         / "evaluation"
         / "runner.py"
     )
-    code = runner_file.read_text(encoding="utf-8")
-    assert "DefaultMatchingEngine" not in code, (
-        "EvaluationRunner must depend on MatchingEngine protocol, not concrete DefaultMatchingEngine."
-    )
+    tree = ast.parse(runner_file.read_text(encoding="utf-8"))
+
+    forbidden_symbols = {"DefaultMatchingEngine", "MatchingPolicyConfig", "MatchingEngine"}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom) and node.module:
+            # Must not import from domain.protocols.matching (concrete matching protocol)
+            assert node.module != "domain.protocols.matching", (
+                "runner.py must not import from domain.protocols.matching. "
+                "Use EvaluatableEngine and EvaluationPolicyIdentity from domain.protocols.evaluation instead."
+            )
+            # Must not import MatchingPolicyConfig or DefaultMatchingEngine from anywhere
+            if node.names:
+                imported = {alias.name for alias in node.names}
+                violations = imported & forbidden_symbols
+                assert not violations, (
+                    f"runner.py must not import {violations}. "
+                    "Use EvaluatableEngine and EvaluationPolicyIdentity from domain.protocols.evaluation."
+                )
 
 
 def test_run_evaluation_requires_all_parameters_without_defaults():
@@ -153,3 +167,74 @@ def test_no_coercion_of_uncertain_to_negative():
         f"Expected precision 1.0 (UNCERTAIN isolated from negatives), got {prec}. "
         "Coercing UNCERTAIN to negative is an epistemic fallacy under ADR 0007."
     )
+
+
+def test_evaluation_protocol_does_not_import_matching_modules():
+    """ADR 0007 + Clean Architecture: domain/protocols/evaluation.py must NOT import from matching.
+
+    The evaluation subsystem must be an independent auditor. Importing MatchingEngine or
+    MatchingPolicyConfig into the evaluation protocol would create an architectural coupling
+    that violates the independent auditor principle.
+    """
+    eval_protocol_file = (
+        _get_repo_root()
+        / "backend"
+        / "src"
+        / "main"
+        / "domain"
+        / "protocols"
+        / "evaluation.py"
+    )
+    tree = ast.parse(eval_protocol_file.read_text(encoding="utf-8"))
+
+    forbidden_matching_modules = (
+        "domain.protocols.matching",
+        "domain.models.matching",
+    )
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                for forbidden in forbidden_matching_modules:
+                    assert not alias.name.startswith(forbidden), (
+                        f"Architectural violation: domain/protocols/evaluation.py imports '{alias.name}'. "
+                        f"The evaluation protocol must not depend on matching modules. "
+                        f"Use EvaluatableEngine and EvaluationPolicyIdentity structural protocols instead."
+                    )
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            for forbidden in forbidden_matching_modules:
+                assert not node.module.startswith(forbidden), (
+                    f"Architectural violation: domain/protocols/evaluation.py imports from '{node.module}'. "
+                    f"The evaluation protocol must not depend on matching modules. "
+                    f"Use EvaluatableEngine and EvaluationPolicyIdentity structural protocols instead."
+                )
+
+
+def test_runner_does_not_fabricate_retrieval_scores_for_sealed_pool():
+    """ADR 0007: Sealed candidate pool must NOT contain synthetic retrieval scores.
+
+    Using LEXICAL=1.0 (or any constant) for a closed benchmark pool introduces spurious signal
+    into the engine, making the evaluation measure something other than matching ability.
+    Candidates must be constructed with retrieval_scores={} when no real retrieval evidence exists.
+    """
+    runner_file = (
+        _get_repo_root()
+        / "backend"
+        / "src"
+        / "main"
+        / "application"
+        / "evaluation"
+        / "runner.py"
+    )
+    code = runner_file.read_text(encoding="utf-8")
+
+    forbidden_patterns = [
+        "RetrievalMethod.LEXICAL",
+        "RetrievalMethod.SEMANTIC",
+        "retrieval_scores={RetrievalMethod",
+    ]
+    for pattern in forbidden_patterns:
+        assert pattern not in code, (
+            f"Forbidden synthetic retrieval score found in runner.py: '{pattern}'. "
+            "Sealed benchmark pools must use retrieval_scores={{}} — no synthetic evidence may be fabricated."
+        )
+

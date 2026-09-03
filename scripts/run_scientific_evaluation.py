@@ -7,9 +7,12 @@ Invariants:
 - Mandatory explicit paths for dataset, checksum, manifest, and matching policy.
 - Zero tuning or multi-policy search: executes a single sealed evaluation run.
 - Prints honest, unedited scientific report and optionally writes JSON artifact.
+- Git provenance is mandatory: either auto-discovered or explicitly provided via --engine-commit.
+  Fallback placeholder hashes (e.g. "0000000") are strictly prohibited.
 """
 
 import argparse
+import re
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -25,9 +28,14 @@ from domain.models.evaluation import EvaluationExecutionContext
 from domain.models.matching import MatchingPolicyConfig
 from infrastructure.evaluation.dataset_loader import DefaultEvaluationDatasetLoader
 
+_COMMIT_HASH_RE = re.compile(r"^[0-9a-fA-F]{7,40}$")
 
-def _get_git_commit(cwd: Path) -> str:
-    """Discovers current git commit hash in the CLI bootstrap layer."""
+
+def _get_git_commit(cwd: Path) -> str | None:
+    """Discovers current git commit hash in the CLI bootstrap layer.
+
+    Returns the full commit hash on success, or None if git is unavailable.
+    """
     try:
         res = subprocess.run(
             ["git", "rev-parse", "HEAD"],
@@ -38,8 +46,36 @@ def _get_git_commit(cwd: Path) -> str:
         )
         return res.stdout.strip()
     except Exception:
-        # Fallback for environments where .git is stripped
-        return "0000000"
+        return None
+
+
+def _resolve_commit_hash(engine_commit_arg: str | None, cwd: Path) -> str:
+    """Resolves the engine commit hash for provenance stamping.
+
+    Priority:
+    1. --engine-commit argument (validated strictly against hex regex).
+    2. Auto-discovery via git rev-parse HEAD.
+
+    Raises:
+        ValueError: if --engine-commit is provided but fails hex validation.
+        RuntimeError: if git discovery fails and --engine-commit is absent.
+    """
+    if engine_commit_arg is not None:
+        if not _COMMIT_HASH_RE.match(engine_commit_arg):
+            raise ValueError(
+                f"Invalid --engine-commit '{engine_commit_arg}': "
+                f"must be 7-40 hexadecimal characters (same contract as EvaluationExecutionContext)."
+            )
+        return engine_commit_arg
+
+    discovered = _get_git_commit(cwd)
+    if discovered is None:
+        raise RuntimeError(
+            "Unable to discover git commit hash: 'git rev-parse HEAD' failed. "
+            "Either run inside a git repository or pass --engine-commit <hash> explicitly. "
+            "Placeholder hashes are prohibited — provenance must be exact."
+        )
+    return discovered
 
 
 def main() -> int:
@@ -80,6 +116,18 @@ def main() -> int:
         default="local_benchmark",
         help="Execution environment tag (e.g. ci, local_benchmark)",
     )
+    parser.add_argument(
+        "--engine-commit",
+        type=str,
+        default=None,
+        dest="engine_commit",
+        help=(
+            "Explicit engine git commit hash (7-40 hex chars). "
+            "Use when running outside a git repo or to pin a specific commit for reproducibility. "
+            "If omitted, auto-discovered from 'git rev-parse HEAD'. "
+            "Placeholder hashes are prohibited — evaluation will fail fast if provenance cannot be resolved."
+        ),
+    )
 
     args = parser.parse_args()
 
@@ -107,8 +155,8 @@ def main() -> int:
     policy = MatchingPolicyConfig.load_from_json(args.policy)
     print(f"✓ Policy verified:     {policy.policy_id} v{policy.policy_version} (SHA: {policy.policy_sha256[:12]}...)")
 
-    # 3. Discover commit hash in CLI bootstrap layer
-    commit_hash = _get_git_commit(repo_root)
+    # 3. Resolve exact commit hash for provenance — fails fast if unavailable (ADR 0007 §5)
+    commit_hash = _resolve_commit_hash(args.engine_commit, repo_root)
     context = EvaluationExecutionContext(
         engine_name="DefaultMatchingEngine",
         engine_version="0.2.0",

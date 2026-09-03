@@ -1,8 +1,8 @@
 """Unit tests for EvaluationRunner orchestrator under ADR 0007.
 
 Invariants verified:
-- Runner delegates exclusively to MatchingEngine.evaluate().
-- Runner passes injected MatchingPolicyConfig completely unchanged.
+- Runner delegates exclusively to EvaluatableEngine.evaluate().
+- Runner passes EvaluationPolicyIdentity without modification.
 - Runner uses the closed candidate universe defined in ValidatedDataset.
 - Runner preserves the engine's original ranking order without re-sorting.
 - Runner delegates all metric calculations to metrics.py.
@@ -10,6 +10,8 @@ Invariants verified:
 - Runner stamps injected EvaluationExecutionContext without filesystem or Git lookups.
 - Runner does not mutate the dataset or policy.
 - Runner operates purely in memory with zero filesystem access.
+- Candidates in the pool have retrieval_scores={} — no synthetic evidence.
+- Real patent metadata (PatentCandidateEvidence) is passed to the engine from benchmark data.
 """
 
 from datetime import UTC, date, datetime
@@ -43,27 +45,29 @@ from domain.models.matching import (
     RankerWeights,
     SufficiencyRules,
 )
-from domain.protocols.matching import MatchingEngine
 
 
 class FakeDeterministicMatchingEngine:
-    """Explicit fake implementing the MatchingEngine protocol without using DefaultMatchingEngine."""
+    """Explicit fake implementing the EvaluatableEngine protocol without using DefaultMatchingEngine."""
 
     def __init__(self, fixed_order: list[str]) -> None:
         self.fixed_order = fixed_order
         self.received_demands: list[DemandRecord | DemandSignal] = []
         self.received_pools: list[CandidatePool] = []
         self.received_policies: list[MatchingPolicyConfig] = []
+        self.received_patent_metadata: list[object] = []
 
     def evaluate(
         self,
         demand: DemandRecord | DemandSignal,
         candidates: CandidatePool,
         policy: MatchingPolicyConfig,
+        patent_metadata: object = None,
     ) -> list[MatchAssessment]:
         self.received_demands.append(demand)
         self.received_pools.append(candidates)
         self.received_policies.append(policy)
+        self.received_patent_metadata.append(patent_metadata)
 
         assessments: list[MatchAssessment] = []
         pool_ids = {c.publication_id for c in candidates.candidates}
@@ -213,7 +217,8 @@ def test_runner_delegates_and_preserves_engine_ranking(
     # System returns ranking: [P-2 (UNCERTAIN), P-3 (GRADE_3), P-1 (GRADE_0), P-4 (GRADE_2), P-5 (GRADE_0)]
     engine_order = ["P-2", "P-3", "P-1", "P-4", "P-5"]
     engine = FakeDeterministicMatchingEngine(fixed_order=engine_order)
-    assert isinstance(engine, MatchingEngine)
+    from domain.protocols.evaluation import EvaluatableEngine
+    assert isinstance(engine, EvaluatableEngine)
 
     runner = DefaultEvaluationRunner()
     report = runner.run_evaluation(
@@ -228,6 +233,22 @@ def test_runner_delegates_and_preserves_engine_ranking(
     assert engine.received_demands[0].demand_id == "D-1"
     assert len(engine.received_pools[0].candidates) == 5
     assert engine.received_policies[0] is sample_policy
+
+    # 1b. Verification: candidates have retrieval_scores={} (no synthetic evidence)
+    for candidate in engine.received_pools[0].candidates:
+        assert candidate.retrieval_scores == {}, (
+            f"Candidate {candidate.publication_id} must have retrieval_scores={{}} — "
+            "fabricating synthetic scores is prohibited by ADR 0007."
+        )
+
+    # 1c. Verification: real patent metadata was passed to the engine
+    assert engine.received_patent_metadata[0] is not None, (
+        "Runner must pass patent_metadata to the engine so it can compute CPC concordance "
+        "from real benchmark data."
+    )
+    assert len(engine.received_patent_metadata[0]) == 5, (
+        "patent_metadata must contain one PatentCandidateEvidence per patent in the dataset."
+    )
 
     # 2. Verification of provenance and stamping
     assert report.dataset_sha256 == sample_validated_dataset.manifest.content_sha256
