@@ -25,7 +25,7 @@ sys.path.insert(0, str(repo_root / "backend" / "src" / "main"))
 from application.evaluation.matching_adapter import DefaultMatchingAdapter
 from application.evaluation.runner import DefaultEvaluationRunner
 from application.matching.engine import DefaultMatchingEngine
-from domain.models.evaluation import EvaluationExecutionContext
+from domain.models.evaluation import EvaluationExecutionContext, ModelConfigurationManifest
 from domain.models.matching import MatchingPolicyConfig
 from infrastructure.evaluation.dataset_loader import DefaultEvaluationDatasetLoader
 
@@ -106,6 +106,13 @@ def main() -> int:
         help="Path to matching policy JSON",
     )
     parser.add_argument(
+        "--model-config",
+        type=Path,
+        default=repo_root / "config" / "evaluations" / "model_configurations_m0_m6.json",
+        dest="model_config",
+        help="Path to frozen model configuration manifest JSON (ADR 0012)",
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         default=None,
@@ -156,6 +163,21 @@ def main() -> int:
     policy = MatchingPolicyConfig.load_from_json(args.policy)
     print(f"✓ Policy verified:     {policy.policy_id} v{policy.policy_version} (SHA: {policy.policy_sha256[:12]}...)")
 
+    # 2b. Load frozen model configuration manifest and verify it still matches the policy in
+    # use (ADR 0012 §5) — the manifest, not any implementation default, controls M0's BM25
+    # parameters (ADR 0013 enforcement: see matching_adapter.py's mandatory constructor args).
+    model_config = ModelConfigurationManifest.load_from_json(args.model_config)
+    model_config.verify_source_policy(policy)
+    m0_config = next(m for m in model_config.models if m.model_id == "M0")
+    if m0_config.weights is None:
+        raise ValueError(
+            f"Model configuration manifest '{args.model_config}' declares no weights for M0 — "
+            "BM25 k1/b must be recorded there before evaluation can run."
+        )
+    bm25_k1 = m0_config.weights["k1"]
+    bm25_b = m0_config.weights["b"]
+    print(f"✓ Model config verified: M0 k1={bm25_k1}, b={bm25_b} (SHA: {model_config.config_sha256[:12]}...)")
+
     # 3. Resolve exact commit hash for provenance — fails fast if unavailable (ADR 0007 §5)
     commit_hash = _resolve_commit_hash(args.engine_commit, repo_root)
     context = EvaluationExecutionContext(
@@ -170,7 +192,7 @@ def main() -> int:
     # 4. Instantiate engine and adapter in CLI layer (the appropriate place for concrete wiring)
     # DefaultMatchingAdapter is the single adapter between evaluation-domain and matching-domain types.
     engine = DefaultMatchingEngine()
-    ranking_port = DefaultMatchingAdapter(engine=engine, policy=policy)
+    ranking_port = DefaultMatchingAdapter(engine=engine, policy=policy, bm25_k1=bm25_k1, bm25_b=bm25_b)
 
     # 5. Execute evaluation via in-memory runner
     # The runner receives only the EvaluationRankingPort — it never sees CandidatePool or MatchingPolicyConfig.

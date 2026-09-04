@@ -18,11 +18,14 @@ Architecture:
 
 Invariants:
 - Implements EvaluationRankingPort protocol (evaluation domain owns the contract).
-- Lexical (BM25) retrieval_scores are a derived_ranking_feature under ADR 0013: computed
-  deterministically from each patent's own observed title/abstract text via
-  domain.models.matching.compute_bm25_scores, over every patent in the closed pool — no
-  filtering, no top-K truncation, no annotation ever reaches this computation (see
-  ADR 0013 and its enforcement in test_adr_0007_invariants.py::DerivedRankingFeaturesTest).
+- Lexical retrieval_scores are a deterministic derived ranking feature under ADR 0013:
+  computed from each patent's own observed title/abstract text, over every patent in the
+  closed pool — no filtering, no top-K truncation, no annotation ever reaches this
+  computation (see ADR 0013 and its enforcement in
+  test_adr_0007_invariants.py::DerivedRankingFeaturesTest). Its parameters (k1, b) are
+  injected by the caller from the frozen model configuration manifest (ADR 0012) — this
+  adapter never falls back to an implementation default: the frozen manifest is the
+  authority for what configuration evaluation actually runs with, not the other way round.
   Semantic retrieval_scores remain absent (0.0): M1 is not yet defined (separate decision).
   CandidatePool in a sealed benchmark does NOT represent a retrieval result — every patent
   remains a candidate regardless of its lexical score.
@@ -82,9 +85,24 @@ class DefaultMatchingAdapter:
     for cross-subsystem wiring.
     """
 
-    def __init__(self, engine: MatchingEngine, policy: MatchingPolicyConfig) -> None:
+    def __init__(
+        self,
+        engine: MatchingEngine,
+        policy: MatchingPolicyConfig,
+        *,
+        bm25_k1: float,
+        bm25_b: float,
+    ) -> None:
+        """`bm25_k1`/`bm25_b` are mandatory (no default) under ADR 0005's explicit-injection
+        principle: the caller must read them from the frozen model configuration manifest
+        (config/evaluations/model_configurations_m0_m6.json, ADR 0012) and pass them in
+        explicitly. This adapter has no fallback default — an implementation default here
+        would let the manifest silently stop controlling what evaluation actually runs with.
+        """
         self._engine = engine
         self._policy = policy
+        self._bm25_k1 = bm25_k1
+        self._bm25_b = bm25_b
 
     def rank_candidates(
         self,
@@ -93,19 +111,20 @@ class DefaultMatchingAdapter:
     ) -> list[str]:
         """Translates evaluation inputs to matching types, calls engine, returns ranked pub_ids.
 
-        Lexical retrieval_scores are computed for every patent via compute_bm25_scores — a
-        derived_ranking_feature (ADR 0013), grounded only in each patent's observed title and
-        abstract text plus the demand's own text. Every patent in `patents` remains a candidate
-        regardless of its score (including 0.0): scoring ranks the closed universe, it does not
-        retrieve a subset of it. Real patent content (CPC, title, abstract, date) is separately
-        provided via patent_metadata using the existing PatentCandidateEvidence channel.
+        Lexical retrieval_scores are computed for every patent via compute_bm25_scores, using
+        the k1/b this adapter was constructed with — a derived_ranking_feature (ADR 0013),
+        grounded only in each patent's observed title and abstract text plus the demand's own
+        text. Every patent in `patents` remains a candidate regardless of its score (including
+        0.0): scoring ranks the closed universe, it does not retrieve a subset of it. Real
+        patent content (CPC, title, abstract, date) is separately provided via patent_metadata
+        using the existing PatentCandidateEvidence channel.
         """
         # Translate evaluation types → matching types
         demand_signal = _to_demand_signal(demand)
 
         query_text = f"{demand.title} {demand.description}"
         documents = {p.publication_id: f"{p.title} {p.abstract}" for p in patents}
-        lexical_scores = compute_bm25_scores(query_text, documents)
+        lexical_scores = compute_bm25_scores(query_text, documents, k1=self._bm25_k1, b=self._bm25_b)
 
         candidates = [
             Candidate(

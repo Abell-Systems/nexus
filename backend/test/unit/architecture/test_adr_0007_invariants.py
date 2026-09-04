@@ -384,7 +384,7 @@ def test_adapter_passes_real_evidence_to_engine(_fake_engine_and_call_record):
         ),
     ]
 
-    adapter = DefaultMatchingAdapter(engine=fake_engine, policy=policy)
+    adapter = DefaultMatchingAdapter(engine=fake_engine, policy=policy, bm25_k1=1.5, bm25_b=0.75)
     assert isinstance(adapter, EvaluationRankingPort)
 
     ranked = adapter.rank_candidates(demand, patents)
@@ -469,7 +469,7 @@ class DerivedRankingFeaturesTest:
             for i in range(5)
         ]
 
-        adapter = DefaultMatchingAdapter(engine=fake_engine, policy=policy)
+        adapter = DefaultMatchingAdapter(engine=fake_engine, policy=policy, bm25_k1=1.5, bm25_b=0.75)
         adapter.rank_candidates(demand, patents)
 
         candidate_ids = {c.publication_id for c in calls["candidates"].candidates}
