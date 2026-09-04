@@ -15,6 +15,7 @@ Invariants:
 import re
 from datetime import UTC, date, datetime
 from enum import Enum, StrEnum
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -401,3 +402,93 @@ class ComparativeRunReport(BaseModel):
         if v not in {"PILOT", "FINAL"}:
             raise ValueError(f"Invalid study_status '{v}'. Must be 'PILOT' or 'FINAL'")
         return v
+
+
+# ---------------------------------------------------------------------------
+# Frozen Model Configuration Provenance (ADR 0012)
+# ---------------------------------------------------------------------------
+
+ProvenanceStatus = Literal[
+    "PRE_EXISTING_INITIAL_CONFIGURATION",
+    "INHERITED",
+    "DERIVED",
+]
+
+TuningStatus = Literal["NOT_TUNED_NO_INDEPENDENT_DEV_SET"]
+
+
+class ModelConfigurationRecord(BaseModel):
+    """Frozen, provenance-tagged configuration for a single M0-M6 model variant (ADR 0012).
+
+    provenance_status is closed by the ProvenanceStatus Literal: TUNED / OPTIMIZED /
+    VALIDATED cannot be expressed, because no hyperparameter search process exists
+    in this codebase to justify those claims.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    model_id: str = Field(min_length=1)
+    description: str = Field(min_length=1)
+    ranker: str = Field(min_length=1)
+    weights: dict[str, float] | None = None
+    version: str = Field(min_length=1)
+    provenance_status: ProvenanceStatus
+
+
+class ModelConfigurationManifest(BaseModel):
+    """Integrity-checked freeze record for M0-M6 configurations (ADR 0012).
+
+    config_sha256 is self-referential (verified against the rest of the payload on
+    load, same pattern as MatchingPolicyConfig.policy_sha256 in domain/models/matching.py).
+    This is tamper-evidence, not a cryptographic seal — it detects accidental drift,
+    not deliberate edits made by someone who also updates the hash. The real freeze
+    guarantee comes from Git history and PR review.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    study_id: str = Field(min_length=1)
+    frozen_at: date
+    tuning_status: TuningStatus
+    development_set: str | None
+    models: list[ModelConfigurationRecord] = Field(min_length=1)
+    config_sha256: str = Field(min_length=64, max_length=64)
+
+    @field_validator("config_sha256")
+    @classmethod
+    def validate_sha256(cls, v: str) -> str:
+        if not re.match(r"^[0-9a-f]{64}$", v.lower()):
+            raise ValueError(f"Invalid SHA-256 digest format: {v}")
+        return v.lower()
+
+    @classmethod
+    def load_from_json(cls, file_path: str) -> "ModelConfigurationManifest":
+        import hashlib
+        import json as _json
+        from pathlib import Path
+
+        path = Path(file_path)
+        if not path.exists():
+            raise FileNotFoundError(f"Model configuration manifest not found: {path}")
+
+        with path.open("r", encoding="utf-8") as f:
+            data = _json.load(f)
+
+        declared_sha = data.pop("config_sha256", None)
+        if not declared_sha:
+            raise ValueError(
+                f"Cryptographic integrity verification failed for {path}: "
+                f"missing mandatory declared 'config_sha256'"
+            )
+
+        canonical_bytes = _json.dumps(data, sort_keys=True, indent=2).encode("utf-8")
+        computed_sha = hashlib.sha256(canonical_bytes).hexdigest()
+
+        if declared_sha.lower() != computed_sha.lower():
+            raise ValueError(
+                f"Cryptographic integrity verification failed for {path}: "
+                f"declared {declared_sha}, computed {computed_sha}"
+            )
+
+        data["config_sha256"] = computed_sha
+        return cls(**data)
