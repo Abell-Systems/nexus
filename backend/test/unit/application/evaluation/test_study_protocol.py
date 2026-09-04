@@ -12,8 +12,6 @@ import hashlib
 import json
 from pathlib import Path
 
-import pytest
-
 
 def get_repo_root() -> Path:
     return Path(__file__).resolve().parents[5]
