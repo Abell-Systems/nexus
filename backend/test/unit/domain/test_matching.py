@@ -174,3 +174,86 @@ def test_compute_max_cpc_similarity_multi_symbols():
     # Empty inputs
     assert compute_max_cpc_similarity([], ["C11D1/00"], levels=levels) == 0.00
     assert compute_max_cpc_similarity(["C11D1/00"], [], levels=levels) == 0.00
+
+
+class BM25ScoringTest:
+    """Guards for compute_bm25_scores (ADR 0013 derived_ranking_feature)."""
+
+    def test_should_compute_deterministic_scores_when_called_twice_with_same_input(self):
+        from domain.models.matching import compute_bm25_scores
+
+        query = "biodegradable surfactant for low-temperature washing"
+        documents = {
+            "EP-1": "Detergent composition with biodegradable surfactant for cold water washing",
+            "EP-2": "Metallurgical alloy for high-strength steel fasteners",
+            "EP-3": "Encapsulated fragrance for laundry detergent",
+        }
+
+        first = compute_bm25_scores(query, documents)
+        second = compute_bm25_scores(query, documents)
+
+        assert first == second
+        assert set(first.keys()) == set(documents.keys()), (
+            "Every input publication_id must be present in the result, regardless of score."
+        )
+        assert first["EP-1"] > first["EP-2"], (
+            "The document with real term overlap must outscore the document with none."
+        )
+        assert first["EP-2"] == 0.0, "No term overlap must score exactly 0.0, not be omitted."
+
+    def test_should_not_depend_on_annotations_when_scoring(self):
+        import inspect
+
+        from domain.models.matching import compute_bm25_scores
+
+        params = set(inspect.signature(compute_bm25_scores).parameters)
+        assert "annotations" not in params
+        assert "relevance_grade" not in params
+        assert "grade" not in params
+        assert params == {"query_text", "documents", "k1", "b"}, (
+            "compute_bm25_scores must take only observed query/document text and scoring "
+            "parameters — no parameter through which ground truth could reach it."
+        )
+
+    def test_should_match_independently_derived_okapi_bm25_values_when_scoring_known_corpus(self):
+        """Pins the Okapi BM25 formula itself, not just its properties.
+
+        Expected values computed by hand from the standard Robertson-Sparck Jones formula
+        (idf = ln((N - n + 0.5) / (n + 0.5) + 1), k1=1.5, b=0.75) in a scratch script kept
+        outside this test — not by calling compute_bm25_scores and asserting its own output.
+        Corpus: A="cat cat dog" (len 3), B="cat" (len 1), C="fish bird" (len 2); avgdl=2.0.
+        Query "cat dog" -> query_terms={"cat", "dog"}, df(cat)=2 (A, B), df(dog)=1 (A only).
+        A regression in the formula (wrong IDF, wrong length normalization, wrong k1/b
+        application) would change these values even though determinism, full-coverage, and
+        zero-for-no-overlap would all still hold.
+        """
+        from domain.models.matching import compute_bm25_scores
+
+        documents = {
+            "A": "cat cat dog",
+            "B": "cat",
+            "C": "fish bird",
+        }
+
+        scores = compute_bm25_scores("cat dog", documents)
+
+        assert scores["A"] == pytest.approx(1.379142946459583)
+        assert scores["B"] == pytest.approx(0.6064562958009492)
+        assert scores["C"] == 0.0
+
+    def test_should_reject_invalid_k1_or_b_when_scoring(self):
+        from domain.models.matching import compute_bm25_scores
+
+        documents = {"A": "cat dog"}
+
+        with pytest.raises(ValueError, match="k1"):
+            compute_bm25_scores("cat", documents, k1=-1.0)
+
+        with pytest.raises(ValueError, match="b"):
+            compute_bm25_scores("cat", documents, b=1.5)
+
+        with pytest.raises(ValueError, match="b"):
+            compute_bm25_scores("cat", documents, b=-0.1)
+
+        with pytest.raises(ValueError, match="k1"):
+            compute_bm25_scores("cat", documents, k1=float("nan"))

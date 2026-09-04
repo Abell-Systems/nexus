@@ -18,8 +18,14 @@ Architecture:
 
 Invariants:
 - Implements EvaluationRankingPort protocol (evaluation domain owns the contract).
-- retrieval_scores={} for all candidates: no synthetic evidence is introduced.
-  CandidatePool in a sealed benchmark does NOT represent a retrieval result.
+- Lexical (BM25) retrieval_scores are a derived_ranking_feature under ADR 0013: computed
+  deterministically from each patent's own observed title/abstract text via
+  domain.models.matching.compute_bm25_scores, over every patent in the closed pool — no
+  filtering, no top-K truncation, no annotation ever reaches this computation (see
+  ADR 0013 and its enforcement in test_adr_0007_invariants.py::DerivedRankingFeaturesTest).
+  Semantic retrieval_scores remain absent (0.0): M1 is not yet defined (separate decision).
+  CandidatePool in a sealed benchmark does NOT represent a retrieval result — every patent
+  remains a candidate regardless of its lexical score.
 - PatentCandidateEvidence is built from real EvaluationPatent data (title, abstract, CPC, date).
   This provides the engine with authentic content for CPC concordance and text feature extraction.
 - The ranked list is returned in the engine's original ordering without re-sorting.
@@ -33,6 +39,8 @@ from domain.models.matching import (
     CandidatePool,
     MatchingPolicyConfig,
     PatentCandidateEvidence,
+    RetrievalMethod,
+    compute_bm25_scores,
 )
 from domain.protocols.matching import MatchingEngine
 
@@ -85,14 +93,26 @@ class DefaultMatchingAdapter:
     ) -> list[str]:
         """Translates evaluation inputs to matching types, calls engine, returns ranked pub_ids.
 
-        retrieval_scores={} for all candidates — no synthetic retrieval evidence is fabricated.
-        Real patent content (CPC, title, abstract, date) is provided via patent_metadata using
-        the existing PatentCandidateEvidence channel designed for this purpose.
+        Lexical retrieval_scores are computed for every patent via compute_bm25_scores — a
+        derived_ranking_feature (ADR 0013), grounded only in each patent's observed title and
+        abstract text plus the demand's own text. Every patent in `patents` remains a candidate
+        regardless of its score (including 0.0): scoring ranks the closed universe, it does not
+        retrieve a subset of it. Real patent content (CPC, title, abstract, date) is separately
+        provided via patent_metadata using the existing PatentCandidateEvidence channel.
         """
         # Translate evaluation types → matching types
         demand_signal = _to_demand_signal(demand)
+
+        query_text = f"{demand.title} {demand.description}"
+        documents = {p.publication_id: f"{p.title} {p.abstract}" for p in patents}
+        lexical_scores = compute_bm25_scores(query_text, documents)
+
         candidates = [
-            Candidate(publication_id=p.publication_id, retrieval_scores={}) for p in patents
+            Candidate(
+                publication_id=p.publication_id,
+                retrieval_scores={RetrievalMethod.LEXICAL: lexical_scores[p.publication_id]},
+            )
+            for p in patents
         ]
         pool = CandidatePool(demand_id=demand.demand_id, candidates=candidates)
         evidence = [_to_patent_candidate_evidence(p) for p in patents]
