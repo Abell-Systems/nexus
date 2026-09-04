@@ -33,10 +33,11 @@ class DuckDbPatentsDataSource:
             else:
                 sql = "SELECT * FROM patents WHERE title ILIKE ? OR abstract ILIKE ? LIMIT ?"
                 params = [f"%{query}%", f"%{query}%", limit]
-            df = self._conn.execute(sql, params).df()
+            cursor = self._conn.execute(sql, params)
+            cols = [desc[0] for desc in cursor.description]
             records = []
-            for _, row in df.iterrows():
-                row_dict = row.to_dict()
+            for row in cursor.fetchall():
+                row_dict = dict(zip(cols, row, strict=False))
                 records.append(
                     PatentRecord(
                         publication_number=str(row_dict.get("publication_id") or row_dict.get("publication_number", "")),
