@@ -43,7 +43,7 @@ def test_innoget_demand_source_from_json(tmp_path: Path):
     ds = InnogetDemandDataSource(snapshot_path=str(json_path))
     demands = ds.get_spanish_demands()
     assert len(demands) == 1
-    assert demands[0].id == "CUSTOM-1"
+    assert demands[0].demand_id == "CUSTOM-1"
 
 
 def test_innoget_demand_source_corrupt_json(tmp_path: Path):
@@ -58,14 +58,14 @@ def test_sbir_demand_datasource():
     ds = SBIRDemandDataSource()
     results = ds.search_demand(query="electrolyte", domain="H01M")
     assert len(results) == 1
-    assert results[0].source == "sbir"
+    assert results[0].source_network == "sbir"
 
 
 def test_cordis_demand_datasource():
     ds = CORDISDemandDataSource()
     results = ds.search_demand(query="battery")
     assert len(results) == 1
-    assert results[0].source == "cordis"
+    assert results[0].source_network == "cordis"
 
 
 def test_mock_demand_datasource():

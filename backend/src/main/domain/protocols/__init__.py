@@ -1,4 +1,3 @@
-from domain.protocols.models import OpportunityModelProtocol, SensitivityAnalyzerProtocol
 from domain.protocols.sources import DemandSourceProtocol, PatentSourceProtocol, RawPayload
 from domain.protocols.storage import CanonicalStoreProtocol, QueryEngineProtocol, RawStoreProtocol
 
@@ -9,6 +8,4 @@ __all__ = [
     "RawStoreProtocol",
     "CanonicalStoreProtocol",
     "QueryEngineProtocol",
-    "OpportunityModelProtocol",
-    "SensitivityAnalyzerProtocol",
 ]

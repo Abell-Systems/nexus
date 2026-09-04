@@ -6,18 +6,17 @@ Invariants:
 - Concrete provider adapters live in infrastructure/ and implement these structural interfaces.
 """
 
-from typing import Protocol, runtime_checkable
+from typing import Protocol
 
+from domain.models.demand import DemandSignal
 from domain.models.runtime_schemas import (
     AdversarialVerdict,
-    DemandSignal,
     InventionCandidate,
     PatentRecord,
     ScoreCard,
 )
 
 
-@runtime_checkable
 class InventorAgentProtocol(Protocol):
     """Port for proposing invention candidates from demand signals and prior art."""
 
@@ -30,7 +29,6 @@ class InventorAgentProtocol(Protocol):
         ...  # pragma: no cover
 
 
-@runtime_checkable
 class AdversarialAgentProtocol(Protocol):
     """Port for attacking invention candidates with prior art citations."""
 
@@ -42,7 +40,6 @@ class AdversarialAgentProtocol(Protocol):
         ...  # pragma: no cover
 
 
-@runtime_checkable
 class GovernorAgentProtocol(Protocol):
     """Port for evaluating novelty, prior-art risk, differentiation, and evidence."""
 

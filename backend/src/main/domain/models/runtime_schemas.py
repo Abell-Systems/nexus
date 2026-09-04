@@ -24,20 +24,6 @@ class PatentRecord(BaseModel):
     similarity_score: float | None = None
 
 
-class DemandSignalItem(BaseModel):
-    """A market-pull signal: an open technology request from an industrial source."""
-    source: str
-    id: str
-    title: str
-    description: str
-    cpc_prefix: str | None = None
-    posted_date: str = ""
-    url: str = ""
-
-
-DemandSignal = DemandSignalItem
-
-
 class PatentCluster(BaseModel):
     """One technology sub-area cluster with white space metrics."""
     cluster_id: str

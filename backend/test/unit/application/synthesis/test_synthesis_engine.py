@@ -4,13 +4,10 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from application.synthesis.synthesis_engine import (
-    InventionSynthesisEngine,
-    SynthesisEngine,
-)
+from application.synthesis.synthesis_engine import SynthesisEngine
+from domain.models.demand import DemandSignal
 from domain.models.runtime_schemas import (
     AdversarialVerdict,
-    DemandSignal,
     InventionCandidate,
     PatentRecord,
 )
@@ -36,8 +33,8 @@ def mock_patents() -> list[PatentRecord]:
 def mock_demands() -> list[DemandSignal]:
     return [
         DemandSignal(
-            source="innoget",
-            id="DEM-1",
+            source_network="innoget",
+            demand_id="DEM-1",
             title="High conductivity solid electrolyte",
             description="Seeking >10 mS/cm at room temperature.",
         )
@@ -53,10 +50,6 @@ def mock_candidate() -> InventionCandidate:
         description="A moisture-resistant composite electrolyte.",
         claimed_novelty="Synergistic halogenation.",
     )
-
-
-def test_alias_equivalence():
-    assert InventionSynthesisEngine is SynthesisEngine
 
 
 def test_propose_candidate_unconfigured_inventor_fails_fast(mock_demands, mock_patents):
@@ -118,36 +111,28 @@ def test_critique_candidate_alias(mock_candidate, mock_patents):
     mock_adversarial.critique_candidate.assert_called_once_with(mock_candidate, mock_patents)
 
 
-def test_constructor_unified_dual_protocol_agent(mock_demands, mock_patents, mock_candidate):
-    # Agent implementing both protocols
-    class DualAgent(InventorAgentProtocol, AdversarialAgentProtocol):
+def test_constructor_explicit_injection(mock_demands, mock_patents, mock_candidate):
+    mock_inventor = MagicMock(spec=InventorAgentProtocol)
+    mock_adversarial = MagicMock(spec=AdversarialAgentProtocol)
+
+    engine = SynthesisEngine(inventor=mock_inventor, adversarial=mock_adversarial)
+    assert engine.inventor is mock_inventor
+    assert engine.adversarial is mock_adversarial
+
+
+def test_constructor_does_not_silently_adopt_duck_typed_adversarial(mock_demands, mock_patents, mock_candidate):
+    """P1 invariant test: constructor does not silently adopt an object as adversarial based on hasattr."""
+    class ImpostorInventor:
         def propose_candidate(self, cluster_id, demands, prior_art):
             return mock_candidate
 
-        def critique_candidate(self, candidate, prior_art):
-            return AdversarialVerdict(
-                candidate_id=candidate.candidate_id,
-                verdict="survives",
-                rationale="Passes.",
-                cited_patents=["ES-2849102-B2"],
-            )
+        # Has an attribute with the same name, but isn't explicitly injected as adversarial
+        critique_candidate = "not a valid adversarial agent"
 
-    dual = DualAgent()
-    engine = SynthesisEngine(dual)
+    impostor = ImpostorInventor()
+    engine = SynthesisEngine(inventor=impostor)  # type: ignore[arg-type]
 
-    assert engine.inventor is dual
-    assert engine.adversarial is dual
-
-    cand = engine.propose_candidate("cluster_battery", mock_demands, mock_patents)
-    assert cand == mock_candidate
-
-    verd = engine.evaluate_adversarial(cand, mock_patents)
-    assert verd.verdict == "survives"
-
-
-def test_constructor_with_agent_kwarg(mock_demands, mock_patents, mock_candidate):
-    mock_inventor = MagicMock(spec=InventorAgentProtocol)
-    mock_inventor.propose_candidate.return_value = mock_candidate
-
-    engine = SynthesisEngine(agent=mock_inventor)
-    assert engine.inventor is mock_inventor
+    assert engine.inventor is impostor
+    assert engine.adversarial is None
+    with pytest.raises(ValueError, match="Adversarial agent not configured"):
+        engine.evaluate_adversarial(mock_candidate, mock_patents)

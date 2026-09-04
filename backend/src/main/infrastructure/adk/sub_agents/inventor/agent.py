@@ -1,8 +1,8 @@
 from google.adk.agents import LlmAgent
 
-from application.state_keys import CANDIDATE_INVENTIONS
 from domain.models.runtime_schemas import InventionCandidate
 from infrastructure.adk.config import get_agent_model
+from infrastructure.adk.state_keys import CANDIDATE_INVENTIONS
 
 from .prompt import INVENTOR_AGENT_INSTRUCTION
 

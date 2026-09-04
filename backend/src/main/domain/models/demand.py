@@ -9,7 +9,7 @@ from domain.models.evidence import FieldObservation
 
 
 class DemandSignal(BaseModel):
-    """External technological demand or market challenge signal (for Step 1-8 compatibility)."""
+    """External technological demand or market challenge signal (canonical domain model)."""
 
     demand_id: str
     source_network: str = "innoget"
@@ -20,8 +20,14 @@ class DemandSignal(BaseModel):
     posted_date: str | None = None
     deadline_date: str | None = None
     classified_cpc_prefixes: list[str] = Field(default_factory=list)
+    url: str = ""
 
     model_config = ConfigDict(extra="ignore")
+
+    @property
+    def cpc_prefix(self) -> str | None:
+        """First classified CPC prefix if present."""
+        return self.classified_cpc_prefixes[0] if self.classified_cpc_prefixes else None
 
 
 class SpanishOriginLevel(StrEnum):

@@ -1,8 +1,8 @@
 from google.adk.agents import LlmAgent
 
-from application.state_keys import SCORED_CANDIDATES
 from domain.models.runtime_schemas import ScoreCard
 from infrastructure.adk.config import get_agent_model
+from infrastructure.adk.state_keys import SCORED_CANDIDATES
 
 from .prompt import GOVERNOR_AGENT_INSTRUCTION
 
