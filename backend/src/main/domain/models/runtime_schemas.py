@@ -4,6 +4,11 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from domain.models.demand import DemandSignal
+
+# Backward-compatibility alias for existing code
+DemandSignalItem = DemandSignal
+
 
 class PatentRecord(BaseModel):
     """Mirrors the fields pulled from Patent Datasources (BigQuery, DuckDB, OEPM, EPO)."""
@@ -22,20 +27,6 @@ class PatentRecord(BaseModel):
     citation_count: int | None = None
     backward_citation_count: int | None = None
     similarity_score: float | None = None
-
-
-class DemandSignalItem(BaseModel):
-    """A market-pull signal: an open technology request from an industrial source."""
-    source: str
-    id: str
-    title: str
-    description: str
-    cpc_prefix: str | None = None
-    posted_date: str = ""
-    url: str = ""
-
-
-DemandSignal = DemandSignalItem
 
 
 class PatentCluster(BaseModel):

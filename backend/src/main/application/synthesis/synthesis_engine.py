@@ -30,7 +30,7 @@ class SynthesisEngine:
     ) -> None:
         inv = inventor or agent
         self.inventor = inv
-        self.adversarial = adversarial or (inv if isinstance(inv, AdversarialAgentProtocol) else None)
+        self.adversarial = adversarial or (inv if hasattr(inv, "critique_candidate") else None)
 
     def propose_candidate(
         self,
