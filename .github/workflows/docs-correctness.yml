@@ -1,0 +1,25 @@
+name: docs-correctness
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "**.md"
+  pull_request:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "**.md"
+
+jobs:
+  docs-correctness:
+    name: Docs Correctness Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run Docs Correctness Gate
+        run: python3 scripts/check_docs_correctness.py
