@@ -175,6 +175,16 @@ class LayerImportVisitor(ast.NodeVisitor):
 
 
 def check_backend_layer_dependencies(errors: list[str]) -> None:
+    """Checks Python AST-level invariants not expressible via standard import graph.
+
+    Inter-layer and cross-subsystem module contracts (domain vs application vs infrastructure,
+    evaluation decoupling, adapter boundary) are declared and enforced by Import Linter in
+    .importlinter via check_import_linter_contracts().
+
+    This visitor specifically enforces framework-isolation invariants:
+    - domain must never import external heavy frameworks (fastapi, google.adk, duckdb, pyarrow, google.cloud).
+    - application must never import delivery/agent frameworks (google.adk, fastapi).
+    """
     backend_main = REPO_ROOT / "backend" / "src" / "main"
     if not backend_main.exists():
         return
@@ -186,7 +196,7 @@ def check_backend_layer_dependencies(errors: list[str]) -> None:
             continue
 
         layer = parts[0]
-        if layer not in ("domain", "application", "infrastructure"):
+        if layer not in ("domain", "application"):
             continue
 
         try:
@@ -201,31 +211,19 @@ def check_backend_layer_dependencies(errors: list[str]) -> None:
         for mod, lineno in visitor.imported_modules:
             rel_file = py_file.relative_to(REPO_ROOT)
 
-            # Domain Layer Invariants
-            if layer == "domain":
-                if mod.startswith("application") or mod.startswith(".application"):
-                    errors.append(
-                        f"FAIL: forbidden dependency: {rel_file}:{lineno} (domain imports application: {mod})"
-                    )
-                if mod.startswith("infrastructure") or mod.startswith(".infrastructure"):
-                    errors.append(
-                        f"FAIL: forbidden dependency: {rel_file}:{lineno} (domain imports infrastructure: {mod})"
-                    )
-                if any(mod.startswith(fw) for fw in ("fastapi", "google.adk", "duckdb", "pyarrow", "google.cloud")):
-                    errors.append(
-                        f"FAIL: forbidden dependency: {rel_file}:{lineno} (domain imports framework: {mod})"
-                    )
+            # Framework Isolation in Domain
+            if layer == "domain" and any(
+                mod.startswith(fw) for fw in ("fastapi", "google.adk", "duckdb", "pyarrow", "google.cloud")
+            ):
+                errors.append(
+                    f"FAIL: forbidden framework dependency in domain: {rel_file}:{lineno} (imports: {mod})"
+                )
 
-            # Application Layer Invariants
-            if layer == "application":
-                if mod.startswith("infrastructure") or mod.startswith(".infrastructure"):
-                    errors.append(
-                        f"FAIL: forbidden dependency: {rel_file}:{lineno} (application imports infrastructure: {mod})"
-                    )
-                if mod.startswith("google.adk") or mod.startswith("fastapi"):
-                    errors.append(
-                        f"FAIL: forbidden dependency: {rel_file}:{lineno} (application imports framework: {mod})"
-                    )
+            # Framework Isolation in Application
+            if layer == "application" and any(mod.startswith(fw) for fw in ("google.adk", "fastapi")):
+                errors.append(
+                    f"FAIL: forbidden framework dependency in application: {rel_file}:{lineno} (imports: {mod})"
+                )
 
 
 TS_IMPORT_PATTERN = re.compile(

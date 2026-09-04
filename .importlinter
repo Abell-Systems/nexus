@@ -21,6 +21,19 @@ source_modules =
 forbidden_modules =
     infrastructure
 
+[importlinter:contract:evaluation-adapter-boundary]
+name = Only matching_adapter may import matching domain from evaluation
+type = forbidden
+source_modules =
+    application.evaluation
+forbidden_modules =
+    domain.models.matching
+    domain.protocols.matching
+    application.matching
+ignore_imports =
+    application.evaluation.matching_adapter -> domain.models.matching
+    application.evaluation.matching_adapter -> domain.protocols.matching
+
 [importlinter:contract:evaluation-metrics-purity]
 name = Evaluation metrics must not depend on matching domain or infrastructure
 type = forbidden
