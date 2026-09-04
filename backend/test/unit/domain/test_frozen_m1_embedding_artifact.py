@@ -15,6 +15,8 @@ from domain.models.evaluation import (
 )
 
 _VALID_REVISION = "4328cf26390c98c5e3c738b4460a05b95f4911f5"
+_NORM_VEC_A = [0.5, 0.5, 0.5, 0.5]  # ||v||_2 == 1.0 exactly
+_NORM_VEC_B = [0.6, 0.8, 0.0, 0.0]  # ||v||_2 == 1.0 exactly
 
 
 def _make_artifact(**overrides: object) -> FrozenEmbeddingArtifact:
@@ -37,8 +39,8 @@ def _make_artifact(**overrides: object) -> FrozenEmbeddingArtifact:
         "embedding_dimension": 4,
         "normalization": "l2",
         "similarity_metric": "cosine",
-        "demand_embeddings": {"D1": [0.1, 0.2, 0.3, 0.4]},
-        "patent_embeddings": {"P1": [0.5, 0.6, 0.7, 0.8]},
+        "demand_embeddings": {"D1": _NORM_VEC_A},
+        "patent_embeddings": {"P1": _NORM_VEC_B},
         "artifact_sha256": "c" * 64,
     }
     defaults.update(overrides)
@@ -121,6 +123,14 @@ class FrozenM1EmbeddingArtifactTest:
         with pytest.raises(ValidationError, match="dimension"):
             _make_artifact(demand_embeddings={"D1": [0.1, 0.2]})
 
+    def test_should_reject_when_embedding_contains_non_finite_value(self) -> None:
+        with pytest.raises(ValidationError, match="non-finite"):
+            _make_artifact(demand_embeddings={"D1": [0.5, 0.5, float("nan"), 0.5]})
+
+    def test_should_reject_when_embedding_is_not_l2_normalized(self) -> None:
+        with pytest.raises(ValidationError, match="L2 norm"):
+            _make_artifact(demand_embeddings={"D1": [1.0, 1.0, 1.0, 1.0]})
+
     def test_should_round_trip_through_load_from_json_when_hash_matches(self, tmp_path: Path) -> None:
         artifact = _make_artifact()
         payload = json.loads(artifact.model_dump_json())
@@ -159,14 +169,14 @@ class FrozenM1EmbeddingArtifactTest:
             artifact.verify_source_dataset(dataset)
 
     def test_should_reject_when_demand_ids_do_not_match_dataset(self) -> None:
-        artifact = _make_artifact(dataset_sha256="b" * 64, demand_embeddings={"D_STALE": [0.1, 0.2, 0.3, 0.4]})
+        artifact = _make_artifact(dataset_sha256="b" * 64, demand_embeddings={"D_STALE": _NORM_VEC_A})
         dataset = _validated_dataset(demand_ids={"D1"}, patent_ids={"P1"}, content_sha256="b" * 64)
 
         with pytest.raises(ValueError, match="demand_embeddings keys"):
             artifact.verify_source_dataset(dataset)
 
     def test_should_reject_when_patent_ids_do_not_match_dataset(self) -> None:
-        artifact = _make_artifact(dataset_sha256="b" * 64, patent_embeddings={"P_STALE": [0.5, 0.6, 0.7, 0.8]})
+        artifact = _make_artifact(dataset_sha256="b" * 64, patent_embeddings={"P_STALE": _NORM_VEC_B})
         dataset = _validated_dataset(demand_ids={"D1"}, patent_ids={"P1"}, content_sha256="b" * 64)
 
         with pytest.raises(ValueError, match="patent_embeddings keys"):

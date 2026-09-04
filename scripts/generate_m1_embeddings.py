@@ -115,17 +115,19 @@ def main() -> int:
     demand_vectors = _encode_texts(model, demand_texts)
     patent_vectors = _encode_texts(model, patent_texts)
 
-    # 4. Determinism check at the generation boundary: re-encode and require identical
-    # output. This verifies our documented procedure is reproducible on this run — it is
-    # not a general audit of PyTorch/sentence-transformers determinism.
+    # 4. Determinism check at the generation boundary: re-encode and require BIT-IDENTICAL
+    # output (np.array_equal, not np.allclose — allclose tolerates numeric drift, which is
+    # exactly what this check exists to rule out). This verifies our documented procedure
+    # is reproducible on this run — it is not a general audit of PyTorch/sentence-transformers
+    # determinism.
     demand_vectors_repeat = _encode_texts(model, demand_texts)
-    if not np.allclose(demand_vectors, demand_vectors_repeat):
+    if not np.array_equal(demand_vectors, demand_vectors_repeat):
         raise RuntimeError(
             "Determinism check failed: re-encoding the same demand texts under the same "
-            "pinned model/parameters produced different vectors. Refusing to generate an "
+            "pinned model/parameters produced bit-different vectors. Refusing to generate an "
             "artifact from a non-reproducible run."
         )
-    print("✓ Determinism check passed (identical output on repeated encode())")
+    print("✓ Determinism check passed (bit-identical output on repeated encode())")
 
     demand_embeddings = {d_id: vec.tolist() for d_id, vec in zip(demand_ids, demand_vectors, strict=True)}
     patent_embeddings = {p_id: vec.tolist() for p_id, vec in zip(patent_ids, patent_vectors, strict=True)}

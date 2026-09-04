@@ -12,6 +12,7 @@ Invariants:
 - Zero filesystem access or relative path resolution.
 """
 
+import math
 import re
 from datetime import UTC, date, datetime
 from enum import Enum, StrEnum
@@ -609,7 +610,13 @@ class FrozenEmbeddingArtifact(BaseModel):
         return v.lower()
 
     @model_validator(mode="after")
-    def validate_embedding_dimensions(self) -> "FrozenEmbeddingArtifact":
+    def validate_embedding_invariants(self) -> "FrozenEmbeddingArtifact":
+        """Enforces the vector-shape invariants ADR 0014 §8-9 freeze: exact dimension,
+        no NaN/inf components, and L2 normalization. These are science invariants, not
+        an optimization — a vector with the right length but non-finite components or
+        the wrong norm is not a valid observation of what this artifact declares itself
+        to be, and must fail here rather than reach cosine-similarity computation later.
+        """
         for space_name, space in (
             ("demand", self.demand_embeddings),
             ("patent", self.patent_embeddings),
@@ -619,6 +626,17 @@ class FrozenEmbeddingArtifact(BaseModel):
                     raise ValueError(
                         f"{space_name} embedding '{key}' has dimension {len(vector)}, "
                         f"expected embedding_dimension={self.embedding_dimension}"
+                    )
+                if not all(math.isfinite(x) for x in vector):
+                    raise ValueError(
+                        f"{space_name} embedding '{key}' contains a non-finite value (NaN/inf) — "
+                        f"invalid under ADR 0014's frozen encoding procedure"
+                    )
+                norm = math.sqrt(sum(x * x for x in vector))
+                if abs(norm - 1.0) > 1e-3:
+                    raise ValueError(
+                        f"{space_name} embedding '{key}' has L2 norm {norm:.6f}, expected ≈1.0 — "
+                        f"ADR 0014 §9 requires L2-normalized embeddings"
                     )
         return self
 
