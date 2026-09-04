@@ -6,7 +6,11 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from domain.models.evaluation import ModelConfigurationManifest, ModelConfigurationRecord
+from domain.models.evaluation import (
+    ModelConfigurationManifest,
+    ModelConfigurationRecord,
+    SourcePolicyReference,
+)
 from domain.models.matching import MatchingPolicyConfig
 
 
@@ -54,6 +58,10 @@ def test_invalid_tuning_status_rejected() -> None:
             frozen_at="2026-09-04",
             tuning_status="TUNED_VIA_GRID_SEARCH",
             development_set=None,
+            source_policy=SourcePolicyReference(
+                path="config/policies/matching/default_matching_policy.json",
+                policy_sha256="0" * 64,
+            ),
             models=[
                 ModelConfigurationRecord(
                     model_id="M0",
@@ -86,3 +94,30 @@ def test_m6_weights_match_default_matching_policy(manifest_path: Path) -> None:
 def test_exactly_m0_through_m6_represented(manifest_path: Path) -> None:
     manifest = ModelConfigurationManifest.load_from_json(manifest_path)
     assert {r.model_id for r in manifest.models} == {"M0", "M1", "M2", "M3", "M4", "M5", "M6"}
+
+
+def test_source_policy_matches_current_default_policy(manifest_path: Path) -> None:
+    manifest = ModelConfigurationManifest.load_from_json(manifest_path)
+    policy_path = get_repo_root() / "config" / "policies" / "matching" / "default_matching_policy.json"
+    policy = MatchingPolicyConfig.load_from_json(policy_path)
+
+    assert manifest.source_policy.path == "config/policies/matching/default_matching_policy.json"
+    manifest.verify_source_policy(policy)  # must not raise
+
+
+def test_source_policy_drift_raises_value_error(manifest_path: Path) -> None:
+    manifest = ModelConfigurationManifest.load_from_json(manifest_path)
+    policy_path = get_repo_root() / "config" / "policies" / "matching" / "default_matching_policy.json"
+    policy = MatchingPolicyConfig.load_from_json(policy_path)
+
+    drifted_manifest = manifest.model_copy(
+        update={
+            "source_policy": SourcePolicyReference(
+                path=manifest.source_policy.path,
+                policy_sha256="0" * 64,
+            )
+        }
+    )
+
+    with pytest.raises(ValueError, match="Source policy drift detected"):
+        drifted_manifest.verify_source_policy(policy)

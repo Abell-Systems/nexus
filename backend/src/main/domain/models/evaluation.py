@@ -15,9 +15,18 @@ Invariants:
 import re
 from datetime import UTC, date, datetime
 from enum import Enum, StrEnum
-from typing import Literal
+from pathlib import Path
+from typing import Literal, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+
+
+class _HasPolicySha256(Protocol):
+    """Structural type for verify_source_policy — matched by MatchingPolicyConfig
+    without importing domain.models.matching, which the evaluation-adapter-boundary
+    Import Linter contract forbids outside application.evaluation.matching_adapter."""
+
+    policy_sha256: str
 
 
 class DataModality(StrEnum):
@@ -435,6 +444,29 @@ class ModelConfigurationRecord(BaseModel):
     provenance_status: ProvenanceStatus
 
 
+class SourcePolicyReference(BaseModel):
+    """Points to the exact matching policy version a configuration freeze was derived from.
+
+    A manifest's own config_sha256 proves internal self-consistency; it says nothing
+    about whether the weights it recorded still match the matching policy it was
+    derived from, after that policy legitimately changes for unrelated reasons
+    months later. source_policy makes that cross-file provenance explicit and
+    checkable via ModelConfigurationManifest.verify_source_policy.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    path: str = Field(min_length=1)
+    policy_sha256: str = Field(min_length=64, max_length=64)
+
+    @field_validator("policy_sha256")
+    @classmethod
+    def validate_sha256(cls, v: str) -> str:
+        if not re.match(r"^[0-9a-f]{64}$", v.lower()):
+            raise ValueError(f"Invalid SHA-256 digest format: {v}")
+        return v.lower()
+
+
 class ModelConfigurationManifest(BaseModel):
     """Integrity-checked freeze record for M0-M6 configurations (ADR 0012).
 
@@ -451,6 +483,7 @@ class ModelConfigurationManifest(BaseModel):
     frozen_at: date
     tuning_status: TuningStatus
     development_set: str | None
+    source_policy: SourcePolicyReference
     models: list[ModelConfigurationRecord] = Field(min_length=1)
     config_sha256: str = Field(min_length=64, max_length=64)
 
@@ -461,11 +494,30 @@ class ModelConfigurationManifest(BaseModel):
             raise ValueError(f"Invalid SHA-256 digest format: {v}")
         return v.lower()
 
+    def verify_source_policy(self, policy: _HasPolicySha256) -> None:
+        """Fails fast if the given, already-loaded policy no longer matches this freeze.
+
+        Takes an already-loaded policy object (structurally typed — see
+        _HasPolicySha256, matched by MatchingPolicyConfig) rather than a path: this
+        manifest stays CWD-independent and does no filesystem discovery of its own,
+        matching the explicit-path-injection invariant already established for
+        dataset loading (ADR 0006) — callers load the policy explicitly and hand it
+        over. It also keeps this module free of importing domain.models.matching,
+        which the evaluation-adapter-boundary Import Linter contract restricts to
+        application.evaluation.matching_adapter alone.
+        """
+        if policy.policy_sha256 != self.source_policy.policy_sha256:
+            raise ValueError(
+                f"Source policy drift detected for manifest '{self.study_id}': "
+                f"declares source_policy.policy_sha256={self.source_policy.policy_sha256}, "
+                f"but the loaded policy has policy_sha256={policy.policy_sha256}. "
+                f"This freeze (ADR 0012) no longer matches the policy it was derived from."
+            )
+
     @classmethod
-    def load_from_json(cls, file_path: str) -> "ModelConfigurationManifest":
+    def load_from_json(cls, file_path: str | Path) -> "ModelConfigurationManifest":
         import hashlib
         import json as _json
-        from pathlib import Path
 
         path = Path(file_path)
         if not path.exists():

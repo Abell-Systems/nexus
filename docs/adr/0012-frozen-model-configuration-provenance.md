@@ -42,8 +42,24 @@ nothing else in the code to give them.
    power that does not exist. None is created for PR #24 or later.
 2. **All M0–M6 configurations are frozen as-is** in
    `config/evaluations/model_configurations_m0_m6.json`, recording once
-   (`frozen_at`, `tuning_status`) and per model (ranker, weights where
-   applicable, version, provenance category).
+   (`frozen_at`, `tuning_status`, `source_policy`) and per model (ranker,
+   weights where applicable, version, provenance category).
+   `source_policy` records the exact path and `policy_sha256` of
+   `default_matching_policy.json` this freeze was derived from — a
+   self-hash alone would prove the manifest's own internal consistency,
+   but not that its weights still match the policy file months later, after
+   that file has legitimately changed for unrelated reasons. `verify_source_policy`
+   compares the manifest's declared digest against a caller-supplied,
+   already-loaded policy object, rather than the manifest silently walking
+   the filesystem to find it — this codebase's dataset loader (ADR 0006)
+   already establishes that config loaders take explicit paths and stay
+   CWD-independent, and drift verification is no exception. The policy
+   parameter is typed structurally (matched by `MatchingPolicyConfig`
+   without importing it), keeping `domain/models/evaluation.py` outside
+   `domain.models.matching` — the evaluation-adapter-boundary Import Linter
+   contract restricts that import to `application.evaluation.matching_adapter`
+   alone, and even a type-checking-only import creates the transitive edge
+   the contract forbids.
 3. **Provenance categories are closed to three values:**
    `PRE_EXISTING_INITIAL_CONFIGURATION`, `INHERITED`, `DERIVED`, enforced via
    a `Literal` type on `ModelConfigurationRecord.provenance_status`. The
@@ -69,10 +85,12 @@ nothing else in the code to give them.
 ## Consequences
 
 ### Positive
-- The final inferential evaluation (PR #26) is defensible: no hyperparameter
-  was fit on the data used to test it, and the artifact's own epistemic
+- No benchmark-based hyperparameter fitting is evidenced by the repository
+  provenance reviewed for this freeze, and the artifact's own epistemic
   claims are machine-validated rather than asserted only in prose.
-- Provenance is explicit per model variant.
+- Provenance is explicit per model variant, and now traceable to the exact
+  source policy file and digest each frozen configuration was derived from
+  (`source_policy`), not merely to values that happen to match today.
 
 ### Negative
 - `alpha/beta/gamma` may be suboptimal. This is accepted; correctness of the
