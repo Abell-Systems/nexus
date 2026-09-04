@@ -81,6 +81,10 @@ Environment Coordinates       ──▶ environment, timestamp
 * `study_protocol_id` and `study_protocol_sha256` are stamped directly into comparative reports.
 * The evaluation runner NEVER discovers Git or scans paths internally; all execution coordinates are supplied explicitly by the external execution context (`EvaluationExecutionContext`).
 
+> **Note on `protocol_sha256` integrity model:** The hash stored in `comparisons_m0_m6.json` is computed over the payload excluding the `protocol_sha256` field itself (self-referential consistency check). This allows detection of accidental protocol drift but does NOT constitute an external cryptographic seal — a party with write access to the file can recompute the digest. For the PILOT phase this is sufficient. For the final frozen inferential evaluation (PR #26), the expected protocol digest MUST be declared in an external immutable record (e.g. pinned in a companion `.sha256` file or a separate frozen manifest), mirroring the model used for datasets in ADR 0006.
+
+> **Note on `run_scientific_evaluation.py` study metadata decoration:** The script currently injects `study_status` and `study_protocol_id` as post-serialization fields into an `EvaluationRunReport` dict. This is an interim pattern for the PILOT phase — acceptable because the script lives outside the product in `scripts/`. In PR #25/26 the script should instead produce a `ComparativeRunReport` directly via `evaluate_study_protocol()`, making the scientific object the primary output rather than a decorated dict.
+
 ---
 
 ### 5. Explicit Epistemic Status: Pilot vs Frozen Final

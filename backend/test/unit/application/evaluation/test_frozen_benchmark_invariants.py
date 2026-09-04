@@ -40,7 +40,9 @@ def test_pilot_benchmark_loads_successfully(pilot_paths: tuple[Path, Path, Path]
     assert len(validated.dataset.demands) == 3
     assert len(validated.dataset.patents) == 15
     assert len(validated.dataset.annotations) == 23
-    assert validated.manifest.content_sha256 == validated.dataset.dataset_id or len(validated.manifest.content_sha256) == 64
+    # Pinned: the loader already verifies byte-exact SHA-256 on load; this confirms
+    # we loaded the correct frozen artifact, not just any 64-char digest.
+    assert validated.manifest.content_sha256 == "bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453"
 
 
 def test_tamper_rejection_raises_value_error(
