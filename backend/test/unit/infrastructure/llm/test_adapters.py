@@ -6,10 +6,6 @@ from unittest.mock import MagicMock
 import pytest
 
 from domain.models.runtime_schemas import DemandSignal, InventionCandidate, PatentRecord
-from domain.protocols.agents import (
-    AdversarialAgentProtocol,
-    InventorAgentProtocol,
-)
 from infrastructure.llm.adapters import (
     GroqAgentAdapter,
     LlmAgentAdapter,

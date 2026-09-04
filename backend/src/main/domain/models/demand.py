@@ -12,7 +12,7 @@ from domain.models.evidence import FieldObservation
 class DemandSignal(BaseModel):
     """External technological demand or market challenge signal (canonical domain model)."""
 
-    demand_id: str
+    demand_id: str = ""
     source_network: str = "innoget"
     title: str
     description: str
@@ -23,6 +23,8 @@ class DemandSignal(BaseModel):
     classified_cpc_prefixes: list[str] = Field(default_factory=list)
     url: str = ""
     cpc_prefix: str | None = None
+    id: str | None = None
+    source: str | None = None
 
     model_config = ConfigDict(extra="ignore")
 
@@ -42,15 +44,9 @@ class DemandSignal(BaseModel):
                 data["classified_cpc_prefixes"] = [cpc]
             elif data.get("classified_cpc_prefixes") and not cpc:
                 data["cpc_prefix"] = data["classified_cpc_prefixes"][0]
+            data["id"] = d_id
+            data["source"] = src
         return data
-
-    @property
-    def id(self) -> str:
-        return self.demand_id
-
-    @property
-    def source(self) -> str:
-        return self.source_network
 
 
 class SpanishOriginLevel(StrEnum):
