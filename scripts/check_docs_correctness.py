@@ -125,7 +125,16 @@ def check_adr_cross_references(files: list[Path], known_adr_numbers: set[str]) -
 
 
 def check_relative_links(files: list[Path]) -> list[str]:
+    """Verifies relative markdown links resolve to a real file inside the repo.
+
+    A link target must resolve within REPO_ROOT before its existence is even checked — a
+    path like `../../../../etc/passwd` must never be validated against the CI runner's
+    filesystem, which has files this repo does not and should never care about. Escaping
+    REPO_ROOT is itself a finding, independent of whether the escaped-to path happens to
+    exist on whatever machine runs this check.
+    """
     findings = []
+    repo_root_resolved = REPO_ROOT.resolve()
     for f in files:
         content = f.read_text(encoding="utf-8")
         for match in MARKDOWN_LINK_RE.finditer(content):
@@ -134,8 +143,13 @@ def check_relative_links(files: list[Path]) -> list[str]:
                 continue
             target_path = target.split("#", 1)[0]
             resolved = (f.parent / target_path).resolve()
-            if not resolved.exists():
-                line_no = content.count("\n", 0, match.start()) + 1
+            line_no = content.count("\n", 0, match.start()) + 1
+
+            if not resolved.is_relative_to(repo_root_resolved):
+                findings.append(
+                    f"{f.relative_to(REPO_ROOT)}:{line_no}: link target escapes the repository: {target}"
+                )
+            elif not resolved.exists():
                 findings.append(
                     f"{f.relative_to(REPO_ROOT)}:{line_no}: link target does not exist: {target}"
                 )
