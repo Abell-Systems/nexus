@@ -31,12 +31,6 @@ from pydantic import BaseModel, Field, ValidationError  # noqa: E402
 from application.landscape.clustering import patents_for_demand_signal  # noqa: E402
 from application.landscape.context import is_supported_domain  # noqa: E402
 from application.research_service import ResearchService  # noqa: E402
-from application.state_keys import (  # noqa: E402
-    ADVERSARIAL_VERDICTS,
-    CANDIDATE_INVENTIONS,
-    SCORED_CANDIDATES,
-    SELECTED_CLUSTER_CONTEXT,
-)
 from application.synthesis.reconciliation import reconcile_candidate_verdicts  # noqa: E402
 from domain.models.runtime_schemas import (  # noqa: E402
     AdversarialVerdict,
@@ -44,6 +38,12 @@ from domain.models.runtime_schemas import (  # noqa: E402
     ScoreCard,
 )
 from infrastructure.adk.agent import build_invention_pipeline  # noqa: E402
+from infrastructure.adk.state_keys import (  # noqa: E402
+    ADVERSARIAL_VERDICTS,
+    CANDIDATE_INVENTIONS,
+    SCORED_CANDIDATES,
+    SELECTED_CLUSTER_CONTEXT,
+)
 from infrastructure.llm.provider_policy import (  # noqa: E402
     ProviderPacingPlugin,
     get_execution_policy,
