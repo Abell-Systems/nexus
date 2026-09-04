@@ -20,7 +20,9 @@ Enforces:
 """
 
 import ast
+import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -272,6 +274,33 @@ def check_frontend_layer_dependencies(errors: list[str]) -> None:
                 )
 
 
+def check_import_linter_contracts(errors: list[str]) -> None:
+    """Runs import-linter to verify declared architectural contracts in .importlinter."""
+    config_file = REPO_ROOT / ".importlinter"
+    if not config_file.exists():
+        errors.append("FAIL: .importlinter configuration file is missing at repository root.")
+        return
+
+    backend_src_main = str(REPO_ROOT / "backend" / "src" / "main")
+    env = os.environ.copy()
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{backend_src_main}:{existing_pythonpath}" if existing_pythonpath else backend_src_main
+
+    try:
+        proc = subprocess.run(
+            ["lint-imports", "--no-logo"],
+            cwd=str(REPO_ROOT),
+            env=env,
+            capture_output=True,
+            text=True,
+        )
+        if proc.returncode != 0:
+            output = (proc.stdout + "\n" + proc.stderr).strip()
+            errors.append(f"FAIL: import-linter contract violation:\n{output}")
+    except FileNotFoundError:
+        errors.append("FAIL: 'lint-imports' command not found. Ensure 'import-linter' is installed in requirements-dev.txt.")
+
+
 def main() -> int:
     errors: list[str] = []
 
@@ -280,6 +309,7 @@ def main() -> int:
     check_frontend_files(errors)
     check_backend_layer_dependencies(errors)
     check_frontend_layer_dependencies(errors)
+    check_import_linter_contracts(errors)
 
     if errors:
         print("\n" + "=" * 70, file=sys.stderr)
@@ -290,7 +320,7 @@ def main() -> int:
         print("=" * 70 + "\n", file=sys.stderr)
         return 1
 
-    print("Architecture check: PASS (Clean Architecture 3-Tier Layer Invariants Validated)")
+    print("Architecture check: PASS (Clean Architecture 3-Tier Layer Invariants & Import Linter Contracts Validated)")
     return 0
 
 

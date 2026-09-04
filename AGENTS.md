@@ -57,21 +57,30 @@ algorithm / decision procedure
 
 ---
 
-## 4. Architectural Enforcement via Automated Tests
+## 4. Architectural Enforcement via Automated Quality Gates & Import Linter (ADR 0008)
 
 Agent instructions alone are insufficient; rules must be backed by automated technical enforcement in CI.
+
+Architectural constraints are **executable, machine-verifiable contracts**. If an architectural rule can be expressed as a dependency constraint, layer boundary, or invariant, it MUST be enforced by CI rather than relying solely on documentation or human code review.
+
+The 4-level enforcement stack is binding on all pull requests:
+1. **Level 1 (Ruff):** Format, linting, import sorting, complexity limits.
+2. **Level 2 (Mypy):** Strict protocol contracts, structural subtyping without `Any` to hide cross-context coupling.
+3. **Level 3 (Import Linter & Invariant Tests):** Declarative layer contracts in `.importlinter` (`domain` isolated from `application`/`infrastructure`; `application` isolated from `infrastructure`; auditor subsystems isolated from collaborator domain models) plus pytest architecture invariants.
+4. **Level 4 (SonarCloud):** Bugs, code smells, duplication, cognitive complexity, test coverage threshold.
 
 Every major architectural boundary MUST be accompanied by deterministic architectural invariant tests:
 1. **No In-Code Policies:** Verify that algorithm resolvers require explicit policy injection and fail fast if policy is omitted.
 2. **Dynamic Behavior:** Demonstrate that changing configuration (e.g., target jurisdiction) alters classification behavior without modifying Python code.
 3. **No Synthetic Inventions:** Verify that entity identifiers and attributes are authentic from observed facts, never fabricated from arbitrary batch IDs or fallback strings.
+4. **No Cross-Context Concealment:** Never use `typing.Any` to bypass static type checks or circumvent import restrictions across bounded contexts.
 
 ---
 
 ## 5. Agent Verification Checklist Before Completing Tasks
 
 Before declaring any task or PR complete, the agent MUST explicitly verify:
-* [ ] Applicable ADRs were inspected.
+* [ ] Applicable ADRs were inspected (ADR 0001 through ADR 0008).
 * [ ] Implementation strictly complies with ADRs.
 * [ ] Any new architectural decisions have an ADR in `docs/adr/`.
 * [ ] Configurable constraints are externalized to versioned files (e.g., `config/policies/`).
@@ -79,4 +88,5 @@ Before declaring any task or PR complete, the agent MUST explicitly verify:
 * [ ] Absence of configuration triggers fail-fast errors (no default fallbacks fabricated in code).
 * [ ] All tests pass cleanly (`pytest backend/test/unit -v --cov=backend/src/main --cov-report=xml:coverage.xml`).
 * [ ] Static analysis is 100% green (`ruff check .` and `mypy backend/src/main`).
+* [ ] Architectural quality gate is 100% green (`python scripts/check_architecture.py` and `PYTHONPATH=backend/src/main lint-imports`).
 * [ ] Diff contains only files relevant to the specific block/PR.

@@ -1,0 +1,55 @@
+[importlinter]
+root_packages =
+    domain
+    application
+    infrastructure
+
+[importlinter:contract:domain-isolation]
+name = Domain layer must not depend on application or infrastructure
+type = forbidden
+source_modules =
+    domain
+forbidden_modules =
+    application
+    infrastructure
+
+[importlinter:contract:application-isolation]
+name = Application layer must not depend on infrastructure
+type = forbidden
+source_modules =
+    application
+forbidden_modules =
+    infrastructure
+
+[importlinter:contract:evaluation-metrics-purity]
+name = Evaluation metrics must not depend on matching domain or infrastructure
+type = forbidden
+source_modules =
+    application.evaluation.metrics
+forbidden_modules =
+    infrastructure
+    domain.models.matching
+    domain.protocols.matching
+    application.matching
+
+[importlinter:contract:evaluation-runner-isolation]
+name = Evaluation runner must not depend on matching domain
+type = forbidden
+source_modules =
+    application.evaluation.runner
+forbidden_modules =
+    infrastructure
+    domain.models.matching
+    domain.protocols.matching
+    application.matching
+
+[importlinter:contract:evaluation-domain-protocol-isolation]
+name = Evaluation domain protocols must not depend on matching domain
+type = forbidden
+source_modules =
+    domain.protocols.evaluation
+forbidden_modules =
+    domain.models.matching
+    domain.protocols.matching
+    application.matching
+    infrastructure
