@@ -10,51 +10,8 @@ from application.evaluation.statistics import (
     WilcoxonResult,
     adjust_benjamini_hochberg,
     paired_bootstrap_ci,
-    paired_resample,
     paired_wilcoxon_test,
 )
-
-# ---------------------------------------------------------------------------
-# Resampling Primitives
-# ---------------------------------------------------------------------------
-
-
-def test_paired_resample_preserves_pairing_and_covariance():
-    """Verify that paired_resample samples baseline and treatment with identical row indices."""
-    baseline = [10.0, 20.0, 30.0, 40.0, 50.0]
-    treatment = [11.0, 21.0, 31.0, 41.0, 51.0]  # perfect delta = 1.0 for every pair
-    rng = np.random.default_rng(123)
-
-    sample_b, sample_t = paired_resample(baseline, treatment, rng)
-
-    assert len(sample_b) == len(baseline)
-    assert len(sample_t) == len(treatment)
-    # Every resampled pair must maintain treatment - baseline == 1.0
-    deltas = sample_t - sample_b
-    np.testing.assert_allclose(deltas, 1.0)
-
-
-def test_paired_resample_validations():
-    """Verify fail-fast on length mismatch and empty sequences."""
-    rng = np.random.default_rng(42)
-    with pytest.raises(ValueError, match="Length mismatch"):
-        paired_resample([1.0, 2.0], [1.0], rng)
-
-    with pytest.raises(ValueError, match="empty sequences"):
-        paired_resample([], [], rng)
-
-
-def test_paired_resample_determinism():
-    """Verify byte-exact reproducibility with identical seed."""
-    b = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
-    t = [1.5, 2.5, 3.2, 4.8, 5.1, 6.9]
-
-    b1, t1 = paired_resample(b, t, np.random.default_rng(999))
-    b2, t2 = paired_resample(b, t, np.random.default_rng(999))
-
-    np.testing.assert_array_equal(b1, b2)
-    np.testing.assert_array_equal(t1, t2)
-
 
 # ---------------------------------------------------------------------------
 # Paired Wilcoxon Signed-Rank Test
@@ -113,7 +70,7 @@ def test_paired_wilcoxon_partial_ties_tracking():
 
 
 def test_paired_wilcoxon_validations():
-    """Verify fail-fast on mismatched length, non-finite values, and invalid alternative."""
+    """Verify fail-fast on mismatched length, non-finite values, and invalid parameters."""
     with pytest.raises(ValueError, match="Length mismatch"):
         paired_wilcoxon_test([1.0, 2.0], [1.0])
 
@@ -128,6 +85,9 @@ def test_paired_wilcoxon_validations():
 
     with pytest.raises(ValueError, match="Invalid alternative"):
         paired_wilcoxon_test([1.0, 2.0], [2.0, 3.0], alternative="invalid")
+
+    with pytest.raises(ValueError, match="Invalid zero_method"):
+        paired_wilcoxon_test([1.0, 2.0], [2.0, 3.0], zero_method="invalid")
 
 
 # ---------------------------------------------------------------------------
@@ -235,7 +195,8 @@ def test_paired_bootstrap_ci_deterministic_reproducibility():
     res2 = paired_bootstrap_ci(b, t, n_bootstrap=1000, seed=42)
 
     assert isinstance(res1, BootstrapCIResult)
-    assert res1.estimate == res2.estimate == 0.1
+    assert res1.estimate == pytest.approx(0.1)
+    assert res1.estimate == res2.estimate
     assert res1.ci_lower == res2.ci_lower
     assert res1.ci_upper == res2.ci_upper
 

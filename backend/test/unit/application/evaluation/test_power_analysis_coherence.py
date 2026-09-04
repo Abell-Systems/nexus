@@ -16,7 +16,8 @@ def test_frozen_power_analysis_artifact_coherence():
     - Medium-large effect theta >= 0.50 requires minimum N = 15 demands (the protocol grid floor).
     - Alpha = 0.05, Target Power = 0.80, B = 10,000 iterations per grid point.
     """
-    artifact_path = Path("data/experiments/power_analysis_wilcoxon.json")
+    repo_root = Path(__file__).resolve().parents[5]
+    artifact_path = repo_root / "data" / "experiments" / "power_analysis_wilcoxon.json"
     assert artifact_path.exists(), f"Pre-registered artifact missing at {artifact_path}"
 
     with open(artifact_path, encoding="utf-8") as f:

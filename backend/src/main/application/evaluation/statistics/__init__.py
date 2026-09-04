@@ -6,7 +6,6 @@ correction, and non-parametric bootstrap confidence intervals.
 
 from .bootstrap import paired_bootstrap_ci
 from .multiple_testing import adjust_benjamini_hochberg
-from .resampling import paired_resample
 from .types import BenjaminiHochbergResult, BootstrapCIResult, WilcoxonResult
 from .wilcoxon import paired_wilcoxon_test
 
@@ -16,6 +15,5 @@ __all__ = [
     "WilcoxonResult",
     "adjust_benjamini_hochberg",
     "paired_bootstrap_ci",
-    "paired_resample",
     "paired_wilcoxon_test",
 ]

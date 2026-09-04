@@ -57,9 +57,9 @@ def paired_bootstrap_ci(
     ci_upper = float(np.percentile(boot_means, upper_pct))
 
     return BootstrapCIResult(
-        estimate=round(point_estimate, 6),
-        ci_lower=round(ci_lower, 6),
-        ci_upper=round(ci_upper, 6),
+        estimate=point_estimate,
+        ci_lower=ci_lower,
+        ci_upper=ci_upper,
         n_bootstrap=n_bootstrap,
         confidence_level=confidence_level,
         seed=seed,

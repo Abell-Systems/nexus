@@ -8,6 +8,7 @@ from scipy.stats import wilcoxon
 from .types import WilcoxonResult
 
 VALID_ALTERNATIVES = {"two-sided", "greater", "less"}
+VALID_ZERO_METHODS = {"wilcox", "pratt", "zsplit"}
 
 
 def paired_wilcoxon_test(
@@ -30,6 +31,10 @@ def paired_wilcoxon_test(
     if alternative not in VALID_ALTERNATIVES:
         raise ValueError(
             f"Invalid alternative '{alternative}'. Must be one of {sorted(VALID_ALTERNATIVES)}"
+        )
+    if zero_method not in VALID_ZERO_METHODS:
+        raise ValueError(
+            f"Invalid zero_method '{zero_method}'. Must be one of {sorted(VALID_ZERO_METHODS)}"
         )
 
     n_b = len(baseline)
