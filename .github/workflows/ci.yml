@@ -148,12 +148,17 @@ jobs:
       - name: Install dependencies
         run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt -r backend/requirements-adk.txt
       - name: Run Provider Tests
-        run: pytest backend/test/providers -v
+        run: pytest backend/test/providers -v --cov=backend/src/main --cov-report=xml:coverage-providers.xml
+      - name: Upload Provider Coverage Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: provider-coverage-report
+          path: coverage-providers.xml
 
   # 6. Sonar Analysis & Quality Gate (Strict - No Green Fallback)
   sonar-quality-gate:
     name: 6. Sonar Quality Gate
-    needs: [backend-tests, frontend-quality]
+    needs: [backend-tests, provider-adk-tests, frontend-quality]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -176,6 +181,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage-report
+      - name: Download Provider Coverage Report
+        uses: actions/download-artifact@v4
+        with:
+          name: provider-coverage-report
       - name: Download Frontend Coverage Report
         uses: actions/download-artifact@v4
         with:

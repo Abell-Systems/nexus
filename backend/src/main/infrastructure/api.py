@@ -173,7 +173,7 @@ async def get_patents_for_demand(
         if hasattr(_demand_datasource, "get_spanish_demands")
         else _demand_datasource.search_demand(domain=domain)
     )
-    signal = next((d for d in demands if d.id == demand_id), None)
+    signal = next((d for d in demands if d.demand_id == demand_id), None)
     if not signal:
         raise HTTPException(status_code=404, detail=f"Demand signal '{demand_id}' not found.")
     patents = patents_for_demand_signal(
