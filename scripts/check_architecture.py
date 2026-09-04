@@ -56,6 +56,7 @@ def check_backend_files(errors: list[str]) -> None:
         "static",
         "requirements.txt",
         "requirements-dev.txt",
+        "requirements-adk.txt",
         "Dockerfile",
         "__pycache__",
         ".pytest_cache",
@@ -83,10 +84,9 @@ def check_backend_files(errors: list[str]) -> None:
             if item.name not in allowed_main:
                 errors.append(f"FAIL: invalid layer in backend/src/main: {item.name}")
 
-    # Check backend/test folders
     backend_test = backend_dir / "test"
     if backend_test.exists():
-        allowed_test = {"unit", "integration", "e2e", "fixtures", "__init__.py", "__pycache__"}
+        allowed_test = {"unit", "integration", "e2e", "providers", "fixtures", "__init__.py", "__pycache__"}
         for item in backend_test.iterdir():
             if item.name.startswith("."):
                 continue

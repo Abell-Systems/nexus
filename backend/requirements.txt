@@ -1,5 +1,4 @@
-google-adk[extensions]==2.7.0
-google-cloud-bigquery==3.43.0
+# Nexus Core Dependencies (ADR 0009 - Provider-Agnostic Core)
 pydantic==2.13.4
 python-dotenv==1.2.2
 fastapi==0.141.1
@@ -8,3 +7,5 @@ pyarrow>=15.0.0
 duckdb>=0.10.0
 numpy>=2.0.0
 scipy>=1.14.0
+httpx>=0.28.0
+beautifulsoup4>=4.12.0

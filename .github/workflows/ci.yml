@@ -13,7 +13,7 @@ on:
       - "**.md"
 
 jobs:
-  # 1. Architecture Quality Gate
+  # 1. Architecture Quality Gate (Minimal Tooling: zero framework/runtime overhead)
   architecture:
     name: 1. Architecture Gate
     runs-on: ubuntu-latest
@@ -22,16 +22,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: pip
-          cache-dependency-path: |
-            backend/requirements.txt
-            backend/requirements-dev.txt
-      - name: Install dependencies
-        run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt
+      - name: Install Architecture Checker Tooling
+        run: pip install import-linter>=2.14
       - name: Run Architecture Quality Gate
         run: python scripts/check_architecture.py
 
-  # 2. Python Static Quality & Type Checking
+  # 2. Python Static Quality & Type Checking (Core + Dev Tooling)
   python-quality:
     name: 2. Python Quality (Ruff & Mypy)
     needs: architecture
@@ -52,7 +48,7 @@ jobs:
       - name: Static Type Checking (Mypy)
         run: mypy backend/src/main --ignore-missing-imports
 
-  # 3. Frontend Quality & Build
+  # 3. Frontend Quality & Build (Fast Direct node_modules Cache + Parallel Execution)
   frontend-quality:
     name: 3. Frontend Quality & Build
     needs: architecture
@@ -65,10 +61,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
+      - name: Cache node_modules
+        id: frontend-node-modules-cache
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: frontend-node-modules-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
       - name: Install dependencies
-        run: npm ci
+        if: steps.frontend-node-modules-cache.outputs.cache-hit != 'true'
+        run: npm ci --prefer-offline --no-audit --no-fund
       - name: Tests & Coverage
         run: npm test
       - name: Typecheck
@@ -83,7 +84,7 @@ jobs:
           name: frontend-coverage-report
           path: frontend/coverage/lcov.info
 
-  # 4. Security & Secret Scanning
+  # 4. Security & Secret Scanning (Parallel with Python/Frontend)
   security-scan:
     name: 4. Security Scan (Gitleaks)
     needs: architecture
@@ -101,10 +102,10 @@ jobs:
       - name: Run Gitleaks Secret Scanner
         run: gitleaks detect --source . --verbose
 
-  # 5. Tests & Coverage Execution
+  # 5. Core Tests & Coverage Execution (Pure core runtime, zero provider SDKs)
   backend-tests:
-    name: 5. Backend Tests & Coverage
-    needs: [python-quality, frontend-quality, security-scan]
+    name: 5. Core Backend Tests & Coverage
+    needs: [architecture, python-quality]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -128,6 +129,26 @@ jobs:
         with:
           name: coverage-report
           path: coverage.xml
+
+  # 5b. Provider Tests (Google ADK & Provider Adapters)
+  provider-adk-tests:
+    name: 5b. Provider Tests (Google ADK)
+    needs: [architecture, python-quality]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            backend/requirements-dev.txt
+            backend/requirements-adk.txt
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt -r backend/requirements-adk.txt
+      - name: Run Provider Tests
+        run: pytest backend/test/providers -v
 
   # 6. Sonar Analysis & Quality Gate (Strict - No Green Fallback)
   sonar-quality-gate:
@@ -173,7 +194,7 @@ jobs:
   # 7. Final Consolidated Quality Gate (Must be all green)
   quality-gate:
     name: 7. QUALITY GATE (Ready to Merge)
-    needs: [architecture, python-quality, frontend-quality, security-scan, backend-tests, sonar-quality-gate]
+    needs: [architecture, python-quality, frontend-quality, security-scan, backend-tests, provider-adk-tests, sonar-quality-gate]
     runs-on: ubuntu-latest
     steps:
       - name: Confirm All Strict Quality Gates Passed
@@ -185,7 +206,8 @@ jobs:
           echo " - Mypy Type Checking: PASS"
           echo " - Frontend Tests, Lint & Build: PASS"
           echo " - Gitleaks Secret Scanner: PASS"
-          echo " - Backend Tests (Unit, Integration, E2E): PASS"
-          echo " - Coverage Threshold Gate (>=65%): PASS"
+          echo " - Backend Core Tests (Unit, Integration, E2E): PASS"
+          echo " - Provider Tests (Google ADK): PASS"
+          echo " - Coverage Threshold Gate (>=80%): PASS"
           echo " - SonarCloud Analysis & Quality Gate: PASS"
           echo "================================================================="

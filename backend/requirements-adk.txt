@@ -1,0 +1,5 @@
+# Google ADK Adapter Dependencies (Optional / Infrastructure Layer Only)
+# Under ADR 0009, Nexus Core does not depend on Google ADK.
+# Install this file only when deploying or testing the Google ADK infrastructure adapter.
+google-adk==2.7.0
+google-cloud-bigquery==3.43.0
