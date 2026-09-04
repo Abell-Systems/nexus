@@ -102,9 +102,37 @@ jobs:
       - name: Run Gitleaks Secret Scanner
         run: gitleaks detect --source . --verbose
 
-  # 5. Tests & Coverage Execution (Decoupled from Frontend, runs parallel with frontend & security)
+  # 5. Core Tests & Coverage Execution (Pure core runtime, zero provider SDKs)
   backend-tests:
-    name: 5. Backend Tests & Coverage
+    name: 5. Core Backend Tests & Coverage
+    needs: [architecture, python-quality]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            backend/requirements-dev.txt
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt
+      - name: Unit Tests
+        run: pytest backend/test/unit -v --cov=backend/src/main --cov-report=xml:coverage.xml
+      - name: Integration Tests
+        run: pytest backend/test/integration -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml
+      - name: E2E Reproducibility Gate & Coverage Verification (Strict Fail Under)
+        run: pytest backend/test/e2e -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml --cov-report=term-missing --cov-fail-under=80
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
+
+  # 5b. Provider Tests (Google ADK & Provider Adapters)
+  provider-adk-tests:
+    name: 5b. Provider Tests (Google ADK)
     needs: [architecture, python-quality]
     runs-on: ubuntu-latest
     steps:
@@ -119,17 +147,8 @@ jobs:
             backend/requirements-adk.txt
       - name: Install dependencies
         run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt -r backend/requirements-adk.txt
-      - name: Unit Tests
-        run: pytest backend/test/unit -v --cov=backend/src/main --cov-report=xml:coverage.xml
-      - name: Integration Tests
-        run: pytest backend/test/integration -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml
-      - name: E2E Reproducibility Gate & Coverage Verification (Strict Fail Under)
-        run: pytest backend/test/e2e -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml --cov-report=term-missing --cov-fail-under=80
-      - name: Upload Coverage Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage.xml
+      - name: Run Provider Tests
+        run: pytest backend/test/providers -v
 
   # 6. Sonar Analysis & Quality Gate (Strict - No Green Fallback)
   sonar-quality-gate:
@@ -175,7 +194,7 @@ jobs:
   # 7. Final Consolidated Quality Gate (Must be all green)
   quality-gate:
     name: 7. QUALITY GATE (Ready to Merge)
-    needs: [architecture, python-quality, frontend-quality, security-scan, backend-tests, sonar-quality-gate]
+    needs: [architecture, python-quality, frontend-quality, security-scan, backend-tests, provider-adk-tests, sonar-quality-gate]
     runs-on: ubuntu-latest
     steps:
       - name: Confirm All Strict Quality Gates Passed
@@ -187,7 +206,8 @@ jobs:
           echo " - Mypy Type Checking: PASS"
           echo " - Frontend Tests, Lint & Build: PASS"
           echo " - Gitleaks Secret Scanner: PASS"
-          echo " - Backend Tests (Unit, Integration, E2E): PASS"
-          echo " - Coverage Threshold Gate (>=65%): PASS"
+          echo " - Backend Core Tests (Unit, Integration, E2E): PASS"
+          echo " - Provider Tests (Google ADK): PASS"
+          echo " - Coverage Threshold Gate (>=80%): PASS"
           echo " - SonarCloud Analysis & Quality Gate: PASS"
           echo "================================================================="

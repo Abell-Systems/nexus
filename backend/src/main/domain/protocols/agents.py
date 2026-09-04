@@ -6,7 +6,9 @@ Invariants:
 - Concrete provider adapters live in infrastructure/ and implement these structural interfaces.
 """
 
-from typing import Any, Protocol, runtime_checkable
+from typing import Protocol, runtime_checkable
+
+from pydantic import BaseModel
 
 from domain.models.runtime_schemas import (
     AdversarialVerdict,
@@ -17,18 +19,38 @@ from domain.models.runtime_schemas import (
 )
 
 
+class LlmChatMessage(BaseModel):
+    """A single chat message with a role and content."""
+
+    role: str
+    content: str
+
+
+class LlmChatRequest(BaseModel):
+    """Typed request payload for LLM completions."""
+
+    messages: list[LlmChatMessage]
+    temperature: float = 0.2
+    response_format: str | None = None
+
+
+class LlmChatResponse(BaseModel):
+    """Typed response from an LLM completion."""
+
+    content: str
+    model: str = ""
+    usage_tokens: int | None = None
+
+
 @runtime_checkable
 class LlmClientProtocol(Protocol):
     """Low-level protocol for structured text/JSON chat completion."""
 
     def chat_completion(
         self,
-        messages: list[dict[str, str]],
-        temperature: float = 0.2,
-        response_format: dict[str, str] | None = None,
-    ) -> dict[str, Any]:
-        """Returns dictionary containing at least {"content": str}."""
-        ...
+        request: LlmChatRequest,
+    ) -> LlmChatResponse:
+        ...  # pragma: no cover
 
 
 @runtime_checkable
@@ -41,7 +63,7 @@ class InventorAgentProtocol(Protocol):
         demands: list[DemandSignal],
         prior_art: list[PatentRecord],
     ) -> InventionCandidate:
-        ...
+        ...  # pragma: no cover
 
 
 @runtime_checkable
@@ -53,7 +75,7 @@ class AdversarialAgentProtocol(Protocol):
         candidate: InventionCandidate,
         prior_art: list[PatentRecord],
     ) -> AdversarialVerdict:
-        ...
+        ...  # pragma: no cover
 
 
 @runtime_checkable
@@ -66,4 +88,4 @@ class GovernorAgentProtocol(Protocol):
         prior_art: list[PatentRecord],
         verdict: AdversarialVerdict | None = None,
     ) -> ScoreCard:
-        ...
+        ...  # pragma: no cover

@@ -96,9 +96,7 @@ source_modules =
     domain
     application
 forbidden_modules =
-    google.adk
-    google.genai
-    google.cloud.aiplatform
+    google
     openai
     anthropic
     litellm

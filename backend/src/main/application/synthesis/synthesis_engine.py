@@ -1,10 +1,20 @@
 """Decoupled Multi-Agent Synthesis & Adversarial Prior-Art Loop."""
 
 import json
-from typing import Any
 
-from domain.models.runtime_schemas import AdversarialVerdict, InventionCandidate, PatentRecord
-from domain.protocols.agents import LlmClientProtocol
+from domain.models.runtime_schemas import (
+    AdversarialVerdict,
+    DemandSignal,
+    InventionCandidate,
+    PatentRecord,
+)
+from domain.protocols.agents import (
+    AdversarialAgentProtocol,
+    InventorAgentProtocol,
+    LlmChatMessage,
+    LlmChatRequest,
+    LlmClientProtocol,
+)
 
 
 def validate_grounded_citations(cited_patents: list[str], prior_art: list[PatentRecord]) -> list[str]:
@@ -13,16 +23,21 @@ def validate_grounded_citations(cited_patents: list[str], prior_art: list[Patent
     return [p for p in cited_patents if p in valid_pub_numbers]
 
 
-class SynthesisEngine:
-    def __init__(self, llm_client: LlmClientProtocol | None = None):
+class SynthesisEngine(InventorAgentProtocol, AdversarialAgentProtocol):
+    """Engine for generating and critically evaluating patent candidates."""
+
+    def __init__(self, llm_client: LlmClientProtocol | None = None) -> None:
         self.client = llm_client
 
     def propose_candidate(
         self,
         cluster_id: str,
-        demands: list[Any],
+        demands: list[DemandSignal],
         prior_art: list[PatentRecord],
     ) -> InventionCandidate:
+        if not self.client:
+            raise ValueError("LLM client not configured")
+
         demand_text = "\n".join(f"- {d.title}: {d.description}" for d in demands[:3])
         prior_art_text = "\n".join(f"- {p.publication_number}: {p.title}" for p in prior_art[:5])
 
@@ -33,34 +48,28 @@ class SynthesisEngine:
         )
         user_prompt = f"Cluster: {cluster_id}\n\nDemands:\n{demand_text}\n\nPrior Art:\n{prior_art_text}"
 
-        try:
-            if not self.client:
-                raise ValueError("LLM client not configured")
-            res = self.client.chat_completion(
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt},
-                ],
-                response_format={"type": "json_object"},
-            )
-            data = json.loads(res["content"])
-            return InventionCandidate(
-                candidate_id=f"cand_{cluster_id}_001",
-                cluster_id=cluster_id,
-                title=data.get("title", f"Invention in {cluster_id}"),
-                description=data.get("description", ""),
-                claimed_novelty=data.get("claimed_novelty", ""),
-            )
-        except Exception:
-            return InventionCandidate(
-                candidate_id=f"cand_{cluster_id}_001",
-                cluster_id=cluster_id,
-                title=f"Advanced formulation for {cluster_id}",
-                description=f"Technical solution addressing demand in {cluster_id}",
-                claimed_novelty="Specific synergistic combination of components",
-            )
+        request = LlmChatRequest(
+            messages=[
+                LlmChatMessage(role="system", content=system_prompt),
+                LlmChatMessage(role="user", content=user_prompt),
+            ],
+            response_format="json_object",
+        )
+        res = self.client.chat_completion(request)
+        data = json.loads(res.content)
 
-    def evaluate_adversarial(
+        if not isinstance(data, dict) or "title" not in data or "claimed_novelty" not in data:
+            raise ValueError(f"LLM response failed schema validation: {res.content}")
+
+        return InventionCandidate(
+            candidate_id=f"cand_{cluster_id}_001",
+            cluster_id=cluster_id,
+            title=data["title"],
+            description=data.get("description", ""),
+            claimed_novelty=data["claimed_novelty"],
+        )
+
+    def critique_candidate(
         self,
         candidate: InventionCandidate,
         prior_art: list[PatentRecord],
@@ -73,7 +82,12 @@ class SynthesisEngine:
                 cited_patents=["NONE"],
             )
 
-        prior_art_text = "\n".join(f"- {p.publication_number}: {p.title} - {p.abstract[:200]}" for p in prior_art[:5])
+        if not self.client:
+            raise ValueError("LLM client not configured")
+
+        prior_art_text = "\n".join(
+            f"- {p.publication_number}: {p.title} - {p.abstract[:200]}" for p in prior_art[:5]
+        )
         system_prompt = (
             "You are a European patent examiner. Conduct an adversarial novelty analysis. "
             "You MUST cite at least one real publication number from the provided prior art list. "
@@ -85,33 +99,37 @@ class SynthesisEngine:
             f"Novelty: {candidate.claimed_novelty}\n\nPrior Art:\n{prior_art_text}"
         )
 
-        try:
-            if not self.client:
-                raise ValueError("LLM client not configured")
-            res = self.client.chat_completion(
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt},
-                ],
-                response_format={"type": "json_object"},
-            )
-            data = json.loads(res["content"])
-            raw_cites = data.get("cited_patents", [])
-            grounded_cites = validate_grounded_citations(raw_cites, prior_art) or [prior_art[0].publication_number]
+        request = LlmChatRequest(
+            messages=[
+                LlmChatMessage(role="system", content=system_prompt),
+                LlmChatMessage(role="user", content=user_prompt),
+            ],
+            response_format="json_object",
+        )
+        res = self.client.chat_completion(request)
+        data = json.loads(res.content)
 
-            return AdversarialVerdict(
-                candidate_id=candidate.candidate_id,
-                verdict=data.get("verdict", "survives"),
-                rationale=data.get("rationale", "Evaluation complete"),
-                cited_patents=grounded_cites,
+        if not isinstance(data, dict) or "verdict" not in data or "cited_patents" not in data:
+            raise ValueError(f"LLM response failed schema validation: {res.content}")
+
+        raw_cites = data.get("cited_patents", [])
+        if not isinstance(raw_cites, list):
+            raise ValueError(f"Expected cited_patents to be a list, got {type(raw_cites)}")
+
+        grounded_cites = validate_grounded_citations(raw_cites, prior_art)
+        if not grounded_cites:
+            raise ValueError(
+                f"Adversarial critique cited no valid prior art from supplied candidates: {raw_cites}"
             )
-        except Exception:
-            return AdversarialVerdict(
-                candidate_id=candidate.candidate_id,
-                verdict="survives",
-                rationale="Candidate exhibits sufficient technical differentiation over prior art.",
-                cited_patents=[prior_art[0].publication_number],
-            )
+
+        return AdversarialVerdict(
+            candidate_id=candidate.candidate_id,
+            verdict=data.get("verdict", "survives"),
+            rationale=data.get("rationale", "Evaluation complete"),
+            cited_patents=grounded_cites,
+        )
+
+    evaluate_adversarial = critique_candidate
 
 
 InventionSynthesisEngine = SynthesisEngine
