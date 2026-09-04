@@ -13,8 +13,8 @@ Invariants enforced:
 9. Evidence integrity: adapter passes complete PatentCandidateEvidence with real data to the engine.
 10. Derived ranking features (ADR 0013): permitted only when grounded in observed evidence —
     never from annotations/relevance grades, and never altering the closed candidate universe.
-    No specific derived feature is implemented as of this file; these tests enforce the boundary
-    ahead of any implementation (contract -> test -> code, per ADR 0013 §3).
+    No specific derived feature is implemented as of this file; these tests enforce the
+    boundary ahead of any implementation (contract -> test -> code, per ADR 0013 §3).
 """
 
 import ast
@@ -418,123 +418,113 @@ def test_adapter_passes_real_evidence_to_engine(_fake_engine_and_call_record):
 # derived feature is eventually added (e.g. lexical BM25 in a future PR):
 #   - the closed candidate universe must never be altered by ranking computation
 #   - the code path that builds candidates/evidence must have no access to annotations
-# A third test pins today's actual behavior (no derived feature exists yet) as a
-# regression check, not as a standing architectural law — that assertion is expected to
-# change the moment a derived feature is implemented in compliance with the two above.
+#
+# Both are AST-based rather than Import Linter contracts. Import Linter contracts operate
+# on whole-module import edges, and EvaluationAnnotation/RelevanceGrade are declared in the
+# same module (domain/models/evaluation.py) as EvaluationDemand/EvaluationPatent, which
+# matching_adapter.py legitimately imports today — a module-level contract cannot forbid
+# two symbols from a module while permitting two others from that same module. Reserving
+# Import Linter for whole-module boundaries (as it already does for the adapter/matching
+# boundary above) and AST for this symbol-level restriction is the narrower tool for the
+# narrower job, not a workaround.
 
-def test_should_preserve_closed_candidate_universe_when_ranking(_fake_engine_and_call_record):
-    """ADR 0013 condition 4: ranking computation must not filter, exclude, or add candidates.
 
-    Every publication_id passed in as a patent must appear exactly once in the candidate
-    pool handed to the engine, regardless of any score a future derived feature computes —
-    a zero or low score is a ranking outcome, not a reason to drop a candidate.
-    """
-    fake_engine, policy, calls = _fake_engine_and_call_record
+class DerivedRankingFeaturesTest:
+    """Guards for ADR 0013 conditions 2 and 4, independent of any specific implementation."""
 
-    prov = EvaluationProvenance(
-        source_authority="oepm",
-        source_uri="https://example.com",
-        extraction_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
-        raw_payload_sha256="f" * 64,
-        modality=DataModality.OBSERVED,
-    )
-    demand = EvaluationDemand(
-        demand_id="D-TEST",
-        title="Test Demand",
-        description="Test description",
-        posted_date=date(2023, 6, 1),
-        target_cpc_prefixes=["E03C"],
-        provenance=prov,
-    )
-    patents = [
-        EvaluationPatent(
-            publication_id=f"EP-{i}",
-            publication_date=date(2022, 3, 15),
-            classifications_cpc=["E03C1/02"],
-            title=f"Patent {i}",
-            abstract="Unrelated abstract text with no query term overlap whatsoever.",
+    def test_should_preserve_closed_candidate_universe_when_ranking(self, _fake_engine_and_call_record):
+        """ADR 0013 condition 4: ranking computation must not filter, exclude, or add candidates.
+
+        This regression-pins the current adapter's actual behavior (it makes one Candidate per
+        input patent, unconditionally) rather than proving no future implementation could ever
+        violate the property — a future derived-feature PR must keep this test green, and its
+        own review is where that guarantee is actually checked for the code it adds.
+        """
+        fake_engine, policy, calls = _fake_engine_and_call_record
+
+        prov = EvaluationProvenance(
+            source_authority="oepm",
+            source_uri="https://example.com",
+            extraction_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+            raw_payload_sha256="f" * 64,
+            modality=DataModality.OBSERVED,
+        )
+        demand = EvaluationDemand(
+            demand_id="D-TEST",
+            title="Test Demand",
+            description="Test description",
+            posted_date=date(2023, 6, 1),
+            target_cpc_prefixes=["E03C"],
             provenance=prov,
         )
-        for i in range(5)
-    ]
+        patents = [
+            EvaluationPatent(
+                publication_id=f"EP-{i}",
+                publication_date=date(2022, 3, 15),
+                classifications_cpc=["E03C1/02"],
+                title=f"Patent {i}",
+                abstract="Unrelated abstract text with no query term overlap whatsoever.",
+                provenance=prov,
+            )
+            for i in range(5)
+        ]
 
-    adapter = DefaultMatchingAdapter(engine=fake_engine, policy=policy)
-    adapter.rank_candidates(demand, patents)
+        adapter = DefaultMatchingAdapter(engine=fake_engine, policy=policy)
+        adapter.rank_candidates(demand, patents)
 
-    candidate_ids = {c.publication_id for c in calls["candidates"].candidates}
-    assert candidate_ids == {p.publication_id for p in patents}, (
-        "Closed candidate universe must be preserved exactly: every input patent must "
-        "appear as a candidate, even when a derived feature would score it 0.0."
-    )
-    assert len(calls["candidates"].candidates) == len(patents), (
-        "Candidate count must equal patent count — no deduplication, filtering, or "
-        "top-K truncation permitted in the evaluation adapter."
-    )
+        candidate_ids = {c.publication_id for c in calls["candidates"].candidates}
+        assert candidate_ids == {p.publication_id for p in patents}, (
+            "Closed candidate universe must be preserved exactly: every input patent must "
+            "appear as a candidate, even when a derived feature would score it 0.0."
+        )
+        assert len(calls["candidates"].candidates) == len(patents), (
+            "Candidate count must equal patent count — no deduplication, filtering, or "
+            "top-K truncation permitted in the evaluation adapter."
+        )
 
+    def test_should_forbid_annotation_access_in_matching_adapter_when_deriving_features(self):
+        """ADR 0013 condition 2: derived features must never be computed from ground truth.
 
-def test_should_forbid_annotation_imports_in_matching_adapter_when_deriving_features():
-    """ADR 0013 condition 2: derived features must never be computed from ground truth.
+        matching_adapter.py builds candidates and evidence for the engine — the one place a
+        future derived feature (e.g. BM25) would be computed. If it cannot reference
+        EvaluationAnnotation or RelevanceGrade at all, it cannot leak them into a feature's
+        computation, regardless of what that computation turns out to be.
 
-    matching_adapter.py builds candidates and evidence for the engine — the one place a
-    future derived feature (e.g. BM25) would be computed. It must never import
-    EvaluationAnnotation or RelevanceGrade: if it cannot reference them, it cannot leak them
-    into a feature's computation, regardless of what that computation turns out to be.
-    """
-    forbidden_symbols = ("EvaluationAnnotation", "RelevanceGrade")
-    tree, adapter_file = _read_ast("backend/src/main/application/evaluation/matching_adapter.py")
+        Checks three independent access paths, since a from-import ban alone does not close
+        indirect access via a whole-module import and attribute lookup:
+        - `from domain.models.evaluation import EvaluationAnnotation` (or `as` any alias —
+          ast.alias.name is the pre-aliasing symbol name, so `as X` does not evade this)
+        - `import domain.models.evaluation` anywhere, whether or not it is later dereferenced
+          (forbidden outright: this file's own style is exclusively `from X import Y`, so a
+          bare module import has no legitimate use here and is refused rather than inspected
+          for how it is used)
+        - any attribute access `.EvaluationAnnotation` / `.RelevanceGrade` on any object,
+          which would catch `some_alias.EvaluationAnnotation(...)` however `some_alias` was
+          obtained (e.g. via a re-export, a helper function's return value, or the module
+          import case above)
+        """
+        forbidden_symbols = {"EvaluationAnnotation", "RelevanceGrade"}
+        tree, adapter_file = _read_ast("backend/src/main/application/evaluation/matching_adapter.py")
 
-    for node in ast.walk(tree):
-        if isinstance(node, ast.ImportFrom):
-            for alias in node.names:
-                assert alias.name not in forbidden_symbols, (
-                    f"{adapter_file.name} imports '{alias.name}'. Under ADR 0013, the module "
-                    "that builds candidates/evidence for a derived ranking feature must have "
-                    "no access to ground-truth annotations."
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom):
+                for alias in node.names:
+                    assert alias.name not in forbidden_symbols, (
+                        f"{adapter_file.name} imports '{alias.name}'. Under ADR 0013, the module "
+                        "that builds candidates/evidence for a derived ranking feature must have "
+                        "no access to ground-truth annotations."
+                    )
+            elif isinstance(node, ast.Import):
+                for alias in node.names:
+                    assert not alias.name.startswith("domain.models.evaluation"), (
+                        f"{adapter_file.name} bare-imports '{alias.name}'. This file's own "
+                        "convention is 'from X import Y' exclusively — a bare module import "
+                        "would permit attribute access to EvaluationAnnotation/RelevanceGrade "
+                        "that a from-import ban cannot see, so it is refused outright."
+                    )
+            elif isinstance(node, ast.Attribute) and node.attr in forbidden_symbols:
+                pytest.fail(
+                    f"{adapter_file.name} accesses '.{node.attr}' via attribute lookup. Under "
+                    "ADR 0013, the module that builds candidates/evidence for a derived ranking "
+                    "feature must have no access to ground-truth annotations, however obtained."
                 )
-
-
-def test_should_produce_no_derived_features_yet_pending_future_implementation(
-    _fake_engine_and_call_record,
-):
-    """Regression pin, not an architectural law: as of this file, no derived ranking feature
-    is implemented, so every candidate's retrieval_scores is still {}. This assertion is
-    expected to change the moment a derived feature satisfying ADR 0013 (conditions verified
-    above) is implemented — unlike the two tests above, it does not encode a permanent rule.
-    """
-    fake_engine, policy, calls = _fake_engine_and_call_record
-
-    prov = EvaluationProvenance(
-        source_authority="oepm",
-        source_uri="https://example.com",
-        extraction_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
-        raw_payload_sha256="f" * 64,
-        modality=DataModality.OBSERVED,
-    )
-    demand = EvaluationDemand(
-        demand_id="D-TEST",
-        title="Test Demand",
-        description="Test description",
-        posted_date=date(2023, 6, 1),
-        target_cpc_prefixes=["E03C"],
-        provenance=prov,
-    )
-    patents = [
-        EvaluationPatent(
-            publication_id="EP-1",
-            publication_date=date(2022, 3, 15),
-            classifications_cpc=["E03C1/02"],
-            title="Drainage valve",
-            abstract="A valve for draining water.",
-            provenance=prov,
-        )
-    ]
-
-    adapter = DefaultMatchingAdapter(engine=fake_engine, policy=policy)
-    adapter.rank_candidates(demand, patents)
-
-    for candidate in calls["candidates"].candidates:
-        assert candidate.retrieval_scores == {}, (
-            f"Candidate {candidate.publication_id} has retrieval_scores={candidate.retrieval_scores}. "
-            "If a derived ranking feature was just implemented, update this test to assert its "
-            "expected values instead of {} — see ADR 0013 for the conditions it must satisfy."
-        )
