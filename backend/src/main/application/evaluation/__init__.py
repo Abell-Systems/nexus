@@ -1,3 +1,4 @@
+from .comparative import evaluate_study_protocol
 from .metrics import (
     compute_demand_metrics,
     is_judged,
@@ -16,6 +17,7 @@ from .runner import DefaultEvaluationRunner
 __all__ = [
     "DefaultEvaluationRunner",
     "compute_demand_metrics",
+    "evaluate_study_protocol",
     "is_judged",
     "is_relevant_broad",
     "is_relevant_strict",

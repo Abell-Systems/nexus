@@ -1,0 +1,76 @@
+{
+  "study_id": "NEXUS-PHASE2-ABLATION-M0-M6",
+  "study_version": "1.0.0",
+  "description": "Pre-registered comparative inferential evaluation protocol across M0-M6 model variants",
+  "alpha": 0.05,
+  "multiple_testing_method": "benjamini_hochberg",
+  "bootstrap_iterations": 10000,
+  "bootstrap_confidence_level": 0.95,
+  "seed": 42,
+  "models": {
+    "M0": "Lexical BM25 baseline",
+    "M1": "Semantic / Dense retriever",
+    "M2": "CPC Concordance / Structural Taxonomy",
+    "M3": "Tripartite Evidence / Symmetrical Verification",
+    "M4": "Domain Origin Policy Filtering",
+    "M5": "Multi-agent Synthesis (Inventor + Adversary)",
+    "M6": "Nexus Complete Pipeline"
+  },
+  "hypotheses": [
+    {
+      "id": "H01_M1_vs_M0_MRR",
+      "baseline": "M0",
+      "treatment": "M1",
+      "metric": "mrr",
+      "scope": "strict",
+      "alternative": "greater",
+      "description": "Dense semantic retrieval improves strict MRR over lexical baseline"
+    },
+    {
+      "id": "H02_M2_vs_M0_MRR",
+      "baseline": "M0",
+      "treatment": "M2",
+      "metric": "mrr",
+      "scope": "strict",
+      "alternative": "greater",
+      "description": "CPC structural concordance improves strict MRR over lexical baseline"
+    },
+    {
+      "id": "H03_M3_vs_M0_MRR",
+      "baseline": "M0",
+      "treatment": "M3",
+      "metric": "mrr",
+      "scope": "strict",
+      "alternative": "greater",
+      "description": "Tripartite evidence assessment improves strict MRR over lexical baseline"
+    },
+    {
+      "id": "H04_M4_vs_M0_MRR",
+      "baseline": "M0",
+      "treatment": "M4",
+      "metric": "mrr",
+      "scope": "strict",
+      "alternative": "greater",
+      "description": "Domain origin policy resolution improves strict MRR over lexical baseline"
+    },
+    {
+      "id": "H05_M5_vs_M0_MRR",
+      "baseline": "M0",
+      "treatment": "M5",
+      "metric": "mrr",
+      "scope": "strict",
+      "alternative": "greater",
+      "description": "Adversarial multi-agent synthesis improves strict MRR over lexical baseline"
+    },
+    {
+      "id": "H06_M6_vs_M0_MRR",
+      "baseline": "M0",
+      "treatment": "M6",
+      "metric": "mrr",
+      "scope": "strict",
+      "alternative": "greater",
+      "description": "Nexus complete pipeline maximizes strict MRR over lexical baseline"
+    }
+  ],
+  "protocol_sha256": "c03e5644da1452957d4ab69d33a9bbe761d9abc7c40f50f64ecfe99516b74d87"
+}

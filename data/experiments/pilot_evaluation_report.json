@@ -1,0 +1,152 @@
+{
+  "run_id": "eval-run-62afce41f97e",
+  "created_at": "2026-09-04T09:17:14.925768Z",
+  "context": {
+    "engine_name": "DefaultMatchingEngine",
+    "engine_version": "0.2.0",
+    "engine_commit_hash": "d1c3678f190433633d8c010a4dd53344d4c01aa3",
+    "execution_timestamp": "2026-09-04T09:17:14.923861Z",
+    "environment": "local_benchmark"
+  },
+  "dataset_id": "nexus-pilot-16-evaluation-corpus-v1",
+  "dataset_version": "1.0.0",
+  "dataset_sha256": "bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453",
+  "policy_id": "NEXUS-MATCHING-POLICY-UC1-DEFAULT",
+  "policy_version": "1.0.0",
+  "policy_sha256": "701f0c71524fc8c3faa7b03d082801559723260fae789918e60c962477e58afa",
+  "demand_reports": [
+    {
+      "demand_id": "INNOGET-2415",
+      "candidate_count": 15,
+      "judged_count": 4,
+      "uncertain_count": 0,
+      "strict_metrics": {
+        "precision_at_1": 1.0,
+        "precision_at_3": 0.6666666666666666,
+        "precision_at_5": 0.6666666666666666,
+        "recall_at_1": 0.5,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "mrr": 1.0,
+        "mrr_at_5": 1.0,
+        "ndcg_at_5": 0.9838988741111756,
+        "judged_at_1": 1.0,
+        "judged_at_3": 1.0,
+        "judged_at_5": 0.6
+      },
+      "broad_metrics": {
+        "precision_at_1": 1.0,
+        "precision_at_3": 0.6666666666666666,
+        "precision_at_5": 0.6666666666666666,
+        "recall_at_1": 0.3333333333333333,
+        "recall_at_3": 0.6666666666666666,
+        "recall_at_5": 0.6666666666666666,
+        "mrr": 1.0,
+        "mrr_at_5": 1.0,
+        "ndcg_at_5": 0.9838988741111756,
+        "judged_at_1": 1.0,
+        "judged_at_3": 1.0,
+        "judged_at_5": 0.6
+      }
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "candidate_count": 15,
+      "judged_count": 13,
+      "uncertain_count": 0,
+      "strict_metrics": {
+        "precision_at_1": 0.0,
+        "precision_at_3": 0.3333333333333333,
+        "precision_at_5": 0.2,
+        "recall_at_1": 0.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "mrr": 0.3333333333333333,
+        "mrr_at_5": 0.3333333333333333,
+        "ndcg_at_5": 0.8075588805057204,
+        "judged_at_1": 1.0,
+        "judged_at_3": 1.0,
+        "judged_at_5": 1.0
+      },
+      "broad_metrics": {
+        "precision_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "precision_at_5": 0.6,
+        "recall_at_1": 0.3333333333333333,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "mrr": 1.0,
+        "mrr_at_5": 1.0,
+        "ndcg_at_5": 0.8075588805057204,
+        "judged_at_1": 1.0,
+        "judged_at_3": 1.0,
+        "judged_at_5": 1.0
+      }
+    },
+    {
+      "demand_id": "INNOGET-2501",
+      "candidate_count": 15,
+      "judged_count": 6,
+      "uncertain_count": 0,
+      "strict_metrics": {
+        "precision_at_1": 0.0,
+        "precision_at_3": 0.0,
+        "precision_at_5": 0.0,
+        "recall_at_1": 1.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "mrr": 0.0,
+        "mrr_at_5": 0.0,
+        "ndcg_at_5": 0.7967075809905066,
+        "judged_at_1": 1.0,
+        "judged_at_3": 1.0,
+        "judged_at_5": 0.8
+      },
+      "broad_metrics": {
+        "precision_at_1": 0.0,
+        "precision_at_3": 0.3333333333333333,
+        "precision_at_5": 0.25,
+        "recall_at_1": 0.0,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "mrr": 0.5,
+        "mrr_at_5": 0.5,
+        "ndcg_at_5": 0.7967075809905066,
+        "judged_at_1": 1.0,
+        "judged_at_3": 1.0,
+        "judged_at_5": 0.8
+      }
+    }
+  ],
+  "macro_strict": {
+    "precision_at_1": 0.3333333333333333,
+    "precision_at_3": 0.3333333333333333,
+    "precision_at_5": 0.2888888888888889,
+    "recall_at_1": 0.5,
+    "recall_at_3": 1.0,
+    "recall_at_5": 1.0,
+    "mrr": 0.4444444444444444,
+    "mrr_at_5": 0.4444444444444444,
+    "ndcg_at_5": 0.8627217785358009,
+    "judged_at_1": 1.0,
+    "judged_at_3": 1.0,
+    "judged_at_5": 0.7999999999999999
+  },
+  "macro_broad": {
+    "precision_at_1": 0.6666666666666666,
+    "precision_at_3": 0.6666666666666666,
+    "precision_at_5": 0.5055555555555555,
+    "recall_at_1": 0.2222222222222222,
+    "recall_at_3": 0.8888888888888888,
+    "recall_at_5": 0.8888888888888888,
+    "mrr": 0.8333333333333334,
+    "mrr_at_5": 0.8333333333333334,
+    "ndcg_at_5": 0.8627217785358009,
+    "judged_at_1": 1.0,
+    "judged_at_3": 1.0,
+    "judged_at_5": 0.7999999999999999
+  },
+  "uncertainty_rate": 0.0,
+  "study_status": "PILOT",
+  "study_protocol_id": "NEXUS-PHASE2-ABLATION-M0-M6"
+}

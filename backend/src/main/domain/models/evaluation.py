@@ -278,3 +278,126 @@ class EvaluationRunReport(BaseModel):
         if not re.match(r"^[0-9a-f]{64}$", v.lower()):
             raise ValueError(f"Invalid SHA-256 digest format: {v}")
         return v.lower()
+
+
+# ---------------------------------------------------------------------------
+# Comparative Evaluation Domain Models (ADR 0011)
+# ---------------------------------------------------------------------------
+
+_VALID_SCOPES = {"strict", "broad"}
+_VALID_ALTERNATIVES = {"greater", "less", "two-sided"}
+
+
+class StudyHypothesis(BaseModel):
+    """Pre-registered hypothesis for a single pairwise comparative test (ADR 0011 §2).
+
+    Invariants:
+    - scope must be 'strict' or 'broad' (maps to evaluation metric thresholds).
+    - alternative must be one of 'greater', 'less', 'two-sided'.
+    - All fields are fixed at registration time and must not change after protocol sealing.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    id: str = Field(min_length=1)
+    baseline: str = Field(min_length=1)
+    treatment: str = Field(min_length=1)
+    metric: str = Field(min_length=1)
+    scope: str
+    alternative: str
+    description: str = ""
+
+    @field_validator("scope")
+    @classmethod
+    def validate_scope(cls, v: str) -> str:
+        if v not in _VALID_SCOPES:
+            raise ValueError(f"Invalid scope '{v}'. Must be one of {sorted(_VALID_SCOPES)}")
+        return v
+
+    @field_validator("alternative")
+    @classmethod
+    def validate_alternative(cls, v: str) -> str:
+        if v not in _VALID_ALTERNATIVES:
+            raise ValueError(f"Invalid alternative '{v}'. Must be one of {sorted(_VALID_ALTERNATIVES)}")
+        return v
+
+
+class StudyProtocol(BaseModel):
+    """Sealed, versioned pre-registration of comparative study parameters (ADR 0011 §2).
+
+    Invariants:
+    - At least one hypothesis must be registered.
+    - protocol_sha256 must be a 64-character hex digest.
+    - alpha, bootstrap_confidence_level, and seed are fixed at registration.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    study_id: str = Field(min_length=1)
+    study_version: str = Field(min_length=1)
+    protocol_sha256: str = Field(min_length=64, max_length=64)
+    alpha: float = Field(gt=0.0, lt=1.0)
+    multiple_testing_method: str = Field(min_length=1)
+    bootstrap_iterations: int = Field(ge=100)
+    bootstrap_confidence_level: float = Field(gt=0.0, lt=1.0)
+    seed: int
+    hypotheses: list[StudyHypothesis] = Field(min_length=1)
+
+    @field_validator("protocol_sha256")
+    @classmethod
+    def validate_sha256(cls, v: str) -> str:
+        if not re.match(r"^[0-9a-f]{64}$", v.lower()):
+            raise ValueError(f"Invalid SHA-256 digest format: {v}")
+        return v.lower()
+
+
+class HypothesisTestResult(BaseModel):
+    """Statistical test outcome for a single pre-registered hypothesis (ADR 0011 §3).
+
+    Carries the raw Wilcoxon result, paired bootstrap CI, BH-adjusted q-value, and
+    rejection decision. Wraps PR #22 frozen dataclasses by reference; no re-wrapping.
+    """
+
+    model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
+
+    hypothesis_id: str = Field(min_length=1)
+    baseline: str = Field(min_length=1)
+    treatment: str = Field(min_length=1)
+    metric: str = Field(min_length=1)
+    scope: str
+    wilcoxon: "object"  # WilcoxonResult (PR #22 frozen dataclass)
+    bootstrap_ci: "object"  # BootstrapCIResult (PR #22 frozen dataclass)
+    adjusted_q_value: float = Field(ge=0.0, le=1.0)
+    rejected: bool
+
+
+class ComparativeRunReport(BaseModel):
+    """Sealed comparative evaluation report preserving full protocol provenance chain.
+
+    Invariants under ADR 0011 §4:
+    - study_protocol_id and study_protocol_sha256 link report to pre-registered protocol.
+    - study_status distinguishes PILOT runs from final frozen evaluations.
+    - run_ids maps model labels to their individual EvaluationRunReport.run_id.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    study_protocol_id: str = Field(min_length=1)
+    study_protocol_sha256: str = Field(min_length=64, max_length=64)
+    study_status: str  # "PILOT" or "FINAL"
+    run_ids: dict[str, str]  # model_label -> run_id
+    results: list[HypothesisTestResult]
+
+    @field_validator("study_protocol_sha256")
+    @classmethod
+    def validate_sha256(cls, v: str) -> str:
+        if not re.match(r"^[0-9a-f]{64}$", v.lower()):
+            raise ValueError(f"Invalid SHA-256 digest format: {v}")
+        return v.lower()
+
+    @field_validator("study_status")
+    @classmethod
+    def validate_status(cls, v: str) -> str:
+        if v not in {"PILOT", "FINAL"}:
+            raise ValueError(f"Invalid study_status '{v}'. Must be 'PILOT' or 'FINAL'")
+        return v
