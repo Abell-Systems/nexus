@@ -50,7 +50,7 @@ class FrozenModelConfigurationTest:
             ModelConfigurationRecord(
                 model_id="M0",
                 description="Lexical BM25 baseline",
-                ranker="LexicalRanker",
+                ranker="compute_bm25_scores",
                 weights=None,
                 version="1.0.0",
                 provenance_status="TUNED",
@@ -71,7 +71,7 @@ class FrozenModelConfigurationTest:
                     ModelConfigurationRecord(
                         model_id="M0",
                         description="Lexical BM25 baseline",
-                        ranker="LexicalRanker",
+                        ranker="compute_bm25_scores",
                         weights=None,
                         version="1.0.0",
                         provenance_status="PRE_EXISTING_INITIAL_CONFIGURATION",

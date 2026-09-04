@@ -8,7 +8,6 @@ from domain.models.matching import (
     MatchAssessment,
     MatchFeatures,
     MatchingPolicyConfig,
-    MatchingResult,
     PatentCandidateEvidence,
     RankedCandidate,
 )
@@ -51,20 +50,6 @@ class CandidateRanker(Protocol):
         pool: CandidatePool,
     ) -> list[RankedCandidate]:
         """Ranks candidates within the fixed candidate pool."""
-        ...
-
-
-@runtime_checkable
-class MatchingTelemetrySink(Protocol):
-    """Port for persisting immutable, reproducible matching execution artifacts."""
-
-    def record_run(
-        self,
-        result: MatchingResult,
-        metadata: dict[str, Any],
-        patent_evidence: dict[str, dict[str, Any]] | None = None,
-    ) -> str:
-        """Persists run artifacts and returns the unique run_id."""
         ...
 
 

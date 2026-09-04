@@ -73,6 +73,12 @@ class DefaultMatchingEngine(MatchingEngine):
         patent_metadata: dict[str, Any] | list[PatentCandidateEvidence] | None = None,
     ) -> list[MatchAssessment]:
         """Orchestrates candidate evaluation through feature extraction, evaluation, and deterministic ranking."""
+        if policy is None:
+            raise ValueError(
+                "MatchingPolicyConfig must be explicitly provided to DefaultMatchingEngine.evaluate() "
+                "(ADR 0004 §3.1 / ADR 0005): missing, corrupt, or tampered mandatory policy must raise "
+                "an explicit error, not fail deep inside feature extraction/evaluation."
+            )
         demand_id, _title, _desc, _date_str, _cpc_prefix = extract_demand_context(demand)
         evidence_lookup = _to_evidence_lookup(patent_metadata)
 

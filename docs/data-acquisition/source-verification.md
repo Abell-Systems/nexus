@@ -309,7 +309,7 @@ When the acquisition code is subsequently implemented, testing will follow:
 4. **Independent Dataset Certification vs. Retrieval Acceptance:**
    To maintain scientific rigor, dataset certification is decoupled from retrieval execution:
    $$\text{Source Verification} \longrightarrow \text{Certified Canonical Dataset} \longrightarrow \text{UC1 Evaluation}$$
-   A dataset is certified strictly when it satisfies the release completeness, manifest hashing, and attribution criteria. E2E tests verify that the certified dataset is consumable by CandidateMatchingService, but successful downstream matching execution is never treated as a substitute for source-level verification.
+   A dataset is certified strictly when it satisfies the release completeness, manifest hashing, and attribution criteria. E2E tests verify that the certified dataset is consumable by DefaultMatchingEngine, but successful downstream matching execution is never treated as a substitute for source-level verification.
 
 ---
 
@@ -531,7 +531,7 @@ To support both scientific reproducibility (Phase 1 & Phase 2 benchmarks) and pr
                                               ▼
                                ┌───────────────────────────────┐
                                │       NEXUS ENGINE (UC1)      │
-                               │   CandidateMatchingService    │
+                               │     DefaultMatchingEngine     │
                                └──────────────┬────────────────┘
                                               │
                        ┌──────────────────────┴──────────────────────┐
