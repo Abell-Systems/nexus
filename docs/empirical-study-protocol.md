@@ -99,8 +99,11 @@ To ensure scientific integrity and eliminate the risk of premature claims or fab
 ```text
 ┌──────────────────────────────────────────────────────────────────────────────────┐
 │ PHASE 1: METHODOLOGICAL VALIDATION & PILOT BENCHMARK                             │
-│ • Dataset: Frozen ES Pilot-16 Patent Snapshot + 3 Verified InnoGet Demands       │
-│ • Relevance Ground Truth: Exhaustive judgment of all 16 documents per demand    │
+│ • Dataset: Frozen ES Pilot-16 Patent Snapshot (15 publications) + 3 Verified     │
+│   InnoGet Demands                                                                │
+│ • Relevance Ground Truth: Partial judgment — 23 of 45 possible demand-patent    │
+│   pairs annotated (see ADR 0006/0007 for the designed handling of unjudged      │
+│   pairs via Judged@K and UNCERTAIN)                                             │
 │ • Objective: Validate data pipelines, normalizers, candidate retrieval,         │
 │   scoring algorithms, primary/secondary metric formulas, and audit trail.        │
 │ • Scope: Methodological Proof-of-Harness (NO GENERAL SCIENTIFIC CLAIMS).        │
@@ -129,8 +132,8 @@ To ensure scientific integrity and eliminate the risk of premature claims or fab
 
 ### 3.1 Phase 1 — Methodological Validation / Pilot Benchmark
 * **Purpose:** Verify the technical correctness of the end-to-end experimental apparatus.
-* **Data Footprint:** The frozen, content-addressed `ES Pilot-16` corpus (16 verified OEPM publications) and 3 verified InnoGet demand calls.
-* **Relevance Assessment:** **Exhaustive judgment** of all 16 patent documents against all 3 demands by domain annotators.
+* **Data Footprint:** The frozen, content-addressed `ES Pilot-16` corpus (15 verified OEPM publications) and 3 verified InnoGet demand calls, sealed under ADR 0006's byte-exact SHA-256 provenance model (`data/evaluation/dataset_pilot_benchmark.json`/`.manifest.json`/`.sha256`).
+* **Relevance Assessment:** **Partial judgment** — 23 of the 45 possible demand-patent pairs (3 demands × 15 patents) are annotated, not exhaustive. This is not a shortfall to be corrected here: ADR 0007 defines `Judged@K` and the `UNCERTAIN` relevance grade specifically to make incomplete judgment an explicit, reportable epistemic state (`UNKNOWN != NEGATIVE`) rather than a silently absorbed one.
 * **Deliverables:** Unit and integration verification, deterministic pipeline execution, cryptographic manifest auditing, automated calculation of $\text{nDCG}@10$, $P@K$, $R@K$, $\text{MRR}$, and automated machine-readable export (`json`/`csv`/`md`).
 * **Reporting Boundary:** Phase 1 results are strictly reported as **methodological validation / pilot benchmark**. Phase 1 **must never be used to claim statistical superiority of one retrieval strategy over another**.
 
@@ -359,7 +362,7 @@ Assign g in {0,1,2,3}  [ STRICT PROTOCOL ]:
 
 1. **Candidate Pool Construction (Judged Pool $\mathcal{G}_d^{\text{pool}}$):**
    * The candidate pool for human annotation in Phase 2 is formed strictly by pooling and deduplicating the top-$K_{\text{pool}}$ ($K_{\text{pool}} = 100$) candidates from the first-stage retrieval baselines: $\mathcal{P}_{\text{lex}} \cup \mathcal{P}_{\text{sem}} \cup \mathcal{P}_{\text{cpc}}$. The hybrid ranker does not contribute to pool generation.
-   * In Phase 1, because $|\mathcal{P}| = 16$, annotation is **exhaustive across all 16 documents**.
+   * In Phase 1, $|\mathcal{P}| = 15$; the sealed annotation set covers 23 of the 45 possible demand-patent pairs (partial, not exhaustive — see ADR 0006/0007 for the designed treatment of unjudged pairs via $Judged@K$).
 2. **Blinded Independent Annotation Procedure:**
    * Each demand–patent pair in the pool is evaluated independently by at least two domain experts (patent information specialists / engineers).
    * **Blinding Standard:** Annotators are strictly blinded to the retrieval method, model scores, and ranking provenance.
@@ -497,7 +500,7 @@ To provide qualitative depth suitable for *World Patent Information*, the empiri
 
 ### 10.2 External Validity
 * **Jurisdictional Focus:** The empirical study focuses on Spanish domestic publications (`ES` jurisdiction). While OEPM follows EPO examination guidelines and CPC classification standards, generalization to other jurisdictions (e.g., USPTO, JPO) requires further cross-jurisdiction validation.
-* **Corpus Scale & Demand Sample Size:** The Phase 1 pilot corpus ($N=16$) represents an initial validation benchmark; Phase 2 sizes demands $|\mathcal{D}|$ via power analysis for paired non-parametric testing and scales corpus $|\mathcal{P}|$ for broad sector coverage.
+* **Corpus Scale & Demand Sample Size:** The Phase 1 pilot corpus ($N=15$, partially annotated) represents an initial validation benchmark; Phase 2 sizes demands $|\mathcal{D}|$ via power analysis for paired non-parametric testing and scales corpus $|\mathcal{P}|$ for broad sector coverage.
 
 ### 10.3 Construct Validity
 * **Relevance as a Proxy:** Technological relevance does not guarantee commercial feasibility, freedom to operate, or legal novelty. The paper explicitly clarifies this construct boundary.
