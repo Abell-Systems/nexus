@@ -28,13 +28,19 @@ The alternative — computing embeddings once, offline, from a specific pinned m
 
 ### 1. Embedding model
 
-**Proposed: `sentence-transformers/paraphrase-multilingual-mpnet-base-v2`.**
+**Decision: `sentence-transformers/paraphrase-multilingual-mpnet-base-v2`.**
 
-Rationale:
-- **Multilingual, including Spanish.** The benchmark's patents are Spanish OEPM publications; demands are in Spanish and English. This model is explicitly trained for multilingual paraphrase/semantic-search across 50+ languages, not English-only.
-- **Apache-2.0 license** — permissive, no field-of-use restriction, safe for a published scientific artifact (verified against the model's Hugging Face card: [sentence-transformers/paraphrase-multilingual-mpnet-base-v2](https://huggingface.co/sentence-transformers/paraphrase-multilingual-mpnet-base-v2)).
+This is an **a priori selection by exogenous criteria** (license, language coverage, offline-runnability, architecture maturity) — explicitly *not* a selection tuned or validated against this benchmark's 3 demands and 15 patents. Doing the latter would contaminate the same frozen benchmark ADR 0012 already protects from exactly this kind of post-hoc fitting. Whether this model actually performs well on Spanish-patent semantic matching is an **empirical question the ablation (M0-M6) answers later**, not a claim this ADR makes now. This ADR is explicit about the difference:
+
+```text
+technically reasonable choice for the task     ≠     empirically validated on this benchmark
+```
+
+Exogenous criteria for this choice, each independently verifiable and verified below (not asserted from training-data memory):
+- **Multilingual, including Spanish.** The benchmark's patents are Spanish OEPM publications; demands are in Spanish and English. Trained for multilingual paraphrase/semantic-similarity across 50+ languages (confirmed via the model's `config.json`: `model_type: xlm-roberta`), not English-only.
+- **Apache-2.0 license** — permissive, no field-of-use restriction, safe for a published scientific artifact. Verified directly against the model's Hugging Face repository (fetched 2026-09-04, see §2 for the exact revision).
 - **Open weights, runnable entirely offline** — no API key, no network call required at embedding-generation time or at evaluation time.
-- **Widely validated** — a mature, heavily-used sentence-embedding model, not an obscure or unaudited one; failure modes are well understood in the literature.
+- **Architecturally mature and inspectable, not a black box.** XLM-RoBERTa base, 768-dim hidden size, a widely-deployed base architecture whose failure modes are documented in the literature — this is a claim about auditability, not about proven fitness for patent-domain retrieval.
 
 An alternative considered: `intfloat/multilingual-e5-base` (also open-weight, MIT-licensed, also multilingual). Rejected only as the *primary* choice for this ADR — not because it is unsuitable, but because `paraphrase-multilingual-mpnet-base-v2` is explicitly tuned for paraphrase/semantic-similarity (the task M1 actually needs), while the E5 family expects a `"query: "` / `"passage: "` prefix convention that adds a formatting decision this ADR would otherwise have to make and justify. Recorded here so a future reviewer does not have to re-derive that this alternative was considered, not overlooked.
 
@@ -42,7 +48,14 @@ An alternative considered: `intfloat/multilingual-e5-base` (also open-weight, MI
 
 ### 2. Exact version / pinning
 
-The implementation PR must pin the **exact Hugging Face repository revision (commit hash)** used to download the model weights — not the mutable `main` branch reference. This ADR does not hardcode that hash now, because pinning it prematurely (before the implementation PR actually downloads and runs the model) risks recording a hash that was never the one actually used. The implementation PR records the revision hash it actually pulled, in the frozen artifact's provenance (§7).
+**Decision: pin now, not at implementation time.** The implementation PR must use exactly:
+
+```text
+model:    sentence-transformers/paraphrase-multilingual-mpnet-base-v2
+revision: 4328cf26390c98c5e3c738b4460a05b95f4911f5
+```
+
+Fetched directly from the Hugging Face repository API on 2026-09-04 (`GET https://huggingface.co/api/models/sentence-transformers/paraphrase-multilingual-mpnet-base-v2`) — this is the commit SHA of `main` as of that date, not invented or estimated. Downloading by this exact revision (not the mutable `main` branch reference) guarantees the implementation PR uses the same weights this ADR reviewed, even if the repository's `main` branch is later updated. If the implementation PR runs after this revision is no longer resolvable (repository deleted, revision garbage-collected — not expected for an actively maintained `sentence-transformers` model, but not impossible over a long timeline), that is a deviation from this ADR requiring an explicit note in the implementation PR, not a silent substitution of whatever `main` resolves to at that time.
 
 ### 3. Where it runs
 
@@ -54,13 +67,21 @@ Apache-2.0 (verified above). The generation script's own dependencies (the `sent
 
 ### 5. How embeddings are generated
 
-- **Input text:** the same fields already used for observed evidence elsewhere in this benchmark — patent `title + ' ' + abstract`, demand `title + ' ' + description`. No new text sources, no annotation text.
-- **Determinism:** the model is run in inference (eval) mode — no dropout, no sampling. Given a fixed model revision, fixed input text, and a fixed library version, output vectors are bit-for-bit reproducible on CPU. (GPU floating-point non-associativity across different hardware/driver combinations is a known source of small numerical variance in deep learning inference; the implementation PR must state which hardware class the frozen artifact was generated on, and should generate on CPU if bit-exact cross-machine reproducibility is required — this ADR flags the tradeoff rather than resolving it, since it depends on choices the implementation PR makes.)
+This section is the science freeze — every value here changes the resulting vectors and must not be left to the implementation PR's discretion (see §13 for what is deliberately left open instead).
+
+- **Input text:** the same fields already used for observed evidence elsewhere in this benchmark — patent `title + ' ' + abstract`, demand `title + ' ' + description`. No new text sources, no annotation text. No additional Unicode normalization, casing, or whitespace collapsing beyond what the model's own tokenizer applies — the sealed dataset's text (ADR 0006) is passed through as-is.
+- **Generation device: CPU.** Decided now, not deferred. This benchmark is small (15 patents + 3 demands = 18 texts to embed); the cost difference between CPU and GPU generation is immaterial at this scale, and CPU generation avoids GPU floating-point non-associativity as an experimental variable entirely — there is no scientific benefit to GPU here that would justify accepting that variance.
+- **Max sequence length: 128 tokens, `do_lower_case: false`.** These are the pinned model's own stated configuration (`sentence_bert_config.json` at the pinned revision, §2) — not a choice this ADR is free to make independently, since a different value would require a different tokenization/truncation behavior than the model was designed for. Recorded explicitly because a patent abstract can exceed 128 tokens: any excess is truncated by the model's own tokenizer, not by generation-script logic. This is accepted as the pinned model's native behavior and must be recorded in the frozen artifact's provenance (§7) so a future reader can attribute any semantic score anomaly on a long abstract to this known truncation, rather than treating it as unexplained noise.
+- **Pooling: mean pooling over token embeddings** (`pooling_mode_mean_tokens: true`, the pinned model's own configuration at `1_Pooling/config.json`) — not CLS-token or max-pooling. Again the model's own designed behavior, not an independent choice.
+- **Encoding call: `SentenceTransformer.encode(text, normalize_embeddings=True, batch_size=1)`.** `normalize_embeddings=True` performs the L2 normalization (§9) inside the library call rather than as a separate post-processing step, removing a place for the two to silently drift apart. `batch_size=1` is pinned specifically to remove batch-composition as a variable: transformer attention masking is designed to make per-sequence output independent of what else shares its batch, but pinning batch size to 1 removes any possibility of a library-version-specific padding/masking bug silently coupling one text's embedding to its batch neighbors, at a computational cost that is irrelevant at 18 texts total.
+- **Determinism:** the model is run in inference (`eval`) mode — no dropout, no sampling. Given the pinned model revision (§2), pinned library versions (§7), CPU generation, and the exact encoding call above, output vectors are reproducible: re-running the documented procedure on the same input text produces the same vectors, verifiable against the frozen artifact's declared hash (§7) — not "bit-for-bit reproducible on any machine" as an unqualified absolute, but reproducible from the declared inputs, algorithm, and environment, which is the same standard ADR 0013 condition 3 already sets for M0.
 - **No annotations, no ground truth** as input, under the same ADR 0013 condition 2 that governs M0.
 
-### 6. Frozen as an artifact
+### 6. Frozen as an artifact, keyed and linked to the sealed dataset
 
-Yes. A new sealed artifact (working name: `data/evaluation/embeddings_pilot_benchmark.json`, or a more storage-appropriate format such as `.npy`/Parquet with a companion manifest — the implementation PR decides the file format; this ADR decides that it must be sealed the same way) stores one embedding vector per patent and one per demand from the closed benchmark, generated once and never regenerated in place.
+Yes. A new sealed artifact (working name: `data/evaluation/embeddings_pilot_benchmark.json`, or a more storage-appropriate format such as `.npy`/Parquet with a companion manifest — the implementation PR decides the file format; this is an implementation detail, see §13) stores one embedding vector per patent, keyed by `publication_id`, and one per demand, keyed by `demand_id` — the same canonical identifiers the sealed dataset (ADR 0006) already uses, not a new identity scheme.
+
+It is not enough for the artifact to claim it was generated "from the benchmark" in prose. The manifest must record, and a loader must verify, that its `demand_ids`/`patent_ids` are exactly the sealed dataset's `demand_ids`/`patent_ids` — the same fail-fast pattern `ModelConfigurationManifest.verify_source_policy` already established for tying the M0-M6 manifest to its source policy (ADR 0012, PR #29).
 
 ### 7. Hash / provenance
 
@@ -69,8 +90,10 @@ The frozen embedding artifact's manifest must record, at minimum:
 - License (§4)
 - Generation script identity (path + git commit it was generated from)
 - Library versions used (`sentence-transformers`, `torch`/backend, etc.)
-- Hardware class used for generation (§5)
-- A self-referential integrity hash, following the same pattern as `MatchingPolicyConfig.policy_sha256`, `StudyProtocol.protocol_sha256`, and `ModelConfigurationManifest.config_sha256` (ADR 0006/0011/0012) — tamper-evident, not a cryptographic seal, exactly as those ADRs already state about their own hashes.
+- Generation device (§5: CPU)
+- **`dataset_sha256`** — the sealed benchmark dataset's own content hash (ADR 0006), so the artifact declares *which exact byte-identical dataset* produced it, not merely "the benchmark" as a moving target. A self-referential `artifact_sha256` alone proves the artifact's own internal consistency; it says nothing about whether the dataset that fed it is still the dataset currently sealed under ADR 0006 — `dataset_sha256` is what makes that link checkable, the same way §6's `verify`-style check makes the identifier sets checkable.
+- `n_demands`, `n_patents`, and the exact `demand_ids`/`patent_ids` lists (§6)
+- A self-referential integrity hash (`artifact_sha256`), following the same pattern as `MatchingPolicyConfig.policy_sha256`, `StudyProtocol.protocol_sha256`, and `ModelConfigurationManifest.config_sha256` (ADR 0006/0011/0012) — tamper-evident, not a cryptographic seal, exactly as those ADRs already state about their own hashes. `artifact_sha256` proves the artifact's own bytes are self-consistent; `dataset_sha256` proves which sealed dataset it was derived from. Neither alone is sufficient; both are required.
 
 ### 8. Dimensionality
 
@@ -90,7 +113,32 @@ Changing the embedding model, its revision, or its generation procedure produces
 
 ### 12. Reproducibility
 
-Given the pinned model revision (§2), the documented generation procedure (§5), the pinned library versions (§7), and the frozen input text (already sealed by ADR 0006), a third party can regenerate the embedding artifact and verify it against the declared hash (§7). This is the same reproducibility contract ADR 0013 §2 condition 3 already requires of M0, restated for what M1 specifically needs to declare to satisfy it.
+Given the pinned model revision (§2), the documented generation procedure and device (§5), the pinned library versions (§7), and the frozen input text tied to a specific `dataset_sha256` (§6-7), a third party can regenerate the embedding artifact on CPU and verify it against the declared `artifact_sha256`. This is a verifiable reproduction claim, not an unqualified "bit-for-bit on any machine" one (§5) — it is the same reproducibility contract ADR 0013 §2 condition 3 already requires of M0, restated for what M1 specifically needs to declare to satisfy it.
+
+### 13. Science freeze vs. implementation detail — explicit split
+
+To keep this ADR from re-litigating implementation choices later as if they were scientific ones (and vice versa):
+
+```text
+SCIENCE FREEZE (this ADR, changing any of these requires a superseding ADR)
+├── model + exact revision (§1-2)
+├── input text fields, no annotations (§5)
+├── generation device: CPU (§5)
+├── max_seq_length=128, do_lower_case=false, mean pooling (§5 — pinned model's own spec)
+├── encode() call shape: normalize_embeddings=True, batch_size=1 (§5)
+├── dimensionality: 768 (§8)
+├── normalization: L2 (§9)
+├── similarity metric: cosine, via existing vector_math.cosine_similarity (§10)
+└── identity keys: publication_id / demand_id, verified against dataset_sha256 (§6-7)
+
+IMPLEMENTATION DETAIL (follow-up PR's discretion, not this ADR's)
+├── artifact file format (JSON / .npy / Parquet)
+├── file layout / directory structure
+├── loader class or function shape
+├── generation script's internal structure
+└── exact library versions actually pinned in requirements (values recorded per §7,
+    but which patch versions to depend on is a normal dependency-management decision)
+```
 
 ---
 
@@ -115,7 +163,10 @@ Given the pinned model revision (§2), the documented generation procedure (§5)
 
 A future implementation PR is **non-compliant** with this ADR if it:
 1. Calls a live, hosted embedding provider from any code path invoked during an evaluation run.
-2. Uses an unpinned model reference (a mutable branch or "latest" tag) for the frozen artifact's provenance.
-3. Regenerates or edits the frozen embedding artifact in place rather than producing a new versioned artifact.
-4. Computes an embedding from annotation or relevance-grade text.
-5. Introduces a general-purpose embedding/vector-store abstraction not required by the specific model and format this ADR (or its accepted revision) actually specifies.
+2. Uses a model revision other than `4328cf26390c98c5e3c738b4460a05b95f4911f5` (§2), or an unpinned reference (a mutable branch or "latest" tag), without recording and justifying the deviation.
+3. Deviates from the pinned encoding call shape (§5: CPU, `max_seq_length=128`, `do_lower_case=false`, mean pooling, `normalize_embeddings=True`, `batch_size=1`) without a documented reason.
+4. Regenerates or edits the frozen embedding artifact in place rather than producing a new versioned artifact.
+5. Computes an embedding from annotation or relevance-grade text.
+6. Omits `dataset_sha256` from the artifact's manifest, or fails to verify the artifact's `demand_ids`/`patent_ids` against the sealed dataset's own identifiers (§6-7).
+7. Introduces a general-purpose embedding/vector-store abstraction not required by the specific model and format this ADR (or its accepted revision) actually specifies.
+8. Presents this model's performance on the frozen benchmark as validation of the model choice itself, rather than as the empirical result the ablation exists to report (§1).
