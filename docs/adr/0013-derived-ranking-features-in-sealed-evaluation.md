@@ -1,6 +1,6 @@
 # ADR 0013: Derived Ranking Features in Sealed Evaluation
 
-**Status:** Proposed
+**Status:** Accepted
 **Date:** 2026-09-04
 **Scope:** Sealed benchmark evaluation evidence and derived ranking features (conceptual; this ADR changes no files under `domain/models/evaluation`, `application/evaluation/matching_adapter.py`, or `docs/adr/0007-scientific-evaluation-protocol-and-metrics.md` — those remain the scope of a future implementation PR)
 

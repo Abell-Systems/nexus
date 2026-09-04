@@ -11,7 +11,10 @@ Invariants enforced:
 8. Adapter isolation: matching_adapter.py is the ONLY file in application/evaluation/ permitted to
    import from domain.models.matching or domain.protocols.matching.
 9. Evidence integrity: adapter passes complete PatentCandidateEvidence with real data to the engine.
-10. Honest pool: adapter must not fabricate retrieval scores (retrieval_scores={} only).
+10. Derived ranking features (ADR 0013): permitted only when grounded in observed evidence —
+    never from annotations/relevance grades, and never altering the closed candidate universe.
+    No specific derived feature is implemented as of this file; these tests enforce the
+    boundary ahead of any implementation (contract -> test -> code, per ADR 0013 §3).
 """
 
 import ast
@@ -340,7 +343,10 @@ def test_adapter_passes_real_evidence_to_engine(_fake_engine_and_call_record):
     Verifies that:
     - Each patent in the evaluation dataset produces one PatentCandidateEvidence entry
     - CPC classifications, title, and abstract are passed through without modification
-    - retrieval_scores={} for all candidates (no synthetic evidence)
+
+    Closed-candidate-universe and derived-ranking-feature boundary invariants (ADR 0013)
+    are covered separately below, since they apply regardless of what — if anything —
+    populates retrieval_scores.
     """
     fake_engine, policy, calls = _fake_engine_and_call_record
 
@@ -386,14 +392,7 @@ def test_adapter_passes_real_evidence_to_engine(_fake_engine_and_call_record):
     # 1. Ranked list contains all patent ids
     assert set(ranked) == {"EP-1", "EP-2"}
 
-    # 2. All candidates have retrieval_scores={} — no synthetic evidence
-    for candidate in calls["candidates"].candidates:
-        assert candidate.retrieval_scores == {}, (
-            f"Candidate {candidate.publication_id} must have retrieval_scores={{}}. "
-            "No synthetic retrieval evidence may be fabricated for a sealed benchmark pool."
-        )
-
-    # 3. Real patent evidence was passed to the engine
+    # 2. Real patent evidence was passed to the engine
     assert calls["patent_metadata"] is not None
     evidence_by_id = {ev.publication_id: ev for ev in calls["patent_metadata"]}
 
@@ -409,21 +408,123 @@ def test_adapter_passes_real_evidence_to_engine(_fake_engine_and_call_record):
 
 
 # ---------------------------------------------------------------------------
-# 10. Honest pool — adapter must not fabricate retrieval scores
+# 10. Derived ranking features — permitted only per ADR 0013
 # ---------------------------------------------------------------------------
+#
+# ADR 0013 distinguishes observed_evidence (title/abstract/CPC/date, verbatim from the
+# sealed dataset) from derived_ranking_feature (deterministically computed FROM observed
+# evidence, never from annotations). It does not itself implement any derived feature —
+# these tests enforce the two conditions that are checkable independently of whatever
+# derived feature is eventually added (e.g. lexical BM25 in a future PR):
+#   - the closed candidate universe must never be altered by ranking computation
+#   - the code path that builds candidates/evidence must have no access to annotations
+#
+# Both are AST-based rather than Import Linter contracts. Import Linter contracts operate
+# on whole-module import edges, and EvaluationAnnotation/RelevanceGrade are declared in the
+# same module (domain/models/evaluation.py) as EvaluationDemand/EvaluationPatent, which
+# matching_adapter.py legitimately imports today — a module-level contract cannot forbid
+# two symbols from a module while permitting two others from that same module. Reserving
+# Import Linter for whole-module boundaries (as it already does for the adapter/matching
+# boundary above) and AST for this symbol-level restriction is the narrower tool for the
+# narrower job, not a workaround.
 
-def test_adapter_does_not_fabricate_retrieval_scores_for_sealed_pool():
-    """ADR 0007: adapter must use retrieval_scores={} — no synthetic evidence."""
-    adapter_file = _eval_dir() / "matching_adapter.py"
-    code = adapter_file.read_text(encoding="utf-8")
 
-    forbidden_patterns = [
-        "RetrievalMethod.LEXICAL",
-        "RetrievalMethod.SEMANTIC",
-        "retrieval_scores={RetrievalMethod",
-    ]
-    for pattern in forbidden_patterns:
-        assert pattern not in code, (
-            f"Forbidden synthetic retrieval score in matching_adapter.py: '{pattern}'. "
-            "Sealed benchmark pools must use retrieval_scores={{}}."
+class DerivedRankingFeaturesTest:
+    """Guards for ADR 0013 conditions 2 and 4, independent of any specific implementation."""
+
+    def test_should_preserve_closed_candidate_universe_when_ranking(self, _fake_engine_and_call_record):
+        """ADR 0013 condition 4: ranking computation must not filter, exclude, or add candidates.
+
+        This regression-pins the current adapter's actual behavior (it makes one Candidate per
+        input patent, unconditionally) rather than proving no future implementation could ever
+        violate the property — a future derived-feature PR must keep this test green, and its
+        own review is where that guarantee is actually checked for the code it adds.
+        """
+        fake_engine, policy, calls = _fake_engine_and_call_record
+
+        prov = EvaluationProvenance(
+            source_authority="oepm",
+            source_uri="https://example.com",
+            extraction_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+            raw_payload_sha256="f" * 64,
+            modality=DataModality.OBSERVED,
         )
+        demand = EvaluationDemand(
+            demand_id="D-TEST",
+            title="Test Demand",
+            description="Test description",
+            posted_date=date(2023, 6, 1),
+            target_cpc_prefixes=["E03C"],
+            provenance=prov,
+        )
+        patents = [
+            EvaluationPatent(
+                publication_id=f"EP-{i}",
+                publication_date=date(2022, 3, 15),
+                classifications_cpc=["E03C1/02"],
+                title=f"Patent {i}",
+                abstract="Unrelated abstract text with no query term overlap whatsoever.",
+                provenance=prov,
+            )
+            for i in range(5)
+        ]
+
+        adapter = DefaultMatchingAdapter(engine=fake_engine, policy=policy)
+        adapter.rank_candidates(demand, patents)
+
+        candidate_ids = {c.publication_id for c in calls["candidates"].candidates}
+        assert candidate_ids == {p.publication_id for p in patents}, (
+            "Closed candidate universe must be preserved exactly: every input patent must "
+            "appear as a candidate, even when a derived feature would score it 0.0."
+        )
+        assert len(calls["candidates"].candidates) == len(patents), (
+            "Candidate count must equal patent count — no deduplication, filtering, or "
+            "top-K truncation permitted in the evaluation adapter."
+        )
+
+    def test_should_forbid_annotation_access_in_matching_adapter_when_deriving_features(self):
+        """ADR 0013 condition 2: derived features must never be computed from ground truth.
+
+        matching_adapter.py builds candidates and evidence for the engine — the one place a
+        future derived feature (e.g. BM25) would be computed. If it cannot reference
+        EvaluationAnnotation or RelevanceGrade at all, it cannot leak them into a feature's
+        computation, regardless of what that computation turns out to be.
+
+        Checks three independent access paths, since a from-import ban alone does not close
+        indirect access via a whole-module import and attribute lookup:
+        - `from domain.models.evaluation import EvaluationAnnotation` (or `as` any alias —
+          ast.alias.name is the pre-aliasing symbol name, so `as X` does not evade this)
+        - `import domain.models.evaluation` anywhere, whether or not it is later dereferenced
+          (forbidden outright: this file's own style is exclusively `from X import Y`, so a
+          bare module import has no legitimate use here and is refused rather than inspected
+          for how it is used)
+        - any attribute access `.EvaluationAnnotation` / `.RelevanceGrade` on any object,
+          which would catch `some_alias.EvaluationAnnotation(...)` however `some_alias` was
+          obtained (e.g. via a re-export, a helper function's return value, or the module
+          import case above)
+        """
+        forbidden_symbols = {"EvaluationAnnotation", "RelevanceGrade"}
+        tree, adapter_file = _read_ast("backend/src/main/application/evaluation/matching_adapter.py")
+
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom):
+                for alias in node.names:
+                    assert alias.name not in forbidden_symbols, (
+                        f"{adapter_file.name} imports '{alias.name}'. Under ADR 0013, the module "
+                        "that builds candidates/evidence for a derived ranking feature must have "
+                        "no access to ground-truth annotations."
+                    )
+            elif isinstance(node, ast.Import):
+                for alias in node.names:
+                    assert not alias.name.startswith("domain.models.evaluation"), (
+                        f"{adapter_file.name} bare-imports '{alias.name}'. This file's own "
+                        "convention is 'from X import Y' exclusively — a bare module import "
+                        "would permit attribute access to EvaluationAnnotation/RelevanceGrade "
+                        "that a from-import ban cannot see, so it is refused outright."
+                    )
+            elif isinstance(node, ast.Attribute) and node.attr in forbidden_symbols:
+                pytest.fail(
+                    f"{adapter_file.name} accesses '.{node.attr}' via attribute lookup. Under "
+                    "ADR 0013, the module that builds candidates/evidence for a derived ranking "
+                    "feature must have no access to ground-truth annotations, however obtained."
+                )
