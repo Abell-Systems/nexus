@@ -1,6 +1,5 @@
-"""Unit tests for SynthesisEngine under ADR 0009."""
+"""Unit tests for SynthesisEngine application orchestrator under ADR 0009."""
 
-import json
 from unittest.mock import MagicMock
 
 import pytest
@@ -8,15 +7,16 @@ import pytest
 from application.synthesis.synthesis_engine import (
     InventionSynthesisEngine,
     SynthesisEngine,
-    validate_grounded_citations,
 )
-from domain.models.runtime_schemas import DemandSignal, InventionCandidate, PatentRecord
+from domain.models.runtime_schemas import (
+    AdversarialVerdict,
+    DemandSignal,
+    InventionCandidate,
+    PatentRecord,
+)
 from domain.protocols.agents import (
     AdversarialAgentProtocol,
     InventorAgentProtocol,
-    LlmChatRequest,
-    LlmChatResponse,
-    LlmClientProtocol,
 )
 
 
@@ -29,12 +29,6 @@ def mock_patents() -> list[PatentRecord]:
             abstract="Lithium phosphorus sulfur compound with high ionic conductivity.",
             filing_date="2020-01-01",
         ),
-        PatentRecord(
-            publication_number="ES-1234567-A1",
-            title="Cathode material",
-            abstract="Coated active material for solid state cells.",
-            filing_date="2021-02-02",
-        ),
     ]
 
 
@@ -45,7 +39,7 @@ def mock_demands() -> list[DemandSignal]:
             source="innoget",
             id="DEM-1",
             title="High conductivity solid electrolyte",
-            description="Seeking >10 mS/cm at room temperature with moisture stability.",
+            description="Seeking >10 mS/cm at room temperature.",
         )
     ]
 
@@ -53,183 +47,107 @@ def mock_demands() -> list[DemandSignal]:
 @pytest.fixture
 def mock_candidate() -> InventionCandidate:
     return InventionCandidate(
-        candidate_id="cand_test_001",
+        candidate_id="cand_battery_001",
         cluster_id="cluster_battery",
         title="Doped Halide-Sulfide Composite Electrolyte",
-        description="A moisture-resistant composite electrolyte with 15 mS/cm conductivity.",
-        claimed_novelty="Synergistic halogenation preventing H2S release.",
+        description="A moisture-resistant composite electrolyte.",
+        claimed_novelty="Synergistic halogenation.",
     )
 
 
-def test_validate_grounded_citations(mock_patents):
-    # Matches valid patents
-    cites = ["ES-2849102-B2", "NON_EXISTENT_999"]
-    grounded = validate_grounded_citations(cites, mock_patents)
-    assert grounded == ["ES-2849102-B2"]
-
-    # None match
-    assert validate_grounded_citations(["UNKNOWN_1"], mock_patents) == []
-    # Empty input
-    assert validate_grounded_citations([], mock_patents) == []
-
-
-def test_protocol_conformance():
-    engine = SynthesisEngine()
-    assert isinstance(engine, InventorAgentProtocol)
-    assert isinstance(engine, AdversarialAgentProtocol)
+def test_alias_equivalence():
     assert InventionSynthesisEngine is SynthesisEngine
 
 
-def test_propose_candidate_unconfigured_client_fails_fast(mock_demands, mock_patents):
-    engine = SynthesisEngine(llm_client=None)
-    with pytest.raises(ValueError, match="LLM client not configured"):
+def test_propose_candidate_unconfigured_inventor_fails_fast(mock_demands, mock_patents):
+    engine = SynthesisEngine(inventor=None)
+    with pytest.raises(ValueError, match="Inventor agent not configured"):
         engine.propose_candidate("cluster_battery", mock_demands, mock_patents)
 
 
-def test_propose_candidate_success(mock_demands, mock_patents):
-    client = MagicMock(spec=LlmClientProtocol)
-    client.chat_completion.return_value = LlmChatResponse(
-        content=json.dumps({
-            "title": "Novel Argyrodite Electrolyte",
-            "description": "Bromine-doped argyrodite with ionic conductivity >12 mS/cm.",
-            "claimed_novelty": "Dual-halide substitution suppressing dendritic growth.",
-        })
+def test_evaluate_adversarial_unconfigured_adversarial_fails_fast(mock_candidate, mock_patents):
+    engine = SynthesisEngine(adversarial=None)
+    with pytest.raises(ValueError, match="Adversarial agent not configured"):
+        engine.evaluate_adversarial(mock_candidate, mock_patents)
+
+
+def test_propose_candidate_delegates_to_inventor_port(mock_demands, mock_patents, mock_candidate):
+    mock_inventor = MagicMock(spec=InventorAgentProtocol)
+    mock_inventor.propose_candidate.return_value = mock_candidate
+
+    engine = SynthesisEngine(inventor=mock_inventor)
+    result = engine.propose_candidate("cluster_battery", mock_demands, mock_patents)
+
+    assert result == mock_candidate
+    mock_inventor.propose_candidate.assert_called_once_with(
+        "cluster_battery", mock_demands, mock_patents
     )
 
-    engine = SynthesisEngine(llm_client=client)
-    candidate = engine.propose_candidate("cluster_battery", mock_demands, mock_patents)
 
-    assert candidate.cluster_id == "cluster_battery"
-    assert candidate.title == "Novel Argyrodite Electrolyte"
-    assert "Dual-halide" in candidate.claimed_novelty
-    assert client.chat_completion.called
-
-    # Verify typed request was passed
-    args, kwargs = client.chat_completion.call_args
-    req = args[0]
-    assert isinstance(req, LlmChatRequest)
-    assert req.response_format == "json_object"
-    assert len(req.messages) == 2
-
-
-def test_propose_candidate_malformed_json_fails_fast(mock_demands, mock_patents):
-    client = MagicMock(spec=LlmClientProtocol)
-    client.chat_completion.return_value = LlmChatResponse(content="not valid json")
-
-    engine = SynthesisEngine(llm_client=client)
-    with pytest.raises(json.JSONDecodeError):
-        engine.propose_candidate("cluster_battery", mock_demands, mock_patents)
-
-
-def test_propose_candidate_missing_schema_keys_fails_fast(mock_demands, mock_patents):
-    client = MagicMock(spec=LlmClientProtocol)
-    client.chat_completion.return_value = LlmChatResponse(
-        content=json.dumps({"description": "Missing title and novelty"})
+def test_evaluate_adversarial_delegates_to_adversarial_port(mock_candidate, mock_patents):
+    mock_adversarial = MagicMock(spec=AdversarialAgentProtocol)
+    expected_verdict = AdversarialVerdict(
+        candidate_id=mock_candidate.candidate_id,
+        verdict="survives",
+        rationale="Novel composition.",
+        cited_patents=["ES-2849102-B2"],
     )
+    mock_adversarial.critique_candidate.return_value = expected_verdict
 
-    engine = SynthesisEngine(llm_client=client)
-    with pytest.raises(ValueError, match="LLM response failed schema validation"):
-        engine.propose_candidate("cluster_battery", mock_demands, mock_patents)
+    engine = SynthesisEngine(adversarial=mock_adversarial)
+    result = engine.evaluate_adversarial(mock_candidate, mock_patents)
 
-
-def test_propose_candidate_non_dict_json_fails_fast(mock_demands, mock_patents):
-    client = MagicMock(spec=LlmClientProtocol)
-    client.chat_completion.return_value = LlmChatResponse(content="[1, 2, 3]")
-
-    engine = SynthesisEngine(llm_client=client)
-    with pytest.raises(ValueError, match="LLM response failed schema validation"):
-        engine.propose_candidate("cluster_battery", mock_demands, mock_patents)
+    assert result == expected_verdict
+    mock_adversarial.critique_candidate.assert_called_once_with(mock_candidate, mock_patents)
 
 
-def test_critique_candidate_empty_prior_art(mock_candidate):
-    engine = SynthesisEngine(llm_client=None)
-    verdict = engine.critique_candidate(mock_candidate, prior_art=[])
-    assert verdict.verdict == "survives"
-    assert verdict.cited_patents == ["NONE"]
-
-
-def test_critique_candidate_unconfigured_client_fails_fast(mock_candidate, mock_patents):
-    engine = SynthesisEngine(llm_client=None)
-    with pytest.raises(ValueError, match="LLM client not configured"):
-        engine.critique_candidate(mock_candidate, mock_patents)
-
-
-def test_critique_candidate_success(mock_candidate, mock_patents):
-    client = MagicMock(spec=LlmClientProtocol)
-    client.chat_completion.return_value = LlmChatResponse(
-        content=json.dumps({
-            "verdict": "survives",
-            "rationale": "Candidate exhibits distinct stoichiometry over ES-2849102-B2.",
-            "cited_patents": ["ES-2849102-B2"],
-        })
+def test_critique_candidate_alias(mock_candidate, mock_patents):
+    mock_adversarial = MagicMock(spec=AdversarialAgentProtocol)
+    expected_verdict = AdversarialVerdict(
+        candidate_id=mock_candidate.candidate_id,
+        verdict="rejected",
+        rationale="Prior art anticipates.",
+        cited_patents=["ES-2849102-B2"],
     )
+    mock_adversarial.critique_candidate.return_value = expected_verdict
 
-    engine = SynthesisEngine(llm_client=client)
-    verdict = engine.critique_candidate(mock_candidate, mock_patents)
+    engine = SynthesisEngine(adversarial=mock_adversarial)
+    result = engine.critique_candidate(mock_candidate, mock_patents)
 
-    assert verdict.verdict == "survives"
-    assert verdict.cited_patents == ["ES-2849102-B2"]
-    assert "ES-2849102-B2" in verdict.rationale
-
-
-def test_evaluate_adversarial_alias(mock_candidate, mock_patents):
-    client = MagicMock(spec=LlmClientProtocol)
-    client.chat_completion.return_value = LlmChatResponse(
-        content=json.dumps({
-            "verdict": "rejected",
-            "rationale": "Anticipated by ES-1234567-A1.",
-            "cited_patents": ["ES-1234567-A1"],
-        })
-    )
-
-    engine = SynthesisEngine(llm_client=client)
-    verdict = engine.evaluate_adversarial(mock_candidate, mock_patents)
-
-    assert verdict.verdict == "rejected"
-    assert verdict.cited_patents == ["ES-1234567-A1"]
+    assert result == expected_verdict
+    mock_adversarial.critique_candidate.assert_called_once_with(mock_candidate, mock_patents)
 
 
-def test_critique_candidate_malformed_json_fails_fast(mock_candidate, mock_patents):
-    client = MagicMock(spec=LlmClientProtocol)
-    client.chat_completion.return_value = LlmChatResponse(content="invalid json output")
+def test_constructor_unified_dual_protocol_agent(mock_demands, mock_patents, mock_candidate):
+    # Agent implementing both protocols
+    class DualAgent(InventorAgentProtocol, AdversarialAgentProtocol):
+        def propose_candidate(self, cluster_id, demands, prior_art):
+            return mock_candidate
 
-    engine = SynthesisEngine(llm_client=client)
-    with pytest.raises(json.JSONDecodeError):
-        engine.critique_candidate(mock_candidate, mock_patents)
+        def critique_candidate(self, candidate, prior_art):
+            return AdversarialVerdict(
+                candidate_id=candidate.candidate_id,
+                verdict="survives",
+                rationale="Passes.",
+                cited_patents=["ES-2849102-B2"],
+            )
 
+    dual = DualAgent()
+    engine = SynthesisEngine(dual)
 
-def test_critique_candidate_missing_schema_keys_fails_fast(mock_candidate, mock_patents):
-    client = MagicMock(spec=LlmClientProtocol)
-    client.chat_completion.return_value = LlmChatResponse(
-        content=json.dumps({"rationale": "Missing verdict and cited_patents"})
-    )
+    assert engine.inventor is dual
+    assert engine.adversarial is dual
 
-    engine = SynthesisEngine(llm_client=client)
-    with pytest.raises(ValueError, match="LLM response failed schema validation"):
-        engine.critique_candidate(mock_candidate, mock_patents)
+    cand = engine.propose_candidate("cluster_battery", mock_demands, mock_patents)
+    assert cand == mock_candidate
 
-
-def test_critique_candidate_invalid_cited_patents_type_fails_fast(mock_candidate, mock_patents):
-    client = MagicMock(spec=LlmClientProtocol)
-    client.chat_completion.return_value = LlmChatResponse(
-        content=json.dumps({"verdict": "survives", "cited_patents": "not-a-list"})
-    )
-
-    engine = SynthesisEngine(llm_client=client)
-    with pytest.raises(ValueError, match="Expected cited_patents to be a list"):
-        engine.critique_candidate(mock_candidate, mock_patents)
+    verd = engine.evaluate_adversarial(cand, mock_patents)
+    assert verd.verdict == "survives"
 
 
-def test_critique_candidate_ungrounded_citations_fails_fast(mock_candidate, mock_patents):
-    client = MagicMock(spec=LlmClientProtocol)
-    client.chat_completion.return_value = LlmChatResponse(
-        content=json.dumps({
-            "verdict": "rejected",
-            "rationale": "Anticipated by hallucinated patent.",
-            "cited_patents": ["US-9999999-B2"],
-        })
-    )
+def test_constructor_with_agent_kwarg(mock_demands, mock_patents, mock_candidate):
+    mock_inventor = MagicMock(spec=InventorAgentProtocol)
+    mock_inventor.propose_candidate.return_value = mock_candidate
 
-    engine = SynthesisEngine(llm_client=client)
-    with pytest.raises(ValueError, match="Adversarial critique cited no valid prior art"):
-        engine.critique_candidate(mock_candidate, mock_patents)
+    engine = SynthesisEngine(agent=mock_inventor)
+    assert engine.inventor is mock_inventor

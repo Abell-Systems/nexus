@@ -47,14 +47,21 @@ We establish that **Nexus Core is completely provider-agnostic and does not depe
         └────────────┘     └────────────┘     └────────────┘
 ```
 
-The core defines **capabilities and contracts**, not vendor SDKs:
-1. **`domain/protocols/agents.py`** declares the abstract port `AgentInvoker` (or `LlmClientProtocol`), receiving pure domain request schemas (`InventionCandidate`, `PatentRecord`, `DemandSignal`) and returning typed results (`AdversarialVerdict`, `ScoreCard`).
-2. **`application/synthesis`** and all core use cases invoke agents exclusively through these ports via dependency injection.
-3. **`infrastructure`** houses concrete provider adapters:
-   - `infrastructure/adk/`: Google ADK implementation.
-   - `infrastructure/llm/groq_client.py`: Groq / OpenAI-compatible implementation.
+The core defines **business capabilities and contracts**, not vendor SDKs or LLM transport details:
+1. **`domain/protocols/agents.py`** declares capability ports:
+   - `InventorAgentProtocol`: receives demand signals and prior art, returns typed `InventionCandidate`.
+   - `AdversarialAgentProtocol`: attacks candidates with prior art citations, returns typed `AdversarialVerdict`.
+   - `GovernorAgentProtocol`: evaluates novelty, risk, and differentiation, returns typed `ScoreCard`.
+   These ports contain zero LLM transport abstractions (no chat completions, prompts, temperatures, or token counts).
+2. **`application/synthesis`** orchestrates invention use cases exclusively through these domain capability ports via dependency injection (`SynthesisEngine(inventor=..., adversarial=...)`).
+3. **`infrastructure`** houses concrete provider adapters and externalized configuration:
+   - `infrastructure/llm/provider_config.py`: `ProviderConfig` externalizing endpoint base URL, model name, credentials, and timeouts.
+   - `infrastructure/llm/client_protocol.py`: low-level LLM transport protocol (`LlmClientProtocol`).
+   - `infrastructure/llm/groq_client.py`: lightweight HTTP transport client implementing `LlmClientProtocol` using injected `ProviderConfig`.
+   - `infrastructure/llm/adapters.py`: `LlmAgentAdapter` adapting capability ports (`InventorAgentProtocol`, `AdversarialAgentProtocol`) to concrete LLM transports.
+   - `infrastructure/adk/`: Google ADK multi-agent workflow adapter.
 4. **Clean Architecture Isolation:**
-   Neither `domain` nor `application` may import `google.adk`, `google.genai`, `google.cloud.aiplatform`, `openai`, `anthropic`, `litellm`, or any external provider SDK.
+   Neither `domain` nor `application` may import `google`, `openai`, `anthropic`, `litellm`, `langgraph`, `llama_index`, or any external provider SDK.
 
 ### 2. Dependency Stratification
 
@@ -111,13 +118,13 @@ Any attempt to introduce a provider SDK into the domain or application layer cau
 ## Consequences
 
 ### Positive
-- **Vendor Independence:** Switching from Google ADK to OpenAI Agents SDK, LangGraph, or plain HTTP adapters requires zero changes to core domain, matching, or evaluation logic.
+- **Vendor Independence:** Switching from Google ADK to OpenAI Agents SDK, LangGraph, or plain HTTP adapters requires zero changes to core domain, matching, evaluation, or synthesis logic.
 - **Dramatically Faster CI:** Core CI jobs (Architecture Gate, Python Quality, Backend Tests) install only lightweight dependencies, cutting pip setup time by 70–80%.
 - **Zero Transitive Bloat:** Eliminates unnecessary third-party packages from production runtime environments.
 
 ### Negative
 - Running Google ADK workflows requires explicitly installing the ADK adapter dependencies (`pip install -r backend/requirements-adk.txt`).
-- The application layer must define typed request/response contracts rather than consuming provider-specific agent messages directly.
+- Concrete provider adapters in `infrastructure/llm` must implement capability ports (`InventorAgentProtocol`, `AdversarialAgentProtocol`) and map internal LLM responses into domain schemas.
 
 ---
 

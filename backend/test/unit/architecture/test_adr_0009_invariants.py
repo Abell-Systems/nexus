@@ -18,7 +18,6 @@ from domain.protocols.agents import (
     AdversarialAgentProtocol,
     GovernorAgentProtocol,
     InventorAgentProtocol,
-    LlmClientProtocol,
 )
 
 
@@ -28,7 +27,6 @@ def _get_repo_root() -> Path:
 
 def test_agent_protocols_are_pure_and_runtime_checkable():
     """ADR 0009 §1: Domain agent protocols exist and require no vendor SDKs."""
-    assert isinstance(LlmClientProtocol, type)
     assert isinstance(InventorAgentProtocol, type)
     assert isinstance(AdversarialAgentProtocol, type)
     assert isinstance(GovernorAgentProtocol, type)

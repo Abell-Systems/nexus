@@ -27,6 +27,7 @@ from application.landscape.cpc_taxonomy import CPC_TAXONOMY_DICTIONARY
 from application.landscape.metrics import ExecutionMode, compute_white_space_metrics
 from application.synthesis.synthesis_engine import SynthesisEngine as InventionSynthesisEngine
 from domain.models.runtime_schemas import AdversarialVerdict, InventionCandidate, ScoreCard
+from infrastructure.llm.adapters import GroqAgentAdapter
 from infrastructure.llm.groq_client import GroqClient as GroqLlmClient
 from infrastructure.sources.demand_sources import InnogetDemandDataSource
 from infrastructure.sources.duckdb_patents import DuckDbPatentsDataSource
@@ -213,7 +214,8 @@ def run_experiment(
     elif can_run_live_llm:
         try:
             client = GroqLlmClient()
-            engine = InventionSynthesisEngine(client=client)
+            adapter = GroqAgentAdapter(client)
+            engine = InventionSynthesisEngine(adapter)
             synthesis_status = "EMPIRICAL (LIVE GROQ SYNTHESIS & ADVERSARIAL VERDICT)"
         except Exception as e:
             engine = None
