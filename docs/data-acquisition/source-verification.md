@@ -316,7 +316,7 @@ When the acquisition code is subsequently implemented, testing will follow:
 ## 7. Status & Next Step
 
 * **Status:** 🟡 **Protocol Specification v0.9 — Scientifically Specified Acquisition Protocol, Source Verification Pending**
-* **Next Action:** Execute the empirical probes of the **Source Verification Sprint** and document findings in [`docs/data-acquisition/source-verification.md`](file:///home/valentin/code/nexus/docs/data-acquisition/source-verification.md).
+* **Next Action:** Execute the empirical probes of the **Source Verification Sprint** and document findings in this file (`docs/data-acquisition/source-verification.md`).
 
 ---
 
