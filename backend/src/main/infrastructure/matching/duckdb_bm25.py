@@ -1,7 +1,3 @@
-import math
-import re
-from collections import Counter
-
 import duckdb
 
 from domain.models.demand import DemandRecord, DemandSignal
@@ -9,6 +5,7 @@ from domain.models.matching import (
     Candidate,
     EligibilityReason,
     RetrievalMethod,
+    compute_bm25_scores,
 )
 from domain.models.patent import PatentDocument
 from domain.protocols.matching import (
@@ -19,37 +16,16 @@ from domain.protocols.matching import (
 from .duckdb_helpers import resolve_patent_columns
 from .eligibility import DefaultPatentEligibilityPolicy
 
-# Common functional/stop words in patent and demand texts (English and Spanish)
-STOPWORDS = {
-    "a", "al", "algo", "algunas", "algunos", "ante", "antes", "como", "con", "contra",
-    "cual", "cuando", "de", "del", "desde", "donde", "durante", "e", "el", "ella",
-    "ellas", "ellos", "en", "entre", "era", "erais", "eran", "eras", "eres", "es",
-    "esa", "esas", "ese", "eso", "esos", "esta", "estas", "este", "esto", "estos",
-    "ha", "habeis", "haber", "habia", "han", "has", "hasta", "hay", "la", "las", "le",
-    "les", "lo", "los", "me", "mi", "mis", "mucho", "muchos", "muy", "mas", "nos",
-    "nosotras", "nosotros", "o", "os", "otra", "otras", "otro", "otros", "para", "pero",
-    "por", "porque", "que", "quien", "quienes", "se", "sea", "sean", "segun", "ser",
-    "si", "sido", "siendo", "sin", "sobre", "sois", "solamente", "solo", "somos", "son",
-    "soy", "su", "sus", "tambien", "tanto", "te", "tenemos", "tener", "tenga", "tengan",
-    "tengo", "ti", "tiene", "tienen", "toda", "todas", "todo", "todos", "tu", "tus",
-    "un", "una", "unas", "uno", "unos", "va", "vais", "vamos", "van", "vaya", "yo",
-    "and", "the", "for", "of", "in", "to", "with", "on", "at", "from", "by", "an", "as",
-    "is", "are", "was", "were", "or", "that", "this", "be", "it",
-}
-
-
-def _tokenize(text: str) -> list[str]:
-    """Lowercase tokenization filtering stopwords and punctuation."""
-    tokens = re.findall(r"\b[a-zA-Z0-9áéíóúüñÁÉÍÓÚÜÑ]{2,}\b", text.lower())
-    return [t for t in tokens if t not in STOPWORDS]
-
 
 class DuckDbBM25Retriever(PatentCandidateRetriever):
     """Real vertical slice executing Okapi BM25 retrieval over a DuckDB database or in-memory connection.
 
     Invariants:
     - Pre-filters eligible patents using PatentEligibilityPolicy before BM25 ranking.
-    - Okapi BM25 scoring with k1=1.5, b=0.75 over (title + ' ' + abstract).
+    - Okapi BM25 scoring with k1=1.5, b=0.75 over (title + ' ' + abstract), via the shared
+      compute_bm25_scores (domain.models.matching) — the same scoring core the evaluation
+      adapter uses for the sealed benchmark (ADR 0013), computed here over the eligible
+      subcorpus rather than the full closed universe.
     - Returns up to `limit` candidates with score > 0.
     - Ties broken deterministically by (score DESC, publication_id ASC).
     - Produces domain Candidate objects with RetrievalMethod.LEXICAL score.
@@ -80,9 +56,9 @@ class DuckDbBM25Retriever(PatentCandidateRetriever):
         cursor = self._con.execute(query)
         rows = cursor.fetchall()
 
-        # 2. Filter documents using strict eligibility policy
-        eligible_docs: list[tuple[str, list[str], int]] = []  # (pub_id, doc_tokens, doc_len)
-        doc_lengths: list[int] = []
+        # 2. Filter documents using strict eligibility policy — candidate generation for live
+        # matching narrows to the eligible subcorpus; the sealed evaluation benchmark does not.
+        eligible_documents: dict[str, str] = {}
 
         for row in rows:
             pub_id = str(row[0])
@@ -107,53 +83,18 @@ class DuckDbBM25Retriever(PatentCandidateRetriever):
             if eval_res.reason != EligibilityReason.ELIGIBLE:
                 continue
 
-            full_text = f"{title} {abstract}"
-            tokens = _tokenize(full_text)
-            doc_len = len(tokens)
-            eligible_docs.append((pub_id, tokens, doc_len))
-            doc_lengths.append(doc_len)
+            eligible_documents[pub_id] = f"{title} {abstract}"
 
-        if not eligible_docs:
+        if not eligible_documents:
             return []
 
-        # 3. Compute Corpus-Level Statistics over Eligible Subcorpus
-        N = len(eligible_docs)
-        avgdl = sum(doc_lengths) / N if N > 0 else 0.0
-
+        # 3. Score the eligible subcorpus
         query_text = f"{demand.title} {demand.description}"
-        query_tokens = _tokenize(query_text)
-        query_counter = Counter(query_tokens)
+        scores = compute_bm25_scores(query_text, eligible_documents, k1=self._k1, b=self._b)
 
-        # Inverted document frequency over eligible docs
-        df: Counter[str] = Counter()
-        for _, tokens, _ in eligible_docs:
-            unique_tokens = set(tokens)
-            for q_term in query_counter:
-                if q_term in unique_tokens:
-                    df[q_term] += 1
-
-        # 4. Compute BM25 Score per Eligible Document
-        candidates: list[tuple[str, float]] = []
-        for pub_id, tokens, doc_len in eligible_docs:
-            doc_counter = Counter(tokens)
-            bm25_score = 0.0
-
-            for q_term, _ in query_counter.items():
-                if q_term not in doc_counter:
-                    continue
-                n_term = df[q_term]
-                # Standard Robertson-Spärck Jones IDF
-                idf = math.log((N - n_term + 0.5) / (n_term + 0.5) + 1.0)
-                f_term = doc_counter[q_term]
-                numerator = f_term * (self._k1 + 1.0)
-                denominator = f_term + self._k1 * (1.0 - self._b + self._b * (doc_len / avgdl if avgdl > 0 else 1.0))
-                bm25_score += idf * (numerator / denominator)
-
-            if bm25_score > 0.0:
-                candidates.append((pub_id, round(bm25_score, 6)))
-
-        # 5. Deterministic sorting: (score DESC, publication_id ASC)
-        sorted_candidates = sorted(candidates, key=lambda item: (-item[1], item[0]))[:limit]
+        # 4. Candidate generation: drop zero scores, sort, truncate to `limit`
+        scored_candidates = [(pub_id, score) for pub_id, score in scores.items() if score > 0.0]
+        sorted_candidates = sorted(scored_candidates, key=lambda item: (-item[1], item[0]))[:limit]
 
         return [
             Candidate(

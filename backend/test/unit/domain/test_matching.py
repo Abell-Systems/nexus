@@ -174,3 +174,43 @@ def test_compute_max_cpc_similarity_multi_symbols():
     # Empty inputs
     assert compute_max_cpc_similarity([], ["C11D1/00"], levels=levels) == 0.00
     assert compute_max_cpc_similarity(["C11D1/00"], [], levels=levels) == 0.00
+
+
+class BM25ScoringTest:
+    """Guards for compute_bm25_scores (ADR 0013 derived_ranking_feature)."""
+
+    def test_should_compute_deterministic_scores_when_called_twice_with_same_input(self):
+        from domain.models.matching import compute_bm25_scores
+
+        query = "biodegradable surfactant for low-temperature washing"
+        documents = {
+            "EP-1": "Detergent composition with biodegradable surfactant for cold water washing",
+            "EP-2": "Metallurgical alloy for high-strength steel fasteners",
+            "EP-3": "Encapsulated fragrance for laundry detergent",
+        }
+
+        first = compute_bm25_scores(query, documents)
+        second = compute_bm25_scores(query, documents)
+
+        assert first == second
+        assert set(first.keys()) == set(documents.keys()), (
+            "Every input publication_id must be present in the result, regardless of score."
+        )
+        assert first["EP-1"] > first["EP-2"], (
+            "The document with real term overlap must outscore the document with none."
+        )
+        assert first["EP-2"] == 0.0, "No term overlap must score exactly 0.0, not be omitted."
+
+    def test_should_not_depend_on_annotations_when_scoring(self):
+        import inspect
+
+        from domain.models.matching import compute_bm25_scores
+
+        params = set(inspect.signature(compute_bm25_scores).parameters)
+        assert "annotations" not in params
+        assert "relevance_grade" not in params
+        assert "grade" not in params
+        assert params == {"query_text", "documents", "k1", "b"}, (
+            "compute_bm25_scores must take only observed query/document text and scoring "
+            "parameters — no parameter through which ground truth could reach it."
+        )
