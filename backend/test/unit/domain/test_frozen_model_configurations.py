@@ -91,6 +91,23 @@ def test_m6_weights_match_default_matching_policy(manifest_path: Path) -> None:
     assert m6.provenance_status == "PRE_EXISTING_INITIAL_CONFIGURATION"
 
 
+def test_m0_parameters_match_compute_bm25_scores_defaults(manifest_path: Path) -> None:
+    """M0 became executable in PR #28; its provenance entry must match the real BM25 defaults."""
+    import inspect
+
+    from domain.models.matching import compute_bm25_scores
+
+    manifest = ModelConfigurationManifest.load_from_json(manifest_path)
+    m0 = next(r for r in manifest.models if r.model_id == "M0")
+
+    params = inspect.signature(compute_bm25_scores).parameters
+    assert m0.weights == {
+        "k1": params["k1"].default,
+        "b": params["b"].default,
+    }
+    assert m0.provenance_status == "PRE_EXISTING_INITIAL_CONFIGURATION"
+
+
 def test_exactly_m0_through_m6_represented(manifest_path: Path) -> None:
     manifest = ModelConfigurationManifest.load_from_json(manifest_path)
     assert {r.model_id for r in manifest.models} == {"M0", "M1", "M2", "M3", "M4", "M5", "M6"}

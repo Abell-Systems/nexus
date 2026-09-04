@@ -10,9 +10,12 @@
   "models": [
     {
       "model_id": "M0",
-      "description": "Lexical BM25 baseline",
+      "description": "Lexical BM25 baseline; a derived_ranking_feature (ADR 0013) computed via domain.models.matching.compute_bm25_scores over every patent's observed title/abstract text in the closed benchmark pool, never from annotations",
       "ranker": "LexicalRanker",
-      "weights": null,
+      "weights": {
+        "k1": 1.5,
+        "b": 0.75
+      },
       "version": "1.0.0",
       "provenance_status": "PRE_EXISTING_INITIAL_CONFIGURATION"
     },
@@ -81,5 +84,5 @@
       "provenance_status": "PRE_EXISTING_INITIAL_CONFIGURATION"
     }
   ],
-  "config_sha256": "f9540b6cb5d4a5f11dd401ec2214a1ac70649f227ea6abeaf4c9d1c4205ab24b"
+  "config_sha256": "abf3a52444dabaf247d5007bbfb285f82b2428fecb668f258fbea778fbe0cca3"
 }
