@@ -1,6 +1,6 @@
 # ADR 0014: M1 Semantic Ranking Protocol — Frozen Embedding Artifact, Not a Live Provider
 
-**Status:** Proposed
+**Status:** Accepted
 **Date:** 2026-09-04
 **Scope:** Scientific definition of M1 (semantic/dense retrieval) for the sealed evaluation benchmark. Doc only — no code, no `EmbeddingProvider`/`SemanticRankingFeature`/`VectorStore`/`EmbeddingRepository` abstraction, no implementation. A follow-up PR implements exactly what this ADR decides, once it is Accepted.
 
