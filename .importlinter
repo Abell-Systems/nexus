@@ -3,6 +3,7 @@ root_packages =
     domain
     application
     infrastructure
+include_external_packages = True
 
 [importlinter:contract:domain-isolation]
 name = Domain layer must not depend on application or infrastructure
@@ -66,3 +67,17 @@ forbidden_modules =
     domain.protocols.matching
     application.matching
     infrastructure
+
+[importlinter:contract:provider-sdk-isolation]
+name = Domain and Application must not import provider SDKs
+type = forbidden
+source_modules =
+    domain
+    application
+forbidden_modules =
+    google
+    openai
+    anthropic
+    litellm
+    langgraph
+    llama_index

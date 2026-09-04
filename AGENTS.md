@@ -74,13 +74,14 @@ Every major architectural boundary MUST be accompanied by deterministic architec
 2. **Dynamic Behavior:** Demonstrate that changing configuration (e.g., target jurisdiction) alters classification behavior without modifying Python code.
 3. **No Synthetic Inventions:** Verify that entity identifiers and attributes are authentic from observed facts, never fabricated from arbitrary batch IDs or fallback strings.
 4. **No Cross-Context Concealment:** Never use `typing.Any` to bypass static type checks or circumvent import restrictions across bounded contexts.
+5. **Provider-Agnostic Core:** Verify that `domain` and `application` have zero imports from external provider SDKs (ADR 0009).
 
 ---
 
 ## 5. Agent Verification Checklist Before Completing Tasks
 
 Before declaring any task or PR complete, the agent MUST explicitly verify:
-* [ ] Applicable ADRs were inspected (ADR 0001 through ADR 0008).
+* [ ] Applicable ADRs were inspected (ADR 0001 through ADR 0009).
 * [ ] Implementation strictly complies with ADRs.
 * [ ] Any new architectural decisions have an ADR in `docs/adr/`.
 * [ ] Configurable constraints are externalized to versioned files (e.g., `config/policies/`).

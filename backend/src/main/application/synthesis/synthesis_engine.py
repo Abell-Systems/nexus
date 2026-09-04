@@ -4,6 +4,7 @@ import json
 from typing import Any
 
 from domain.models.runtime_schemas import AdversarialVerdict, InventionCandidate, PatentRecord
+from domain.protocols.agents import LlmClientProtocol
 
 
 def validate_grounded_citations(cited_patents: list[str], prior_art: list[PatentRecord]) -> list[str]:
@@ -13,7 +14,7 @@ def validate_grounded_citations(cited_patents: list[str], prior_art: list[Patent
 
 
 class SynthesisEngine:
-    def __init__(self, llm_client: Any = None):
+    def __init__(self, llm_client: LlmClientProtocol | None = None):
         self.client = llm_client
 
     def propose_candidate(

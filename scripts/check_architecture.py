@@ -56,6 +56,7 @@ def check_backend_files(errors: list[str]) -> None:
         "static",
         "requirements.txt",
         "requirements-dev.txt",
+        "requirements-adk.txt",
         "Dockerfile",
         "__pycache__",
         ".pytest_cache",
