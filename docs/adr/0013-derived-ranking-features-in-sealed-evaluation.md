@@ -2,7 +2,7 @@
 
 **Status:** Proposed
 **Date:** 2026-09-04
-**Scope:** `domain/models/evaluation`, `application/evaluation/matching_adapter.py`, `docs/adr/0007-scientific-evaluation-protocol-and-metrics.md`
+**Scope:** Sealed benchmark evaluation evidence and derived ranking features (conceptual; this ADR changes no files under `domain/models/evaluation`, `application/evaluation/matching_adapter.py`, or `docs/adr/0007-scientific-evaluation-protocol-and-metrics.md` — those remain the scope of a future implementation PR)
 
 ---
 
@@ -45,11 +45,11 @@ derived_ranking_feature
 
 ### 2. What qualifies as a derived ranking feature
 
-A computed value may be treated as `derived_ranking_feature` (and therefore permitted to populate a candidate's `retrieval_scores`) only if all of the following hold:
+A computed value may be treated as `derived_ranking_feature` only if all of the following hold. (Whether the existing `retrieval_scores` field remains the right representation for such a feature, or a distinct representation is warranted, is an implementation question for the follow-up PR — this ADR authorizes the category, not a specific data-model change.)
 
 1. **Computed strictly from `observed_evidence`.** Its inputs are limited to the sealed dataset's title, abstract, CPC codes, and publication date (and the demand's own text) — nothing else.
 2. **Never computed from, or informed by, ground-truth annotations.** `EvaluationAnnotation` / relevance grades must never appear as an input, directly or indirectly, to any derived feature. This is the line that keeps the frozen benchmark's ground truth meaningful: a feature that peeked at the answer key would invalidate every metric computed against it.
-3. **Deterministic and reproducible.** The same observed inputs must always produce the same output, on any machine, at any time. No live network calls, no non-reproducible randomness, no dependence on wall-clock time.
+3. **Deterministic and reproducible.** The computation must be reproducible from its declared inputs, algorithm, algorithm/library version, and parameters — not merely "the same on any machine at any time" in the abstract, since floating-point behavior, tokenizer versions, or locale can legitimately vary across environments. Reproducibility is achieved by declaring those variables as provenance (condition 5), not by asserting an absolute machine-independent identity the ADR does not itself define. No live network calls, no unseeded randomness, no dependence on wall-clock time.
 4. **Does not alter the closed candidate universe.** A derived feature may score a candidate (including a score of exactly `0.0`), but must never cause a candidate to be excluded, filtered, or newly introduced. The candidate universe is fixed by ADR 0006; ranking features only inform how the fixed universe is ordered.
 5. **Provenance-bearing when its parameters could affect the scientific result.** If a derived feature has tunable parameters (e.g. BM25's `k1`/`b`), those parameters must be recorded wherever the feature's values are reported, the same way `MatchingPolicyConfig` and `ModelConfigurationManifest` already record the provenance of the parameters they govern (ADR 0006, ADR 0012).
 
@@ -57,9 +57,11 @@ A lexical BM25 score computed from a patent's own title/abstract text satisfies 
 
 ### 3. Relationship to ADR 0007
 
-This ADR clarifies and narrows ADR 0007's evidence-fabrication rule; it does not reverse it. ADR 0007's rule, restated precisely: *no retrieval score may be asserted without a deterministic, evidence-grounded basis.* Before this ADR, the only implementation available made that rule equivalent to "no retrieval scores, ever" (correct, since nothing computed at the time could meet that bar without also risking fabrication). This ADR states the actual bar precisely (§2 above) so that a computation which meets it is no longer, by definition, "fabricated."
+ADR 0007 established a conservative boundary: the evaluation adapter introduces no retrieval score that is not itself observed evidence from the benchmark. That boundary was the right call at the time — nothing in the codebase could compute a retrieval score without risking exactly the fabrication it was written to prevent, so drawing the line at "no computed scores, period" was the safe default.
 
-ADR 0007 is not edited by this ADR. Its existing text remains accurate as a statement of principle; this ADR is the clarification that principle needed once a real candidate for a derived feature (BM25) existed. The two guard tests in `test_adr_0007_invariants.py` that currently enforce the pre-clarification interpretation (`retrieval_scores == {}`, and the literal-string ban on `RetrievalMethod.LEXICAL`/`SEMANTIC` in `matching_adapter.py`) are intentionally **not modified by this ADR** — they remain the guard until a specific, reviewed implementation PR (not this one) demonstrates conformance to §2 and updates them deliberately, in that order: contract, then test, then code.
+Experience since then shows that boundary conflates two distinct categories: (1) observed evidence, and (2) deterministic features derived from observed evidence. This ADR does not claim ADR 0007 already drew that line and was merely under-specified — it did not. This ADR **introduces** the distinction for the first time and proposes permitting category (2) under the conditions in §2. That is a change to the boundary's operative effect, not a restatement of what ADR 0007 always meant.
+
+ADR 0007's text is not edited by this ADR and remains an accurate record of the decision as it was made. If this ADR is Accepted, the specific implementation guard that currently enforces the pre-ADR-0013 boundary — `test_adr_0007_invariants.py`'s `retrieval_scores == {}` assertion and its ban on `RetrievalMethod.LEXICAL`/`SEMANTIC` literals in `matching_adapter.py` — must be revised to reflect the new boundary. That revision, and the `matching_adapter.py` implementation it would then permit, are deliberately left to a separate, independently reviewed follow-up PR: contract (this ADR), then test, then code, never the reverse.
 
 ---
 
