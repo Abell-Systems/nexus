@@ -81,3 +81,15 @@ forbidden_modules =
     litellm
     langgraph
     llama_index
+
+[importlinter:contract:embedding-generation-stack-isolation]
+name = Nexus runtime must not import the offline M1 embedding-generation stack (ADR 0014)
+type = forbidden
+source_modules =
+    domain
+    application
+    infrastructure
+forbidden_modules =
+    torch
+    transformers
+    sentence_transformers

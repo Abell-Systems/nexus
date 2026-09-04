@@ -544,3 +544,142 @@ class ModelConfigurationManifest(BaseModel):
 
         data["config_sha256"] = computed_sha
         return cls(**data)
+
+
+# ---------------------------------------------------------------------------
+# Frozen M1 Semantic Embedding Artifact (ADR 0014)
+# ---------------------------------------------------------------------------
+
+
+class FrozenEmbeddingArtifact(BaseModel):
+    """Frozen, provenance-sealed M1 semantic embedding artifact (ADR 0014).
+
+    demand_embeddings/patent_embeddings are keyed by the sealed dataset's own
+    demand_id/publication_id — no separate id-list fields, since a list that could
+    drift from the embeddings dict is exactly the kind of authority-inversion bug
+    ADR 0012/PR #29 found for M0 (a value that could silently disagree with what's
+    actually used). n_demands/n_patents are likewise derived from dict length, not
+    stored, for the same reason.
+
+    artifact_sha256 is self-referential (tamper-evidence, not a cryptographic seal —
+    same pattern as ModelConfigurationManifest.config_sha256). dataset_sha256 ties
+    this artifact to the exact sealed dataset it was derived from; verify_source_dataset
+    checks both facts against an already-loaded ValidatedDataset, mirroring
+    ModelConfigurationManifest.verify_source_policy's explicit-injection pattern.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    artifact_id: str = Field(min_length=1)
+    frozen_at: date
+    model_name: str = Field(min_length=1)
+    model_revision: str = Field(min_length=40, max_length=40)
+    license: str = Field(min_length=1)
+    generation_script_path: str = Field(min_length=1)
+    generation_script_commit: str = Field(min_length=7, max_length=40)
+    library_versions: dict[str, str] = Field(min_length=1)
+    generation_device: Literal["cpu"]
+    dataset_sha256: str = Field(min_length=64, max_length=64)
+    embedding_dimension: int = Field(gt=0)
+    normalization: str = Field(min_length=1)
+    similarity_metric: str = Field(min_length=1)
+    demand_embeddings: dict[str, list[float]] = Field(min_length=1)
+    patent_embeddings: dict[str, list[float]] = Field(min_length=1)
+    artifact_sha256: str = Field(min_length=64, max_length=64)
+
+    @field_validator("model_revision")
+    @classmethod
+    def validate_revision_hex(cls, v: str) -> str:
+        if not re.match(r"^[0-9a-f]{40}$", v.lower()):
+            raise ValueError(f"Invalid model_revision '{v}': expected exactly 40 hex characters (a full git SHA)")
+        return v.lower()
+
+    @field_validator("generation_script_commit")
+    @classmethod
+    def validate_commit_hash(cls, v: str) -> str:
+        if not re.match(r"^[0-9a-fA-F]{7,40}$", v):
+            raise ValueError(f"Invalid generation_script_commit '{v}': expected 7-40 hexadecimal characters")
+        return v.lower()
+
+    @field_validator("dataset_sha256", "artifact_sha256")
+    @classmethod
+    def validate_sha256(cls, v: str) -> str:
+        if not re.match(r"^[0-9a-f]{64}$", v.lower()):
+            raise ValueError(f"Invalid SHA-256 digest format: {v}")
+        return v.lower()
+
+    @model_validator(mode="after")
+    def validate_embedding_dimensions(self) -> "FrozenEmbeddingArtifact":
+        for space_name, space in (
+            ("demand", self.demand_embeddings),
+            ("patent", self.patent_embeddings),
+        ):
+            for key, vector in space.items():
+                if len(vector) != self.embedding_dimension:
+                    raise ValueError(
+                        f"{space_name} embedding '{key}' has dimension {len(vector)}, "
+                        f"expected embedding_dimension={self.embedding_dimension}"
+                    )
+        return self
+
+    def verify_source_dataset(self, validated_dataset: ValidatedDataset) -> None:
+        """Fails fast if this artifact no longer matches the sealed dataset it declares.
+
+        Checks both the dataset's content hash (ADR 0006) and the exact identifier sets —
+        an artifact whose dataset_sha256 matches but whose embedded ids are a stale subset
+        (or superset) of the current dataset would otherwise pass a hash-only check.
+        """
+        if self.dataset_sha256 != validated_dataset.manifest.content_sha256:
+            raise ValueError(
+                f"Source dataset drift detected for artifact '{self.artifact_id}': "
+                f"declares dataset_sha256={self.dataset_sha256}, but the loaded dataset "
+                f"has content_sha256={validated_dataset.manifest.content_sha256}. "
+                f"This artifact (ADR 0014) no longer matches the dataset it was derived from."
+            )
+
+        actual_demand_ids = {d.demand_id for d in validated_dataset.dataset.demands}
+        actual_patent_ids = {p.publication_id for p in validated_dataset.dataset.patents}
+
+        if set(self.demand_embeddings.keys()) != actual_demand_ids:
+            raise ValueError(
+                f"Artifact '{self.artifact_id}' demand_embeddings keys "
+                f"{sorted(self.demand_embeddings.keys())} do not exactly match the sealed "
+                f"dataset's demand_ids {sorted(actual_demand_ids)}"
+            )
+        if set(self.patent_embeddings.keys()) != actual_patent_ids:
+            raise ValueError(
+                f"Artifact '{self.artifact_id}' patent_embeddings keys "
+                f"{sorted(self.patent_embeddings.keys())} do not exactly match the sealed "
+                f"dataset's publication_ids {sorted(actual_patent_ids)}"
+            )
+
+    @classmethod
+    def load_from_json(cls, file_path: str | Path) -> "FrozenEmbeddingArtifact":
+        import hashlib
+        import json as _json
+
+        path = Path(file_path)
+        if not path.exists():
+            raise FileNotFoundError(f"Frozen embedding artifact not found: {path}")
+
+        with path.open("r", encoding="utf-8") as f:
+            data = _json.load(f)
+
+        declared_sha = data.pop("artifact_sha256", None)
+        if not declared_sha:
+            raise ValueError(
+                f"Cryptographic integrity verification failed for {path}: "
+                f"missing mandatory declared 'artifact_sha256'"
+            )
+
+        canonical_bytes = _json.dumps(data, sort_keys=True, indent=2).encode("utf-8")
+        computed_sha = hashlib.sha256(canonical_bytes).hexdigest()
+
+        if declared_sha.lower() != computed_sha.lower():
+            raise ValueError(
+                f"Cryptographic integrity verification failed for {path}: "
+                f"declared {declared_sha}, computed {computed_sha}"
+            )
+
+        data["artifact_sha256"] = computed_sha
+        return cls(**data)

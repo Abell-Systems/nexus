@@ -1,0 +1,23 @@
+# Pinned environment for scripts/generate_m1_embeddings.py ONLY (ADR 0014).
+#
+# These dependencies exist to reproduce the frozen M1 semantic embedding artifact
+# once, offline. Nexus's runtime (domain/application/infrastructure) never imports
+# torch, transformers, or sentence-transformers — enforced by the
+# `embedding-generation-stack-isolation` Import Linter contract in .importlinter.
+# This file is NOT backend/requirements.txt and must never be merged into it.
+#
+# --extra-index-url is load-bearing: without it, `pip install torch==2.5.1` resolves
+# the default CUDA-bundled wheel (large, and not the CPU-only generation environment
+# ADR 0014 §5 requires), not the CPU-only one pinned below. It affects only this
+# generation environment's torch install — it is not a Nexus runtime concern.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+torch==2.5.1+cpu
+transformers==4.47.1
+sentence-transformers==3.4.1
+
+# Needed only because the generation script loads Nexus's dataset/artifact domain models
+# (backend/src/main/domain/models/evaluation.py) to verify the sealed dataset before
+# generating — not part of the embedding-generation stack itself. Pinned to match
+# backend/requirements.txt so both environments validate the same models identically.
+pydantic==2.13.4

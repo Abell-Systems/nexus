@@ -95,6 +95,18 @@ def test_import_linter_config_semantic_rules():
     for expected in ("google", "openai", "anthropic", "litellm", "langgraph", "llama_index"):
         assert expected in forbidden_providers, f"Expected forbidden provider '{expected}' in {forbidden_providers}"
 
+    # 7. Embedding-generation-stack isolation contract (ADR 0014): the M1 offline
+    # generation stack (torch/transformers/sentence_transformers) belongs only to a
+    # standalone generation script, never to the Nexus runtime that consumes its frozen
+    # artifact.
+    sec_embed = "importlinter:contract:embedding-generation-stack-isolation"
+    assert config.get(sec_embed, "type") == "forbidden"
+    source_embed = set(config.get(sec_embed, "source_modules").split())
+    assert {"domain", "application", "infrastructure"}.issubset(source_embed)
+    forbidden_embed = set(config.get(sec_embed, "forbidden_modules").split())
+    for expected in ("torch", "transformers", "sentence_transformers"):
+        assert expected in forbidden_embed, f"Expected forbidden module '{expected}' in {forbidden_embed}"
+
 
 def test_lint_imports_executes_cleanly():
     """Verify that lint-imports executes cleanly with 0 broken contracts."""
@@ -140,6 +152,38 @@ def test_provider_sdk_isolation_behaviorally_catches_leaks():
         )
         assert proc.returncode != 0, "lint-imports must fail when provider SDK is imported into application"
         assert "application._temp_provider_leak -> openai" in proc.stdout
+    finally:
+        if leak_file.exists():
+            leak_file.unlink()
+
+
+def test_embedding_generation_stack_isolation_behaviorally_catches_leaks():
+    """Behavioral meta-test: importing torch inside infrastructure must fail lint-imports.
+
+    infrastructure is included (unlike provider-sdk-isolation, which only covers
+    domain/application) because the M1 artifact loader — a future infrastructure
+    component consuming the frozen embedding artifact (ADR 0014) — must never need
+    the generation stack; only the standalone scripts/generate_m1_embeddings.py does.
+    """
+    repo_root = _get_repo_root()
+    leak_file = repo_root / "backend" / "src" / "main" / "infrastructure" / "_temp_embedding_leak.py"
+    leak_file.write_text("import torch\n", encoding="utf-8")
+
+    backend_src_main = str(repo_root / "backend" / "src" / "main")
+    env = os.environ.copy()
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{backend_src_main}:{existing_pythonpath}" if existing_pythonpath else backend_src_main
+
+    try:
+        proc = subprocess.run(
+            ["lint-imports", "--no-logo", "--contract", "embedding-generation-stack-isolation"],
+            cwd=str(repo_root),
+            env=env,
+            capture_output=True,
+            text=True,
+        )
+        assert proc.returncode != 0, "lint-imports must fail when torch is imported into infrastructure"
+        assert "infrastructure._temp_embedding_leak -> torch" in proc.stdout
     finally:
         if leak_file.exists():
             leak_file.unlink()
