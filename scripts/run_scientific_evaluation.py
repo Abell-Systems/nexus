@@ -224,8 +224,13 @@ def main() -> int:
     print("================================================================================")
 
     if args.output is not None:
+        import json as _json
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(report.model_dump_json(indent=2), encoding="utf-8")
+        report_dict = _json.loads(report.model_dump_json(indent=2))
+        # ADR 0011: every output must declare study_status and reference the study protocol
+        report_dict["study_status"] = "PILOT"
+        report_dict["study_protocol_id"] = "NEXUS-PHASE2-ABLATION-M0-M6"
+        args.output.write_text(_json.dumps(report_dict, indent=2), encoding="utf-8")
         print(f"Report JSON saved to: {args.output}")
 
     return 0
