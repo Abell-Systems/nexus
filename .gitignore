@@ -33,7 +33,9 @@ data/*
 !data/snapshots/
 !data/raw/
 !data/evaluation/
-data/experiments/
+!data/experiments/
+data/experiments/*
+!data/experiments/power_analysis_wilcoxon.json
 
 # --- OS / IDE ---
 .DS_Store
