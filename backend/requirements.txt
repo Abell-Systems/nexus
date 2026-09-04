@@ -8,3 +8,4 @@ duckdb>=0.10.0
 numpy>=2.0.0
 scipy>=1.14.0
 httpx>=0.28.0
+beautifulsoup4>=4.12.0

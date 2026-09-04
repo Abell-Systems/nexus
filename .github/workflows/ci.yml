@@ -116,8 +116,9 @@ jobs:
           cache-dependency-path: |
             backend/requirements.txt
             backend/requirements-dev.txt
+            backend/requirements-adk.txt
       - name: Install dependencies
-        run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt
+        run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt -r backend/requirements-adk.txt
       - name: Unit Tests
         run: pytest backend/test/unit -v --cov=backend/src/main --cov-report=xml:coverage.xml
       - name: Integration Tests
