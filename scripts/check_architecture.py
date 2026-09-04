@@ -20,7 +20,9 @@ Enforces:
 """
 
 import ast
+import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -173,6 +175,16 @@ class LayerImportVisitor(ast.NodeVisitor):
 
 
 def check_backend_layer_dependencies(errors: list[str]) -> None:
+    """Checks Python AST-level invariants not expressible via standard import graph.
+
+    Inter-layer and cross-subsystem module contracts (domain vs application vs infrastructure,
+    evaluation decoupling, adapter boundary) are declared and enforced by Import Linter in
+    .importlinter via check_import_linter_contracts().
+
+    This visitor specifically enforces framework-isolation invariants:
+    - domain must never import external heavy frameworks (fastapi, google.adk, duckdb, pyarrow, google.cloud).
+    - application must never import delivery/agent frameworks (google.adk, fastapi).
+    """
     backend_main = REPO_ROOT / "backend" / "src" / "main"
     if not backend_main.exists():
         return
@@ -184,7 +196,7 @@ def check_backend_layer_dependencies(errors: list[str]) -> None:
             continue
 
         layer = parts[0]
-        if layer not in ("domain", "application", "infrastructure"):
+        if layer not in ("domain", "application"):
             continue
 
         try:
@@ -199,31 +211,19 @@ def check_backend_layer_dependencies(errors: list[str]) -> None:
         for mod, lineno in visitor.imported_modules:
             rel_file = py_file.relative_to(REPO_ROOT)
 
-            # Domain Layer Invariants
-            if layer == "domain":
-                if mod.startswith("application") or mod.startswith(".application"):
-                    errors.append(
-                        f"FAIL: forbidden dependency: {rel_file}:{lineno} (domain imports application: {mod})"
-                    )
-                if mod.startswith("infrastructure") or mod.startswith(".infrastructure"):
-                    errors.append(
-                        f"FAIL: forbidden dependency: {rel_file}:{lineno} (domain imports infrastructure: {mod})"
-                    )
-                if any(mod.startswith(fw) for fw in ("fastapi", "google.adk", "duckdb", "pyarrow", "google.cloud")):
-                    errors.append(
-                        f"FAIL: forbidden dependency: {rel_file}:{lineno} (domain imports framework: {mod})"
-                    )
+            # Framework Isolation in Domain
+            if layer == "domain" and any(
+                mod.startswith(fw) for fw in ("fastapi", "google.adk", "duckdb", "pyarrow", "google.cloud")
+            ):
+                errors.append(
+                    f"FAIL: forbidden framework dependency in domain: {rel_file}:{lineno} (imports: {mod})"
+                )
 
-            # Application Layer Invariants
-            if layer == "application":
-                if mod.startswith("infrastructure") or mod.startswith(".infrastructure"):
-                    errors.append(
-                        f"FAIL: forbidden dependency: {rel_file}:{lineno} (application imports infrastructure: {mod})"
-                    )
-                if mod.startswith("google.adk") or mod.startswith("fastapi"):
-                    errors.append(
-                        f"FAIL: forbidden dependency: {rel_file}:{lineno} (application imports framework: {mod})"
-                    )
+            # Framework Isolation in Application
+            if layer == "application" and any(mod.startswith(fw) for fw in ("google.adk", "fastapi")):
+                errors.append(
+                    f"FAIL: forbidden framework dependency in application: {rel_file}:{lineno} (imports: {mod})"
+                )
 
 
 TS_IMPORT_PATTERN = re.compile(
@@ -272,6 +272,33 @@ def check_frontend_layer_dependencies(errors: list[str]) -> None:
                 )
 
 
+def check_import_linter_contracts(errors: list[str]) -> None:
+    """Runs import-linter to verify declared architectural contracts in .importlinter."""
+    config_file = REPO_ROOT / ".importlinter"
+    if not config_file.exists():
+        errors.append("FAIL: .importlinter configuration file is missing at repository root.")
+        return
+
+    backend_src_main = str(REPO_ROOT / "backend" / "src" / "main")
+    env = os.environ.copy()
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{backend_src_main}:{existing_pythonpath}" if existing_pythonpath else backend_src_main
+
+    try:
+        proc = subprocess.run(
+            ["lint-imports", "--no-logo"],
+            cwd=str(REPO_ROOT),
+            env=env,
+            capture_output=True,
+            text=True,
+        )
+        if proc.returncode != 0:
+            output = (proc.stdout + "\n" + proc.stderr).strip()
+            errors.append(f"FAIL: import-linter contract violation:\n{output}")
+    except FileNotFoundError:
+        errors.append("FAIL: 'lint-imports' command not found. Ensure 'import-linter' is installed in requirements-dev.txt.")
+
+
 def main() -> int:
     errors: list[str] = []
 
@@ -280,6 +307,7 @@ def main() -> int:
     check_frontend_files(errors)
     check_backend_layer_dependencies(errors)
     check_frontend_layer_dependencies(errors)
+    check_import_linter_contracts(errors)
 
     if errors:
         print("\n" + "=" * 70, file=sys.stderr)
@@ -290,7 +318,7 @@ def main() -> int:
         print("=" * 70 + "\n", file=sys.stderr)
         return 1
 
-    print("Architecture check: PASS (Clean Architecture 3-Tier Layer Invariants Validated)")
+    print("Architecture check: PASS (Clean Architecture 3-Tier Layer Invariants & Import Linter Contracts Validated)")
     return 0
 
 
