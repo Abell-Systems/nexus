@@ -365,8 +365,8 @@ class HypothesisTestResult(BaseModel):
     treatment: str = Field(min_length=1)
     metric: str = Field(min_length=1)
     scope: str
-    wilcoxon: object  # WilcoxonResult (PR #22 frozen dataclass)
-    bootstrap_ci: object  # BootstrapCIResult (PR #22 frozen dataclass)
+    wilcoxon: "object"  # WilcoxonResult (PR #22 frozen dataclass)
+    bootstrap_ci: "object"  # BootstrapCIResult (PR #22 frozen dataclass)
     adjusted_q_value: float = Field(ge=0.0, le=1.0)
     rejected: bool
 
