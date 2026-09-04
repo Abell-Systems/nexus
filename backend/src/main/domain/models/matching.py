@@ -321,7 +321,17 @@ def compute_bm25_scores(
     infrastructure/matching/duckdb_bm25.py's DuckDbBM25Retriever calls this same function for
     its scoring core, then applies its own eligibility filtering and top-K truncation for live
     candidate generation — behavior a closed evaluation benchmark must not have (ADR 0013).
+
+    Raises:
+        ValueError: if k1 or b is outside Okapi BM25's valid domain (k1 >= 0, 0 <= b <= 1) or
+            not finite. This is a contract check on the algorithm's parameters, not a runtime
+            path exercised by the current fixed defaults.
     """
+    if not math.isfinite(k1) or k1 < 0.0:
+        raise ValueError(f"k1 must be a finite number >= 0, got {k1}")
+    if not math.isfinite(b) or not (0.0 <= b <= 1.0):
+        raise ValueError(f"b must be a finite number in [0, 1], got {b}")
+
     if not documents:
         return {}
 
@@ -356,7 +366,7 @@ def compute_bm25_scores(
             denominator = f_term + k1 * (1.0 - b + b * (doc_len / avgdl if avgdl > 0 else 1.0))
             bm25_score += idf * (f_term * (k1 + 1.0) / denominator)
 
-        scores[pub_id] = round(bm25_score, 6)
+        scores[pub_id] = bm25_score
 
     return scores
 
