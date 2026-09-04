@@ -149,15 +149,6 @@ class EligibilityResult(BaseModel):
     details: str | None = None
 
 
-class MatchingResult(BaseModel):
-    """Result of Stage 1 Retrieval + Stage 2 Ranking over the shared fixed pool."""
-
-    demand_id: str
-    pool: CandidatePool
-    rankings: dict[str, list[RankedCandidate]] = Field(default_factory=dict)
-    metadata: dict[str, Any] = Field(default_factory=dict)
-
-
 class ParsedCPCSymbol(BaseModel):
     """Structured representation of a CPC classification symbol.
     

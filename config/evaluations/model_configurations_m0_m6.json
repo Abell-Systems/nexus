@@ -11,7 +11,7 @@
     {
       "model_id": "M0",
       "description": "Lexical baseline; deterministic derived_ranking_feature (ADR 0013) computed from each candidate's observed title/abstract text over the closed benchmark pool using Okapi BM25 with k1=1.5, b=0.75, never from annotations",
-      "ranker": "LexicalRanker",
+      "ranker": "compute_bm25_scores (domain/models/matching.py)",
       "weights": {
         "k1": 1.5,
         "b": 0.75
@@ -21,24 +21,24 @@
     },
     {
       "model_id": "M1",
-      "description": "Dense semantic retrieval",
-      "ranker": "SemanticRanker",
+      "description": "Dense semantic retrieval; deterministic derived_ranking_feature (ADR 0014) computed as cosine similarity between the frozen M1 embedding artifact's demand and patent vectors",
+      "ranker": "cosine_similarity (domain/models/matching.py)",
       "weights": null,
       "version": "1.0.0",
       "provenance_status": "PRE_EXISTING_INITIAL_CONFIGURATION"
     },
     {
       "model_id": "M2",
-      "description": "CPC concordance / structural taxonomy",
-      "ranker": "CPCRanker",
+      "description": "CPC concordance / structural taxonomy, computed against policy.cpc_concordance_levels",
+      "ranker": "compute_cpc_symbol_similarity_from_levels (domain/models/matching.py)",
       "weights": null,
       "version": "1.0.0",
       "provenance_status": "PRE_EXISTING_INITIAL_CONFIGURATION"
     },
     {
       "model_id": "M3",
-      "description": "Tripartite evidence assessment layered on the hybrid-ranked pool (DefaultEvidenceEvaluator); no independent weight config exists for this stage",
-      "ranker": "HybridRanker",
+      "description": "Tripartite evidence assessment layered on the fused evidence assessment (DefaultEvidenceEvaluator); no independent weight config exists for this stage",
+      "ranker": "DefaultMatchingEngine (DefaultEvidenceEvaluator)",
       "weights": {
         "alpha": 0.35,
         "beta": 0.45,
@@ -49,8 +49,8 @@
     },
     {
       "model_id": "M4",
-      "description": "Origin policy resolution layered on the hybrid-ranked pool (origin_resolver.py); no independent weight config exists for this stage",
-      "ranker": "HybridRanker",
+      "description": "Origin policy resolution layered on the fused evidence assessment (origin_resolver.py); no independent weight config exists for this stage",
+      "ranker": "DefaultMatchingEngine (DefaultEvidenceEvaluator)",
       "weights": {
         "alpha": 0.35,
         "beta": 0.45,
@@ -61,8 +61,8 @@
     },
     {
       "model_id": "M5",
-      "description": "Multi-agent synthesis (inventor/adversarial agents) layered on the hybrid-ranked pool; no independent weight config exists for this stage",
-      "ranker": "HybridRanker",
+      "description": "Multi-agent synthesis (inventor/adversarial agents) layered on the fused evidence assessment; no independent weight config exists for this stage",
+      "ranker": "DefaultMatchingEngine (DefaultEvidenceEvaluator)",
       "weights": {
         "alpha": 0.35,
         "beta": 0.45,
@@ -73,8 +73,8 @@
     },
     {
       "model_id": "M6",
-      "description": "Nexus complete pipeline; uses the frozen HybridRanker weights from default_matching_policy.json",
-      "ranker": "HybridRanker",
+      "description": "Nexus complete pipeline; DefaultMatchingEngine/DefaultEvidenceEvaluator fusing all three signals with the frozen alpha/beta/gamma weights from default_matching_policy.json",
+      "ranker": "DefaultMatchingEngine (DefaultEvidenceEvaluator)",
       "weights": {
         "alpha": 0.35,
         "beta": 0.45,
@@ -84,5 +84,5 @@
       "provenance_status": "PRE_EXISTING_INITIAL_CONFIGURATION"
     }
   ],
-  "config_sha256": "f5634b6bf7f4f8d7e51667187bcaf54acf4978ee05f8d54fcc5d7ff30daee369"
+  "config_sha256": "4374c187e19e2aba9a9035d2a79b091c9656eb4b9a446e24d2a4d1949a8eecaf"
 }
