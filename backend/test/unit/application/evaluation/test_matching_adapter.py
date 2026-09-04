@@ -126,7 +126,7 @@ class MatchingAdapterTest:
         ]
 
         engine = _RecordingEngine()
-        adapter = DefaultMatchingAdapter(engine=engine, policy=_policy())
+        adapter = DefaultMatchingAdapter(engine=engine, policy=_policy(), bm25_k1=1.5, bm25_b=0.75)
 
         ranked = adapter.rank_candidates(_demand(), patents)
 
@@ -155,7 +155,7 @@ class MatchingAdapterTest:
         ]
 
         engine = _RecordingEngine()
-        adapter = DefaultMatchingAdapter(engine=engine, policy=_policy())
+        adapter = DefaultMatchingAdapter(engine=engine, policy=_policy(), bm25_k1=1.5, bm25_b=0.75)
 
         ranked = adapter.rank_candidates(_demand(), patents)
 
@@ -177,7 +177,7 @@ class MatchingAdapterTest:
         ]
 
         engine = _RecordingEngine()
-        adapter = DefaultMatchingAdapter(engine=engine, policy=_policy())
+        adapter = DefaultMatchingAdapter(engine=engine, policy=_policy(), bm25_k1=1.5, bm25_b=0.75)
 
         adapter.rank_candidates(_demand(), patents)
 
@@ -188,3 +188,93 @@ class MatchingAdapterTest:
         assert candidate.retrieval_scores[RetrievalMethod.LEXICAL] == 0.0, (
             "A candidate with no term overlap must be scored 0.0, not dropped from the pool."
         )
+
+    def test_should_use_injected_bm25_parameters_when_they_differ_from_library_defaults(self):
+        """Proves the constructor's bm25_k1/bm25_b actually reach the scoring computation.
+
+        Two adapters differing only in constructor k1/b must produce different scores for the
+        same input — this is what makes the frozen manifest (ADR 0012) the real authority over
+        execution rather than decorative documentation next to an implementation default. If a
+        future change made the adapter silently ignore these constructor arguments and fall
+        back to compute_bm25_scores' own defaults, this test would fail even though every other
+        test in this file (which happens to pass the same values as the library defaults) would
+        keep passing.
+        """
+        prov = _provenance()
+        patents = [
+            EvaluationPatent(
+                publication_id="EP-1",
+                publication_date=date(2022, 3, 15),
+                classifications_cpc=["C11D1/00"],
+                title="Biodegradable surfactant composition",
+                abstract="A biodegradable surfactant formulated for low-temperature washing.",
+                provenance=prov,
+            ),
+        ]
+
+        engine_default = _RecordingEngine()
+        DefaultMatchingAdapter(
+            engine=engine_default, policy=_policy(), bm25_k1=1.5, bm25_b=0.75
+        ).rank_candidates(_demand(), patents)
+
+        engine_other = _RecordingEngine()
+        DefaultMatchingAdapter(
+            engine=engine_other, policy=_policy(), bm25_k1=2.5, bm25_b=0.25
+        ).rank_candidates(_demand(), patents)
+
+        from domain.models.matching import RetrievalMethod
+
+        score_default = engine_default.received_candidates.candidates[0].retrieval_scores[
+            RetrievalMethod.LEXICAL
+        ]
+        score_other = engine_other.received_candidates.candidates[0].retrieval_scores[
+            RetrievalMethod.LEXICAL
+        ]
+        assert score_default != score_other, (
+            "Different constructor k1/b must produce different scores — otherwise the "
+            "adapter is not actually using the injected parameters."
+        )
+
+    def test_should_match_frozen_manifest_declared_parameters_when_scoring(self):
+        """End-to-end: loads the real frozen manifest (ADR 0012), extracts M0's declared k1/b,
+        and confirms the adapter constructed with them produces exactly what an independent
+        direct call to compute_bm25_scores with those same declared values produces. This is
+        the actual chain the review required: manifest -> declared configuration -> execution.
+        """
+        from pathlib import Path
+
+        from domain.models.evaluation import ModelConfigurationManifest
+        from domain.models.matching import RetrievalMethod, compute_bm25_scores
+
+        manifest_path = (
+            Path(__file__).resolve().parents[5] / "config" / "evaluations" / "model_configurations_m0_m6.json"
+        )
+        manifest = ModelConfigurationManifest.load_from_json(manifest_path)
+        m0 = next(m for m in manifest.models if m.model_id == "M0")
+        assert m0.weights is not None, "M0 must declare BM25 parameters in the frozen manifest"
+
+        prov = _provenance()
+        patent = EvaluationPatent(
+            publication_id="EP-1",
+            publication_date=date(2022, 3, 15),
+            classifications_cpc=["C11D1/00"],
+            title="Biodegradable surfactant composition",
+            abstract="A biodegradable surfactant formulated for low-temperature washing.",
+            provenance=prov,
+        )
+        demand = _demand()
+
+        engine = _RecordingEngine()
+        DefaultMatchingAdapter(
+            engine=engine, policy=_policy(), bm25_k1=m0.weights["k1"], bm25_b=m0.weights["b"]
+        ).rank_candidates(demand, [patent])
+
+        expected = compute_bm25_scores(
+            f"{demand.title} {demand.description}",
+            {patent.publication_id: f"{patent.title} {patent.abstract}"},
+            k1=m0.weights["k1"],
+            b=m0.weights["b"],
+        )[patent.publication_id]
+
+        actual = engine.received_candidates.candidates[0].retrieval_scores[RetrievalMethod.LEXICAL]
+        assert actual == expected
