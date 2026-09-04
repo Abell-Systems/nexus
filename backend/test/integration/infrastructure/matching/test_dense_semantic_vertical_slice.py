@@ -4,7 +4,7 @@ import pytest
 from domain.models.demand import DemandSignal
 from domain.models.matching import RetrievalMethod
 from infrastructure.matching.dense_semantic import DuckDbDenseSemanticRetriever, TextEmbedder
-from infrastructure.matching.vector_math import cosine_similarity
+from domain.models.matching import cosine_similarity
 
 
 class MockDeterministicEmbedder(TextEmbedder):

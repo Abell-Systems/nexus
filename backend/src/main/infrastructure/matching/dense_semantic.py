@@ -8,6 +8,7 @@ from domain.models.matching import (
     Candidate,
     EligibilityReason,
     RetrievalMethod,
+    cosine_similarity,
 )
 from domain.models.patent import PatentDocument
 from domain.protocols.matching import (
@@ -17,7 +18,6 @@ from domain.protocols.matching import (
 
 from .duckdb_helpers import resolve_patent_columns
 from .eligibility import DefaultPatentEligibilityPolicy
-from .vector_math import cosine_similarity
 
 
 @runtime_checkable
