@@ -11,7 +11,10 @@ Invariants enforced:
 8. Adapter isolation: matching_adapter.py is the ONLY file in application/evaluation/ permitted to
    import from domain.models.matching or domain.protocols.matching.
 9. Evidence integrity: adapter passes complete PatentCandidateEvidence with real data to the engine.
-10. Honest pool: adapter must not fabricate retrieval scores (retrieval_scores={} only).
+10. Derived ranking features (ADR 0013): permitted only when grounded in observed evidence —
+    never from annotations/relevance grades, and never altering the closed candidate universe.
+    No specific derived feature is implemented as of this file; these tests enforce the boundary
+    ahead of any implementation (contract -> test -> code, per ADR 0013 §3).
 """
 
 import ast
@@ -340,7 +343,10 @@ def test_adapter_passes_real_evidence_to_engine(_fake_engine_and_call_record):
     Verifies that:
     - Each patent in the evaluation dataset produces one PatentCandidateEvidence entry
     - CPC classifications, title, and abstract are passed through without modification
-    - retrieval_scores={} for all candidates (no synthetic evidence)
+
+    Closed-candidate-universe and derived-ranking-feature boundary invariants (ADR 0013)
+    are covered separately below, since they apply regardless of what — if anything —
+    populates retrieval_scores.
     """
     fake_engine, policy, calls = _fake_engine_and_call_record
 
@@ -386,14 +392,7 @@ def test_adapter_passes_real_evidence_to_engine(_fake_engine_and_call_record):
     # 1. Ranked list contains all patent ids
     assert set(ranked) == {"EP-1", "EP-2"}
 
-    # 2. All candidates have retrieval_scores={} — no synthetic evidence
-    for candidate in calls["candidates"].candidates:
-        assert candidate.retrieval_scores == {}, (
-            f"Candidate {candidate.publication_id} must have retrieval_scores={{}}. "
-            "No synthetic retrieval evidence may be fabricated for a sealed benchmark pool."
-        )
-
-    # 3. Real patent evidence was passed to the engine
+    # 2. Real patent evidence was passed to the engine
     assert calls["patent_metadata"] is not None
     evidence_by_id = {ev.publication_id: ev for ev in calls["patent_metadata"]}
 
@@ -409,21 +408,133 @@ def test_adapter_passes_real_evidence_to_engine(_fake_engine_and_call_record):
 
 
 # ---------------------------------------------------------------------------
-# 10. Honest pool — adapter must not fabricate retrieval scores
+# 10. Derived ranking features — permitted only per ADR 0013
 # ---------------------------------------------------------------------------
+#
+# ADR 0013 distinguishes observed_evidence (title/abstract/CPC/date, verbatim from the
+# sealed dataset) from derived_ranking_feature (deterministically computed FROM observed
+# evidence, never from annotations). It does not itself implement any derived feature —
+# these tests enforce the two conditions that are checkable independently of whatever
+# derived feature is eventually added (e.g. lexical BM25 in a future PR):
+#   - the closed candidate universe must never be altered by ranking computation
+#   - the code path that builds candidates/evidence must have no access to annotations
+# A third test pins today's actual behavior (no derived feature exists yet) as a
+# regression check, not as a standing architectural law — that assertion is expected to
+# change the moment a derived feature is implemented in compliance with the two above.
 
-def test_adapter_does_not_fabricate_retrieval_scores_for_sealed_pool():
-    """ADR 0007: adapter must use retrieval_scores={} — no synthetic evidence."""
-    adapter_file = _eval_dir() / "matching_adapter.py"
-    code = adapter_file.read_text(encoding="utf-8")
+def test_should_preserve_closed_candidate_universe_when_ranking(_fake_engine_and_call_record):
+    """ADR 0013 condition 4: ranking computation must not filter, exclude, or add candidates.
 
-    forbidden_patterns = [
-        "RetrievalMethod.LEXICAL",
-        "RetrievalMethod.SEMANTIC",
-        "retrieval_scores={RetrievalMethod",
+    Every publication_id passed in as a patent must appear exactly once in the candidate
+    pool handed to the engine, regardless of any score a future derived feature computes —
+    a zero or low score is a ranking outcome, not a reason to drop a candidate.
+    """
+    fake_engine, policy, calls = _fake_engine_and_call_record
+
+    prov = EvaluationProvenance(
+        source_authority="oepm",
+        source_uri="https://example.com",
+        extraction_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+        raw_payload_sha256="f" * 64,
+        modality=DataModality.OBSERVED,
+    )
+    demand = EvaluationDemand(
+        demand_id="D-TEST",
+        title="Test Demand",
+        description="Test description",
+        posted_date=date(2023, 6, 1),
+        target_cpc_prefixes=["E03C"],
+        provenance=prov,
+    )
+    patents = [
+        EvaluationPatent(
+            publication_id=f"EP-{i}",
+            publication_date=date(2022, 3, 15),
+            classifications_cpc=["E03C1/02"],
+            title=f"Patent {i}",
+            abstract="Unrelated abstract text with no query term overlap whatsoever.",
+            provenance=prov,
+        )
+        for i in range(5)
     ]
-    for pattern in forbidden_patterns:
-        assert pattern not in code, (
-            f"Forbidden synthetic retrieval score in matching_adapter.py: '{pattern}'. "
-            "Sealed benchmark pools must use retrieval_scores={{}}."
+
+    adapter = DefaultMatchingAdapter(engine=fake_engine, policy=policy)
+    adapter.rank_candidates(demand, patents)
+
+    candidate_ids = {c.publication_id for c in calls["candidates"].candidates}
+    assert candidate_ids == {p.publication_id for p in patents}, (
+        "Closed candidate universe must be preserved exactly: every input patent must "
+        "appear as a candidate, even when a derived feature would score it 0.0."
+    )
+    assert len(calls["candidates"].candidates) == len(patents), (
+        "Candidate count must equal patent count — no deduplication, filtering, or "
+        "top-K truncation permitted in the evaluation adapter."
+    )
+
+
+def test_should_forbid_annotation_imports_in_matching_adapter_when_deriving_features():
+    """ADR 0013 condition 2: derived features must never be computed from ground truth.
+
+    matching_adapter.py builds candidates and evidence for the engine — the one place a
+    future derived feature (e.g. BM25) would be computed. It must never import
+    EvaluationAnnotation or RelevanceGrade: if it cannot reference them, it cannot leak them
+    into a feature's computation, regardless of what that computation turns out to be.
+    """
+    forbidden_symbols = ("EvaluationAnnotation", "RelevanceGrade")
+    tree, adapter_file = _read_ast("backend/src/main/application/evaluation/matching_adapter.py")
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom):
+            for alias in node.names:
+                assert alias.name not in forbidden_symbols, (
+                    f"{adapter_file.name} imports '{alias.name}'. Under ADR 0013, the module "
+                    "that builds candidates/evidence for a derived ranking feature must have "
+                    "no access to ground-truth annotations."
+                )
+
+
+def test_should_produce_no_derived_features_yet_pending_future_implementation(
+    _fake_engine_and_call_record,
+):
+    """Regression pin, not an architectural law: as of this file, no derived ranking feature
+    is implemented, so every candidate's retrieval_scores is still {}. This assertion is
+    expected to change the moment a derived feature satisfying ADR 0013 (conditions verified
+    above) is implemented — unlike the two tests above, it does not encode a permanent rule.
+    """
+    fake_engine, policy, calls = _fake_engine_and_call_record
+
+    prov = EvaluationProvenance(
+        source_authority="oepm",
+        source_uri="https://example.com",
+        extraction_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+        raw_payload_sha256="f" * 64,
+        modality=DataModality.OBSERVED,
+    )
+    demand = EvaluationDemand(
+        demand_id="D-TEST",
+        title="Test Demand",
+        description="Test description",
+        posted_date=date(2023, 6, 1),
+        target_cpc_prefixes=["E03C"],
+        provenance=prov,
+    )
+    patents = [
+        EvaluationPatent(
+            publication_id="EP-1",
+            publication_date=date(2022, 3, 15),
+            classifications_cpc=["E03C1/02"],
+            title="Drainage valve",
+            abstract="A valve for draining water.",
+            provenance=prov,
+        )
+    ]
+
+    adapter = DefaultMatchingAdapter(engine=fake_engine, policy=policy)
+    adapter.rank_candidates(demand, patents)
+
+    for candidate in calls["candidates"].candidates:
+        assert candidate.retrieval_scores == {}, (
+            f"Candidate {candidate.publication_id} has retrieval_scores={candidate.retrieval_scores}. "
+            "If a derived ranking feature was just implemented, update this test to assert its "
+            "expected values instead of {} — see ADR 0013 for the conditions it must satisfy."
         )
