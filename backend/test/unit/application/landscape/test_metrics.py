@@ -1,7 +1,8 @@
 """Unit tests for white-space metrics and citation traction calculations."""
 
 from application.landscape.metrics import compute_citation_traction, compute_white_space_metrics
-from domain.models.runtime_schemas import DemandSignalItem, PatentRecord
+from domain.models.demand import DemandSignal
+from domain.models.runtime_schemas import PatentRecord
 
 
 def test_compute_citation_traction_handles_null_citations():
@@ -39,12 +40,12 @@ def test_compute_white_space_metrics():
         )
     ]
     demands = [
-        DemandSignalItem(
-            source="innoget",
-            id="INNOGET-2292",
+        DemandSignal(
+            source_network="innoget",
+            demand_id="INNOGET-2292",
             title="Industrial detergent",
             description="Seeking surfactants",
-            cpc_prefix="C11D",
+            classified_cpc_prefixes=["C11D"],
         )
     ]
     metrics = compute_white_space_metrics(

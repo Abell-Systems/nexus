@@ -25,7 +25,7 @@ for p in (REPO_ROOT, BACKEND_SRC):
 
 from application.landscape.cpc_taxonomy import CPC_TAXONOMY_DICTIONARY
 from application.landscape.metrics import ExecutionMode, compute_white_space_metrics
-from application.synthesis.synthesis_engine import SynthesisEngine as InventionSynthesisEngine
+from application.synthesis.synthesis_engine import SynthesisEngine
 from domain.models.runtime_schemas import AdversarialVerdict, InventionCandidate, ScoreCard
 from infrastructure.llm.adapters import GroqAgentAdapter
 from infrastructure.llm.groq_client import GroqClient as GroqLlmClient
@@ -215,7 +215,7 @@ def run_experiment(
         try:
             client = GroqLlmClient()
             adapter = GroqAgentAdapter(client)
-            engine = InventionSynthesisEngine(adapter)
+            engine = SynthesisEngine(inventor=adapter, adversarial=adapter)
             synthesis_status = "EMPIRICAL (LIVE GROQ SYNTHESIS & ADVERSARIAL VERDICT)"
         except Exception as e:
             engine = None

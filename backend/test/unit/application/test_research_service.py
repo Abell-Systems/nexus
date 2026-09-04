@@ -3,7 +3,8 @@
 import pytest
 
 from application.research_service import ResearchService
-from domain.models.runtime_schemas import DemandSignalItem, PatentRecord
+from domain.models.demand import DemandSignal
+from domain.models.runtime_schemas import PatentRecord
 from infrastructure.telemetry import PipelineProfiler
 
 
@@ -44,12 +45,12 @@ class MockDemandDataSource:
         if self._demands is not None:
             return self._demands
         return [
-            DemandSignalItem(
-                id="dem-1",
+            DemandSignal(
+                demand_id="dem-1",
                 title=f"Industrial challenge {query}",
                 description="Challenge description",
-                source="Innoget",
-                cpc_prefix="H01M",
+                source_network="Innoget",
+                classified_cpc_prefixes=["H01M"],
             )
         ]
 

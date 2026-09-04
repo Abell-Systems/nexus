@@ -2,9 +2,8 @@
 
 from datetime import datetime
 from enum import StrEnum
-from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field
 
 from domain.models.evidence import FieldObservation
 
@@ -12,7 +11,7 @@ from domain.models.evidence import FieldObservation
 class DemandSignal(BaseModel):
     """External technological demand or market challenge signal (canonical domain model)."""
 
-    demand_id: str = ""
+    demand_id: str
     source_network: str = "innoget"
     title: str
     description: str
@@ -22,31 +21,13 @@ class DemandSignal(BaseModel):
     deadline_date: str | None = None
     classified_cpc_prefixes: list[str] = Field(default_factory=list)
     url: str = ""
-    cpc_prefix: str | None = None
-    id: str | None = None
-    source: str | None = None
 
     model_config = ConfigDict(extra="ignore")
 
-    @model_validator(mode="before")
-    @classmethod
-    def _normalize_demand_fields(cls, data: Any) -> Any:
-        if isinstance(data, dict):
-            # Resolve id / demand_id
-            d_id = data.get("demand_id") or data.get("id") or ""
-            data.setdefault("demand_id", d_id)
-            # Resolve source / source_network
-            src = data.get("source_network") or data.get("source") or "innoget"
-            data.setdefault("source_network", src)
-            # Resolve cpc_prefix / classified_cpc_prefixes
-            cpc = data.get("cpc_prefix")
-            if cpc and not data.get("classified_cpc_prefixes"):
-                data["classified_cpc_prefixes"] = [cpc]
-            elif data.get("classified_cpc_prefixes") and not cpc:
-                data["cpc_prefix"] = data["classified_cpc_prefixes"][0]
-            data["id"] = d_id
-            data["source"] = src
-        return data
+    @property
+    def cpc_prefix(self) -> str | None:
+        """First classified CPC prefix if present."""
+        return self.classified_cpc_prefixes[0] if self.classified_cpc_prefixes else None
 
 
 class SpanishOriginLevel(StrEnum):

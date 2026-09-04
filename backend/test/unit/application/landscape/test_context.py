@@ -5,7 +5,8 @@ from application.landscape.context import (
     get_domain_keywords,
     is_supported_domain,
 )
-from domain.models.runtime_schemas import DemandSignalItem, PatentCluster, PatentRecord
+from domain.models.demand import DemandSignal
+from domain.models.runtime_schemas import PatentCluster, PatentRecord
 
 
 def test_is_supported_domain():
@@ -46,11 +47,11 @@ def test_build_cluster_context():
         )
     ]
     demands = [
-        DemandSignalItem(
-            id="d1",
+        DemandSignal(
+            demand_id="d1",
             title="Challenge 1",
             description="Desc",
-            source="innoget",
+            source_network="innoget",
         )
     ]
 

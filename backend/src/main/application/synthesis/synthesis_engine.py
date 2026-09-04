@@ -1,8 +1,8 @@
 """Decoupled Multi-Agent Synthesis & Adversarial Prior-Art Orchestration."""
 
+from domain.models.demand import DemandSignal
 from domain.models.runtime_schemas import (
     AdversarialVerdict,
-    DemandSignal,
     InventionCandidate,
     PatentRecord,
 )
@@ -16,7 +16,7 @@ class SynthesisEngine:
     """Application use-case orchestrating candidate invention proposals and adversarial critiques.
 
     Invariants:
-    - Depends strictly on domain capability ports (InventorAgentProtocol, AdversarialAgentProtocol).
+    - Depends strictly on explicit domain capability ports (InventorAgentProtocol, AdversarialAgentProtocol).
     - Contains ZERO LLM transport abstractions (no chat completions, prompts, temperatures, or formats).
     - Fails fast if required agent ports are missing.
     """
@@ -25,12 +25,9 @@ class SynthesisEngine:
         self,
         inventor: InventorAgentProtocol | None = None,
         adversarial: AdversarialAgentProtocol | None = None,
-        *,
-        agent: InventorAgentProtocol | None = None,
     ) -> None:
-        inv = inventor or agent
-        self.inventor = inv
-        self.adversarial = adversarial or (inv if hasattr(inv, "critique_candidate") else None)
+        self.inventor = inventor
+        self.adversarial = adversarial
 
     def propose_candidate(
         self,
@@ -52,6 +49,3 @@ class SynthesisEngine:
         return self.adversarial.critique_candidate(candidate, prior_art)
 
     critique_candidate = evaluate_adversarial
-
-
-InventionSynthesisEngine = SynthesisEngine

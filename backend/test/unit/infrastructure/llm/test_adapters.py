@@ -5,7 +5,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from domain.models.runtime_schemas import DemandSignal, InventionCandidate, PatentRecord
+from domain.models.demand import DemandSignal
+from domain.models.runtime_schemas import InventionCandidate, PatentRecord
 from infrastructure.llm.adapters import (
     GroqAgentAdapter,
     LlmAgentAdapter,
@@ -40,10 +41,10 @@ def mock_patents() -> list[PatentRecord]:
 def mock_demands() -> list[DemandSignal]:
     return [
         DemandSignal(
-            source="innoget",
-            id="DEM-1",
+            source_network="innoget",
+            demand_id="DEM-1",
             title="High conductivity solid electrolyte",
-            description="Seeking >10 mS/cm at room temperature with moisture stability.",
+            description="Seeking >10 mS/cm at room temperature.",
         )
     ]
 

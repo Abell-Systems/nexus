@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-from domain.models.runtime_schemas import DemandSignalItem
+from domain.models.demand import DemandSignal
 
 
 class InnogetDemandDataSource:
@@ -15,34 +15,34 @@ class InnogetDemandDataSource:
         self.snapshot_path = snapshot_path
         self._demands = self._load()
 
-    def _load(self) -> list[DemandSignalItem]:
+    def _load(self) -> list[DemandSignal]:
         p = Path(self.snapshot_path)
         if not p.exists():
             return [
-                DemandSignalItem(
-                    source="innoget",
-                    id="INNOGET-2292",
+                DemandSignal(
+                    source_network="innoget",
+                    demand_id="INNOGET-2292",
                     title="Industrial formulation for concentrated detergent",
                     description="Seeking enzymatic biodegradable surfactant formulations",
-                    cpc_prefix="C11D",
+                    classified_cpc_prefixes=["C11D"],
                     posted_date="2023-05-15",
                     url="https://innoget.com/challenge/2292",
                 ),
-                DemandSignalItem(
-                    source="innoget",
-                    id="INNOGET-2415",
+                DemandSignal(
+                    source_network="innoget",
+                    demand_id="INNOGET-2415",
                     title="Optimized sink and sanitary plumbing drainage systems",
                     description="Seeking durable high-flow sanitary drainage and sink fixtures",
-                    cpc_prefix="E03C",
+                    classified_cpc_prefixes=["E03C"],
                     posted_date="2023-09-20",
                     url="https://innoget.com/challenge/2415",
                 ),
-                DemandSignalItem(
-                    source="innoget",
-                    id="INNOGET-2501",
+                DemandSignal(
+                    source_network="innoget",
+                    demand_id="INNOGET-2501",
                     title="Industrial process automation numerical control software",
                     description="Seeking program-control algorithms for factory robotics",
-                    cpc_prefix="G05B",
+                    classified_cpc_prefixes=["G05B"],
                     posted_date="2024-01-10",
                     url="https://innoget.com/challenge/2501",
                 ),
@@ -51,12 +51,12 @@ class InnogetDemandDataSource:
             with open(p, encoding="utf-8") as f:
                 items = json.load(f)
                 return [
-                    DemandSignalItem(
-                        source="innoget",
-                        id=d.get("id", f"INNOGET-{i}"),
+                    DemandSignal(
+                        source_network="innoget",
+                        demand_id=d.get("id") or d.get("demand_id") or f"INNOGET-{i}",
                         title=d.get("title", ""),
                         description=d.get("description", ""),
-                        cpc_prefix=d.get("cpc_prefix", "H01M"),
+                        classified_cpc_prefixes=[d.get("cpc_prefix", "H01M")] if d.get("cpc_prefix") else ["H01M"],
                         posted_date=d.get("posted_date", ""),
                         url=d.get("url", ""),
                     )
@@ -65,13 +65,13 @@ class InnogetDemandDataSource:
         except Exception:
             return []
 
-    def get_spanish_demands(self) -> list[DemandSignalItem]:
+    def get_spanish_demands(self) -> list[DemandSignal]:
         return self._demands
 
-    def get_demands_for_cluster(self, cluster_id: str) -> list[DemandSignalItem]:
+    def get_demands_for_cluster(self, cluster_id: str) -> list[DemandSignal]:
         return [d for d in self._demands if (d.cpc_prefix or "")[:4] == cluster_id[:4]]
 
-    def search_demand(self, query: str = "", domain: str = "") -> list[DemandSignalItem]:
+    def search_demand(self, query: str = "", domain: str = "") -> list[DemandSignal]:
         q = query.lower()
         d = domain.lower()
         matched = [
@@ -85,18 +85,18 @@ class InnogetDemandDataSource:
 class SBIRDemandDataSource:
     def __init__(self):
         self.demands = [
-            DemandSignalItem(
-                source="sbir",
-                id="SBIR-2022-001",
+            DemandSignal(
+                source_network="sbir",
+                demand_id="SBIR-2022-001",
                 title="Solid electrolyte interphase stability in solid-state lithium metal batteries",
                 description="DoE solicitation for interfacial stabilization between solid electrolyte and Li anode",
-                cpc_prefix="H01M",
+                classified_cpc_prefixes=["H01M"],
                 posted_date="2022-04-10",
                 url="https://sbir.gov/node/12345",
             )
         ]
 
-    def search_demand(self, query: str = "", domain: str = "") -> list[DemandSignalItem]:
+    def search_demand(self, query: str = "", domain: str = "") -> list[DemandSignal]:
         q = query.lower()
         d = domain.lower()
         matched = [
@@ -110,18 +110,18 @@ class SBIRDemandDataSource:
 class CORDISDemandDataSource:
     def __init__(self):
         self.demands = [
-            DemandSignalItem(
-                source="cordis",
-                id="CORDIS-958284",
+            DemandSignal(
+                source_network="cordis",
+                demand_id="CORDIS-958284",
                 title="European Solid-State Lithium Battery Initiative",
                 description="Horizon Europe grant for next-generation solid electrolyte interfaces",
-                cpc_prefix="H01M",
+                classified_cpc_prefixes=["H01M"],
                 posted_date="2021-09-01",
                 url="https://cordis.europa.eu/project/id/958284",
             )
         ]
 
-    def search_demand(self, query: str = "", domain: str = "") -> list[DemandSignalItem]:
+    def search_demand(self, query: str = "", domain: str = "") -> list[DemandSignal]:
         q = query.lower()
         d = domain.lower()
         matched = [
@@ -135,27 +135,27 @@ class CORDISDemandDataSource:
 class MockDemandDataSource:
     def __init__(self):
         self.demands = [
-            DemandSignalItem(
-                source="innoget",
-                id="INNOGET-2292",
+            DemandSignal(
+                source_network="innoget",
+                demand_id="INNOGET-2292",
                 title="Industrial formulation for concentrated detergent",
                 description="Seeking enzymatic biodegradable surfactant formulations",
-                cpc_prefix="C11D",
+                classified_cpc_prefixes=["C11D"],
                 posted_date="2023-05-15",
                 url="https://innoget.com/challenge/2292",
             ),
-            DemandSignalItem(
-                source="sbir",
-                id="SBIR-2022-001",
+            DemandSignal(
+                source_network="sbir",
+                demand_id="SBIR-2022-001",
                 title="Solid electrolyte interphase stability in solid-state lithium metal batteries",
                 description="DoE solicitation for interfacial stabilization between solid electrolyte and Li anode",
-                cpc_prefix="H01M",
+                classified_cpc_prefixes=["H01M"],
                 posted_date="2022-04-10",
                 url="https://sbir.gov/node/12345",
             ),
         ]
 
-    def search_demand(self, query: str = "", domain: str = "") -> list[DemandSignalItem]:
+    def search_demand(self, query: str = "", domain: str = "") -> list[DemandSignal]:
         q = query.lower()
         d = domain.lower()
         matched = [

@@ -2,9 +2,9 @@
 
 import json
 
+from domain.models.demand import DemandSignal
 from domain.models.runtime_schemas import (
     AdversarialVerdict,
-    DemandSignal,
     InventionCandidate,
     PatentRecord,
 )
