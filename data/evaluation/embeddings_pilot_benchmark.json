@@ -5,7 +5,7 @@
   "model_revision": "4328cf26390c98c5e3c738b4460a05b95f4911f5",
   "license": "Apache-2.0",
   "generation_script_path": "scripts/generate_m1_embeddings.py",
-  "generation_script_commit": "d4d3fa6ac6184d923d10b1cb7bda53426f7db603",
+  "generation_script_commit": "db0c0b844e8d4bad4cb9578eb5c0ab6d9b20658c",
   "library_versions": {
     "python": "3.12.3",
     "torch": "2.5.1+cpu",
@@ -13881,5 +13881,5 @@
       -0.031614039093256
     ]
   },
-  "artifact_sha256": "224bf6774ed20eb9910d3ab8ad4951babe991c2b5ac526aaa0689869e1709b5d"
+  "artifact_sha256": "2ba27432607e261546844788400bbd5a0131e78874d2cdf3fac9cb855c49e76d"
 }
