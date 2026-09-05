@@ -3,20 +3,28 @@
 
 import json
 import os
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
 from domain.models.runtime_schemas import InventionCandidate
+from infrastructure import analysis_pipeline as analysis_pipeline_module
+from infrastructure.adk.state_keys import (
+    ADVERSARIAL_VERDICTS,
+    CANDIDATE_INVENTIONS,
+    SCORED_CANDIDATES,
+)
 from infrastructure.analysis_pipeline import (
     _ANALYZE_RATE_LIMIT,
+    AnalyzeRequest,
     _analyze_request_times,
     _as_list,
     _check_rate_limit,
     _classify_error,
     _emit_event,
+    _execute_analysis,
     _extract_json_object,
     _handle_candidate_state,
     _handle_verdict_state,
@@ -448,6 +456,135 @@ async def test_run_job_exception_handling():
     job = _job_store.get_job(job_id)
     assert job["status"] == "failed"
     assert "Engine failure" in job["error"]
+
+
+class _FakeSession:
+    def __init__(self, session_id: str, state: dict):
+        self.id = session_id
+        self.state = state
+
+
+@pytest.mark.asyncio
+async def test_execute_analysis_full_flow():
+    """Exercises the real _execute_analysis body end to end: research -> clustering ->
+    the run() event loop picking up candidates/verdicts/scores from session state as they
+    accumulate -> final result assembly. Previously this function was only ever exercised
+    via `patch("infrastructure.analysis_pipeline._execute_analysis", ...)` in the _run_job
+    tests above, so its entire body (bar the module-level definitions) was unexercised."""
+    job_id = "execute_analysis_full_flow_job"
+    _job_store.create_job(job_id=job_id, domain="solid_state_battery", query="solid electrolyte")
+
+    research_result = MagicMock()
+    research_result.patents = [MagicMock()]
+    research_result.clusters = [MagicMock(model_dump=lambda: {"cluster_id": "H01M"})]
+    research_result.cluster_id = "H01M"
+    research_result.cluster_context = {"summary": "context"}
+
+    candidate = {
+        "candidate_id": "cand_1",
+        "cluster_id": "H01M",
+        "title": "Title",
+        "description": "Desc",
+        "claimed_novelty": "Novel",
+    }
+    verdict = {
+        "candidate_id": "cand_1",
+        "verdict": "survives",
+        "rationale": "Rationale",
+        "cited_patents": ["ES-2849102-B2"],
+    }
+    scorecard = {
+        "candidate_id": "cand_1",
+        "novelty": 0.8,
+        "prior_art_risk": 0.2,
+        "differentiation": 0.7,
+        "evidence": 0.9,
+        "supporting_evidence": ["ES-2849102-B2"],
+    }
+
+    # Session state grows across three simulated run_async ticks, mirroring how the real
+    # ADK session accumulates candidate/verdict/score state as agents in the pipeline run.
+    states = [
+        {CANDIDATE_INVENTIONS: [candidate]},
+        {CANDIDATE_INVENTIONS: [candidate], ADVERSARIAL_VERDICTS: [verdict]},
+        {CANDIDATE_INVENTIONS: [candidate], ADVERSARIAL_VERDICTS: [verdict], SCORED_CANDIDATES: [scorecard]},
+    ]
+    tick = {"n": 0}
+
+    async def fake_get_session(**kwargs):
+        idx = min(tick["n"], len(states) - 1)
+        tick["n"] += 1
+        return _FakeSession(kwargs["session_id"], states[idx])
+
+    async def fake_run_async(**kwargs):
+        for _ in states:
+            yield object()
+
+    async def fake_create_session(**kwargs):
+        return _FakeSession("fake-session-1", kwargs.get("state", {}))
+
+    with (
+        patch.object(analysis_pipeline_module, "_research_service", MagicMock(conduct_research=AsyncMock(return_value=research_result))),
+        patch.object(analysis_pipeline_module._session_service, "create_session", side_effect=fake_create_session),
+        patch.object(analysis_pipeline_module._session_service, "get_session", side_effect=fake_get_session),
+        patch.object(analysis_pipeline_module._session_service, "delete_session", new=AsyncMock()),
+        patch.object(analysis_pipeline_module._runner, "run_async", side_effect=fake_run_async),
+    ):
+        result = await _execute_analysis(
+            job_id, AnalyzeRequest(domain="solid_state_battery", query="solid electrolyte")
+        )
+
+    assert len(result["candidates"]) == 1
+    assert result["candidates"][0]["candidate_id"] == "cand_1"
+    assert len(result["scorecards"]) == 1
+    assert "telemetry_profile" in result
+
+    job = _job_store.get_job(job_id)
+    assert job["clusters"] == [{"cluster_id": "H01M"}]
+
+
+@pytest.mark.asyncio
+async def test_execute_analysis_retries_on_rate_limit_then_succeeds():
+    """Covers the retry branch: run() raises once with a recognizable rate-limit message,
+    _retry_after_seconds parses the wait, and the second attempt succeeds."""
+    job_id = "execute_analysis_retry_job"
+    _job_store.create_job(job_id=job_id, domain="solid_state_battery", query="solid electrolyte")
+
+    research_result = MagicMock()
+    research_result.patents = []
+    research_result.clusters = []
+    research_result.cluster_id = "H01M"
+    research_result.cluster_context = {}
+
+    attempt = {"n": 0}
+
+    async def fake_run_async(**kwargs):
+        attempt["n"] += 1
+        if attempt["n"] == 1:
+            raise RuntimeError("Rate limit exceeded, try again in 10ms")
+        return
+        yield  # pragma: no cover - makes this an async generator; unreachable on success
+
+    async def fake_create_session(**kwargs):
+        return _FakeSession("fake-session-2", kwargs.get("state", {}))
+
+    async def fake_get_session(**kwargs):
+        return _FakeSession(kwargs["session_id"], {})
+
+    with (
+        patch.object(analysis_pipeline_module, "_research_service", MagicMock(conduct_research=AsyncMock(return_value=research_result))),
+        patch.object(analysis_pipeline_module._session_service, "create_session", side_effect=fake_create_session),
+        patch.object(analysis_pipeline_module._session_service, "get_session", side_effect=fake_get_session),
+        patch.object(analysis_pipeline_module._session_service, "delete_session", new=AsyncMock()),
+        patch.object(analysis_pipeline_module._runner, "run_async", side_effect=fake_run_async),
+        patch("infrastructure.analysis_pipeline.asyncio.sleep", new=AsyncMock()),
+    ):
+        result = await _execute_analysis(
+            job_id, AnalyzeRequest(domain="solid_state_battery", query="solid electrolyte")
+        )
+
+    assert attempt["n"] == 2
+    assert result["candidates"] == []
 
 
 def test_frontend_routes_and_security(tmp_path):
