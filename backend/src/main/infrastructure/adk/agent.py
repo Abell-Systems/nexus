@@ -2,7 +2,7 @@
 # new Workflow API, but as of the installed version Workflow cannot yet be used as
 # an LlmAgent sub-agent — irrelevant here since invention_loop is nested inside a
 # SequentialAgent, not an LlmAgent. Revisit this if a later google-adk release
-# removes these classes (see docs/roadmap.md open risks).
+# removes these classes (see docs/roadmap.md open risks and issue #14).
 from google.adk.agents import LoopAgent, SequentialAgent
 
 from .config import INVENTION_LOOP_MAX_ITERATIONS

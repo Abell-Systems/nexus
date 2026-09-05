@@ -107,6 +107,8 @@ jobs:
     name: 5. Core Backend Tests & Coverage
     needs: [architecture, python-quality]
     runs-on: ubuntu-latest
+    env:
+      COVERAGE_FILE: .coverage.core
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -129,12 +131,28 @@ jobs:
         with:
           name: coverage-report
           path: coverage.xml
+      # Raw .coverage data (not the XML) so Sonar gets one correctly-merged report instead of
+      # two independent XMLs — see the coverage-merge step in sonar-quality-gate for why.
+      # include-hidden-files: actions/upload-artifact@v4 excludes dotfiles by default and only
+      # warns (doesn't fail) when nothing matches — silently dropping .coverage.core here is what
+      # produced "Artifact not found" two jobs later in sonar-quality-gate instead of failing here
+      # where it's obvious. if-no-files-found: error makes a future path/name typo fail loudly at
+      # the point of the mistake instead.
+      - name: Upload Raw Coverage Data
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-data-core
+          path: .coverage.core
+          include-hidden-files: true
+          if-no-files-found: error
 
   # 5b. Provider Tests (Google ADK & Provider Adapters)
   provider-adk-tests:
     name: 5b. Provider Tests (Google ADK)
     needs: [architecture, python-quality]
     runs-on: ubuntu-latest
+    env:
+      COVERAGE_FILE: .coverage.providers
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -154,47 +172,87 @@ jobs:
         with:
           name: provider-coverage-report
           path: coverage-providers.xml
+      - name: Upload Raw Coverage Data
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-data-providers
+          path: .coverage.providers
+          include-hidden-files: true
+          if-no-files-found: error
 
-  # 6. Sonar Analysis & Quality Gate (Strict - No Green Fallback)
+  # 6. Sonar Analysis & Quality Gate. Skipped with a build warning (not a hard failure) when
+  # SONAR_TOKEN is unset, so a revoked/missing external token can't brick the pipeline — ruff+mypy
+  # already cover a lot of the same static-analysis ground locally. The final quality-gate summary
+  # below reports this run as explicitly SKIPPED/UNVERIFIED rather than folding it into a plain
+  # PASS: absence of Sonar evidence must never be reported as evidence Sonar passed.
   sonar-quality-gate:
     name: 6. Sonar Quality Gate
     needs: [backend-tests, provider-adk-tests, frontend-quality]
     runs-on: ubuntu-latest
+    outputs:
+      skipped: ${{ steps.check_token.outputs.skip }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Check SONAR_TOKEN secret existence
+        id: check_token
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        if: env.SONAR_TOKEN == ''
         run: |
-          echo "::error::SONAR_TOKEN secret is not configured in repository secrets."
-          echo "Quality Gate Failure: SonarCloud analysis and Quality Gate are mandatory."
-          echo ""
-          echo "MANUAL ACTION REQUIRED:"
-          echo "1. Create/configure SonarCloud project 'Abell-Systems_nexus' in organization 'abell-systems'."
-          echo "2. Generate a SonarCloud token at https://sonarcloud.io/account/security."
-          echo "3. Add the token to GitHub repository secrets under the name SONAR_TOKEN."
-          exit 1
-      - name: Download Backend Coverage Report
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo "::warning::SONAR_TOKEN secret is not configured in repository secrets. Skipping SonarCloud analysis for this run (ruff+mypy static analysis still ran and gate the pipeline)."
+            echo ""
+            echo "To enable SonarCloud analysis:"
+            echo "1. Create/configure SonarCloud project 'Abell-Systems_nexus' in organization 'abell-systems'."
+            echo "2. Generate a SonarCloud token at https://sonarcloud.io/account/security."
+            echo "3. Add the token to GitHub repository secrets under the name SONAR_TOKEN."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+      # Merge the two suites' raw coverage data (rather than feeding Sonar two separate XML
+      # reports via sonar.python.coverage.reportPaths) because Sonar's own multi-report merge
+      # was not unioning them correctly: files only exercised by the ADK provider suite (which
+      # needs google-adk, unavailable in the core suite's job) were coming through as ~0%
+      # covered even though the provider suite covered them at 77-100%, which was enough on its
+      # own to fail the "coverage on new code" gate. `coverage combine` does the union correctly
+      # at the source, so Sonar is handed one accurate report instead of resolving the ambiguity
+      # itself.
+      - name: Set up Python
+        if: steps.check_token.outputs.skip != 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download Core Coverage Data
+        if: steps.check_token.outputs.skip != 'true'
         uses: actions/download-artifact@v4
         with:
-          name: coverage-report
-      - name: Download Provider Coverage Report
+          name: coverage-data-core
+      - name: Download Provider Coverage Data
+        if: steps.check_token.outputs.skip != 'true'
         uses: actions/download-artifact@v4
         with:
-          name: provider-coverage-report
+          name: coverage-data-providers
+      - name: Merge Coverage Data Into a Single Report
+        if: steps.check_token.outputs.skip != 'true'
+        run: |
+          pip install coverage
+          python -m coverage combine .coverage.core .coverage.providers
+          python -m coverage xml -o coverage.xml
       - name: Download Frontend Coverage Report
+        if: steps.check_token.outputs.skip != 'true'
         uses: actions/download-artifact@v4
         with:
           name: frontend-coverage-report
           path: frontend/coverage
       - name: SonarQube Cloud Scan
+        if: steps.check_token.outputs.skip != 'true'
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: SonarQube Cloud Quality Gate
+        if: steps.check_token.outputs.skip != 'true'
         uses: SonarSource/sonarqube-quality-gate-action@v1
         timeout-minutes: 5
         env:
@@ -207,6 +265,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Confirm All Strict Quality Gates Passed
+        env:
+          SONAR_SKIPPED: ${{ needs.sonar-quality-gate.outputs.skipped }}
         run: |
           echo "================================================================="
           echo "All Strict Quality Gates Passed (Clean Code & Clean Architecture)"
@@ -218,5 +278,10 @@ jobs:
           echo " - Backend Core Tests (Unit, Integration, E2E): PASS"
           echo " - Provider Tests (Google ADK): PASS"
           echo " - Coverage Threshold Gate (>=80%): PASS"
-          echo " - SonarCloud Analysis & Quality Gate: PASS"
+          if [ "$SONAR_SKIPPED" = "true" ]; then
+            echo "::warning::SonarCloud Analysis & Quality Gate was SKIPPED (SONAR_TOKEN not configured). This run is UNVERIFIED by Sonar, not a Sonar pass — configure SONAR_TOKEN to close this gap."
+            echo " - SonarCloud Analysis & Quality Gate: SKIPPED (SONAR_TOKEN not configured) — UNVERIFIED, not PASS"
+          else
+            echo " - SonarCloud Analysis & Quality Gate: PASS"
+          fi
           echo "================================================================="

@@ -1,30 +1,40 @@
-"""Comprehensive unit tests for FastAPI endpoints and helper functions in infrastructure/api.py."""
+"""Comprehensive unit tests for FastAPI endpoints (infrastructure/api.py) and the
+/api/analyze job orchestration helpers (infrastructure/analysis_pipeline.py)."""
 
-from unittest.mock import MagicMock, patch
+import json
+import os
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
 from domain.models.runtime_schemas import InventionCandidate
-from infrastructure.api import (
+from infrastructure import analysis_pipeline as analysis_pipeline_module
+from infrastructure.adk.state_keys import (
+    ADVERSARIAL_VERDICTS,
+    CANDIDATE_INVENTIONS,
+    SCORED_CANDIDATES,
+)
+from infrastructure.analysis_pipeline import (
     _ANALYZE_RATE_LIMIT,
+    AnalyzeRequest,
     _analyze_request_times,
     _as_list,
-    _check_domain_supported,
     _check_rate_limit,
     _classify_error,
     _emit_event,
+    _execute_analysis,
     _extract_json_object,
     _handle_candidate_state,
     _handle_verdict_state,
-    _job_store,
     _parse_item_to_dict,
     _retry_after_seconds,
     _run_job,
     _validated,
-    app,
 )
+from infrastructure.api import _check_domain_supported, _get_dist_dir, app
+from infrastructure.api_dependencies import _demand_datasource, _execution_policy, _job_store
 
 client = TestClient(app)
 
@@ -100,12 +110,54 @@ def test_extract_json_object():
     assert _extract_json_object(invalid) is None
 
 
+def test_extract_json_object_handles_nested_objects():
+    """Regression test: a naive "first { .. first }" or "[^}]*" regex truncates
+    on the first inner closing brace, dropping real candidate/verdict payloads
+    that nest objects (routine for InventionCandidate/AdversarialVerdict/ScoreCard)."""
+    nested = (
+        "```json\n"
+        '{"candidate": {"title": "foo"}, "evidence": {"patents": ["x"]}}\n'
+        "```"
+    )
+    extracted = _extract_json_object(nested)
+    assert extracted == '{"candidate": {"title": "foo"}, "evidence": {"patents": ["x"]}}'
+    assert json.loads(extracted) == {"candidate": {"title": "foo"}, "evidence": {"patents": ["x"]}}
+
+
+def test_extract_json_object_ignores_braces_inside_strings():
+    tricky = '{"title": "uses {curly} braces in text", "score": 1}'
+    extracted = _extract_json_object(tricky)
+    assert extracted == tricky
+    assert json.loads(extracted) == {"title": "uses {curly} braces in text", "score": 1}
+
+
+def test_extract_json_object_handles_escaped_quotes_in_strings():
+    escaped = r'{"title": "says \"hello\" to you"}'
+    extracted = _extract_json_object(escaped)
+    assert extracted == escaped
+    assert json.loads(extracted) == {"title": 'says "hello" to you'}
+
+
+def test_extract_json_object_returns_none_when_unbalanced():
+    assert _extract_json_object('{"a": 1, "b": {"c": 2}') is None
+
+
 def test_parse_item_to_dict():
     assert _parse_item_to_dict({"a": 1}, "Test") == {"a": 1}
     assert _parse_item_to_dict('{"a": 1}', "Test") == {"a": 1}
     assert _parse_item_to_dict("```json\n{\"a\": 2}\n```", "Test") == {"a": 2}
     assert _parse_item_to_dict("Not a json", "Test") is None
     assert _parse_item_to_dict(12345, "Test") is None
+
+
+def test_parse_item_to_dict_extracted_text_still_invalid_json():
+    """A '{' is found and the scanner returns a balanced span, but that span still
+    isn't valid JSON (e.g. single-quoted keys) — must fail gracefully, not raise."""
+    assert _parse_item_to_dict("{'a': 1} is what the model said", "Test") is None
+
+
+def test_as_list_fallback_for_non_list_dict_str():
+    assert _as_list(("a", "b")) == ["a", "b"]
 
 
 def test_validated():
@@ -161,6 +213,25 @@ async def test_handle_candidate_state():
 
 
 @pytest.mark.asyncio
+async def test_handle_candidate_state_with_object_attribute_access():
+    """Covers the non-dict, non-string branch: an ADK-emitted object exposing
+    .candidate_id/.title as attributes rather than dict keys."""
+    job_id = "test_cand_job_002"
+    _job_store.create_job(job_id=job_id, domain="solid_state_battery", query="test")
+    seen: set[str] = set()
+
+    cand_obj = InventionCandidate(
+        candidate_id="cand_obj_1",
+        cluster_id="H01M",
+        title="Object-form Candidate",
+        description="Desc",
+        claimed_novelty="Nov",
+    )
+    await _handle_candidate_state(job_id, [cand_obj], seen)
+    assert "cand_obj_1" in seen
+
+
+@pytest.mark.asyncio
 async def test_handle_verdict_state():
     job_id = "test_verdict_job_001"
     _job_store.create_job(job_id=job_id, domain="solid_state_battery", query="test")
@@ -193,6 +264,31 @@ async def test_handle_verdict_state():
     job = _job_store.get_job(job_id)
     assert job["progress"]["candidatesRejected"] == 1
     assert job["progress"]["candidatesSurvived"] == 1
+    assert job["progress"]["candidatesRevised"] == 1
+
+
+@pytest.mark.asyncio
+async def test_handle_verdict_state_skips_non_dict_and_normalizes_revise():
+    """Covers: a non-dict entry in the verdicts list (skipped via `continue`), and
+    the present-tense "revise" spelling some models emit instead of "revised"."""
+    job_id = "test_verdict_job_002"
+    _job_store.create_job(job_id=job_id, domain="solid_state_battery", query="test")
+    seen: set[int] = set()
+
+    verdicts = [
+        "not_a_dict_verdict",
+        {
+            "candidate_id": "c4",
+            "verdict": "revise",
+            "rationale": "Needs narrower scope",
+            "cited_patents": [],
+        },
+    ]
+    validated_res = await _handle_verdict_state(job_id, verdicts, seen)
+    assert validated_res == []
+    assert seen == {1}
+
+    job = _job_store.get_job(job_id)
     assert job["progress"]["candidatesRevised"] == 1
 
 
@@ -231,6 +327,23 @@ def test_demands_endpoint():
     # Filtered by cluster
     response_cluster = client.get("/api/demands", params={"domain": "solid_state_battery", "cluster_id": "H01M"})
     assert response_cluster.status_code == 200
+
+
+def test_demands_endpoint_uses_cluster_filter_when_datasource_supports_it():
+    """Covers the get_demands_for_cluster branch: only reachable when the configured
+    datasource actually exposes that method, which the default test double doesn't."""
+    with patch.object(_demand_datasource, "get_demands_for_cluster", return_value=[], create=True):
+        response = client.get("/api/demands", params={"domain": "solid_state_battery", "cluster_id": "H01M"})
+        assert response.status_code == 200
+        assert response.json()["demands"] == []
+
+
+def test_demands_endpoint_uses_spanish_demands_when_no_cluster_id():
+    """Covers the get_spanish_demands branch (no cluster_id, datasource exposes it)."""
+    with patch.object(_demand_datasource, "get_spanish_demands", return_value=[], create=True):
+        response = client.get("/api/demands", params={"domain": "solid_state_battery"})
+        assert response.status_code == 200
+        assert response.json()["demands"] == []
 
 
 def test_demand_patents_endpoint():
@@ -289,12 +402,42 @@ def test_analyze_status_nonexistent_job():
     assert response.status_code == 404
 
 
+def test_analyze_endpoint_rejects_when_already_busy():
+    with patch.object(_execution_policy, "is_busy", return_value=True):
+        response = client.post(
+            "/api/analyze",
+            json={"domain": "solid_state_battery", "query": "test query"},
+        )
+        assert response.status_code == 503
+
+
+def test_get_dist_dir_prefers_static_dir_when_present():
+    with (
+        patch("infrastructure.api.os.path.exists", side_effect=lambda p: p.endswith("static")),
+        patch("infrastructure.api.AGENTS_DIR", "/fake/agents/dir"),
+    ):
+        assert _get_dist_dir() == "/fake/agents/dir/static"
+
+
+def test_get_dist_dir_falls_back_to_frontend_dist():
+    with (
+        patch("infrastructure.api.os.path.exists", side_effect=lambda p: p.endswith("frontend/dist")),
+        patch("infrastructure.api.AGENTS_DIR", "/fake/agents/dir"),
+    ):
+        assert _get_dist_dir() == os.path.abspath("/fake/agents/dir/../frontend/dist")
+
+
+def test_get_dist_dir_returns_none_when_neither_exists():
+    with patch("infrastructure.api.os.path.exists", return_value=False):
+        assert _get_dist_dir() is None
+
+
 @pytest.mark.asyncio
 async def test_run_job_timeout_handling():
     job_id = "timeout_test_job"
     _job_store.create_job(job_id=job_id, domain="solid_state_battery", query="test")
 
-    with patch("infrastructure.api._execute_analysis", side_effect=TimeoutError()):
+    with patch("infrastructure.analysis_pipeline._execute_analysis", side_effect=TimeoutError()):
         await _run_job(job_id, MagicMock())
 
     job = _job_store.get_job(job_id)
@@ -307,12 +450,141 @@ async def test_run_job_exception_handling():
     job_id = "exc_test_job"
     _job_store.create_job(job_id=job_id, domain="solid_state_battery", query="test")
 
-    with patch("infrastructure.api._execute_analysis", side_effect=RuntimeError("Engine failure")):
+    with patch("infrastructure.analysis_pipeline._execute_analysis", side_effect=RuntimeError("Engine failure")):
         await _run_job(job_id, MagicMock())
 
     job = _job_store.get_job(job_id)
     assert job["status"] == "failed"
     assert "Engine failure" in job["error"]
+
+
+class _FakeSession:
+    def __init__(self, session_id: str, state: dict):
+        self.id = session_id
+        self.state = state
+
+
+@pytest.mark.asyncio
+async def test_execute_analysis_full_flow():
+    """Exercises the real _execute_analysis body end to end: research -> clustering ->
+    the run() event loop picking up candidates/verdicts/scores from session state as they
+    accumulate -> final result assembly. Previously this function was only ever exercised
+    via `patch("infrastructure.analysis_pipeline._execute_analysis", ...)` in the _run_job
+    tests above, so its entire body (bar the module-level definitions) was unexercised."""
+    job_id = "execute_analysis_full_flow_job"
+    _job_store.create_job(job_id=job_id, domain="solid_state_battery", query="solid electrolyte")
+
+    research_result = MagicMock()
+    research_result.patents = [MagicMock()]
+    research_result.clusters = [MagicMock(model_dump=lambda: {"cluster_id": "H01M"})]
+    research_result.cluster_id = "H01M"
+    research_result.cluster_context = {"summary": "context"}
+
+    candidate = {
+        "candidate_id": "cand_1",
+        "cluster_id": "H01M",
+        "title": "Title",
+        "description": "Desc",
+        "claimed_novelty": "Novel",
+    }
+    verdict = {
+        "candidate_id": "cand_1",
+        "verdict": "survives",
+        "rationale": "Rationale",
+        "cited_patents": ["ES-2849102-B2"],
+    }
+    scorecard = {
+        "candidate_id": "cand_1",
+        "novelty": 0.8,
+        "prior_art_risk": 0.2,
+        "differentiation": 0.7,
+        "evidence": 0.9,
+        "supporting_evidence": ["ES-2849102-B2"],
+    }
+
+    # Session state grows across three simulated run_async ticks, mirroring how the real
+    # ADK session accumulates candidate/verdict/score state as agents in the pipeline run.
+    states = [
+        {CANDIDATE_INVENTIONS: [candidate]},
+        {CANDIDATE_INVENTIONS: [candidate], ADVERSARIAL_VERDICTS: [verdict]},
+        {CANDIDATE_INVENTIONS: [candidate], ADVERSARIAL_VERDICTS: [verdict], SCORED_CANDIDATES: [scorecard]},
+    ]
+    tick = {"n": 0}
+
+    async def fake_get_session(**kwargs):
+        idx = min(tick["n"], len(states) - 1)
+        tick["n"] += 1
+        return _FakeSession(kwargs["session_id"], states[idx])
+
+    async def fake_run_async(**kwargs):
+        for _ in states:
+            yield object()
+
+    async def fake_create_session(**kwargs):
+        return _FakeSession("fake-session-1", kwargs.get("state", {}))
+
+    with (
+        patch.object(analysis_pipeline_module, "_research_service", MagicMock(conduct_research=AsyncMock(return_value=research_result))),
+        patch.object(analysis_pipeline_module._session_service, "create_session", side_effect=fake_create_session),
+        patch.object(analysis_pipeline_module._session_service, "get_session", side_effect=fake_get_session),
+        patch.object(analysis_pipeline_module._session_service, "delete_session", new=AsyncMock()),
+        patch.object(analysis_pipeline_module._runner, "run_async", side_effect=fake_run_async),
+    ):
+        result = await _execute_analysis(
+            job_id, AnalyzeRequest(domain="solid_state_battery", query="solid electrolyte")
+        )
+
+    assert len(result["candidates"]) == 1
+    assert result["candidates"][0]["candidate_id"] == "cand_1"
+    assert len(result["scorecards"]) == 1
+    assert "telemetry_profile" in result
+
+    job = _job_store.get_job(job_id)
+    assert job["clusters"] == [{"cluster_id": "H01M"}]
+
+
+@pytest.mark.asyncio
+async def test_execute_analysis_retries_on_rate_limit_then_succeeds():
+    """Covers the retry branch: run() raises once with a recognizable rate-limit message,
+    _retry_after_seconds parses the wait, and the second attempt succeeds."""
+    job_id = "execute_analysis_retry_job"
+    _job_store.create_job(job_id=job_id, domain="solid_state_battery", query="solid electrolyte")
+
+    research_result = MagicMock()
+    research_result.patents = []
+    research_result.clusters = []
+    research_result.cluster_id = "H01M"
+    research_result.cluster_context = {}
+
+    attempt = {"n": 0}
+
+    async def fake_run_async(**kwargs):
+        attempt["n"] += 1
+        if attempt["n"] == 1:
+            raise RuntimeError("Rate limit exceeded, try again in 10ms")
+        return
+        yield  # pragma: no cover - makes this an async generator; unreachable on success
+
+    async def fake_create_session(**kwargs):
+        return _FakeSession("fake-session-2", kwargs.get("state", {}))
+
+    async def fake_get_session(**kwargs):
+        return _FakeSession(kwargs["session_id"], {})
+
+    with (
+        patch.object(analysis_pipeline_module, "_research_service", MagicMock(conduct_research=AsyncMock(return_value=research_result))),
+        patch.object(analysis_pipeline_module._session_service, "create_session", side_effect=fake_create_session),
+        patch.object(analysis_pipeline_module._session_service, "get_session", side_effect=fake_get_session),
+        patch.object(analysis_pipeline_module._session_service, "delete_session", new=AsyncMock()),
+        patch.object(analysis_pipeline_module._runner, "run_async", side_effect=fake_run_async),
+        patch("infrastructure.analysis_pipeline.asyncio.sleep", new=AsyncMock()),
+    ):
+        result = await _execute_analysis(
+            job_id, AnalyzeRequest(domain="solid_state_battery", query="solid electrolyte")
+        )
+
+    assert attempt["n"] == 2
+    assert result["candidates"] == []
 
 
 def test_frontend_routes_and_security(tmp_path):

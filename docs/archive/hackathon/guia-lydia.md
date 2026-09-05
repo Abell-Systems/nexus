@@ -36,13 +36,13 @@ Esto refleja exactamente cómo trabaja un examinador de patentes profesional: un
 
 **Listo (31 de agosto):**
 - Desplegado en Google Cloud Run con datos reales de BigQuery.
-- Vídeo técnico grabado, silencioso y con subtítulos en pantalla: `docs/demo/patent-innovation-agent-demo.mp4` (2:07, foco 100% en el producto).
-- Vídeo "pitch" con la narrativa Mens et Manus (MIT → el problema → la idea → demo real → por qué importa → visión): `docs/demo/abell-systems-pitch.mp4` (3:42, silencioso, con texto en pantalla).
-- Guion de narración para el vídeo técnico: `docs/demo/narration_script.md`.
-- **Deck de presentación para la demo en directo:** `docs/demo/abell-systems-pitch.pptx` (11 diapositivas, misma narrativa Mens et Manus). La diapositiva 6 ("LIVE DEMO") es la chuleta para el presentador: trae escrito literalmente el dominio y la query a teclear, y el orden de clics (Analyze opportunity → View evidence → How the agent reached this result). Ábrelo en PowerPoint o Google Slides y sigue esa diapositiva mientras uno de los dos maneja la app en directo.
+- Vídeo técnico grabado, silencioso y con subtítulos en pantalla: `docs/archive/hackathon/demo/patent-innovation-agent-demo.mp4` (2:07, foco 100% en el producto).
+- Vídeo "pitch" con la narrativa Mens et Manus (MIT → el problema → la idea → demo real → por qué importa → visión): `docs/archive/hackathon/demo/abell-systems-pitch.mp4` (3:42, silencioso, con texto en pantalla).
+- Guion de narración para el vídeo técnico: `docs/archive/hackathon/demo/narration_script.md`.
+- **Deck de presentación para la demo en directo:** `docs/archive/hackathon/demo/abell-systems-pitch.pptx` (11 diapositivas, misma narrativa Mens et Manus). La diapositiva 6 ("LIVE DEMO") es la chuleta para el presentador: trae escrito literalmente el dominio y la query a teclear, y el orden de clics (Analyze opportunity → View evidence → How the agent reached this result). Ábrelo en PowerPoint o Google Slides y sigue esa diapositiva mientras uno de los dos maneja la app en directo.
 
 **Pendiente:**
-- Subir el vídeo elegido a YouTube/Vimeo como *unlisted* y enlazarlo en `docs/devpost-draft.md`.
+- Subir el vídeo elegido a YouTube/Vimeo como *unlisted* y enlazarlo en `docs/archive/hackathon/devpost-draft.md`.
 - Decidir cuál de los dos vídeos (técnico o pitch) va al formulario de Devpost — pueden convivir, pero solo uno es "el" vídeo de la submission.
 
 ## ¿Qué puedes hacer tú ahora mismo?

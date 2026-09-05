@@ -106,7 +106,7 @@ npm run dev
 - [x] **Repository URL**: GitHub public repo with complete setup instructions.
 - [x] **README spin-up**: Reproducible instructions for both mock and real GCP modes.
 - [x] **Architecture diagram**: Embedded 1-page Mermaid & ASCII topology in `docs/architecture.md`.
-- [ ] **Demo Video (≤ 4 min)**: Script is ready and timed (`docs/demo-script.md`), but no video has been recorded/uploaded yet. A script is not a video — do not check this until a YouTube/Vimeo link exists and has been watched end-to-end.
+- [ ] **Demo Video (≤ 4 min)**: Script is ready and timed (`docs/archive/hackathon/demo-script.md`), but no video has been recorded/uploaded yet. A script is not a video — do not check this until a YouTube/Vimeo link exists and has been watched end-to-end.
 - [x] **Google Cloud proof**: Cloud Run dashboard & URL visible in live demo.
 - [x] **Hackathon Track**: **Taskmaster**.
 - [x] **Gemini requirement**: Configured with `gemini-3.5-flash`.

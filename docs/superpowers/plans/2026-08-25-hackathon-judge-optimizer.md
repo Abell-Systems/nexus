@@ -9,7 +9,7 @@
 2. Deployment automation script `scripts/deploy_cloud_run.sh` and environment validation.
 3. Enhanced test coverage for edge cases (timeouts, missing API key, empty results, 503 concurrency locks, 404 job polling).
 4. Architecture documentation update in `docs/architecture.md` with complete data flow, ADK agent graph, and state management strategy.
-5. 4-minute locked demo script in `docs/demo-script.md` and Devpost QA checklist in `docs/devpost-draft.md`.
+5. 4-minute locked demo script in `docs/archive/hackathon/demo-script.md` and Devpost QA checklist in `docs/archive/hackathon/devpost-draft.md`.
 
 **Tech Stack:** Python 3.12, FastAPI, Google ADK, Google BigQuery (`google-cloud-bigquery`), Pytest, React, Vite.
 
@@ -196,13 +196,13 @@ git commit -m "docs: update architecture diagram and state persistence strategy"
 ### Task 5: 4-Minute Demo Script & Devpost Submission QA Checklist
 
 **Files:**
-- Modify: `docs/demo-script.md`
-- Modify: `docs/devpost-draft.md`
+- Modify: `docs/archive/hackathon/demo-script.md`
+- Modify: `docs/archive/hackathon/devpost-draft.md`
 
 **Interfaces:**
 - Produces: 4-minute timed video script and Devpost judge submission checklist.
 
-- [ ] **Step 1: Update `docs/demo-script.md` with exact minute-by-minute breakdown**
+- [ ] **Step 1: Update `docs/archive/hackathon/demo-script.md` with exact minute-by-minute breakdown**
 
 0:00–0:30 Problem statement
 0:30–1:00 Input domain (Solid-state electrolytes for EV batteries)
@@ -212,7 +212,7 @@ git commit -m "docs: update architecture diagram and state persistence strategy"
 3:15–3:40 Final invention & traceable ScoreCard evidence
 3:40–4:00 Cloud Run / Google Cloud live proof dashboard
 
-- [ ] **Step 2: Update `docs/devpost-draft.md` with final QA checklist**
+- [ ] **Step 2: Update `docs/archive/hackathon/devpost-draft.md` with final QA checklist**
 
 - Hosted URL
 - Architecture Diagram
@@ -222,7 +222,7 @@ git commit -m "docs: update architecture diagram and state persistence strategy"
 - [ ] **Step 3: Commit demo script and submission QA**
 
 ```bash
-git add docs/demo-script.md docs/devpost-draft.md
+git add docs/archive/hackathon/demo-script.md docs/archive/hackathon/devpost-draft.md
 git commit -m "docs: polish 4-minute demo script and Devpost submission checklist"
 ```
 
