@@ -242,6 +242,9 @@ def main() -> int:
     )
 
     # 6. Display Honest Scientific Report
+    def _fmt(value: float | None) -> str:
+        return f"{value:.2f}" if value is not None else "n/a"
+
     print("\n================================================================================")
     print(f"EVALUATION REPORT: {report.run_id}")
     print("================================================================================")
@@ -250,7 +253,7 @@ def main() -> int:
     print(f"Engine Commit:         {report.context.engine_commit_hash}")
     print(f"Uncertainty Rate:      {report.uncertainty_rate:.2%}")
     print("--------------------------------------------------------------------------------")
-    print(f"{'Demand ID':<16} {'Cand':<5} {'Judged':<7} {'P@1 (S)':<8} {'P@3 (S)':<8} {'R@3 (S)':<8} {'MRR (S)':<8} {'nDCG@5':<8}")
+    print(f"{'Demand ID':<16} {'Cand':<5} {'Judged':<7} {'P@1 (S)':<8} {'P@3 (S)':<8} {'R@3 (S)':<8} {'MRR (S)':<8} {'nDCG@5':<8} {'nDCG@10':<8}")
     print("--------------------------------------------------------------------------------")
 
     for d_rep in report.demand_reports:
@@ -261,24 +264,37 @@ def main() -> int:
             f"{d_rep.judged_count:<7} "
             f"{s.precision_at_1:<8.2f} "
             f"{s.precision_at_3:<8.2f} "
-            f"{s.recall_at_3:<8.2f} "
+            f"{_fmt(s.recall_at_3):<8} "
             f"{s.mrr:<8.2f} "
-            f"{s.ndcg_at_5:<8.2f}"
+            f"{_fmt(s.ndcg_at_5):<8} "
+            f"{_fmt(s.ndcg_at_10):<8}"
         )
 
     print("--------------------------------------------------------------------------------")
     ms = report.macro_strict
     mb = report.macro_broad
-    print("MACRO-AVERAGES:")
+    n_demands = len(report.demand_reports)
+    print("MACRO-AVERAGES (undefined per-demand values excluded, never imputed):")
+    print(
+        "  Valid queries: nDCG@10 over "
+        f"{report.macro_denominators.get('strict.ndcg_at_10', 0)}/{n_demands} demands (strict), "
+        f"{report.macro_denominators.get('broad.ndcg_at_10', 0)}/{n_demands} (broad)"
+    )
     print("  Strict Alignment (Grade 3):")
     print(f"    Precision: P@1 = {ms.precision_at_1:.2f}, P@3 = {ms.precision_at_3:.2f}, P@5 = {ms.precision_at_5:.2f}")
-    print(f"    Recall:    R@1 = {ms.recall_at_1:.2f}, R@3 = {ms.recall_at_3:.2f}, R@5 = {ms.recall_at_5:.2f}")
-    print(f"    Ranking:   MRR = {ms.mrr:.2f}, MRR@5 = {ms.mrr_at_5:.2f}, nDCG@5 = {ms.ndcg_at_5:.2f}")
+    print(f"    Recall:    R@1 = {_fmt(ms.recall_at_1)}, R@3 = {_fmt(ms.recall_at_3)}, R@5 = {_fmt(ms.recall_at_5)}")
+    print(
+        f"    Ranking:   MRR = {ms.mrr:.2f}, MRR@5 = {ms.mrr_at_5:.2f}, "
+        f"nDCG@5 = {_fmt(ms.ndcg_at_5)}, nDCG@10 = {_fmt(ms.ndcg_at_10)}"
+    )
     print(f"    Coverage:  Judged@1 = {ms.judged_at_1:.2f}, Judged@3 = {ms.judged_at_3:.2f}, Judged@5 = {ms.judged_at_5:.2f}")
     print("  Broad Alignment (Grades 2 & 3):")
     print(f"    Precision: P@1 = {mb.precision_at_1:.2f}, P@3 = {mb.precision_at_3:.2f}, P@5 = {mb.precision_at_5:.2f}")
-    print(f"    Recall:    R@1 = {mb.recall_at_1:.2f}, R@3 = {mb.recall_at_3:.2f}, R@5 = {mb.recall_at_5:.2f}")
-    print(f"    Ranking:   MRR = {mb.mrr:.2f}, MRR@5 = {mb.mrr_at_5:.2f}, nDCG@5 = {mb.ndcg_at_5:.2f}")
+    print(f"    Recall:    R@1 = {_fmt(mb.recall_at_1)}, R@3 = {_fmt(mb.recall_at_3)}, R@5 = {_fmt(mb.recall_at_5)}")
+    print(
+        f"    Ranking:   MRR = {mb.mrr:.2f}, MRR@5 = {mb.mrr_at_5:.2f}, "
+        f"nDCG@5 = {_fmt(mb.ndcg_at_5)}, nDCG@10 = {_fmt(mb.ndcg_at_10)}"
+    )
     print("================================================================================")
 
     if args.output is not None:

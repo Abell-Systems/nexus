@@ -36,39 +36,44 @@ from domain.protocols.evaluation import (
 )
 
 
-def _macro_average_metric_sets(metric_sets: list[MetricSet]) -> MetricSet:
-    """Computes deterministic macro-average across multiple per-demand MetricSets."""
-    if not metric_sets:
-        return MetricSet(
-            precision_at_1=0.0,
-            precision_at_3=0.0,
-            precision_at_5=0.0,
-            recall_at_1=0.0,
-            recall_at_3=0.0,
-            recall_at_5=0.0,
-            mrr=0.0,
-            mrr_at_5=0.0,
-            ndcg_at_5=0.0,
-            judged_at_1=0.0,
-            judged_at_3=0.0,
-            judged_at_5=0.0,
-        )
+# MetricSet fields that are always defined (never None): on empty input they fall
+# back to 0.0, preserving the pre-PR-#44 all-zero behavior for empty universes.
+_ALWAYS_DEFINED_FIELDS = frozenset(
+    {
+        "precision_at_1",
+        "precision_at_3",
+        "precision_at_5",
+        "mrr",
+        "mrr_at_5",
+        "judged_at_1",
+        "judged_at_3",
+        "judged_at_5",
+    }
+)
 
-    n = len(metric_sets)
-    return MetricSet(
-        precision_at_1=sum(m.precision_at_1 for m in metric_sets) / n,
-        precision_at_3=sum(m.precision_at_3 for m in metric_sets) / n,
-        precision_at_5=sum(m.precision_at_5 for m in metric_sets) / n,
-        recall_at_1=sum(m.recall_at_1 for m in metric_sets) / n,
-        recall_at_3=sum(m.recall_at_3 for m in metric_sets) / n,
-        recall_at_5=sum(m.recall_at_5 for m in metric_sets) / n,
-        mrr=sum(m.mrr for m in metric_sets) / n,
-        mrr_at_5=sum(m.mrr_at_5 for m in metric_sets) / n,
-        ndcg_at_5=sum(m.ndcg_at_5 for m in metric_sets) / n,
-        judged_at_1=sum(m.judged_at_1 for m in metric_sets) / n,
-        judged_at_3=sum(m.judged_at_3 for m in metric_sets) / n,
-        judged_at_5=sum(m.judged_at_5 for m in metric_sets) / n,
-    )
+
+def _macro_average_metric_sets(
+    metric_sets: list[MetricSet],
+) -> tuple[MetricSet, dict[str, int]]:
+    """Computes deterministic macro-average across per-demand MetricSets.
+
+    Protocol exclusion rule (PR #44): None (undefined) observations are skipped,
+    never imputed. Returns the macro MetricSet (None where no valid observation
+    exists) together with explicit per-metric denominators.
+    """
+    macro_values: dict[str, float | None] = {}
+    denominators: dict[str, int] = {}
+    for field in MetricSet.model_fields:
+        valid = [getattr(m, field) for m in metric_sets if getattr(m, field) is not None]
+        denominators[field] = len(valid)
+        if valid:
+            macro_values[field] = sum(valid) / len(valid)
+        elif field in _ALWAYS_DEFINED_FIELDS:
+            macro_values[field] = 0.0
+        else:
+            macro_values[field] = None
+
+    return MetricSet(**macro_values), denominators
 
 
 class DefaultEvaluationRunner(EvaluationRunner):
@@ -128,9 +133,13 @@ class DefaultEvaluationRunner(EvaluationRunner):
             )
             demand_reports.append(demand_report)
 
-        # 3. Compute macro summaries
-        macro_strict = _macro_average_metric_sets([r.strict_metrics for r in demand_reports])
-        macro_broad = _macro_average_metric_sets([r.broad_metrics for r in demand_reports])
+        # 3. Compute macro summaries with explicit denominators: undefined (None)
+        # per-demand observations are excluded, never imputed (protocol rule).
+        # Strict and broad scopes exclude independently (different relevance totals).
+        macro_strict, denom_strict = _macro_average_metric_sets([r.strict_metrics for r in demand_reports])
+        macro_broad, denom_broad = _macro_average_metric_sets([r.broad_metrics for r in demand_reports])
+        macro_denominators = {f"strict.{k}": v for k, v in denom_strict.items()}
+        macro_denominators.update({f"broad.{k}": v for k, v in denom_broad.items()})
 
         # 4. Compute global uncertainty rate
         unc_count = sum(1 for g in all_grades if g == RelevanceGrade.UNCERTAIN)
@@ -152,5 +161,6 @@ class DefaultEvaluationRunner(EvaluationRunner):
             demand_reports=demand_reports,
             macro_strict=macro_strict,
             macro_broad=macro_broad,
+            macro_denominators=macro_denominators,
             uncertainty_rate=overall_uncertainty_rate,
         )

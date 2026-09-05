@@ -116,6 +116,7 @@ def test_hypothesis_test_result_carries_statistical_outputs():
         bootstrap_ci=ci,
         adjusted_q_value=0.12,
         rejected=False,
+        n_paired=10,
     )
     assert r.hypothesis_id == "H01"
     assert r.wilcoxon.p_value == 0.03
@@ -136,6 +137,8 @@ def test_comparative_run_report_stamps_protocol_provenance():
         bootstrap_ci=ci,
         adjusted_q_value=0.12,
         rejected=False,
+        n_paired=10,
+        excluded_demand_ids=["D9"],
     )
     report = ComparativeRunReport(
         study_protocol_id="NEXUS-PHASE2-ABLATION-M0-M6",
