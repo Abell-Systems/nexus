@@ -38,6 +38,7 @@ data/*
 data/experiments/*
 !data/experiments/power_analysis_wilcoxon.json
 !data/experiments/pilot_evaluation_report.json
+!data/experiments/dataset_identity_audit.json
 # --- OS / IDE ---
 .DS_Store
 .vscode/
