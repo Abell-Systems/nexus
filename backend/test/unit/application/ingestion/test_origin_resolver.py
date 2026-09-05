@@ -10,7 +10,11 @@ from domain.models.demand import ExtractionSourceKind, RawExtractedDemandFields,
 from domain.models.evidence import VerificationStatus
 from domain.models.origin_policy import JurisdictionEntry, OriginPolicyConfig
 
-CANONICAL_POLICY_PATH = Path("config/policies/data/jurisdiction_policy.json")
+# Anchored to repo root so this resolves regardless of pytest's invocation cwd
+# (e.g. `pytest` from repo root vs `cd backend && pytest`).
+CANONICAL_POLICY_PATH = (
+    Path(__file__).resolve().parents[5] / "config" / "policies" / "data" / "jurisdiction_policy.json"
+)
 
 
 @pytest.fixture

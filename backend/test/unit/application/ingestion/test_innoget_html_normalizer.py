@@ -14,7 +14,12 @@ from domain.models.demand import (
 from domain.models.origin_policy import OriginPolicyConfig
 from domain.protocols.sources import RawPayload
 
-CANONICAL_POLICY_PATH = Path("config/policies/data/jurisdiction_policy.json")
+# Anchored to repo root so this resolves regardless of pytest's invocation cwd
+# (e.g. `pytest` from repo root vs `cd backend && pytest`).
+CANONICAL_POLICY_PATH = (
+    Path(__file__).resolve().parents[5] / "config" / "policies" / "data" / "jurisdiction_policy.json"
+)
+_FIXTURES_DIR = Path(__file__).resolve().parents[5] / "backend" / "test" / "fixtures"
 
 
 @pytest.fixture
@@ -26,7 +31,7 @@ def origin_resolver() -> DefaultOriginResolver:
 @pytest.fixture
 def pg_us_payload() -> RawPayload:
     # Uses clean, canonical version-controlled fixture
-    fixture_path = Path("backend/test/fixtures/innoget_sample_call_2446.html")
+    fixture_path = _FIXTURES_DIR / "innoget_sample_call_2446.html"
     return RawPayload(
         source_id="innoget_web",
         batch_id="innoget_call_2446",
@@ -38,7 +43,7 @@ def pg_us_payload() -> RawPayload:
 
 @pytest.fixture
 def spanish_call_payload() -> RawPayload:
-    fixture_path = Path("backend/test/fixtures/innoget_sample_spanish_call.html")
+    fixture_path = _FIXTURES_DIR / "innoget_sample_spanish_call.html"
     return RawPayload(
         source_id="innoget_web",
         batch_id="innoget_call_2292",

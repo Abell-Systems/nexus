@@ -126,7 +126,12 @@ def matching_policy():
     from pathlib import Path
 
     from domain.models.matching import MatchingPolicyConfig
-    return MatchingPolicyConfig.load_from_json(Path("config/policies/matching/default_matching_policy.json"))
+
+    # Anchored to repo root so this resolves regardless of pytest's invocation cwd
+    # (e.g. `pytest` from repo root vs `cd backend && pytest`).
+    repo_root = Path(__file__).resolve().parents[5]
+    policy_path = repo_root / "config" / "policies" / "matching" / "default_matching_policy.json"
+    return MatchingPolicyConfig.load_from_json(policy_path)
 
 
 def test_duckdb_cpc_retriever_hierarchical_scoring_and_invariants(memory_duckdb_cpc_patents, matching_policy):
