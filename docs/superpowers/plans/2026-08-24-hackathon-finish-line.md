@@ -415,7 +415,7 @@ Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>"
 ### Task 6: Demo script (~4 min) + rehearsal
 
 **Files:**
-- Create: `docs/demo-script.md`
+- Create: `docs/archive/hackathon/demo-script.md`
 
 - [ ] **Step 1: Write the script** with this beat structure (timings sum to ~3:50):
 
