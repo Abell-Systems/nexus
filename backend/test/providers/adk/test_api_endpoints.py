@@ -2,6 +2,7 @@
 /api/analyze job orchestration helpers (infrastructure/analysis_pipeline.py)."""
 
 import json
+import os
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -24,8 +25,8 @@ from infrastructure.analysis_pipeline import (
     _run_job,
     _validated,
 )
-from infrastructure.api import _check_domain_supported, app
-from infrastructure.api_dependencies import _job_store
+from infrastructure.api import _check_domain_supported, _get_dist_dir, app
+from infrastructure.api_dependencies import _demand_datasource, _execution_policy, _job_store
 
 client = TestClient(app)
 
@@ -320,6 +321,23 @@ def test_demands_endpoint():
     assert response_cluster.status_code == 200
 
 
+def test_demands_endpoint_uses_cluster_filter_when_datasource_supports_it():
+    """Covers the get_demands_for_cluster branch: only reachable when the configured
+    datasource actually exposes that method, which the default test double doesn't."""
+    with patch.object(_demand_datasource, "get_demands_for_cluster", return_value=[], create=True):
+        response = client.get("/api/demands", params={"domain": "solid_state_battery", "cluster_id": "H01M"})
+        assert response.status_code == 200
+        assert response.json()["demands"] == []
+
+
+def test_demands_endpoint_uses_spanish_demands_when_no_cluster_id():
+    """Covers the get_spanish_demands branch (no cluster_id, datasource exposes it)."""
+    with patch.object(_demand_datasource, "get_spanish_demands", return_value=[], create=True):
+        response = client.get("/api/demands", params={"domain": "solid_state_battery"})
+        assert response.status_code == 200
+        assert response.json()["demands"] == []
+
+
 def test_demand_patents_endpoint():
     # Valid demand signal
     response = client.get(
@@ -374,6 +392,36 @@ def test_analyze_endpoint_unsupported_domain():
 def test_analyze_status_nonexistent_job():
     response = client.get("/api/analyze/nonexistent_job_12345")
     assert response.status_code == 404
+
+
+def test_analyze_endpoint_rejects_when_already_busy():
+    with patch.object(_execution_policy, "is_busy", return_value=True):
+        response = client.post(
+            "/api/analyze",
+            json={"domain": "solid_state_battery", "query": "test query"},
+        )
+        assert response.status_code == 503
+
+
+def test_get_dist_dir_prefers_static_dir_when_present():
+    with (
+        patch("infrastructure.api.os.path.exists", side_effect=lambda p: p.endswith("static")),
+        patch("infrastructure.api.AGENTS_DIR", "/fake/agents/dir"),
+    ):
+        assert _get_dist_dir() == "/fake/agents/dir/static"
+
+
+def test_get_dist_dir_falls_back_to_frontend_dist():
+    with (
+        patch("infrastructure.api.os.path.exists", side_effect=lambda p: p.endswith("frontend/dist")),
+        patch("infrastructure.api.AGENTS_DIR", "/fake/agents/dir"),
+    ):
+        assert _get_dist_dir() == os.path.abspath("/fake/agents/dir/../frontend/dist")
+
+
+def test_get_dist_dir_returns_none_when_neither_exists():
+    with patch("infrastructure.api.os.path.exists", return_value=False):
+        assert _get_dist_dir() is None
 
 
 @pytest.mark.asyncio

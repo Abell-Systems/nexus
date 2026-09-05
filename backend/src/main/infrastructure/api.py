@@ -32,6 +32,13 @@ from infrastructure.api_dependencies import (
 
 _background_tasks: set[asyncio.Task] = set()
 
+# get_fast_api_app() (in api_dependencies.py) already registers its own GET /health route as
+# part of building the ADK scaffold app. Starlette matches routes in registration order, so
+# without evicting it here, our health_check below — registered afterward — would be dead code:
+# every request would keep matching ADK's generic route first, silently hiding the
+# provider/agents/version diagnostics ours reports.
+app.router.routes = [r for r in app.router.routes if getattr(r, "path", None) != "/health"]
+
 
 def _check_domain_supported(domain: str) -> None:
     if not is_supported_domain(domain):
