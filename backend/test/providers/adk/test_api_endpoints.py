@@ -122,12 +122,33 @@ def test_extract_json_object_ignores_braces_inside_strings():
     assert json.loads(extracted) == {"title": "uses {curly} braces in text", "score": 1}
 
 
+def test_extract_json_object_handles_escaped_quotes_in_strings():
+    escaped = r'{"title": "says \"hello\" to you"}'
+    extracted = _extract_json_object(escaped)
+    assert extracted == escaped
+    assert json.loads(extracted) == {"title": 'says "hello" to you'}
+
+
+def test_extract_json_object_returns_none_when_unbalanced():
+    assert _extract_json_object('{"a": 1, "b": {"c": 2}') is None
+
+
 def test_parse_item_to_dict():
     assert _parse_item_to_dict({"a": 1}, "Test") == {"a": 1}
     assert _parse_item_to_dict('{"a": 1}', "Test") == {"a": 1}
     assert _parse_item_to_dict("```json\n{\"a\": 2}\n```", "Test") == {"a": 2}
     assert _parse_item_to_dict("Not a json", "Test") is None
     assert _parse_item_to_dict(12345, "Test") is None
+
+
+def test_parse_item_to_dict_extracted_text_still_invalid_json():
+    """A '{' is found and the scanner returns a balanced span, but that span still
+    isn't valid JSON (e.g. single-quoted keys) — must fail gracefully, not raise."""
+    assert _parse_item_to_dict("{'a': 1} is what the model said", "Test") is None
+
+
+def test_as_list_fallback_for_non_list_dict_str():
+    assert _as_list(("a", "b")) == ["a", "b"]
 
 
 def test_validated():
@@ -183,6 +204,25 @@ async def test_handle_candidate_state():
 
 
 @pytest.mark.asyncio
+async def test_handle_candidate_state_with_object_attribute_access():
+    """Covers the non-dict, non-string branch: an ADK-emitted object exposing
+    .candidate_id/.title as attributes rather than dict keys."""
+    job_id = "test_cand_job_002"
+    _job_store.create_job(job_id=job_id, domain="solid_state_battery", query="test")
+    seen: set[str] = set()
+
+    cand_obj = InventionCandidate(
+        candidate_id="cand_obj_1",
+        cluster_id="H01M",
+        title="Object-form Candidate",
+        description="Desc",
+        claimed_novelty="Nov",
+    )
+    await _handle_candidate_state(job_id, [cand_obj], seen)
+    assert "cand_obj_1" in seen
+
+
+@pytest.mark.asyncio
 async def test_handle_verdict_state():
     job_id = "test_verdict_job_001"
     _job_store.create_job(job_id=job_id, domain="solid_state_battery", query="test")
@@ -215,6 +255,31 @@ async def test_handle_verdict_state():
     job = _job_store.get_job(job_id)
     assert job["progress"]["candidatesRejected"] == 1
     assert job["progress"]["candidatesSurvived"] == 1
+    assert job["progress"]["candidatesRevised"] == 1
+
+
+@pytest.mark.asyncio
+async def test_handle_verdict_state_skips_non_dict_and_normalizes_revise():
+    """Covers: a non-dict entry in the verdicts list (skipped via `continue`), and
+    the present-tense "revise" spelling some models emit instead of "revised"."""
+    job_id = "test_verdict_job_002"
+    _job_store.create_job(job_id=job_id, domain="solid_state_battery", query="test")
+    seen: set[int] = set()
+
+    verdicts = [
+        "not_a_dict_verdict",
+        {
+            "candidate_id": "c4",
+            "verdict": "revise",
+            "rationale": "Needs narrower scope",
+            "cited_patents": [],
+        },
+    ]
+    validated_res = await _handle_verdict_state(job_id, verdicts, seen)
+    assert validated_res == []
+    assert seen == {1}
+
+    job = _job_store.get_job(job_id)
     assert job["progress"]["candidatesRevised"] == 1
 
 

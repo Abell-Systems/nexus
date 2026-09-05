@@ -107,6 +107,8 @@ jobs:
     name: 5. Core Backend Tests & Coverage
     needs: [architecture, python-quality]
     runs-on: ubuntu-latest
+    env:
+      COVERAGE_FILE: .coverage.core
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -129,12 +131,21 @@ jobs:
         with:
           name: coverage-report
           path: coverage.xml
+      # Raw .coverage data (not the XML) so Sonar gets one correctly-merged report instead of
+      # two independent XMLs — see the coverage-merge step in sonar-quality-gate for why.
+      - name: Upload Raw Coverage Data
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-data-core
+          path: .coverage.core
 
   # 5b. Provider Tests (Google ADK & Provider Adapters)
   provider-adk-tests:
     name: 5b. Provider Tests (Google ADK)
     needs: [architecture, python-quality]
     runs-on: ubuntu-latest
+    env:
+      COVERAGE_FILE: .coverage.providers
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -154,6 +165,11 @@ jobs:
         with:
           name: provider-coverage-report
           path: coverage-providers.xml
+      - name: Upload Raw Coverage Data
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-data-providers
+          path: .coverage.providers
 
   # 6. Sonar Analysis & Quality Gate. Skipped with a build warning (not a hard failure) when
   # SONAR_TOKEN is unset, so a revoked/missing external token can't brick the pipeline — ruff+mypy
@@ -186,16 +202,35 @@ jobs:
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
-      - name: Download Backend Coverage Report
+      # Merge the two suites' raw coverage data (rather than feeding Sonar two separate XML
+      # reports via sonar.python.coverage.reportPaths) because Sonar's own multi-report merge
+      # was not unioning them correctly: files only exercised by the ADK provider suite (which
+      # needs google-adk, unavailable in the core suite's job) were coming through as ~0%
+      # covered even though the provider suite covered them at 77-100%, which was enough on its
+      # own to fail the "coverage on new code" gate. `coverage combine` does the union correctly
+      # at the source, so Sonar is handed one accurate report instead of resolving the ambiguity
+      # itself.
+      - name: Set up Python
+        if: steps.check_token.outputs.skip != 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download Core Coverage Data
         if: steps.check_token.outputs.skip != 'true'
         uses: actions/download-artifact@v4
         with:
-          name: coverage-report
-      - name: Download Provider Coverage Report
+          name: coverage-data-core
+      - name: Download Provider Coverage Data
         if: steps.check_token.outputs.skip != 'true'
         uses: actions/download-artifact@v4
         with:
-          name: provider-coverage-report
+          name: coverage-data-providers
+      - name: Merge Coverage Data Into a Single Report
+        if: steps.check_token.outputs.skip != 'true'
+        run: |
+          pip install coverage
+          python -m coverage combine .coverage.core .coverage.providers
+          python -m coverage xml -o coverage.xml
       - name: Download Frontend Coverage Report
         if: steps.check_token.outputs.skip != 'true'
         uses: actions/download-artifact@v4
