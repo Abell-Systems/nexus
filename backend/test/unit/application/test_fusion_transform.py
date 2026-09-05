@@ -212,20 +212,23 @@ class FusionModelBoundsTest:
                 retrieval_scores={RetrievalMethod.CPC: -0.3},
             )
 
-    def test_should_default_fusion_transform_id_on_direct_assessment_construction(self) -> None:
-        assessment = MatchAssessment(
-            demand_id="D",
-            publication_id="P",
-            overall_score=0.5,
-            confidence=MatchConfidence.MODERATE,
-            sufficiency=EvidenceSufficiency.PARTIAL,
-            features=MatchFeatures(),
-            rationale="direct",
-            policy_id="pid",
-            policy_version="1.0.0",
-            policy_sha256=_SHA64,
-        )
-        assert assessment.fusion_transform_id == FUSION_TRANSFORM_ID
+    def test_should_reject_assessment_without_explicit_fusion_provenance(self) -> None:
+        # Provenance is mandatory, never inferred: omitting fusion_transform_id
+        # must fail loudly instead of silently inheriting an identity the object
+        # did not earn through the evaluator.
+        with pytest.raises(ValidationError):
+            MatchAssessment(
+                demand_id="D",
+                publication_id="P",
+                overall_score=0.5,
+                confidence=MatchConfidence.MODERATE,
+                sufficiency=EvidenceSufficiency.PARTIAL,
+                features=MatchFeatures(),
+                rationale="direct",
+                policy_id="pid",
+                policy_version="1.0.0",
+                policy_sha256=_SHA64,
+            )
 
 
 class FusionManifestProvenanceTest:

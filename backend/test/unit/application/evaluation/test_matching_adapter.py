@@ -82,6 +82,9 @@ class _RecordingEngine:
                 policy_id=policy.policy_id,
                 policy_version=policy.policy_version,
                 policy_sha256=policy.policy_sha256,
+                # Explicit fake provenance: this engine never applies the ADR 0016
+                # transform, so it must not inherit its identity by default.
+                fusion_transform_id="fake-no-transform",
             )
             for pub_id, score in scored
         ]

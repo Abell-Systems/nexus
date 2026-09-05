@@ -427,10 +427,11 @@ class MatchAssessment(BaseModel):
     policy_id: str
     policy_version: str
     policy_sha256: str = Field(min_length=64, max_length=64)
-    # ADR 0016 §4: every assessment stamps the fusion-transform identity so the
-    # result is reconstructible (ConfigurationVersion is policy_version;
-    # PolicySHA is policy_sha256; transform identity is this field).
-    fusion_transform_id: str = FUSION_TRANSFORM_ID
+    # ADR 0016 §4 / ADR 0017 §4: fusion-transform identity is MANDATORY provenance.
+    # Deliberately no default: a MatchAssessment that never passed through the
+    # evaluator must not silently inherit an identity it did not earn. The only
+    # legitimate producer is DefaultEvidenceEvaluator, which stamps it explicitly.
+    fusion_transform_id: str
 
 
 class OperationalLimits(BaseModel):
