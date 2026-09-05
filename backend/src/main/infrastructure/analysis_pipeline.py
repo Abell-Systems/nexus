@@ -67,13 +67,38 @@ def _as_list(value: Any) -> list:
 
 
 def _extract_json_object(text: str) -> str | None:
-    fence_match = re.search(r"```(?:json)?\s*(\{[^}]*\})\s*```", text, re.DOTALL)
-    if fence_match:
-        return fence_match.group(1)
-    first = text.find("{")
-    last = text.rfind("}")
-    if first != -1 and last != -1 and last > first:
-        return text[first : last + 1]
+    """Extract the first balanced {...} object from text (fenced or not).
+
+    Tracks brace depth and string-literal state (with escapes) so nested
+    objects and braces inside string values don't truncate the match early —
+    a plain "first { .. last }" or "[^}]*" regex both do, which matters here
+    since LLM output for InventionCandidate/AdversarialVerdict/ScoreCard
+    routinely nests objects.
+    """
+    start = text.find("{")
+    if start == -1:
+        return None
+    depth = 0
+    in_string = False
+    escape = False
+    for i in range(start, len(text)):
+        ch = text[i]
+        if in_string:
+            if escape:
+                escape = False
+            elif ch == "\\":
+                escape = True
+            elif ch == '"':
+                in_string = False
+            continue
+        if ch == '"':
+            in_string = True
+        elif ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start : i + 1]
     return None
 
 

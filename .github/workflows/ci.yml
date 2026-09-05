@@ -155,13 +155,17 @@ jobs:
           name: provider-coverage-report
           path: coverage-providers.xml
 
-  # 6. Sonar Analysis & Quality Gate (soft-fail: skipped with a warning if SONAR_TOKEN is unset,
-  # rather than bricking the pipeline on an external hosted token — ruff+mypy already cover a lot
-  # of the same ground locally).
+  # 6. Sonar Analysis & Quality Gate. Skipped with a build warning (not a hard failure) when
+  # SONAR_TOKEN is unset, so a revoked/missing external token can't brick the pipeline — ruff+mypy
+  # already cover a lot of the same static-analysis ground locally. The final quality-gate summary
+  # below reports this run as explicitly SKIPPED/UNVERIFIED rather than folding it into a plain
+  # PASS: absence of Sonar evidence must never be reported as evidence Sonar passed.
   sonar-quality-gate:
     name: 6. Sonar Quality Gate
     needs: [backend-tests, provider-adk-tests, frontend-quality]
     runs-on: ubuntu-latest
+    outputs:
+      skipped: ${{ steps.check_token.outputs.skip }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -217,6 +221,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Confirm All Strict Quality Gates Passed
+        env:
+          SONAR_SKIPPED: ${{ needs.sonar-quality-gate.outputs.skipped }}
         run: |
           echo "================================================================="
           echo "All Strict Quality Gates Passed (Clean Code & Clean Architecture)"
@@ -228,5 +234,10 @@ jobs:
           echo " - Backend Core Tests (Unit, Integration, E2E): PASS"
           echo " - Provider Tests (Google ADK): PASS"
           echo " - Coverage Threshold Gate (>=80%): PASS"
-          echo " - SonarCloud Analysis & Quality Gate: PASS (or SKIPPED if SONAR_TOKEN is unset)"
+          if [ "$SONAR_SKIPPED" = "true" ]; then
+            echo "::warning::SonarCloud Analysis & Quality Gate was SKIPPED (SONAR_TOKEN not configured). This run is UNVERIFIED by Sonar, not a Sonar pass — configure SONAR_TOKEN to close this gap."
+            echo " - SonarCloud Analysis & Quality Gate: SKIPPED (SONAR_TOKEN not configured) — UNVERIFIED, not PASS"
+          else
+            echo " - SonarCloud Analysis & Quality Gate: PASS"
+          fi
           echo "================================================================="

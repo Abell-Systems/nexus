@@ -1,6 +1,7 @@
 """Comprehensive unit tests for FastAPI endpoints (infrastructure/api.py) and the
 /api/analyze job orchestration helpers (infrastructure/analysis_pipeline.py)."""
 
+import json
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -98,6 +99,27 @@ def test_extract_json_object():
 
     invalid = "No json here at all"
     assert _extract_json_object(invalid) is None
+
+
+def test_extract_json_object_handles_nested_objects():
+    """Regression test: a naive "first { .. first }" or "[^}]*" regex truncates
+    on the first inner closing brace, dropping real candidate/verdict payloads
+    that nest objects (routine for InventionCandidate/AdversarialVerdict/ScoreCard)."""
+    nested = (
+        "```json\n"
+        '{"candidate": {"title": "foo"}, "evidence": {"patents": ["x"]}}\n'
+        "```"
+    )
+    extracted = _extract_json_object(nested)
+    assert extracted == '{"candidate": {"title": "foo"}, "evidence": {"patents": ["x"]}}'
+    assert json.loads(extracted) == {"candidate": {"title": "foo"}, "evidence": {"patents": ["x"]}}
+
+
+def test_extract_json_object_ignores_braces_inside_strings():
+    tricky = '{"title": "uses {curly} braces in text", "score": 1}'
+    extracted = _extract_json_object(tricky)
+    assert extracted == tricky
+    assert json.loads(extracted) == {"title": "uses {curly} braces in text", "score": 1}
 
 
 def test_parse_item_to_dict():
