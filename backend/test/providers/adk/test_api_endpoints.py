@@ -1,4 +1,5 @@
-"""Comprehensive unit tests for FastAPI endpoints and helper functions in infrastructure/api.py."""
+"""Comprehensive unit tests for FastAPI endpoints (infrastructure/api.py) and the
+/api/analyze job orchestration helpers (infrastructure/analysis_pipeline.py)."""
 
 from unittest.mock import MagicMock, patch
 
@@ -7,24 +8,23 @@ from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
 from domain.models.runtime_schemas import InventionCandidate
-from infrastructure.api import (
+from infrastructure.analysis_pipeline import (
     _ANALYZE_RATE_LIMIT,
     _analyze_request_times,
     _as_list,
-    _check_domain_supported,
     _check_rate_limit,
     _classify_error,
     _emit_event,
     _extract_json_object,
     _handle_candidate_state,
     _handle_verdict_state,
-    _job_store,
     _parse_item_to_dict,
     _retry_after_seconds,
     _run_job,
     _validated,
-    app,
 )
+from infrastructure.api import _check_domain_supported, app
+from infrastructure.api_dependencies import _job_store
 
 client = TestClient(app)
 
@@ -294,7 +294,7 @@ async def test_run_job_timeout_handling():
     job_id = "timeout_test_job"
     _job_store.create_job(job_id=job_id, domain="solid_state_battery", query="test")
 
-    with patch("infrastructure.api._execute_analysis", side_effect=TimeoutError()):
+    with patch("infrastructure.analysis_pipeline._execute_analysis", side_effect=TimeoutError()):
         await _run_job(job_id, MagicMock())
 
     job = _job_store.get_job(job_id)
@@ -307,7 +307,7 @@ async def test_run_job_exception_handling():
     job_id = "exc_test_job"
     _job_store.create_job(job_id=job_id, domain="solid_state_battery", query="test")
 
-    with patch("infrastructure.api._execute_analysis", side_effect=RuntimeError("Engine failure")):
+    with patch("infrastructure.analysis_pipeline._execute_analysis", side_effect=RuntimeError("Engine failure")):
         await _run_job(job_id, MagicMock())
 
     job = _job_store.get_job(job_id)
