@@ -133,11 +133,18 @@ jobs:
           path: coverage.xml
       # Raw .coverage data (not the XML) so Sonar gets one correctly-merged report instead of
       # two independent XMLs — see the coverage-merge step in sonar-quality-gate for why.
+      # include-hidden-files: actions/upload-artifact@v4 excludes dotfiles by default and only
+      # warns (doesn't fail) when nothing matches — silently dropping .coverage.core here is what
+      # produced "Artifact not found" two jobs later in sonar-quality-gate instead of failing here
+      # where it's obvious. if-no-files-found: error makes a future path/name typo fail loudly at
+      # the point of the mistake instead.
       - name: Upload Raw Coverage Data
         uses: actions/upload-artifact@v4
         with:
           name: coverage-data-core
           path: .coverage.core
+          include-hidden-files: true
+          if-no-files-found: error
 
   # 5b. Provider Tests (Google ADK & Provider Adapters)
   provider-adk-tests:
@@ -170,6 +177,8 @@ jobs:
         with:
           name: coverage-data-providers
           path: .coverage.providers
+          include-hidden-files: true
+          if-no-files-found: error
 
   # 6. Sonar Analysis & Quality Gate. Skipped with a build warning (not a hard failure) when
   # SONAR_TOKEN is unset, so a revoked/missing external token can't brick the pipeline — ruff+mypy
