@@ -25,7 +25,11 @@ sys.path.insert(0, str(repo_root / "backend" / "src" / "main"))
 from application.evaluation.matching_adapter import DefaultMatchingAdapter
 from application.evaluation.runner import DefaultEvaluationRunner
 from application.matching.engine import DefaultMatchingEngine
-from domain.models.evaluation import EvaluationExecutionContext, ModelConfigurationManifest
+from domain.models.evaluation import (
+    EvaluationExecutionContext,
+    FrozenEmbeddingArtifact,
+    ModelConfigurationManifest,
+)
 from domain.models.matching import MatchingPolicyConfig
 from infrastructure.evaluation.dataset_loader import DefaultEvaluationDatasetLoader
 
@@ -119,6 +123,18 @@ def main() -> int:
         help="Optional path to save serialized EvaluationRunReport JSON",
     )
     parser.add_argument(
+        "--embeddings",
+        type=Path,
+        default=None,
+        help=(
+            "Optional path to the frozen M1 embedding artifact JSON (ADR 0014). "
+            "When omitted the run is M0-only (lexical + CPC); when supplied the artifact "
+            "is hash-verified, source-dataset-verified against the loaded dataset, and wired "
+            "into the adapter as raw-cosine semantic scores. Nothing is ever generated or "
+            "modified in place — the artifact file is read-only input."
+        ),
+    )
+    parser.add_argument(
         "--environment",
         type=str,
         default="local_benchmark",
@@ -191,8 +207,28 @@ def main() -> int:
 
     # 4. Instantiate engine and adapter in CLI layer (the appropriate place for concrete wiring)
     # DefaultMatchingAdapter is the single adapter between evaluation-domain and matching-domain types.
+    # Optional M1 wiring (ADR 0014): the artifact is loaded, hash-verified, and bound to the
+    # already-validated dataset here — never inside the runner, never generated, never edited.
+    semantic_artifact: FrozenEmbeddingArtifact | None = None
+    if args.embeddings is not None:
+        semantic_artifact = FrozenEmbeddingArtifact.load_from_json(args.embeddings)
+        semantic_artifact.verify_source_dataset(validated_dataset)
+        print(
+            f"✓ Embeddings wired:  {semantic_artifact.artifact_id} "
+            f"({semantic_artifact.model_name}@{semantic_artifact.model_revision[:12]}, "
+            f"dim={semantic_artifact.embedding_dimension}, "
+            f"SHA: {semantic_artifact.artifact_sha256[:12]}...)"
+        )
+    else:
+        print("○ Embeddings:        M0-only mode (no semantic artifact supplied)")
     engine = DefaultMatchingEngine()
-    ranking_port = DefaultMatchingAdapter(engine=engine, policy=policy, bm25_k1=bm25_k1, bm25_b=bm25_b)
+    ranking_port = DefaultMatchingAdapter(
+        engine=engine,
+        policy=policy,
+        bm25_k1=bm25_k1,
+        bm25_b=bm25_b,
+        semantic_artifact=semantic_artifact,
+    )
 
     # 5. Execute evaluation via in-memory runner
     # The runner receives only the EvaluationRankingPort — it never sees CandidatePool or MatchingPolicyConfig.
@@ -252,6 +288,19 @@ def main() -> int:
         # ADR 0011: every output must declare study_status and reference the study protocol
         report_dict["study_status"] = "PILOT"
         report_dict["study_protocol_id"] = "NEXUS-PHASE2-ABLATION-M0-M6"
+        # M1 provenance: which frozen artifact (if any) fed the semantic scores
+        if semantic_artifact is not None:
+            report_dict["embedding_provenance"] = {
+                "artifact_id": semantic_artifact.artifact_id,
+                "artifact_sha256": semantic_artifact.artifact_sha256,
+                "dataset_sha256": semantic_artifact.dataset_sha256,
+                "model_name": semantic_artifact.model_name,
+                "model_revision": semantic_artifact.model_revision,
+                "embedding_dimension": semantic_artifact.embedding_dimension,
+                "generation_device": semantic_artifact.generation_device,
+            }
+        else:
+            report_dict["embedding_provenance"] = None
         args.output.write_text(_json.dumps(report_dict, indent=2), encoding="utf-8")
         print(f"Report JSON saved to: {args.output}")
 
