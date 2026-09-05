@@ -79,7 +79,7 @@ class FusionTransformUnitTest:
     def test_should_be_strictly_increasing_in_lexical(self) -> None:
         inputs = [0.0, 0.01, 0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 100.0, 1e6]
         outputs = [fuse_lexical_score(x) for x in inputs]
-        assert all(b > a for a, b in zip(outputs, outputs[1:]))
+        assert all(b > a for a, b in zip(outputs, outputs[1:], strict=False))
         assert all(0.0 <= y < 1.0 for y in outputs)
 
     def test_should_saturate_without_clamping_in_lexical_tail(self) -> None:
@@ -96,7 +96,7 @@ class FusionTransformUnitTest:
     def test_should_be_strictly_increasing_in_semantic(self) -> None:
         inputs = [-1.0, -0.5, -0.1, 0.0, 0.3, 0.7, 1.0]
         outputs = [fuse_semantic_score(x) for x in inputs]
-        assert all(b > a for a, b in zip(outputs, outputs[1:]))
+        assert all(b > a for a, b in zip(outputs, outputs[1:], strict=False))
         assert all(0.0 <= y <= 1.0 for y in outputs)
 
 
@@ -155,13 +155,16 @@ class FusionEvaluatorBoundednessTest:
 
     def test_should_be_monotone_in_each_raw_signal(self) -> None:
         policy = _policy()
-        base = lambda lex, sem, cpc: _evaluator().evaluate_candidate(
-            "D", "P", _features(lex=lex, sem=sem, cpc=cpc), policy
-        ).overall_score
+
+        def base(lex: float, sem: float, cpc: float) -> float:
+            return _evaluator().evaluate_candidate(
+                "D", "P", _features(lex=lex, sem=sem, cpc=cpc), policy
+            ).overall_score
+
         lex_scores = [base(x, 0.2, 0.5) for x in (0.0, 0.5, 2.0, 20.0)]
-        assert all(b > a for a, b in zip(lex_scores, lex_scores[1:]))
+        assert all(b > a for a, b in zip(lex_scores, lex_scores[1:], strict=False))
         sem_scores = [base(1.0, x, 0.5) for x in (-1.0, -0.2, 0.4, 1.0)]
-        assert all(b > a for a, b in zip(sem_scores, sem_scores[1:]))
+        assert all(b > a for a, b in zip(sem_scores, sem_scores[1:], strict=False))
 
     def test_should_hold_unit_interval_under_extreme_weight_configurations(self) -> None:
         policy = _policy()

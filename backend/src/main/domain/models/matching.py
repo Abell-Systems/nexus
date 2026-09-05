@@ -5,7 +5,6 @@ from typing import Any
 
 from pydantic import BaseModel, Field, model_validator
 
-
 # ADR 0016 fusion-transform identity and scale prior.
 # FUSION_LEX_K is an ex ante unit-scale convention (f_lex(k) = 0.5), not a value
 # calibrated against any benchmark; changing it is a new decision, not a bug fix.
