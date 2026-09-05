@@ -10,6 +10,8 @@ Invariants verified:
 
 
 
+from pathlib import Path
+
 import pytest
 
 from domain.models.demand import DemandRecord, SpanishOriginLevel
@@ -24,6 +26,12 @@ from domain.models.matching import (
     compute_cpc_symbol_similarity_from_levels,
 )
 from domain.protocols.matching import MatchingEngine
+
+# Anchored to repo root so this resolves regardless of pytest's invocation cwd
+# (e.g. `pytest` from repo root vs `cd backend && pytest`).
+DEFAULT_MATCHING_POLICY_PATH = (
+    Path(__file__).resolve().parents[4] / "config" / "policies" / "matching" / "default_matching_policy.json"
+)
 
 
 def _make_demand() -> DemandRecord:
@@ -55,7 +63,7 @@ def test_matching_engine_protocol_is_runtime_checkable():
 
 
 def test_cpc_similarity_uses_policy_levels_as_single_source_of_truth():
-    policy = MatchingPolicyConfig.load_from_json("config/policies/matching/default_matching_policy.json")
+    policy = MatchingPolicyConfig.load_from_json(DEFAULT_MATCHING_POLICY_PATH)
     levels = policy.cpc_concordance_levels
 
     # 1. Exact subgroup match uses levels.subgroup (1.0)
@@ -97,7 +105,7 @@ def test_default_matching_engine_full_evaluation_and_determinism():
     from application.matching.engine import DefaultMatchingEngine
 
     engine = DefaultMatchingEngine()
-    policy = MatchingPolicyConfig.load_from_json("config/policies/matching/default_matching_policy.json")
+    policy = MatchingPolicyConfig.load_from_json(DEFAULT_MATCHING_POLICY_PATH)
     demand = _make_demand()
 
     # Candidate 1: strong prior art with semantic and lexical overlap
@@ -172,7 +180,7 @@ def test_matching_engine_sufficiency_rule_governed_strictly_by_policy():
     from application.matching.engine import DefaultMatchingEngine
 
     engine = DefaultMatchingEngine()
-    policy = MatchingPolicyConfig.load_from_json("config/policies/matching/default_matching_policy.json")
+    policy = MatchingPolicyConfig.load_from_json(DEFAULT_MATCHING_POLICY_PATH)
     demand = _make_demand()
 
     # Candidate with exactly 1 active signal (e.g. lexical only)
@@ -201,7 +209,7 @@ def test_matching_engine_rejects_incompatible_demand_type():
     from application.matching.engine import DefaultMatchingEngine
 
     engine = DefaultMatchingEngine()
-    policy = MatchingPolicyConfig.load_from_json("config/policies/matching/default_matching_policy.json")
+    policy = MatchingPolicyConfig.load_from_json(DEFAULT_MATCHING_POLICY_PATH)
     pool = CandidatePool(demand_id="D-1", candidates=[])
 
     with pytest.raises(TypeError, match="Expected DemandRecord or DemandSignal"):
@@ -214,7 +222,7 @@ def test_matching_engine_with_canonical_patent_candidate_evidence_objects():
     from domain.models.matching import PatentCandidateEvidence
 
     engine = DefaultMatchingEngine()
-    policy = MatchingPolicyConfig.load_from_json("config/policies/matching/default_matching_policy.json")
+    policy = MatchingPolicyConfig.load_from_json(DEFAULT_MATCHING_POLICY_PATH)
     demand = _make_demand()
 
     # Demand with target CPC symbol H01M10/0562

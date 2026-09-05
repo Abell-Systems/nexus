@@ -35,6 +35,11 @@ from domain.models.matching import (
 )
 from domain.models.patent import PatentDocument
 
+# Anchored to repo root so this resolves regardless of pytest's invocation cwd
+# (e.g. `pytest` from repo root vs `cd backend && pytest`).
+_REPO_ROOT = Path(__file__).resolve().parents[4]
+DEFAULT_MATCHING_POLICY_PATH = _REPO_ROOT / "config" / "policies" / "matching" / "default_matching_policy.json"
+
 
 def _make_demand(
     demand_id: str = "INNOGET-2292",
@@ -78,7 +83,7 @@ def _make_patent(
 
 
 def test_matching_policy_config_loads_and_verifies_cryptographic_digest():
-    policy_path = Path("config/policies/matching/default_matching_policy.json")
+    policy_path = DEFAULT_MATCHING_POLICY_PATH
     assert policy_path.exists(), "Default matching policy file must exist"
 
     policy = MatchingPolicyConfig.load_from_json(policy_path)
@@ -90,11 +95,11 @@ def test_matching_policy_config_loads_and_verifies_cryptographic_digest():
 
 def test_matching_policy_config_fail_fast_on_missing_file():
     with pytest.raises(FileNotFoundError):
-        MatchingPolicyConfig.load_from_json("config/policies/matching/non_existent.json")
+        MatchingPolicyConfig.load_from_json(_REPO_ROOT / "config" / "policies" / "matching" / "non_existent.json")
 
 
 def test_matching_policy_config_fail_fast_on_tampered_digest(tmp_path):
-    policy_path = Path("config/policies/matching/default_matching_policy.json")
+    policy_path = DEFAULT_MATCHING_POLICY_PATH
     with open(policy_path, encoding="utf-8") as f:
         data = json.load(f)
 
@@ -109,7 +114,7 @@ def test_matching_policy_config_fail_fast_on_tampered_digest(tmp_path):
 
 
 def test_matching_policy_config_fail_fast_on_missing_declared_digest(tmp_path):
-    policy_path = Path("config/policies/matching/default_matching_policy.json")
+    policy_path = DEFAULT_MATCHING_POLICY_PATH
     with open(policy_path, encoding="utf-8") as f:
         data = json.load(f)
 
