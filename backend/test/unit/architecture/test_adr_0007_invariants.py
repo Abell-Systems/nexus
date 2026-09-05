@@ -330,6 +330,8 @@ def _fake_engine_and_call_record():
                     policy_id=policy.policy_id,
                     policy_version=policy.policy_version,
                     policy_sha256=policy.policy_sha256,
+                    # Explicit fake provenance: never inherits the real transform identity.
+                    fusion_transform_id="fake-no-transform",
                 )
                 for c in candidates.candidates
             ]

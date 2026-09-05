@@ -427,6 +427,24 @@ ProvenanceStatus = Literal[
 TuningStatus = Literal["NOT_TUNED_NO_INDEPENDENT_DEV_SET"]
 
 
+class FusionTransformRecord(BaseModel):
+    """Pre-registered score-space fusion transform (ADR 0016 §4).
+
+    Records the exact functional form mapping heterogeneous raw ranking features
+    into [0, 1] before the convex combination in DefaultEvidenceEvaluator. Fixed
+    ex ante; changing any field defines a new transform_id, never an edit.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    transform_id: str = Field(min_length=1)
+    f_lex: str = Field(min_length=1)
+    f_lex_k: float = Field(gt=0.0)
+    f_sem: str = Field(min_length=1)
+    applied_at: str = Field(min_length=1)
+    adr: str = Field(min_length=1)
+
+
 class ModelConfigurationRecord(BaseModel):
     """Frozen, provenance-tagged configuration for a single M0-M6 model variant (ADR 0012).
 
@@ -443,6 +461,7 @@ class ModelConfigurationRecord(BaseModel):
     weights: dict[str, float] | None = None
     version: str = Field(min_length=1)
     provenance_status: ProvenanceStatus
+    fusion_transform: FusionTransformRecord | None = None
 
 
 class SourcePolicyReference(BaseModel):

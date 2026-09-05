@@ -168,6 +168,8 @@ def test_match_assessment_model_and_confidence_evaluation():
         policy_id="NEXUS-MATCHING-POLICY-UC1-DEFAULT",
         policy_version="1.0.0",
         policy_sha256="c7aec29433975db6a2503cf216554a6d5ade701a69b14f0230710542fd519541",
+        # Explicit direct-construction provenance (these objects never pass the evaluator).
+        fusion_transform_id="test-direct-construction",
     )
 
     assert assessment.confidence == MatchConfidence.STRONG
@@ -198,6 +200,7 @@ def test_temporal_ineligibility_produces_ineligible_sufficiency():
         policy_id="NEXUS-MATCHING-POLICY-UC1-DEFAULT",
         policy_version="1.0.0",
         policy_sha256="c7aec29433975db6a2503cf216554a6d5ade701a69b14f0230710542fd519541",
+        fusion_transform_id="test-direct-construction",
     )
 
     assert assessment.sufficiency == EvidenceSufficiency.INELIGIBLE_TEMPORAL
@@ -228,6 +231,7 @@ def test_insufficient_evidence_when_signals_are_absent():
         policy_id="NEXUS-MATCHING-POLICY-UC1-DEFAULT",
         policy_version="1.0.0",
         policy_sha256="c7aec29433975db6a2503cf216554a6d5ade701a69b14f0230710542fd519541",
+        fusion_transform_id="test-direct-construction",
     )
 
     assert assessment.sufficiency == EvidenceSufficiency.INSUFFICIENT_EVIDENCE
