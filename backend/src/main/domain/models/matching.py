@@ -6,6 +6,13 @@ from typing import Any
 from pydantic import BaseModel, Field, model_validator
 
 
+# ADR 0016 fusion-transform identity and scale prior.
+# FUSION_LEX_K is an ex ante unit-scale convention (f_lex(k) = 0.5), not a value
+# calibrated against any benchmark; changing it is a new decision, not a bug fix.
+FUSION_TRANSFORM_ID = "adr0016-fusion-v1"
+FUSION_LEX_K = 1.0
+
+
 class RetrievalMethod(StrEnum):
     LEXICAL = "lexical"
     SEMANTIC = "semantic"
@@ -36,7 +43,9 @@ class Candidate(BaseModel):
         if not self.publication_id.strip():
             raise ValueError("publication_id cannot be empty")
         for method, score in self.retrieval_scores.items():
-            if score < 0.0:
+            # ADR 0015 §2: raw cosine similarity (SEMANTIC) spans [-1, 1]; only
+            # LEXICAL ([0, +∞)) and CPC ([0, 1]) are non-negative by definition.
+            if score < 0.0 and method != RetrievalMethod.SEMANTIC:
                 raise ValueError(f"Retrieval score for {method} must be non-negative, got {score}")
         return self
 
@@ -396,7 +405,8 @@ class MatchFeatures(BaseModel):
     """Deterministic, explainable features extracted between a demand and a patent."""
 
     lexical_score: float = Field(ge=0.0, default=0.0)
-    semantic_score: float = Field(ge=0.0, le=1.0, default=0.0)
+    # ADR 0015 §2: true domain of raw cosine similarity is [-1, 1].
+    semantic_score: float = Field(ge=-1.0, le=1.0, default=0.0)
     cpc_concordance: float = Field(ge=0.0, le=1.0, default=0.0)
     temporal_valid: bool = True
     delta_days: int | None = None
@@ -417,6 +427,10 @@ class MatchAssessment(BaseModel):
     policy_id: str
     policy_version: str
     policy_sha256: str = Field(min_length=64, max_length=64)
+    # ADR 0016 §4: every assessment stamps the fusion-transform identity so the
+    # result is reconstructible (ConfigurationVersion is policy_version;
+    # PolicySHA is policy_sha256; transform identity is this field).
+    fusion_transform_id: str = FUSION_TRANSFORM_ID
 
 
 class OperationalLimits(BaseModel):

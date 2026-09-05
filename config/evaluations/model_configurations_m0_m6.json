@@ -45,7 +45,15 @@
         "gamma": 0.2
       },
       "version": "1.0.0",
-      "provenance_status": "INHERITED"
+      "provenance_status": "INHERITED",
+      "fusion_transform": {
+        "transform_id": "adr0016-fusion-v1",
+        "f_lex": "x/(x+k)",
+        "f_lex_k": 1.0,
+        "f_sem": "(x+1)/2",
+        "applied_at": "fusion",
+        "adr": "ADR 0016"
+      }
     },
     {
       "model_id": "M4",
@@ -57,7 +65,15 @@
         "gamma": 0.2
       },
       "version": "1.0.0",
-      "provenance_status": "INHERITED"
+      "provenance_status": "INHERITED",
+      "fusion_transform": {
+        "transform_id": "adr0016-fusion-v1",
+        "f_lex": "x/(x+k)",
+        "f_lex_k": 1.0,
+        "f_sem": "(x+1)/2",
+        "applied_at": "fusion",
+        "adr": "ADR 0016"
+      }
     },
     {
       "model_id": "M5",
@@ -69,7 +85,15 @@
         "gamma": 0.2
       },
       "version": "1.0.0",
-      "provenance_status": "INHERITED"
+      "provenance_status": "INHERITED",
+      "fusion_transform": {
+        "transform_id": "adr0016-fusion-v1",
+        "f_lex": "x/(x+k)",
+        "f_lex_k": 1.0,
+        "f_sem": "(x+1)/2",
+        "applied_at": "fusion",
+        "adr": "ADR 0016"
+      }
     },
     {
       "model_id": "M6",
@@ -81,8 +105,16 @@
         "gamma": 0.2
       },
       "version": "1.0.0",
-      "provenance_status": "PRE_EXISTING_INITIAL_CONFIGURATION"
+      "provenance_status": "PRE_EXISTING_INITIAL_CONFIGURATION",
+      "fusion_transform": {
+        "transform_id": "adr0016-fusion-v1",
+        "f_lex": "x/(x+k)",
+        "f_lex_k": 1.0,
+        "f_sem": "(x+1)/2",
+        "applied_at": "fusion",
+        "adr": "ADR 0016"
+      }
     }
   ],
-  "config_sha256": "4374c187e19e2aba9a9035d2a79b091c9656eb4b9a446e24d2a4d1949a8eecaf"
+  "config_sha256": "0400b5ec6b95dc5573b069813a8be3463fa8c58a7d7c40f124ce3cfbe1e045c2"
 }
