@@ -35,7 +35,7 @@ jobs:
             exit 1
           fi
 
-          gcloud run deploy patent-agent \
+          gcloud run deploy abell-nexus \
             --source . \
             --project "$PROJECT_ID" \
             --region "$REGION" \
