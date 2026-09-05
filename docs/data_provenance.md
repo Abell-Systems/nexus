@@ -14,7 +14,7 @@ To guarantee scientific rigor, empirical reproducibility, and source fingerprint
 [Official Authority Catalog / Live API]
                  │
                  ▼
-[Fingerprinted Raw Baseline: data/raw/oepm_open_data_es.json (SHA-256: 68500f25...)]
+[Fingerprinted Raw Baseline: data/raw/oepm_open_data_es.json (SHA-256: 2832dc59...)]
                  │
                  ▼
 [Normalized Storage: Parquet / JSONL (SHA-256: c158bdaa...)]
@@ -69,7 +69,7 @@ To guarantee scientific rigor, empirical reproducibility, and source fingerprint
   * **Analytical Evaluation Set:** Cross-sector comparison evaluated across a predefined analytical set: `["C11D", "E03C", "G05B", "C22C", "H01M", "C08L"]`.
 * **Dataset Artifacts & Cryptographic Checksums:**
   * **Raw Source Baseline:** `data/raw/oepm_open_data_es.json`  
-    * *SHA-256 Fingerprint:* `68500f2536d65f2c136c06a0c6e0ec9798aa3814581a28e276c06124107c7313`
+    * *SHA-256 Fingerprint:* `2832dc5936b881b4045b26b415f5c5ed2c0bfdc71f6902b838d85000e6799d7b`
   * **Normalized Parquet Snapshot:** `data/snapshots/patents_es_corpus.parquet`  
     * *SHA-256 Digest:* `c158bdaa2426e71c4aa42db5c1885885dc36607bf6cf5431135bdfa70eee3a2e`
   * **Content-Addressed Manifest:** `data/snapshots/patents_es_manifest.json`

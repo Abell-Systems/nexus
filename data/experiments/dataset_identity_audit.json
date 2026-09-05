@@ -1,0 +1,132 @@
+{
+  "audit_id": "nexus-dataset-identity-temporal-audit-v1",
+  "generated_at": "2026-09-05T19:19:12.222768+00:00",
+  "dataset_id": "nexus-pilot-16-evaluation-corpus-v1",
+  "dataset_sha256": "bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453",
+  "counts": {
+    "demands": 3,
+    "patents": 15,
+    "annotations": 23
+  },
+  "demand_ids": [
+    "INNOGET-2292",
+    "INNOGET-2415",
+    "INNOGET-2501"
+  ],
+  "embedding_artifact_id": "m1_embeddings_nexus-pilot-16-evaluation-corpus-v1_1.0.0",
+  "embedding_artifact_sha256": "2ba27432607e261546844788400bbd5a0131e78874d2cdf3fac9cb855c49e76d",
+  "snapshots_total_records": 16,
+  "snapshots_only_ids": [
+    "ES-2918450-A1"
+  ],
+  "temporal_rule": "t_pub < t_demand (strict; equivalent to <= on current data: no equal-date pairs)",
+  "temporal_violations": [
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2856789-A1",
+      "grade": 0,
+      "publication_date": "2023-03-25",
+      "demand_posted_date": "2023-02-15",
+      "status": "TEMPORAL_VIOLATION"
+    },
+    {
+      "demand_id": "INNOGET-2415",
+      "publication_id": "ES-2901234-A1",
+      "grade": 2,
+      "publication_date": "2023-04-20",
+      "demand_posted_date": "2023-01-10",
+      "status": "TEMPORAL_VIOLATION"
+    },
+    {
+      "demand_id": "INNOGET-2501",
+      "publication_id": "ES-2901234-A1",
+      "grade": 0,
+      "publication_date": "2023-04-20",
+      "demand_posted_date": "2023-03-20",
+      "status": "TEMPORAL_VIOLATION"
+    }
+  ],
+  "temporal_violation_count": 3,
+  "checks": [
+    {
+      "check": "dataset_sha_sidecar",
+      "status": "PASS",
+      "detail": "file=bf7c501f817f... sidecar=['bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453', 'dataset_pilot_benchmark.json']"
+    },
+    {
+      "check": "dataset_sha_manifest",
+      "status": "PASS",
+      "detail": "manifest=bf7c501f817f... file=bf7c501f817f..."
+    },
+    {
+      "check": "manifest_counts",
+      "status": "PASS",
+      "detail": "manifest=(3,15,23) actual=(3,15,23)"
+    },
+    {
+      "check": "no_duplicate_demand_ids",
+      "status": "PASS",
+      "detail": "3 demands"
+    },
+    {
+      "check": "no_duplicate_patent_ids",
+      "status": "PASS",
+      "detail": "15 patents"
+    },
+    {
+      "check": "annotations_reference_known_ids",
+      "status": "PASS",
+      "detail": "dangling=[]"
+    },
+    {
+      "check": "embeddings_artifact_sha",
+      "status": "PASS",
+      "detail": "declared=2ba27432607e..."
+    },
+    {
+      "check": "embeddings_dataset_sha",
+      "status": "PASS",
+      "detail": "artifact_ds=bf7c501f817f... dataset=bf7c501f817f..."
+    },
+    {
+      "check": "embeddings_demand_ids",
+      "status": "PASS",
+      "detail": "artifact=['INNOGET-2292', 'INNOGET-2415', 'INNOGET-2501']"
+    },
+    {
+      "check": "embeddings_patent_ids",
+      "status": "PASS",
+      "detail": "artifact=15 dataset=15"
+    },
+    {
+      "check": "embeddings_dimension",
+      "status": "PASS",
+      "detail": "expected_dim=768"
+    },
+    {
+      "check": "snapshots_raw_sha",
+      "status": "PASS",
+      "detail": "manifest=2832dc5936b8... file=2832dc5936b8..."
+    },
+    {
+      "check": "snapshots_count",
+      "status": "PASS",
+      "detail": "manifest=16 jsonl=16"
+    },
+    {
+      "check": "evaluation_subset_of_snapshots",
+      "status": "PASS",
+      "detail": "snapshot_only=['ES-2918450-A1'] evaluation_only=[]"
+    },
+    {
+      "check": "temporal_eligibility",
+      "status": "FAIL",
+      "detail": "3 of 23 annotated pairs violate t_pub < t_demand"
+    }
+  ],
+  "failed_checks": [
+    "temporal_eligibility"
+  ],
+  "verdict": "FAIL",
+  "canonical_fingerprint": "a4c16536b7eabb1c6429adcd97cae5eb686ecbeb7e4feb4ae1508b8f33354543"
+}
