@@ -6,6 +6,7 @@ the acceptance bar this PR closes: a reproducible M0-vs-M1 comparative result
 with explicit denominators/exclusions and full provenance.
 """
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -13,6 +14,17 @@ from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 _SCRIPT = _REPO_ROOT / "scripts" / "run_m0_vs_m1_comparison.py"
+_PROTOCOL_PATH = _REPO_ROOT / "config" / "evaluations" / "comparisons_m0_vs_m1_pilot.json"
+
+
+def _recompute_protocol_sha256(protocol_path: Path) -> str:
+    """Recomputes protocol_sha256 straight from the file, independent of any
+    value a run or artifact claims — same convention as
+    test_m0_vs_m1_pilot_protocol_sha256_integrity (Task 1)."""
+    data = json.loads(protocol_path.read_text(encoding="utf-8"))
+    payload = {k: v for k, v in data.items() if k != "protocol_sha256"}
+    canonical_bytes = json.dumps(payload, sort_keys=True, indent=2).encode("utf-8")
+    return hashlib.sha256(canonical_bytes).hexdigest()
 
 
 def _run_cli(output_dir: Path) -> subprocess.CompletedProcess:
@@ -55,6 +67,20 @@ def test_m0_vs_m1_comparative_report_has_three_pre_registered_hypotheses(tmp_pat
         assert r["n_paired"] + len(r["excluded_demand_ids"]) == 3
         assert "wilcoxon" in r and "p_value" in r["wilcoxon"]
         assert "bootstrap_ci" in r and "ci_lower" in r["bootstrap_ci"]
+
+
+def test_m0_vs_m1_comparative_report_protocol_sha256_matches_the_loaded_protocol_file(tmp_path: Path):
+    """Closes the provenance-integrity gap: the artifact's declared
+    study_protocol_sha256 must match a hash independently recomputed from the
+    actual protocol file the script loaded — not merely whatever value
+    ComparativeRunReport happens to carry through unchecked."""
+    output_dir = tmp_path / "run_a"
+    _run_cli(output_dir)
+
+    comparative = json.loads((output_dir / "m0_vs_m1_comparative_report.json").read_text())
+    expected_sha = _recompute_protocol_sha256(_PROTOCOL_PATH)
+
+    assert comparative["study_protocol_sha256"] == expected_sha
 
 
 def test_m0_run_report_has_no_embedding_provenance_m1_does(tmp_path: Path):
@@ -101,14 +127,25 @@ def test_m0_vs_m1_comparison_cli_is_deterministic_across_runs(tmp_path: Path):
 
     m0_a = json.loads((dir_a / "m0_run_report.json").read_text())
     m0_b = json.loads((dir_b / "m0_run_report.json").read_text())
-    assert m0_a["dataset_sha256"] == m0_b["dataset_sha256"]
-    assert m0_a["policy_sha256"] == m0_b["policy_sha256"]
-    assert m0_a["model_config_sha256"] == m0_b["model_config_sha256"]
-    assert m0_a["macro_strict"] == m0_b["macro_strict"]
-    assert m0_a["macro_broad"] == m0_b["macro_broad"]
-    assert m0_a["macro_denominators"] == m0_b["macro_denominators"]
+    m1_a = json.loads((dir_a / "m1_run_report.json").read_text())
+    m1_b = json.loads((dir_b / "m1_run_report.json").read_text())
 
-    # Execution identity is NOT a scientific result: it is expected to differ,
-    # and this test documents that expectation instead of silently ignoring it.
-    assert m0_a["run_id"] != m0_b["run_id"]
-    assert m0_a["created_at"] != m0_b["created_at"]
+    for ra, rb in ((m0_a, m0_b), (m1_a, m1_b)):
+        assert ra["dataset_sha256"] == rb["dataset_sha256"]
+        assert ra["policy_sha256"] == rb["policy_sha256"]
+        assert ra["model_config_sha256"] == rb["model_config_sha256"]
+        assert ra["macro_strict"] == rb["macro_strict"]
+        assert ra["macro_broad"] == rb["macro_broad"]
+        assert ra["macro_denominators"] == rb["macro_denominators"]
+
+        # Execution identity is NOT a scientific result: it is expected to
+        # differ, and this test documents that expectation instead of
+        # silently ignoring it.
+        assert ra["run_id"] != rb["run_id"]
+        assert ra["created_at"] != rb["created_at"]
+
+    # M1's embedding provenance must be identical across independent runs too
+    # (same frozen artifact, same dataset) — not just "present" (already
+    # covered by test_m0_run_report_has_no_embedding_provenance_m1_does).
+    assert m1_a["embedding_provenance"]["artifact_sha256"] == m1_b["embedding_provenance"]["artifact_sha256"]
+    assert m1_a["embedding_provenance"]["dataset_sha256"] == m1_b["embedding_provenance"]["dataset_sha256"]
