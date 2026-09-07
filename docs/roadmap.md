@@ -43,9 +43,9 @@ Rules that are non-negotiable (see ADR 0017 §5–§7 for the binding text):
 
 ## 2. Where things stand (2026-09-05)
 
-**Deterministic core:** `domain/` + `application/matching/` + `infrastructure/matching/` shareable but not consolidated. M0 (BM25) wired via frozen manifest; M1 artifact frozen but unwired; fusion transform (ADR 0016, Proposed) not yet implemented — raw weighted sum still live in `evaluator.py`.
+**Deterministic core:** `domain/` + `application/matching/` + `infrastructure/matching/` shareable but not consolidated. M0 (BM25) wired via frozen manifest; M1 artifact frozen and wired as raw cosine (#42). Fusion transform (ADR 0016) implemented (#41) — `evaluator.py` applies `f_lex`/`f_sem` at fusion time, no raw weighted sum.
 
-**Lab:** sealed pilot (3 demands × 15 patents, 23/45 pairs, `PILOT / PROOF_OF_HARNESS`). Open items before any efficacy claim: temporal-eligibility correction, metric/protocol alignment (`IDCG=0` handling, primary endpoint MRR-vs-`nDCG@10`), canonical hash chain, dual blinded annotation + IAA, powered Phase-2 dataset.
+**Lab:** sealed pilot (3 demands × 15 patents, 23/45 pairs, `PILOT / PROOF_OF_HARNESS`). `IDCG=0` handling (undefined → `None`, excluded from macro, never imputed; #44, see §4 item 4) and the canonical dataset hash chain (dataset/manifest/embeddings triple verified against one SHA-256, #43, see `docs/dataset-identity-audit.md`) are resolved. Primary confirmatory endpoint is `nDCG@10` (see §4 item 3). A first empirical M0-vs-M1 comparison ran under this protocol (#45): all three pre-registered hypotheses (`nDCG@10`, `Recall@5`, `MRR`) show no detectable difference on the 3-demand pilot — a harness/proof-of-concept result, not an efficacy claim. Still open before any efficacy claim: temporal-eligibility correction (3/23 pairs flagged, uncorrected by design — deferred to Phase-2 pool construction), dual blinded annotation + IAA, powered Phase-2 dataset.
 
 **Product:** landscape/analyze APIs on in-memory jobs (demo-only), no Matching Store, no persistent jobs, no lifecycle, no audit export, no disclaimers in UI/API. Nothing billable yet by design.
 
@@ -87,14 +87,23 @@ PR-B  #40 — ADR 0016 implementation (fusion + bounds)        [shared/lab]
 
 Licensing gate runs parallel to all Product PRs with veto power; it is not sequenced as a feature.
 
+**PR-D execution note:** the canonical-dataset and metric-alignment parts of PR-D's scope were executed as #43 (hash chain, read-only audit) and #44 (`IDCG=0`/primary-endpoint alignment; see §4 items 3–4) rather than as a single PR under this exact label — recorded here rather than rewritten into the table above. PR-D's temporal-eligibility part ("pool pre/post-`Φ_temporal` decided") was **not** executed: the 3 flagged violations remain uncorrected by design, deferred to Phase-2 pool construction (PR-F track).
+
 ---
 
 ## 4. Recorded contradictions (open, owned, not silently fixed)
 
 1. `architecture.md` still describes the pre-UC1 ip-matchmaker topology (BigQuery-global white-space method). Owner: PR-G or a Lab docs PR — rewrite or archive, not both.
 2. Archived hackathon narrative promises ScoreCards "for patent filings" / "patentable white space". Owner: PR-G — editorial correction + disclaimer; archive itself stays byte-identical.
-3. Primary endpoint mismatch: M0–M6 hypothesis family (strict MRR) vs study protocol (primary `nDCG@10`). Owner: PR-D — unify to one confirmatory endpoint.
-4. `IDCG=0` handling: protocol (exclude + report) vs `metrics.py` (impute 1.0). Owner: PR-D — one truth, code or protocol changes accordingly.
+3. Primary endpoint mismatch: M0–M6 hypothesis family (strict MRR) vs study protocol (primary `nDCG@10`). **Resolved (docs-only, no code/hash change):**
+
+   > **Confirmatory endpoint:** `nDCG@10`, as specified by the empirical study protocol and used by the current evaluation implementation.
+   >
+   > The sealed M0–M6 hypothesis configuration (`config/evaluations/comparisons_m0_m6.json`) retains `MRR` as its historical primary metric. This configuration is preserved unchanged for provenance and reproducibility and is treated as **legacy/secondary analysis**, not as the confirmatory endpoint of the Phase-2 study.
+   >
+   > No re-sealing, re-hashing, or mutation of `comparisons_m0_m6.json` is permitted. `MRR` remains a valid secondary metric — it simply is not the pre-specified confirmatory endpoint.
+
+4. `IDCG=0` handling: protocol (exclude + report) vs `metrics.py` (impute 1.0). **Resolved (#44):** `metrics.py` now returns `None` when `IDCG == 0` (never imputed) and excludes the observation from macro averages, with explicit per-metric denominators (`EvaluationRunReport.macro_denominators`). Protocol and code now agree.
 
 ---
 
