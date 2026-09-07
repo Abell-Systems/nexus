@@ -90,5 +90,12 @@
       },
       "n_min": 15
     }
-  ]
+  ],
+  "binding_decision": {
+    "selected_target_theta": 0.2,
+    "rationale": "Minimum scientifically relevant effect Phase 2 must have power to detect, not the effect observed in the Phase 1 pilot (n=3 cannot reliably estimate any effect size; the pilot comparative result, PR #45/#51, showed no detectable M0-vs-M1 difference). Frozen before any Phase 2 test-split result is inspected, per docs/empirical-study-protocol.md §3.2's Binding Rule.",
+    "frozen_demand_sample_size": 60,
+    "power_at_frozen_n": 0.8164,
+    "frozen_at": "2026-09-07"
+  }
 }
