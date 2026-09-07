@@ -70,6 +70,7 @@ class RawExtractedDemandFields(BaseModel):
     deadline_date_raw: str | None = None
     budget_range_raw: str | None = None
     canonical_uri_observed: str | None = None
+    external_reference_raw: str | None = None
     extraction_timestamp: datetime
     source_uri: str
 

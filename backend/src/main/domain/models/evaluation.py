@@ -150,6 +150,32 @@ class EvaluationDataset(BaseModel):
         return self
 
 
+class DemandCorpus(BaseModel):
+    """Frozen demand-only corpus for the pre-patent-pairing acquisition stage.
+
+    Distinct from EvaluationDataset (which requires a non-empty patent corpus and
+    annotations): this represents the state immediately after demand acquisition and
+    content/origin verification, before candidate generation or annotation exist.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    dataset_id: str = Field(min_length=1)
+    schema_version: str = Field(min_length=1)
+    dataset_version: str = Field(min_length=1)
+    description: str = Field(min_length=1)
+    demands: list[EvaluationDemand] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_unique_demand_ids(self) -> "DemandCorpus":
+        seen: set[str] = set()
+        for d in self.demands:
+            if d.demand_id in seen:
+                raise ValueError(f"Duplicate demand_id in corpus: {d.demand_id}")
+            seen.add(d.demand_id)
+        return self
+
+
 class EvaluationDatasetManifest(BaseModel):
     """External descriptor and cryptographic identity for an evaluation dataset."""
 
