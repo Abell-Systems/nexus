@@ -30,26 +30,32 @@ from domain.models.evaluation import (
 )
 
 
-def _extract_metric(metric_set: MetricSet, metric: str) -> float:
-    """Extract a scalar metric value by name from a MetricSet."""
-    value = getattr(metric_set, metric, None)
-    if value is None:
+def _extract_metric(metric_set: MetricSet, metric: str) -> float | None:
+    """Extract a scalar metric value by name from a MetricSet.
+
+    Returns None when the metric is undefined for that demand (protocol exclusion
+    semantics, PR #44) so the caller can exclude the pair instead of imputing.
+    """
+    if metric not in MetricSet.model_fields:
         raise ValueError(
             f"Metric '{metric}' not found in MetricSet. "
             f"Available metrics: {list(MetricSet.model_fields.keys())}"
         )
-    return float(value)
+    value = getattr(metric_set, metric)
+    return None if value is None else float(value)
 
 
 def _extract_paired_vectors(
     baseline_run: EvaluationRunReport,
     treatment_run: EvaluationRunReport,
     hypothesis: StudyHypothesis,
-) -> tuple[list[float], list[float]]:
+) -> tuple[list[float], list[float], list[str]]:
     """Extract aligned per-demand metric vectors from two EvaluationRunReports.
 
     The paired vectors are ordered by the sorted set of demand_ids to guarantee
-    deterministic alignment across independent runs.
+    deterministic alignment across independent runs. Demands where the hypothesis
+    metric is undefined (None) on either side are excluded as a pair and returned
+    as the third element, per the protocol exclusion rule — never imputed.
 
     Raises:
         ValueError: if demand_id sets differ between baseline and treatment runs.
@@ -79,16 +85,22 @@ def _extract_paired_vectors(
 
     baseline_values: list[float] = []
     treatment_values: list[float] = []
+    excluded_demand_ids: list[str] = []
 
     for demand_id in ordered_ids:
         b_report = baseline_by_demand[demand_id]
         t_report = treatment_by_demand[demand_id]
         b_metrics: MetricSet = getattr(b_report, scope_attr)
         t_metrics: MetricSet = getattr(t_report, scope_attr)
-        baseline_values.append(_extract_metric(b_metrics, hypothesis.metric))
-        treatment_values.append(_extract_metric(t_metrics, hypothesis.metric))
+        b_value = _extract_metric(b_metrics, hypothesis.metric)
+        t_value = _extract_metric(t_metrics, hypothesis.metric)
+        if b_value is None or t_value is None:
+            excluded_demand_ids.append(demand_id)
+            continue
+        baseline_values.append(b_value)
+        treatment_values.append(t_value)
 
-    return baseline_values, treatment_values
+    return baseline_values, treatment_values, excluded_demand_ids
 
 
 def evaluate_study_protocol(
@@ -125,14 +137,22 @@ def evaluate_study_protocol(
                 )
 
     # Step 2: Run paired tests for each hypothesis, collecting raw p-values
-    raw_results: list[tuple[StudyHypothesis, WilcoxonResult, BootstrapCIResult]] = []
+    raw_results: list[tuple[StudyHypothesis, WilcoxonResult, BootstrapCIResult, int, list[str]]] = []
     raw_p_values: list[float] = []
 
     for hypothesis in protocol.hypotheses:
         baseline_run = runs[hypothesis.baseline]
         treatment_run = runs[hypothesis.treatment]
 
-        baseline_vec, treatment_vec = _extract_paired_vectors(baseline_run, treatment_run, hypothesis)
+        baseline_vec, treatment_vec, excluded_ids = _extract_paired_vectors(
+            baseline_run, treatment_run, hypothesis
+        )
+        if not baseline_vec:
+            raise ValueError(
+                f"Hypothesis '{hypothesis.id}' has no valid paired observations for metric "
+                f"'{hypothesis.metric}' ({hypothesis.scope} scope): every demand was excluded "
+                f"as undefined. Cannot test on zero pairs."
+            )
 
         wilcoxon_result: WilcoxonResult = paired_wilcoxon_test(
             baseline=baseline_vec,
@@ -148,7 +168,9 @@ def evaluate_study_protocol(
             seed=protocol.seed,
         )
 
-        raw_results.append((hypothesis, wilcoxon_result, bootstrap_result))
+        raw_results.append(
+            (hypothesis, wilcoxon_result, bootstrap_result, len(baseline_vec), excluded_ids)
+        )
         raw_p_values.append(wilcoxon_result.p_value)
 
     # Step 3: BH-FDR across the closed family of hypotheses
@@ -156,7 +178,7 @@ def evaluate_study_protocol(
 
     # Step 4: Assemble HypothesisTestResult per hypothesis
     hypothesis_results: list[HypothesisTestResult] = []
-    for i, (hypothesis, wilcoxon_result, bootstrap_result) in enumerate(raw_results):
+    for i, (hypothesis, wilcoxon_result, bootstrap_result, n_paired, excluded_ids) in enumerate(raw_results):
         hypothesis_results.append(
             HypothesisTestResult(
                 hypothesis_id=hypothesis.id,
@@ -168,6 +190,8 @@ def evaluate_study_protocol(
                 bootstrap_ci=bootstrap_result,
                 adjusted_q_value=bh.adjusted_p_values[i],
                 rejected=bh.rejected[i],
+                n_paired=n_paired,
+                excluded_demand_ids=excluded_ids,
             )
         )
 

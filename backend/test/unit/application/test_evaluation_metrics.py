@@ -8,7 +8,8 @@ Invariants verified:
 - Epistemic invariant: UNCERTAIN (-1) does not penalize or inflate Precision@K,
   while correctly altering Judged@K coverage and uncertainty_rate.
 - Exact nDCG computation with graded relevance (0 to 3).
-- Boundary conditions: IDCG=0 -> nDCG=1.0, empty inputs -> 0.0 or 1.0 safely without division by zero.
+- Exclusion semantics: IDCG=0 -> nDCG is None (undefined, excluded from macro
+  averages per protocol, never imputed); total_relevant=0 -> Recall is None.
 - Global MRR across full ranking vs rank-truncated MRR@K.
 - Deterministic invariance: identical inputs produce identical outputs.
 """
@@ -83,8 +84,9 @@ def test_recall_at_k_exact():
     assert math.isclose(recall_at_k(ranking, judgements, total_relevant=total_relevant, k=3, relevance_fn=is_relevant_strict), 2 / 3)
     assert math.isclose(recall_at_k(ranking, judgements, total_relevant=total_relevant, k=5, relevance_fn=is_relevant_strict), 2 / 3)
 
-    # Edge case: total_relevant is 0 -> recall is 1.0 (all relevant items found trivially)
-    assert recall_at_k(ranking, judgements, total_relevant=0, k=5, relevance_fn=is_relevant_strict) == 1.0
+    # Edge case: total_relevant is 0 -> recall is undefined (None), excluded from
+    # macro-averaged Recall@K per protocol instead of imputed.
+    assert recall_at_k(ranking, judgements, total_relevant=0, k=5, relevance_fn=is_relevant_strict) is None
 
 
 def test_judged_at_k_exact():
@@ -217,6 +219,8 @@ def test_ndcg_exact():
 
 
 def test_ndcg_idcg_zero_boundary():
+    # Protocol exclusion rule (PR #44, superseding ADR 0007 §4's 1.0 imputation):
+    # IDCG == 0 means the ranking task is non-informative -> None (undefined).
     # Case A: Demand where all judged candidates are Grade 0 (no relevant items exist)
     ranking = ["P1", "P2", "P3"]
     all_zero_judgements = {
@@ -224,25 +228,24 @@ def test_ndcg_idcg_zero_boundary():
         "P2": RelevanceGrade.GRADE_0,
         "P3": RelevanceGrade.GRADE_0,
     }
-    # IDCG is 0 and DCG is 0 -> mathematically non-informative -> 1.0 by ADR 0007 §4
-    assert ndcg_at_k(ranking, all_zero_judgements, k=3) == 1.0
+    assert ndcg_at_k(ranking, all_zero_judgements, k=3) is None
 
     # Case B: All candidates are UNCERTAIN (0 judged relevant items)
     all_uncertain_judgements = {
         "P1": RelevanceGrade.UNCERTAIN,
         "P2": RelevanceGrade.UNCERTAIN,
     }
-    assert ndcg_at_k(ranking, all_uncertain_judgements, k=3) == 1.0
+    assert ndcg_at_k(ranking, all_uncertain_judgements, k=3) is None
 
     # Case C: Mixture of UNCERTAIN and Grade 0 (0 relevant items)
     mixed_judgements = {
         "P1": RelevanceGrade.UNCERTAIN,
         "P2": RelevanceGrade.GRADE_0,
     }
-    assert ndcg_at_k(ranking, mixed_judgements, k=3) == 1.0
+    assert ndcg_at_k(ranking, mixed_judgements, k=3) is None
 
     # Case D: Empty candidate ranking
-    assert ndcg_at_k([], {}, k=3) == 1.0
+    assert ndcg_at_k([], {}, k=3) is None
 
 
 def test_ndcg_with_uncertain_filters_before_discount():

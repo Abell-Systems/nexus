@@ -1,5 +1,13 @@
 """Pure mathematical evaluation metrics for scientific matching evaluation under ADR 0007.
 
+Protocol alignment (PR #44, docs/metrics-endpoint-alignment.md):
+- Primary endpoint metric is nDCG@10 (empirical-study-protocol §7); MRR stays secondary.
+- Undefined is explicit, never imputed: nDCG with IDCG == 0 and Recall with zero
+  relevant items return None. The ADR 0007 §4 imputation (nDCG = 1.0 on IDCG = 0)
+  is superseded by the protocol's exclusion rule — macro averages skip None and
+  report explicit denominators; no unresolved demand ever contributes a fabricated
+  1.0 to an average.
+
 Invariants:
 - Pure functional inputs: sequences of publication IDs and discrete RelevanceGrade mappings.
 - Completely decoupled: NO imports from MatchingEngine, CandidateRetriever, MatchingPolicyConfig,
@@ -7,8 +15,7 @@ Invariants:
 - Epistemological invariant: RelevanceGrade.UNCERTAIN (-1) is strictly filtered and NEVER coerced to 0.
 - Dual operational projections: Strict (Grade 3) and Broad (Grades 2 & 3).
 - Judged-item Precision@K paired with mandatory Judged@K coverage reporting.
-- Deterministic boundary handling: IDCG=0 -> nDCG=1.0.
-- Decoupled cutoffs: functions accept generic k, leaving standard (1, 3, 5) aggregation to orchestrators.
+- Decoupled cutoffs: functions accept generic k, leaving standard aggregation to orchestrators.
 """
 
 import math
@@ -76,13 +83,15 @@ def recall_at_k(
     total_relevant: int,
     k: int,
     relevance_fn: Callable[[RelevanceGrade], bool],
-) -> float:
+) -> float | None:
     """Computes Recall@K over the closed pooled candidate universe under ADR 0007 §1: TP_K / TotalRelevant.
 
-    Boundary condition: if total_relevant == 0, returns 1.0 (all relevant items found trivially).
+    Returns None when total_relevant == 0: with no relevant items the fraction is
+    undefined, and the protocol excludes such demands from macro-averaged Recall@K
+    instead of imputing a value.
     """
     if total_relevant <= 0:
-        return 1.0
+        return None
     if k <= 0:
         return 0.0
 
@@ -162,13 +171,15 @@ def ndcg_at_k(
     ranked_ids: Sequence[str],
     judgements: dict[str, RelevanceGrade],
     k: int,
-) -> float:
+) -> float | None:
     """Computes normalized Discounted Cumulative Gain at K under ADR 0007 §4.
 
     Invariants:
     - Items with grade UNCERTAIN are filtered out before applying logarithmic discount.
     - Uses gain formulation: 2^g - 1 for discrete grade g in {0, 1, 2, 3}.
-    - Boundary condition: if IDCG == 0.0 (no judged relevant items exist for demand), returns 1.0.
+    - Undefined (None) when IDCG == 0.0, i.e. no judged relevant item exists for the
+      demand: the ranking task is non-informative and the protocol excludes such
+      demands from macro-averaged nDCG@K instead of imputing 1.0.
     """
     if k <= 0:
         return 0.0
@@ -201,9 +212,9 @@ def ndcg_at_k(
         discount = math.log2(idx + 2.0)
         idcg += gain / discount
 
-    # Boundary handling (ADR 0007 §4)
+    # Undefined when IDCG == 0 (protocol exclusion rule, PR #44).
     if idcg <= 0.0:
-        return 1.0
+        return None
 
     return min(1.0, dcg / idcg)
 
@@ -225,6 +236,7 @@ def _build_metric_set(
         mrr=mrr(ranked_ids, judgements, relevance_fn=relevance_fn),
         mrr_at_5=mrr_at_k(ranked_ids, judgements, k=5, relevance_fn=relevance_fn),
         ndcg_at_5=ndcg_at_k(ranked_ids, judgements, k=5),
+        ndcg_at_10=ndcg_at_k(ranked_ids, judgements, k=10),
         judged_at_1=judged_at_k(ranked_ids, judgements, k=1),
         judged_at_3=judged_at_k(ranked_ids, judgements, k=3),
         judged_at_5=judged_at_k(ranked_ids, judgements, k=5),
@@ -261,11 +273,18 @@ def compute_demand_metrics(
         relevance_fn=is_relevant_broad,
     )
 
+    # nDCG defined-ness is scope-independent (graded 0-3 scale, no binary projection):
+    # valid iff at least one judged grade is relevant (> 0).
+    has_relevant_judged = any(
+        is_judged(g) and g.value > 0 for g in judgements.values()
+    )
+
     return DemandMetricsReport(
         demand_id=demand_id,
         candidate_count=candidate_universe_size,
         judged_count=judged_count,
         uncertain_count=uncertain_count,
+        has_relevant_judged=has_relevant_judged,
         strict_metrics=strict_metrics,
         broad_metrics=broad_metrics,
     )

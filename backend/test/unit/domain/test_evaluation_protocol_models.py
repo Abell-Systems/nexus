@@ -83,6 +83,7 @@ def test_demand_metrics_report_and_run_report():
         mrr=1.0,
         mrr_at_5=1.0,
         ndcg_at_5=0.88,
+        ndcg_at_10=0.91,
         judged_at_1=1.0,
         judged_at_3=1.0,
         judged_at_5=0.80,
@@ -97,6 +98,7 @@ def test_demand_metrics_report_and_run_report():
         mrr=1.0,
         mrr_at_5=1.0,
         ndcg_at_5=0.95,
+        ndcg_at_10=0.97,
         judged_at_1=1.0,
         judged_at_3=1.0,
         judged_at_5=0.80,
@@ -107,6 +109,7 @@ def test_demand_metrics_report_and_run_report():
         candidate_count=15,
         judged_count=10,
         uncertain_count=1,
+        has_relevant_judged=True,
         strict_metrics=strict_metrics,
         broad_metrics=broad_metrics,
     )
@@ -124,6 +127,7 @@ def test_demand_metrics_report_and_run_report():
         demand_reports=[demand_rep],
         macro_strict=strict_metrics,
         macro_broad=broad_metrics,
+        macro_denominators={"strict.ndcg_at_10": 1, "broad.ndcg_at_10": 1},
         uncertainty_rate=0.10,
     )
 

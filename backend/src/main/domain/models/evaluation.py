@@ -233,19 +233,26 @@ class EvaluationExecutionContext(BaseModel):
 
 
 class MetricSet(BaseModel):
-    """Immutable set of standard evaluation metrics under ADR 0007 §4."""
+    """Immutable set of standard evaluation metrics under ADR 0007 §4.
+
+    Recall@K and nDCG@K are None exactly when undefined (zero relevant items /
+    IDCG == 0): the protocol excludes such demands from macro averages instead of
+    imputing values (PR #44, docs/metrics-endpoint-alignment.md). nDCG@10 is the
+    primary endpoint metric (protocol §7); MRR stays secondary.
+    """
 
     model_config = ConfigDict(frozen=True)
 
     precision_at_1: float = Field(ge=0.0, le=1.0)
     precision_at_3: float = Field(ge=0.0, le=1.0)
     precision_at_5: float = Field(ge=0.0, le=1.0)
-    recall_at_1: float = Field(ge=0.0, le=1.0)
-    recall_at_3: float = Field(ge=0.0, le=1.0)
-    recall_at_5: float = Field(ge=0.0, le=1.0)
+    recall_at_1: float | None = Field(default=None, ge=0.0, le=1.0)
+    recall_at_3: float | None = Field(default=None, ge=0.0, le=1.0)
+    recall_at_5: float | None = Field(default=None, ge=0.0, le=1.0)
     mrr: float = Field(ge=0.0, le=1.0)
     mrr_at_5: float = Field(ge=0.0, le=1.0)
-    ndcg_at_5: float = Field(ge=0.0, le=1.0)
+    ndcg_at_5: float | None = Field(default=None, ge=0.0, le=1.0)
+    ndcg_at_10: float | None = Field(default=None, ge=0.0, le=1.0)
     judged_at_1: float = Field(ge=0.0, le=1.0)
     judged_at_3: float = Field(ge=0.0, le=1.0)
     judged_at_5: float = Field(ge=0.0, le=1.0)
@@ -260,6 +267,9 @@ class DemandMetricsReport(BaseModel):
     candidate_count: int = Field(ge=0)
     judged_count: int = Field(ge=0)
     uncertain_count: int = Field(ge=0)
+    # Explicit per-demand nDCG validity (IDCG > 0): mirrors the None-ness of the
+    # nDCG fields so exclusion from macro averages stays auditable per demand.
+    has_relevant_judged: bool
     strict_metrics: MetricSet
     broad_metrics: MetricSet
 
@@ -281,6 +291,10 @@ class EvaluationRunReport(BaseModel):
     demand_reports: list[DemandMetricsReport]
     macro_strict: MetricSet
     macro_broad: MetricSet
+    # Explicit macro denominators (PR #44): metric field name → number of valid
+    # (non-None) per-demand observations averaged into the corresponding macro value.
+    # Excluded demands per metric = len(demand_reports) - macro_denominators[metric].
+    macro_denominators: dict[str, int]
     uncertainty_rate: float = Field(ge=0.0, le=1.0)
 
     @field_validator("dataset_sha256", "policy_sha256")
@@ -380,6 +394,10 @@ class HypothesisTestResult(BaseModel):
     bootstrap_ci: "object"  # BootstrapCIResult (PR #22 frozen dataclass)
     adjusted_q_value: float = Field(ge=0.0, le=1.0)
     rejected: bool
+    # Paired-observation accounting (PR #44): demands excluded from this hypothesis
+    # because the metric was undefined (None) on either side, and the resulting n.
+    n_paired: int = Field(ge=0)
+    excluded_demand_ids: list[str] = Field(default_factory=list)
 
 
 class ComparativeRunReport(BaseModel):

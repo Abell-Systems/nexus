@@ -47,6 +47,7 @@ def _make_metric_set(mrr: float) -> MetricSet:
         mrr=mrr,
         mrr_at_5=mrr,
         ndcg_at_5=mrr,
+        ndcg_at_10=mrr,
         judged_at_1=1.0,
         judged_at_3=1.0,
         judged_at_5=1.0,
@@ -59,6 +60,7 @@ def _make_demand_report(demand_id: str, mrr: float) -> DemandMetricsReport:
         candidate_count=10,
         judged_count=10,
         uncertain_count=0,
+        has_relevant_judged=True,
         strict_metrics=_make_metric_set(mrr),
         broad_metrics=_make_metric_set(min(mrr + 0.1, 1.0)),
     )
@@ -67,6 +69,8 @@ def _make_demand_report(demand_id: str, mrr: float) -> DemandMetricsReport:
 def _make_run_report(run_id: str, demand_mrrs: dict[str, float]) -> EvaluationRunReport:
     demand_reports = [_make_demand_report(d, mrr) for d, mrr in demand_mrrs.items()]
     macro = _make_metric_set(sum(demand_mrrs.values()) / len(demand_mrrs))
+    denominators = {f"strict.{f}": len(demand_mrrs) for f in MetricSet.model_fields}
+    denominators.update({f"broad.{f}": len(demand_mrrs) for f in MetricSet.model_fields})
     return EvaluationRunReport(
         run_id=run_id,
         created_at=_TS,
@@ -80,6 +84,7 @@ def _make_run_report(run_id: str, demand_mrrs: dict[str, float]) -> EvaluationRu
         demand_reports=demand_reports,
         macro_strict=macro,
         macro_broad=macro,
+        macro_denominators=denominators,
         uncertainty_rate=0.0,
     )
 
