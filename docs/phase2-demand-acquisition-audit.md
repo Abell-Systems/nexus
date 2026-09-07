@@ -2,8 +2,10 @@
 
 **Status:** Closed (2026-09-07). Documents the empirical search for a real, Spain-origin,
 `Technology request`-construct demand corpus, and why acquisition was closed at
-**N=48** rather than the pre-registered **N=60**
-(see `docs/empirical-study-protocol.md` §3.2, "Frozen Demand Sample Size").
+**N=48** against the pre-registered target **N=60**
+(`docs/empirical-study-protocol.md` §3.2, "Frozen Demand Sample Size", left unmodified).
+The resulting methodological amendment is recorded separately in
+`docs/phase2-sample-size-amendment.md`.
 
 This is a **source feasibility record**, not the frozen corpus itself. No demand record
 here is part of a sealed dataset; corpus assembly (annotation, Dev/Test split) is a
@@ -68,16 +70,20 @@ discovery script would itself have been a methodological error.
 | Catalonia Open Challenges / ACCIÓ (`openchallenges.accio.gencat.cat` → b2match marketplace) | The actual opportunity marketplace is a b2match event instance; no listing is visible without an account — fails the public-access criterion. No account created. |
 
 Eight additional candidates evaluated beyond InnoGet/EEN/Lombardia; **zero** yielded
-usable new records. This is treated as evidence of a real availability ceiling, not
-insufficient search effort.
+usable new records. This is recorded as the observed acquisition ceiling under the
+evaluated public sources and the stated acceptance criteria — not a claim about the
+total worldwide population of Spanish technology demands, and not, by itself, evidence
+of insufficient search effort.
 
 ## Decision
 
 Acquisition is closed at **N=48**. No eligibility criterion was relaxed, no observation
 was fabricated or imputed, and no incompatible demand construct was mixed in to reach
-60. See `docs/empirical-study-protocol.md` §3.2 for the resulting pre-registration
-amendment and `data/experiments/power_analysis_wilcoxon_n48_sensitivity.json` for the
-power sensitivity computation at N=48 under the identical, unmodified frozen design.
+60. See `docs/phase2-sample-size-amendment.md` for the resulting methodological
+amendment record (kept separate from the frozen pre-registration in
+`docs/empirical-study-protocol.md` §3.2) and
+`data/experiments/power_analysis_wilcoxon_n48_sensitivity.json` for the power
+sensitivity computation at N=48 under the identical, unmodified frozen design.
 
 Raw per-record screening artifacts (id/URL/country_raw/origin_level per candidate,
 before dedup) are retained by the author outside this repository for audit purposes and
