@@ -42,6 +42,9 @@ data/experiments/*
 !data/experiments/m0_run_report.json
 !data/experiments/m1_run_report.json
 !data/experiments/m0_vs_m1_comparative_report.json
+!data/experiments/m0_run_report_strict.json
+!data/experiments/m1_run_report_strict.json
+!data/experiments/m0_vs_m1_comparative_report_strict.json
 # --- OS / IDE ---
 .DS_Store
 .vscode/

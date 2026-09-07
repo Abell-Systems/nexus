@@ -103,6 +103,51 @@ def _run_report_artifact(
     return report_dict
 
 
+def _build_comparative_provenance(
+    report_m0: EvaluationRunReport,
+    report_m1: EvaluationRunReport,
+    model_config_sha256: str,
+) -> dict:
+    """Machine-checkable P_shared linkage for the comparative artifact (code review, PR #51).
+
+    ComparativeRunReport only carries study_protocol_id/sha256 and the two run_ids —
+    a consumer would otherwise have to dereference both individual run reports to
+    confirm this was actually a like-for-like comparison (same dataset, policy,
+    engine commit, temporal_pool_mode). This asserts that identity explicitly
+    rather than merely assuming it, and surfaces it directly on the comparative
+    artifact so it never needs re-deriving.
+    """
+    shared_fields = [
+        ("dataset_id", report_m0.dataset_id, report_m1.dataset_id),
+        ("dataset_sha256", report_m0.dataset_sha256, report_m1.dataset_sha256),
+        ("policy_id", report_m0.policy_id, report_m1.policy_id),
+        ("policy_sha256", report_m0.policy_sha256, report_m1.policy_sha256),
+        ("engine_commit_hash", report_m0.context.engine_commit_hash, report_m1.context.engine_commit_hash),
+        ("temporal_pool_mode", report_m0.context.temporal_pool_mode, report_m1.context.temporal_pool_mode),
+        ("execution_timestamp", report_m0.context.execution_timestamp, report_m1.context.execution_timestamp),
+    ]
+    for name, v0, v1 in shared_fields:
+        if v0 != v1:
+            raise ValueError(
+                f"M0 and M1 run reports disagree on '{name}' ({v0!r} vs {v1!r}) — "
+                "this comparative artifact requires a like-for-like P_shared run, "
+                "not two independently-configured evaluations."
+            )
+
+    return {
+        "dataset_id": report_m0.dataset_id,
+        "dataset_sha256": report_m0.dataset_sha256,
+        "policy_id": report_m0.policy_id,
+        "policy_sha256": report_m0.policy_sha256,
+        "model_config_sha256": model_config_sha256,
+        "engine_commit_hash": report_m0.context.engine_commit_hash,
+        # Match pydantic's own JSON datetime format ("Z" suffix) exactly, so this
+        # string is byte-comparable with EvaluationExecutionContext's serialized form.
+        "execution_timestamp": report_m0.context.execution_timestamp.isoformat().replace("+00:00", "Z"),
+        "temporal_pool_mode": report_m0.context.temporal_pool_mode,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run the first M0 vs M1 pilot comparison (PR-E)")
     parser.add_argument("--dataset", type=Path, default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.json")
@@ -219,8 +264,12 @@ def main() -> int:
         json.dumps(_run_report_artifact(report_m1, semantic_artifact, model_config.config_sha256), indent=2),
         encoding="utf-8",
     )
+    comparative_dict = serialize_comparative_report(comparative)
+    comparative_dict["provenance"] = _build_comparative_provenance(
+        report_m0, report_m1, model_config.config_sha256
+    )
     (args.output_dir / "m0_vs_m1_comparative_report.json").write_text(
-        json.dumps(serialize_comparative_report(comparative), indent=2), encoding="utf-8"
+        json.dumps(comparative_dict, indent=2), encoding="utf-8"
     )
     print(f"\nArtifacts written to: {args.output_dir}")
 

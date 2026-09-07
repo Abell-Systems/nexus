@@ -1,0 +1,101 @@
+{
+  "study_protocol_id": "NEXUS-M0-VS-M1-PILOT",
+  "study_protocol_sha256": "5c4687e7a88ab86426799f06f03864d6eb1bca3b657289e6ce270f5373240de8",
+  "study_status": "PILOT",
+  "run_ids": {
+    "M0": "eval-run-31e05c6d988c",
+    "M1": "eval-run-e63eeb0c3b2c"
+  },
+  "results": [
+    {
+      "hypothesis_id": "H01_M0_VS_M1_NDCG10",
+      "baseline": "M0",
+      "treatment": "M1",
+      "metric": "ndcg_at_10",
+      "scope": "strict",
+      "wilcoxon": {
+        "statistic": 1.0,
+        "p_value": 0.5,
+        "n_pairs": 3,
+        "n_nonzero": 1,
+        "alternative": "greater"
+      },
+      "bootstrap_ci": {
+        "estimate": 0.004216745835933493,
+        "ci_lower": 0.0,
+        "ci_upper": 0.012650237507800477,
+        "n_bootstrap": 10000,
+        "confidence_level": 0.95,
+        "seed": 42
+      },
+      "adjusted_q_value": 1.0,
+      "rejected": false,
+      "n_paired": 3,
+      "excluded_demand_ids": []
+    },
+    {
+      "hypothesis_id": "H02_M0_VS_M1_RECALL5",
+      "baseline": "M0",
+      "treatment": "M1",
+      "metric": "recall_at_5",
+      "scope": "strict",
+      "wilcoxon": {
+        "statistic": 0.0,
+        "p_value": 1.0,
+        "n_pairs": 2,
+        "n_nonzero": 0,
+        "alternative": "greater"
+      },
+      "bootstrap_ci": {
+        "estimate": 0.0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "n_bootstrap": 10000,
+        "confidence_level": 0.95,
+        "seed": 42
+      },
+      "adjusted_q_value": 1.0,
+      "rejected": false,
+      "n_paired": 2,
+      "excluded_demand_ids": [
+        "INNOGET-2501"
+      ]
+    },
+    {
+      "hypothesis_id": "H03_M0_VS_M1_MRR",
+      "baseline": "M0",
+      "treatment": "M1",
+      "metric": "mrr",
+      "scope": "strict",
+      "wilcoxon": {
+        "statistic": 0.0,
+        "p_value": 1.0,
+        "n_pairs": 3,
+        "n_nonzero": 0,
+        "alternative": "greater"
+      },
+      "bootstrap_ci": {
+        "estimate": 0.0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "n_bootstrap": 10000,
+        "confidence_level": 0.95,
+        "seed": 42
+      },
+      "adjusted_q_value": 1.0,
+      "rejected": false,
+      "n_paired": 3,
+      "excluded_demand_ids": []
+    }
+  ],
+  "provenance": {
+    "dataset_id": "nexus-pilot-16-evaluation-corpus-v1",
+    "dataset_sha256": "bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453",
+    "policy_id": "NEXUS-MATCHING-POLICY-UC1-DEFAULT",
+    "policy_sha256": "701f0c71524fc8c3faa7b03d082801559723260fae789918e60c962477e58afa",
+    "model_config_sha256": "0400b5ec6b95dc5573b069813a8be3463fa8c58a7d7c40f124ce3cfbe1e045c2",
+    "engine_commit_hash": "b3636cce00275c4da081a0852fc20bd4d2103d6e",
+    "execution_timestamp": "2026-09-07T11:58:27.874092Z",
+    "temporal_pool_mode": "strict"
+  }
+}
