@@ -33,7 +33,7 @@ from application.ingestion.normalizers.innoget_html_normalizer import InnogetHtm
 from application.ingestion.normalizers.lombardia_html_normalizer import LombardiaHtmlNormalizer  # noqa: E402
 from application.ingestion.origin_resolver import DefaultOriginResolver  # noqa: E402
 from domain.models.demand import DemandDisposition  # noqa: E402
-from domain.models.evaluation import DataModality, DemandCorpus, EvaluationDemand, EvaluationProvenance  # noqa: E402
+from domain.models.evaluation import DataModality, DemandCorpus, DemandCorpusItem, EvaluationProvenance  # noqa: E402
 from domain.models.origin_policy import OriginPolicyConfig  # noqa: E402
 from domain.protocols.sources import RawPayload  # noqa: E402
 
@@ -52,6 +52,13 @@ DESCRIPTION = (
     "for the acquisition and eligibility record this corpus materializes."
 )
 
+# NORMATIVE INPUT, not a discovery mechanism: these two URL lists ARE the frozen
+# eligible set closed by docs/phase2-demand-acquisition-audit.md (PR #53, #54). This
+# script re-verifies each one live (eligibility + content-completeness) and hard-fails
+# on any regression; it does not search for, add, or drop candidates on its own. Any
+# future change to this set is an acquisition-audit decision, made and recorded there
+# first, then reflected here -- never the other way around.
+#
 # The 37 eligible InnoGet demands, closed by docs/phase2-demand-acquisition-audit.md's
 # InnoGet content-completeness correction (excludes INNOGET-1864, -1701, -1725, -1741).
 INNOGET_URLS = [
@@ -112,7 +119,7 @@ def main() -> None:
     innoget_normalizer = InnogetHtmlNormalizer(origin_resolver=resolver)
     lombardia_normalizer = LombardiaHtmlNormalizer(origin_resolver=resolver, extractor=LombardiaExtractor())
 
-    demands: list[EvaluationDemand] = []
+    demands: list[DemandCorpusItem] = []
     audit_records: list[dict] = []
     seen_ids: set[str] = set()
     seen_pod_refs: set[str] = set()
@@ -164,12 +171,15 @@ def main() -> None:
             modality=DataModality.OBSERVED,
         )
         demands.append(
-            EvaluationDemand(
+            DemandCorpusItem(
                 demand_id=demand.demand_id,
                 title=demand.title,
                 description=demand.description,
                 posted_date=None,
                 target_cpc_prefixes=[],
+                origin_country=demand.origin_country,
+                spanish_origin_level=result.origin_assessment.level,
+                external_reference=pod_ref,
                 provenance=provenance,
             )
         )

@@ -54,6 +54,29 @@ def test_frozen_corpus_sha256_matches_sidecar(corpus_paths: tuple[Path, Path, Pa
     assert declared_name == dataset_path.name
 
 
+def test_frozen_corpus_carries_origin_evidence_inline(corpus_paths: tuple[Path, Path, Path]) -> None:
+    """The frozen artifact itself, not only the origin_audit sidecar, must be
+    self-sufficient to verify the Spanish-origin eligibility criterion (PR #55 review)."""
+    from domain.models.demand import SpanishOriginLevel
+
+    dataset_path, _checksum_path, _manifest_path = corpus_paths
+    corpus = DemandCorpus.model_validate_json(dataset_path.read_text(encoding="utf-8"))
+
+    for demand in corpus.demands:
+        assert demand.spanish_origin_level in (
+            SpanishOriginLevel.LEVEL_1_DIRECT_METADATA,
+            SpanishOriginLevel.LEVEL_2_ORGANIZATION_METADATA,
+            SpanishOriginLevel.LEVEL_3_REGISTRY_CROSS_CHECK,
+        )
+
+    lombardia = [d for d in corpus.demands if d.demand_id.startswith("LOMBARDIA-")]
+    assert len(lombardia) == 2
+    for demand in lombardia:
+        assert demand.external_reference is not None
+        assert demand.external_reference.startswith("TRES")
+        assert demand.origin_country == "ES"
+
+
 def test_frozen_corpus_manifest_matches_dataset(corpus_paths: tuple[Path, Path, Path]) -> None:
     dataset_path, _checksum_path, manifest_path = corpus_paths
     file_bytes = dataset_path.read_bytes()
@@ -85,7 +108,8 @@ def test_frozen_corpus_all_demands_meet_content_completeness(corpus_paths: tuple
 def test_demand_corpus_rejects_duplicate_demand_ids() -> None:
     from datetime import UTC, datetime
 
-    from domain.models.evaluation import DataModality, EvaluationDemand, EvaluationProvenance
+    from domain.models.demand import SpanishOriginLevel
+    from domain.models.evaluation import DataModality, DemandCorpusItem, EvaluationProvenance
 
     provenance = EvaluationProvenance(
         source_authority="innoget",
@@ -94,10 +118,11 @@ def test_demand_corpus_rejects_duplicate_demand_ids() -> None:
         raw_payload_sha256="0" * 64,
         modality=DataModality.OBSERVED,
     )
-    demand = EvaluationDemand(
+    demand = DemandCorpusItem(
         demand_id="DUP-1",
         title="t",
         description="d " * 30,
+        spanish_origin_level=SpanishOriginLevel.LEVEL_1_DIRECT_METADATA,
         provenance=provenance,
     )
 
@@ -108,4 +133,28 @@ def test_demand_corpus_rejects_duplicate_demand_ids() -> None:
             dataset_version="1.0.0",
             description="test",
             demands=[demand, demand],
+        )
+
+
+def test_demand_corpus_item_rejects_non_target_origin_level() -> None:
+    from datetime import UTC, datetime
+
+    from domain.models.demand import SpanishOriginLevel
+    from domain.models.evaluation import DataModality, DemandCorpusItem, EvaluationProvenance
+
+    provenance = EvaluationProvenance(
+        source_authority="innoget",
+        source_uri="https://example.test/1",
+        extraction_timestamp=datetime.now(UTC),
+        raw_payload_sha256="0" * 64,
+        modality=DataModality.OBSERVED,
+    )
+
+    with pytest.raises(ValidationError, match="Spanish target-origin"):
+        DemandCorpusItem(
+            demand_id="NON-ES-1",
+            title="t",
+            description="d " * 30,
+            spanish_origin_level=SpanishOriginLevel.NON_SPANISH,
+            provenance=provenance,
         )
