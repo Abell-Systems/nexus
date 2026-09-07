@@ -1,0 +1,36 @@
+{
+  "protocol_reference": "docs/empirical-study-protocol.md \u00a73.2",
+  "test": "paired two-sided Wilcoxon signed-rank test",
+  "alpha": 0.05,
+  "target_power": 0.8,
+  "iterations_per_point": 10000,
+  "candidate_grid": {
+    "n_min": 43,
+    "n_max": 43,
+    "step": 1
+  },
+  "assumptions": {
+    "tie_rate": 0.1,
+    "beta_shape": 2.5
+  },
+  "seed": 42,
+  "results": [
+    {
+      "target_theta": 0.2,
+      "calibrated_location": 0.17333984375,
+      "power_curve": {
+        "43": 0.674
+      },
+      "n_min": null
+    }
+  ],
+  "sensitivity_context": {
+    "purpose": "Correction of data/experiments/power_analysis_wilcoxon_n48_sensitivity.json. That artifact and PR #53 counted 5 EEN-sourced records that pass ADR 0003 origin verification but were never checked against the pre-registered content-completeness inclusion criterion (docs/empirical-study-protocol.md §4.1: substantive technical problem description, minimum 25 words). Those 5 EEN detail pages carry no free-text description (verified via direct fetch and rendered-browser inspection) and no alternative public description was found for 4 of them; the 5th's only substantive description lives on the Lombardia mirror and was already counted there. Corrected available N = 41 (InnoGet) + 2 (Lombardia) = 43, 0 from EEN. See docs/phase2-demand-acquisition-audit.md and docs/phase2-sample-size-amendment.md for the full correction record.",
+    "supersedes": "data/experiments/power_analysis_wilcoxon_n48_sensitivity.json (retained, not deleted, as part of the audit trail)",
+    "calibrated_location_matches_frozen_artifact": true,
+    "power_at_n43": 0.674,
+    "power_at_n48_superseded": 0.725,
+    "power_at_n60_frozen": 0.8164,
+    "computed_at": "2026-09-07"
+  }
+}

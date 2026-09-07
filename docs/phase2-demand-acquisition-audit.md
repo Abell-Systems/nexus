@@ -1,11 +1,20 @@
 # Phase 2 Demand Corpus Acquisition — Source Feasibility Audit
 
-**Status:** Closed (2026-09-07). Documents the empirical search for a real, Spain-origin,
-`Technology request`-construct demand corpus, and why acquisition was closed at
-**N=48** against the pre-registered target **N=60**
+**Status:** Closed (2026-09-07), **corrected (2026-09-07)**. Documents the empirical
+search for a real, Spain-origin, `Technology request`-construct demand corpus, and why
+acquisition was closed at **N=43** against the pre-registered target **N=60**
 (`docs/empirical-study-protocol.md` §3.2, "Frozen Demand Sample Size", left unmodified).
 The resulting methodological amendment is recorded separately in
 `docs/phase2-sample-size-amendment.md`.
+
+> **Post-closure correction:** the original closure of this audit (merged as PR #53)
+> reported N=48, counting 5 EEN-sourced records that pass origin verification (criterion
+> 3 below) but were never checked against criterion 5 (content completeness) before
+> being counted. That check was performed afterward and found all 5 fail it. Corrected
+> total: **N=43**. See "Post-closure correction: EEN content-completeness" below for the
+> full finding, and `docs/phase2-sample-size-amendment.md` for the amendment trail. The
+> table and total under "Sources accepted" reflect the corrected figures; the original
+> N=48 figures are preserved in git history (PR #53) rather than silently overwritten.
 
 This is a **source feasibility record**, not the frozen corpus itself. No demand record
 here is part of a sealed dataset; corpus assembly (annotation, Dev/Test split) is a
@@ -28,15 +37,20 @@ A candidate source counts toward $N$ only if it satisfies **all** of:
    No heuristic ever substituted for this resolver in a target-origin count.
 4. **Deduplicable** — a persistent identifier (own ID, or an EEN `POD Reference`, e.g.
    `TRES20260408022`) so records appearing in more than one source are counted once.
+5. **Content-complete** — the record itself (not just its title) carries a substantive
+   technical problem description, minimum 25 words, per the pre-existing Demand
+   Inclusion Criteria (`docs/empirical-study-protocol.md` §4.1). **This criterion was
+   omitted from the original acceptance check** (see the post-closure correction below)
+   and is listed here as now-enforced, not as it was originally applied.
 
 ## Sources accepted
 
-| Source | Construct | Discovered | Spain-verified (`is_target_origin=True`) | New (post-dedup) |
-|---|---:|---:|---:|---:|
-| InnoGet (`innoget.com/technology-calls`) | Technology call | 412 | 41 | 41 |
-| EEN Partnering Opportunities Database, "Technology request" facet (`p:4320`) | Technology request | 110 | 5 | 5 |
-| Open Innovation Lombardia (`openinnovation.regione.lombardia.it`) — regional EEN mirror, "Technology request" (`collaboration_type_id=2`) | Technology request | 35 | 3 | 2 (1 duplicate: `TRES20260408022` also present in EEN) |
-| **Total** | | | | **48** |
+| Source | Construct | Discovered | Spain-verified (`is_target_origin=True`) | Content-complete (§4.1) | Counted |
+|---|---:|---:|---:|---:|---:|
+| InnoGet (`innoget.com/technology-calls`) | Technology call | 412 | 41 | 41 (platform structurally includes a challenge description; to be re-confirmed record-by-record when the real `InnogetHtmlNormalizer` runs in the corpus-freeze step) | 41 |
+| EEN Partnering Opportunities Database, "Technology request" facet (`p:4320`) | Technology request | 110 | 5 | 0 — see correction below | 0 |
+| Open Innovation Lombardia (`openinnovation.regione.lombardia.it`) — regional EEN mirror, "Technology request" (`collaboration_type_id=2`) | Technology request | 35 | 3 | 2 (verified: both have a substantive `Abstract` paragraph, ~40–65 words) | 2 (1 duplicate: `TRES20260408022`, also present in EEN, already counted here) |
+| **Total** | | | | | **43** |
 
 Dedup method: exact match on EEN `POD Reference` (e.g. `TRAT20250331004`,
 `TRES20260408022`) where present. Lombardia republishes the identical EEN POD scheme,
@@ -75,15 +89,58 @@ evaluated public sources and the stated acceptance criteria — not a claim abou
 total worldwide population of Spanish technology demands, and not, by itself, evidence
 of insufficient search effort.
 
+## Post-closure correction: EEN content-completeness (2026-09-07)
+
+While scoping the follow-on corpus-freeze work (intended PR #54), the 5 EEN-sourced
+records were re-examined for the Demand Inclusion Criteria required by
+`docs/empirical-study-protocol.md` §4.1 ("Contains a substantive technical problem
+description (minimum 25 words)") — a check the original feasibility audit never
+performed, because it only verified *origin* (criterion 3), not *content completeness*.
+
+Findings, checked directly (plain HTTP fetch, cross-checked with a rendered browser for
+two of them):
+
+* All 5 EEN detail pages carry **zero** free-text description — no `<p>` element with
+  more than a handful of words in the page body, in either the raw HTML or the fully
+  JS-rendered DOM. Only a title (8–18 words, itself below the 25-word threshold and not
+  an "expanded technological problem statement" in the protocol's sense), a structured
+  metadata block (country, partnership type, validity dates, POD reference), and a
+  gated "Express interest" contact-form link are present.
+* No PDF attachment or other linked document carrying technical content was found on
+  any of the 5 pages.
+* One of the 5 (`TRES20260408022`) does have a substantive description — but only via
+  the Open Innovation Lombardia mirror (`.../1073/startup-spagnola-...`, confirmed
+  ~65-word `Abstract` paragraph), which is the same record already counted under
+  Lombardia, not an independent EEN contribution.
+* The remaining 4 POD references (`TRES20250709018`, `TRES20260522011`,
+  `TRES20250625001`, `TRES20251113019`) were checked against Lombardia's own catalog by
+  direct substring search across its fetched pages and found absent. Lombardia's total
+  catalog across all profile types is empirically capped at ~389 records — a small
+  fraction of EEN's full historical POD universe — so non-presence there is the
+  unsurprising, expected outcome, not evidence of a broken search.
+
+**Conclusion:** 0 of the 5 EEN-sourced records independently satisfy the content-
+completeness criterion. They are removed from the counted total. Lombardia's 2 records
+were independently re-verified to have substantive `Abstract` text and remain counted.
+InnoGet's 41 were not re-audited record-by-record here (that will happen naturally when
+`InnogetHtmlNormalizer` runs over them during corpus freezing, since it already enforces
+this exact check and would flag any failure as `EXCLUDED_MISSING_TEXT`); every InnoGet
+page spot-checked during the original feasibility crawl and this correction did carry a
+full challenge-description block, so no failure is expected, but this is stated as an
+expectation to be confirmed, not as an already-verified fact.
+
+**Corrected total: 41 (InnoGet) + 0 (EEN) + 2 (Lombardia) = 43.**
+
 ## Decision
 
-Acquisition is closed at **N=48**. No eligibility criterion was relaxed, no observation
+Acquisition is closed at **N=43**. No eligibility criterion was relaxed, no observation
 was fabricated or imputed, and no incompatible demand construct was mixed in to reach
-60. See `docs/phase2-sample-size-amendment.md` for the resulting methodological
-amendment record (kept separate from the frozen pre-registration in
+60 — and, per the correction above, no record missing a substantive description was
+counted either. See `docs/phase2-sample-size-amendment.md` for the resulting
+methodological amendment record (kept separate from the frozen pre-registration in
 `docs/empirical-study-protocol.md` §3.2) and
-`data/experiments/power_analysis_wilcoxon_n48_sensitivity.json` for the power
-sensitivity computation at N=48 under the identical, unmodified frozen design.
+`data/experiments/power_analysis_wilcoxon_n43_sensitivity.json` for the power
+sensitivity computation at N=43 under the identical, unmodified frozen design.
 
 Raw per-record screening artifacts (id/URL/country_raw/origin_level per candidate,
 before dedup) are retained by the author outside this repository for audit purposes and
