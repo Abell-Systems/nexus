@@ -41,7 +41,7 @@ Rules that are non-negotiable (see ADR 0017 §5–§7 for the binding text):
 
 ---
 
-## 2. Where things stand (2026-09-05)
+## 2. Where things stand (2026-09-07)
 
 **Deterministic core:** `domain/` + `application/matching/` + `infrastructure/matching/` shareable but not consolidated. M0 (BM25) wired via frozen manifest; M1 artifact frozen and wired as raw cosine (#42). Fusion transform (ADR 0016) implemented (#41) — `evaluator.py` applies `f_lex`/`f_sem` at fusion time, no raw weighted sum.
 
