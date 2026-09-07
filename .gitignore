@@ -46,6 +46,8 @@ data/experiments/*
 !data/experiments/m1_run_report_strict.json
 !data/experiments/m0_vs_m1_comparative_report_strict.json
 !data/experiments/power_analysis_wilcoxon_n48_sensitivity.json
+!data/experiments/power_analysis_wilcoxon_n43_sensitivity.json
+!data/experiments/power_analysis_wilcoxon_n39_sensitivity.json
 # --- OS / IDE ---
 .DS_Store
 .vscode/
