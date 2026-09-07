@@ -1,0 +1,37 @@
+{
+  "protocol_reference": "docs/empirical-study-protocol.md \u00a73.2",
+  "test": "paired two-sided Wilcoxon signed-rank test",
+  "alpha": 0.05,
+  "target_power": 0.8,
+  "iterations_per_point": 10000,
+  "candidate_grid": {
+    "n_min": 39,
+    "n_max": 39,
+    "step": 1
+  },
+  "assumptions": {
+    "tie_rate": 0.1,
+    "beta_shape": 2.5
+  },
+  "seed": 42,
+  "results": [
+    {
+      "target_theta": 0.2,
+      "calibrated_location": 0.17333984375,
+      "power_curve": {
+        "39": 0.6216
+      },
+      "n_min": null
+    }
+  ],
+  "sensitivity_context": {
+    "purpose": "Second correction of the Phase 2 available-N figure, requested during PR #54 review. That PR's N=43 counted all 41 InnoGet Spain-verified records as content-complete (§4.1: substantive technical problem description, minimum 25 words) without actually running them through the real InnogetHtmlNormalizer. Doing so found 1 record with no description at all (EXCLUDED_MISSING_TEXT) and, applying the protocol's literal 25-word threshold (which InnogetHtmlNormalizer itself does not enforce -- it only checks non-emptiness, a separate documented gap), 3 more records with genuine but short (15-24 word) descriptions that fall under it. Corrected: 37 InnoGet + 0 EEN + 2 Lombardia = 39. See docs/phase2-demand-acquisition-audit.md and docs/phase2-sample-size-amendment.md.",
+    "supersedes": ["data/experiments/power_analysis_wilcoxon_n48_sensitivity.json", "data/experiments/power_analysis_wilcoxon_n43_sensitivity.json"],
+    "calibrated_location_matches_frozen_artifact": true,
+    "power_at_n39": 0.6216,
+    "power_at_n43_superseded": 0.674,
+    "power_at_n48_superseded": 0.725,
+    "power_at_n60_frozen": 0.8164,
+    "computed_at": "2026-09-07"
+  }
+}

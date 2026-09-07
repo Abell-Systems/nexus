@@ -1,20 +1,27 @@
 # Phase 2 Demand Corpus Acquisition — Source Feasibility Audit
 
-**Status:** Closed (2026-09-07), **corrected (2026-09-07)**. Documents the empirical
-search for a real, Spain-origin, `Technology request`-construct demand corpus, and why
-acquisition was closed at **N=43** against the pre-registered target **N=60**
-(`docs/empirical-study-protocol.md` §3.2, "Frozen Demand Sample Size", left unmodified).
-The resulting methodological amendment is recorded separately in
+**Status:** Closed (2026-09-07), **corrected twice (2026-09-07)**. Documents the
+empirical search for a real, Spain-origin, `Technology request`-construct demand
+corpus, and why acquisition was closed at **N=39** against the pre-registered target
+**N=60** (`docs/empirical-study-protocol.md` §3.2, "Frozen Demand Sample Size", left
+unmodified). The resulting methodological amendment is recorded separately in
 `docs/phase2-sample-size-amendment.md`.
 
-> **Post-closure correction:** the original closure of this audit (merged as PR #53)
-> reported N=48, counting 5 EEN-sourced records that pass origin verification (criterion
-> 3 below) but were never checked against criterion 5 (content completeness) before
-> being counted. That check was performed afterward and found all 5 fail it. Corrected
-> total: **N=43**. See "Post-closure correction: EEN content-completeness" below for the
-> full finding, and `docs/phase2-sample-size-amendment.md` for the amendment trail. The
-> table and total under "Sources accepted" reflect the corrected figures; the original
-> N=48 figures are preserved in git history (PR #53) rather than silently overwritten.
+> **Correction history:**
+> 1. The original closure of this audit (merged as PR #53) reported **N=48**, counting
+>    5 EEN-sourced records that pass origin verification (criterion 3 below) but were
+>    never checked against criterion 5 (content completeness) before being counted.
+>    Corrected to **N=43** (submitted as PR #54): 41 InnoGet + 0 EEN + 2 Lombardia.
+> 2. PR #54's review found that N=43 still asserted all 41 InnoGet records as
+>    content-complete without actually running them through the real
+>    `InnogetHtmlNormalizer`. Doing so (see "Post-closure correction: InnoGet
+>    content-completeness" below) found 1 record with no description at all and 3 more
+>    under the protocol's literal 25-word threshold. Corrected to **N=39**: 37 InnoGet +
+>    0 EEN + 2 Lombardia.
+>
+> Each prior figure and its sensitivity artifact is retained unmodified in git history
+> (PR #53, PR #54) rather than silently overwritten. The table and total under "Sources
+> accepted" reflect the current, twice-corrected figures.
 
 This is a **source feasibility record**, not the frozen corpus itself. No demand record
 here is part of a sealed dataset; corpus assembly (annotation, Dev/Test split) is a
@@ -45,12 +52,12 @@ A candidate source counts toward $N$ only if it satisfies **all** of:
 
 ## Sources accepted
 
-| Source | Construct | Discovered | Spain-verified (`is_target_origin=True`) | Content-complete (§4.1) | Counted |
+| Source | Construct | Discovered | Spain-verified (`is_target_origin=True`) | Content-complete (§4.1, empirically checked) | Counted |
 |---|---:|---:|---:|---:|---:|
-| InnoGet (`innoget.com/technology-calls`) | Technology call | 412 | 41 | 41 (platform structurally includes a challenge description; to be re-confirmed record-by-record when the real `InnogetHtmlNormalizer` runs in the corpus-freeze step) | 41 |
+| InnoGet (`innoget.com/technology-calls`) | Technology call | 412 | 41 | 37 — see correction below (1 has no title/description at all; 3 more have genuine but short, 15–24 word descriptions, under the protocol's 25-word minimum) | 37 |
 | EEN Partnering Opportunities Database, "Technology request" facet (`p:4320`) | Technology request | 110 | 5 | 0 — see correction below | 0 |
 | Open Innovation Lombardia (`openinnovation.regione.lombardia.it`) — regional EEN mirror, "Technology request" (`collaboration_type_id=2`) | Technology request | 35 | 3 | 2 (verified: both have a substantive `Abstract` paragraph, ~40–65 words) | 2 (1 duplicate: `TRES20260408022`, also present in EEN, already counted here) |
-| **Total** | | | | | **43** |
+| **Total** | | | | | **39** |
 
 Dedup method: exact match on EEN `POD Reference` (e.g. `TRAT20250331004`,
 `TRES20260408022`) where present. Lombardia republishes the identical EEN POD scheme,
@@ -122,25 +129,56 @@ two of them):
 **Conclusion:** 0 of the 5 EEN-sourced records independently satisfy the content-
 completeness criterion. They are removed from the counted total. Lombardia's 2 records
 were independently re-verified to have substantive `Abstract` text and remain counted.
-InnoGet's 41 were not re-audited record-by-record here (that will happen naturally when
-`InnogetHtmlNormalizer` runs over them during corpus freezing, since it already enforces
-this exact check and would flag any failure as `EXCLUDED_MISSING_TEXT`); every InnoGet
-page spot-checked during the original feasibility crawl and this correction did carry a
-full challenge-description block, so no failure is expected, but this is stated as an
-expectation to be confirmed, not as an already-verified fact.
 
-**Corrected total: 41 (InnoGet) + 0 (EEN) + 2 (Lombardia) = 43.**
+## Post-closure correction: InnoGet content-completeness (2026-09-07)
+
+PR #54, which corrected EEN, still asserted all 41 InnoGet Spain-verified records as
+content-complete on the grounds that the platform structurally includes a description
+field — a property of the platform, not a verified property of each of the 41
+observations. Code review on PR #54 correctly flagged this as unproven. The real,
+already-tested production pipeline was run against all 41 to settle it directly:
+
+```text
+InnoGetExtractor -> DefaultOriginResolver -> InnogetHtmlNormalizer
+(backend/src/main/application/ingestion/{extractors,normalizers}/, origin_resolver.py)
+```
+
+fetching each of the 41 live pages and calling `normalize_results()` exactly as the
+corpus-freeze step will. Findings:
+
+* **1 record** (`INNOGET-1864`, "seeking-chemical-plastic-waste-recycling") returns
+  `disposition=EXCLUDED_MISSING_TEXT` — no title or description extractable at all.
+* **`InnogetHtmlNormalizer`'s own completeness check only verifies non-emptiness of
+  title/description, not the protocol's literal 25-word minimum** — a real gap between
+  `docs/empirical-study-protocol.md` §4.1 and the implemented validator, noted here as
+  an open item, not fixed in this correction (fixing the normalizer is a separate,
+  narrowly-scoped change with its own test coverage, not bundled into a sample-size
+  correction).
+* Applying the protocol's literal ≥25-word rule directly to the 40 records the
+  normalizer did mark `INCLUDED`: **3 more fail it** — `INNOGET-1701` (24 words),
+  `INNOGET-1725` (17 words), `INNOGET-1741` (15 words). All three have genuine,
+  on-topic technical text (verified by reading the extracted `description` directly,
+  e.g. "*We are looking for sensitive, fast, and non-expensive analytical procedures
+  for Brettanomyces identification and quantification in wines.*" — 17 words); they are
+  excluded strictly because the pre-registered criterion sets a bright-line word count,
+  not because the content is deficient in substance. No exception was made for them.
+
+**Conclusion:** 37 of the 41 InnoGet Spain-verified records independently satisfy the
+content-completeness criterion. 4 do not and are removed from the counted total.
+
+**Corrected total: 37 (InnoGet) + 0 (EEN) + 2 (Lombardia) = 39.**
 
 ## Decision
 
-Acquisition is closed at **N=43**. No eligibility criterion was relaxed, no observation
+Acquisition is closed at **N=39**. No eligibility criterion was relaxed, no observation
 was fabricated or imputed, and no incompatible demand construct was mixed in to reach
-60 — and, per the correction above, no record missing a substantive description was
-counted either. See `docs/phase2-sample-size-amendment.md` for the resulting
-methodological amendment record (kept separate from the frozen pre-registration in
+60 — and, per both corrections above, no record missing a substantive, ≥25-word
+description was counted either, InnoGet included. See
+`docs/phase2-sample-size-amendment.md` for the resulting methodological amendment
+record (kept separate from the frozen pre-registration in
 `docs/empirical-study-protocol.md` §3.2) and
-`data/experiments/power_analysis_wilcoxon_n43_sensitivity.json` for the power
-sensitivity computation at N=43 under the identical, unmodified frozen design.
+`data/experiments/power_analysis_wilcoxon_n39_sensitivity.json` for the power
+sensitivity computation at N=39 under the identical, unmodified frozen design.
 
 Raw per-record screening artifacts (id/URL/country_raw/origin_level per candidate,
 before dedup) are retained by the author outside this repository for audit purposes and
