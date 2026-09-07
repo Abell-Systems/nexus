@@ -72,7 +72,7 @@ def _macro_average_metric_sets(
         else:
             macro_values[field] = None
 
-    return MetricSet(**macro_values), denominators
+    return MetricSet.model_validate(macro_values), denominators
 
 
 class DefaultEvaluationRunner(EvaluationRunner):
