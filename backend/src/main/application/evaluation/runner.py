@@ -35,7 +35,6 @@ from domain.protocols.evaluation import (
     EvaluationRunner,
 )
 
-
 # MetricSet fields that are always defined (never None): on empty input they fall
 # back to 0.0, preserving the pre-PR-#44 all-zero behavior for empty universes.
 _ALWAYS_DEFINED_FIELDS = frozenset(

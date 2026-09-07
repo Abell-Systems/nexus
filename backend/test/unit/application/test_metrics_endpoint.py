@@ -13,6 +13,8 @@ not copied from an implementation run.
 import math
 from datetime import UTC, date, datetime
 
+import pytest
+
 from application.evaluation.comparative import evaluate_study_protocol
 from application.evaluation.metrics import compute_demand_metrics, ndcg_at_k
 from application.evaluation.runner import DefaultEvaluationRunner
@@ -33,8 +35,6 @@ from domain.models.evaluation import (
     StudyProtocol,
     ValidatedDataset,
 )
-
-import pytest
 
 _SHA64 = "a" * 64
 
