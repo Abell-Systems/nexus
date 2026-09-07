@@ -102,3 +102,18 @@ Licensing gate runs parallel to all Product PRs with veto power; it is not seque
 
 * **Lab done:** powered efficacy on a frozen DEV/TEST split with pre-registered transform, dual annotation + IAA, and a WPI manuscript that reports a protocol + harness + limitations — efficacy claims only after PR-F.
 * **Product done (pilotable):** a customer pilot runs on persistent `MatchRun`s with full version provenance, reduced lifecycle, auditable exports, and visible recall-aid disclaimers — without waiting for PR-F and without enterprise machinery.
+
+---
+
+## 6. Future Research Extensions
+
+The Demand → Patent experiment is Nexus's first empirical case, not the scientific definition of Nexus.
+
+Not before completion of the current Phase-2 evaluation and PR-F, the deterministic evidence engine may be evaluated on additional heterogeneous technology-matching problems, including:
+
+* **L2 — Research → Patent:** linkage between scientific research outputs and patent-based technological outputs, including replication/extension of prior research corpora where appropriate.
+* **L3 — Generalized Technology Matching:** evaluation of whether the same provenance-aware, deterministic and versioned evidence infrastructure can support multiple matching problems without introducing application-specific ranking logic.
+
+These extensions are **future research directions, not current implementation commitments**. They do not introduce additional experimental branches into the current Phase-2 work and must not alter the frozen protocol, benchmark, or evaluation sequence defined for the Demand → Patent study.
+
+No implementation is planned under this section before completion of the current Phase-2/PR-F work.
