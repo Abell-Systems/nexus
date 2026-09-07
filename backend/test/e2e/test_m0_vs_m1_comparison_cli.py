@@ -28,8 +28,12 @@ def _recompute_protocol_sha256(protocol_path: Path) -> str:
 
 
 def _run_cli(output_dir: Path) -> subprocess.CompletedProcess:
+    # ADR 0018: --temporal-pool-mode is mandatory. "strict" is used here (not
+    # "unconstrained") because the real default policy has
+    # require_temporal_validity=True — pairing that with "unconstrained" is
+    # exactly the contaminated combination the script's own fail-fast rejects.
     return subprocess.run(
-        [sys.executable, str(_SCRIPT), "--output-dir", str(output_dir)],
+        [sys.executable, str(_SCRIPT), "--output-dir", str(output_dir), "--temporal-pool-mode", "strict"],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,

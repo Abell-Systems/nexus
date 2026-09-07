@@ -23,7 +23,9 @@ from datetime import UTC, datetime
 from application.evaluation.metrics import compute_demand_metrics
 from domain.models.evaluation import (
     DemandMetricsReport,
+    EvaluationDemand,
     EvaluationExecutionContext,
+    EvaluationPatent,
     EvaluationRunReport,
     MetricSet,
     RelevanceGrade,
@@ -49,6 +51,48 @@ _ALWAYS_DEFINED_FIELDS = frozenset(
         "judged_at_5",
     }
 )
+
+
+def validate_temporal_pool_mode_consistency(temporal_pool_mode: str, require_temporal_validity: bool) -> None:
+    """ADR 0018 §2: fails fast on the one invalid combination.
+
+    Pure function over primitives — takes no policy/context object — so the CLI
+    bootstrap layer (which already loads the real MatchingPolicyConfig and builds
+    the EvaluationExecutionContext) can call it without any new coupling between
+    the evaluation runner and matching-domain policy internals: the runner itself
+    never reads policy.sufficiency_rules (EvaluationPolicyIdentity intentionally
+    exposes only policy_id/policy_version/policy_sha256 for provenance stamping).
+
+    "unconstrained" + require_temporal_validity=True would silently reintroduce
+    temporal score-zeroing into what is supposed to be the no-enforcement
+    condition RQ3 needs. "strict" is valid regardless of the flag: ineligible
+    candidates are already excluded from the pool, so the flag is vacuous, not
+    contradictory.
+    """
+    if temporal_pool_mode == "unconstrained" and require_temporal_validity:
+        raise ValueError(
+            "temporal_pool_mode='unconstrained' with require_temporal_validity=True "
+            "contaminates the unconstrained condition: the evaluator would still zero "
+            "scores for temporally-ineligible candidates that remain in the pool. "
+            "Use a policy with require_temporal_validity=False for a genuine "
+            "unconstrained run, or switch to temporal_pool_mode='strict' (ADR 0018 §2)."
+        )
+
+
+def _filter_temporally_eligible_patents(
+    demand: EvaluationDemand, patents: list[EvaluationPatent]
+) -> list[EvaluationPatent]:
+    """ADR 0018 §3: Φ_temporal pool filter — t_pub < t_demand, evaluated per demand.
+
+    Mirrors application.matching.feature_extractor's temporal_valid semantics
+    exactly: a patent stays eligible whenever either date is missing (undecidable,
+    not excluded) — this function does not introduce a stricter default than the
+    existing evaluation-time check it complements.
+    """
+    d_date = demand.posted_date
+    if d_date is None:
+        return list(patents)
+    return [p for p in patents if p.publication_date is None or p.publication_date < d_date]
 
 
 def _macro_average_metric_sets(
@@ -118,9 +162,18 @@ class DefaultEvaluationRunner(EvaluationRunner):
         for eval_demand in eval_dataset.demands:
             d_id = eval_demand.demand_id
 
+            # 0. ADR 0018 §3: in "strict" mode, Φ_temporal is applied per demand
+            #    BEFORE ranking, excluding ineligible patents from the pool entirely —
+            #    never inside the adapter/engine/evaluator. "unconstrained" keeps the
+            #    full sealed universe, exactly as before ADR 0018.
+            if context.temporal_pool_mode == "strict":
+                eligible_patents = _filter_temporally_eligible_patents(eval_demand, patent_universe)
+            else:
+                eligible_patents = patent_universe
+
             # 1. Delegate ranking to port — receives only evaluation-domain objects,
             #    returns ranked publication_ids in engine's original order.
-            ranked_ids = ranking_port.rank_candidates(eval_demand, patent_universe)
+            ranked_ids = ranking_port.rank_candidates(eval_demand, eligible_patents)
 
             # 2. Align with expert annotations and compute per-demand metrics
             judgements = annotations_by_demand.get(d_id, {})
@@ -128,7 +181,7 @@ class DefaultEvaluationRunner(EvaluationRunner):
                 demand_id=d_id,
                 ranked_publication_ids=ranked_ids,
                 judgements=judgements,
-                candidate_universe_size=len(patent_universe),
+                candidate_universe_size=len(eligible_patents),
             )
             demand_reports.append(demand_report)
 
