@@ -19,7 +19,10 @@ from datetime import UTC, date, datetime
 
 import pytest
 
-from application.evaluation.runner import DefaultEvaluationRunner
+from application.evaluation.runner import (
+    DefaultEvaluationRunner,
+    validate_temporal_pool_mode_consistency,
+)
 from domain.models.evaluation import (
     DataModality,
     EvaluationAnnotation,
@@ -184,7 +187,95 @@ def sample_context() -> EvaluationExecutionContext:
         engine_commit_hash="a321b0c",
         execution_timestamp=datetime(2026, 9, 3, 14, 0, 0, tzinfo=UTC),
         environment="test",
+        temporal_pool_mode="unconstrained",
     )
+
+
+@pytest.fixture
+def strict_context() -> EvaluationExecutionContext:
+    return EvaluationExecutionContext(
+        engine_name="FakeRankingPort",
+        engine_version="1.0.0",
+        engine_commit_hash="a321b0c",
+        execution_timestamp=datetime(2026, 9, 3, 14, 0, 0, tzinfo=UTC),
+        environment="test",
+        temporal_pool_mode="strict",
+    )
+
+
+@pytest.fixture
+def dataset_with_temporal_violation() -> ValidatedDataset:
+    """One demand, one temporally-eligible patent (t_pub < t_demand), one
+    temporally-ineligible patent (t_pub >= t_demand) — ADR 0018 §2/§3."""
+    prov = EvaluationProvenance(
+        source_authority="oepm",
+        source_uri="https://example.com/p",
+        extraction_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+        raw_payload_sha256="1" * 64,
+        modality=DataModality.OBSERVED,
+    )
+    demand = EvaluationDemand(
+        demand_id="D-TEMPORAL",
+        title="Sanitary Fixtures",
+        description="Drainage equipment",
+        posted_date=date(2023, 6, 1),
+        target_cpc_prefixes=["E03C"],
+        provenance=prov,
+    )
+    patents = [
+        EvaluationPatent(
+            publication_id="P-ELIGIBLE",
+            publication_date=date(2022, 1, 1),  # t_pub < t_demand: eligible
+            classifications_cpc=["E03C"],
+            title="Eligible patent",
+            abstract="Abstract",
+            provenance=prov,
+        ),
+        EvaluationPatent(
+            publication_id="P-INELIGIBLE",
+            publication_date=date(2024, 1, 1),  # t_pub >= t_demand: ineligible
+            classifications_cpc=["E03C"],
+            title="Ineligible patent",
+            abstract="Abstract",
+            provenance=prov,
+        ),
+    ]
+    annotations = [
+        EvaluationAnnotation(
+            demand_id="D-TEMPORAL",
+            publication_id="P-ELIGIBLE",
+            grade=RelevanceGrade.GRADE_2,
+            annotator_role="expert",
+            modality=DataModality.EXPERT_LABELLED,
+        ),
+        EvaluationAnnotation(
+            demand_id="D-TEMPORAL",
+            publication_id="P-INELIGIBLE",
+            grade=RelevanceGrade.GRADE_3,
+            annotator_role="expert",
+            modality=DataModality.EXPERT_LABELLED,
+        ),
+    ]
+    dataset = EvaluationDataset(
+        dataset_id="eval-corpus-temporal",
+        schema_version="1.0.0",
+        dataset_version="1.0.0",
+        description="Temporal-violation test corpus",
+        demands=[demand],
+        patents=patents,
+        annotations=annotations,
+    )
+    manifest = EvaluationDatasetManifest(
+        dataset_id="eval-corpus-temporal",
+        schema_version="1.0.0",
+        dataset_version="1.0.0",
+        source_authorities=["oepm"],
+        demand_count=1,
+        patent_count=2,
+        annotation_count=2,
+        content_sha256="e" * 64,
+    )
+    return ValidatedDataset(dataset=dataset, manifest=manifest)
 
 
 def test_runner_delegates_and_preserves_engine_ranking(
@@ -362,3 +453,102 @@ def test_runner_produces_strict_and_broad_metrics(
     assert d_rep.broad_metrics.precision_at_3 == 2 / 3  # P-3, P-4, P-1 → P-3 and P-4 broad relevant
     assert report.macro_strict.precision_at_1 == 1.0
     assert report.macro_broad.precision_at_1 == 1.0
+
+
+# ---------------------------------------------------------------------------
+# ADR 0018: temporal pool eligibility (temporal_pool_mode)
+# ---------------------------------------------------------------------------
+
+
+def test_runner_strict_mode_excludes_temporally_ineligible_patents_from_pool(
+    dataset_with_temporal_violation, sample_policy, strict_context
+):
+    """ADR 0018 §3: strict mode excludes t_pub >= t_demand patents before ranking —
+    the ranking port must never even see P-INELIGIBLE."""
+    ranking_port = FakeRankingPort(fixed_order=["P-ELIGIBLE", "P-INELIGIBLE"])
+    runner = DefaultEvaluationRunner()
+
+    runner.run_evaluation(
+        dataset=dataset_with_temporal_violation,
+        ranking_port=ranking_port,
+        policy=sample_policy,
+        context=strict_context,
+    )
+
+    received_ids = {p.publication_id for p in ranking_port.received_patents[0]}
+    assert received_ids == {"P-ELIGIBLE"}, (
+        "Strict mode must exclude the temporally-ineligible patent from the pool "
+        "before it ever reaches the ranking port."
+    )
+
+
+def test_runner_strict_mode_computes_candidate_universe_size_from_filtered_pool(
+    dataset_with_temporal_violation, sample_policy, strict_context
+):
+    """ADR 0018 §3: candidate_universe_size (and therefore Recall/nDCG denominators)
+    must reflect the filtered pool, not the full sealed dataset universe."""
+    ranking_port = FakeRankingPort(fixed_order=["P-ELIGIBLE"])
+    runner = DefaultEvaluationRunner()
+
+    report = runner.run_evaluation(
+        dataset=dataset_with_temporal_violation,
+        ranking_port=ranking_port,
+        policy=sample_policy,
+        context=strict_context,
+    )
+
+    d_rep = report.demand_reports[0]
+    assert d_rep.candidate_count == 1, (
+        "candidate_count must equal the filtered pool size (1), not the sealed "
+        "dataset's full patent count (2)."
+    )
+
+
+def test_runner_unconstrained_mode_preserves_full_universe_including_ineligible_patents(
+    dataset_with_temporal_violation, sample_policy, sample_context
+):
+    """ADR 0018 §3/§4: unconstrained mode is the pre-ADR-0018 baseline — the full
+    universe, ineligible patents included, is preserved exactly as before."""
+    ranking_port = FakeRankingPort(fixed_order=["P-ELIGIBLE", "P-INELIGIBLE"])
+    runner = DefaultEvaluationRunner()
+
+    report = runner.run_evaluation(
+        dataset=dataset_with_temporal_violation,
+        ranking_port=ranking_port,
+        policy=sample_policy,
+        context=sample_context,
+    )
+
+    received_ids = {p.publication_id for p in ranking_port.received_patents[0]}
+    assert received_ids == {"P-ELIGIBLE", "P-INELIGIBLE"}
+    assert report.demand_reports[0].candidate_count == 2
+
+
+# ---------------------------------------------------------------------------
+# ADR 0018 §2: unconstrained + require_temporal_validity=True must fail fast
+# ---------------------------------------------------------------------------
+
+
+def test_validate_temporal_pool_mode_consistency_rejects_contaminated_unconstrained():
+    """ADR 0018 §2: unconstrained paired with require_temporal_validity=True would
+    silently reintroduce temporal enforcement into the no-enforcement condition."""
+    with pytest.raises(ValueError, match="unconstrained"):
+        validate_temporal_pool_mode_consistency(
+            temporal_pool_mode="unconstrained", require_temporal_validity=True
+        )
+
+
+def test_validate_temporal_pool_mode_consistency_accepts_clean_unconstrained():
+    """unconstrained + require_temporal_validity=False is the genuine, uncontaminated
+    no-enforcement condition RQ3 requires — must not raise."""
+    validate_temporal_pool_mode_consistency(
+        temporal_pool_mode="unconstrained", require_temporal_validity=False
+    )
+
+
+def test_validate_temporal_pool_mode_consistency_accepts_strict_regardless_of_flag():
+    """ADR 0018 §4: in strict mode, require_temporal_validity is vacuous (ineligible
+    candidates never reach the evaluator) but not contradictory — must not raise
+    whether the policy flag is True or False."""
+    validate_temporal_pool_mode_consistency(temporal_pool_mode="strict", require_temporal_validity=True)
+    validate_temporal_pool_mode_consistency(temporal_pool_mode="strict", require_temporal_validity=False)

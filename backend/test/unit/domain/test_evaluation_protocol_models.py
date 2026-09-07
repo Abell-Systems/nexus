@@ -27,6 +27,7 @@ def _sample_context() -> EvaluationExecutionContext:
         engine_commit_hash="a321b0c",
         execution_timestamp=datetime(2026, 9, 3, 14, 0, 0, tzinfo=UTC),
         environment="ci",
+        temporal_pool_mode="unconstrained",
     )
 
 
@@ -43,6 +44,7 @@ def test_evaluation_execution_context_validation():
             engine_commit_hash="abc",
             execution_timestamp=datetime.now(UTC),
             environment="test",
+            temporal_pool_mode="unconstrained",
         )
 
     # Non-hex characters
@@ -53,6 +55,7 @@ def test_evaluation_execution_context_validation():
             engine_commit_hash="not-a-valid-hex-hash",
             execution_timestamp=datetime.now(UTC),
             environment="test",
+            temporal_pool_mode="unconstrained",
         )
 
     # Missing timezone on execution_timestamp
@@ -63,6 +66,7 @@ def test_evaluation_execution_context_validation():
             engine_commit_hash="a321b0c",
             execution_timestamp=datetime(2026, 9, 3, 14, 0, 0),  # Naive
             environment="test",
+            temporal_pool_mode="unconstrained",
         )
 
     # Immutability

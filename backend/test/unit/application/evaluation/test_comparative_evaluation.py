@@ -33,6 +33,7 @@ _CTX = EvaluationExecutionContext(
     engine_commit_hash="abc1234",
     execution_timestamp=_TS,
     environment="test",
+    temporal_pool_mode="unconstrained",
 )
 
 

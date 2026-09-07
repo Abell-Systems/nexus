@@ -187,6 +187,7 @@ def _context() -> EvaluationExecutionContext:
         engine_commit_hash="abc1234",
         execution_timestamp=datetime(2026, 9, 4, tzinfo=UTC),
         environment="test",
+        temporal_pool_mode="unconstrained",
     )
 
 

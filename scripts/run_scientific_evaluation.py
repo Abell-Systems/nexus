@@ -23,7 +23,7 @@ repo_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(repo_root / "backend" / "src" / "main"))
 
 from application.evaluation.matching_adapter import DefaultMatchingAdapter
-from application.evaluation.runner import DefaultEvaluationRunner
+from application.evaluation.runner import DefaultEvaluationRunner, validate_temporal_pool_mode_consistency
 from application.matching.engine import DefaultMatchingEngine
 from domain.models.evaluation import (
     EvaluationExecutionContext,
@@ -152,6 +152,22 @@ def main() -> int:
             "Placeholder hashes are prohibited — evaluation will fail fast if provenance cannot be resolved."
         ),
     )
+    parser.add_argument(
+        "--temporal-pool-mode",
+        type=str,
+        choices=["strict", "unconstrained"],
+        required=True,
+        dest="temporal_pool_mode",
+        help=(
+            "ADR 0018: mandatory, no default (same explicit-injection principle as "
+            "--engine-commit / M0's bm25_k1/b) — the pool-eligibility regime must always "
+            "be a conscious choice, never an implicit one. 'strict' excludes temporally-"
+            "ineligible patents (t_pub >= t_demand) from the pool before ranking. "
+            "'unconstrained' keeps the pre-ADR-0018 full-universe behavior and requires "
+            "the policy's require_temporal_validity to be false, or this script fails "
+            "fast rather than silently contaminating the condition."
+        ),
+    )
 
     args = parser.parse_args()
 
@@ -194,6 +210,13 @@ def main() -> int:
     bm25_b = m0_config.weights["b"]
     print(f"✓ Model config verified: M0 k1={bm25_k1}, b={bm25_b} (SHA: {model_config.config_sha256[:12]}...)")
 
+    # 2c. ADR 0018 §2: fail fast on the one invalid temporal_pool_mode/policy combination
+    # before any run executes, rather than producing a contaminated "unconstrained" result.
+    validate_temporal_pool_mode_consistency(
+        temporal_pool_mode=args.temporal_pool_mode,
+        require_temporal_validity=policy.sufficiency_rules.require_temporal_validity,
+    )
+
     # 3. Resolve exact commit hash for provenance — fails fast if unavailable (ADR 0007 §5)
     commit_hash = _resolve_commit_hash(args.engine_commit, repo_root)
     context = EvaluationExecutionContext(
@@ -202,8 +225,12 @@ def main() -> int:
         engine_commit_hash=commit_hash,
         execution_timestamp=datetime.now(UTC),
         environment=args.environment,
+        temporal_pool_mode=args.temporal_pool_mode,
     )
-    print(f"✓ Execution Context:   Engine commit {commit_hash[:7]} at {context.execution_timestamp.isoformat()}")
+    print(
+        f"✓ Execution Context:   Engine commit {commit_hash[:7]} at {context.execution_timestamp.isoformat()} "
+        f"(temporal_pool_mode={args.temporal_pool_mode})"
+    )
 
     # 4. Instantiate engine and adapter in CLI layer (the appropriate place for concrete wiring)
     # DefaultMatchingAdapter is the single adapter between evaluation-domain and matching-domain types.

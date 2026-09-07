@@ -60,31 +60,37 @@ _MATCHING_DIR_FILES = [
 
 
 # ---------------------------------------------------------------------------
-# 1. temporal_pool_mode does not exist yet — trip-wire
+# 1. temporal_pool_mode is now implemented — field mandatory, confined correctly
 # ---------------------------------------------------------------------------
+#
+# The original trip-wire test (test_temporal_pool_mode_field_does_not_exist_yet_
+# on_execution_context) has been deleted per its own docstring's instruction, now
+# that ADR 0018 is implemented. These replace it with the actual guarantees.
 
 
-def test_temporal_pool_mode_field_does_not_exist_yet_on_execution_context():
-    """Trip-wire: once `temporal_pool_mode` is added to EvaluationExecutionContext,
-    this test starts failing and forces the implementer back to ADR 0018 §5 to
-    verify the field is mandatory (no default) rather than silently defaulted."""
-    assert "temporal_pool_mode" not in EvaluationExecutionContext.model_fields, (
-        "ADR 0018 has not been implemented yet in this codebase snapshot — if this "
-        "fails, temporal_pool_mode now exists; verify it is mandatory (no default, "
-        "ADR 0005 explicit-injection principle) per ADR 0018 §5, then delete this test."
+def test_temporal_pool_mode_field_is_mandatory_with_no_default():
+    """ADR 0018 §5: mandatory, no default (ADR 0005 explicit-injection)."""
+    field = EvaluationExecutionContext.model_fields["temporal_pool_mode"]
+    assert field.is_required(), "temporal_pool_mode must have no default — every run must declare it explicitly."
+
+
+def test_temporal_pool_mode_token_confined_to_runner_never_matching_domain():
+    """ADR 0018 §3/Enforcement #2: the token may appear in runner.py (the sanctioned
+    pool-construction layer) but must never appear in matching_adapter.py, engine.py,
+    or evaluator.py — pool eligibility must not be smuggled into ranking/scoring."""
+    runner_source = _read_source("backend/src/main/application/evaluation/runner.py")
+    assert "temporal_pool_mode" in runner_source, (
+        "runner.py no longer references temporal_pool_mode — ADR 0018 §3's implementation seems to have moved."
     )
 
-
-def test_temporal_pool_mode_token_absent_from_ranking_and_evaluation_layers():
-    """No component has started inferring/hardcoding a temporal pool mode anywhere
-    in the ranking or evaluation layers — the decision has not been smuggled in
-    ahead of the ADR being implemented properly (ADR 0018 §2, mandatory + explicit)."""
-    for rel_path in _EVAL_DIR_FILES + _MATCHING_DIR_FILES:
+    forbidden_files = [
+        "backend/src/main/application/evaluation/matching_adapter.py",
+    ] + _MATCHING_DIR_FILES
+    for rel_path in forbidden_files:
         source = _read_source(rel_path)
         assert "temporal_pool_mode" not in source, (
-            f"{rel_path} already references 'temporal_pool_mode' — ADR 0018 requires "
-            "this to be a mandatory, explicit, typed field on EvaluationExecutionContext, "
-            "never inferred inside a ranking/evaluation component."
+            f"{rel_path} references 'temporal_pool_mode' — pool eligibility must be decided "
+            "in DefaultEvaluationRunner before ranking, never inside the adapter, engine, or evaluator."
         )
 
 

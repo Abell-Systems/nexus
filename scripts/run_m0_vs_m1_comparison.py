@@ -146,12 +146,17 @@ def main() -> int:
     commit_hash = _resolve_commit_hash(args.engine_commit, repo_root)
     # Same context instance for both runs: same commit, same timestamp, same
     # environment — the P_shared the two runs must share to be comparable.
+    # temporal_pool_mode is fixed to "unconstrained" here (ADR 0018): this script
+    # reproduces the exact condition already reported as the first empirical
+    # M0-vs-M1 pilot result (PR-E, #45) — introducing "strict" here would silently
+    # change that already-published comparison rather than adding new capability.
     context = EvaluationExecutionContext(
         engine_name="DefaultMatchingEngine",
         engine_version="0.2.0",
         engine_commit_hash=commit_hash,
         execution_timestamp=datetime.now(UTC),
         environment=args.environment,
+        temporal_pool_mode="unconstrained",
     )
     print(f"Execution Context:  Engine commit {commit_hash[:7]} at {context.execution_timestamp.isoformat()}")
 

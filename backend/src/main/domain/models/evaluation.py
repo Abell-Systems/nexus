@@ -216,6 +216,13 @@ class EvaluationExecutionContext(BaseModel):
     engine_commit_hash: str = Field(min_length=7, max_length=40)
     execution_timestamp: datetime
     environment: str = Field(min_length=1)
+    # ADR 0018: which Φ_temporal pool-eligibility regime this run used. Mandatory,
+    # no default (ADR 0005 explicit-injection) — never inferred from a CLI flag or
+    # implicit filtering. "strict" excludes temporally-ineligible patents from the
+    # pool before ranking; "unconstrained" keeps the full universe (pre-ADR-0018
+    # behavior) and must be paired with require_temporal_validity=False by the
+    # caller (see application.evaluation.runner.validate_temporal_pool_mode_consistency).
+    temporal_pool_mode: Literal["strict", "unconstrained"]
 
     @field_validator("engine_commit_hash")
     @classmethod
