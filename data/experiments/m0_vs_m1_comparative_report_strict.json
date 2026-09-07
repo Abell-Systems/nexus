@@ -3,8 +3,8 @@
   "study_protocol_sha256": "5c4687e7a88ab86426799f06f03864d6eb1bca3b657289e6ce270f5373240de8",
   "study_status": "PILOT",
   "run_ids": {
-    "M0": "eval-run-5868de330d18",
-    "M1": "eval-run-d4c833f34f0a"
+    "M0": "eval-run-31e05c6d988c",
+    "M1": "eval-run-e63eeb0c3b2c"
   },
   "results": [
     {
@@ -87,5 +87,15 @@
       "n_paired": 3,
       "excluded_demand_ids": []
     }
-  ]
+  ],
+  "provenance": {
+    "dataset_id": "nexus-pilot-16-evaluation-corpus-v1",
+    "dataset_sha256": "bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453",
+    "policy_id": "NEXUS-MATCHING-POLICY-UC1-DEFAULT",
+    "policy_sha256": "701f0c71524fc8c3faa7b03d082801559723260fae789918e60c962477e58afa",
+    "model_config_sha256": "0400b5ec6b95dc5573b069813a8be3463fa8c58a7d7c40f124ce3cfbe1e045c2",
+    "engine_commit_hash": "b3636cce00275c4da081a0852fc20bd4d2103d6e",
+    "execution_timestamp": "2026-09-07T11:58:27.874092Z",
+    "temporal_pool_mode": "strict"
+  }
 }

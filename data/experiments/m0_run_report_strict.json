@@ -1,11 +1,11 @@
 {
-  "run_id": "eval-run-5868de330d18",
-  "created_at": "2026-09-07T11:50:41.932401Z",
+  "run_id": "eval-run-31e05c6d988c",
+  "created_at": "2026-09-07T11:58:27.877585Z",
   "context": {
     "engine_name": "DefaultMatchingEngine",
     "engine_version": "0.2.0",
-    "engine_commit_hash": "b5584c43ec6a3130620e3bb6a59a7d0396c91fd2",
-    "execution_timestamp": "2026-09-07T11:50:41.928168Z",
+    "engine_commit_hash": "b3636cce00275c4da081a0852fc20bd4d2103d6e",
+    "execution_timestamp": "2026-09-07T11:58:27.874092Z",
     "environment": "local_benchmark",
     "temporal_pool_mode": "strict"
   },

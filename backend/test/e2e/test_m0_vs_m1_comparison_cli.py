@@ -87,6 +87,30 @@ def test_m0_vs_m1_comparative_report_protocol_sha256_matches_the_loaded_protocol
     assert comparative["study_protocol_sha256"] == expected_sha
 
 
+def test_m0_vs_m1_comparative_report_carries_p_shared_provenance(tmp_path: Path):
+    """Code review (PR #51): the comparative artifact must carry the dataset/
+    policy/engine/temporal_pool_mode identity directly — a consumer should never
+    have to dereference both individual run reports to confirm this was a
+    like-for-like P_shared comparison."""
+    output_dir = tmp_path / "run_a"
+    _run_cli(output_dir)
+
+    comparative = json.loads((output_dir / "m0_vs_m1_comparative_report.json").read_text())
+    m0 = json.loads((output_dir / "m0_run_report.json").read_text())
+    m1 = json.loads((output_dir / "m1_run_report.json").read_text())
+
+    provenance = comparative["provenance"]
+    assert provenance["dataset_id"] == m0["dataset_id"] == m1["dataset_id"]
+    assert provenance["dataset_sha256"] == m0["dataset_sha256"] == m1["dataset_sha256"]
+    assert provenance["policy_id"] == m0["policy_id"] == m1["policy_id"]
+    assert provenance["policy_sha256"] == m0["policy_sha256"] == m1["policy_sha256"]
+    assert provenance["model_config_sha256"] == m0["model_config_sha256"] == m1["model_config_sha256"]
+    assert provenance["engine_commit_hash"] == m0["context"]["engine_commit_hash"] == m1["context"]["engine_commit_hash"]
+    assert provenance["temporal_pool_mode"] == m0["context"]["temporal_pool_mode"] == m1["context"]["temporal_pool_mode"]
+    assert provenance["temporal_pool_mode"] == "strict"
+    assert provenance["execution_timestamp"] == m0["context"]["execution_timestamp"] == m1["context"]["execution_timestamp"]
+
+
 def test_m0_run_report_has_no_embedding_provenance_m1_does(tmp_path: Path):
     output_dir = tmp_path / "run_a"
     _run_cli(output_dir)
