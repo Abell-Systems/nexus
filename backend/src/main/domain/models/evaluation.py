@@ -21,6 +21,8 @@ from typing import Literal, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from domain.models.demand import SpanishOriginLevel
+
 
 class _HasPolicySha256(Protocol):
     """Structural type for verify_source_policy — matched by MatchingPolicyConfig
@@ -147,6 +149,71 @@ class EvaluationDataset(BaseModel):
                 raise ValueError(
                     f"Annotation #{idx} references unknown publication_id '{anno.publication_id}' not in dataset patents"
                 )
+        return self
+
+
+class DemandCorpusItem(BaseModel):
+    """Frozen demand record for the pre-patent-pairing acquisition stage, WITH the
+    origin evidence that determines its inclusion (unlike EvaluationDemand, whose
+    contract assumes origin was already verified out-of-band by the time a full
+    EvaluationDataset with patents/annotations is assembled).
+
+    A DemandCorpus's eligibility criterion IS Spanish origin; the record proving that
+    (spanish_origin_level, origin_country, and the external_reference used to resolve
+    it, where one exists) must be checkable from the frozen artifact itself, not only
+    from a separate audit sidecar.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    demand_id: str = Field(min_length=1)
+    title: str = Field(min_length=1)
+    description: str = Field(min_length=1)
+    posted_date: date | None = None
+    target_cpc_prefixes: list[str] = Field(default_factory=list)
+    origin_country: str | None = None
+    spanish_origin_level: SpanishOriginLevel
+    external_reference: str | None = None
+    provenance: EvaluationProvenance
+
+    @field_validator("spanish_origin_level")
+    @classmethod
+    def validate_target_origin(cls, v: SpanishOriginLevel) -> SpanishOriginLevel:
+        target_levels = {
+            SpanishOriginLevel.LEVEL_1_DIRECT_METADATA,
+            SpanishOriginLevel.LEVEL_2_ORGANIZATION_METADATA,
+            SpanishOriginLevel.LEVEL_3_REGISTRY_CROSS_CHECK,
+        }
+        if v not in target_levels:
+            raise ValueError(
+                f"DemandCorpus requires Spanish target-origin demands only; got spanish_origin_level={v.value}"
+            )
+        return v
+
+
+class DemandCorpus(BaseModel):
+    """Frozen demand-only corpus for the pre-patent-pairing acquisition stage.
+
+    Distinct from EvaluationDataset (which requires a non-empty patent corpus and
+    annotations): this represents the state immediately after demand acquisition and
+    content/origin verification, before candidate generation or annotation exist.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    dataset_id: str = Field(min_length=1)
+    schema_version: str = Field(min_length=1)
+    dataset_version: str = Field(min_length=1)
+    description: str = Field(min_length=1)
+    demands: list[DemandCorpusItem] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_unique_demand_ids(self) -> "DemandCorpus":
+        seen: set[str] = set()
+        for d in self.demands:
+            if d.demand_id in seen:
+                raise ValueError(f"Duplicate demand_id in corpus: {d.demand_id}")
+            seen.add(d.demand_id)
         return self
 
 

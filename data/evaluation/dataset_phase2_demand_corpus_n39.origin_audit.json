@@ -1,0 +1,1450 @@
+{
+  "generated_at": "2026-09-07T16:00:39.780053+00:00",
+  "dataset_id": "nexus-phase2-demand-corpus-n39-v1",
+  "note": "Full origin-verification and FieldObservation evidence per frozen demand, retained outside the minimal frozen-dataset schema for audit purposes.",
+  "records": [
+    {
+      "demand_id": "INNOGET-1605",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/1605/seeking-lightweight-innovators-for-open-innovation-challenge-from-6-leading-automotive-oems",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Bax & Company",
+      "pod_reference": null,
+      "description_word_count": 82,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-1605",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking lightweight innovators for open innovation challenge from 6 leading automotive OEMs\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1605/seeking-lightweight-innovators-for-open-innovation-challenge-from-6-leading-automotive-oems",
+          "retrieval_timestamp": "2026-09-07T15:59:43.773584Z",
+          "raw_payload_sha256": "57f2e812c90f9e971e8d142d9b5f6de39ed94662b0b5033f38abf171c4dd69dd",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-1605",
+          "field_name": "description",
+          "observed_value_json": "\"Do you have a specific idea or concept (material or manufacturing) on how to design lighter vehicles...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1605/seeking-lightweight-innovators-for-open-innovation-challenge-from-6-leading-automotive-oems",
+          "retrieval_timestamp": "2026-09-07T15:59:43.773584Z",
+          "raw_payload_sha256": "57f2e812c90f9e971e8d142d9b5f6de39ed94662b0b5033f38abf171c4dd69dd",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-1607",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/1607/seeking-innovative-material-and-manufacturing-technologies-to-enable-cost-efficient-lightweighting-in-high-volume-automotive-appli",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "ALLIANCE project",
+      "pod_reference": null,
+      "description_word_count": 152,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-1607",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking innovative material and manufacturing technologies to enable cost-efficient lightweighting in high-volume automotive applications\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1607/seeking-innovative-material-and-manufacturing-technologies-to-enable-cost-efficient-lightweighting-in-high-volume-automotive-appli",
+          "retrieval_timestamp": "2026-09-07T15:59:45.421942Z",
+          "raw_payload_sha256": "beb741df927f7057f65027b6fd3d7b11905f424bf7c600e0f6d2efdddef5c3bf",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-1607",
+          "field_name": "description",
+          "observed_value_json": "\"The ALLIANCE partners are giving the opportunity to large and small companies, research centres, uni...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1607/seeking-innovative-material-and-manufacturing-technologies-to-enable-cost-efficient-lightweighting-in-high-volume-automotive-appli",
+          "retrieval_timestamp": "2026-09-07T15:59:45.421942Z",
+          "raw_payload_sha256": "beb741df927f7057f65027b6fd3d7b11905f424bf7c600e0f6d2efdddef5c3bf",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-1625",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/1625/seeking-for-a-method-to-remove-sodium-and-trapped-water-from-residual-fuel-oil",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Anonymous Organization",
+      "pod_reference": null,
+      "description_word_count": 82,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-1625",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking for a method to remove sodium and trapped water from residual fuel oil\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1625/seeking-for-a-method-to-remove-sodium-and-trapped-water-from-residual-fuel-oil",
+          "retrieval_timestamp": "2026-09-07T15:59:46.138402Z",
+          "raw_payload_sha256": "7951e9a54789147ecdfd8ad91510d6512f2b66f24d7e50aaefcf8d1004c6286b",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-1625",
+          "field_name": "description",
+          "observed_value_json": "\"We are looking for residues from renewable sources to formulate cleaner fuel oils. However, incorpor...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1625/seeking-for-a-method-to-remove-sodium-and-trapped-water-from-residual-fuel-oil",
+          "retrieval_timestamp": "2026-09-07T15:59:46.138402Z",
+          "raw_payload_sha256": "7951e9a54789147ecdfd8ad91510d6512f2b66f24d7e50aaefcf8d1004c6286b",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-1689",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/1689/seeking-for-how-to-improve-long-steel-products",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Celsa Group",
+      "pod_reference": null,
+      "description_word_count": 70,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-1689",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking for how to improve long-steel products\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1689/seeking-for-how-to-improve-long-steel-products",
+          "retrieval_timestamp": "2026-09-07T15:59:47.327928Z",
+          "raw_payload_sha256": "1ba9d71615836c16ab994273602d29040fb29d797633aaf1bab25fc0b9ac1481",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-1689",
+          "field_name": "description",
+          "observed_value_json": "\"Celsa Group is among top 4 long-steel producers. The steel industry is one of the oldest industries ...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1689/seeking-for-how-to-improve-long-steel-products",
+          "retrieval_timestamp": "2026-09-07T15:59:47.327928Z",
+          "raw_payload_sha256": "1ba9d71615836c16ab994273602d29040fb29d797633aaf1bab25fc0b9ac1481",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-1726",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/1726/seeking-a-method-for-controlling-the-implantation-of-yeasts-during-alcoholic-fermentation",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Familia Torres",
+      "pod_reference": null,
+      "description_word_count": 80,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-1726",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking a method for controlling the implantation of yeasts during alcoholic fermentation\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1726/seeking-a-method-for-controlling-the-implantation-of-yeasts-during-alcoholic-fermentation",
+          "retrieval_timestamp": "2026-09-07T15:59:48.767571Z",
+          "raw_payload_sha256": "227178a8d8ae34e90835d79f0b4b8b64efa48912200ba2a3cb40615ca8c16567",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-1726",
+          "field_name": "description",
+          "observed_value_json": "\"We are interested in knowing if during the alcoholic fermentation yeasts that are fermenting are the...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1726/seeking-a-method-for-controlling-the-implantation-of-yeasts-during-alcoholic-fermentation",
+          "retrieval_timestamp": "2026-09-07T15:59:48.767571Z",
+          "raw_payload_sha256": "227178a8d8ae34e90835d79f0b4b8b64efa48912200ba2a3cb40615ca8c16567",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-1870",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/1870/seeking-innovative-proposals-in-the-arc-welding-processes",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Fundingbox",
+      "pod_reference": null,
+      "description_word_count": 56,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-1870",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking innovative proposals in the arc welding processes\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1870/seeking-innovative-proposals-in-the-arc-welding-processes",
+          "retrieval_timestamp": "2026-09-07T15:59:49.959897Z",
+          "raw_payload_sha256": "741ca54f33fefa963a1df142f9ddc3e9b132877423381f3a472b079bd5c1434c",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-1870",
+          "field_name": "description",
+          "observed_value_json": "\"The arc welding industry is increasingly being challenged to find innovative new solutions to\nremain...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1870/seeking-innovative-proposals-in-the-arc-welding-processes",
+          "retrieval_timestamp": "2026-09-07T15:59:49.959897Z",
+          "raw_payload_sha256": "741ca54f33fefa963a1df142f9ddc3e9b132877423381f3a472b079bd5c1434c",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-1932",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/1932/seeking-for-solutions-to-make-lcd-displays-or-similar-withstand-temperatures-above-85-c-working-properly",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Anonymous Organization",
+      "pod_reference": null,
+      "description_word_count": 60,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-1932",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking for solutions to make LCD displays or similar withstand temperatures above 85\u00baC working properly\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1932/seeking-for-solutions-to-make-lcd-displays-or-similar-withstand-temperatures-above-85-c-working-properly",
+          "retrieval_timestamp": "2026-09-07T15:59:51.388790Z",
+          "raw_payload_sha256": "59aafb2621c9481ae6b29d07ca3e6e88794b05d5852e24f2b1241f65be82b81b",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-1932",
+          "field_name": "description",
+          "observed_value_json": "\"Some of our products are outdoors and can be in very hot environments if in the direct\nsunlight. We ...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1932/seeking-for-solutions-to-make-lcd-displays-or-similar-withstand-temperatures-above-85-c-working-properly",
+          "retrieval_timestamp": "2026-09-07T15:59:51.388790Z",
+          "raw_payload_sha256": "59aafb2621c9481ae6b29d07ca3e6e88794b05d5852e24f2b1241f65be82b81b",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-1935",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/1935/seeking-for-new-available-technologies-for-water-quality-measurement",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Anonymous Organization",
+      "pod_reference": null,
+      "description_word_count": 46,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-1935",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking for new available technologies for water quality measurement.\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1935/seeking-for-new-available-technologies-for-water-quality-measurement",
+          "retrieval_timestamp": "2026-09-07T15:59:52.309759Z",
+          "raw_payload_sha256": "fd004280e0eb135b204d7b3459d8fb61facbe3ec055aca2905cf8932706a1dbf",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-1935",
+          "field_name": "description",
+          "observed_value_json": "\"We look for solutions or technologies that minimize the problems of current water quality sensors. W...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1935/seeking-for-new-available-technologies-for-water-quality-measurement",
+          "retrieval_timestamp": "2026-09-07T15:59:52.309759Z",
+          "raw_payload_sha256": "fd004280e0eb135b204d7b3459d8fb61facbe3ec055aca2905cf8932706a1dbf",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-1965",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/1965/seeking-barcode-product-packaging-recognition",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Blue Room Innovation",
+      "pod_reference": null,
+      "description_word_count": 35,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-1965",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking barcode product packaging recognition\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1965/seeking-barcode-product-packaging-recognition",
+          "retrieval_timestamp": "2026-09-07T15:59:53.711979Z",
+          "raw_payload_sha256": "72a1ab8f9bbf28d6620550990d388ce05483ae8707cf508cf2b670cfcefd1976",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-1965",
+          "field_name": "description",
+          "observed_value_json": "\"We are seeking a solution able to recognise the product packaging type after scanning the product ba...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1965/seeking-barcode-product-packaging-recognition",
+          "retrieval_timestamp": "2026-09-07T15:59:53.711979Z",
+          "raw_payload_sha256": "72a1ab8f9bbf28d6620550990d388ce05483ae8707cf508cf2b670cfcefd1976",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-1972",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/1972/seeking-anti-oxidant-extract-or-blend-from-micro-algae-with-anti-aging-properties",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Anonymous Organization",
+      "pod_reference": null,
+      "description_word_count": 53,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-1972",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking anti oxidant extract or blend from micro algae with anti aging properties\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1972/seeking-anti-oxidant-extract-or-blend-from-micro-algae-with-anti-aging-properties",
+          "retrieval_timestamp": "2026-09-07T15:59:55.127980Z",
+          "raw_payload_sha256": "cef9bc8c79115ea3aa38868ec7f5e6ab9c1f1d5d9cb357bd68605bb67d39bf02",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-1972",
+          "field_name": "description",
+          "observed_value_json": "\"Develop an Anti oxidant solution from Micro Algae specie or species with an antioxidant action for c...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/1972/seeking-anti-oxidant-extract-or-blend-from-micro-algae-with-anti-aging-properties",
+          "retrieval_timestamp": "2026-09-07T15:59:55.127980Z",
+          "raw_payload_sha256": "cef9bc8c79115ea3aa38868ec7f5e6ab9c1f1d5d9cb357bd68605bb67d39bf02",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2006",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2006/seeking-a-botanic-extract-for-urinary-health",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Alberto from Pharmactive Biotech Products",
+      "pod_reference": null,
+      "description_word_count": 76,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2006",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking a botanic extract for urinary health\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2006/seeking-a-botanic-extract-for-urinary-health",
+          "retrieval_timestamp": "2026-09-07T15:59:56.072019Z",
+          "raw_payload_sha256": "721e7093fa3f951778603c23917d99d549201f9730d37e019cb0b839972603ba",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2006",
+          "field_name": "description",
+          "observed_value_json": "\"An European fast-growing and solid company is seeking an innovative botanic extracts with functional...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2006/seeking-a-botanic-extract-for-urinary-health",
+          "retrieval_timestamp": "2026-09-07T15:59:56.072019Z",
+          "raw_payload_sha256": "721e7093fa3f951778603c23917d99d549201f9730d37e019cb0b839972603ba",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2054",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2054/seeking-electromagnetic-applications-to-be-converted-into-a-final-product",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Rafael from ANTEC Magnets",
+      "pod_reference": null,
+      "description_word_count": 95,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2054",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking electromagnetic applications to be converted into a final product\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2054/seeking-electromagnetic-applications-to-be-converted-into-a-final-product",
+          "retrieval_timestamp": "2026-09-07T15:59:57.275012Z",
+          "raw_payload_sha256": "7587b6c636c9641e04d3b3d009fdf9aee920b657f308e35254f4bcdf8e008844",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2054",
+          "field_name": "description",
+          "observed_value_json": "\"We are looking for a collaboration to develop electromagnetic applications for future product commer...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2054/seeking-electromagnetic-applications-to-be-converted-into-a-final-product",
+          "retrieval_timestamp": "2026-09-07T15:59:57.275012Z",
+          "raw_payload_sha256": "7587b6c636c9641e04d3b3d009fdf9aee920b657f308e35254f4bcdf8e008844",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2167",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2167/seeking-partners-smes-to-contribute-to-co2-emissions-reduction-and-resource-efficiency-in-eu",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Indira from Bax&Co",
+      "pod_reference": null,
+      "description_word_count": 55,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2167",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking partners (SMEs) to Contribute to CO2 emissions reduction and resource efficiency in EU\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2167/seeking-partners-smes-to-contribute-to-co2-emissions-reduction-and-resource-efficiency-in-eu",
+          "retrieval_timestamp": "2026-09-07T15:59:58.759154Z",
+          "raw_payload_sha256": "f0e392c8e07e485b5b39e166431d4c8234aa55102b4954f89483a64fa053efc7",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2167",
+          "field_name": "description",
+          "observed_value_json": "\"Join AMULET on a journey that will bring sustainable and reduced CO2 emissions while working with:\n\u2705...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2167/seeking-partners-smes-to-contribute-to-co2-emissions-reduction-and-resource-efficiency-in-eu",
+          "retrieval_timestamp": "2026-09-07T15:59:58.759154Z",
+          "raw_payload_sha256": "f0e392c8e07e485b5b39e166431d4c8234aa55102b4954f89483a64fa053efc7",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2173",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2173/seeking-for-a-partner-in-the-building-sector",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Indira from Bax&Co",
+      "pod_reference": null,
+      "description_word_count": 81,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2173",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking for a partner in the building sector\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2173/seeking-for-a-partner-in-the-building-sector",
+          "retrieval_timestamp": "2026-09-07T15:59:59.968360Z",
+          "raw_payload_sha256": "1041a8fa5057d28eaca5156982db3901ffa85059153a599763650d7418ef2b00",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2173",
+          "field_name": "description",
+          "observed_value_json": "\"A proposal development with the valorization of waste products of the mining industry. After further...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2173/seeking-for-a-partner-in-the-building-sector",
+          "retrieval_timestamp": "2026-09-07T15:59:59.968360Z",
+          "raw_payload_sha256": "1041a8fa5057d28eaca5156982db3901ffa85059153a599763650d7418ef2b00",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2248",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2248/seeking-patents-for-license-de-ep-and-us-issued-patents",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "CABIER INSTITUTE, SL",
+      "pod_reference": null,
+      "description_word_count": 89,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2248",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking patents for license: DE, EP and US issued patents\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2248/seeking-patents-for-license-de-ep-and-us-issued-patents",
+          "retrieval_timestamp": "2026-09-07T16:00:01.304654Z",
+          "raw_payload_sha256": "0d90f322461949e67768d45a2c0262d9728ed0058307af1f455fe57f1d8de88a",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2248",
+          "field_name": "description",
+          "observed_value_json": "\"We are seeking patents granted in Germany (DE) or as European Patents (EP) and US-issued patents in ...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2248/seeking-patents-for-license-de-ep-and-us-issued-patents",
+          "retrieval_timestamp": "2026-09-07T16:00:01.304654Z",
+          "raw_payload_sha256": "0d90f322461949e67768d45a2c0262d9728ed0058307af1f455fe57f1d8de88a",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2258",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2258/seeking-how-can-we-reduce-costs-and-increase-efficiency-when-obtaining-renewable-hydrogen",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Repsol",
+      "pod_reference": null,
+      "description_word_count": 26,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2258",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking:  How can we reduce costs and increase efficiency when obtaining renewable hydrogen\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2258/seeking-how-can-we-reduce-costs-and-increase-efficiency-when-obtaining-renewable-hydrogen",
+          "retrieval_timestamp": "2026-09-07T16:00:02.228903Z",
+          "raw_payload_sha256": "00f996ffacdff421f786106d6a1dba6a1fcc30760d1c9a4cb0fd64dd415bd993",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2258",
+          "field_name": "description",
+          "observed_value_json": "\"All4Zero , technological innovation hub is looking for technological solutions to develop advanced e...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2258/seeking-how-can-we-reduce-costs-and-increase-efficiency-when-obtaining-renewable-hydrogen",
+          "retrieval_timestamp": "2026-09-07T16:00:02.228903Z",
+          "raw_payload_sha256": "00f996ffacdff421f786106d6a1dba6a1fcc30760d1c9a4cb0fd64dd415bd993",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2292/project-3in1-innovative-approaches-to-discovering-consumer-needs-an-in-depth-detergent-market-overview-and-trend-analysis-call",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "INDUSAC",
+      "pod_reference": null,
+      "description_word_count": 114,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2292",
+          "field_name": "title",
+          "observed_value_json": "\"Project 3in1: Innovative Approaches to Discovering Consumer Needs. An In-Depth Detergent Market Overview and Trend Analysis. (Call for EU University students ONLY)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2292/project-3in1-innovative-approaches-to-discovering-consumer-needs-an-in-depth-detergent-market-overview-and-trend-analysis-call",
+          "retrieval_timestamp": "2026-09-07T16:00:03.915663Z",
+          "raw_payload_sha256": "33a95f163c2feb13d16630dc9c2567672592c60efb57878364df10fd50404202",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2292",
+          "field_name": "description",
+          "observed_value_json": "\"The project's aim is to uncover hidden consumer needs (both current and future) and pain points in t...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2292/project-3in1-innovative-approaches-to-discovering-consumer-needs-an-in-depth-detergent-market-overview-and-trend-analysis-call",
+          "retrieval_timestamp": "2026-09-07T16:00:03.915663Z",
+          "raw_payload_sha256": "33a95f163c2feb13d16630dc9c2567672592c60efb57878364df10fd50404202",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2293",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2293/seeking-kitchen-sink-the-centerpiece-of-your-kitchen-call-for-eu-university-students-only",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "INDUSAC",
+      "pod_reference": null,
+      "description_word_count": 168,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2293",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking Kitchen sink: The centerpiece of your kitchen (Call for EU University students ONLY)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2293/seeking-kitchen-sink-the-centerpiece-of-your-kitchen-call-for-eu-university-students-only",
+          "retrieval_timestamp": "2026-09-07T16:00:05.492070Z",
+          "raw_payload_sha256": "4d96cbd8b37ad25620da4ad6ec2bfeca728d0884fcb88569c9e251923941ab91",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2293",
+          "field_name": "description",
+          "observed_value_json": "\"The kitchen sink is often undervalued, despite its centrality in the home. Traditionally seen as a p...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2293/seeking-kitchen-sink-the-centerpiece-of-your-kitchen-call-for-eu-university-students-only",
+          "retrieval_timestamp": "2026-09-07T16:00:05.492070Z",
+          "raw_payload_sha256": "4d96cbd8b37ad25620da4ad6ec2bfeca728d0884fcb88569c9e251923941ab91",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2297",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2297/seeking-green-efficiency-designing-the-future-marketing-campaign-for-connect-iq-call-for-eu-university-students-only",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "INDUSAC",
+      "pod_reference": null,
+      "description_word_count": 103,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2297",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking Green Efficiency: Designing the Future Marketing Campaign for Connect IQ (Call for EU University students ONLY)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2297/seeking-green-efficiency-designing-the-future-marketing-campaign-for-connect-iq-call-for-eu-university-students-only",
+          "retrieval_timestamp": "2026-09-07T16:00:06.591706Z",
+          "raw_payload_sha256": "28ca49be512936398864a99851716da726524360a1c6aed5b9969ceef0f486bd",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2297",
+          "field_name": "description",
+          "observed_value_json": "\"Develop an innovative marketing campaign for Connect IQ, focusing on promoting products for monitori...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2297/seeking-green-efficiency-designing-the-future-marketing-campaign-for-connect-iq-call-for-eu-university-students-only",
+          "retrieval_timestamp": "2026-09-07T16:00:06.591706Z",
+          "raw_payload_sha256": "28ca49be512936398864a99851716da726524360a1c6aed5b9969ceef0f486bd",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2298",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2298/seeking-beyond-traditional-envelopes-redefining-communication-with-smartenvelope-call-for-eu-university-students-only",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "INDUSAC",
+      "pod_reference": null,
+      "description_word_count": 172,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2298",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking Beyond Traditional Envelopes: Redefining Communication with SmartEnvelope (Call for EU University students ONLY)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2298/seeking-beyond-traditional-envelopes-redefining-communication-with-smartenvelope-call-for-eu-university-students-only",
+          "retrieval_timestamp": "2026-09-07T16:00:08.295857Z",
+          "raw_payload_sha256": "dfe64f06b92c261d8f5531d5016bf0ec59a3960034d88d26a32a07445f1ea953",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2298",
+          "field_name": "description",
+          "observed_value_json": "\"The challenge for students is to identify and develop potential applications for a new product calle...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2298/seeking-beyond-traditional-envelopes-redefining-communication-with-smartenvelope-call-for-eu-university-students-only",
+          "retrieval_timestamp": "2026-09-07T16:00:08.295857Z",
+          "raw_payload_sha256": "dfe64f06b92c261d8f5531d5016bf0ec59a3960034d88d26a32a07445f1ea953",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2299",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2299/seeking-redesign-and-updating-envit-s-resoil-website-to-enhance-global-engagement-and-accessibility-call-for-eu-university-stud",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "INDUSAC",
+      "pod_reference": null,
+      "description_word_count": 231,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2299",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking Redesign and updating ENVIT's ReSoil\u00ae Website to Enhance Global Engagement and Accessibility (Call for EU University students ONLY)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2299/seeking-redesign-and-updating-envit-s-resoil-website-to-enhance-global-engagement-and-accessibility-call-for-eu-university-stud",
+          "retrieval_timestamp": "2026-09-07T16:00:10.035830Z",
+          "raw_payload_sha256": "a91fcaf60f1c4c0f50c70a9fda0bcf9030b6d098117cccf1cadba3bd4c8d1d9b",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2299",
+          "field_name": "description",
+          "observed_value_json": "\"Redesign the ENVIT's website to enhance ReSoil\u00ae global engagement. Features include easy content man...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2299/seeking-redesign-and-updating-envit-s-resoil-website-to-enhance-global-engagement-and-accessibility-call-for-eu-university-stud",
+          "retrieval_timestamp": "2026-09-07T16:00:10.035830Z",
+          "raw_payload_sha256": "a91fcaf60f1c4c0f50c70a9fda0bcf9030b6d098117cccf1cadba3bd4c8d1d9b",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2300",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2300/seeking-the-next-wave-of-growth-for-robots-in-warehouse-call-for-eu-university-students-only",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "INDUSAC",
+      "pod_reference": null,
+      "description_word_count": 187,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2300",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking The next wave of growth for Robots in Warehouse (Call for EU University students ONLY)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2300/seeking-the-next-wave-of-growth-for-robots-in-warehouse-call-for-eu-university-students-only",
+          "retrieval_timestamp": "2026-09-07T16:00:11.055811Z",
+          "raw_payload_sha256": "98ced601f08533f0f9f0be43ffd040551742cb11c60f4e5ec5979b02da135b6e",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2300",
+          "field_name": "description",
+          "observed_value_json": "\"Mobile robots are increasingly common in huge warehousing companies with large IT teams and in areas...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2300/seeking-the-next-wave-of-growth-for-robots-in-warehouse-call-for-eu-university-students-only",
+          "retrieval_timestamp": "2026-09-07T16:00:11.055811Z",
+          "raw_payload_sha256": "98ced601f08533f0f9f0be43ffd040551742cb11c60f4e5ec5979b02da135b6e",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2301",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2301/seeking-ai-assistants-automating-and-streamlining-engineering-processes-call-for-eu-university-students-only",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "INDUSAC",
+      "pod_reference": null,
+      "description_word_count": 116,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2301",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking AI Assistants: Automating and Streamlining Engineering Processes (Call for EU University students ONLY)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2301/seeking-ai-assistants-automating-and-streamlining-engineering-processes-call-for-eu-university-students-only",
+          "retrieval_timestamp": "2026-09-07T16:00:12.587043Z",
+          "raw_payload_sha256": "4a936e268f882f8d101f79db3f50c60a5de88127420f0a48d06c4f82d0af81da",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2301",
+          "field_name": "description",
+          "observed_value_json": "\"We seek to develop custom AI assistants using RAG (Retrieval-Augmented Generation) technology to str...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2301/seeking-ai-assistants-automating-and-streamlining-engineering-processes-call-for-eu-university-students-only",
+          "retrieval_timestamp": "2026-09-07T16:00:12.587043Z",
+          "raw_payload_sha256": "4a936e268f882f8d101f79db3f50c60a5de88127420f0a48d06c4f82d0af81da",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2401",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2401/upcycling-agri-food-waste-through-upscaling-industrial-applicability-and-business-case-modelling-upc-barcelonatech-spain",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "SMAR3TS",
+      "pod_reference": null,
+      "description_word_count": 94,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2401",
+          "field_name": "title",
+          "observed_value_json": "\"Upcycling agri-food waste through upscaling industrial applicability and business case modelling (UPC BarcelonaTech, Spain)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2401/upcycling-agri-food-waste-through-upscaling-industrial-applicability-and-business-case-modelling-upc-barcelonatech-spain",
+          "retrieval_timestamp": "2026-09-07T16:00:14.478336Z",
+          "raw_payload_sha256": "b3fc7142dbd8a3cce03701dc3ccbe4d56646987c164490fe0a9d7704e3568272",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2401",
+          "field_name": "description",
+          "observed_value_json": "\"SMAR3TS project partner - UPC BarcelonaTech and its R2EM research and innovation team at Barcelona R...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2401/upcycling-agri-food-waste-through-upscaling-industrial-applicability-and-business-case-modelling-upc-barcelonatech-spain",
+          "retrieval_timestamp": "2026-09-07T16:00:14.478336Z",
+          "raw_payload_sha256": "b3fc7142dbd8a3cce03701dc3ccbe4d56646987c164490fe0a9d7704e3568272",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2402",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2402/processes-for-market-assessment-lca-and-regulatory-assessment-upc-barcelonatech-spain",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "SMAR3TS",
+      "pod_reference": null,
+      "description_word_count": 117,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2402",
+          "field_name": "title",
+          "observed_value_json": "\"Processes for market assessment \u2013 LCA and regulatory assessment, (UPC BarcelonaTech, Spain)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2402/processes-for-market-assessment-lca-and-regulatory-assessment-upc-barcelonatech-spain",
+          "retrieval_timestamp": "2026-09-07T16:00:16.330256Z",
+          "raw_payload_sha256": "4744b6e1fdda5733c713b99a3239652c250af7990678ade4bdbc61201f43e479",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2402",
+          "field_name": "description",
+          "observed_value_json": "\"SMAR3TS project partner - UPC BarcelonaTech and its R2EM research and innovation team at Barcelona R...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2402/processes-for-market-assessment-lca-and-regulatory-assessment-upc-barcelonatech-spain",
+          "retrieval_timestamp": "2026-09-07T16:00:16.330256Z",
+          "raw_payload_sha256": "4744b6e1fdda5733c713b99a3239652c250af7990678ade4bdbc61201f43e479",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2403",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2403/assessment-of-scalability-processes-for-industrial-decarbonization-upc-barcelonatech-spain",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "SMAR3TS",
+      "pod_reference": null,
+      "description_word_count": 89,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2403",
+          "field_name": "title",
+          "observed_value_json": "\"Assessment of scalability processes for industrial decarbonization (UPC BarcelonaTech, Spain)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2403/assessment-of-scalability-processes-for-industrial-decarbonization-upc-barcelonatech-spain",
+          "retrieval_timestamp": "2026-09-07T16:00:17.746113Z",
+          "raw_payload_sha256": "036a2d7dcef3fe3902fc8e559ba6490c3d1f01ba0dcef1e4f861e32ba1051aa9",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2403",
+          "field_name": "description",
+          "observed_value_json": "\"SMAR3TS project partner - UPC BarcelonaTech and its R2EM research and innovation team at Barcelona R...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2403/assessment-of-scalability-processes-for-industrial-decarbonization-upc-barcelonatech-spain",
+          "retrieval_timestamp": "2026-09-07T16:00:17.746113Z",
+          "raw_payload_sha256": "036a2d7dcef3fe3902fc8e559ba6490c3d1f01ba0dcef1e4f861e32ba1051aa9",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2404",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2404/scaling-industrial-processes-of-critical-raw-materials-recovery-and-application-upc-barcelonatech-spain",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "SMAR3TS",
+      "pod_reference": null,
+      "description_word_count": 119,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2404",
+          "field_name": "title",
+          "observed_value_json": "\"Scaling industrial processes of critical raw materials recovery and application (UPC BarcelonaTech, Spain)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2404/scaling-industrial-processes-of-critical-raw-materials-recovery-and-application-upc-barcelonatech-spain",
+          "retrieval_timestamp": "2026-09-07T16:00:19.709307Z",
+          "raw_payload_sha256": "8a47d2e2c0348475977a3ce494a45ed7054b5d0db6b80e27641b2bb9f11bbaec",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2404",
+          "field_name": "description",
+          "observed_value_json": "\"SMAR3TS project partner - UPC BarcelonaTech and its R2EM research and innovation team at Barcelona R...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2404/scaling-industrial-processes-of-critical-raw-materials-recovery-and-application-upc-barcelonatech-spain",
+          "retrieval_timestamp": "2026-09-07T16:00:19.709307Z",
+          "raw_payload_sha256": "8a47d2e2c0348475977a3ce494a45ed7054b5d0db6b80e27641b2bb9f11bbaec",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2405",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2405/development-of-multi-scale-approaches-for-testing-separation-removal-and-recovery-of-valuable-components-water-and-energy-thr",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "SMAR3TS",
+      "pod_reference": null,
+      "description_word_count": 119,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2405",
+          "field_name": "title",
+          "observed_value_json": "\"Development of multi-scale approaches for testing, separation, removal, and recovery of valuable components, water, and energy through hybrid processes (UPC BarcelonaTech, Spain)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2405/development-of-multi-scale-approaches-for-testing-separation-removal-and-recovery-of-valuable-components-water-and-energy-thr",
+          "retrieval_timestamp": "2026-09-07T16:00:21.468067Z",
+          "raw_payload_sha256": "69b521dbad7b8c4efff1bb8c3281f6e7aec831beda550fa5e5eae05993edf979",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2405",
+          "field_name": "description",
+          "observed_value_json": "\"SMAR3TS project partner - UPC BarcelonaTech and its R2EM research and innovation team at Barcelona R...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2405/development-of-multi-scale-approaches-for-testing-separation-removal-and-recovery-of-valuable-components-water-and-energy-thr",
+          "retrieval_timestamp": "2026-09-07T16:00:21.468067Z",
+          "raw_payload_sha256": "69b521dbad7b8c4efff1bb8c3281f6e7aec831beda550fa5e5eae05993edf979",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2413",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2413/application-of-circular-economy-principles-in-housing-construction-development-taltech-estonia",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "SMAR3TS",
+      "pod_reference": null,
+      "description_word_count": 213,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2413",
+          "field_name": "title",
+          "observed_value_json": "\"Application of Circular Economy Principles in Housing/Construction Development (Taltech, Estonia)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2413/application-of-circular-economy-principles-in-housing-construction-development-taltech-estonia",
+          "retrieval_timestamp": "2026-09-07T16:00:23.464786Z",
+          "raw_payload_sha256": "40c71977323eb5245c941e1182f4c2cc47746fab35934475e7fe74853e855330",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2413",
+          "field_name": "description",
+          "observed_value_json": "\"SMAR3TS project partner - TalTech is looking for innovative approaches to apply Circular Economy Pri...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2413/application-of-circular-economy-principles-in-housing-construction-development-taltech-estonia",
+          "retrieval_timestamp": "2026-09-07T16:00:23.464786Z",
+          "raw_payload_sha256": "40c71977323eb5245c941e1182f4c2cc47746fab35934475e7fe74853e855330",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2414",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2414/improving-resilience-of-multifunctional-neighborhoods-within-15-minutes-city-concept-workplaces-perspective-pare-estonia",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "SMAR3TS",
+      "pod_reference": null,
+      "description_word_count": 182,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2414",
+          "field_name": "title",
+          "observed_value_json": "\"Improving Resilience of Multifunctional Neighborhoods within 15-minutes City Concept: Workplaces Perspective (PARE, Estonia)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2414/improving-resilience-of-multifunctional-neighborhoods-within-15-minutes-city-concept-workplaces-perspective-pare-estonia",
+          "retrieval_timestamp": "2026-09-07T16:00:25.432403Z",
+          "raw_payload_sha256": "e052709bd8eecc5a9f1f894940e2b80276a5a53b595fdf2a5ce9653937b0d5fd",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2414",
+          "field_name": "description",
+          "observed_value_json": "\"SMAR3TS project partner - PARE is looking for innovative solutions to improve the Resilience of Mult...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2414/improving-resilience-of-multifunctional-neighborhoods-within-15-minutes-city-concept-workplaces-perspective-pare-estonia",
+          "retrieval_timestamp": "2026-09-07T16:00:25.432403Z",
+          "raw_payload_sha256": "e052709bd8eecc5a9f1f894940e2b80276a5a53b595fdf2a5ce9653937b0d5fd",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2417",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2417/sustainable-packaging-challenge-new-materials-for-food-ifm-engage-institute-for-manufacturing-university-of-cambridge-uk",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "SMAR3TS",
+      "pod_reference": null,
+      "description_word_count": 125,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2417",
+          "field_name": "title",
+          "observed_value_json": "\"Sustainable Packaging Challenge \u2013 New Materials for Food (IfM Engage, Institute for Manufacturing, University of Cambridge, UK)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2417/sustainable-packaging-challenge-new-materials-for-food-ifm-engage-institute-for-manufacturing-university-of-cambridge-uk",
+          "retrieval_timestamp": "2026-09-07T16:00:26.900155Z",
+          "raw_payload_sha256": "ac2aa66b7309f0a5625ed61bdef41fa4cc87165cf1b236fe256553759be31427",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2417",
+          "field_name": "description",
+          "observed_value_json": "\"SMAR3TS project partner IfM Engage is looking for innovative approaches to support the development a...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2417/sustainable-packaging-challenge-new-materials-for-food-ifm-engage-institute-for-manufacturing-university-of-cambridge-uk",
+          "retrieval_timestamp": "2026-09-07T16:00:26.900155Z",
+          "raw_payload_sha256": "ac2aa66b7309f0a5625ed61bdef41fa4cc87165cf1b236fe256553759be31427",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2425",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2425/next-generation-proteins-for-resilient-and-regenerative-food-systems-lut-university-kouvola-finland",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "SMAR3TS",
+      "pod_reference": null,
+      "description_word_count": 236,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2425",
+          "field_name": "title",
+          "observed_value_json": "\"Next-generation proteins for resilient and regenerative food systems (LUT University \u2013 Kouvola, Finland)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2425/next-generation-proteins-for-resilient-and-regenerative-food-systems-lut-university-kouvola-finland",
+          "retrieval_timestamp": "2026-09-07T16:00:29.049822Z",
+          "raw_payload_sha256": "d805faeee1c83a0147591909a562d723017ddfae043253868f07a4e24ad8d88e",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2425",
+          "field_name": "description",
+          "observed_value_json": "\"SMAR3TS project partner \u2013 Kouvola Research & Innovation Unit (LUT University) is seeking innovative ...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2425/next-generation-proteins-for-resilient-and-regenerative-food-systems-lut-university-kouvola-finland",
+          "retrieval_timestamp": "2026-09-07T16:00:29.049822Z",
+          "raw_payload_sha256": "d805faeee1c83a0147591909a562d723017ddfae043253868f07a4e24ad8d88e",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2426",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2426/kempower-ev-charging-dataset-exploring-data-driven-opportunities-for-new-business-kempower-finland",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "SMAR3TS",
+      "pod_reference": null,
+      "description_word_count": 103,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2426",
+          "field_name": "title",
+          "observed_value_json": "\"Kempower EV Charging Dataset: Exploring data-driven opportunities for new business (Kempower, Finland)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2426/kempower-ev-charging-dataset-exploring-data-driven-opportunities-for-new-business-kempower-finland",
+          "retrieval_timestamp": "2026-09-07T16:00:30.901193Z",
+          "raw_payload_sha256": "0e683a46a88fb9c4fd7f3ae0f951a623952af89e871473e6f7e81d74d800f2e1",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2426",
+          "field_name": "description",
+          "observed_value_json": "\"SMAR3TS project partner \u2013 Kempower is looking for innovative approaches to support the scaling of he...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2426/kempower-ev-charging-dataset-exploring-data-driven-opportunities-for-new-business-kempower-finland",
+          "retrieval_timestamp": "2026-09-07T16:00:30.901193Z",
+          "raw_payload_sha256": "0e683a46a88fb9c4fd7f3ae0f951a623952af89e871473e6f7e81d74d800f2e1",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2427",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2427/exploring-the-applicability-of-kempower-solutions-in-heavy-electric-traffic-market-analysis-for-scaling-kempower-finland",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "SMAR3TS",
+      "pod_reference": null,
+      "description_word_count": 138,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2427",
+          "field_name": "title",
+          "observed_value_json": "\"Exploring the applicability of Kempower solutions in Heavy Electric Traffic \u2013 Market analysis for scaling (Kempower, Finland)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2427/exploring-the-applicability-of-kempower-solutions-in-heavy-electric-traffic-market-analysis-for-scaling-kempower-finland",
+          "retrieval_timestamp": "2026-09-07T16:00:32.328980Z",
+          "raw_payload_sha256": "c5fe1c8f48cde0afda5bb8882b528809141952a161a9369b946956cfda1626ec",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2427",
+          "field_name": "description",
+          "observed_value_json": "\"SMAR3TS project partner \u2013 Kempower is looking for innovative approaches to analyse and scale the app...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2427/exploring-the-applicability-of-kempower-solutions-in-heavy-electric-traffic-market-analysis-for-scaling-kempower-finland",
+          "retrieval_timestamp": "2026-09-07T16:00:32.328980Z",
+          "raw_payload_sha256": "c5fe1c8f48cde0afda5bb8882b528809141952a161a9369b946956cfda1626ec",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2491",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2491/seeking-solutions-that-address-the-root-cause-of-gingivitis-by-actively-restoring-oral-microbiome-balance",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Lacer, S.A",
+      "pod_reference": null,
+      "description_word_count": 163,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2491",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking Solutions that Address the Root Cause of Gingivitis by Actively Restoring Oral Microbiome Balance\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2491/seeking-solutions-that-address-the-root-cause-of-gingivitis-by-actively-restoring-oral-microbiome-balance",
+          "retrieval_timestamp": "2026-09-07T16:00:33.855946Z",
+          "raw_payload_sha256": "1825b6a126e7b851f8d141974e49a53b6a31537e5288669a833782d391d01ed8",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2491",
+          "field_name": "description",
+          "observed_value_json": "\"Lacer is seeking to identify and develop innovative solutions that address the root cause of gingivi...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2491/seeking-solutions-that-address-the-root-cause-of-gingivitis-by-actively-restoring-oral-microbiome-balance",
+          "retrieval_timestamp": "2026-09-07T16:00:33.855946Z",
+          "raw_payload_sha256": "1825b6a126e7b851f8d141974e49a53b6a31537e5288669a833782d391d01ed8",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2492",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2492/seeking-novel-active-ingredients-and-bio-technologies-targeting-new-mechanisms-for-androgenetic-alopecia-aga",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Lacer, S.A",
+      "pod_reference": null,
+      "description_word_count": 110,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2492",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking Novel Active Ingredients and Bio-Technologies Targeting New Mechanisms for Androgenetic Alopecia (AGA)\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2492/seeking-novel-active-ingredients-and-bio-technologies-targeting-new-mechanisms-for-androgenetic-alopecia-aga",
+          "retrieval_timestamp": "2026-09-07T16:00:35.301045Z",
+          "raw_payload_sha256": "0c53779ed843afdae85b0566c544fe7548eeedeebe2b882da6c452db7ae610d4",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2492",
+          "field_name": "description",
+          "observed_value_json": "\"Lacer is seeking novel ingredients, technologies and innovative solutions to integrate into the curr...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2492/seeking-novel-active-ingredients-and-bio-technologies-targeting-new-mechanisms-for-androgenetic-alopecia-aga",
+          "retrieval_timestamp": "2026-09-07T16:00:35.301045Z",
+          "raw_payload_sha256": "0c53779ed843afdae85b0566c544fe7548eeedeebe2b882da6c452db7ae610d4",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2493",
+      "source_authority": "innoget",
+      "source_uri": "https://www.innoget.com/technology-calls/2493/seeking-highly-effective-antimicrobial-alternatives-to-chlorhexidine-chx-without-the-side-effects",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "Spain",
+      "requesting_organization": "Lacer, S.A",
+      "pod_reference": null,
+      "description_word_count": 220,
+      "field_observations": [
+        {
+          "entity_id": "INNOGET-2493",
+          "field_name": "title",
+          "observed_value_json": "\"Seeking: Highly Effective Antimicrobial Alternatives to Chlorhexidine (CHX) Without the Side Effects\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2493/seeking-highly-effective-antimicrobial-alternatives-to-chlorhexidine-chx-without-the-side-effects",
+          "retrieval_timestamp": "2026-09-07T16:00:36.243678Z",
+          "raw_payload_sha256": "c06ea1f0558cff7359f05747919ff3876a46dcfe8241d99a36278350c29c03cb",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "INNOGET-2493",
+          "field_name": "description",
+          "observed_value_json": "\"Lacer seeks substitute ingredients or formulations that deliver the same antiseptic efficacy as Chlo...\"",
+          "value_type": "str",
+          "source_authority": "InnoGet Marketplace",
+          "source_uri": "https://www.innoget.com/technology-calls/2493/seeking-highly-effective-antimicrobial-alternatives-to-chlorhexidine-chx-without-the-side-effects",
+          "retrieval_timestamp": "2026-09-07T16:00:36.243678Z",
+          "raw_payload_sha256": "c06ea1f0558cff7359f05747919ff3876a46dcfe8241d99a36278350c29c03cb",
+          "extraction_version": "2.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "LOMBARDIA-860",
+      "source_authority": "openinnovation-lombardia",
+      "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/860/manutenzione-giunti-di-ponti",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "ES",
+      "requesting_organization": null,
+      "pod_reference": "TRES20250806011",
+      "description_word_count": 52,
+      "field_observations": [
+        {
+          "entity_id": "LOMBARDIA-860",
+          "field_name": "title",
+          "observed_value_json": "\"Manutenzione giunti di ponti\"",
+          "value_type": "str",
+          "source_authority": "Open Innovation Lombardia",
+          "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/860/manutenzione-giunti-di-ponti",
+          "retrieval_timestamp": "2026-09-07T16:00:37.915834Z",
+          "raw_payload_sha256": "bc23a1f86145e21f596977591a24f7866ef28d17298eff42efd359d922032d74",
+          "extraction_version": "1.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "LOMBARDIA-860",
+          "field_name": "description",
+          "observed_value_json": "\"Una societ\u00e0 spagnola cerca tecnologie di manutenzione per giunti di dilatazione elastomerici e appog...\"",
+          "value_type": "str",
+          "source_authority": "Open Innovation Lombardia",
+          "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/860/manutenzione-giunti-di-ponti",
+          "retrieval_timestamp": "2026-09-07T16:00:37.915834Z",
+          "raw_payload_sha256": "bc23a1f86145e21f596977591a24f7866ef28d17298eff42efd359d922032d74",
+          "extraction_version": "1.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    },
+    {
+      "demand_id": "LOMBARDIA-947",
+      "source_authority": "openinnovation-lombardia",
+      "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/947/soluzioni-per-monitorare-e-mitigare-polveri-pm10-in-miniere",
+      "origin_level": "level_1_direct_metadata",
+      "is_target_origin": true,
+      "origin_country": "ES",
+      "requesting_organization": null,
+      "pod_reference": "TRES20251031029",
+      "description_word_count": 37,
+      "field_observations": [
+        {
+          "entity_id": "LOMBARDIA-947",
+          "field_name": "title",
+          "observed_value_json": "\"Soluzioni per monitorare e mitigare polveri PM10 in miniere\"",
+          "value_type": "str",
+          "source_authority": "Open Innovation Lombardia",
+          "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/947/soluzioni-per-monitorare-e-mitigare-polveri-pm10-in-miniere",
+          "retrieval_timestamp": "2026-09-07T16:00:39.556551Z",
+          "raw_payload_sha256": "20886205e2379473a951da5badf57df7ea91fd65084f93868bccbc5ffc200815",
+          "extraction_version": "1.0.0",
+          "verification_status": "source_reported"
+        },
+        {
+          "entity_id": "LOMBARDIA-947",
+          "field_name": "description",
+          "observed_value_json": "\"Societ\u00e0 spagnola cerca tecnologie per monitoraggio e mitigazione polveri PM10 in miniera a cielo ape...\"",
+          "value_type": "str",
+          "source_authority": "Open Innovation Lombardia",
+          "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/947/soluzioni-per-monitorare-e-mitigare-polveri-pm10-in-miniere",
+          "retrieval_timestamp": "2026-09-07T16:00:39.556551Z",
+          "raw_payload_sha256": "20886205e2379473a951da5badf57df7ea91fd65084f93868bccbc5ffc200815",
+          "extraction_version": "1.0.0",
+          "verification_status": "source_reported"
+        }
+      ]
+    }
+  ]
+}
