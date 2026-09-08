@@ -65,3 +65,18 @@ class IaaTest:
         judgments_b = [_judgment("D1", "P2", "lydia", 2)]
         with pytest.raises(ValueError, match="same set"):
             compute_iaa(judgments_a, judgments_b)
+
+    def test_should_raise_when_both_inputs_are_the_same_annotator(self):
+        judgments = [_judgment("D1", "P1", "valentin", 2), _judgment("D1", "P2", "valentin", 0)]
+        with pytest.raises(ValueError, match="same single annotator"):
+            compute_iaa(judgments, judgments)
+
+    def test_should_raise_when_either_input_is_empty(self):
+        judgments = [_judgment("D1", "P1", "valentin", 2)]
+        with pytest.raises(ValueError, match="non-empty"):
+            compute_iaa([], judgments)
+        with pytest.raises(ValueError, match="non-empty"):
+            compute_iaa(judgments, [])
+        with pytest.raises(ValueError, match="non-empty"):
+            compute_iaa([], [])
+

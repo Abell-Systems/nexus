@@ -70,6 +70,17 @@ def compute_iaa(
     judgments_a: list[AnnotationJudgment],
     judgments_b: list[AnnotationJudgment],
 ) -> IAAReport:
+    if not judgments_a or not judgments_b:
+        raise ValueError("compute_iaa requires both judgments_a and judgments_b to be non-empty")
+
+    annotators_a = {j.annotator_id for j in judgments_a}
+    annotators_b = {j.annotator_id for j in judgments_b}
+    if len(annotators_a) == 1 and annotators_a == annotators_b:
+        raise ValueError(
+            f"judgments_a and judgments_b are both from the same single annotator "
+            f"({next(iter(annotators_a))!r}) — IAA requires two independent annotators"
+        )
+
     keys_a = {(j.demand_id, j.publication_id) for j in judgments_a}
     keys_b = {(j.demand_id, j.publication_id) for j in judgments_b}
     if keys_a != keys_b:
