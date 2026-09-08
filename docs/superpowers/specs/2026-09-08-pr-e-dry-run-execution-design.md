@@ -74,7 +74,11 @@ Two different statuses, not one undifferentiated "committed and hashed":
 
 ## 8. Entry / exit criteria
 
-**Entry to step 6 (pool/batch generation):** steps 2 and 5 finalized (demand list and guide boundaries signed off by Valentín + Lydia). §6 is resolved (semantic deferred) — no longer a blocker.
+**Entry to step 6 (pool/batch generation):** steps 2 and 5 finalized (demand list and guide boundaries signed off by Valentín + Lydia — done, `phase2-dry-run-selection.md`/`phase2-guide.md` both FINAL). §6 is resolved (semantic deferred) — no longer a blocker.
+
+**BLOCKED ON CORPUS DATA (found 2026-09-08, while starting step 6):** the only ES patent corpus in this repository (`data/snapshots/patents_es_snapshot.duckdb`) has 16 records, explicitly labeled "Pilot baseline corpus for proof-of-method validation," with a CPC distribution (detergents, batteries, plumbing, polymers, control systems, power, machining, catalysts, measurement, kitchenware, alloys, pesticides, water treatment, valves) that barely overlaps the 8 selected demands' domains (welding, hydrogen electrolysis, cosmetics/algae, water sensing, fuel oil, steel). Running `CandidatePoolBuilder` against it would produce empty or near-empty pools for most demands — a formally-executable but scientifically weak artifact, not a real test of the annotation protocol on a realistic pool.
+
+Decided (2026-09-08): **do not** proceed with the 16-patent corpus, even caveated. **Do not** hand-pick a domain-matched ad hoc patent set either — that would introduce candidate selection before retrieval, contaminating exactly the independence PR-E exists to protect. Step 6 is blocked until a sufficiently large, technically relevant ES patent corpus is ingested and frozen — separate data-infrastructure work, not a PR-E protocol change. Steps 1-5 (selection, guide, scope, §6) remain closed and are not reopened by this blocker. Before any ingestion: define the dry-run's minimum corpus size/relevance bar, identify a reproducible source, decide how it gets frozen/versioned (same discipline as `dataset_phase2_demand_corpus_n39.*`), and confirm it works with `AnnotationPoolEligibilityPolicy` — only then ingest.
 
 **Entry to step 7 (annotation):** step 6's batches frozen and hashed.
 
