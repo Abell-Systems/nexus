@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abell-systems.com/schemas/nexus/project-status-v1.json",
+  "title": "NexusProjectStatus",
+  "description": "Canonical machine-readable contract for Nexus Project Status and technical/scientific observability.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "commit_sha",
+    "evaluated_at",
+    "overall_status",
+    "aggregation_rule",
+    "dimensions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,40}$",
+      "description": "Git commit SHA of the code revision evaluated."
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp of when the status evaluation was executed."
+    },
+    "overall_status": {
+      "$ref": "#/$defs/OverallStatusEnum",
+      "description": "Aggregated status across required dimensions."
+    },
+    "aggregation_rule": {
+      "type": "string",
+      "description": "Explicit formula or description of the conservative aggregation rule applied."
+    },
+    "summary": {
+      "type": "string",
+      "description": "High-level summary of the evaluation outcome."
+    },
+    "dimensions": {
+      "type": "object",
+      "required": [
+        "backend_testing",
+        "backend_coverage",
+        "python_quality",
+        "frontend_testing",
+        "frontend_coverage",
+        "frontend_quality",
+        "architecture",
+        "documentation",
+        "scientific_integrity",
+        "sonar_cloud"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "backend_testing": { "$ref": "#/$defs/DimensionDetail" },
+        "backend_coverage": { "$ref": "#/$defs/DimensionDetail" },
+        "python_quality": { "$ref": "#/$defs/DimensionDetail" },
+        "frontend_testing": { "$ref": "#/$defs/DimensionDetail" },
+        "frontend_coverage": { "$ref": "#/$defs/DimensionDetail" },
+        "frontend_quality": { "$ref": "#/$defs/DimensionDetail" },
+        "architecture": { "$ref": "#/$defs/DimensionDetail" },
+        "documentation": { "$ref": "#/$defs/DimensionDetail" },
+        "scientific_integrity": { "$ref": "#/$defs/DimensionDetail" },
+        "sonar_cloud": { "$ref": "#/$defs/DimensionDetail" }
+      }
+    }
+  },
+  "$defs": {
+    "StatusEnum": {
+      "type": "string",
+      "enum": ["PASS", "FAIL", "SKIPPED", "UNVERIFIED", "N/A"],
+      "description": "Symmetrical canonical status vocabulary."
+    },
+    "OverallStatusEnum": {
+      "type": "string",
+      "enum": ["PASS", "FAIL", "UNVERIFIED"],
+      "description": "Conservative aggregate status across required dimensions."
+    },
+    "RequirementLevel": {
+      "type": "string",
+      "enum": ["required", "optional"],
+      "description": "Whether the dimension is mandatory for overall repository health."
+    },
+    "CheckDetail": {
+      "type": "object",
+      "required": ["name", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "status": { "$ref": "#/$defs/StatusEnum" },
+        "value": {},
+        "threshold": {},
+        "detail": { "type": "string" }
+      }
+    },
+    "DimensionDetail": {
+      "type": "object",
+      "required": [
+        "status",
+        "requirement_level",
+        "evidence_source",
+        "evidence_available",
+        "checks"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "$ref": "#/$defs/StatusEnum" },
+        "requirement_level": { "$ref": "#/$defs/RequirementLevel" },
+        "evidence_source": {
+          "type": "string",
+          "description": "Path or identifier of the raw artifact/tool generating evidence."
+        },
+        "evidence_available": {
+          "type": "boolean",
+          "description": "Whether the raw evidence source exists and was parsed."
+        },
+        "message": { "type": "string" },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Scalar measurements extracted directly from evidence."
+        },
+        "checks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/CheckDetail" },
+          "description": "Individual assertions evaluated within this dimension."
+        }
+      }
+    }
+  }
+}
