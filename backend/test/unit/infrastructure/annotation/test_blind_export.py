@@ -85,3 +85,35 @@ class ExportTemporalProvenanceTest:
         roundtripped = json.loads(serialized)
         assert roundtripped == {"ES-1": "eligible", "ES-2": "temporal_unknown"}
         assert set(roundtripped.keys()) == {"ES-1", "ES-2"}
+
+    def test_should_never_appear_in_annotation_batch_serialization(self):
+        """Explicit boundary test (code review comment on PR #56): the temporal
+        provenance produced by export_temporal_provenance() must never be
+        reachable through AnnotationBatch — not just "happens to be a separate
+        function today". Builds a batch and provenance from the SAME pool/reasons
+        and confirms none of the provenance's EligibilityReason values leak into
+        the annotator-facing batch's serialized form."""
+        pool = _pool()
+        temporal_reasons = {
+            "ES-1": EligibilityReason.ELIGIBLE,
+            "ES-2": EligibilityReason.TEMPORAL_UNKNOWN,
+            "ES-3": EligibilityReason.ELIGIBLE,
+        }
+
+        batch = build_annotation_batch(pool, _demand(), _patents(), seed=42)
+        provenance = export_temporal_provenance(temporal_reasons)
+
+        batch_serialized = batch.model_dump_json()
+        assert "temporal_unknown" not in batch_serialized
+        assert "eligible" not in batch_serialized
+        assert "excluded_temporal" not in batch_serialized
+        assert provenance not in batch_serialized
+
+        # And structurally: no field on AnnotationBatch or AnnotationCandidateEntry
+        # is even shaped to carry an EligibilityReason.
+        batch_field_names = set(type(batch).model_fields.keys())
+        entry_field_names = set(type(batch.entries[0]).model_fields.keys()) if batch.entries else set()
+        assert "temporal_reasons" not in batch_field_names
+        assert "eligibility_reason" not in batch_field_names
+        assert "temporal_reasons" not in entry_field_names
+        assert "eligibility_reason" not in entry_field_names
