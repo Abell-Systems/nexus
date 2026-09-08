@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ops:world-patent-data xmlns:ops="http://ops.epo.org" xmlns="http://www.epo.org/exchange">
+  <ops:biblio-search total-result-count="6">
+    <ops:range begin="1" end="6"/>
+  </ops:biblio-search>
+  <exchange-documents>
+    <exchange-document country="EP" doc-number="3000001" kind="B1">
+      <bibliographic-data>
+        <publication-reference>
+          <document-id document-id-type="epodoc"><doc-number>EP3000001</doc-number><date>20210115</date></document-id>
+        </publication-reference>
+        <invention-title lang="en">Heat exchanger assembly</invention-title>
+        <patent-classifications><patent-classification><classification-symbol>F28D1/00</classification-symbol></patent-classification></patent-classifications>
+      </bibliographic-data>
+      <abstract lang="en">A heat exchanger assembly for industrial cooling.</abstract>
+    </exchange-document>
+    <exchange-document country="US" doc-number="11223344" kind="B2">
+      <bibliographic-data>
+        <publication-reference>
+          <document-id document-id-type="epodoc"><doc-number>US11223344</doc-number><date>20200601</date></document-id>
+        </publication-reference>
+        <invention-title lang="en">Battery management circuit</invention-title>
+        <patent-classifications><patent-classification><classification-symbol>H01M10/48</classification-symbol></patent-classification></patent-classifications>
+      </bibliographic-data>
+      <abstract lang="en">A circuit for managing rechargeable battery cells.</abstract>
+    </exchange-document>
+    <exchange-document country="JP" doc-number="6912345" kind="B2">
+      <bibliographic-data>
+        <publication-reference>
+          <document-id document-id-type="epodoc"><doc-number>JP6912345</doc-number><date>20190310</date></document-id>
+        </publication-reference>
+        <invention-title lang="en">Semiconductor packaging method</invention-title>
+        <patent-classifications><patent-classification><classification-symbol>H01L21/56</classification-symbol></patent-classification></patent-classifications>
+      </bibliographic-data>
+      <abstract lang="en">A method for packaging semiconductor devices.</abstract>
+    </exchange-document>
+    <exchange-document country="CN" doc-number="112233445" kind="B">
+      <bibliographic-data>
+        <publication-reference>
+          <document-id document-id-type="epodoc"><doc-number>CN112233445</doc-number><date>20220220</date></document-id>
+        </publication-reference>
+        <invention-title lang="en">Water purification membrane</invention-title>
+        <patent-classifications><patent-classification><classification-symbol>C02F1/44</classification-symbol></patent-classification></patent-classifications>
+      </bibliographic-data>
+      <abstract lang="en">A membrane for purifying industrial wastewater.</abstract>
+    </exchange-document>
+    <exchange-document country="KR" doc-number="1023456780" kind="B1">
+      <bibliographic-data>
+        <publication-reference>
+          <document-id document-id-type="epodoc"><doc-number>KR1023456780</doc-number><date>20180705</date></document-id>
+        </publication-reference>
+        <invention-title lang="en">Robotic arm joint mechanism</invention-title>
+        <patent-classifications><patent-classification><classification-symbol>B25J17/00</classification-symbol></patent-classification></patent-classifications>
+      </bibliographic-data>
+      <abstract lang="en">A joint mechanism for industrial robotic arms.</abstract>
+    </exchange-document>
+    <exchange-document country="WO" doc-number="2021123456" kind="A1">
+      <bibliographic-data>
+        <publication-reference>
+          <document-id document-id-type="epodoc"><doc-number>WO2021123456</doc-number><date>20210715</date></document-id>
+        </publication-reference>
+        <invention-title lang="en">Solar panel mounting frame (pending application)</invention-title>
+        <patent-classifications><patent-classification><classification-symbol>H02S20/00</classification-symbol></patent-classification></patent-classifications>
+      </bibliographic-data>
+      <abstract lang="en">A mounting frame for photovoltaic solar panels.</abstract>
+    </exchange-document>
+  </exchange-documents>
+</ops:world-patent-data>
