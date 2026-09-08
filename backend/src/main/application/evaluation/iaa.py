@@ -30,7 +30,7 @@ def _weighted_kappa(labels_a: list[int], labels_b: list[int]) -> tuple[float, li
     proportionally more than adjacent ones (e.g. 2 vs 3), per PR-E spec §7."""
     n = len(labels_a)
     confusion = [[0] * _NUM_GRADES for _ in range(_NUM_GRADES)]
-    for a, b in zip(labels_a, labels_b):
+    for a, b in zip(labels_a, labels_b, strict=True):
         confusion[a][b] += 1
 
     # n=0, or every judgment sharing the same grade (no expected variance to
@@ -63,7 +63,7 @@ def _binary_kappa(labels_a: list[int], labels_b: list[int]) -> float:
         return float("nan")
     bin_a = [1 if g >= 2 else 0 for g in labels_a]
     bin_b = [1 if g >= 2 else 0 for g in labels_b]
-    observed_agreement = sum(1 for a, b in zip(bin_a, bin_b) if a == b) / n
+    observed_agreement = sum(1 for a, b in zip(bin_a, bin_b, strict=True) if a == b) / n
 
     p_a1 = sum(bin_a) / n
     p_b1 = sum(bin_b) / n
@@ -112,7 +112,7 @@ def compute_iaa(
 
     disagreements = [
         Disagreement(demand_id=k[0], publication_id=k[1], grade_a=ga, grade_b=gb)
-        for k, ga, gb in zip(ordered_keys, labels_a, labels_b)
+        for k, ga, gb in zip(ordered_keys, labels_a, labels_b, strict=True)
         if ga != gb
     ]
 

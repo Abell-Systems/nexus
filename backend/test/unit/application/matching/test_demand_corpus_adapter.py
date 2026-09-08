@@ -1,6 +1,6 @@
+from application.matching.demand_corpus_adapter import demand_corpus_item_to_demand_record
 from domain.models.demand import SpanishOriginLevel
 from domain.models.evaluation import DemandCorpusItem, EvaluationProvenance
-from application.matching.demand_corpus_adapter import demand_corpus_item_to_demand_record
 
 
 def _corpus_item(**overrides) -> DemandCorpusItem:

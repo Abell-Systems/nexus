@@ -2,9 +2,9 @@ import math
 
 import pytest
 
+from application.evaluation.iaa import compute_iaa
 from domain.models.annotation import AnnotationJudgment
 from domain.models.evaluation import RelevanceGrade
-from application.evaluation.iaa import compute_iaa
 
 
 def _judgment(demand_id, pub_id, annotator, grade) -> AnnotationJudgment:

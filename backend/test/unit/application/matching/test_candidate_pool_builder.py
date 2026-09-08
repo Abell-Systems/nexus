@@ -1,11 +1,10 @@
 import duckdb
 import pytest
 
+from application.matching.candidate_pool_builder import CandidatePoolBuilder
 from domain.models.demand import DemandSignal
 from domain.models.matching import Candidate, EligibilityReason, RetrievalMethod
-from domain.models.patent import PatentDocument
 from domain.protocols.matching import PatentEligibilityPolicy
-from application.matching.candidate_pool_builder import CandidatePoolBuilder
 
 
 class _FakeRetriever:
