@@ -15,9 +15,17 @@ from datetime import date, timedelta
 from typing import Literal
 
 from domain.protocols.sources import RawPayload
-from infrastructure.sources.patent.ops_pagination import fetch_all_ops_batches, peek_total_result_count
+from infrastructure.sources.patent.ops_pagination import (
+    _PaginatedPatentSource,
+    fetch_all_ops_batches,
+    peek_total_result_count,
+)
 
 PartitionLevel = Literal["jurisdiction", "year", "month"]
+
+# PR-E0.1 contract §7: OPS-adapter working assumption, not a domain fact -- see
+# enumerate_partition_tree's default and the spec's confidence note.
+OPS_RETRIEVAL_CEILING: int = 2000
 
 
 @dataclass(frozen=True)
@@ -40,6 +48,8 @@ def build_root_partitions(
     query-space coverage, before any subdivision)."""
     if window_start > window_end:
         raise ValueError(f"window_start ({window_start}) must be <= window_end ({window_end})")
+    if not jurisdictions:
+        raise ValueError("jurisdictions must be a non-empty list")
     return [
         DatePartition(jurisdiction=j, start_date=window_start, end_date=window_end, level="jurisdiction")
         for j in jurisdictions
@@ -173,11 +183,11 @@ class PartitionFetchResult:
 
 
 def enumerate_partition_tree(
-    client,
+    client: _PaginatedPatentSource,
     jurisdictions: list[str],
     window_start: date,
     window_end: date,
-    ceiling: int = 2000,
+    ceiling: int = OPS_RETRIEVAL_CEILING,
 ) -> PartitionFetchResult:
     """Drive `partition()` using real OPS total-result-count peeks, then fully
     enumerate every eligible leaf via `fetch_all_ops_batches`, returning the union
@@ -186,8 +196,9 @@ def enumerate_partition_tree(
     Fail-closed at both stages (contract §5.4): a NonEnumerablePartitionError from
     `partition()`, or a RuntimeError from any leaf's `fetch_all_ops_batches` call,
     propagates immediately -- no partial result is ever returned. `ceiling`'s default
-    (2000) is the OPS-adapter's working assumption (contract §7), not a domain fact;
-    override it explicitly once PR-E0.2's live integration test confirms or corrects it.
+    (OPS_RETRIEVAL_CEILING) is the OPS-adapter's working assumption (contract §7), not
+    a domain fact; override it explicitly once PR-E0.2's live integration test confirms
+    or corrects it.
     """
 
     def count_fn(p: DatePartition) -> int:

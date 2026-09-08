@@ -32,7 +32,10 @@ from domain.models.evaluation import DataModality, EvaluationProvenance, PatentC
 from domain.models.ingestion import RecordDisposition  # noqa: E402
 from domain.models.patent import PatentDocument  # noqa: E402
 from infrastructure.sources.patent.epo_ops_client import EpoOpsClient  # noqa: E402
-from infrastructure.sources.patent.ops_partitioning import enumerate_partition_tree  # noqa: E402
+from infrastructure.sources.patent.ops_partitioning import (  # noqa: E402
+    OPS_RETRIEVAL_CEILING,
+    enumerate_partition_tree,
+)
 
 OUT_DIR = REPO_ROOT / "data" / "evaluation"
 OUT_BASENAME = "dataset_patent_corpus_p"
@@ -41,16 +44,13 @@ JURISDICTIONS = ["EP", "US", "JP", "CN", "KR", "WO"]
 GRANT_KIND_CODES = frozenset({"B1", "B2"})
 TARGET_N = 50000
 MINIMUM_ACCEPTABLE_N = 5000
-# PR-E0.1 contract §7: OPS-adapter working assumption, not a domain fact -- see
-# enumerate_partition_tree's own default and the spec's confidence note.
-OPS_RETRIEVAL_CEILING = 2000
 DATASET_ID = "nexus-patent-corpus-p-v1"
 SCHEMA_VERSION = "1.0.0"
 DATASET_VERSION = "1.0.0"
 
 # ponytail: OepmXmlNormalizer's own min/max_publication_year defaults (2016-2024) are
 # tuned for the OEPM Spain pipeline it was built for, not this multi-jurisdiction EPO
-# OPS pipeline. The window here is ALREADY enforced by ops_query.build_patent_corpus_cql
+# OPS pipeline. The window here is ALREADY enforced by ops_partitioning.build_partition_cql
 # (pd within ...) -- passing the normalizer's defaults through unchanged would silently
 # re-apply a second, stale window and drop valid documents once run past 2024. Widen the
 # normalizer's own window check to a no-op so window enforcement has exactly one source
@@ -183,11 +183,17 @@ def _has_parseable_publication_date(doc: PatentDocument) -> bool:
 def main() -> None:
     """Run the real EPO OPS ingestion. Requires EPO_OPS_KEY/EPO_OPS_SECRET.
 
-    Enumerates the full ADR 0020 §2 universe via jurisdiction/date partitioning
-    (PR-E0.1, docs/superpowers/specs/2026-09-08-ops-enumeration-partitioning-contract.md)
-    rather than one unpartitioned query -- see enumerate_partition_tree. Fails closed
-    (NonEnumerablePartitionError) if any partition cannot be shown enumerable even at
-    month granularity; produces no output files in that case.
+    Decomposes ADR 0020 §2's universe down to month granularity via jurisdiction/date
+    partitioning (PR-E0.1, docs/superpowers/specs/
+    2026-09-08-ops-enumeration-partitioning-contract.md) -- see enumerate_partition_tree.
+    This does NOT guarantee a real run against the full 6-jurisdiction/10-year scope
+    completes: a real run is EXPECTED to raise NonEnumerablePartitionError for
+    high-volume jurisdictions (US/CN/JP are likely candidates, since their monthly
+    grant+application volume plausibly exceeds the ~2000-record OPS retrieval ceiling
+    even at month level). That is correct fail-closed behavior, not a bug -- resolving
+    it requires an explicit human decision per contract §4 (narrowing the inclusion
+    contract, or a new partitioning approach agreed with the ADR owner), not a code fix.
+    On any NonEnumerablePartitionError this produces no output files.
     """
     window_end = datetime.now(UTC).date()
     try:

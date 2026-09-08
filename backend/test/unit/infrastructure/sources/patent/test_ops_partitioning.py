@@ -1,13 +1,16 @@
 """Unit tests for the jurisdiction -> year -> month partition tree (PR-E0.1 §4)."""
 
-from datetime import date
+from datetime import date, timedelta
 
 import pytest
 
+from domain.protocols.sources import RawPayload
 from infrastructure.sources.patent.ops_partitioning import (
     DatePartition,
     NonEnumerablePartitionError,
+    build_partition_cql,
     build_root_partitions,
+    enumerate_partition_tree,
     partition,
     subdivide,
 )
@@ -28,6 +31,11 @@ def test_build_root_partitions_one_per_jurisdiction_spanning_whole_window():
 def test_build_root_partitions_rejects_inverted_window():
     with pytest.raises(ValueError, match="window_start"):
         build_root_partitions(["EP"], date(2026, 1, 1), date(2016, 1, 1))
+
+
+def test_build_root_partitions_rejects_empty_jurisdictions():
+    with pytest.raises(ValueError, match="jurisdictions"):
+        build_root_partitions([], date(2016, 1, 1), date(2026, 1, 1))
 
 
 def test_subdivide_jurisdiction_into_years_clipped_to_window():
@@ -72,7 +80,7 @@ def test_subdivide_leaves_are_contiguous_and_disjoint():
     for y in years:
         months.extend(subdivide(y))
     for prev, nxt in zip(months, months[1:]):
-        assert prev.end_date < nxt.start_date or prev.end_date == nxt.start_date - __import__("datetime").timedelta(days=1)
+        assert prev.end_date + timedelta(days=1) == nxt.start_date
     assert months[0].start_date == date(2019, 11, 20)
     assert months[-1].end_date == date(2020, 2, 5)
 
@@ -185,9 +193,6 @@ def test_partition_leaf_at_exactly_the_ceiling_is_accepted_not_subdivided():
     assert leaves[0].level == "jurisdiction"
 
 
-from infrastructure.sources.patent.ops_partitioning import build_partition_cql, enumerate_partition_tree
-
-
 def test_build_partition_cql_single_jurisdiction_day_precision():
     p = DatePartition("US", date(2020, 3, 15), date(2020, 6, 10), "year")
     query = build_partition_cql(p)
@@ -209,8 +214,6 @@ class _FakeOpsClient:
             f'<?xml version="1.0"?><ops:world-patent-data xmlns:ops="http://ops.epo.org">'
             f'<ops:biblio-search total-result-count="{self.total}"/></ops:world-patent-data>'
         ).encode()
-        from domain.protocols.sources import RawPayload
-
         yield RawPayload(source_id="epo_ops", batch_id=f"b_{range_start}_{range_end}", payload_bytes=xml, metadata={})
 
 
@@ -239,3 +242,46 @@ def test_enumerate_partition_tree_raises_on_non_enumerable_leaf():
             window_end=date(2020, 1, 31),
             ceiling=2000,
         )
+
+
+def test_partition_recursive_output_is_gapless_across_mixed_depth_leaves():
+    """Regression guard for the coverage invariant (contract §5.1) at the RECURSIVE
+    `partition()` level, not just a single `subdivide()` call: a bug where `partition()`
+    itself drops a sub-range while descending would not be caught by
+    test_subdivide_leaves_are_contiguous_and_disjoint alone."""
+    window_start = date(2020, 1, 1)
+    window_end = date(2021, 12, 31)
+
+    def count_fn(p: DatePartition) -> int:
+        if p.jurisdiction == "EP":
+            return 100  # always under ceiling -> stays at jurisdiction level
+        # US: jurisdiction-level always over ceiling -> subdivide into years.
+        if p.level == "jurisdiction":
+            return 5000
+        if p.level == "year":
+            # 2020 still over ceiling -> subdivide into months; 2021 accepted as-is.
+            return 5000 if p.start_date.year == 2020 else 100
+        return 50  # month level always accepted
+
+    leaves = partition(
+        jurisdictions=["EP", "US"],
+        window_start=window_start,
+        window_end=window_end,
+        count_fn=count_fn,
+        ceiling=2000,
+    )
+    # Mixed depth, as designed: EP is jurisdiction-level, US-2020 is 12 month-level
+    # leaves, US-2021 is a single year-level leaf.
+    levels = {leaf.level for leaf in leaves}
+    assert levels == {"jurisdiction", "year", "month"}
+
+    by_jurisdiction: dict[str, list[DatePartition]] = {}
+    for leaf in leaves:
+        by_jurisdiction.setdefault(leaf.jurisdiction, []).append(leaf)
+
+    for jurisdiction, jleaves in by_jurisdiction.items():
+        jleaves.sort(key=lambda p: p.start_date)
+        assert jleaves[0].start_date == window_start
+        assert jleaves[-1].end_date == window_end
+        for prev, nxt in zip(jleaves, jleaves[1:]):
+            assert prev.end_date + timedelta(days=1) == nxt.start_date

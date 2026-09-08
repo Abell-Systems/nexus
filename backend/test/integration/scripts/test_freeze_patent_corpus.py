@@ -43,6 +43,39 @@ def test_build_patent_corpus_from_fixture_succeeds_below_target():
     assert len(result.corpus.patents) == 4
     assert {p.country_code for p in result.corpus.patents} == {"EP", "US", "JP", "KR"}
     assert result.leaf_count == 6  # one jurisdiction-level leaf each, no subdivision needed
+    # eligible_available_records is NOT inflated by fixture-mode's per-leaf repetition
+    # (every one of the 6 jurisdiction-level leaves returns the same fixture content):
+    # select_frozen_patents's dedup collapses the 6x-repeated identical-content
+    # documents back down before this count is taken. disposition_counts["included"]/
+    # ["excluded"] WOULD be 6x inflated, which is why they are deliberately not
+    # asserted at a specific value here.
+    assert result.eligible_available_records == 4
+
+
+def test_build_patent_corpus_excludes_jurisdictions_outside_whitelist():
+    """The post-normalization jurisdiction-whitelist guard (`doc.country_code not in
+    jurisdictions` in build_patent_corpus) must still fire under the partitioned-fetch
+    code path. KR is deliberately omitted from `jurisdictions` here; fixture-mode
+    ignores each leaf's CQL query and always returns the whole fixture (which contains
+    a KR document) regardless of which jurisdiction/window the leaf nominally
+    represents, so the KR document is fetched by every leaf and must be excluded by
+    the whitelist guard, not by the fetch itself."""
+    client = EpoOpsClient.from_fixture_file(FIXTURE)
+    result = build_patent_corpus(
+        client=client,
+        jurisdictions=["EP", "US", "JP", "CN", "WO"],  # KR omitted deliberately
+        window_start=date(2016, 1, 1),
+        window_end=date(2026, 12, 31),
+        ceiling=2000,
+        target_n=50000,
+        minimum_acceptable_n=1,
+        dataset_id="nexus-patent-corpus-p-test",
+        dataset_version="0.0.1-test",
+        description="test run over fixture, partitioned",
+    )
+
+    assert "KR" not in {p.country_code for p in result.corpus.patents}
+    assert result.disposition_counts["excluded_jurisdiction_or_window"] >= 1
 
 
 def test_build_patent_corpus_raises_below_floor():
