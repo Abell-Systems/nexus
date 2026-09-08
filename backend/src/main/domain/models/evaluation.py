@@ -217,6 +217,53 @@ class DemandCorpus(BaseModel):
         return self
 
 
+class PatentCorpusItem(BaseModel):
+    """Frozen patent record for the demand-blind patent-side experimental artifact (ADR 0020).
+
+    Field set matches PatentDocument's core retrieval/eligibility-relevant fields, not its
+    full shape (ADR 0020 §5 explicitly does not require reusing PatentDocument's exact
+    schema) -- enough for a later PR-E1 step to map 1:1 into PatentDocument for retrieval.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    publication_id: str = Field(min_length=1)
+    country_code: str = Field(min_length=2, max_length=2)
+    kind_code: str = Field(min_length=1)
+    title: str = Field(min_length=1)
+    abstract: str = Field(min_length=1)
+    publication_date: str | None = None
+    classifications_cpc: list[str] = Field(default_factory=list)
+    provenance: EvaluationProvenance
+
+
+class PatentCorpus(BaseModel):
+    """Frozen, demand-blind patent corpus (ADR 0020's `P`).
+
+    Composition is fixed by jurisdiction + grant + temporal-window inclusion contract
+    (ADR 0020 §2) and sha256(publication_id)-order selection (ADR 0020 §3) -- never by
+    any demand-side property. See scripts/freeze_patent_corpus.py for the construction
+    pipeline that produces this artifact.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    dataset_id: str = Field(min_length=1)
+    schema_version: str = Field(min_length=1)
+    dataset_version: str = Field(min_length=1)
+    description: str = Field(min_length=1)
+    patents: list[PatentCorpusItem] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_unique_publication_ids(self) -> "PatentCorpus":
+        seen: set[str] = set()
+        for p in self.patents:
+            if p.publication_id in seen:
+                raise ValueError(f"Duplicate publication_id in corpus: {p.publication_id}")
+            seen.add(p.publication_id)
+        return self
+
+
 class EvaluationDatasetManifest(BaseModel):
     """External descriptor and cryptographic identity for an evaluation dataset."""
 
