@@ -10,6 +10,7 @@ venv/
 coverage*.xml
 coverage/
 htmlcov/
+project_status.json
 
 # --- Node / frontend ---
 node_modules/
