@@ -21,6 +21,8 @@ if str(_REPO_ROOT / "scripts") not in sys.path:
 
 from audit_project_status import (  # noqa: E402
     ALLOWED_SOURCE_EVENTS,
+    README_STATUS_END,
+    README_STATUS_START,
     REQ_OPTIONAL,
     REQ_REQUIRED,
     STATUS_FAIL,
@@ -35,6 +37,8 @@ from audit_project_status import (  # noqa: E402
     build_project_status,
     evaluate_coverage_xml,
     generate_markdown_report,
+    generate_readme_status_snippet,
+    update_readme_status,
 )
 
 _REPO_ROOT = Path(__file__).resolve().parents[4]
@@ -288,3 +292,66 @@ class TestHistoricalTelemetry:
 
         # Invariant 1: history is secondary output, overall_status cannot be changed
         assert sample_payload["overall_status"] == original_status
+
+
+class TestReadmeObservatory:
+    def test_generate_readme_status_snippet(self) -> None:
+        payload = {
+            "schema_version": "1.0.0",
+            "commit_sha": "abcdef1234567890abcdef1234567890abcdef12",
+            "evaluated_at": "2026-09-08T18:30:00Z",
+            "overall_status": STATUS_PASS,
+            "aggregation_rule": "all required pass",
+            "dimensions": {
+                "architecture": {"status": STATUS_PASS},
+                "backend_testing": {
+                    "status": STATUS_PASS,
+                    "checks": [{"value": 566}],
+                },
+                "backend_coverage": {
+                    "status": STATUS_PASS,
+                    "metrics": {"line_coverage": 80.24},
+                },
+                "documentation": {"status": STATUS_PASS},
+                "scientific_integrity": {"status": STATUS_PASS},
+                "sonar_cloud": {"status": STATUS_UNVERIFIED},
+            },
+        }
+
+        snippet = generate_readme_status_snippet(payload)
+        assert README_STATUS_START in snippet
+        assert README_STATUS_END in snippet
+        assert "Project_Status-PASS" in snippet
+        assert "Tests-566_passed" in snippet
+        assert "Coverage-80.24%25" in snippet
+        assert "SonarCloud-UNVERIFIED-yellow" in snippet
+        assert "Verified against:** `abcdef1234` · `2026-09-08T18:30:00Z`" in snippet
+
+    def test_update_readme_status_success(self, tmp_path: Path) -> None:
+        readme = tmp_path / "README.md"
+        readme.write_text(
+            "# Title\n\n"
+            f"{README_STATUS_START}\nOld content\n{README_STATUS_END}\n\n"
+            "## Section\nContent",
+            encoding="utf-8",
+        )
+        payload = {
+            "schema_version": "1.0.0",
+            "commit_sha": "abcdef1234567890",
+            "evaluated_at": "2026-09-08T18:30:00Z",
+            "overall_status": STATUS_PASS,
+            "dimensions": {},
+        }
+        res = update_readme_status(readme, payload)
+        assert res is True
+        content = readme.read_text(encoding="utf-8")
+        assert "Old content" not in content
+        assert "Project_Status-PASS" in content
+        assert "## Section\nContent" in content
+
+    def test_update_readme_status_missing_delimiters(self, tmp_path: Path) -> None:
+        readme = tmp_path / "README.md"
+        readme.write_text("# Title\nNo delimiters", encoding="utf-8")
+        res = update_readme_status(readme, {"overall_status": STATUS_PASS})
+        assert res is False
+        assert readme.read_text(encoding="utf-8") == "# Title\nNo delimiters"
