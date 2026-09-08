@@ -50,14 +50,14 @@ N=39 frozen demand corpus (dataset_phase2_demand_corpus_n39.json)
        │  application/evaluation/         │
        │  candidate_pool_builder.py       │
        │                                  │
-       │ inputs: demand, temporal_pool_mode (explicit, no default) │
+       │ inputs: demand, eligibility_policy: PatentEligibilityPolicy (explicit, no default) │
        │                                  │
        │ BM25.retrieve(limit=20)          │
        │ CPC.retrieve(limit=20)           │
        │ Semantic.retrieve(limit=20)      │
        │        ↓ union                   │
-       │ DefaultPatentEligibilityPolicy   │
-       │ (per temporal_pool_mode)         │
+       │ eligibility_policy.evaluate()    │
+       │ (injected DefaultPatentEligibilityPolicy) │
        │        ↓                         │
        │ CandidatePool (existing model:   │
        │  dedup + cap enforced already)   │
@@ -102,7 +102,7 @@ N=39 frozen demand corpus (dataset_phase2_demand_corpus_n39.json)
 
 ## 5. Contract rules (from review)
 
-1. `CandidatePoolBuilder` takes `temporal_pool_mode` as an explicit required argument (ADR 0005 explicit-injection pattern, same as `DefaultMatchingAdapter`'s `bm25_k1`/`bm25_b`) — no silent default.
+1. `CandidatePoolBuilder` MUST receive an explicit `PatentEligibilityPolicy` dependency (ADR 0005 explicit-injection pattern, same as `DefaultMatchingAdapter`'s `bm25_k1`/`bm25_b`) — no silent default, and the builder MUST NOT select, infer, or default an eligibility mode itself; eligibility is delegated entirely to the injected policy. **Correction from initial review:** `temporal_pool_mode` (`strict`/`unconstrained`, ADR 0018) is a sealed-evaluation-runner concept (`application/evaluation/runner.py`, operating over an already-annotated `EvaluationExecutionContext`) — it has no equivalent at the live-retrieval layer, where `DefaultPatentEligibilityPolicy` already enforces temporal prior-art eligibility unconditionally. PR-E injects the existing `DefaultPatentEligibilityPolicy` as-is; it does not invent or plumb through a `temporal_pool_mode` string.
 2. Hard boundary at `BlindExport`: everything after it (`AnnotationBatch` and downstream) MUST NOT contain `retrieval_scores`, `RetrievalMethod`, or original ranking/position. Internal `CandidatePool` may retain `retrieval_scores` before the boundary.
 3. Shuffle order is deterministic and reproducible: same `blind_export_seed` + same pool → byte-identical export order. Enables regenerating the batch without changing what an annotator saw.
 4. CPC-auto card is auxiliary evidence only — contractually not a recommendation, not a score, and must not reveal which retriever(s) surfaced the candidate.
@@ -137,7 +137,7 @@ Primary IAA metric: weighted Cohen's κ (penalizes distant disagreements like 0-
 
 ## 8. Testing
 
-- `CandidatePoolBuilder`: union without duplication, cap respected, eligibility policy applied per explicit `temporal_pool_mode` (most invariants already covered by the existing `CandidatePool` model — new tests target the orchestration, not re-testing the model).
+- `CandidatePoolBuilder`: union without duplication, cap respected, eligibility policy applied via the injected `PatentEligibilityPolicy` (most invariants already covered by the existing `CandidatePool` model — new tests target the orchestration, not re-testing the model).
 - `iaa.py`: weighted κ against known worked examples; confusion matrix correctness.
 - Blindness tests (highest priority):
   - Export contains no `retrieval_scores`.
