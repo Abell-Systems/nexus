@@ -16,20 +16,22 @@ This document is the contract for that execution. It exists so that human decisi
 
 **Out of scope (unchanged from the instrument spec):** the full 39-demand corpus, DEV/TEST split, any M0/M1/M2 efficacy claim, statistical testing (Wilcoxon/paired bootstrap/BH) — all PR-F.
 
-## 3. The 8 steps, and who owns each
+## 3. The 7 steps, and who owns each
+
+(Originally 8 — step 3, embedding generation, is struck through below: §6 resolves it as deferred, not executed in this dry-run.)
 
 | # | Step | Owner | Artifact |
 |---|---|---|---|
 | 1 | Propose 6–8 demands from N=39, justified against selection criteria (§4) | **Me — proposal only** | `docs/annotation/phase2-dry-run-selection.md` (draft) |
 | 2 | Final demand selection | **Valentín + Lydia** | same file, finalized |
-| 3 | Generate frozen embedding artifact for the selected demands | Me (script), same pattern as `embeddings_pilot_benchmark.json` (ADR 0014) | `data/evaluation/embeddings_phase2_dry_run.json` + manifest/hash — **blocked on §6 open question** |
+| 3 | ~~Generate frozen embedding artifact~~ — **resolved (§6): deferred, not part of this dry-run** | — | — |
 | 4 | Write annotation guide: 0-3 scale, worked examples | **Me — draft only** | `docs/annotation/phase2-guide.md` (draft) |
 | 5 | Fix operational criteria for 1↔2 and 2↔3 boundaries | **Valentín + Lydia** | same file, finalized |
-| 6 | Build the independent candidate pool per demand (BM25 top-20 ∪ CPC top-20 ∪ semantic top-20 → dedup → eligibility) and the single frozen `AnnotationBatch` per demand | Me (script, using #56's `CandidatePoolBuilder`/`build_annotation_batch` directly — no new library code) | `data/annotation/dry_run/batch_<demand_id>.json` |
+| 6 | Build the independent candidate pool per demand (BM25 top-20 ∪ CPC top-20 → dedup → eligibility) and the single frozen `AnnotationBatch` per demand | Me (script, using #56's `CandidatePoolBuilder`/`build_annotation_batch` directly — no new library code) | `data/annotation/dry_run/batch_<demand_id>.json` |
 | 7 | Independent annotation | **Valentín + Lydia, separately, no shared judgments, pool/batch frozen and untouched** | `data/annotation/dry_run/judgments_valentin.json`, `judgments_lydia.json` (hashed, frozen — same pattern as the N=39 corpus artifacts) |
 | 8 | Compute IAA (`compute_iaa`, already merged) and review confusion matrix | Me (run the calculator) — **interpretation and the freeze/revise decision is Valentín + Lydia's** | `data/annotation/dry_run/iaa_report.json` + written summary |
 
-Steps 3 and 6 are mechanical once their inputs (finalized demand list, finalized guide) exist — no new production code beyond what #56 already merged, plus small orchestration scripts (same category as `scripts/freeze_phase2_demand_corpus.py`).
+Step 6 is mechanical once its inputs (finalized demand list, finalized guide) exist — no new production code beyond what #56 already merged, plus a small orchestration script (same category as `scripts/freeze_phase2_demand_corpus.py`).
 
 ## 4. Demand selection criteria (for step 1's proposal — not the final decision)
 
@@ -38,24 +40,30 @@ Per the design agreed for the instrument itself: this is a **stress test of the 
 - Technical/domain diversity across the 6-8.
 - Lexical ambiguity (terms with multiple plausible technical readings).
 - At least one or two demands where CPC concordance is likely to carry real signal (a well-populated `target_cpc_prefixes`).
-- Demands where BM25/CPC/semantic are likely to diverge (different candidates surfaced by different methods) — deliberately sought out, not avoided.
+- Demands where BM25 and CPC are likely to diverge (different candidates surfaced by the two methods) — deliberately sought out, not avoided.
+
+**Scope note (per §6's resolution): semantic-retriever divergence is not evaluated in this dry-run.** A corpus-wide semantic embedding pipeline (populating patent embeddings over an open, unbounded candidate universe) is future infrastructure — see §6 — and is not introduced solely to satisfy PR-E. The independent pool for this dry-run is `top-20 BM25 ∪ top-20 CPC → dedup → eligibility`, not the three-way union originally envisioned. This still exercises pool independence from M0/M1/M2, heterogeneous-retriever union, dedup, `AnnotationPoolEligibilityPolicy`, blind export, batch freezing, independent annotation, and IAA — everything this phase needs to validate. It does not let PR-F later claim the dry-run validated the semantic retriever's contribution to the pool; that remains open.
 - **Practical filter, discovered during instrument planning (ADR 0019):** all 39 demands have `posted_date: null`. Wayback Machine gave a confirmed upper-bound capture for 6 of them (`INNOGET-1625/1689/1932/1935/1972/2258`) — preferring some of these in the proposal narrows the `TEMPORAL_UNKNOWN` fraction of the dry-run pool, which is useful for exercising the `ELIGIBLE`/`EXCLUDED_TEMPORAL` branches too, not just `TEMPORAL_UNKNOWN`. Not a hard requirement — a proposal of all-`TEMPORAL_UNKNOWN` demands would still be valid, just less informative about the eligibility policy's other branches.
 
 ## 5. Guide draft criteria (for step 4's draft — not the final boundaries)
 
 Ordinal 0-3 (spec §7, unchanged): 0 not relevant, 1 marginally relevant, 2 relevant, 3 highly relevant. The draft will propose example pairs per grade and a first pass at 1↔2/2↔3 language, but **§7's non-negotiable statement stands**: annotators grade technical relevance, not temporal/prior-art eligibility, and the guide draft must not smuggle date-based reasoning into the grading criteria (consistent with removing `publication_date` from the annotator-facing evidence in #56's review).
 
-## 6. Open question: does `FrozenEmbeddingArtifact` fit the dry-run corpus?
+## 6. Resolved: semantic retriever is deferred, not adapted into `FrozenEmbeddingArtifact`
 
-Checked against the real model (`domain/models/evaluation.py::FrozenEmbeddingArtifact`) before assuming it applies: it requires `dataset_sha256` — validated (`verify_source_dataset`) against an already-loaded `ValidatedDataset`, which wraps a sealed `EvaluationDataset` (patents + annotations already present). The N=39 corpus is a `DemandCorpus` (pre-annotation, pre-patent-pairing) — a different, earlier-stage sealed type. There is no `EvaluationDataset` for the dry-run yet, because producing the annotations *is* this phase's goal.
+**Original question:** does `FrozenEmbeddingArtifact` fit the dry-run corpus, and if not, do we extend it or create a PR-E-specific type?
 
-**This must be resolved before step 3, not assumed — and not resolved by picking whichever option is less code.**
+**What inspection of the real code found — deeper than an identity/hash mismatch:**
 
-> **`FrozenEmbeddingArtifact` is not modified, and no second embedding-artifact contract is created, until the question below is answered.**
+1. `FrozenEmbeddingArtifact.verify_source_dataset` (`domain/models/evaluation.py`) requires `patent_embeddings`' keys to *exactly match* a sealed `ValidatedDataset`'s publication_ids — a **closed, predetermined patent universe**. Confirmed against the real pilot artifact (`data/evaluation/embeddings_pilot_benchmark.json`): 3 demand embeddings, 15 patent embeddings, exactly the sealed 45-pair benchmark's patents. This type is architecturally scoped to sealed evaluation (`application/evaluation/matching_adapter.py`'s raw-cosine path) — not a coincidence of the dataset it happens to reference.
+2. `DuckDbDenseSemanticRetriever` (`infrastructure/matching/dense_semantic.py`) — the live retriever `CandidatePoolBuilder` would need for a semantic branch — requires the opposite shape: a *live* `TextEmbedder` call for the demand at retrieval time, and patent embeddings pre-loaded into a DuckDB column over an **open, not-predetermined universe** (whatever the table holds, since which patents end up in any given demand's pool is discovered by retrieval, not known in advance).
+3. **No pipeline in this codebase populates that embedding column outside the retriever's own isolated vertical-slice test** (`backend/test/integration/infrastructure/matching/test_dense_semantic_vertical_slice.py`) — it has never been wired to a real corpus or used in production.
 
-The question to answer first is not "how do we make the model accept a `DemandCorpus`" — it's **what entity is this dry-run scientifically freezing**. Here, the artifact is demand embeddings for a *selected subset*, produced *before any judgment exists* — conceptually `embedding artifact → (N=39 DemandCorpus identity, selection identity, model/pipeline identity)`, not `embedding artifact → ValidatedDataset` (which presupposes patents + annotations already sealed, the thing this phase is producing evidence toward, not starting from). Extending `FrozenEmbeddingArtifact` to accept a `DemandCorpus` risks a bad abstraction — a demand-stage artifact wearing an evaluation-dataset-stage artifact's shape — not just a validation-path change.
+**Decision:** the closed-universe/open-universe mismatch means extending `FrozenEmbeddingArtifact` would misapply a sealed-evaluation-shaped contract to a live-retrieval problem — a bad abstraction regardless of whose identity it binds to, not merely a validation-path fix. Building the missing open-corpus embedding pipeline (embedding the full ES patent snapshot, persisting it, keeping it reproducible/updatable) is real, non-trivial infrastructure work — scoping it into this execution phase would silently expand PR-E from *validating the annotation instrument* into *building semantic retrieval infrastructure for the first time*, two different problems.
 
-This is left an **open architectural decision**, with that framing as its resolution criterion, to be settled explicitly (in writing, one paragraph is enough) before step 3 starts — not discovered mid-script.
+**Resolution: the semantic retriever is deferred out of this dry-run entirely.** The independent pool for PR-E's dry-run is `top-20 BM25 ∪ top-20 CPC → dedup → eligibility` (§4 updated accordingly). `FrozenEmbeddingArtifact` is not modified. No second embedding-artifact type is created. Step 3 (embedding generation) is removed from §3's table.
+
+**Future work — Open-Corpus Semantic Retrieval (not PR-E, not PR-F, tracked separately):** `patent corpus → embedding generation → persistent embedding store → DuckDbDenseSemanticRetriever → validation → reproducibility/incremental-update policy`. Deciding how to freeze/version embeddings over an open, growing universe is a real architectural problem in its own right and deserves its own spec/ADR when it's actually needed — not one forced open now to unblock a dry-run that doesn't require it.
 
 ## 7. What gets versioned
 
@@ -66,7 +74,7 @@ Two different statuses, not one undifferentiated "committed and hashed":
 
 ## 8. Entry / exit criteria
 
-**Entry to step 6 (pool/batch generation):** steps 2 and 5 finalized (demand list and guide boundaries signed off by Valentín + Lydia), §6's open question resolved.
+**Entry to step 6 (pool/batch generation):** steps 2 and 5 finalized (demand list and guide boundaries signed off by Valentín + Lydia). §6 is resolved (semantic deferred) — no longer a blocker.
 
 **Entry to step 7 (annotation):** step 6's batches frozen and hashed.
 
