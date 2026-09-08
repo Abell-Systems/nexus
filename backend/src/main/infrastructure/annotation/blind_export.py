@@ -46,7 +46,10 @@ def build_annotation_batch(
     """
     publication_ids = [c.publication_id for c in pool.candidates]
     order = list(publication_ids)
-    random.Random(seed).shuffle(order)  # NOSONAR(python:S2245) -- deterministic reproducible shuffle for annotation-batch ordering, not security-sensitive
+    # Deterministic reproducible shuffle for annotation-batch ordering, not
+    # security-sensitive (python:S2245 suppressed for this file in
+    # sonar-project.properties -- inline NOSONAR doesn't suppress this rule).
+    random.Random(seed).shuffle(order)
 
     entries = []
     for pub_id in order:
