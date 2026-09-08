@@ -10,12 +10,12 @@ import { AgentActivityFeed } from "./AgentActivityFeed";
 import styles from "./ExecutionView.module.css";
 
 interface ExecutionViewProps {
-  domain: string;
-  stage: PipelineStage;
-  progress?: JobProgress;
-  events?: AgentEventItem[];
-  verdicts?: AdversarialVerdict[];
-  candidates?: InventionCandidate[];
+  readonly domain: string;
+  readonly stage: PipelineStage;
+  readonly progress?: JobProgress;
+  readonly events?: AgentEventItem[];
+  readonly verdicts?: AdversarialVerdict[];
+  readonly candidates?: InventionCandidate[];
 }
 
 export function ExecutionView({

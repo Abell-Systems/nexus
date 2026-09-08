@@ -7,6 +7,8 @@ import duckdb
 
 from domain.models.runtime_schemas import PatentRecord
 
+_DUCKDB_IN_MEMORY = ":memory:"
+
 
 class DuckDbPatentsDataSource:
     def __init__(self, db_path: str = "data/snapshots/patents_es_snapshot.duckdb", read_only: bool = True):
@@ -14,13 +16,13 @@ class DuckDbPatentsDataSource:
         if Path(db_path).exists():
             self._conn = duckdb.connect(db_path, read_only=read_only)
         else:
-            self._conn = duckdb.connect(":memory:")
+            self._conn = duckdb.connect(_DUCKDB_IN_MEMORY)
 
     @classmethod
     def from_parquet(cls, parquet_path: str | Path) -> "DuckDbPatentsDataSource":
         instance = cls.__new__(cls)
-        instance.db_path = ":memory:"
-        instance._conn = duckdb.connect(":memory:")
+        instance.db_path = _DUCKDB_IN_MEMORY
+        instance._conn = duckdb.connect(_DUCKDB_IN_MEMORY)
         parquet_posix = Path(parquet_path).resolve().as_posix()
         instance._conn.execute(f"CREATE VIEW patents AS SELECT * FROM read_parquet('{parquet_posix}')")
         return instance

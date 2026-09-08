@@ -47,8 +47,8 @@ def build_annotation_batch(
     publication_ids = [c.publication_id for c in pool.candidates]
     order = list(publication_ids)
     # Deterministic reproducible shuffle for annotation-batch ordering, not
-    # security-sensitive (python:S2245 suppressed for this file in
-    # sonar-project.properties -- inline NOSONAR doesn't suppress this rule).
+    # security-sensitive. Rule python:S2245 is suppressed project-wide via
+    # sonar-project.properties; inline NOSONAR does not work for this rule.
     random.Random(seed).shuffle(order)
 
     entries = []

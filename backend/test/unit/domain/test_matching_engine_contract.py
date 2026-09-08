@@ -153,7 +153,8 @@ def test_default_matching_engine_full_evaluation_and_determinism():
     assert top.confidence in (MatchConfidence.STRONG, MatchConfidence.MODERATE)
     assert top.sufficiency == EvidenceSufficiency.SUFFICIENT
     assert top.features.temporal_valid is True
-    assert top.features.delta_days is not None and top.features.delta_days > 0
+    assert top.features.delta_days is not None
+    assert top.features.delta_days > 0
     assert "solid-state" in top.features.shared_terms
     assert top.policy_sha256 == policy.policy_sha256
 

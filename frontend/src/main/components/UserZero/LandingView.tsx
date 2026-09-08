@@ -3,9 +3,9 @@ import { AbellMark, BrandHeader } from "../shared/BrandHeader";
 import styles from "./LandingView.module.css";
 
 interface LandingViewProps {
-  onStartAnalysis: (domain: string, query: string) => void;
-  onOpenHistory?: () => void;
-  isLoading?: boolean;
+  readonly onStartAnalysis: (domain: string, query: string) => void;
+  readonly onOpenHistory?: () => void;
+  readonly isLoading?: boolean;
 }
 
 function SearchIcon() {

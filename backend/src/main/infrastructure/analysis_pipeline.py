@@ -44,9 +44,11 @@ from infrastructure.telemetry import PipelineProfiler  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
+_DOMAIN_SLUG_DESC = "Domain slug"
+
 
 class AnalyzeRequest(BaseModel):
-    domain: str = Field(..., description="Domain slug")
+    domain: str = Field(..., description=_DOMAIN_SLUG_DESC)
     query: str = Field(..., description="Invention prompt / target direction")
     cluster_id: str | None = Field(None, description="Optional cluster to analyze")
 
@@ -185,8 +187,6 @@ async def _handle_candidate_state(job_id: str, cands: list, seen_candidates: set
     validated_cands = _validated(InventionCandidate, cands)
     await _job_store.update_progress(job_id, "candidatesGenerated", len(cands))
     for cand in cands:
-        c_id = "unknown"
-        cand_title = ""
         if isinstance(cand, dict):
             c_id = str(cand.get("candidate_id", "unknown"))
             cand_title = cand.get("title", "")
@@ -195,6 +195,7 @@ async def _handle_candidate_state(job_id: str, cands: list, seen_candidates: set
             cand_title = getattr(cand, "title", "")
         else:
             c_id = str(cand)
+            cand_title = ""
 
         if c_id not in seen_candidates:
             seen_candidates.add(c_id)

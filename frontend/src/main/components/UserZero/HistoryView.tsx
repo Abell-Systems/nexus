@@ -5,8 +5,8 @@ import { BrandHeader } from "../shared/BrandHeader";
 import styles from "./HistoryView.module.css";
 
 interface HistoryViewProps {
-  onOpenJob: (jobId: string) => void;
-  onBack: () => void;
+  readonly onOpenJob: (jobId: string) => void;
+  readonly onBack: () => void;
 }
 
 function formatDate(iso: string | null): string {

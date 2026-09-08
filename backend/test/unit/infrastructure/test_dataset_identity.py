@@ -70,7 +70,8 @@ class DatasetIdentityAuditTest:
         assert report["snapshots_total_records"] == 16
         assert report["snapshots_only_ids"] == ["ES-2918450-A1"]
         non_temporal = [c for c in report["checks"] if c["check"] != "temporal_eligibility"]
-        assert non_temporal and all(c["status"] == "PASS" for c in non_temporal)
+        assert non_temporal
+        assert all(c["status"] == "PASS" for c in non_temporal)
 
     def test_should_freeze_known_temporal_violations(self, tmp_path: Path) -> None:
         report = _run_audit(tmp_path / "audit.json")

@@ -31,6 +31,7 @@ from infrastructure.api_dependencies import (
 )
 
 _background_tasks: set[asyncio.Task] = set()
+_DOMAIN_SLUG_DESC = "Domain slug"
 
 # get_fast_api_app() (in api_dependencies.py) already registers its own GET /health route as
 # part of building the ADK scaffold app. Starlette matches routes in registration order, so
@@ -74,7 +75,7 @@ async def health_check():
 @app.get("/api/landscape")
 async def get_research(
     query: str = Query(..., description="Query string for patent search"),
-    domain: str = Query(..., description="Domain slug"),
+    domain: str = Query(..., description=_DOMAIN_SLUG_DESC),
     max_results: int = Query(20, ge=1, le=100),
 ):
     _check_domain_supported(domain)
@@ -89,7 +90,7 @@ async def get_research(
 
 @app.get("/api/demands")
 async def get_demands(
-    domain: str = Query(..., description="Domain slug"),
+    domain: str = Query(..., description=_DOMAIN_SLUG_DESC),
     cluster_id: str | None = Query(None, description="Optional cluster CPC prefix to filter demands"),
 ):
     _check_domain_supported(domain)
@@ -109,7 +110,7 @@ async def get_demands(
 @app.get("/api/landscape/demand-patents")
 async def get_patents_for_demand(
     demand_id: str = Query(..., description="Demand signal ID"),
-    domain: str = Query(..., description="Domain slug"),
+    domain: str = Query(..., description=_DOMAIN_SLUG_DESC),
     max_results: int = Query(20, ge=1, le=100),
 ):
     _check_domain_supported(domain)

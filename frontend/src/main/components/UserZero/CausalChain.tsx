@@ -7,11 +7,13 @@ import type {
 } from "../../domain/patent";
 import styles from "./ResultsView.module.css";
 
+const US_PATENT_RE = /\b(US-[A-Za-z0-9-]+)\b/;
+
 export interface CausalChainProps {
-  cluster?: PatentCluster;
-  candidate?: InventionCandidate;
-  verdict?: AdversarialVerdict;
-  scorecard?: ScoreCard;
+  readonly cluster?: PatentCluster;
+  readonly candidate?: InventionCandidate;
+  readonly verdict?: AdversarialVerdict;
+  readonly scorecard?: ScoreCard;
 }
 
 function formatScore(score?: number | null): string {
@@ -34,9 +36,9 @@ export type NodeId =
   | "EVIDENCE";
 
 interface ChainNodeDef {
-  id: NodeId;
-  label: string;
-  shortSummary: string;
+  readonly id: NodeId;
+  readonly label: string;
+  readonly shortSummary: string;
 }
 
 function isCandidateSurvived(
@@ -68,7 +70,7 @@ export function CausalChain({ cluster, candidate, verdict, scorecard }: CausalCh
 
   const extractedPatentsFromEvidence = supportingEvidenceFromScorecard
     .map((item) => {
-      const match = item.match(/\b(US-[A-Za-z0-9-]+)\b/);
+      const match = US_PATENT_RE.exec(item);
       return match ? match[1] : item.trim();
     })
     .filter((item) => item.length > 0 && item.startsWith("US-"));
@@ -86,9 +88,13 @@ export function CausalChain({ cluster, candidate, verdict, scorecard }: CausalCh
     {
       id: "OPPORTUNITY",
       label: "OPPORTUNITY",
-      shortSummary: cluster?.label
-        ? `${cluster.label} (${hasValidWhiteSpaceScore ? `Score: ${formatScore(cluster.white_space_score)}` : "Score: N/A"})`
-        : "Identified White Space",
+      shortSummary: (() => {
+        if (!cluster?.label) return "Identified White Space";
+        const scoreStr = hasValidWhiteSpaceScore
+          ? `Score: ${formatScore(cluster.white_space_score)}`
+          : "Score: N/A";
+        return `${cluster.label} (${scoreStr})`;
+      })(),
     },
     {
       id: "PRIOR ART",
@@ -365,11 +371,19 @@ export function CausalChain({ cluster, candidate, verdict, scorecard }: CausalCh
                     <div className={styles.evidenceSection}>
                       <span className={styles.metaLabel}>Supporting Evidence Citations:</span>
                       <ul className={styles.evidenceList}>
-                        {scorecard.supporting_evidence.map((item, idx) => (
-                          <li key={idx} className={styles.evidenceItem}>
-                            {item}
-                          </li>
-                        ))}
+                        {(() => {
+                          const seen = new Map<string, number>();
+                          return scorecard.supporting_evidence.map((item) => {
+                            const count = (seen.get(item) ?? 0) + 1;
+                            seen.set(item, count);
+                            const stableKey = count === 1 ? item : `${item}__${count}`;
+                            return (
+                              <li key={stableKey} className={styles.evidenceItem}>
+                                {item}
+                              </li>
+                            );
+                          });
+                        })()}
                       </ul>
                     </div>
                   )}
