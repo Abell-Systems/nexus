@@ -17,7 +17,9 @@ def test_build_query_encodes_all_jurisdictions_and_window():
 
 def test_build_query_is_deterministic():
     args = dict(jurisdictions=["EP", "US"], min_publication_year=2020, max_publication_year=2021)
-    assert build_patent_corpus_cql(**args) == build_patent_corpus_cql(**args)
+    first_call = build_patent_corpus_cql(**args)
+    second_call = build_patent_corpus_cql(**args)
+    assert first_call == second_call
 
 
 def test_build_query_rejects_empty_jurisdictions():
