@@ -61,10 +61,7 @@ def _year_bounds(year: int) -> tuple[date, date]:
 
 
 def _month_bounds(year: int, month: int) -> tuple[date, date]:
-    if month == 12:
-        next_month_start = date(year + 1, 1, 1)
-    else:
-        next_month_start = date(year, month + 1, 1)
+    next_month_start = date(year + 1, 1, 1) if month == 12 else date(year, month + 1, 1)
     return date(year, month, 1), next_month_start - timedelta(days=1)
 
 

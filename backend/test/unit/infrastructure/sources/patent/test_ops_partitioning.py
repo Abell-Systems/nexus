@@ -79,7 +79,7 @@ def test_subdivide_leaves_are_contiguous_and_disjoint():
     months: list[DatePartition] = []
     for y in years:
         months.extend(subdivide(y))
-    for prev, nxt in zip(months, months[1:]):
+    for prev, nxt in zip(months, months[1:], strict=False):
         assert prev.end_date + timedelta(days=1) == nxt.start_date
     assert months[0].start_date == date(2019, 11, 20)
     assert months[-1].end_date == date(2020, 2, 5)
@@ -279,9 +279,9 @@ def test_partition_recursive_output_is_gapless_across_mixed_depth_leaves():
     for leaf in leaves:
         by_jurisdiction.setdefault(leaf.jurisdiction, []).append(leaf)
 
-    for jurisdiction, jleaves in by_jurisdiction.items():
+    for _jurisdiction, jleaves in by_jurisdiction.items():
         jleaves.sort(key=lambda p: p.start_date)
         assert jleaves[0].start_date == window_start
         assert jleaves[-1].end_date == window_end
-        for prev, nxt in zip(jleaves, jleaves[1:]):
+        for prev, nxt in zip(jleaves, jleaves[1:], strict=False):
             assert prev.end_date + timedelta(days=1) == nxt.start_date
