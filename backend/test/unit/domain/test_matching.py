@@ -176,6 +176,20 @@ def test_compute_max_cpc_similarity_multi_symbols():
     assert compute_max_cpc_similarity(["C11D1/00"], [], levels=levels) == 0.00
 
 
+class EligibilityReasonTest:
+    def test_should_expose_temporal_unknown_as_eligible_not_excluded(self):
+        result = EligibilityResult(
+            publication_id="ES-9001",
+            is_eligible=True,
+            reason=EligibilityReason.TEMPORAL_UNKNOWN,
+            details="demand.posted_date is unresolvable",
+        )
+        assert result.is_eligible is True
+        assert result.reason == EligibilityReason.TEMPORAL_UNKNOWN
+        assert result.reason != EligibilityReason.ELIGIBLE
+        assert result.reason != EligibilityReason.EXCLUDED_TEMPORAL
+
+
 class BM25ScoringTest:
     """Guards for compute_bm25_scores (ADR 0013 derived_ranking_feature)."""
 
