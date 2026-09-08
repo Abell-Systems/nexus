@@ -29,8 +29,7 @@ def select_frozen_patents(
     from its INCLUDED stream within a single run, but this function is general
     purpose and makes no assumption about its caller). If two input documents
     share a publication_id but differ in content, whichever appears LAST in
-    `documents` silently wins; see
-    test_selection_keeps_last_occurrence_when_same_publication_id_has_different_content.
+    `documents` silently wins.
     """
     unique_by_id = {doc.publication_id: doc for doc in documents}
     eligible_available_records = len(unique_by_id)

@@ -57,10 +57,15 @@ def fetch_all_ops_batches(
 
         page_total = parse_total_result_count(batch.payload_bytes)
         if page_total is None:
+            try:
+                ET.fromstring(batch.payload_bytes)
+                cause = "the response parsed but has no ops:biblio-search total-result-count attribute"
+            except ET.ParseError as e:
+                cause = f"the response XML failed to parse ({e})"
             raise RuntimeError(
                 f"EPO OPS response for range {range_start}-{range_end} is missing "
-                "total-result-count; cannot verify complete enumeration of the eligible "
-                "universe (ADR 0020 §4 enumerability requirement)."
+                f"total-result-count ({cause}); cannot verify complete enumeration of the "
+                "eligible universe (ADR 0020 §4 enumerability requirement)."
             )
         if known_total is None:
             known_total = page_total

@@ -47,7 +47,9 @@ class OepmXmlNormalizer:
         self.target_country = target_country
         self.min_publication_year = min_publication_year
         self.max_publication_year = max_publication_year
-        self.allowed_kind_codes = allowed_kind_codes or NORMATIVE_KIND_CODES
+        self.allowed_kind_codes = (
+            allowed_kind_codes if allowed_kind_codes is not None else NORMATIVE_KIND_CODES
+        )
 
     def normalize_stream(
         self, raw_payload: RawPayload
@@ -238,7 +240,7 @@ class OepmXmlNormalizer:
                     country_code=country_code,
                     kind_code=kind_code,
                     reason=ExclusionReason.UNSUPPORTED_KIND_CODE,
-                    detail=f"Kind code '{kind_code}' is outside normative universe {sorted(self.allowed_kind_codes)}",
+                    detail=f"Kind code '{kind_code}' is outside allowed kind codes {sorted(self.allowed_kind_codes)}",
                     source_uri=source_uri,
                 ),
             )
