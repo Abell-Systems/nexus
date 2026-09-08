@@ -39,9 +39,13 @@ from audit_project_status import (  # noqa: E402
     append_history_entry,
     build_history_entry,
     build_project_status,
+    evaluate_backend_testing,
     evaluate_coverage_xml,
+    evaluate_frontend_testing,
     generate_markdown_report,
     generate_readme_status_snippet,
+    parse_junit_xml,
+    status_badge_color,
     update_readme_status,
 )
 
@@ -156,6 +160,124 @@ class TestEvidenceEvaluation:
         res = evaluate_coverage_xml(missing_file, threshold=0.80)
         assert res.status == STATUS_UNVERIFIED
         assert res.evidence_available is False
+
+    def test_parse_junit_xml_valid(self, tmp_path: Path) -> None:
+        report = tmp_path / "sample-junit.xml"
+        report.write_text(
+            '<?xml version="1.0" encoding="utf-8"?>\n'
+            '<testsuites name="test">\n'
+            '  <testsuite name="suite1" tests="10" failures="1" errors="0" skipped="2" />\n'
+            '  <testsuite name="suite2" tests="5" failures="0" errors="0" skipped="0" />\n'
+            '</testsuites>',
+            encoding="utf-8",
+        )
+        metrics = parse_junit_xml(report)
+        assert metrics["total"] == 15
+        assert metrics["failed"] == 1
+        assert metrics["errors"] == 0
+        assert metrics["skipped"] == 2
+        assert metrics["passed"] == 12
+
+    def test_evaluate_backend_testing_pass(self, tmp_path: Path) -> None:
+        test_dir = tmp_path / "test-results"
+        test_dir.mkdir()
+        (test_dir / "unit.xml").write_text(
+            '<?xml version="1.0" encoding="utf-8"?>\n'
+            '<testsuite name="unit" tests="100" failures="0" errors="0" skipped="2" />',
+            encoding="utf-8",
+        )
+        (test_dir / "integration.xml").write_text(
+            '<?xml version="1.0" encoding="utf-8"?>\n'
+            '<testsuite name="integration" tests="50" failures="0" errors="0" skipped="0" />',
+            encoding="utf-8",
+        )
+        res = evaluate_backend_testing(tmp_path)
+        assert res.status == STATUS_PASS
+        assert res.evidence_available is True
+        assert res.metrics["total"] == 150
+        assert res.metrics["passed"] == 148
+        assert res.metrics["failed"] == 0
+        assert res.metrics["errors"] == 0
+        assert res.metrics["skipped"] == 2
+
+    def test_evaluate_backend_testing_fail_when_failures_exist(self, tmp_path: Path) -> None:
+        test_dir = tmp_path / "test-results"
+        test_dir.mkdir()
+        (test_dir / "unit.xml").write_text(
+            '<?xml version="1.0" encoding="utf-8"?>\n'
+            '<testsuite name="unit" tests="100" failures="2" errors="1" skipped="0" />',
+            encoding="utf-8",
+        )
+        res = evaluate_backend_testing(tmp_path)
+        assert res.status == STATUS_FAIL
+        assert res.evidence_available is True
+        assert res.metrics["failed"] == 2
+        assert res.metrics["errors"] == 1
+        assert "3 failures, 1 errors" not in res.message  # Check exact message format
+        assert "failed: 2 failures, 1 errors" in res.message
+
+    def test_evaluate_backend_testing_unverified_when_only_coverage_exists(self, tmp_path: Path) -> None:
+        """Blocker 1 Invariant: coverage.xml alone is NOT affirmative evidence of test completion."""
+        (tmp_path / "coverage.xml").write_text(
+            '<?xml version="1.0" ?><coverage line-rate="0.85" />', encoding="utf-8"
+        )
+        res = evaluate_backend_testing(tmp_path)
+        assert res.status == STATUS_UNVERIFIED
+        assert res.evidence_available is False
+        assert "unverified" in res.message.lower()
+
+    def test_evaluate_backend_testing_fails_when_zero_tests(self, tmp_path: Path) -> None:
+        test_dir = tmp_path / "test-results"
+        test_dir.mkdir()
+        (test_dir / "unit.xml").write_text(
+            '<?xml version="1.0" encoding="utf-8"?>\n'
+            '<testsuite name="unit" tests="0" failures="0" errors="0" skipped="0" />',
+            encoding="utf-8",
+        )
+        res = evaluate_backend_testing(tmp_path)
+        assert res.status == STATUS_FAIL
+        assert "0 executed tests" in res.message
+
+    def test_evaluate_frontend_testing_pass(self, tmp_path: Path) -> None:
+        cov_dir = tmp_path / "frontend" / "coverage"
+        cov_dir.mkdir(parents=True)
+        (cov_dir / "junit.xml").write_text(
+            '<?xml version="1.0" encoding="utf-8"?>\n'
+            '<testsuites name="vitest tests" tests="40" failures="0" errors="0">\n'
+            '  <testsuite name="suite" tests="40" failures="0" errors="0" skipped="0" />\n'
+            '</testsuites>',
+            encoding="utf-8",
+        )
+        res = evaluate_frontend_testing(tmp_path)
+        assert res.status == STATUS_PASS
+        assert res.evidence_available is True
+        assert res.metrics["total"] == 40
+        assert res.metrics["passed"] == 40
+        assert res.metrics["failed"] == 0
+
+    def test_evaluate_frontend_testing_unverified_when_only_lcov_exists(self, tmp_path: Path) -> None:
+        """Blocker 1 Invariant: lcov.info alone is NOT affirmative evidence of test completion."""
+        cov_dir = tmp_path / "frontend" / "coverage"
+        cov_dir.mkdir(parents=True)
+        (cov_dir / "lcov.info").write_text("TN:\nSF:test.ts\nLF:10\nLH:10\nend_of_record\n", encoding="utf-8")
+        res = evaluate_frontend_testing(tmp_path)
+        assert res.status == STATUS_UNVERIFIED
+        assert res.evidence_available is False
+
+    def test_evaluate_frontend_testing_fail(self, tmp_path: Path) -> None:
+        cov_dir = tmp_path / "frontend" / "coverage"
+        cov_dir.mkdir(parents=True)
+        (cov_dir / "junit.xml").write_text(
+            '<?xml version="1.0" encoding="utf-8"?>\n'
+            '<testsuites name="vitest tests" tests="40" failures="3" errors="0">\n'
+            '  <testsuite name="suite" tests="40" failures="3" errors="0" skipped="0" />\n'
+            '</testsuites>',
+            encoding="utf-8",
+        )
+        res = evaluate_frontend_testing(tmp_path)
+        assert res.status == STATUS_FAIL
+        assert res.evidence_available is True
+        assert res.metrics["failed"] == 3
 
 
 class TestSchemaValidationAndSerialization:
@@ -361,3 +483,51 @@ class TestReadmeObservatory:
         res = update_readme_status(readme, {"overall_status": STATUS_PASS})
         assert res is False
         assert readme.read_text(encoding="utf-8") == "# Title\nNo delimiters"
+
+    def test_status_badge_color_mapping(self) -> None:
+        assert status_badge_color(STATUS_PASS) == "brightgreen"
+        assert status_badge_color(STATUS_FAIL) == "red"
+        assert status_badge_color(STATUS_UNVERIFIED) == "yellow"
+        assert status_badge_color(STATUS_NA) == "lightgrey"
+
+    def test_generate_readme_status_snippet_zero_green_fallbacks_on_empty_payload(self) -> None:
+        """Blocker 3 Invariant: Empty payload MUST NEVER render default green, 566, or 80.0%."""
+        payload = {
+            "schema_version": "1.0.0",
+            "commit_sha": "0123456789abcdef",
+            "evaluated_at": "2026-09-08T18:30:00Z",
+            "overall_status": STATUS_UNVERIFIED,
+            "dimensions": {},
+        }
+        snippet = generate_readme_status_snippet(payload)
+        assert "brightgreen" not in snippet, "Snippet leaked brightgreen with empty dimensions!"
+        assert "566" not in snippet, "Snippet leaked hardcoded 566 test count!"
+        assert "80.0" not in snippet, "Snippet leaked hardcoded 80.0 coverage!"
+        assert "Project_Status-UNVERIFIED-yellow" in snippet
+        assert "CI_Gates-UNVERIFIED-yellow" in snippet
+        assert "Architecture-UNVERIFIED-yellow" in snippet
+        assert "Tests-UNVERIFIED-yellow" in snippet
+        assert "Coverage-UNVERIFIED-yellow" in snippet
+        assert "Docs-UNVERIFIED-yellow" in snippet
+        assert "Scientific_Integrity-UNVERIFIED-yellow" in snippet
+        assert "SonarCloud-UNVERIFIED-yellow" in snippet
+
+    def test_generate_readme_status_snippet_renders_fail_accurately(self) -> None:
+        """Verifies failed dimensions render as red with explicit failed status/metrics."""
+        payload = {
+            "schema_version": "1.0.0",
+            "commit_sha": "0123456789abcdef",
+            "evaluated_at": "2026-09-08T18:30:00Z",
+            "overall_status": STATUS_FAIL,
+            "dimensions": {
+                "backend_testing": {"status": STATUS_FAIL},
+                "backend_coverage": {"status": STATUS_FAIL, "metrics": {"line_coverage": 73.5}},
+                "architecture": {"status": STATUS_FAIL},
+            },
+        }
+        snippet = generate_readme_status_snippet(payload)
+        assert "Project_Status-FAIL-red" in snippet
+        assert "CI_Gates-FAIL-red" in snippet
+        assert "Architecture-FAIL-red" in snippet
+        assert "Tests-FAIL-red" in snippet
+        assert "Coverage-73.5%25-red" in snippet

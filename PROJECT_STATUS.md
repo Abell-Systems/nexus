@@ -1,6 +1,6 @@
 # Nexus Project Status
 
-> **Overall Status:** `[PASS]` | **Commit:** `edb0c732e62594ddf946827414e4ad722e292e2c` | **Evaluated At:** `2026-09-08T16:36:36.933417+00:00`
+> **Overall Status:** `[PASS]` | **Commit:** `2ef0d1b057768b4ceda4b171158dee91f5cc6dd8` | **Evaluated At:** `2026-09-08T16:49:26.613418+00:00`
 
 ![Status](https://img.shields.io/badge/Project_Status-PASS-brightgreen)
 
@@ -13,10 +13,10 @@ Nexus Project Status evaluates to PASS. All required dimensions verified and pas
 
 | Dimension | Level | Status | Evidence Available | Evidence Source | Message / Metric |
 | :--- | :---: | :---: | :---: | :--- | :--- |
-| **backend_testing** | `required` | **`PASS`** | ✓ | `coverage.xml` | Backend test suites completed and produced valid coverage artifact |
-| **backend_coverage** | `required` | **`PASS`** | ✓ | `/home/valentin/code/nexus/coverage.xml` | Line coverage is 80.24% (threshold: 80.0%) |
+| **backend_testing** | `required` | **`PASS`** | ✓ | `pytest-results.xml` | Backend test suites completed successfully: 491 passed, 0 skipped in 491 tests |
+| **backend_coverage** | `required` | **`PASS`** | ✓ | `coverage.xml` | Line coverage is 80.24% (threshold: 80.0%) |
 | **python_quality** | `required` | **`PASS`** | ✓ | `ruff & mypy CLI` | Python static quality status: PASS |
-| **frontend_testing** | `required` | **`PASS`** | ✓ | `frontend/coverage/lcov.info` | Frontend Vitest test suite completed successfully |
+| **frontend_testing** | `required` | **`PASS`** | ✓ | `frontend/coverage/junit.xml` | Frontend Vitest test suite completed successfully: 40 passed in 40 tests |
 | **frontend_coverage** | `required` | **`PASS`** | ✓ | `frontend/coverage/lcov.info` | Frontend line coverage is 90.88% (target: 80.0%) |
 | **frontend_quality** | `required` | **`PASS`** | ✓ | `npm run typecheck & npm run lint` | Frontend quality status: PASS |
 | **architecture** | `required` | **`PASS`** | ✓ | `scripts/check_architecture.py` | Architecture check passed |
@@ -29,7 +29,7 @@ Nexus Project Status evaluates to PASS. All required dimensions verified and pas
 ## Detailed Checks
 
 ### `backend_testing` (`PASS`)
-- `[PASS]` **test_execution** — Backend tests passed successfully during coverage generation
+- `[PASS]` **report_pytest-results** — pytest-results.xml: 491/491 passed (0 failed, 0 errors, 0 skipped)
 
 ### `backend_coverage` (`PASS`)
 - `[PASS]` **line_coverage_threshold** — Line coverage is 80.24% (threshold: 80.0%)
@@ -39,7 +39,7 @@ Nexus Project Status evaluates to PASS. All required dimensions verified and pas
 - `[PASS]` **mypy_typecheck** — 0 type errors
 
 ### `frontend_testing` (`PASS`)
-- `[PASS]` **vitest_execution** — Vitest tests executed and generated coverage report
+- `[PASS]` **vitest_execution** — 40/40 tests passed (0 failures)
 
 ### `frontend_coverage` (`PASS`)
 - `[PASS]` **frontend_line_coverage** — 259/285 lines covered

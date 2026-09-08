@@ -78,11 +78,13 @@ jobs:
         run: npm run lint
       - name: Production Build
         run: npm run build
-      - name: Upload Frontend Coverage Artifact
+      - name: Upload Frontend Coverage & Test Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage-report
-          path: frontend/coverage/lcov.info
+          path: |
+            frontend/coverage/lcov.info
+            frontend/coverage/junit.xml
 
   # 4. Security & Secret Scanning (Parallel with Python/Frontend)
   security-scan:
@@ -121,16 +123,21 @@ jobs:
       - name: Install dependencies
         run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt
       - name: Unit Tests
-        run: pytest backend/test/unit -v --cov=backend/src/main --cov-report=xml:coverage.xml
+        run: pytest backend/test/unit -v --cov=backend/src/main --cov-report=xml:coverage.xml --junitxml=test-results/unit.xml
       - name: Integration Tests
-        run: pytest backend/test/integration -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml
+        run: pytest backend/test/integration -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml --junitxml=test-results/integration.xml
       - name: E2E Reproducibility Gate & Coverage Verification (Strict Fail Under)
-        run: pytest backend/test/e2e -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml --cov-report=term-missing --cov-fail-under=80
+        run: pytest backend/test/e2e -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml --cov-report=term-missing --cov-fail-under=80 --junitxml=test-results/e2e.xml
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage.xml
+      - name: Upload Backend Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-results
+          path: test-results/
       # Raw .coverage data (not the XML) so Sonar gets one correctly-merged report instead of
       # two independent XMLs — see the coverage-merge step in sonar-quality-gate for why.
       # include-hidden-files: actions/upload-artifact@v4 excludes dotfiles by default and only
@@ -273,7 +280,12 @@ jobs:
         with:
           name: coverage-report
           path: .
-      - name: Download Frontend Coverage Report
+      - name: Download Backend Test Results
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-test-results
+          path: test-results
+      - name: Download Frontend Coverage & Test Report
         uses: actions/download-artifact@v4
         with:
           name: frontend-coverage-report
