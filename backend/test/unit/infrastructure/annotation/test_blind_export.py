@@ -43,7 +43,9 @@ class BlindExportTest:
         batch = build_annotation_batch(_pool(), _demand(), _patents(), seed=42)
         serialized = batch.model_dump_json()
         assert "retrieval_scores" not in serialized
-        assert "0.9" not in serialized and "0.7" not in serialized and "0.5" not in serialized
+        assert "0.9" not in serialized
+        assert "0.7" not in serialized
+        assert "0.5" not in serialized
 
     def test_should_exclude_retrieval_method_from_export(self):
         batch = build_annotation_batch(_pool(), _demand(), _patents(), seed=42)

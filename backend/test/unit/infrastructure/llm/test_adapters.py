@@ -72,9 +72,11 @@ def test_validate_grounded_citations(mock_patents):
 def test_protocol_conformance():
     adapter = LlmAgentAdapter()
     # Structural conformance to InventorAgentProtocol
-    assert hasattr(adapter, "propose_candidate") and callable(adapter.propose_candidate)
+    assert hasattr(adapter, "propose_candidate")
+    assert callable(adapter.propose_candidate)
     # Structural conformance to AdversarialAgentProtocol
-    assert hasattr(adapter, "critique_candidate") and callable(adapter.critique_candidate)
+    assert hasattr(adapter, "critique_candidate")
+    assert callable(adapter.critique_candidate)
     assert GroqAgentAdapter is LlmAgentAdapter
 
 
