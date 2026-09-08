@@ -386,7 +386,7 @@
   padding: 0.35rem 0.75rem;
   border-radius: 9999px;
   background: rgba(34, 197, 94, 0.18);
-  color: #16a34a;
+  color: #15803d;
   border: 1px solid rgba(34, 197, 94, 0.35);
 }
 
@@ -406,7 +406,7 @@
   padding: 0.35rem 0.75rem;
   border-radius: 9999px;
   background: rgba(239, 68, 68, 0.18);
-  color: #dc2626;
+  color: #b91c1c;
   border: 1px solid rgba(239, 68, 68, 0.35);
 }
 
@@ -470,7 +470,7 @@
 
 .lowRiskBadge {
   background: rgba(34, 197, 94, 0.15);
-  color: #16a34a;
+  color: #15803d;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -481,7 +481,7 @@
 
 .medRiskBadge {
   background: rgba(234, 179, 8, 0.15);
-  color: #ca8a04;
+  color: #a16207;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -770,7 +770,7 @@
 
 .challengeTag {
   background: rgba(239, 68, 68, 0.15);
-  color: #dc2626;
+  color: #b91c1c;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -781,7 +781,7 @@
 
 .survivalTag {
   background: rgba(34, 197, 94, 0.15);
-  color: #16a34a;
+  color: #15803d;
 }
 
 @media (prefers-color-scheme: dark) {

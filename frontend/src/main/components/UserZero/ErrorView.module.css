@@ -30,7 +30,7 @@
   font-size: clamp(2.3rem, 5vw, 4rem);
   line-height: 1.03;
   letter-spacing: -0.045em;
-  font-weight: 760;
+  font-weight: 700;
 }
 
 .subtitle {
@@ -67,7 +67,7 @@
   gap: 10px;
   color: #3b4563;
   font-size: 14px;
-  font-weight: 720;
+  font-weight: 700;
 }
 
 .statusDot {
@@ -96,7 +96,7 @@
 
 .technical summary {
   cursor: pointer;
-  font-weight: 650;
+  font-weight: 600;
 }
 
 .technical code {
