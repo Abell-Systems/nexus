@@ -9,6 +9,7 @@ month-level partition still over the ceiling is NON_ENUMERABLE, not subdivided
 further onto an unspecified axis (contract §4).
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date, timedelta
 from typing import Literal
@@ -99,3 +100,51 @@ def subdivide(partition: DatePartition) -> list[DatePartition]:
         f"no fourth level). Partition: {partition.jurisdiction} "
         f"[{partition.start_date}, {partition.end_date}]"
     )
+
+
+CountFn = Callable[[DatePartition], int]
+
+
+class NonEnumerablePartitionError(Exception):
+    """A month-level partition's total-result-count still exceeds the OPS retrieval
+    ceiling. PR-E0.1 contract §4/§5.4: construction fails closed -- this is an explicit
+    terminal state requiring a human decision, never an automatic deeper recursion onto
+    an unspecified axis, and never silently accepted as a partial universe."""
+
+
+def partition(
+    jurisdictions: list[str],
+    window_start: date,
+    window_end: date,
+    count_fn: CountFn,
+    ceiling: int,
+) -> list[DatePartition]:
+    """Recursively decompose jurisdictions x [window_start, window_end] into leaves
+    whose count_fn(leaf) <= ceiling (contract §5.3's "eligible for enumeration").
+    Deterministic given a deterministic count_fn: same inputs -> same leaves, in
+    jurisdiction-input order then chronological order (contract §5.5). Raises
+    NonEnumerablePartitionError -- aborting the whole call, no partial leaf list
+    returned -- if any month-level partition still exceeds the ceiling (contract §5.4).
+    """
+    leaves: list[DatePartition] = []
+    for root in build_root_partitions(jurisdictions, window_start, window_end):
+        leaves.extend(_partition_node(root, count_fn, ceiling))
+    return leaves
+
+
+def _partition_node(node: DatePartition, count_fn: CountFn, ceiling: int) -> list[DatePartition]:
+    count = count_fn(node)
+    if count <= ceiling:
+        return [node]
+    if node.level == "month":
+        raise NonEnumerablePartitionError(
+            f"Partition {node.jurisdiction} [{node.start_date}, {node.end_date}] "
+            f"(month-level) has total-result-count={count} > ceiling={ceiling} and "
+            "cannot be subdivided further (PR-E0.1 contract §4: no fourth level). "
+            "Construction fails closed -- this requires an explicit decision about "
+            "the inclusion contract or ceiling, not automatic recursion."
+        )
+    result: list[DatePartition] = []
+    for child in subdivide(node):
+        result.extend(_partition_node(child, count_fn, ceiling))
+    return result
