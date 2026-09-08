@@ -126,7 +126,7 @@ class DuckDbCPCRetriever(PatentCandidateRetriever):
                 try:
                     parsed = json.loads(raw_cpc)
                     patent_cpcs = [str(c) for c in parsed] if isinstance(parsed, list) else [raw_cpc]
-                except (json.JSONDecodeError, ValueError):
+                except ValueError:
                     patent_cpcs = [c.strip() for c in raw_cpc.split(",") if c.strip()]
 
             similarity = compute_max_cpc_similarity(demand_cpc.symbols, patent_cpcs, levels=self._levels)

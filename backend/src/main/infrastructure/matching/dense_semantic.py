@@ -115,7 +115,7 @@ class DuckDbDenseSemanticRetriever(PatentCandidateRetriever):
                     parsed = json.loads(raw_emb)
                     if isinstance(parsed, list):
                         patent_vector = [float(x) for x in parsed]
-                except (json.JSONDecodeError, ValueError):
+                except ValueError:
                     pass
 
             if not patent_vector:

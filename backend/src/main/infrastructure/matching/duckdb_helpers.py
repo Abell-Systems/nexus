@@ -11,7 +11,12 @@ def resolve_patent_columns(con: duckdb.DuckDBPyConnection, table_name: str, extr
     country_col = "country_code" if "country_code" in cols else "'ES'"
     doc_num_col = "doc_number" if "doc_number" in cols else "''"
     kind_col = "kind_code" if "kind_code" in cols else "''"
-    extra_expr = f", {extra_column}" if extra_column and extra_column in cols else (f", '' AS {extra_column}" if extra_column else "")
+    if not extra_column:
+        extra_expr = ""
+    elif extra_column in cols:
+        extra_expr = f", {extra_column}"
+    else:
+        extra_expr = f", '' AS {extra_column}"
 
     return f"""
         SELECT 
