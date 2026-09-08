@@ -16,7 +16,7 @@ ADR 0001 establishes the testing strategy and ADR 0002 establishes minimal Clean
 
 ### 1. Technical quality is non-regressive
 
-A Nexus contribution must leave the repository at an equal or better technical quality level than the base revision, unless an explicit exception is justified and documented.
+A Nexus contribution must not knowingly introduce a material regression in an applicable technical-quality dimension relative to the base revision, unless the exception is explicit, justified, and reviewable.
 
 The relevant dimensions are:
 
