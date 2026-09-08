@@ -2,6 +2,7 @@
 
 **Status:** Approved design, ready for implementation plan.
 **Roadmap anchor:** `docs/roadmap.md` §3, table row **PR-E** ("Blinded re-annotation + IAA dry-run + CPC-auto card"), sequenced before **PR-F** (Phase-2 dataset + DEV/TEST freeze + powered efficacy). PR-E is currently fully unexecuted.
+**Depends on:** ADR 0019 (`docs/adr/0019-annotation-pool-temporal-eligibility-under-unknown-posting-date.md`) — the N=39 corpus has no `posted_date` for any demand; ADR 0019's `AnnotationPoolEligibilityPolicy`/`TEMPORAL_UNKNOWN` outcome is required for `CandidatePoolBuilder` to produce a non-empty pool.
 
 ## 1. Purpose
 
@@ -34,7 +35,7 @@ Reuses existing domain/protocol primitives rather than adding new abstractions �
 
 - `domain/models/matching.py::CandidatePool` — already documented as "Shared fixed candidate pool (P_shared), constructed strictly as the union of first-stage baselines," with dedup and a 300-candidate structural cap already enforced by the model.
 - `domain/protocols/matching.py::PatentCandidateRetriever` — protocol already implemented by `DuckDbBM25Retriever`, `DuckDbCPCRetriever`, and the semantic (M1) retriever in `infrastructure/matching/dense_semantic.py`.
-- `infrastructure/matching/eligibility.py::DefaultPatentEligibilityPolicy` — already implements ADR 0018 temporal pool eligibility (`strict`/`unconstrained`).
+- `infrastructure/matching/eligibility.py::DefaultPatentEligibilityPolicy` — the live-retrieval eligibility policy (jurisdiction, text availability, unconditional strict temporal). PR-E does NOT use this directly (see §5.1 / ADR 0019) — it uses a new, separate `AnnotationPoolEligibilityPolicy` that adds a `TEMPORAL_UNKNOWN` outcome for the N=39 corpus's missing `posted_date`.
 
 ```text
 N=39 frozen demand corpus (dataset_phase2_demand_corpus_n39.json)
@@ -57,7 +58,9 @@ N=39 frozen demand corpus (dataset_phase2_demand_corpus_n39.json)
        │ Semantic.retrieve(limit=20)      │
        │        ↓ union                   │
        │ eligibility_policy.evaluate()    │
-       │ (injected DefaultPatentEligibilityPolicy) │
+       │ (injected AnnotationPoolEligibilityPolicy, │
+       │  ADR 0019 — ELIGIBLE/EXCLUDED_TEMPORAL/    │
+       │  TEMPORAL_UNKNOWN)               │
        │        ↓                         │
        │ CandidatePool (existing model:   │
        │  dedup + cap enforced already)   │
@@ -102,7 +105,7 @@ N=39 frozen demand corpus (dataset_phase2_demand_corpus_n39.json)
 
 ## 5. Contract rules (from review)
 
-1. `CandidatePoolBuilder` MUST receive an explicit `PatentEligibilityPolicy` dependency (ADR 0005 explicit-injection pattern, same as `DefaultMatchingAdapter`'s `bm25_k1`/`bm25_b`) — no silent default, and the builder MUST NOT select, infer, or default an eligibility mode itself; eligibility is delegated entirely to the injected policy. **Correction from initial review:** `temporal_pool_mode` (`strict`/`unconstrained`, ADR 0018) is a sealed-evaluation-runner concept (`application/evaluation/runner.py`, operating over an already-annotated `EvaluationExecutionContext`) — it has no equivalent at the live-retrieval layer, where `DefaultPatentEligibilityPolicy` already enforces temporal prior-art eligibility unconditionally. PR-E injects the existing `DefaultPatentEligibilityPolicy` as-is; it does not invent or plumb through a `temporal_pool_mode` string.
+1. `CandidatePoolBuilder` MUST receive an explicit `PatentEligibilityPolicy` dependency (ADR 0005 explicit-injection pattern, same as `DefaultMatchingAdapter`'s `bm25_k1`/`bm25_b`) — no silent default, and the builder MUST NOT select, infer, or default an eligibility mode itself; eligibility is delegated entirely to the injected policy. **Correction from initial review:** `temporal_pool_mode` (`strict`/`unconstrained`, ADR 0018) is a sealed-evaluation-runner concept (`application/evaluation/runner.py`, operating over an already-annotated `EvaluationExecutionContext`) — it has no equivalent at the live-retrieval layer, and does not apply to annotation-pool construction at all. **Superseded by ADR 0019:** the frozen N=39 corpus has `posted_date: null` for all 39 demands (verified against live source pages — a real data gap, not an extraction bug), so `DefaultPatentEligibilityPolicy` would reject every candidate. PR-E injects `AnnotationPoolEligibilityPolicy` (ADR 0019) instead — a separate, narrowly-scoped policy that returns `ELIGIBLE` / `EXCLUDED_TEMPORAL` when both dates are known, and `TEMPORAL_UNKNOWN` (included, not excluded, marked) when the demand's `posted_date` is unresolvable. `DefaultPatentEligibilityPolicy` and live retrieval/matching are untouched by this. See ADR 0019 for the full contract, including Wayback Machine captures as optional, non-fabricated upper-bound evidence (never a `posted_date` substitute) — not a required dependency for PR-E's main reproducible path.
 2. Hard boundary at `BlindExport`: everything after it (`AnnotationBatch` and downstream) MUST NOT contain `retrieval_scores`, `RetrievalMethod`, or original ranking/position. Internal `CandidatePool` may retain `retrieval_scores` before the boundary.
 3. Shuffle order is deterministic and reproducible: same `blind_export_seed` + same pool → byte-identical export order. Enables regenerating the batch without changing what an annotator saw.
 4. CPC-auto card is auxiliary evidence only — contractually not a recommendation, not a score, and must not reveal which retriever(s) surfaced the candidate.
@@ -113,7 +116,8 @@ N=39 frozen demand corpus (dataset_phase2_demand_corpus_n39.json)
 
 | Component | Layer | Responsibility |
 |---|---|---|
-| `CandidatePoolBuilder` | `application/evaluation/candidate_pool_builder.py` | Orchestrates the 3 existing retrievers + eligibility policy into one `CandidatePool` per demand. No new domain model. |
+| `AnnotationPoolEligibilityPolicy` | `infrastructure/matching/annotation_pool_eligibility.py` (or similar) | ADR 0019: implements `PatentEligibilityPolicy`; returns `ELIGIBLE`/`EXCLUDED_TEMPORAL` when both dates are known, `TEMPORAL_UNKNOWN` when `posted_date` (or `publication_date`) is unresolvable. Does not modify `DefaultPatentEligibilityPolicy`. |
+| `CandidatePoolBuilder` | `application/evaluation/candidate_pool_builder.py` | Orchestrates the 3 existing retrievers + injected eligibility policy into one `CandidatePool` per demand. No new domain model for the pool itself. |
 | `blind_export.py` | `infrastructure/annotation/` | Enforces the blind boundary; deterministic seeded shuffle; emits `AnnotationBatch`. |
 | Annotation guide | `docs/annotation/phase2-guide.md` | 0–3 scale with examples; explicit criteria for the 1↔2 and 2↔3 boundaries. Written before annotation starts. |
 | `AnnotationJudgment` | `domain/models/` (new, minimal) | `(annotator_id, demand_id, publication_id) → grade [0-3]`. One frozen, hashed artifact per annotator. |
