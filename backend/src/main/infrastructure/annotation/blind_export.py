@@ -46,16 +46,22 @@ def build_annotation_batch(
     """
     publication_ids = [c.publication_id for c in pool.candidates]
     order = list(publication_ids)
-    random.Random(seed).shuffle(order)
+    random.Random(seed).shuffle(order)  # NOSONAR(python:S2245) -- deterministic reproducible shuffle for annotation-batch ordering, not security-sensitive
 
     entries = []
     for pub_id in order:
         if pub_id not in patents_by_id:
             raise KeyError(pub_id)
         patent = patents_by_id[pub_id]
+        # Deliberately NOT publication_date: PR-E spec §4 defines the annotator-
+        # facing evidence as title/abstract/CPC only. Annotators grade technical
+        # relevance, not temporal/prior-art eligibility (that's evaluated
+        # separately by AnnotationPoolEligibilityPolicy, ADR 0019, and never
+        # shown here) -- exposing publication_date would let an annotator's
+        # relevance judgment be contaminated by reasoning about eligibility,
+        # exactly the two-axis conflation this PR's architecture keeps apart.
         evidence = PatentCandidateEvidence(
             publication_id=pub_id,
-            publication_date=patent.publication_date,
             classifications_cpc=list(patent.classifications_cpc),
             title=patent.title,
             abstract=patent.abstract,

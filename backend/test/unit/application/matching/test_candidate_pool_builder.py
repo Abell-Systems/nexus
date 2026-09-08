@@ -145,6 +145,18 @@ class CandidatePoolBuilderTest:
                 connection=memory_duckdb_two_patents,
             )
 
+    def test_should_fail_fast_when_retriever_returns_id_missing_from_patents_table(
+        self, memory_duckdb_two_patents
+    ):
+        bm25 = _FakeRetriever(RetrievalMethod.LEXICAL, {"ES-9999": 0.9})
+        builder = CandidatePoolBuilder(
+            retrievers=[bm25],
+            eligibility_policy=_AllEligiblePolicy(),
+            connection=memory_duckdb_two_patents,
+        )
+        with pytest.raises(ValueError, match="ES-9999"):
+            builder.build(DemandSignal(demand_id="D1", title="t", description="d"))
+
     def test_should_stamp_demand_id_on_pool(self, memory_duckdb_two_patents):
         bm25 = _FakeRetriever(RetrievalMethod.LEXICAL, {"ES-3001": 0.9})
         builder = CandidatePoolBuilder(

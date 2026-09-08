@@ -63,10 +63,15 @@ class CandidatePoolBuilder:
         for pub_id, candidate in merged.items():
             patent = patents_by_id.get(pub_id)
             if patent is None:
-                # Not found in the DB fetch: exclude from the pool entirely, not
-                # just tagged, otherwise build_annotation_batch KeyErrors later
-                # since patents_by_id there won't have it either.
-                continue
+                # A retriever returned this publication_id, but it isn't resolvable
+                # in the patents table backing that same retriever's corpus — a
+                # data-consistency bug in the pipeline, not a normal exclusion.
+                # Fail fast rather than silently shrinking the annotation universe
+                # (this is a frozen, auditable scientific instrument).
+                raise ValueError(
+                    f"Candidate {pub_id!r} was returned by a retriever but has no "
+                    f"matching row in table {self._table_name!r} — pipeline inconsistency"
+                )
             result = self._eligibility_policy.evaluate(patent, demand)
             if not result.is_eligible:
                 continue

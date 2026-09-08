@@ -22,7 +22,10 @@ class IAAReport(BaseModel):
     confusion_matrix: list[list[int]]
     disagreements: list[Disagreement]
 
-    model_config = {"arbitrary_types_allowed": True}
+    # revalidate_instances="never": disagreements is built from Disagreement
+    # instances we construct ourselves right above, never from untrusted input —
+    # explicit per Sonar python:S8978, not relying on Pydantic's default.
+    model_config = {"arbitrary_types_allowed": True, "revalidate_instances": "never"}
 
 
 def _weighted_kappa(labels_a: list[int], labels_b: list[int]) -> tuple[float, list[list[int]]]:
@@ -63,17 +66,24 @@ def _binary_kappa(labels_a: list[int], labels_b: list[int]) -> float:
         return float("nan")
     bin_a = [1 if g >= 2 else 0 for g in labels_a]
     bin_b = [1 if g >= 2 else 0 for g in labels_b]
+    count_a1 = sum(bin_a)
+    count_b1 = sum(bin_b)
     observed_agreement = sum(1 for a, b in zip(bin_a, bin_b, strict=True) if a == b) / n
 
-    p_a1 = sum(bin_a) / n
-    p_b1 = sum(bin_b) / n
-    expected_agreement = p_a1 * p_b1 + (1 - p_a1) * (1 - p_b1)
-
-    # expected_agreement == 1.0 means both annotators graded with zero variance
-    # (e.g. everything binarizes to the same class): expected disagreement is 0,
-    # so kappa is 0/0, mathematically undefined, not perfect agreement.
-    if expected_agreement == 1.0:
+    # expected_agreement == 1.0 (the degenerate case) holds iff p_a1 == p_b1 AND
+    # both are exactly 0 or exactly 1 -- i.e. both annotators are constant AND
+    # constant at the SAME value (constant-but-different, e.g. A always 0 / B
+    # always 1, gives expected_agreement == 0, a well-defined non-degenerate
+    # kappa, not this case). Checked on the integer counts rather than the
+    # derived float proportions to avoid a floating-point equality comparison
+    # (Sonar python:S1244); exact by construction since p_a1/p_b1 are integers
+    # divided by n.
+    if count_a1 == count_b1 and count_a1 in (0, n):
         return float("nan")
+
+    p_a1 = count_a1 / n
+    p_b1 = count_b1 / n
+    expected_agreement = p_a1 * p_b1 + (1 - p_a1) * (1 - p_b1)
     return (observed_agreement - expected_agreement) / (1 - expected_agreement)
 
 
@@ -94,6 +104,10 @@ def compute_iaa(
 
     keys_a = {(j.demand_id, j.publication_id) for j in judgments_a}
     keys_b = {(j.demand_id, j.publication_id) for j in judgments_b}
+    if len(keys_a) != len(judgments_a):
+        raise ValueError("judgments_a contains duplicate (demand_id, publication_id) judgments")
+    if len(keys_b) != len(judgments_b):
+        raise ValueError("judgments_b contains duplicate (demand_id, publication_id) judgments")
     if keys_a != keys_b:
         raise ValueError(
             "Both annotators must judge the same set of (demand_id, publication_id) pairs — "

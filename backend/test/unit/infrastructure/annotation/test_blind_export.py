@@ -74,6 +74,25 @@ class BlindExportTest:
         with pytest.raises(KeyError, match="ES-2"):
             build_annotation_batch(_pool(), _demand(), patents, seed=42)
 
+    def test_should_exclude_publication_date_from_export(self):
+        """Code review comment on PR #56: publication_date could let an annotator
+        reconstruct temporal eligibility and contaminate a relevance judgment that
+        is supposed to be purely technical. Uses a real, distinctive date so this
+        test actually fails if the date leaks (the default fixture's None wouldn't
+        catch a regression that starts passing a real date through)."""
+        patents = _patents()
+        for patent in patents.values():
+            patent.publication_date = "2019-11-20"
+        batch = build_annotation_batch(_pool(), _demand(), patents, seed=42)
+        serialized = batch.model_dump_json()
+        # PatentCandidateEvidence (a shared domain model) still has a
+        # publication_date field/key that serializes as null -- the actual
+        # boundary property is that the real DATE VALUE never crosses, not that
+        # the key is absent.
+        assert "2019-11-20" not in serialized
+        for entry in batch.entries:
+            assert entry.evidence.publication_date is None
+
 
 class ExportTemporalProvenanceTest:
     def test_should_roundtrip_publication_ids_and_reasons_exactly(self):
