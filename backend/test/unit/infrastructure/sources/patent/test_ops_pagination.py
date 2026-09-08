@@ -72,3 +72,12 @@ def test_fetch_all_ops_batches_raises_when_max_records_reached_before_total():
     client = _FakeClient({(1, 10): huge_total})
     with pytest.raises(RuntimeError, match="max_records"):
         list(fetch_all_ops_batches(client, cql_query="pn=US", page_size=10, max_records=10))
+
+
+def test_fetch_all_ops_batches_raises_when_total_count_changes_mid_pagination():
+    page1 = b'<?xml version="1.0"?><ops:world-patent-data xmlns:ops="http://ops.epo.org"><ops:biblio-search total-result-count="4"/></ops:world-patent-data>'
+    page2 = b'<?xml version="1.0"?><ops:world-patent-data xmlns:ops="http://ops.epo.org"><ops:biblio-search total-result-count="5"/></ops:world-patent-data>'
+    client = _FakeClient({(1, 2): page1, (3, 4): page2})
+
+    with pytest.raises(RuntimeError, match="changed mid-pagination"):
+        list(fetch_all_ops_batches(client, cql_query="pn=US", page_size=2))
