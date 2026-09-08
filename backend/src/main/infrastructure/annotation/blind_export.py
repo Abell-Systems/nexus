@@ -1,9 +1,10 @@
+import json
 import random
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from domain.models.demand import DemandRecord, DemandSignal
-from domain.models.matching import CandidatePool, PatentCandidateEvidence
+from domain.models.matching import CandidatePool, EligibilityReason, PatentCandidateEvidence
 from domain.models.patent import PatentDocument
 
 
@@ -68,3 +69,11 @@ def build_annotation_batch(
         seed=seed,
         entries=tuple(entries),
     )
+
+
+def export_temporal_provenance(temporal_reasons: dict[str, EligibilityReason]) -> str:
+    """ADR 0019 §5: eligibility provenance (ELIGIBLE / TEMPORAL_UNKNOWN) for later
+    PR-F admissibility analysis. Kept completely separate from AnnotationBatch /
+    AnnotationCandidateEntry — this is never annotator-facing and must never cross
+    the blind-export boundary those models define."""
+    return json.dumps({pub_id: reason.value for pub_id, reason in temporal_reasons.items()})

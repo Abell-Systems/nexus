@@ -1,9 +1,11 @@
+import json
+
 import pytest
 
 from domain.models.demand import DemandSignal
-from domain.models.matching import Candidate, CandidatePool, RetrievalMethod
+from domain.models.matching import Candidate, CandidatePool, EligibilityReason, RetrievalMethod
 from domain.models.patent import PatentDocument
-from infrastructure.annotation.blind_export import build_annotation_batch
+from infrastructure.annotation.blind_export import build_annotation_batch, export_temporal_provenance
 
 
 def _pool() -> CandidatePool:
@@ -71,3 +73,15 @@ class BlindExportTest:
         del patents["ES-2"]
         with pytest.raises(KeyError, match="ES-2"):
             build_annotation_batch(_pool(), _demand(), patents, seed=42)
+
+
+class ExportTemporalProvenanceTest:
+    def test_should_roundtrip_publication_ids_and_reasons_exactly(self):
+        temporal_reasons = {
+            "ES-1": EligibilityReason.ELIGIBLE,
+            "ES-2": EligibilityReason.TEMPORAL_UNKNOWN,
+        }
+        serialized = export_temporal_provenance(temporal_reasons)
+        roundtripped = json.loads(serialized)
+        assert roundtripped == {"ES-1": "eligible", "ES-2": "temporal_unknown"}
+        assert set(roundtripped.keys()) == {"ES-1", "ES-2"}
