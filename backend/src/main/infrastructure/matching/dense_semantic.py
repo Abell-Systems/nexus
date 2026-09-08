@@ -6,7 +6,6 @@ import duckdb
 from domain.models.demand import DemandRecord, DemandSignal
 from domain.models.matching import (
     Candidate,
-    EligibilityReason,
     RetrievalMethod,
 )
 from domain.models.patent import PatentDocument
@@ -104,7 +103,7 @@ class DuckDbDenseSemanticRetriever(PatentCandidateRetriever):
 
             # Strict pre-retrieval eligibility check
             eval_res = self._eligibility_policy.evaluate(patent, demand)
-            if eval_res.reason != EligibilityReason.ELIGIBLE:
+            if not eval_res.is_eligible:
                 continue
 
             # Parse patent embedding vector
