@@ -19,7 +19,7 @@ import json
 import sys
 from collections import Counter
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -32,8 +32,7 @@ from domain.models.evaluation import DataModality, EvaluationProvenance, PatentC
 from domain.models.ingestion import RecordDisposition  # noqa: E402
 from domain.models.patent import PatentDocument  # noqa: E402
 from infrastructure.sources.patent.epo_ops_client import EpoOpsClient  # noqa: E402
-from infrastructure.sources.patent.ops_pagination import fetch_all_ops_batches  # noqa: E402
-from infrastructure.sources.patent.ops_query import build_patent_corpus_cql  # noqa: E402
+from infrastructure.sources.patent.ops_partitioning import enumerate_partition_tree  # noqa: E402
 
 OUT_DIR = REPO_ROOT / "data" / "evaluation"
 OUT_BASENAME = "dataset_patent_corpus_p"
@@ -42,6 +41,9 @@ JURISDICTIONS = ["EP", "US", "JP", "CN", "KR", "WO"]
 GRANT_KIND_CODES = frozenset({"B1", "B2"})
 TARGET_N = 50000
 MINIMUM_ACCEPTABLE_N = 5000
+# PR-E0.1 contract §7: OPS-adapter working assumption, not a domain fact -- see
+# enumerate_partition_tree's own default and the spec's confidence note.
+OPS_RETRIEVAL_CEILING = 2000
 DATASET_ID = "nexus-patent-corpus-p-v1"
 SCHEMA_VERSION = "1.0.0"
 DATASET_VERSION = "1.0.0"
@@ -65,12 +67,15 @@ class PatentCorpusBuildResult:
     corpus: PatentCorpus
     disposition_counts: dict[str, int]
     eligible_available_records: int
+    leaf_count: int
 
 
 def build_patent_corpus(
     client: EpoOpsClient,
-    cql_query: str,
     jurisdictions: list[str],
+    window_start: date,
+    window_end: date,
+    ceiling: int,
     target_n: int,
     minimum_acceptable_n: int,
     dataset_id: str,
@@ -100,7 +105,8 @@ def build_patent_corpus(
     disposition_counts: Counter[str] = Counter()
     excluded_jurisdiction_or_window = 0
 
-    for raw_payload in fetch_all_ops_batches(client, cql_query=cql_query):
+    partition_result = enumerate_partition_tree(client, jurisdictions, window_start, window_end, ceiling)
+    for raw_payload in partition_result.batches:
         for result in normalizer.normalize_results(raw_payload):
             validated = validator.validate_normalization_result(result)
             disposition_counts[validated.disposition.value] += 1
@@ -157,6 +163,7 @@ def build_patent_corpus(
         corpus=corpus,
         disposition_counts=counts,
         eligible_available_records=eligible_available_records,
+        leaf_count=partition_result.leaf_count,
     )
 
 
@@ -176,43 +183,34 @@ def _has_parseable_publication_date(doc: PatentDocument) -> bool:
 def main() -> None:
     """Run the real EPO OPS ingestion. Requires EPO_OPS_KEY/EPO_OPS_SECRET.
 
-    KNOWN LIMITATION (as of this writing): this issues ONE unpartitioned CQL query
-    across all 6 jurisdictions x the full 10-year window. EP+US+JP+CN+KR+WO grants
-    (and applications -- CQL cannot filter grants-only reliably, see ops_query.py)
-    over 10 years is on the order of 10^7 candidate records. fetch_all_ops_batches's
-    enumerability guard (ops_pagination.py) will raise RuntimeError once pagination's
-    max_records default (60000) is exceeded, well before reaching that volume -- this
-    fails safely (no truncated/silent corpus), but means main() as currently written
-    cannot complete a real run at the scale ADR 0020 targets. Before attempting a real
-    run: this needs a query-partitioning strategy (e.g. per-jurisdiction, or per-
-    jurisdiction-per-year sub-queries, unioned before select_frozen_patents -- sha256
-    ordering over the union is identical to ordering over the whole, so ADR 0020 §3's
-    determinism is unaffected by how the union is assembled) that is not yet designed
-    or implemented. This is a deliberate scope boundary, not an oversight -- see the
-    implementation plan's Task 7 and the final-review ledger for the ruling.
+    Enumerates the full ADR 0020 §2 universe via jurisdiction/date partitioning
+    (PR-E0.1, docs/superpowers/specs/2026-09-08-ops-enumeration-partitioning-contract.md)
+    rather than one unpartitioned query -- see enumerate_partition_tree. Fails closed
+    (NonEnumerablePartitionError) if any partition cannot be shown enumerable even at
+    month granularity; produces no output files in that case.
     """
-    current_year = datetime.now(UTC).year
-    min_publication_year = current_year - 10
-    max_publication_year = current_year
-    cql_query = build_patent_corpus_cql(
-        jurisdictions=JURISDICTIONS,
-        min_publication_year=min_publication_year,
-        max_publication_year=max_publication_year,
-    )
+    window_end = datetime.now(UTC).date()
+    try:
+        window_start = window_end.replace(year=window_end.year - 10)
+    except ValueError:
+        # window_end is Feb 29 with no Feb 29 ten years prior
+        window_start = window_end.replace(year=window_end.year - 10, day=28)
     client = EpoOpsClient()  # reads EPO_OPS_KEY/EPO_OPS_SECRET from env
 
-    print(f"Fetching PatentCorpus universe: {cql_query}")
+    print(f"Fetching PatentCorpus universe: {JURISDICTIONS} x [{window_start}, {window_end}]")
     result = build_patent_corpus(
         client=client,
-        cql_query=cql_query,
         jurisdictions=JURISDICTIONS,
+        window_start=window_start,
+        window_end=window_end,
+        ceiling=OPS_RETRIEVAL_CEILING,
         target_n=TARGET_N,
         minimum_acceptable_n=MINIMUM_ACCEPTABLE_N,
         dataset_id=DATASET_ID,
         dataset_version=DATASET_VERSION,
         description=(
             f"Nexus PatentCorpus (P): {', '.join(JURISDICTIONS)} grants, "
-            f"{current_year - 10}-{current_year}. See docs/adr/"
+            f"{window_start} to {window_end}. See docs/adr/"
             "0020-experimental-corpus-architecture-demand-times-patent.md."
         ),
     )
@@ -235,9 +233,10 @@ def main() -> None:
         "jurisdictions": JURISDICTIONS,
         "patent_count": len(corpus.patents),
         "content_sha256": content_sha256,
-        "cql_query": cql_query,
-        "min_publication_year": min_publication_year,
-        "max_publication_year": max_publication_year,
+        "window_start": window_start.isoformat(),
+        "window_end": window_end.isoformat(),
+        "ops_retrieval_ceiling": OPS_RETRIEVAL_CEILING,
+        "leaf_count": result.leaf_count,
         "grant_kind_codes": sorted(GRANT_KIND_CODES),
         "target_n": TARGET_N,
         "minimum_acceptable_n": MINIMUM_ACCEPTABLE_N,
@@ -257,6 +256,7 @@ def main() -> None:
     print(f"  content_sha256={content_sha256}")
     print(f"  eligible_available_records={result.eligible_available_records}")
     print(f"  disposition_counts={result.disposition_counts}")
+    print(f"  leaf_count={result.leaf_count}")
 
 
 if __name__ == "__main__":
