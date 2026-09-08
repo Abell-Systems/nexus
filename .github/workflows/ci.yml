@@ -258,12 +258,37 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  # 7. Final Consolidated Quality Gate (Must be all green)
+  # 7. Final Consolidated Quality Gate & Observability Telemetry (ADR 0022)
   quality-gate:
     name: 7. QUALITY GATE (Ready to Merge)
     needs: [architecture, python-quality, frontend-quality, security-scan, backend-tests, provider-adk-tests, sonar-quality-gate]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download Backend Coverage Report
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: .
+      - name: Download Frontend Coverage Report
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage
+      - name: Consolidate Project Status Telemetry (ADR 0022)
+        run: |
+          pip install import-linter>=2.14
+          python scripts/audit_project_status.py
+      - name: Upload Project Status Telemetry Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-status-telemetry
+          path: |
+            project_status.json
+            PROJECT_STATUS.md
       - name: Confirm All Strict Quality Gates Passed
         env:
           SONAR_SKIPPED: ${{ needs.sonar-quality-gate.outputs.skipped }}
@@ -284,4 +309,5 @@ jobs:
           else
             echo " - SonarCloud Analysis & Quality Gate: PASS"
           fi
+          echo " - Project Status Observability Telemetry (ADR 0022): PUBLISHED"
           echo "================================================================="
