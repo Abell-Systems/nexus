@@ -24,14 +24,30 @@ def select_frozen_patents(
     first min(target_n, eligible_available_records). Raises PatentCorpusConstructionError
     if eligible_available_records < minimum_acceptable_n (ADR 0020 §4).
 
-    Dedup is keyed on publication_id via a plain dict comprehension: last-wins on
-    a collision (defense in depth -- PatentValidator already excludes duplicates
-    from its INCLUDED stream within a single run, but this function is general
-    purpose and makes no assumption about its caller). If two input documents
-    share a publication_id but differ in content, whichever appears LAST in
-    `documents` silently wins.
+    Dedup is keyed on publication_id via an explicit loop (defense in depth --
+    PatentValidator already excludes duplicates from its INCLUDED stream within a
+    single run, but this function is general purpose and makes no assumption about
+    its caller). Two documents sharing a publication_id with IDENTICAL content
+    (equal as Pydantic models) are safely deduplicated -- e.g. the same record
+    fetched twice via overlapping pagination windows. Two documents sharing a
+    publication_id with DIFFERENT content raise PatentCorpusConstructionError: for
+    a frozen, reproducible artifact, silently picking one based on input order
+    would make the result depend on OPS's delivery order, and would hide a genuine
+    upstream data-quality problem instead of surfacing it.
     """
-    unique_by_id = {doc.publication_id: doc for doc in documents}
+    unique_by_id: dict[str, PatentDocument] = {}
+    for doc in documents:
+        existing = unique_by_id.get(doc.publication_id)
+        if existing is None:
+            unique_by_id[doc.publication_id] = doc
+        elif existing != doc:
+            raise PatentCorpusConstructionError(
+                f"PatentCorpus construction failed: publication_id={doc.publication_id!r} "
+                "appears twice with divergent content. Same-identity records must be "
+                "identical or construction cannot proceed -- this indicates an upstream "
+                "data-quality problem requiring investigation, not something to silently "
+                "resolve by picking one."
+            )
     eligible_available_records = len(unique_by_id)
 
     if eligible_available_records < minimum_acceptable_n:

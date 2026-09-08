@@ -55,27 +55,38 @@ def test_selection_is_reproducible_across_calls():
     assert [d.publication_id for d in first] == [d.publication_id for d in second]
 
 
-def test_selection_keeps_last_occurrence_when_same_publication_id_has_different_content():
-    """select_frozen_patents does its own dict-based dedup keyed on publication_id.
+def test_selection_raises_when_same_publication_id_has_different_content():
+    """select_frozen_patents does an explicit-loop dedup keyed on publication_id.
 
     This is a general-purpose function, not exclusively fed from a single
     PatentValidator run -- callers upstream (e.g. two disagreeing sources, or a
     data-quality bug) can hand it two PatentDocuments sharing a publication_id
-    but differing in content. The dict comprehension's last-wins semantics
-    silently pick the document that appears LATER in the input list and drop
-    the earlier one, with no warning or error. That behavior is deliberate and
-    kept as-is (per ADR 0020 task brief) -- this test makes it explicit and
-    pins it down instead of leaving it an accidental side effect of a dict
-    comprehension.
+    but differing in content. For a frozen, reproducible artifact, silently
+    picking whichever appears LAST in the input list would make the result
+    depend on OPS's delivery order and would hide a genuine data-quality
+    problem -- so this must raise PatentCorpusConstructionError instead of
+    silently resolving the divergence.
     """
     first_seen = _doc("US1")
     first_seen.title = "First title"
     last_seen = _doc("US1")
     last_seen.title = "Last title"
 
+    with pytest.raises(PatentCorpusConstructionError, match="US1"):
+        select_frozen_patents([first_seen, last_seen], target_n=10, minimum_acceptable_n=1)
+
+
+def test_selection_dedupes_silently_when_same_publication_id_has_identical_content():
+    """Two documents sharing a publication_id with IDENTICAL content (e.g. the same
+    record fetched twice via overlapping pagination windows) is a legitimate,
+    non-error case -- dedup to one record, no exception."""
+    first_copy = _doc("US1")
+    second_copy = _doc("US1")
+    assert first_copy == second_copy  # sanity: Pydantic BaseModel value equality
+
     selected = select_frozen_patents(
-        [first_seen, last_seen], target_n=10, minimum_acceptable_n=1
+        [first_copy, second_copy], target_n=10, minimum_acceptable_n=1
     )
 
     assert len(selected) == 1
-    assert selected[0].title == "Last title"
+    assert selected[0].publication_id == "US1"
