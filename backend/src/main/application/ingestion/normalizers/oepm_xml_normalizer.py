@@ -41,11 +41,13 @@ class OepmXmlNormalizer:
         target_country: str = "ES",
         min_publication_year: int = 2016,
         max_publication_year: int = 2024,
+        allowed_kind_codes: frozenset[str] | None = None,
     ) -> None:
         self.extraction_version = extraction_version
         self.target_country = target_country
         self.min_publication_year = min_publication_year
         self.max_publication_year = max_publication_year
+        self.allowed_kind_codes = allowed_kind_codes or NORMATIVE_KIND_CODES
 
     def normalize_stream(
         self, raw_payload: RawPayload
@@ -228,7 +230,7 @@ class OepmXmlNormalizer:
         canonical_pub_id = f"{country_code}{doc_number}{kind_code}"
 
         # 3. Validation against Kind-Code Universe
-        if kind_code not in NORMATIVE_KIND_CODES:
+        if kind_code not in self.allowed_kind_codes:
             return NormalizationResult(
                 disposition=RecordDisposition.EXCLUDED,
                 excluded=ExcludedRecord(
@@ -236,7 +238,7 @@ class OepmXmlNormalizer:
                     country_code=country_code,
                     kind_code=kind_code,
                     reason=ExclusionReason.UNSUPPORTED_KIND_CODE,
-                    detail=f"Kind code '{kind_code}' is outside normative universe {sorted(NORMATIVE_KIND_CODES)}",
+                    detail=f"Kind code '{kind_code}' is outside normative universe {sorted(self.allowed_kind_codes)}",
                     source_uri=source_uri,
                 ),
             )
