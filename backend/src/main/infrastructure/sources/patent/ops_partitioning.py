@@ -14,6 +14,9 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 from typing import Literal
 
+from domain.protocols.sources import RawPayload
+from infrastructure.sources.patent.ops_pagination import fetch_all_ops_batches, peek_total_result_count
+
 PartitionLevel = Literal["jurisdiction", "year", "month"]
 
 
@@ -148,3 +151,51 @@ def _partition_node(node: DatePartition, count_fn: CountFn, ceiling: int) -> lis
     for child in subdivide(node):
         result.extend(_partition_node(child, count_fn, ceiling))
     return result
+
+
+def build_partition_cql(partition: DatePartition) -> str:
+    """CQL for one candidate/leaf partition: a single jurisdiction, day-precision
+    closed date range. Mirrors ops_query.build_patent_corpus_cql's `pd within "A B"`
+    convention, generalized to a single jurisdiction and arbitrary day granularity."""
+    start = partition.start_date.strftime("%Y%m%d")
+    end = partition.end_date.strftime("%Y%m%d")
+    return f'pn={partition.jurisdiction.upper()} and pd within "{start} {end}"'
+
+
+@dataclass(frozen=True)
+class PartitionFetchResult:
+    """Return value of enumerate_partition_tree: the unioned, verified batches plus
+    how many leaf partitions the run actually needed (manifest/audit purposes --
+    contract §5.5 determinism means this count is itself reproducible)."""
+
+    batches: list[RawPayload]
+    leaf_count: int
+
+
+def enumerate_partition_tree(
+    client,
+    jurisdictions: list[str],
+    window_start: date,
+    window_end: date,
+    ceiling: int = 2000,
+) -> PartitionFetchResult:
+    """Drive `partition()` using real OPS total-result-count peeks, then fully
+    enumerate every eligible leaf via `fetch_all_ops_batches`, returning the union
+    plus the leaf count.
+
+    Fail-closed at both stages (contract §5.4): a NonEnumerablePartitionError from
+    `partition()`, or a RuntimeError from any leaf's `fetch_all_ops_batches` call,
+    propagates immediately -- no partial result is ever returned. `ceiling`'s default
+    (2000) is the OPS-adapter's working assumption (contract §7), not a domain fact;
+    override it explicitly once PR-E0.2's live integration test confirms or corrects it.
+    """
+
+    def count_fn(p: DatePartition) -> int:
+        return peek_total_result_count(client, build_partition_cql(p))
+
+    leaves = partition(jurisdictions, window_start, window_end, count_fn=count_fn, ceiling=ceiling)
+
+    all_batches: list[RawPayload] = []
+    for leaf in leaves:
+        all_batches.extend(fetch_all_ops_batches(client, cql_query=build_partition_cql(leaf)))
+    return PartitionFetchResult(batches=all_batches, leaf_count=len(leaves))

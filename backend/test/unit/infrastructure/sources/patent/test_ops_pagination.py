@@ -112,3 +112,19 @@ def test_fetch_all_ops_batches_never_exposes_the_first_valid_batch_before_a_late
 
     # The call never returned, so there is no value in which the first (valid)
     # batch could have reached the caller -- the raise happened before any return.
+
+
+from infrastructure.sources.patent.ops_pagination import peek_total_result_count
+
+
+def test_peek_total_result_count_reads_page_one_only():
+    client = _FakeClient({(1, 1): ONE_DOC_PAGE})
+    total = peek_total_result_count(client, cql_query="pn=US")
+    assert total == 3
+    assert client.calls == [(1, 1)]
+
+
+def test_peek_total_result_count_raises_on_missing_total():
+    client = _FakeClient({(1, 1): NO_COUNT_PAGE})
+    with pytest.raises(RuntimeError, match="total-result-count"):
+        peek_total_result_count(client, cql_query="pn=US")

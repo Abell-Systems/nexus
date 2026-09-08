@@ -183,3 +183,59 @@ def test_partition_leaf_at_exactly_the_ceiling_is_accepted_not_subdivided():
     )
     assert len(leaves) == 1
     assert leaves[0].level == "jurisdiction"
+
+
+from infrastructure.sources.patent.ops_partitioning import build_partition_cql, enumerate_partition_tree
+
+
+def test_build_partition_cql_single_jurisdiction_day_precision():
+    p = DatePartition("US", date(2020, 3, 15), date(2020, 6, 10), "year")
+    query = build_partition_cql(p)
+    assert query == 'pn=US and pd within "20200315 20200610"'
+
+
+class _FakeOpsClient:
+    """Test double: every call returns the same fixed total-result-count and a
+    trivial biblio-search payload, regardless of the query -- enough to drive
+    enumerate_partition_tree's control flow without real XML content."""
+
+    def __init__(self, total: int) -> None:
+        self.total = total
+        self.calls: list[tuple[str, int, int]] = []
+
+    def fetch_batches(self, cql_query="", range_start=1, range_end=25):
+        self.calls.append((cql_query, range_start, range_end))
+        xml = (
+            f'<?xml version="1.0"?><ops:world-patent-data xmlns:ops="http://ops.epo.org">'
+            f'<ops:biblio-search total-result-count="{self.total}"/></ops:world-patent-data>'
+        ).encode()
+        from domain.protocols.sources import RawPayload
+
+        yield RawPayload(source_id="epo_ops", batch_id=f"b_{range_start}_{range_end}", payload_bytes=xml, metadata={})
+
+
+def test_enumerate_partition_tree_unions_eligible_leaves():
+    client = _FakeOpsClient(total=5)  # well under ceiling -> jurisdiction-level leaves, no subdivision
+    result = enumerate_partition_tree(
+        client,
+        jurisdictions=["EP", "US"],
+        window_start=date(2020, 1, 1),
+        window_end=date(2020, 12, 31),
+        ceiling=2000,
+    )
+    # One fetch_all_ops_batches call per leaf (2 jurisdiction-level leaves), each
+    # single-page since total=5 fits in one page.
+    assert len(result.batches) == 2
+    assert result.leaf_count == 2
+
+
+def test_enumerate_partition_tree_raises_on_non_enumerable_leaf():
+    client = _FakeOpsClient(total=999999)  # never eligible, at any level
+    with pytest.raises(NonEnumerablePartitionError):
+        enumerate_partition_tree(
+            client,
+            jurisdictions=["EP"],
+            window_start=date(2020, 1, 1),
+            window_end=date(2020, 1, 31),
+            ceiling=2000,
+        )
