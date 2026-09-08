@@ -63,6 +63,15 @@ class BlindExportTest:
         batch_b = build_annotation_batch(_pool(), _demand(), _patents(), seed=42)
         assert [e.publication_id for e in batch_a.entries] == [e.publication_id for e in batch_b.entries]
 
+    def test_should_produce_byte_identical_serialized_artifact_for_same_seed_and_pool(self):
+        """Spec §5 contract 3 literally says 'byte-identical export order' -- test
+        the serialized artifact itself, not just the publication_id sequence
+        (a weaker property that wouldn't catch e.g. a nondeterministic field
+        ordering or value elsewhere in the model)."""
+        batch_a = build_annotation_batch(_pool(), _demand(), _patents(), seed=42)
+        batch_b = build_annotation_batch(_pool(), _demand(), _patents(), seed=42)
+        assert batch_a.model_dump_json() == batch_b.model_dump_json()
+
     def test_should_preserve_the_same_candidate_set_across_different_seeds(self):
         batch_a = build_annotation_batch(_pool(), _demand(), _patents(), seed=1)
         batch_b = build_annotation_batch(_pool(), _demand(), _patents(), seed=2)
