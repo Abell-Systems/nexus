@@ -31,6 +31,26 @@ class _AllEligiblePolicy(PatentEligibilityPolicy):
         )
 
 
+class _ExcludeOnePolicy(PatentEligibilityPolicy):
+    def __init__(self, excluded_id: str):
+        self._excluded_id = excluded_id
+
+    def evaluate(self, patent, demand):
+        from domain.models.matching import EligibilityResult
+
+        if patent.publication_id == self._excluded_id:
+            return EligibilityResult(
+                publication_id=patent.publication_id,
+                is_eligible=False,
+                reason=EligibilityReason.EXCLUDED_TEMPORAL,
+            )
+        return EligibilityResult(
+            publication_id=patent.publication_id,
+            is_eligible=True,
+            reason=EligibilityReason.ELIGIBLE,
+        )
+
+
 class _UnknownForOnePolicy(PatentEligibilityPolicy):
     def __init__(self, unknown_id: str):
         self._unknown_id = unknown_id
@@ -105,6 +125,18 @@ class CandidatePoolBuilderTest:
         result = builder.build(DemandSignal(demand_id="D1", title="t", description="d"))
         assert result.temporal_reasons["ES-3001"] == EligibilityReason.ELIGIBLE
         assert result.temporal_reasons["ES-3002"] == EligibilityReason.TEMPORAL_UNKNOWN
+
+    def test_should_exclude_excluded_temporal_candidate_from_final_pool(self, memory_duckdb_two_patents):
+        bm25 = _FakeRetriever(RetrievalMethod.LEXICAL, {"ES-3001": 0.9, "ES-3002": 0.5})
+        builder = CandidatePoolBuilder(
+            retrievers=[bm25],
+            eligibility_policy=_ExcludeOnePolicy(excluded_id="ES-3002"),
+            connection=memory_duckdb_two_patents,
+        )
+        result = builder.build(DemandSignal(demand_id="D1", title="t", description="d"))
+        assert {c.publication_id for c in result.pool.candidates} == {"ES-3001"}
+        assert "ES-3002" not in result.temporal_reasons
+        assert result.temporal_reasons["ES-3001"] == EligibilityReason.ELIGIBLE
 
     def test_should_reject_empty_retriever_list(self, memory_duckdb_two_patents):
         with pytest.raises(ValueError, match="at least one retriever"):

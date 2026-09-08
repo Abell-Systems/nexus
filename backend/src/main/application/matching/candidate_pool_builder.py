@@ -59,15 +59,21 @@ class CandidatePoolBuilder:
 
         patents_by_id = self._fetch_patents(set(merged.keys()))
         temporal_reasons: dict[str, EligibilityReason] = {}
-        for pub_id in merged:
+        eligible_candidates: list[Candidate] = []
+        for pub_id, candidate in merged.items():
             patent = patents_by_id.get(pub_id)
             if patent is None:
-                temporal_reasons[pub_id] = EligibilityReason.EXCLUDED_MISSING_TEXT
+                # Not found in the DB fetch: exclude from the pool entirely, not
+                # just tagged, otherwise build_annotation_batch KeyErrors later
+                # since patents_by_id there won't have it either.
                 continue
             result = self._eligibility_policy.evaluate(patent, demand)
+            if not result.is_eligible:
+                continue
             temporal_reasons[pub_id] = result.reason
+            eligible_candidates.append(candidate)
 
-        pool = CandidatePool(demand_id=demand.demand_id, candidates=list(merged.values()))
+        pool = CandidatePool(demand_id=demand.demand_id, candidates=eligible_candidates)
         return CandidatePoolBuildResult(pool=pool, temporal_reasons=temporal_reasons)
 
     def _fetch_patents(self, publication_ids: set[str]) -> dict[str, PatentDocument]:
