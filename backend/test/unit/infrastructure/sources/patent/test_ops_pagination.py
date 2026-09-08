@@ -126,3 +126,18 @@ def test_peek_total_result_count_raises_on_missing_total():
     client = _FakeClient({(1, 1): NO_COUNT_PAGE})
     with pytest.raises(RuntimeError, match="total-result-count"):
         peek_total_result_count(client, cql_query="pn=US")
+
+
+class _EmptyClient:
+    """Test double: fetch_batches yields nothing at all, simulating an EPO OPS
+    response with zero batches -- must not surface as a bare StopIteration."""
+
+    def fetch_batches(self, cql_query: str = "", range_start: int = 1, range_end: int = 25) -> Iterator[RawPayload]:
+        return
+        yield  # pragma: no cover -- makes this a generator function with an empty body
+
+
+def test_peek_total_result_count_raises_explicit_error_on_empty_response():
+    client = _EmptyClient()
+    with pytest.raises(RuntimeError, match="no batches"):
+        peek_total_result_count(client, cql_query="pn=US")

@@ -194,6 +194,21 @@ def main() -> None:
     it requires an explicit human decision per contract §4 (narrowing the inclusion
     contract, or a new partitioning approach agreed with the ADR owner), not a code fix.
     On any NonEnumerablePartitionError this produces no output files.
+
+    OPERATIONAL DEBT before attempting a real run (neither is a correctness bug --
+    both are recorded here so PR-E0.2 doesn't discover them live):
+    - EpoOpsClient (infrastructure/sources/patent/epo_ops_client.py, unmodified by
+      PR-E0/PR-E0.1) never refreshes its OAuth token or retries on 401. A real run
+      issues far more requests than the single-query design this client was written
+      for (see the next point), and OPS access tokens expire in roughly 20 minutes --
+      a long run can plausibly outlive its own token and abort mid-flight.
+    - enumerate_partition_tree issues one peek_total_result_count request per
+      candidate partition PLUS a full fetch_all_ops_batches run per eligible leaf --
+      roughly double the request count a single combined fetch+count call would need.
+      Contract §5.3 deliberately keeps eligibility and completeness as separate
+      concerns, so this is not something to silently optimize away here, but it
+      compounds the token-lifetime risk above and should factor into PR-E0.2's
+      request-budget planning.
     """
     window_end = datetime.now(UTC).date()
     try:
