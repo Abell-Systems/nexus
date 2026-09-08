@@ -10,7 +10,6 @@ from domain.models.matching import (
     CPCConcordanceLevels,
     CPCModality,
     DemandCPC,
-    EligibilityReason,
     MatchingPolicyConfig,
     RetrievalMethod,
     compute_max_cpc_similarity,
@@ -116,7 +115,7 @@ class DuckDbCPCRetriever(PatentCandidateRetriever):
 
             # Strict pre-retrieval eligibility evaluation
             eval_res = self._eligibility_policy.evaluate(patent, demand)
-            if eval_res.reason != EligibilityReason.ELIGIBLE:
+            if not eval_res.is_eligible:
                 continue
 
             # Parse patent CPC symbols (supports JSON string, list or comma-delimited)

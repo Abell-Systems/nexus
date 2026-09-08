@@ -146,6 +146,10 @@ class EligibilityReason(StrEnum):
     EXCLUDED_TEMPORAL = "excluded_temporal"
     EXCLUDED_JURISDICTION = "excluded_jurisdiction"
     EXCLUDED_MISSING_TEXT = "excluded_missing_text"
+    # ADR 0019: annotation-pool-only outcome. An eligibility OUTCOME, not an
+    # exclusion reason — is_eligible must be True whenever this reason is used.
+    # DefaultPatentEligibilityPolicy (live retrieval) never produces this value.
+    TEMPORAL_UNKNOWN = "temporal_unknown"
 
 
 class EligibilityResult(BaseModel):

@@ -3,7 +3,6 @@ import duckdb
 from domain.models.demand import DemandRecord, DemandSignal
 from domain.models.matching import (
     Candidate,
-    EligibilityReason,
     RetrievalMethod,
     compute_bm25_scores,
 )
@@ -80,7 +79,7 @@ class DuckDbBM25Retriever(PatentCandidateRetriever):
             )
 
             eval_res = self._eligibility_policy.evaluate(patent, demand)
-            if eval_res.reason != EligibilityReason.ELIGIBLE:
+            if not eval_res.is_eligible:
                 continue
 
             eligible_documents[pub_id] = f"{title} {abstract}"
