@@ -147,7 +147,13 @@ Primary IAA metric: weighted Cohen's κ (penalizes distant disagreements like 0-
   - Different seed → same candidate set, potentially different order.
   - Both annotators' exports cover exactly the same `(demand_id, publication_id)` set.
 
-## 9. Exit criteria
+## 9. Non-negotiable statements
+
+> The dry-run candidate pool is an annotation instrument, not an evaluation pool. Its purpose is to validate the annotation protocol and inter-annotator agreement. No efficacy metric or model comparison may be computed from PR-E judgments.
+
+> The candidate pool is frozen before annotation begins. Annotator judgments cannot alter candidate inclusion, ordering, evidence, or pool membership.
+
+## 10. Exit criteria
 
 If κ is acceptable and disagreements concentrate on understandable adjacent boundaries (1↔2, 2↔3) with no structural ambiguity: freeze the protocol, proceed to scale the same protocol to the full 39 demands (still within Lab track, ahead of PR-F).
 
