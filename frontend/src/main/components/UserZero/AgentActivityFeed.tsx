@@ -2,8 +2,8 @@ import type { AgentEventItem } from "../../domain/patent";
 import styles from "./AgentActivityFeed.module.css";
 
 interface AgentActivityFeedProps {
-  events?: AgentEventItem[];
-  isLive?: boolean;
+  readonly events?: AgentEventItem[];
+  readonly isLive?: boolean;
 }
 
 export function AgentActivityFeed({ events = [], isLive = false }: AgentActivityFeedProps) {

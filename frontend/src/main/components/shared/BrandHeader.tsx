@@ -1,7 +1,7 @@
 import styles from "./BrandHeader.module.css";
 
 interface BrandHeaderProps {
-  domain?: string | null;
+  readonly domain?: string | null;
 }
 
 // A simplified, icon-scale take on the Abell Systems mark (docs/abell-systems.jpeg):

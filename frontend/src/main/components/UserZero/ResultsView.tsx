@@ -26,10 +26,30 @@ function firstSentence(text: string, maxLen = 180): string {
   return `${truncated.slice(0, lastSpace > 0 ? lastSpace : maxLen)}…`;
 }
 
+const US_PATENT_RE = /\b(US-[A-Za-z0-9-]+)\b/;
+
+function isCandidateSurvived(
+  verdict?: AdversarialVerdict,
+  scorecard?: ScoreCard
+): boolean {
+  if (!verdict) return false;
+  const vStr = (verdict.verdict || "").toLowerCase();
+  if (vStr !== "survives") return false;
+  const summary = (scorecard?.summary || "").toLowerCase();
+  if (
+    summary.includes("directly anticipated") ||
+    summary.includes("no room for novelty") ||
+    summary.includes("cannot be recommended")
+  ) {
+    return false;
+  }
+  return true;
+}
+
 export interface ResultsViewProps {
-  domain?: string;
-  result: JobStatusResponse;
-  onReset?: () => void;
+  readonly domain?: string;
+  readonly result: JobStatusResponse;
+  readonly onReset?: () => void;
 }
 
 export function ResultsView({ domain, result, onReset }: ResultsViewProps) {
@@ -40,24 +60,6 @@ export function ResultsView({ domain, result, onReset }: ResultsViewProps) {
   const verdicts = result.verdicts || [];
   const scorecards = result.scorecards || [];
   const clusters = result.clusters || [];
-
-  function isCandidateSurvived(
-    verdict?: AdversarialVerdict,
-    scorecard?: ScoreCard
-  ): boolean {
-    if (!verdict) return false;
-    const vStr = (verdict.verdict || "").toLowerCase();
-    if (vStr !== "survives") return false;
-    const summary = (scorecard?.summary || "").toLowerCase();
-    if (
-      summary.includes("directly anticipated") ||
-      summary.includes("no room for novelty") ||
-      summary.includes("cannot be recommended")
-    ) {
-      return false;
-    }
-    return true;
-  }
 
   // Filter candidates prioritizing surviving ones
   const survivingCandidates = candidates.filter((c) => {
@@ -96,7 +98,7 @@ export function ResultsView({ domain, result, onReset }: ResultsViewProps) {
 
   const extractedPatentsFromEvidence = supportingEvidenceFromScorecard
     .map((item) => {
-      const match = item.match(/\b(US-[A-Za-z0-9-]+)\b/);
+      const match = US_PATENT_RE.exec(item);
       return match ? match[1] : item.trim();
     })
     .filter((item) => item.length > 0 && item.startsWith("US-"));
@@ -427,11 +429,19 @@ export function ResultsView({ domain, result, onReset }: ResultsViewProps) {
                 <div className={styles.evidenceSection}>
                   <span className={styles.evidenceLabel}>Supporting Citations:</span>
                   <ul className={styles.evidenceList}>
-                    {currentScorecard.supporting_evidence.map((ev, idx) => (
-                      <li key={idx} className={styles.evidenceItem}>
-                        {ev}
-                      </li>
-                    ))}
+                    {(() => {
+                      const seen = new Map<string, number>();
+                      return currentScorecard.supporting_evidence.map((ev) => {
+                        const count = (seen.get(ev) ?? 0) + 1;
+                        seen.set(ev, count);
+                        const stableKey = count === 1 ? ev : `${ev}__${count}`;
+                        return (
+                          <li key={stableKey} className={styles.evidenceItem}>
+                            {ev}
+                          </li>
+                        );
+                      });
+                    })()}
                   </ul>
                 </div>
               )}
