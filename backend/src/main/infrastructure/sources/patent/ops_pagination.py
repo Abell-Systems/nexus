@@ -42,18 +42,28 @@ def fetch_all_ops_batches(
     cql_query: str,
     page_size: int = 100,
     max_records: int = 60000,
-) -> Iterator[RawPayload]:
+) -> list[RawPayload]:
     """Page through `client.fetch_batches` until EPO OPS's own total-result-count is
-    fully covered. Raises RuntimeError instead of returning a partial set if the total
-    count is missing, changes mid-run, or exceeds `max_records` before completion.
+    fully covered, and return the complete, verified list of batches. Raises
+    RuntimeError instead of returning anything if the total count is missing,
+    changes mid-run, or exceeds `max_records` before completion.
+
+    Deliberately NOT a generator: every batch is verified and buffered internally
+    as it arrives, and only handed to the caller via `return` once the full universe
+    has been confirmed covered. A generator's `yield` would expose each batch to the
+    caller before the run as a whole (not just that one page) had been verified
+    complete -- a caller consuming it lazily could observe and act on data from a
+    fetch that later turns out to be truncated or corrupt. Buffer-then-return closes
+    that gap: this function either returns the complete verified list, or raises
+    before returning anything at all.
     """
     range_start = 1
     known_total: int | None = None
+    batches: list[RawPayload] = []
 
     while True:
         range_end = range_start + page_size - 1
         batch = next(iter(client.fetch_batches(cql_query=cql_query, range_start=range_start, range_end=range_end)))
-        yield batch
 
         page_total = parse_total_result_count(batch.payload_bytes)
         if page_total is None:
@@ -67,6 +77,7 @@ def fetch_all_ops_batches(
                 f"total-result-count ({cause}); cannot verify complete enumeration of the "
                 "eligible universe (ADR 0020 §4 enumerability requirement)."
             )
+        batches.append(batch)
         if known_total is None:
             known_total = page_total
         elif page_total != known_total:
@@ -77,7 +88,7 @@ def fetch_all_ops_batches(
             )
 
         if range_end >= known_total:
-            return
+            return batches
         if range_end >= max_records:
             raise RuntimeError(
                 f"EPO OPS pagination reached max_records={max_records} before covering "
