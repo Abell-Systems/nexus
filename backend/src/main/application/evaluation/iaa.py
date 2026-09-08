@@ -32,6 +32,12 @@ def _weighted_kappa(labels_a: list[int], labels_b: list[int]) -> tuple[float, li
     confusion = [[0] * _NUM_GRADES for _ in range(_NUM_GRADES)]
     for a, b in zip(labels_a, labels_b):
         confusion[a][b] += 1
+
+    # n=0, or every judgment sharing the same grade (no expected variance to
+    # divide by): kappa is mathematically undefined (0/0), not perfect
+    # agreement. Report NaN rather than a misleading 1.0.
+    if n == 0:
+        return float("nan"), confusion
     observed = np.array(confusion, dtype=float)
 
     row_marginals = observed.sum(axis=1)
@@ -45,7 +51,7 @@ def _weighted_kappa(labels_a: list[int], labels_b: list[int]) -> tuple[float, li
     weighted_observed_disagreement = float((weights * observed).sum())
     weighted_expected_disagreement = float((weights * expected).sum())
     if weighted_expected_disagreement == 0:
-        return 1.0, confusion
+        return float("nan"), confusion
     kappa = 1.0 - (weighted_observed_disagreement / weighted_expected_disagreement)
     return kappa, confusion
 
@@ -53,6 +59,8 @@ def _weighted_kappa(labels_a: list[int], labels_b: list[int]) -> tuple[float, li
 def _binary_kappa(labels_a: list[int], labels_b: list[int]) -> float:
     """Simple (unweighted) Cohen's kappa over the derived relevant_binary = grade >= 2 view."""
     n = len(labels_a)
+    if n == 0:
+        return float("nan")
     bin_a = [1 if g >= 2 else 0 for g in labels_a]
     bin_b = [1 if g >= 2 else 0 for g in labels_b]
     observed_agreement = sum(1 for a, b in zip(bin_a, bin_b) if a == b) / n
@@ -61,8 +69,11 @@ def _binary_kappa(labels_a: list[int], labels_b: list[int]) -> float:
     p_b1 = sum(bin_b) / n
     expected_agreement = p_a1 * p_b1 + (1 - p_a1) * (1 - p_b1)
 
+    # expected_agreement == 1.0 means both annotators graded with zero variance
+    # (e.g. everything binarizes to the same class): expected disagreement is 0,
+    # so kappa is 0/0, mathematically undefined, not perfect agreement.
     if expected_agreement == 1.0:
-        return 1.0
+        return float("nan")
     return (observed_agreement - expected_agreement) / (1 - expected_agreement)
 
 

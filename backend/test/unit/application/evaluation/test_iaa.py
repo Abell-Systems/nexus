@@ -1,3 +1,5 @@
+import math
+
 import pytest
 
 from domain.models.annotation import AnnotationJudgment
@@ -80,3 +82,11 @@ class IaaTest:
         with pytest.raises(ValueError, match="non-empty"):
             compute_iaa([], [])
 
+    def test_should_report_nan_kappa_for_zero_variance_input_not_perfect_agreement(self):
+        # Both annotators grade everything 0 -> no expected variance, kappa is
+        # 0/0 (undefined), not perfect agreement.
+        judgments_a = [_judgment("D1", "P1", "valentin", 0), _judgment("D1", "P2", "valentin", 0)]
+        judgments_b = [_judgment("D1", "P1", "lydia", 0), _judgment("D1", "P2", "lydia", 0)]
+        report = compute_iaa(judgments_a, judgments_b)
+        assert math.isnan(report.weighted_kappa)
+        assert math.isnan(report.binary_kappa)
