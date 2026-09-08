@@ -20,6 +20,7 @@ if str(_REPO_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
 from audit_project_status import (  # noqa: E402
+    ALLOWED_SOURCE_EVENTS,
     REQ_OPTIONAL,
     REQ_REQUIRED,
     STATUS_FAIL,
@@ -29,6 +30,8 @@ from audit_project_status import (  # noqa: E402
     CheckResult,
     DimensionResult,
     aggregate_overall_status,
+    append_history_entry,
+    build_history_entry,
     build_project_status,
     evaluate_coverage_xml,
     generate_markdown_report,
@@ -171,3 +174,117 @@ class TestSchemaValidationAndSerialization:
         assert "## Dimensions Summary" in md
         assert "| Dimension |" in md
         assert "UNVERIFIED != PASS" in md
+
+
+class TestHistoricalTelemetry:
+    @pytest.fixture
+    def sample_payload(self) -> dict:
+        return {
+            "schema_version": "1.0.0",
+            "commit_sha": "e6dccbe123456789abcdef0123456789abcdef01",
+            "evaluated_at": "2026-09-08T18:25:00Z",
+            "overall_status": STATUS_PASS,
+            "aggregation_rule": "all required pass",
+            "summary": "Sample summary",
+            "dimensions": {
+                "backend_coverage": {
+                    "status": STATUS_PASS,
+                    "requirement_level": REQ_REQUIRED,
+                    "evidence_source": "coverage.xml",
+                    "evidence_available": True,
+                    "metrics": {"line_coverage": 85.0},
+                    "checks": [],
+                },
+                "sonar_cloud": {
+                    "status": STATUS_UNVERIFIED,
+                    "requirement_level": REQ_OPTIONAL,
+                    "evidence_source": "environment",
+                    "evidence_available": False,
+                    "metrics": {},
+                    "checks": [],
+                },
+            },
+        }
+
+    def test_build_history_entry_conforms_to_spec(self, sample_payload: dict) -> None:
+        entry = build_history_entry(sample_payload, source_event="ci_audit")
+        assert entry["schema_version"] == "1.0.0"
+        assert entry["commit_sha"] == "e6dccbe123456789abcdef0123456789abcdef01"
+        assert entry["evaluated_at"] == "2026-09-08T18:25:00Z"
+        assert entry["overall_status"] == STATUS_PASS
+        assert entry["aggregation_rule"] == "all required pass"
+        assert entry["source_event"] == "ci_audit"
+        assert entry["dimension_statuses"] == {
+            "backend_coverage": STATUS_PASS,
+            "sonar_cloud": STATUS_UNVERIFIED,
+        }
+        assert entry["metrics"] == {"backend_coverage.line_coverage": 85.0}
+
+    def test_build_history_entry_rejects_uncontrolled_source_event(self, sample_payload: dict) -> None:
+        with pytest.raises(ValueError, match="Invalid source_event"):
+            build_history_entry(sample_payload, source_event="unauthorized_random_trigger")
+
+    def test_allowed_source_events_set(self) -> None:
+        assert "manual_audit" in ALLOWED_SOURCE_EVENTS
+        assert "ci_audit" in ALLOWED_SOURCE_EVENTS
+        assert "release_audit" in ALLOWED_SOURCE_EVENTS
+
+    def test_append_history_entry_appends_and_preserves_previous(
+        self, tmp_path: Path, sample_payload: dict
+    ) -> None:
+        history_file = tmp_path / "telemetry" / "history.jsonl"
+
+        entry1 = build_history_entry(sample_payload, source_event="manual_audit")
+        appended1 = append_history_entry(history_file, entry1)
+        assert appended1 is True
+        assert history_file.exists()
+
+        payload2 = dict(sample_payload)
+        payload2["commit_sha"] = "ffffffffffffffffffffffffffffffffffffffff"
+        entry2 = build_history_entry(payload2, source_event="manual_audit")
+        appended2 = append_history_entry(history_file, entry2)
+        assert appended2 is True
+
+        lines = history_file.read_text(encoding="utf-8").strip().splitlines()
+        assert len(lines) == 2
+        record1 = json.loads(lines[0])
+        record2 = json.loads(lines[1])
+        assert record1["commit_sha"] == sample_payload["commit_sha"]
+        assert record2["commit_sha"] == "ffffffffffffffffffffffffffffffffffffffff"
+
+    def test_append_history_entry_idempotency(
+        self, tmp_path: Path, sample_payload: dict
+    ) -> None:
+        history_file = tmp_path / "telemetry" / "history.jsonl"
+
+        entry = build_history_entry(sample_payload, source_event="ci_audit")
+        assert append_history_entry(history_file, entry) is True
+        # Second identical append must be skipped
+        assert append_history_entry(history_file, entry) is False
+
+        lines = history_file.read_text(encoding="utf-8").strip().splitlines()
+        assert len(lines) == 1
+
+    def test_append_history_entry_force_allows_duplicate(
+        self, tmp_path: Path, sample_payload: dict
+    ) -> None:
+        history_file = tmp_path / "telemetry" / "history.jsonl"
+
+        entry = build_history_entry(sample_payload, source_event="ci_audit")
+        assert append_history_entry(history_file, entry) is True
+        assert append_history_entry(history_file, entry, force=True) is True
+
+        lines = history_file.read_text(encoding="utf-8").strip().splitlines()
+        assert len(lines) == 2
+
+    def test_history_does_not_alter_overall_status(
+        self, tmp_path: Path, sample_payload: dict
+    ) -> None:
+        history_file = tmp_path / "telemetry" / "history.jsonl"
+        original_status = sample_payload["overall_status"]
+
+        entry = build_history_entry(sample_payload, source_event="manual_audit")
+        append_history_entry(history_file, entry)
+
+        # Invariant 1: history is secondary output, overall_status cannot be changed
+        assert sample_payload["overall_status"] == original_status

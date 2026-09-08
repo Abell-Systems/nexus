@@ -14,6 +14,7 @@ Invariants enforced (ADR 0022):
 - Zero new scientific logic; consumes existing evidence artifacts.
 """
 
+import argparse
 import json
 import os
 import re
@@ -35,6 +36,9 @@ STATUS_NA = "N/A"
 # Requirement Levels (ADR 0022 §3)
 REQ_REQUIRED = "required"
 REQ_OPTIONAL = "optional"
+
+# Controlled Source Events for Historical Telemetry (ADR 0022 Telemetry Spec)
+ALLOWED_SOURCE_EVENTS = frozenset({"manual_audit", "ci_audit", "release_audit"})
 
 
 @dataclass
@@ -746,21 +750,125 @@ def generate_markdown_report(payload: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+
+def build_history_entry(payload: dict[str, Any], source_event: str = "manual_audit") -> dict[str, Any]:
+    """Constructs a flat, self-sufficient historical telemetry record (ADR 0022 Telemetry Spec).
+
+    Invariants:
+    1. Historical telemetry is a secondary output and cannot alter overall_status.
+    2. Self-sufficient: carries schema_version, commit_sha, timestamps, dimension statuses, and metrics.
+    3. Source event must be one of ALLOWED_SOURCE_EVENTS.
+    """
+    if source_event not in ALLOWED_SOURCE_EVENTS:
+        raise ValueError(
+            f"Invalid source_event: '{source_event}'. Must be one of {sorted(ALLOWED_SOURCE_EVENTS)}"
+        )
+
+    dimension_statuses: dict[str, str] = {}
+    metrics: dict[str, Any] = {}
+
+    for dim_name, dim_data in payload.get("dimensions", {}).items():
+        dimension_statuses[dim_name] = dim_data.get("status", STATUS_UNVERIFIED)
+        dim_metrics = dim_data.get("metrics", {})
+        for m_name, m_val in dim_metrics.items():
+            metrics[f"{dim_name}.{m_name}"] = m_val
+
+    return {
+        "schema_version": payload.get("schema_version", "1.0.0"),
+        "commit_sha": payload.get("commit_sha", ""),
+        "evaluated_at": payload.get("evaluated_at", ""),
+        "overall_status": payload.get("overall_status", STATUS_UNVERIFIED),
+        "aggregation_rule": payload.get("aggregation_rule", ""),
+        "dimension_statuses": dimension_statuses,
+        "metrics": metrics,
+        "source_event": source_event,
+    }
+
+
+def append_history_entry(history_file: Path, entry: dict[str, Any], force: bool = False) -> bool:
+    """Appends an entry to history.jsonl adhering to append-only and idempotency contracts.
+
+    Idempotent by (commit_sha, source_event) unless force=True.
+    Returns True if appended, False if skipped due to existing duplicate.
+    """
+    history_file = Path(history_file)
+    if history_file.exists() and not force:
+        try:
+            for line in history_file.read_text(encoding="utf-8").splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                existing = json.loads(line)
+                if (
+                    existing.get("commit_sha") == entry.get("commit_sha")
+                    and existing.get("source_event") == entry.get("source_event")
+                ):
+                    return False
+        except Exception:
+            pass
+
+    history_file.parent.mkdir(parents=True, exist_ok=True)
+    with history_file.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(entry) + "\n")
+    return True
+
+
 def main() -> int:
-    repo_root = Path(__file__).resolve().parent.parent
+    parser = argparse.ArgumentParser(description="Nexus Project Status Auditor & Observability Telemetry")
+    parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parent.parent)
+    parser.add_argument("--output-json", type=Path, default=None)
+    parser.add_argument("--output-md", type=Path, default=None)
+    parser.add_argument(
+        "--record-history", action="store_true", help="Append telemetry to history.jsonl (opt-in)"
+    )
+    parser.add_argument(
+        "--history-file",
+        type=Path,
+        default=None,
+        help="Target history.jsonl path (default: data/telemetry/history.jsonl)",
+    )
+    parser.add_argument(
+        "--source-event",
+        type=str,
+        default="manual_audit",
+        choices=sorted(ALLOWED_SOURCE_EVENTS),
+        help="Controlled event trigger",
+    )
+    parser.add_argument(
+        "--force-history", action="store_true", help="Force append even if commit+event duplicate exists"
+    )
+    parser.add_argument("--no-write", action="store_true", help="Do not write output files, print to stdout only")
+
+    args = parser.parse_args()
+    repo_root = args.repo_root.resolve()
 
     payload = build_project_status(repo_root)
 
-    json_path = repo_root / "project_status.json"
-    md_path = repo_root / "PROJECT_STATUS.md"
+    json_path = args.output_json or (repo_root / "project_status.json")
+    md_path = args.output_md or (repo_root / "PROJECT_STATUS.md")
+    history_file = args.history_file or (repo_root / "data" / "telemetry" / "history.jsonl")
 
-    # Write outputs
-    json_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    md_path.write_text(generate_markdown_report(payload), encoding="utf-8")
+    if not args.no_write:
+        json_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        md_path.write_text(generate_markdown_report(payload), encoding="utf-8")
+
+        if args.record_history:
+            history_entry = build_history_entry(payload, source_event=args.source_event)
+            appended = append_history_entry(history_file, history_entry, force=args.force_history)
+            history_status = "appended" if appended else "skipped (duplicate)"
+            hist_rel = (
+                history_file.relative_to(repo_root)
+                if history_file.is_relative_to(repo_root)
+                else history_file
+            )
+            print(f" - History: {hist_rel} ({history_status})")
 
     print(f"Project Status Auditor: {payload['overall_status']}")
-    print(f" - JSON: {json_path.relative_to(repo_root)}")
-    print(f" - Markdown: {md_path.relative_to(repo_root)}")
+    if not args.no_write:
+        j_rel = json_path.relative_to(repo_root) if json_path.is_relative_to(repo_root) else json_path
+        m_rel = md_path.relative_to(repo_root) if md_path.is_relative_to(repo_root) else md_path
+        print(f" - JSON: {j_rel}")
+        print(f" - Markdown: {m_rel}")
 
     # ADR 0022: Auditor is an observer and evidence consolidator, not an enforcement failure gate
     return 0
