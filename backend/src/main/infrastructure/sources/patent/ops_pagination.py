@@ -96,3 +96,28 @@ def fetch_all_ops_batches(
                 "max_records or narrow the query -- do not silently accept a truncated fetch."
             )
         range_start = range_end + 1
+
+
+def peek_total_result_count(client: _PaginatedPatentSource, cql_query: str) -> int:
+    """Fetch page 1 only of `cql_query` and return its declared total-result-count,
+    without paginating further. Used to decide partition eligibility (PR-E0.1 contract
+    §5.3) before committing to a full fetch_all_ops_batches run. Raises RuntimeError
+    with the same diagnostic style as fetch_all_ops_batches if the response is empty,
+    or if total-result-count is missing or unparseable -- this is the first fail-closed
+    barrier in the partitioning pipeline, so it must never fail silently or as an
+    unrelated StopIteration.
+    """
+    try:
+        batch = next(iter(client.fetch_batches(cql_query=cql_query, range_start=1, range_end=1)))
+    except StopIteration:
+        raise RuntimeError(
+            f"EPO OPS returned no batches at all for query {cql_query!r}; "
+            "cannot determine partition eligibility (PR-E0.1 contract §5.3)."
+        ) from None
+    total = parse_total_result_count(batch.payload_bytes)
+    if total is None:
+        raise RuntimeError(
+            f"EPO OPS response for query {cql_query!r} is missing total-result-count; "
+            "cannot determine partition eligibility (PR-E0.1 contract §5.3)."
+        )
+    return total

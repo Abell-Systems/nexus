@@ -8,6 +8,7 @@ from domain.protocols.sources import RawPayload
 from infrastructure.sources.patent.ops_pagination import (
     fetch_all_ops_batches,
     parse_total_result_count,
+    peek_total_result_count,
 )
 
 ONE_DOC_PAGE = b"""<?xml version="1.0" encoding="UTF-8"?>
@@ -112,3 +113,31 @@ def test_fetch_all_ops_batches_never_exposes_the_first_valid_batch_before_a_late
 
     # The call never returned, so there is no value in which the first (valid)
     # batch could have reached the caller -- the raise happened before any return.
+
+
+def test_peek_total_result_count_reads_page_one_only():
+    client = _FakeClient({(1, 1): ONE_DOC_PAGE})
+    total = peek_total_result_count(client, cql_query="pn=US")
+    assert total == 3
+    assert client.calls == [(1, 1)]
+
+
+def test_peek_total_result_count_raises_on_missing_total():
+    client = _FakeClient({(1, 1): NO_COUNT_PAGE})
+    with pytest.raises(RuntimeError, match="total-result-count"):
+        peek_total_result_count(client, cql_query="pn=US")
+
+
+class _EmptyClient:
+    """Test double: fetch_batches yields nothing at all, simulating an EPO OPS
+    response with zero batches -- must not surface as a bare StopIteration."""
+
+    def fetch_batches(self, cql_query: str = "", range_start: int = 1, range_end: int = 25) -> Iterator[RawPayload]:
+        return
+        yield  # pragma: no cover -- makes this a generator function with an empty body
+
+
+def test_peek_total_result_count_raises_explicit_error_on_empty_response():
+    client = _EmptyClient()
+    with pytest.raises(RuntimeError, match="no batches"):
+        peek_total_result_count(client, cql_query="pn=US")
