@@ -185,7 +185,65 @@ class OepmXmlNormalizer:
         """Normalize a single XML publication element into a typed NormalizationResult."""
         raw_snippet = ET.tostring(elem, encoding="utf-8")[:300].decode("utf-8", errors="replace")
 
-        # 1. Identifier extraction (order-independent)
+        id_result = self._resolve_publication_id(elem, raw_snippet, source_uri)
+        if isinstance(id_result, NormalizationResult):
+            return id_result
+        _pub_id_raw, doc_number, country_code, kind_code, canonical_pub_id = id_result
+
+        kind_result = self._validate_kind_code(kind_code, country_code, canonical_pub_id, source_uri)
+        if kind_result is not None:
+            return kind_result
+
+        date_result = self._resolve_dates(
+            elem, canonical_pub_id, country_code, kind_code, raw_snippet, source_uri
+        )
+        if isinstance(date_result, NormalizationResult):
+            return date_result
+        norm_pub_date, norm_filing_date, norm_priority_date = date_result
+
+        text_result = self._resolve_text_fields(
+            elem, kind_code, canonical_pub_id, country_code, source_uri
+        )
+        if isinstance(text_result, NormalizationResult):
+            return text_result
+        title, abstract = text_result
+
+        assignees, inventors, valid_cpc, app_num = self._resolve_metadata(elem)
+
+        doc = PatentDocument(
+            publication_id=canonical_pub_id,
+            country_code=country_code,
+            doc_number=doc_number,
+            kind_code=kind_code,
+            application_number=app_num,
+            title=title.strip(),
+            abstract=abstract.strip(),
+            assignees=assignees,
+            inventors=inventors,
+            filing_date=norm_filing_date,
+            publication_date=norm_pub_date,
+            priority_date=norm_priority_date,
+            classifications_cpc=valid_cpc,
+            classifications_ipc=valid_cpc,
+        )
+
+        observations = self._build_observations(
+            doc, raw_payload, source_authority, source_uri
+        )
+
+        return NormalizationResult(
+            disposition=RecordDisposition.INCLUDED,
+            document=doc,
+            observations=observations,
+        )
+
+    def _resolve_publication_id(
+        self,
+        elem: ET.Element,
+        raw_snippet: str,
+        source_uri: str,
+    ) -> NormalizationResult | tuple[str, str, str, str, str]:
+        """Extract publication ID, country code, and kind code."""
         pub_id_raw = self._get_element_text(
             elem,
             ["publicacionid", "p11_numpatenteccp", "doc-number", "doc_number", "id", "numero_publicacion"],
@@ -206,7 +264,6 @@ class OepmXmlNormalizer:
                 ),
             )
 
-        # 2. Country code & Kind code parsing
         country_code = self._get_element_text(elem, ["pais", "country", "country_code"])
         if not country_code and "country" in elem.attrib:
             country_code = elem.attrib["country"]
@@ -215,7 +272,6 @@ class OepmXmlNormalizer:
         if not kind_code and "kind" in elem.attrib:
             kind_code = elem.attrib["kind"]
 
-        # If pub_id_raw contains prefix/suffix (e.g. ES2849102B2 or ES-2849102-B2)
         clean_num = pub_id_raw.replace("-", "").strip()
         m_pattern = re.match(r"^([A-Z]{2})?(\d+)([A-Z]\d?)?$", clean_num, re.IGNORECASE)
         if m_pattern:
@@ -230,8 +286,16 @@ class OepmXmlNormalizer:
         country_code = (country_code or self.target_country).upper()
         kind_code = (kind_code or "").upper()
         canonical_pub_id = f"{country_code}{doc_number}{kind_code}"
+        return pub_id_raw, doc_number, country_code, kind_code, canonical_pub_id
 
-        # 3. Validation against Kind-Code Universe
+    def _validate_kind_code(
+        self,
+        kind_code: str,
+        country_code: str,
+        canonical_pub_id: str,
+        source_uri: str,
+    ) -> NormalizationResult | None:
+        """Validate kind code against configured allowed kind codes."""
         if kind_code not in self.allowed_kind_codes:
             return NormalizationResult(
                 disposition=RecordDisposition.EXCLUDED,
@@ -244,8 +308,18 @@ class OepmXmlNormalizer:
                     source_uri=source_uri,
                 ),
             )
+        return None
 
-        # 4. Dates extraction and validation
+    def _resolve_dates(
+        self,
+        elem: ET.Element,
+        canonical_pub_id: str,
+        country_code: str,
+        kind_code: str,
+        raw_snippet: str,
+        source_uri: str,
+    ) -> NormalizationResult | tuple[str | None, str | None, str | None]:
+        """Extract and validate publication, filing, and priority dates."""
         pub_date_raw = self._get_element_text(
             elem,
             ["fechapublicacion", "p45_fechapublicaciondelaconcesion", "date", "publication_date"],
@@ -264,7 +338,6 @@ class OepmXmlNormalizer:
                 ),
             )
 
-        # Temporal boundary check
         if norm_pub_date:
             pub_year = int(norm_pub_date.split("-")[0])
             if pub_year < self.min_publication_year or pub_year > self.max_publication_year:
@@ -280,7 +353,9 @@ class OepmXmlNormalizer:
                     ),
                 )
 
-        filing_date_raw = self._get_element_text(elem, ["fechasolicitud", "p22_fechasolicitud", "filing_date"])
+        filing_date_raw = self._get_element_text(
+            elem, ["fechasolicitud", "p22_fechasolicitud", "filing_date"]
+        )
         norm_filing_date = self._normalize_date(filing_date_raw)
 
         priority_date_raw = self._get_element_text(
@@ -288,17 +363,25 @@ class OepmXmlNormalizer:
         )
         norm_priority_date = self._normalize_date(priority_date_raw)
 
-        # 5. Text fields extraction with explicit deterministic hierarchy (Abstract > Claims > Description)
+        return norm_pub_date, norm_filing_date, norm_priority_date
+
+    def _resolve_text_fields(
+        self,
+        elem: ET.Element,
+        kind_code: str,
+        canonical_pub_id: str,
+        country_code: str,
+        source_uri: str,
+    ) -> NormalizationResult | tuple[str, str]:
+        """Extract title and abstract with deterministic fallback hierarchy."""
         title = self._get_element_text(
             elem, ["p54_tituloinvencion", "titulo", "tituloinvencion", "invention-title", "title"]
         )
-        
-        # Primary: Look exclusively for formal abstract tags first
+
         abstract = self._get_element_text(
             elem, ["p57_resumenoreivindicacion", "resumen", "abstract"]
         )
 
-        # Fallback hierarchy for T3 (European translations) when formal abstract is omitted
         if not abstract and kind_code == "T3":
             claims_text = self._get_element_text(
                 elem, ["claims", "reivindicaciones", "p57_reivindicaciones", "reivindicacion"]
@@ -312,26 +395,6 @@ class OepmXmlNormalizer:
                 if desc_text:
                     abstract = desc_text
 
-        # 6. Metadata: Assignees, Inventors, CPC, IPC
-        assignees = self._get_all_element_texts(
-            elem, ["p73_nombretitular", "p731_nombretitularotros", "titular", "applicant-name", "name"]
-        )
-        inventors = self._get_all_element_texts(
-            elem, ["p72_nombreinventor", "inventor-name", "inventor"]
-        )
-
-        # Classifications
-        classifications_cpc = self._get_all_element_texts(
-            elem, ["classification-symbol", "cpc", "p51_clasificacioninternacionalpatentes", "clasificacion"]
-        )
-        # Filter standard format (A01B, C11D, etc.)
-        valid_cpc = [c.replace(" ", "").upper() for c in classifications_cpc if len(c.strip()) >= 3]
-
-        app_num = self._get_element_text(
-            elem, ["p21_numsolicitud", "p21_numeroexpediente", "numsolicitud", "application_number"]
-        )
-
-        # Rule: Critical text completeness (must possess non-empty title and abstract/claims)
         if not title or not title.strip() or not abstract or not abstract.strip():
             return NormalizationResult(
                 disposition=RecordDisposition.EXCLUDED,
@@ -345,33 +408,29 @@ class OepmXmlNormalizer:
                 ),
             )
 
-        doc = PatentDocument(
-            publication_id=canonical_pub_id,
-            country_code=country_code,
-            doc_number=doc_number,
-            kind_code=kind_code,
-            application_number=app_num or None,
-            title=title.strip(),
-            abstract=abstract.strip(),
-            assignees=assignees,
-            inventors=inventors,
-            filing_date=norm_filing_date,
-            publication_date=norm_pub_date,
-            priority_date=norm_priority_date,
-            classifications_cpc=valid_cpc,
-            classifications_ipc=valid_cpc,
-        )
+        return title, abstract
 
-        # 7. Build Provenance Field Observations
-        observations = self._build_observations(
-            doc, raw_payload, source_authority, source_uri
+    def _resolve_metadata(
+        self, elem: ET.Element
+    ) -> tuple[list[str], list[str], list[str], str | None]:
+        """Extract assignees, inventors, CPC classifications, and application number."""
+        assignees = self._get_all_element_texts(
+            elem, ["p73_nombretitular", "p731_nombretitularotros", "titular", "applicant-name", "name"]
         )
+        inventors = self._get_all_element_texts(
+            elem, ["p72_nombreinventor", "inventor-name", "inventor"]
+        )
+        classifications_cpc = self._get_all_element_texts(
+            elem,
+            ["classification-symbol", "cpc", "p51_clasificacioninternacionalpatentes", "clasificacion"],
+        )
+        valid_cpc = [c.replace(" ", "").upper() for c in classifications_cpc if len(c.strip()) >= 3]
 
-        return NormalizationResult(
-            disposition=RecordDisposition.INCLUDED,
-            document=doc,
-            observations=observations,
-        )
+        app_num = self._get_element_text(
+            elem, ["p21_numsolicitud", "p21_numeroexpediente", "numsolicitud", "application_number"]
+        ) or None
+
+        return assignees, inventors, valid_cpc, app_num
 
     def _build_observations(
         self,
