@@ -12,8 +12,12 @@ import json
 import sys
 from pathlib import Path
 
-import jsonschema
 import pytest
+
+try:
+    import jsonschema
+except ImportError:
+    jsonschema = None
 
 _REPO_ROOT = Path(__file__).resolve().parents[4]
 if str(_REPO_ROOT / "scripts") not in sys.path:
@@ -156,6 +160,8 @@ class TestEvidenceEvaluation:
 
 class TestSchemaValidationAndSerialization:
     def test_build_project_status_conforms_to_schema(self, status_schema: dict) -> None:
+        if jsonschema is None:
+            pytest.skip("jsonschema not installed in current environment")
         payload = build_project_status(
             repo_root=_REPO_ROOT,
             commit_sha="db714eee6b79b7b767ac07e6abd4225b2220eadc",
