@@ -41,7 +41,7 @@ Existing infrastructure, checked before assuming a new data source was needed:
                               (PR-E1, unchanged, already designed)
 ```
 
-Neither corpus is constructed with knowledge of the other's content beyond what this ADR fixes as shared contract (jurisdiction/date/schema fields needed for eligibility). In particular: **`P`'s composition is fixed before any demand-side selection is consulted** — see §3's pipeline order. `D`'s 39 demands and the 8-demand dry-run selection are already frozen (execution-design spec, `phase2-dry-run-selection.md`) and are not reopened or referenced during `P`'s construction.
+The independence required here is one-directional, not a claim that `D ⟂ P`: **`P`'s composition must be demand-blind — fixed before, and without reference to, any demand-side selection.** `D` is not required to be independent of `P`'s existence; `D`'s 39 demands and the 8-demand dry-run selection are already frozen (execution-design spec, `phase2-dry-run-selection.md`), and nothing about them changes because `P` exists. What must never happen is the reverse: `P`'s content, jurisdiction mix, or composition being shaped by knowledge of `D` — see §3's pipeline order, which fixes `P` before any demand-side step runs.
 
 ### 2. `PatentCorpus` inclusion contract (defined ex ante, independent of any demand)
 
