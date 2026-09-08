@@ -1,6 +1,6 @@
-# PR-E Dry-Run Demand Selection — DRAFT PROPOSAL
+# PR-E Dry-Run Demand Selection — FINAL
 
-**Status:** DRAFT — a proposal against the criteria in `docs/superpowers/specs/2026-09-08-pr-e-dry-run-execution-design.md` §4, for Valentín + Lydia to review and finalize. Not a frozen artifact (per that spec's §7 distinction): no manifest, no hash. **This is not the final selection.**
+**Status:** FINAL. All 8 proposed demands accepted as-is by Valentín + Lydia on 2026-09-08 — no substitutions. Frozen scientific artifact per `docs/superpowers/specs/2026-09-08-pr-e-dry-run-execution-design.md` §7 — see `phase2-dry-run-selection.manifest.json`/`phase2-dry-run-selection.sha256` for hash/provenance.
 
 ## Real-data correction to the spec's assumed criterion
 
@@ -36,6 +36,6 @@ Not all 39 records are genuine technology-seeking demands amenable to a patent-c
 - **Temporal branch coverage:** 6 of 8 have a Wayback-confirmed upper bound (exercises `ELIGIBLE`/`EXCLUDED_TEMPORAL`); `INNOGET-1870` and `LOMBARDIA-947` have none (exercises `TEMPORAL_UNKNOWN`).
 - **Source diversity:** 7 InnoGet + 1 Lombardia (matches the corpus's own 37:2 ratio reasonably; a second Lombardia demand (`LOMBARDIA-860`, bridge-joint maintenance) was considered but not included, to keep the set at 8 and avoid over-indexing on a 2-item source).
 
-## What this proposal does not decide
+## Finalization record
 
-Final inclusion/exclusion, any substitution, and whether 6, 7, or 8 demands is the right count for the dry-run are Valentín + Lydia's call, per the execution-design spec §3.
+All 8 demands proposed above (`INNOGET-1625`, `INNOGET-1689`, `INNOGET-1870`, `INNOGET-1932`, `INNOGET-1935`, `INNOGET-1972`, `INNOGET-2258`, `LOMBARDIA-947`) were accepted as the final dry-run selection by Valentín + Lydia on 2026-09-08, with no substitutions and no change in count.

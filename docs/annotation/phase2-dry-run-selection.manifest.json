@@ -1,0 +1,10 @@
+{
+  "artifact_id": "nexus-pr-e-dry-run-selection-v1",
+  "file": "phase2-dry-run-selection.md",
+  "frozen_at": "2026-09-08",
+  "finalized_by": [
+    "valentin",
+    "lydia"
+  ],
+  "content_sha256": "7b63c6a76b7a6176e28fa130421d10b99751729e61c14da2309c8d9c4802422c"
+}

@@ -1,0 +1,10 @@
+{
+  "artifact_id": "nexus-pr-e-dry-run-annotation-guide-v1",
+  "file": "phase2-guide.md",
+  "frozen_at": "2026-09-08",
+  "finalized_by": [
+    "valentin",
+    "lydia"
+  ],
+  "content_sha256": "26e1754733baf54ac5c267eae34568e6a171a3e4db14ed711d9a62bec0c68628"
+}

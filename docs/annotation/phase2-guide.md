@@ -1,8 +1,8 @@
-# PR-E Dry-Run Annotation Guide — DRAFT
+# PR-E Dry-Run Annotation Guide — FINAL
 
-**Status:** DRAFT. Per `docs/superpowers/specs/2026-09-08-pr-e-dry-run-execution-design.md` §5 (step 4/5): this is a proposal for the scale's worked examples and boundary language. **Sections marked `⚠ PENDING VALIDATION` are not decided** — they are starting points for Valentín + Lydia to accept, edit, or replace. Not a frozen artifact (spec §7): no manifest, no hash, until finalized.
+**Status:** FINAL. Validated by Valentín + Lydia on 2026-09-08. Frozen scientific artifact per `docs/superpowers/specs/2026-09-08-pr-e-dry-run-execution-design.md` §7 — see `phase2-guide.manifest.json`/`phase2-guide.sha256` for hash/provenance.
 
-This guide is deliberately independent of which 6-8 demands end up selected (`docs/annotation/phase2-dry-run-selection.md`, itself still a draft) — nothing here presupposes a specific demand.
+This guide is deliberately independent of which demands were selected (`docs/annotation/phase2-dry-run-selection.md`) — nothing here presupposes a specific demand.
 
 ## 1. What you are judging
 
@@ -54,15 +54,15 @@ These are synthetic, to avoid presupposing which real demands get selected.
 - **Grade 2:** A patent on a semiconductor-based pH sensor for water, without an explicit low-power design claim.
 - **Grade 3:** A patent on a miniaturized, low-power multiparameter water quality sensor using semiconductor sensing. Matches the demand closely on both the "what" (water quality) and the stated constraint (low-power).
 
-## 5. ⚠ PENDING VALIDATION — the 1↔2 and 2↔3 boundaries
+## 5. The 1↔2 and 2↔3 boundaries (validated)
 
-This is the section most likely to drive disagreement, per the instrument's own design intent (§4/§10 of the dry-run execution spec) — it is deliberately left as a proposal, not a rule.
+This is the section most likely to drive disagreement, per the instrument's own design intent (§4/§10 of the dry-run execution spec).
 
-**Proposed 1↔2 boundary (draft):** grade 2 requires the patent to address a genuine *component* of the demand's problem (the same sub-problem, the same functional requirement, or a closely analogous technical mechanism) — not just the same general field. Grade 1 is "same neighborhood," grade 2 is "same building."
+**1↔2 boundary:** grade 2 requires the patent to address a genuine *component* of the demand's problem (the same sub-problem, the same functional requirement, or a closely analogous technical mechanism) — not just the same general field. Grade 1 is "same neighborhood," grade 2 is "same building."
 
-**Proposed 2↔3 boundary (draft):** grade 3 requires the patent to address the demand's problem as a whole, not just one component of it — even if it's not a perfect match, a grade-3 candidate should read as "if I were solving this demand, I would look closely at this patent," not "this is one piece of a possible solution."
+**2↔3 boundary:** grade 3 requires the patent to address the demand's problem as a whole, not just one component of it — even if it's not a perfect match, a grade-3 candidate should read as "if I were solving this demand, I would look closely at this patent," not "this is one piece of a possible solution."
 
-**Open question for Valentín + Lydia to resolve, not implied by anything above:** how to grade a patent that solves the demand's problem completely but via a very different technical mechanism than what the demand describes (e.g. a chemical solution to a demand phrased in mechanical terms) — is that a 2 (analogous approach) or a 3 (directly addresses the problem, mechanism aside)? The worked examples above don't cover this case on purpose; it's exactly the kind of edge case the dry-run is meant to surface.
+**Alternative-mechanism case (resolved 2026-09-08):** a patent that solves the demand's problem completely, but via a technical mechanism substantially different from the one the demand describes (e.g. a chemical solution to a demand phrased in mechanical terms), is graded **2, not 3**, under this guide. "Directly addressing the demand" for a grade of 3 requires the mechanism to match, not only the outcome — a substantially different mechanism is treated as an analogous approach (grade 2) regardless of how completely it solves the stated problem.
 
 ## 6. Disagreements
 
