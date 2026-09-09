@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { BrandHeader } from "./components/shared/BrandHeader";
 import styles from "./components/UserZero/ErrorView.module.css";
 import { ExecutionView } from "./components/UserZero/ExecutionView";
@@ -5,8 +6,29 @@ import { HistoryView } from "./components/UserZero/HistoryView";
 import { LandingView } from "./components/UserZero/LandingView";
 import { ResultsView } from "./components/UserZero/ResultsView";
 import { useAnalyzeJob } from "./application/useAnalyzeJob";
+import { ScientificVerificationView } from "./features/scientific-verification/ScientificVerificationView";
+
+function isVerificationRoute(hash: string, pathname: string): boolean {
+  return (
+    hash === "#/scientific-verification" ||
+    hash.startsWith("#/scientific-verification") ||
+    pathname.endsWith("/scientific-verification")
+  );
+}
 
 export function App() {
+  const [currentHash, setCurrentHash] = useState<string>(
+    typeof window !== "undefined" ? window.location.hash : ""
+  );
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentHash(window.location.hash);
+    };
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
   const {
     view,
     domain,
@@ -20,6 +42,22 @@ export function App() {
     openHistory,
     openJob,
   } = useAnalyzeJob();
+
+  const isVerification = isVerificationRoute(
+    currentHash,
+    typeof window !== "undefined" ? window.location.pathname : ""
+  );
+
+  if (isVerification) {
+    return (
+      <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
+        <BrandHeader domain="Scientific Verification" />
+        <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col items-center">
+          <ScientificVerificationView onNavigateHome={() => { window.location.hash = ""; }} />
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">

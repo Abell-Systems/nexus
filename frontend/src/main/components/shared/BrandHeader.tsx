@@ -41,7 +41,12 @@ export function BrandHeader({ domain }: BrandHeaderProps) {
           ABELL <strong>SYSTEMS</strong>
         </span>
       </div>
-      {domain && <div className={styles.domainBadge}>{domain}</div>}
+      <div className="flex items-center gap-3">
+        {domain && <div className={styles.domainBadge}>{domain}</div>}
+        <a href="#/scientific-verification" className={styles.sciLink}>
+          <span>🔬</span> Verificación Científica
+        </a>
+      </div>
     </div>
   );
 }

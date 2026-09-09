@@ -1,5 +1,5 @@
 import React from "react";
-import { EpistemicBoundaries } from "../types";
+import type { EpistemicBoundaries } from "../types";
 
 interface EpistemicBoundaryCardProps {
   boundaries: EpistemicBoundaries;

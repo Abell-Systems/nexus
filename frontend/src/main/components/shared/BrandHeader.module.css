@@ -41,8 +41,30 @@
   font-weight: 650;
 }
 
+.sciLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #38bdf8;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.sciLink:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #7dd3fc;
+}
+
 @media (max-width: 640px) {
   .brandName {
     font-size: 15px;
   }
 }
+

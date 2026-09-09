@@ -34,4 +34,12 @@ describe("App Root Component", () => {
     expect(screen.getByText("Analysis generation timed out")).toBeDefined();
     expect(screen.getByRole("button", { name: /try again/i })).toBeDefined();
   });
+
+  it("renders scientific verification view when hash is #/scientific-verification", () => {
+    window.location.hash = "#/scientific-verification";
+    render(<App />);
+    expect(screen.getByText("Abell Nexus · Verificación Científica")).toBeDefined();
+    expect(screen.getByText("← Volver a Nexus Patent Agent")).toBeDefined();
+    window.location.hash = "";
+  });
 });

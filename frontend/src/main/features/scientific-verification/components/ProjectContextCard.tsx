@@ -1,5 +1,5 @@
 import React from "react";
-import { ScientificContext } from "../types";
+import type { ScientificContext } from "../types";
 
 interface ProjectContextCardProps {
   context: ScientificContext["project_overview"];

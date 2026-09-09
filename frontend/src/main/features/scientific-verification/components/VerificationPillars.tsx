@@ -1,5 +1,5 @@
 import React from "react";
-import { PillarViewModel } from "../types";
+import type { PillarViewModel } from "../types";
 
 interface VerificationPillarsProps {
   pillars: {

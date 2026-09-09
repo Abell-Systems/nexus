@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import contextData from "../scientific_context.json";
-import { ScientificContext } from "../types";
+import type { ScientificContext } from "../types";
 
 describe("ScientificContext schema", () => {
   it("conforms to ScientificContext interface", () => {
