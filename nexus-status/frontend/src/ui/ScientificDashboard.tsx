@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useProjectStatus } from '../application/useProjectStatus';
+import { useScientificResults } from '../application/useScientificResults';
 import { Header } from './Header';
 import { TabNav, type ViewId } from './TabNav';
 import { OverviewView } from './OverviewView';
@@ -7,26 +8,20 @@ import { MethodologyView } from './MethodologyView';
 import { ReproducibilityView } from './ReproducibilityView';
 import { LimitationsView } from './LimitationsView';
 import { EngineeringView } from './EngineeringView';
+import { LandscapeView } from './LandscapeView';
 import { NotAvailableView } from './NotAvailableView';
 import './styles.css';
 
 export interface ScientificDashboardProps {
   statusUrl?: string;
+  scientificResultsUrl?: string;
 }
 
-const NOT_AVAILABLE_COPY: Record<'landscape' | 'opportunities' | 'candidates' | 'evidence', {
+const NOT_AVAILABLE_COPY: Record<'opportunities' | 'candidates' | 'evidence', {
   title: string;
   question: string;
   explanation: string;
 }> = {
-  landscape: {
-    title: 'Landscape',
-    question: 'What technology space is Nexus analysing?',
-    explanation:
-      'The current canonical project status contract does not yet expose technology, ' +
-      'cluster or domain data. This view will populate once Nexus publishes structured ' +
-      'landscape results.',
-  },
   opportunities: {
     title: 'Opportunities',
     question: 'Where are the technological gaps?',
@@ -55,8 +50,13 @@ const NOT_AVAILABLE_COPY: Record<'landscape' | 'opportunities' | 'candidates' | 
 
 export const ScientificDashboard: React.FC<ScientificDashboardProps> = ({
   statusUrl = './project_status.json',
+  scientificResultsUrl = './scientific_results.json',
 }) => {
   const { state, data, error, reload } = useProjectStatus(statusUrl);
+  // Independent from project_status.json's loading/error gate below: a failure to
+  // load scientific_results.json must only affect the Landscape tab, never hide the
+  // rest of the dashboard (Engineering/Overview/etc. don't depend on it).
+  const scientificResults = useScientificResults(scientificResultsUrl);
   const [activeView, setActiveView] = useState<ViewId>('overview');
 
   if (state === 'loading') {
@@ -100,7 +100,7 @@ export const ScientificDashboard: React.FC<ScientificDashboardProps> = ({
       {activeView === 'overview' && (
         <OverviewView status={data} onOpenEngineering={() => setActiveView('engineering')} />
       )}
-      {activeView === 'landscape' && <NotAvailableView {...NOT_AVAILABLE_COPY.landscape} />}
+      {activeView === 'landscape' && <LandscapeView result={scientificResults} />}
       {activeView === 'opportunities' && <NotAvailableView {...NOT_AVAILABLE_COPY.opportunities} />}
       {activeView === 'candidates' && <NotAvailableView {...NOT_AVAILABLE_COPY.candidates} />}
       {activeView === 'evidence' && <NotAvailableView {...NOT_AVAILABLE_COPY.evidence} />}
