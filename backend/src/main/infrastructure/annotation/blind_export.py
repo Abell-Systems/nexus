@@ -15,6 +15,11 @@ from infrastructure.matching.eligibility import DefaultPatentEligibilityPolicy
 # real file, not guessed).
 EXPECTED_PILOT_BENCHMARK_SHA256 = "bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453"
 
+# PR-E.1 design spec §2.1: the only dataset_id this generator is bound to. A
+# benchmark file with a different dataset_id is not the target this policy
+# binding was authorized for, even if its SHA-256 were somehow made to match.
+EXPECTED_PILOT_DATASET_ID = "nexus-pilot-16-evaluation-corpus-v1"
+
 
 class AnnotationCandidateEntry(BaseModel):
     """One candidate as shown to an annotator: observed evidence only. Never
@@ -52,7 +57,7 @@ class BlindedAnnotationSet(BaseModel):
     dataset_sha256: str = Field(min_length=64, max_length=64)
     temporal_pool_mode: str = Field(min_length=1)
     seed: int
-    demands: list[AnnotationBatch] = Field(default_factory=list)
+    demands: tuple[AnnotationBatch, ...] = Field(default_factory=tuple)
 
 
 def build_annotation_batch(
@@ -108,13 +113,19 @@ def generate_blinded_annotation_set(
     benchmark_path: Path,
     temporal_pool_mode: str = "strict",
     seed: int = 42,
-    expected_sha256: str | None = EXPECTED_PILOT_BENCHMARK_SHA256,
+    expected_sha256: str = EXPECTED_PILOT_BENCHMARK_SHA256,
+    expected_dataset_id: str = EXPECTED_PILOT_DATASET_ID,
 ) -> BlindedAnnotationSet:
-    """Loads the benchmark dataset, enforces fail-fast validations on SHA-256 and temporal policy,
-    evaluates candidates under strict eligibility (ADR 0018), and produces the canonical BlindedAnnotationSet.
+    """Loads the benchmark dataset, enforces fail-fast validations on SHA-256, dataset identity,
+    and temporal policy binding, evaluates candidates under strict eligibility (ADR 0018), and
+    produces the canonical BlindedAnnotationSet.
 
     Temporal eligibility (t_pub < t_demand) is decided exclusively by
     DefaultPatentEligibilityPolicy.evaluate() -- never re-implemented here.
+
+    ``expected_sha256`` and ``expected_dataset_id`` are mandatory, not optional bypasses: PR-E.1's
+    design spec (§3 step 2) requires the policy be verifiably bound to a specific target benchmark,
+    not merely to whatever file happens to be passed in.
     """
     if temporal_pool_mode != "strict":
         raise ValueError(
@@ -127,7 +138,7 @@ def generate_blinded_annotation_set(
 
     content_bytes = path.read_bytes()
     computed_sha256 = hashlib.sha256(content_bytes).hexdigest()
-    if expected_sha256 and computed_sha256 != expected_sha256:
+    if computed_sha256 != expected_sha256:
         raise ValueError(
             f"Benchmark SHA-256 digest mismatch. Expected {expected_sha256}, got {computed_sha256}"
         )
@@ -136,6 +147,11 @@ def generate_blinded_annotation_set(
     dataset_id = data.get("dataset_id")
     if not dataset_id:
         raise ValueError("Benchmark JSON is missing 'dataset_id'")
+    if dataset_id != expected_dataset_id:
+        raise ValueError(
+            f"Benchmark dataset_id is not the target this policy binding was authorized for. "
+            f"Expected '{expected_dataset_id}', got '{dataset_id}'"
+        )
 
     policy = DefaultPatentEligibilityPolicy(target_jurisdiction="ES")
 
@@ -178,7 +194,7 @@ def generate_blinded_annotation_set(
         dataset_sha256=computed_sha256,
         temporal_pool_mode=temporal_pool_mode,
         seed=seed,
-        demands=demands_batches,
+        demands=tuple(demands_batches),
     )
 
 

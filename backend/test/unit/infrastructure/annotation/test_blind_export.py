@@ -258,30 +258,52 @@ class GenerateBlindedAnnotationSetTest:
         demands_by_id = {d.demand_id: d for d in result.demands}
         assert set(demands_by_id.keys()) == {"INNOGET-2415", "INNOGET-2292", "INNOGET-2501"}
 
-        # Exact candidate counts per demand
-        assert len(demands_by_id["INNOGET-2415"].entries) == 12
-        assert len(demands_by_id["INNOGET-2292"].entries) == 13
-        assert len(demands_by_id["INNOGET-2501"].entries) == 13
+        # Exact set identity (design spec §4): full publication_id sets by value, not just
+        # cardinality -- swapping one eligible patent for another while preserving 12/13/13
+        # counts must fail this assertion.
+        expected_2415 = {
+            "ES-2634129-B1", "ES-2654981-B1", "ES-2684913-B1", "ES-2715482-B2",
+            "ES-2739812-B2", "ES-2754890-B2", "ES-2765431-B2", "ES-2789123-B2",
+            "ES-2798124-B1", "ES-2812345-B1", "ES-2849102-B2", "ES-2876540-B1",
+        }
+        expected_2292 = expected_2415 | {"ES-2895412-B1"}
+        expected_2501 = expected_2415 | {"ES-2895412-B1"}
+
+        pub_2415 = {e.publication_id for e in demands_by_id["INNOGET-2415"].entries}
+        pub_2292 = {e.publication_id for e in demands_by_id["INNOGET-2292"].entries}
+        pub_2501 = {e.publication_id for e in demands_by_id["INNOGET-2501"].entries}
+
+        assert pub_2415 == expected_2415
+        assert pub_2292 == expected_2292
+        assert pub_2501 == expected_2501
 
         # Total candidate pairs = 38
         total_candidates = sum(len(d.entries) for d in result.demands)
         assert total_candidates == 38
 
-        # Invariant: excluded publications must never appear
-        pub_2415 = {e.publication_id for e in demands_by_id["INNOGET-2415"].entries}
+        # Excluded publications must never appear (redundant with the exact-set assertions
+        # above, kept for an explicit, readable failure message on regression)
         assert "ES-2856789-A1" not in pub_2415
         assert "ES-2895412-B1" not in pub_2415
         assert "ES-2901234-A1" not in pub_2415
-
-        pub_2292 = {e.publication_id for e in demands_by_id["INNOGET-2292"].entries}
         assert "ES-2856789-A1" not in pub_2292
         assert "ES-2901234-A1" not in pub_2292
-        assert "ES-2895412-B1" in pub_2292  # Eligible for 2292 (pub 2023-01-15 < demand 2023-02-15)
-
-        pub_2501 = {e.publication_id for e in demands_by_id["INNOGET-2501"].entries}
         assert "ES-2856789-A1" not in pub_2501
         assert "ES-2901234-A1" not in pub_2501
-        assert "ES-2895412-B1" in pub_2501
+
+    def test_should_fail_fast_if_dataset_id_is_not_the_authorized_target(self, tmp_path: Path):
+        benchmark_file = tmp_path / "wrong_dataset.json"
+        content = '{"dataset_id": "some-other-corpus-v1"}'
+        benchmark_file.write_text(content, encoding="utf-8")
+        actual_sha256 = hashlib.sha256(content.encode("utf-8")).hexdigest()
+
+        with pytest.raises(ValueError, match="not the target this policy binding was authorized for"):
+            generate_blinded_annotation_set(
+                benchmark_file,
+                temporal_pool_mode="strict",
+                seed=42,
+                expected_sha256=actual_sha256,
+            )
 
 
 class StructuralBlindnessInvariantTest:
