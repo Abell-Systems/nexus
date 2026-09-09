@@ -27,8 +27,18 @@ The default patents/demand datasources this script uses
 `infrastructure.sources.demand_sources.get_demand_datasource()`) are, in this
 environment, the same fixture-backed `MockPatentsDataSource`/`MockDemandDataSource`
 Nexus's own `GET /api/landscape` endpoint falls back to by default — not live
-BigQuery. `datasource_status()` below reports exactly which implementation ran, and
-this script prints it, so that fact is never hidden.
+BigQuery. This fact is published IN THE ARTIFACT, not only to stdout: every execution's
+`source_provenance` (`domain.models.scientific_results.DataSourceProvenance`) records
+each datasource's own `kind` (its `get_status()["type"]` where that method exists —
+already the exact structured identity `MockPatentsDataSource`/`BigQueryPatentsDataSource`
+expose — or its class name where it doesn't, which no demand datasource does today). A
+reader of `scientific_results.json` never has to consult a CI log to learn whether an
+execution's input was live or fixture data.
+
+`execution_id` identifies this one published execution/record — it is a publication-time
+identity, not a claim that Head A's live job store (`infrastructure/storage/job_store.py`,
+`uuid4().hex`, in-memory only) has become durable. That gap (ADR 0017 §7) is unchanged
+by this script; only this specific execution, once published, is durable and citable.
 
 Publishing is exclusively via `infrastructure.storage.scientific_results_publisher.
 publish_scientific_results` (PR #73) — this script performs no other write to disk.
@@ -47,6 +57,7 @@ sys.path.insert(0, str(repo_root / "backend" / "src" / "main"))
 
 from application.landscape.clustering import compute_cluster_landscape  # noqa: E402
 from domain.models.scientific_results import (  # noqa: E402
+    DataSourceProvenance,
     DiscoveryLandscapeRecord,
     ScientificResultsDocument,
     ScientificResultsExecution,
@@ -60,14 +71,28 @@ from infrastructure.storage.scientific_results_publisher import publish_scientif
 SCHEMA_VERSION = "0.1.0"
 
 
-def datasource_status(patents_datasource: Any, demand_datasource: Any) -> dict[str, Any]:
-    """Reports which concrete datasource implementations actually ran — never hidden."""
-    return {
-        "patents_datasource": (
-            patents_datasource.get_status() if hasattr(patents_datasource, "get_status") else type(patents_datasource).__name__
-        ),
-        "demand_datasource": type(demand_datasource).__name__,
-    }
+def _datasource_kind(datasource: Any) -> str:
+    """The datasource's own reported kind: `get_status()["type"]` where that method
+    exists (already the exact structured identity `MockPatentsDataSource`/
+    `BigQueryPatentsDataSource` expose), else its class name — real either way, never
+    invented.
+    """
+    if hasattr(datasource, "get_status"):
+        status = datasource.get_status()
+        if isinstance(status, dict) and "type" in status:
+            return str(status["type"])
+    return type(datasource).__name__
+
+
+def datasource_provenance(patents_datasource: Any, demand_datasource: Any) -> tuple[DataSourceProvenance, ...]:
+    """Structured provenance for both datasources — published on the execution itself,
+    not only printed to stdout, so a reader of scientific_results.json never has to
+    consult a CI log to learn whether input was live or fixture data.
+    """
+    return (
+        DataSourceProvenance(role="patents", kind=_datasource_kind(patents_datasource)),
+        DataSourceProvenance(role="demand", kind=_datasource_kind(demand_datasource)),
+    )
 
 
 def run_landscape_execution(
@@ -76,7 +101,7 @@ def run_landscape_execution(
     max_patents: int,
     execution_id: str,
     created_at: datetime,
-) -> tuple[ScientificResultsExecution, DiscoveryLandscapeRecord, dict[str, Any]]:
+) -> tuple[ScientificResultsExecution, DiscoveryLandscapeRecord, tuple[DataSourceProvenance, ...]]:
     """Runs the real Head A landscape sub-pipeline once and wraps its output.
 
     No scientific computation happens here beyond what `compute_cluster_landscape`
@@ -90,6 +115,8 @@ def run_landscape_execution(
     patents = patents_datasource.search_patents(query=query, domain=domain, limit=max_patents)
     demands = demand_datasource.search_demand(query=query, domain=domain)
 
+    provenance = datasource_provenance(patents_datasource, demand_datasource)
+
     execution = ScientificResultsExecution(
         execution_id=execution_id,
         track=Track.DISCOVERY,
@@ -98,6 +125,7 @@ def run_landscape_execution(
         created_at=created_at,
         # dataset_id/dataset_version/policy_*/engine_commit intentionally omitted —
         # see module docstring. Not fabricated.
+        source_provenance=provenance,
     )
 
     cluster_observations = tuple(
@@ -120,7 +148,7 @@ def run_landscape_execution(
         clusters=cluster_observations,
     )
 
-    return execution, landscape, datasource_status(patents_datasource, demand_datasource)
+    return execution, landscape, provenance
 
 
 def build_document(
@@ -129,9 +157,9 @@ def build_document(
     max_patents: int,
     generated_at: datetime,
     execution_id: str | None = None,
-) -> tuple[ScientificResultsDocument, dict[str, Any]]:
+) -> tuple[ScientificResultsDocument, tuple[DataSourceProvenance, ...]]:
     resolved_execution_id = execution_id or uuid.uuid4().hex
-    execution, landscape, status = run_landscape_execution(
+    execution, landscape, provenance = run_landscape_execution(
         domain=domain,
         query=query,
         max_patents=max_patents,
@@ -144,7 +172,7 @@ def build_document(
         executions=(execution,),
         landscapes=(landscape,),
     )
-    return document, status
+    return document, provenance
 
 
 def main() -> int:
@@ -162,7 +190,7 @@ def main() -> int:
     target = args.output or (resolved_repo_root / "scientific_results.json")
     generated_at = datetime.now(UTC)
 
-    document, status = build_document(
+    document, provenance = build_document(
         domain=args.domain,
         query=args.query,
         max_patents=args.max_patents,
@@ -170,7 +198,7 @@ def main() -> int:
         execution_id=args.execution_id,
     )
 
-    print(f"Datasource status: {status}")
+    print(f"Datasource provenance: {[(p.role, p.kind) for p in provenance]} (also published in the artifact itself)")
     print(f"Execution: {document.executions[0].execution_id} (track={document.executions[0].track})")
     print(f"Clusters: {len(document.landscapes[0].clusters)}")
 

@@ -93,11 +93,46 @@ class RealHeadALandscapeExecutionTest:
                 assert rep_id in real_patent_ids
 
     def test_should_carry_the_exact_discovery_disclaimer(self) -> None:
-        _execution, landscape, _status = run_landscape_execution(
+        _execution, landscape, _provenance = run_landscape_execution(
             domain="solid_state_battery", query="solid electrolyte", max_patents=20,
             execution_id="test-exec-0005", created_at=datetime(2026, 1, 1, tzinfo=UTC),
         )
         assert landscape.disclaimer == DISCOVERY_DISCLAIMER
+
+
+class DatasourceProvenanceTest:
+    """Bloqueante 1 (PR #74 review): a reader of scientific_results.json must be able
+    to tell live from fixture data from the artifact itself, not from a CI log."""
+
+    def test_should_publish_provenance_for_both_patents_and_demand_roles(self) -> None:
+        execution, _landscape, provenance = run_landscape_execution(
+            domain="solid_state_battery", query="solid electrolyte", max_patents=20,
+            execution_id="test-exec-0006", created_at=datetime(2026, 1, 1, tzinfo=UTC),
+        )
+        roles = {entry.role for entry in provenance}
+        assert roles == {"patents", "demand"}
+        assert execution.source_provenance == provenance
+
+    def test_should_reuse_the_datasources_own_get_status_type_for_patents(self) -> None:
+        patents_datasource = get_patents_datasource()
+        expected_kind = patents_datasource.get_status()["type"]
+
+        _execution, _landscape, provenance = run_landscape_execution(
+            domain="solid_state_battery", query="solid electrolyte", max_patents=20,
+            execution_id="test-exec-0007", created_at=datetime(2026, 1, 1, tzinfo=UTC),
+        )
+        patents_entry = next(p for p in provenance if p.role == "patents")
+        assert patents_entry.kind == expected_kind == "mock"
+
+    def test_should_report_this_environments_datasources_as_mock_not_live(self) -> None:
+        # This environment has no BigQuery/live demand credentials configured — the
+        # published provenance must say so plainly, not imply live data.
+        _execution, _landscape, provenance = run_landscape_execution(
+            domain="solid_state_battery", query="solid electrolyte", max_patents=20,
+            execution_id="test-exec-0008", created_at=datetime(2026, 1, 1, tzinfo=UTC),
+        )
+        for entry in provenance:
+            assert "mock" in entry.kind.lower()
 
 
 class BuildDocumentDeterminismTest:
@@ -187,3 +222,11 @@ class CommittedSnapshotTest:
         project_status = json.loads((_REPO_ROOT / "project_status.json").read_text(encoding="utf-8"))
         for forbidden_key in ("executions", "landscapes", "candidates", "verifications", "matches", "track"):
             assert forbidden_key not in project_status
+
+    def test_should_publish_datasource_provenance_readable_without_a_ci_log(self) -> None:
+        raw = json.loads(self._snapshot_path().read_text(encoding="utf-8"))
+        document = ScientificResultsDocument.model_validate(raw)
+        provenance = document.executions[0].source_provenance
+        roles = {entry.role for entry in provenance}
+        assert roles == {"patents", "demand"}
+        assert all("mock" in entry.kind.lower() for entry in provenance)

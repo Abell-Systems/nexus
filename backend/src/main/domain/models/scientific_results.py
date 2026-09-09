@@ -166,8 +166,36 @@ def _validate_utc_aware(v: datetime) -> datetime:
     return v
 
 
+class DataSourceProvenance(BaseModel):
+    """Which concrete datasource implementation produced an execution's input data.
+
+    `kind` reuses whatever identity string the datasource itself already exposes —
+    e.g. the `"type"` field `MockPatentsDataSource`/`BigQueryPatentsDataSource.get_status()`
+    already return (`domain.models.runtime_schemas` producers, `infrastructure.sources.
+    bigquery_patents`) — rather than inventing a new taxonomy of source kinds. Where a
+    datasource exposes no such status method (no demand datasource does today), `kind`
+    falls back to that datasource's own class name, which is equally real and equally
+    not invented, just less structured. This exists so a reader of a published record
+    never has to consult a CI log to learn whether its input came from a live source or
+    a fixture — that fact belongs in the artifact itself.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    role: Literal["patents", "demand"]
+    kind: str = Field(min_length=1)
+
+
 class ScientificResultsExecution(BaseModel):
     """Identity and provenance of one execution that produced published records.
+
+    `execution_id` identifies *this published execution* — the record now sitting in
+    `scientific_results.json` — not a durable runtime identity for Head A in general.
+    Head A's live `job_id` (`infrastructure/storage/job_store.py`, `uuid4().hex`,
+    in-memory only) remains exactly as ephemeral as before this contract existed; ADR
+    0017 §7's "no durable Head A execution identity" gap is unchanged by publishing one
+    execution's id into a git-tracked file. Git tracking makes *this one record*
+    citable and stable; it does not retroactively make Head A's job store durable.
 
     `dataset_id`/`dataset_version`/`policy_id`/`policy_version`/`policy_sha256`/
     `engine_commit` are optional: the deterministic (`verification`) track already
@@ -176,6 +204,9 @@ class ScientificResultsExecution(BaseModel):
     them optional here reflects that gap honestly rather than fabricating values; see
     `executions_are_aggregable` below for why an absent field blocks aggregation rather
     than being treated as a wildcard match.
+
+    `source_provenance` records which concrete datasource implementation(s) actually
+    produced this execution's input — see `DataSourceProvenance`.
     """
 
     model_config = ConfigDict(frozen=True)
@@ -191,6 +222,7 @@ class ScientificResultsExecution(BaseModel):
     policy_id: str | None = None
     policy_version: str | None = None
     policy_sha256: str | None = None
+    source_provenance: tuple[DataSourceProvenance, ...] = Field(default_factory=tuple)
 
     @field_validator("created_at")
     @classmethod
@@ -203,6 +235,16 @@ class ScientificResultsExecution(BaseModel):
         if v is not None and not _SHA256_RE.match(v.lower()):
             raise ValueError(f"Invalid SHA-256 digest format: {v}")
         return v.lower() if v is not None else v
+
+    @field_validator("source_provenance")
+    @classmethod
+    def validate_source_provenance_roles_are_unique(
+        cls, v: tuple[DataSourceProvenance, ...]
+    ) -> tuple[DataSourceProvenance, ...]:
+        roles = [entry.role for entry in v]
+        if len(roles) != len(set(roles)):
+            raise ValueError(f"source_provenance must not repeat a role, got: {roles}")
+        return v
 
 
 def executions_are_aggregable(a: ScientificResultsExecution, b: ScientificResultsExecution) -> bool:

@@ -2,20 +2,30 @@
   "candidates": [],
   "executions": [
     {
-      "created_at": "2026-09-09T11:10:03.265017Z",
+      "created_at": "2026-09-09T11:26:54.982691Z",
       "dataset_id": null,
       "dataset_version": null,
       "domain": "solid_state_battery",
       "engine_commit": null,
-      "execution_id": "d9e2fddb2dd44464b632b4fa0d21c8a6",
+      "execution_id": "3f7176fa06e744499f1f68a3547d1fab",
       "policy_id": null,
       "policy_sha256": null,
       "policy_version": null,
       "query": "solid electrolyte",
+      "source_provenance": [
+        {
+          "kind": "mock",
+          "role": "patents"
+        },
+        {
+          "kind": "MockDemandDataSource",
+          "role": "demand"
+        }
+      ],
       "track": "discovery"
     }
   ],
-  "generated_at": "2026-09-09T11:10:03.265017Z",
+  "generated_at": "2026-09-09T11:26:54.982691Z",
   "landscapes": [
     {
       "clusters": [
@@ -42,7 +52,7 @@
         }
       ],
       "disclaimer": "Nexus generated/discovered this output; it is model-synthesized technology discovery output, not scientifically verified evidence. It does not demonstrate patentability, freedom-to-operate, or commercial efficacy, and is not a substitute for a professional prior-art search. (ADR 0017 \u00a75, ADR 0025 \u00a72)",
-      "execution_id": "d9e2fddb2dd44464b632b4fa0d21c8a6",
+      "execution_id": "3f7176fa06e744499f1f68a3547d1fab",
       "query": "solid electrolyte"
     }
   ],
