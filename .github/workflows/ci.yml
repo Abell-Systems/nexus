@@ -279,6 +279,13 @@ jobs:
         with:
           name: frontend-coverage-report
           path: frontend/coverage
+      - name: Cache SonarCloud packages
+        if: steps.check_token.outputs.skip != 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
       - name: SonarQube Cloud Scan
         if: steps.check_token.outputs.skip != 'true'
         uses: SonarSource/sonarqube-scan-action@v6
