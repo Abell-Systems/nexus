@@ -1,11 +1,19 @@
+import hashlib
 import json
+import re
+from pathlib import Path
 
 import pytest
 
 from domain.models.demand import DemandSignal
 from domain.models.matching import Candidate, CandidatePool, EligibilityReason, RetrievalMethod
 from domain.models.patent import PatentDocument
-from infrastructure.annotation.blind_export import build_annotation_batch, export_temporal_provenance
+from infrastructure.annotation.blind_export import (
+    BlindedAnnotationSet,
+    build_annotation_batch,
+    export_temporal_provenance,
+    generate_blinded_annotation_set,
+)
 
 
 def _pool() -> CandidatePool:
@@ -147,3 +155,218 @@ class ExportTemporalProvenanceTest:
         assert "eligibility_reason" not in batch_field_names
         assert "temporal_reasons" not in entry_field_names
         assert "eligibility_reason" not in entry_field_names
+
+
+class BlindExportOrderingTest:
+    def test_should_produce_identical_batch_regardless_of_candidate_input_order(self):
+        pool_forward = CandidatePool(
+            demand_id="D1",
+            candidates=[
+                Candidate(publication_id="ES-3", retrieval_scores={RetrievalMethod.LEXICAL: 0.5}),
+                Candidate(publication_id="ES-1", retrieval_scores={RetrievalMethod.LEXICAL: 0.9}),
+                Candidate(publication_id="ES-2", retrieval_scores={RetrievalMethod.LEXICAL: 0.7}),
+            ],
+        )
+        pool_reverse = CandidatePool(
+            demand_id="D1",
+            candidates=[
+                Candidate(publication_id="ES-1", retrieval_scores={RetrievalMethod.LEXICAL: 0.9}),
+                Candidate(publication_id="ES-2", retrieval_scores={RetrievalMethod.LEXICAL: 0.7}),
+                Candidate(publication_id="ES-3", retrieval_scores={RetrievalMethod.LEXICAL: 0.5}),
+            ],
+        )
+        batch_a = build_annotation_batch(pool_forward, _demand(), _patents(), seed=42)
+        batch_b = build_annotation_batch(pool_reverse, _demand(), _patents(), seed=42)
+        assert [e.publication_id for e in batch_a.entries] == [e.publication_id for e in batch_b.entries]
+        assert batch_a.model_dump_json() == batch_b.model_dump_json()
+
+
+class BlindedAnnotationSetModelTest:
+    def test_should_require_explicit_schema_version_and_mandatory_provenance(self):
+        batch = build_annotation_batch(_pool(), _demand(), _patents(), seed=42)
+        annotation_set = BlindedAnnotationSet(
+            schema_version="1.0.0",
+            dataset_id="nexus-pilot-16-evaluation-corpus-v1",
+            dataset_sha256="bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453",
+            temporal_pool_mode="strict",
+            seed=42,
+            demands=[batch],
+        )
+        assert annotation_set.schema_version == "1.0.0"
+        assert annotation_set.temporal_pool_mode == "strict"
+        assert len(annotation_set.demands) == 1
+        assert not hasattr(annotation_set, "created_at")
+
+    def test_should_reject_empty_schema_version_or_mismatched_sha_length(self):
+        batch = build_annotation_batch(_pool(), _demand(), _patents(), seed=42)
+        with pytest.raises(ValueError):
+            BlindedAnnotationSet(
+                schema_version="",
+                dataset_id="nexus-pilot-16-evaluation-corpus-v1",
+                dataset_sha256="bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453",
+                temporal_pool_mode="strict",
+                seed=42,
+                demands=[batch],
+            )
+        with pytest.raises(ValueError):
+            BlindedAnnotationSet(
+                schema_version="1.0.0",
+                dataset_id="nexus-pilot-16-evaluation-corpus-v1",
+                dataset_sha256="short_hash",
+                temporal_pool_mode="strict",
+                seed=42,
+                demands=[batch],
+            )
+
+
+class GenerateBlindedAnnotationSetTest:
+    def test_should_fail_fast_if_benchmark_does_not_exist(self, tmp_path: Path):
+        non_existent = tmp_path / "missing.json"
+        with pytest.raises(FileNotFoundError, match="Benchmark dataset file not found"):
+            generate_blinded_annotation_set(non_existent, temporal_pool_mode="strict", seed=42)
+
+    def test_should_fail_fast_if_temporal_pool_mode_not_strict(self, tmp_path: Path):
+        benchmark_file = tmp_path / "dummy.json"
+        benchmark_file.write_text("{}", encoding="utf-8")
+        with pytest.raises(ValueError, match="temporal_pool_mode must be 'strict'"):
+            generate_blinded_annotation_set(benchmark_file, temporal_pool_mode="unconstrained", seed=42)
+
+    def test_should_fail_fast_if_benchmark_sha256_mismatch(self, tmp_path: Path):
+        benchmark_file = tmp_path / "corrupted.json"
+        benchmark_file.write_text('{"dataset_id": "nexus-pilot-16"}', encoding="utf-8")
+        with pytest.raises(ValueError, match="SHA-256 digest mismatch"):
+            generate_blinded_annotation_set(
+                benchmark_file,
+                temporal_pool_mode="strict",
+                seed=42,
+                expected_sha256="0000000000000000000000000000000000000000000000000000000000000000",
+            )
+
+    def test_should_derive_exact_eligible_sets_from_real_pilot_benchmark(self):
+        real_benchmark = Path("data/evaluation/dataset_pilot_benchmark.json")
+        if not real_benchmark.exists():
+            pytest.skip("Benchmark file not present")
+
+        result = generate_blinded_annotation_set(real_benchmark, temporal_pool_mode="strict", seed=42)
+
+        assert result.schema_version == "1.0.0"
+        assert result.dataset_id == "nexus-pilot-16-evaluation-corpus-v1"
+        assert result.temporal_pool_mode == "strict"
+        assert result.seed == 42
+        assert len(result.demands) == 3
+
+        demands_by_id = {d.demand_id: d for d in result.demands}
+        assert set(demands_by_id.keys()) == {"INNOGET-2415", "INNOGET-2292", "INNOGET-2501"}
+
+        # Exact set identity (design spec §4): full publication_id sets by value, not just
+        # cardinality -- swapping one eligible patent for another while preserving 12/13/13
+        # counts must fail this assertion.
+        expected_2415 = {
+            "ES-2634129-B1", "ES-2654981-B1", "ES-2684913-B1", "ES-2715482-B2",
+            "ES-2739812-B2", "ES-2754890-B2", "ES-2765431-B2", "ES-2789123-B2",
+            "ES-2798124-B1", "ES-2812345-B1", "ES-2849102-B2", "ES-2876540-B1",
+        }
+        expected_2292 = expected_2415 | {"ES-2895412-B1"}
+        expected_2501 = expected_2415 | {"ES-2895412-B1"}
+
+        pub_2415 = {e.publication_id for e in demands_by_id["INNOGET-2415"].entries}
+        pub_2292 = {e.publication_id for e in demands_by_id["INNOGET-2292"].entries}
+        pub_2501 = {e.publication_id for e in demands_by_id["INNOGET-2501"].entries}
+
+        assert pub_2415 == expected_2415
+        assert pub_2292 == expected_2292
+        assert pub_2501 == expected_2501
+
+        # Total candidate pairs = 38
+        total_candidates = sum(len(d.entries) for d in result.demands)
+        assert total_candidates == 38
+
+        # Excluded publications must never appear (redundant with the exact-set assertions
+        # above, kept for an explicit, readable failure message on regression)
+        assert "ES-2856789-A1" not in pub_2415
+        assert "ES-2895412-B1" not in pub_2415
+        assert "ES-2901234-A1" not in pub_2415
+        assert "ES-2856789-A1" not in pub_2292
+        assert "ES-2901234-A1" not in pub_2292
+        assert "ES-2856789-A1" not in pub_2501
+        assert "ES-2901234-A1" not in pub_2501
+
+    def test_should_fail_fast_if_dataset_id_is_not_the_authorized_target(self, tmp_path: Path):
+        benchmark_file = tmp_path / "wrong_dataset.json"
+        content = '{"dataset_id": "some-other-corpus-v1"}'
+        benchmark_file.write_text(content, encoding="utf-8")
+        actual_sha256 = hashlib.sha256(content.encode("utf-8")).hexdigest()
+
+        with pytest.raises(ValueError, match="not the target this policy binding was authorized for"):
+            generate_blinded_annotation_set(
+                benchmark_file,
+                temporal_pool_mode="strict",
+                seed=42,
+                expected_sha256=actual_sha256,
+            )
+
+
+class StructuralBlindnessInvariantTest:
+    def test_serialized_json_payload_must_not_contain_forbidden_keys(self):
+        real_benchmark = Path("data/evaluation/dataset_pilot_benchmark.json")
+        if not real_benchmark.exists():
+            pytest.skip("Benchmark file not present")
+
+        annotation_set = generate_blinded_annotation_set(real_benchmark, temporal_pool_mode="strict", seed=42)
+        serialized = annotation_set.model_dump_json(indent=2)
+        parsed = json.loads(serialized)
+
+        forbidden_patterns = [
+            r'"score"',
+            r'"retrieval_scores"',
+            r'"rank"',
+            r'"position"',
+            r'"retriever_id"',
+            r'"retrieval_method"',
+            r'"method"',
+            r'"publication_date":\s*"[^"]+"',  # Non-null publication date string
+        ]
+
+        for pattern in forbidden_patterns:
+            assert not re.search(pattern, serialized, re.IGNORECASE), f"Forbidden pattern {pattern} found in serialized JSON"
+
+        # Verify entry structure
+        for demand_batch in parsed["demands"]:
+            assert "demand_id" in demand_batch
+            assert "demand_title" in demand_batch
+            assert "demand_description" in demand_batch
+            for entry in demand_batch["entries"]:
+                assert set(entry.keys()) == {"publication_id", "evidence"}
+                evidence = entry["evidence"]
+                assert "title" in evidence
+                assert "abstract" in evidence
+                assert "classifications_cpc" in evidence
+                assert evidence.get("publication_date") is None
+
+
+class SidecarAndArtifactIntegrityTest:
+    def test_emitted_artifact_matches_sidecar_digest(self):
+        batch_file = Path("data/annotations/pilot_strict_annotation_batch.json")
+        sidecar_file = Path("data/annotations/pilot_strict_annotation_batch.json.sha256")
+        if not batch_file.exists() or not sidecar_file.exists():
+            pytest.skip("Artifact not generated yet")
+
+        content_bytes = batch_file.read_bytes()
+        computed_sha = hashlib.sha256(content_bytes).hexdigest()
+
+        sidecar_line = sidecar_file.read_text(encoding="utf-8").strip()
+        expected_sha = sidecar_line.split()[0]
+
+        assert computed_sha == expected_sha
+
+    def test_emitted_artifact_is_byte_for_byte_reproducible_from_source(self):
+        batch_file = Path("data/annotations/pilot_strict_annotation_batch.json")
+        real_benchmark = Path("data/evaluation/dataset_pilot_benchmark.json")
+        if not batch_file.exists() or not real_benchmark.exists():
+            pytest.skip("Artifact not generated yet")
+
+        regenerated = generate_blinded_annotation_set(real_benchmark, temporal_pool_mode="strict", seed=42)
+        regenerated_json = regenerated.model_dump_json(indent=2) + "\n"
+
+        assert regenerated_json == batch_file.read_text(encoding="utf-8")
+

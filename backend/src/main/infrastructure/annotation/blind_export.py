@@ -1,11 +1,24 @@
+import hashlib
 import json
 import random
+from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from domain.models.demand import DemandRecord, DemandSignal
-from domain.models.matching import CandidatePool, EligibilityReason, PatentCandidateEvidence
+from domain.models.matching import Candidate, CandidatePool, EligibilityReason, PatentCandidateEvidence
 from domain.models.patent import PatentDocument
+from infrastructure.matching.eligibility import DefaultPatentEligibilityPolicy
+
+# ADR 0018 pilot benchmark fixture. Declared verbatim: computed via
+# sha256sum data/evaluation/dataset_pilot_benchmark.json (verified against the
+# real file, not guessed).
+EXPECTED_PILOT_BENCHMARK_SHA256 = "bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453"
+
+# PR-E.1 design spec §2.1: the only dataset_id this generator is bound to. A
+# benchmark file with a different dataset_id is not the target this policy
+# binding was authorized for, even if its SHA-256 were somehow made to match.
+EXPECTED_PILOT_DATASET_ID = "nexus-pilot-16-evaluation-corpus-v1"
 
 
 class AnnotationCandidateEntry(BaseModel):
@@ -33,6 +46,20 @@ class AnnotationBatch(BaseModel):
     entries: tuple[AnnotationCandidateEntry, ...] = Field(default_factory=tuple)
 
 
+class BlindedAnnotationSet(BaseModel):
+    """Canonical multi-demand blinded annotation set. Built once per (benchmark, policy, seed)
+    and completely deterministic without timestamps or scores."""
+
+    model_config = ConfigDict(frozen=True)
+
+    schema_version: str = Field(min_length=1)
+    dataset_id: str = Field(min_length=1)
+    dataset_sha256: str = Field(min_length=64, max_length=64)
+    temporal_pool_mode: str = Field(min_length=1)
+    seed: int
+    demands: tuple[AnnotationBatch, ...] = Field(default_factory=tuple)
+
+
 def build_annotation_batch(
     pool: CandidatePool,
     demand: DemandRecord | DemandSignal,
@@ -41,11 +68,13 @@ def build_annotation_batch(
 ) -> AnnotationBatch:
     """Strips retrieval provenance and applies a deterministic seeded shuffle.
 
+    Pre-sorts publication IDs alphabetically before shuffling to guarantee bit-for-bit
+    reproducibility regardless of the order candidates were inserted into the pool.
+
     Raises KeyError if a pool candidate has no corresponding patent — an
     AnnotationBatch must never silently drop or skip a pool member.
     """
-    publication_ids = [c.publication_id for c in pool.candidates]
-    order = list(publication_ids)
+    order = sorted([c.publication_id for c in pool.candidates])
     # Deterministic reproducible shuffle for annotation-batch ordering, not
     # security-sensitive. Rule python:S2245 is suppressed project-wide via
     # sonar-project.properties; inline NOSONAR does not work for this rule.
@@ -77,6 +106,95 @@ def build_annotation_batch(
         demand_description=demand.description,
         seed=seed,
         entries=tuple(entries),
+    )
+
+
+def generate_blinded_annotation_set(
+    benchmark_path: Path,
+    temporal_pool_mode: str = "strict",
+    seed: int = 42,
+    expected_sha256: str = EXPECTED_PILOT_BENCHMARK_SHA256,
+    expected_dataset_id: str = EXPECTED_PILOT_DATASET_ID,
+) -> BlindedAnnotationSet:
+    """Loads the benchmark dataset, enforces fail-fast validations on SHA-256, dataset identity,
+    and temporal policy binding, evaluates candidates under strict eligibility (ADR 0018), and
+    produces the canonical BlindedAnnotationSet.
+
+    Temporal eligibility (t_pub < t_demand) is decided exclusively by
+    DefaultPatentEligibilityPolicy.evaluate() -- never re-implemented here.
+
+    ``expected_sha256`` and ``expected_dataset_id`` are mandatory, not optional bypasses: PR-E.1's
+    design spec (§3 step 2) requires the policy be verifiably bound to a specific target benchmark,
+    not merely to whatever file happens to be passed in.
+    """
+    if temporal_pool_mode != "strict":
+        raise ValueError(
+            f"PR-E.1 contract requires temporal_pool_mode must be 'strict', got '{temporal_pool_mode}'"
+        )
+
+    path = Path(benchmark_path)
+    if not path.is_file():
+        raise FileNotFoundError(f"Benchmark dataset file not found: {path}")
+
+    content_bytes = path.read_bytes()
+    computed_sha256 = hashlib.sha256(content_bytes).hexdigest()
+    if computed_sha256 != expected_sha256:
+        raise ValueError(
+            f"Benchmark SHA-256 digest mismatch. Expected {expected_sha256}, got {computed_sha256}"
+        )
+
+    data = json.loads(content_bytes.decode("utf-8"))
+    dataset_id = data.get("dataset_id")
+    if not dataset_id:
+        raise ValueError("Benchmark JSON is missing 'dataset_id'")
+    if dataset_id != expected_dataset_id:
+        raise ValueError(
+            f"Benchmark dataset_id is not the target this policy binding was authorized for. "
+            f"Expected '{expected_dataset_id}', got '{dataset_id}'"
+        )
+
+    policy = DefaultPatentEligibilityPolicy(target_jurisdiction="ES")
+
+    patents_by_id: dict[str, PatentDocument] = {}
+    for p_raw in data.get("patents", []):
+        doc = PatentDocument(
+            publication_id=p_raw["publication_id"],
+            country_code=p_raw.get("country_code", p_raw["publication_id"].split("-")[0]),
+            doc_number=p_raw.get("doc_number", p_raw["publication_id"].split("-")[1]),
+            kind_code=p_raw.get("kind_code", p_raw["publication_id"].split("-")[2]),
+            title=p_raw.get("title", ""),
+            abstract=p_raw.get("abstract", ""),
+            publication_date=p_raw.get("publication_date"),
+            classifications_cpc=p_raw.get("classifications_cpc", []),
+        )
+        patents_by_id[doc.publication_id] = doc
+
+    demands_batches: list[AnnotationBatch] = []
+    for d_raw in data.get("demands", []):
+        demand = DemandSignal(
+            demand_id=d_raw["demand_id"],
+            title=d_raw["title"],
+            description=d_raw["description"],
+            posted_date=d_raw.get("posted_date"),
+        )
+
+        eligible_candidates: list[Candidate] = []
+        for pub_id, patent in patents_by_id.items():
+            eligibility = policy.evaluate(patent, demand)
+            if eligibility.is_eligible and eligibility.reason == EligibilityReason.ELIGIBLE:
+                eligible_candidates.append(Candidate(publication_id=pub_id, retrieval_scores={}))
+
+        pool = CandidatePool(demand_id=demand.demand_id, candidates=eligible_candidates)
+        batch = build_annotation_batch(pool, demand, patents_by_id, seed=seed)
+        demands_batches.append(batch)
+
+    return BlindedAnnotationSet(
+        schema_version="1.0.0",
+        dataset_id=dataset_id,
+        dataset_sha256=computed_sha256,
+        temporal_pool_mode=temporal_pool_mode,
+        seed=seed,
+        demands=tuple(demands_batches),
     )
 
 
