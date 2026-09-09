@@ -86,7 +86,7 @@ describe('ScientificDashboard UI', () => {
     expect(reloadMock).toHaveBeenCalledTimes(1);
   });
 
-  it('renders full dashboard on success preserving all data faithfully', () => {
+  it('renders scientific overview by default without dominant engineering content', () => {
     vi.spyOn(applicationHook, 'useProjectStatus').mockReturnValue({
       state: 'success',
       data: mockSuccessStatus,
@@ -96,10 +96,26 @@ describe('ScientificDashboard UI', () => {
 
     render(<ScientificDashboard />);
 
-    // Header & Overall Verdict
     expect(screen.getByText(/nexus scientific verification/i)).toBeInTheDocument();
+    expect(screen.getByText(/what nexus does/i)).toBeInTheDocument();
+    // Engineering-only content is not shown on the default Overview tab
+    expect(screen.queryByText(/scientific_integrity/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/wilcoxon_test/i)).not.toBeInTheDocument();
+  });
+
+  it('renders full engineering dashboard on the Engineering tab, preserving all data faithfully', () => {
+    vi.spyOn(applicationHook, 'useProjectStatus').mockReturnValue({
+      state: 'success',
+      data: mockSuccessStatus,
+      error: null,
+      reload: vi.fn(),
+    });
+
+    render(<ScientificDashboard />);
+    fireEvent.click(screen.getByRole('button', { name: 'Engineering' }));
+
+    // Overall Verdict
     expect(screen.getByTestId('overall-status-badge')).toHaveTextContent('PASS');
-    expect(screen.getByText(/d1e2f3a4b5c6/)).toBeInTheDocument();
     expect(screen.getByText(/Nexus scientific invariants fully validated/i)).toBeInTheDocument();
 
     // Dimensions rendered
@@ -114,6 +130,36 @@ describe('ScientificDashboard UI', () => {
     // Check item rendered
     expect(screen.getByText(/wilcoxon_test/i)).toBeInTheDocument();
     expect(screen.getByText(/Statistically significant superiority/i)).toBeInTheDocument();
+  });
+
+  it('shows evaluated commit sha on the Reproducibility tab', () => {
+    vi.spyOn(applicationHook, 'useProjectStatus').mockReturnValue({
+      state: 'success',
+      data: mockSuccessStatus,
+      error: null,
+      reload: vi.fn(),
+    });
+
+    render(<ScientificDashboard />);
+    fireEvent.click(screen.getByRole('button', { name: 'Reproducibility' }));
+
+    expect(screen.getByText(mockSuccessStatus.commit_sha)).toBeInTheDocument();
+  });
+
+  it('marks Landscape, Opportunities, Candidates and Evidence as not yet available', () => {
+    vi.spyOn(applicationHook, 'useProjectStatus').mockReturnValue({
+      state: 'success',
+      data: mockSuccessStatus,
+      error: null,
+      reload: vi.fn(),
+    });
+
+    render(<ScientificDashboard />);
+
+    for (const label of ['Landscape', 'Opportunities', 'Candidates', 'Evidence']) {
+      fireEvent.click(screen.getByRole('button', { name: label }));
+      expect(screen.getAllByText(/not yet available/i).length).toBeGreaterThan(0);
+    }
   });
 
   it('preserves epistemic statuses UNVERIFIED, SKIPPED, FAIL without recalculation', () => {
@@ -137,6 +183,7 @@ describe('ScientificDashboard UI', () => {
     });
 
     render(<ScientificDashboard />);
+    fireEvent.click(screen.getByRole('button', { name: 'Engineering' }));
 
     // Overall verdict must faithfully reflect UNVERIFIED without recalculation
     expect(screen.getByTestId('overall-status-badge')).toHaveTextContent('UNVERIFIED');

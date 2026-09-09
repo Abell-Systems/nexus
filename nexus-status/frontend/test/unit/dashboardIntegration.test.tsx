@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -34,18 +34,24 @@ describe('ScientificDashboard End-to-End Live Contract Integration', () => {
     // Initially displays loading
     expect(screen.getByText(/loading scientific verification/i)).toBeInTheDocument();
 
-    // Resolves and displays full dashboard
+    // Resolves and displays the scientific overview by default
     await waitFor(() => {
-      expect(screen.getByTestId('overall-status-badge')).toBeInTheDocument();
+      expect(screen.getByText(/what nexus does/i)).toBeInTheDocument();
     });
 
+    // Navigate to Engineering to inspect the full CI/status dashboard
+    fireEvent.click(screen.getByRole('button', { name: 'Engineering' }));
+
+    expect(screen.getByTestId('overall-status-badge')).toBeInTheDocument();
     expect(screen.getByTestId('overall-status-badge')).toHaveTextContent(
       canonicalContractRaw.overall_status
     );
 
-    // Evaluated commit truncated SHA is visible
-    const expectedShortSha = canonicalContractRaw.commit_sha.slice(0, 12);
-    expect(screen.getByText(new RegExp(expectedShortSha))).toBeInTheDocument();
+    // Evaluated commit truncated SHA is visible on the Reproducibility tab
+    fireEvent.click(screen.getByRole('button', { name: 'Reproducibility' }));
+    expect(screen.getByText(canonicalContractRaw.commit_sha)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Engineering' }));
 
     // Verify key dimensions are present in the DOM
     expect(screen.getAllByText(/backend_testing/i).length).toBeGreaterThan(0);
