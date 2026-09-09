@@ -1037,8 +1037,9 @@ def generate_readme_status_snippet(payload: dict[str, Any]) -> str:
         f"[![Docs](https://img.shields.io/badge/Docs-{docs_status}-{docs_color})](PROJECT_STATUS.md#documentation-{docs_status.lower()})",
         f"[![Scientific Integrity](https://img.shields.io/badge/Scientific_Integrity-{sci_status}-{sci_color})](PROJECT_STATUS.md#scientific_integrity-{sci_status.lower()})",
         f"[![SonarCloud](https://img.shields.io/badge/SonarCloud-{sonar_status}-{sonar_color})](PROJECT_STATUS.md#sonar_cloud-{sonar_status.lower()})",
+        "[![Scientific Dashboard](https://img.shields.io/badge/Scientific_Dashboard-Live-blue)](https://abell-systems.github.io/nexus/)",
         "",
-        f"> **Verified against:** `{sha}` · `{timestamp}` · [Full Project Status](PROJECT_STATUS.md)",
+        f"> **Verified against:** `{sha}` · `{timestamp}` · [Scientific Dashboard](https://abell-systems.github.io/nexus/) · [Full Project Status](PROJECT_STATUS.md) · [Raw Contract](project_status.json)",
         README_STATUS_END,
     ]
     return "\n".join(lines)
