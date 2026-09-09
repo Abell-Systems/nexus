@@ -1,0 +1,63 @@
+{
+  "project_overview": {
+    "title": "Abell Nexus",
+    "tagline": "Plataforma de emparejamiento reproducible entre demandas de innovación y patentes",
+    "description": "Abell Nexus es una plataforma de investigación abierta diseñada para estudiar de forma auditable y reproducible las relaciones entre el conocimiento científico, la tecnología patentada y las necesidades reales de innovación. Emplea un pipeline de emparejamiento híbrido (léxico BM25, representaciones semánticas densas y clasificación CPC) validado mediante protocolos empíricos formales.",
+    "protocol_url": "https://github.com/Abell-Systems/nexus/blob/main/docs/empirical-study-protocol.md",
+    "repository_url": "https://github.com/Abell-Systems/nexus"
+  },
+  "milestones": [
+    {
+      "id": "pilot_benchmark",
+      "title": "Corpus y Benchmark Piloto",
+      "description": "Conjunto sellado de 15 patentes OEPM, 3 demandas InnoGet y 23 anotaciones con hashes de integridad inmutables.",
+      "dimension_key": "scientific_integrity",
+      "phase": "Fase 1"
+    },
+    {
+      "id": "matching_pipeline",
+      "title": "Pipeline de Recuperación y Fusión M0/M1",
+      "description": "Implementación y prueba formal de los extractores de características, fusionadores y evaluadores de evidencia.",
+      "dimension_key": "backend_testing",
+      "phase": "Fase 1"
+    },
+    {
+      "id": "cryptographic_integrity",
+      "title": "Integridad Criptográfica de Artefactos",
+      "description": "Trazabilidad completa mediante sidecars SHA-256 y verificación estricta de manifiestos y embeddings.",
+      "dimension_key": "scientific_integrity",
+      "phase": "Fase 1"
+    },
+    {
+      "id": "temporal_protocol",
+      "title": "Restricciones Temporales de Prior-Art",
+      "description": "Aplicación de la regla estricta t_pub < t_demand con excepciones históricas congeladas formalmente bajo ADR 0018/0019.",
+      "dimension_key": "scientific_integrity",
+      "phase": "Fase 1"
+    },
+    {
+      "id": "dataset_scaling",
+      "title": "Escalado de Corpus y Anotación Ciega",
+      "description": "Ampliación del espacio de candidatos, exportación ciega dual y evaluación de acuerdo entre anotadores (IAA).",
+      "dimension_key": "dataset_scaling",
+      "phase": "Fase 2"
+    }
+  ],
+  "epistemic_boundaries": {
+    "demonstrated": [
+      "Integridad byte-a-byte del corpus piloto auditado frente a manifiestos y sidecars SHA-256.",
+      "Correspondencia dimensional y trazabilidad reproducible de los embeddings del benchmark.",
+      "Cumplimiento formal de las restricciones temporales definidas por el protocolo empírico (ADR 0018 §6 / ADR 0019)."
+    ],
+    "not_yet_demonstrated": [
+      "Generalización estadística sobre catálogos industriales a gran escala (>100.000 patentes).",
+      "Validez transfronteriza y multilingüe fuera de las jurisdicciones y vocabularios evaluados en el piloto.",
+      "Rendimiento del emparejamiento con anotadores ciegos independientes no implicados en el diseño del benchmark."
+    ],
+    "next_scientific_step": {
+      "title": "Pool de Candidatos Fase 2 y Anotación Ciega Dual (ADR 0019)",
+      "description": "Construir el pool de candidatos ampliado (N=39), realizar doble anotación ciega con cálculo de coeficiente Kappa/IAA y verificar la estabilidad de rankings bajo filtrado temporal estricto.",
+      "target_milestone": "Fase 2"
+    }
+  }
+}
