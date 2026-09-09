@@ -98,6 +98,58 @@ class DatasetIdentityAuditTest:
         temp_check = next(c for c in report["checks"] if c["check"] == "temporal_eligibility")
         assert temp_check["status"] == "FAIL"
 
+    def test_should_fail_when_temporal_policy_target_dataset_id_mismatches(self, tmp_path: Path) -> None:
+        policy_path = _REPO_ROOT / "config" / "policies" / "data" / "temporal_integrity_policy.json"
+        policy_data = json.loads(policy_path.read_text(encoding="utf-8"))
+        policy_data["target_dataset_id"] = "wrong-corpus-id-v2"
+        tampered_policy = tmp_path / "tampered_policy.json"
+        tampered_policy.write_text(json.dumps(policy_data), encoding="utf-8")
+
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(_AUDIT_SCRIPT),
+                "--policy",
+                str(tampered_policy),
+                "--output",
+                str(tmp_path / "mismatch.json"),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert proc.returncode == 0
+        report = json.loads((tmp_path / "mismatch.json").read_text(encoding="utf-8"))
+        assert report["verdict"] == "FAIL"
+        assert "temporal_policy_binding" in report["failed_checks"]
+        assert "temporal_eligibility" in report["failed_checks"]
+
+    def test_should_fail_when_temporal_policy_target_dataset_sha_mismatches(self, tmp_path: Path) -> None:
+        policy_path = _REPO_ROOT / "config" / "policies" / "data" / "temporal_integrity_policy.json"
+        policy_data = json.loads(policy_path.read_text(encoding="utf-8"))
+        policy_data["target_dataset_sha256"] = "0000000000000000000000000000000000000000000000000000000000000000"
+        tampered_policy = tmp_path / "tampered_policy.json"
+        tampered_policy.write_text(json.dumps(policy_data), encoding="utf-8")
+
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(_AUDIT_SCRIPT),
+                "--policy",
+                str(tampered_policy),
+                "--output",
+                str(tmp_path / "mismatch.json"),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert proc.returncode == 0
+        report = json.loads((tmp_path / "mismatch.json").read_text(encoding="utf-8"))
+        assert report["verdict"] == "FAIL"
+        assert "temporal_policy_binding" in report["failed_checks"]
+        assert "temporal_eligibility" in report["failed_checks"]
+
     def test_should_be_reproducible_across_runs(self, tmp_path: Path) -> None:
         first = _run_audit(tmp_path / "audit1.json")
         second = _run_audit(tmp_path / "audit2.json")

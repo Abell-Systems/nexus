@@ -213,13 +213,33 @@ def audit(policy_path: Path | None = DEFAULT_POLICY_PATH) -> dict:
             )
     violations.sort(key=lambda v: (v["demand_id"], v["publication_id"]))
 
+    policy_binding_valid = False
+    if policy is not None:
+        policy_target_id = policy.get("target_dataset_id")
+        policy_target_sha = policy.get("target_dataset_sha256")
+        dataset_id = dataset.get("dataset_id")
+        policy_binding_valid = bool(
+            policy_target_id
+            and policy_target_sha
+            and policy_target_id == dataset_id
+            and policy_target_sha == file_sha
+        )
+        _check(
+            "temporal_policy_binding",
+            policy_binding_valid,
+            f"policy=({policy_target_id}, {str(policy_target_sha)[:12]}...) "
+            f"actual=({dataset_id}, {file_sha[:12]}...)",
+            checks,
+            failures,
+        )
+
     if not violations:
         checks.append({
             "check": "temporal_eligibility",
             "status": "PASS",
             "detail": f"0 of {len(annotations)} annotated pairs violate t_pub < t_demand",
         })
-    elif policy is not None and "accepted_exceptions" in policy:
+    elif policy is not None and policy_binding_valid and "accepted_exceptions" in policy:
         accepted_map = {
             (e["demand_id"], e["publication_id"]): e
             for e in policy.get("accepted_exceptions", [])
@@ -249,6 +269,16 @@ def audit(policy_path: Path | None = DEFAULT_POLICY_PATH) -> dict:
                 "detail": f"{len(unaccepted)} unaccepted temporal violations detected",
             })
             failures.append("temporal_eligibility")
+    elif policy is not None and not policy_binding_valid:
+        checks.append({
+            "check": "temporal_eligibility",
+            "status": "FAIL",
+            "detail": (
+                f"Policy exceptions rejected: target dataset mismatch "
+                f"(policy target: {policy.get('target_dataset_id')}, actual: {dataset.get('dataset_id')})"
+            ),
+        })
+        failures.append("temporal_eligibility")
     else:
         _check(
             "temporal_eligibility",

@@ -1,6 +1,6 @@
 # Nexus Project Status
 
-> **Overall Status:** `[PASS]` | **Commit:** `1d06870dd9bfd2b83cd4cbaf0e10ff710511b028` | **Evaluated At:** `2026-09-09T06:07:51.745367+00:00`
+> **Overall Status:** `[PASS]` | **Commit:** `955908b2441468c2b9cc938fd19cb8307bc95f45` | **Evaluated At:** `2026-09-09T06:09:34.784462+00:00`
 
 ![Status](https://img.shields.io/badge/Project_Status-PASS-brightgreen)
 
@@ -69,6 +69,7 @@ Nexus Project Status evaluates to PASS. All required dimensions verified and pas
 - `[PASS]` **snapshots_raw_sha** — manifest=2832dc5936b8... file=2832dc5936b8...
 - `[PASS]` **snapshots_count** — manifest=16 jsonl=16
 - `[PASS]` **evaluation_subset_of_snapshots** — snapshot_only=['ES-2918450-A1'] evaluation_only=[]
+- `[PASS]` **temporal_policy_binding** — policy=(nexus-pilot-16-evaluation-corpus-v1, bf7c501f817f...) actual=(nexus-pilot-16-evaluation-corpus-v1, bf7c501f817f...)
 - `[SKIPPED]` **temporal_eligibility** — 3 temporal violations formally accepted as exceptions under ADR-0018/ADR-0019 (accepted_temporal_exception)
 
 ### `sonar_cloud` (`UNVERIFIED`)
