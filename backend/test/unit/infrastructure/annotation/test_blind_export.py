@@ -1,4 +1,5 @@
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -280,4 +281,39 @@ class GenerateBlindedAnnotationSetTest:
         assert "ES-2856789-A1" not in pub_2501
         assert "ES-2901234-A1" not in pub_2501
         assert "ES-2895412-B1" in pub_2501
+
+
+class StructuralBlindnessInvariantTest:
+    def test_serialized_json_payload_must_not_contain_forbidden_keys(self):
+        real_benchmark = Path("data/evaluation/dataset_pilot_benchmark.json")
+        annotation_set = generate_blinded_annotation_set(real_benchmark, temporal_pool_mode="strict", seed=42)
+        serialized = annotation_set.model_dump_json(indent=2)
+        parsed = json.loads(serialized)
+
+        forbidden_patterns = [
+            r'"score"',
+            r'"retrieval_scores"',
+            r'"rank"',
+            r'"position"',
+            r'"retriever_id"',
+            r'"retrieval_method"',
+            r'"method"',
+            r'"publication_date":\s*"[^"]+"',  # Non-null publication date string
+        ]
+
+        for pattern in forbidden_patterns:
+            assert not re.search(pattern, serialized, re.IGNORECASE), f"Forbidden pattern {pattern} found in serialized JSON"
+
+        # Verify entry structure
+        for demand_batch in parsed["demands"]:
+            assert "demand_id" in demand_batch
+            assert "demand_title" in demand_batch
+            assert "demand_description" in demand_batch
+            for entry in demand_batch["entries"]:
+                assert set(entry.keys()) == {"publication_id", "evidence"}
+                evidence = entry["evidence"]
+                assert "title" in evidence
+                assert "abstract" in evidence
+                assert "classifications_cpc" in evidence
+                assert evidence.get("publication_date") is None
 
