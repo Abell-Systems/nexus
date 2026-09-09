@@ -262,21 +262,41 @@ describe('Project Status Contract v1 Domain Model', () => {
           },
         })
       ).toThrow(ContractValidationError);
+
+      expect(() =>
+        parseProjectStatus({
+          ...validMinimalPayload,
+          dimensions: {
+            test_dim: {
+              ...validMinimalPayload.dimensions.backend_testing,
+              checks: 'not-an-array' as unknown as [],
+            },
+          },
+        })
+      ).toThrow(ContractValidationError);
+    });
+
+    it('rejects evaluated_at timestamps that are not strictly ISO-8601', () => {
+      expect(() =>
+        parseProjectStatus({
+          ...validMinimalPayload,
+          evaluated_at: '2026/09/09 10:00:00', // parseable by Date.parse but NOT ISO-8601
+        })
+      ).toThrow(ContractValidationError);
     });
 
     it('successfully parses the actual repository project_status.json contract', () => {
       const rootContractPath = path.resolve(__dirname, '../../../../project_status.json');
-      if (fs.existsSync(rootContractPath)) {
-        const raw = JSON.parse(fs.readFileSync(rootContractPath, 'utf-8'));
-        const parsed = parseProjectStatus(raw);
-        expect(parsed.schema_version).toBe('1.0.0');
-        expect(parsed.overall_status).toBe('PASS');
-        expect(Object.keys(parsed.dimensions).length).toBeGreaterThanOrEqual(7);
-        expect(parsed.dimensions.backend_testing.status).toBe('PASS');
-        expect(parsed.dimensions.architecture.status).toBe('PASS');
-        expect(parsed.dimensions.documentation.status).toBe('PASS');
-        expect(parsed.dimensions.scientific_integrity.status).toBe('PASS');
-      }
+      expect(fs.existsSync(rootContractPath)).toBe(true);
+      const raw = JSON.parse(fs.readFileSync(rootContractPath, 'utf-8'));
+      const parsed = parseProjectStatus(raw);
+      expect(parsed.schema_version).toBe('1.0.0');
+      expect(parsed.overall_status).toBe('PASS');
+      expect(Object.keys(parsed.dimensions).length).toBeGreaterThanOrEqual(7);
+      expect(parsed.dimensions.backend_testing.status).toBe('PASS');
+      expect(parsed.dimensions.architecture.status).toBe('PASS');
+      expect(parsed.dimensions.documentation.status).toBe('PASS');
+      expect(parsed.dimensions.scientific_integrity.status).toBe('PASS');
     });
   });
 });

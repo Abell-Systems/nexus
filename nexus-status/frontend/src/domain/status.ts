@@ -135,8 +135,13 @@ function validateDimension(rawDim: unknown, key: string): DimensionStatus {
     );
   }
 
-  const rawChecks = Array.isArray(dim.checks) ? dim.checks : [];
-  const validatedChecks = rawChecks.map((c, i) => validateCheck(c, i, key));
+  if (!Array.isArray(dim.checks)) {
+    throw new ContractValidationError(
+      `Dimension '${key}' must have an array for 'checks'.`
+    );
+  }
+
+  const validatedChecks = dim.checks.map((c, i) => validateCheck(c, i, key));
 
   return {
     status: dim.status,
@@ -150,6 +155,8 @@ function validateDimension(rawDim: unknown, key: string): DimensionStatus {
     checks: Object.freeze(validatedChecks),
   };
 }
+
+const ISO_8601_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/;
 
 /**
  * Parses and validates an untrusted raw payload against the canonical Project Status Contract v1.
@@ -178,8 +185,12 @@ export function parseProjectStatus(raw: unknown): ProjectStatus {
     throw new ContractValidationError('Missing or empty commit_sha.');
   }
 
-  // 3. Evaluated at (valid ISO timestamp)
-  if (typeof payload.evaluated_at !== 'string' || Number.isNaN(Date.parse(payload.evaluated_at))) {
+  // 3. Evaluated at (valid ISO-8601 timestamp)
+  if (
+    typeof payload.evaluated_at !== 'string' ||
+    !ISO_8601_PATTERN.test(payload.evaluated_at) ||
+    Number.isNaN(Date.parse(payload.evaluated_at))
+  ) {
     throw new ContractValidationError(
       `Invalid evaluated_at timestamp: '${String(payload.evaluated_at)}'. Must be ISO-8601.`
     );
