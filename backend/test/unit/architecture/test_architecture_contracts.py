@@ -14,6 +14,7 @@ Invariants enforced:
 import configparser
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 from domain.protocols.agents import (
@@ -22,9 +23,15 @@ from domain.protocols.agents import (
     InventorAgentProtocol,
 )
 
+_REPO_ROOT = Path(__file__).resolve().parents[4]
+if str(_REPO_ROOT / "scripts") not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT / "scripts"))
+
+from check_architecture import check_monorepo_boundaries  # noqa: E402
+
 
 def _get_repo_root() -> Path:
-    return Path(__file__).resolve().parents[4]
+    return _REPO_ROOT
 
 
 def test_agent_protocols_are_pure():
@@ -191,9 +198,146 @@ def test_embedding_generation_stack_isolation_behaviorally_catches_leaks():
 
 def test_check_architecture_script_integrates_import_linter():
     """Verify scripts/check_architecture.py integrates import-linter contracts in CI."""
-    script_path = _get_repo_root() / "scripts" / "check_architecture.py"
+    script_path = _REPO_ROOT / "scripts" / "check_architecture.py"
     code = script_path.read_text(encoding="utf-8")
 
     assert "check_import_linter_contracts" in code
     assert "lint-imports" in code
     assert ".importlinter" in code
+
+
+def test_monorepo_boundaries_passes_on_current_repository():
+    """Verify ADR 0024 monorepo boundaries pass on the actual repository."""
+    errors: list[str] = []
+    check_monorepo_boundaries(errors, repo_root=_REPO_ROOT)
+    assert errors == [], f"Expected 0 boundary violations, got: {errors}"
+
+
+def test_monorepo_boundaries_passes_on_valid_fixture(tmp_path: Path):
+    """Positive behavioral test: valid local imports inside each workspace pass with 0 errors."""
+    # Setup clean fixture
+    frontend_src = tmp_path / "frontend" / "src" / "main"
+    frontend_src.mkdir(parents=True)
+    (frontend_src / "App.tsx").write_text(
+        "import React from 'react';\nimport { Header } from './Header';\n",
+        encoding="utf-8",
+    )
+
+    status_dir = tmp_path / "nexus-status"
+    (status_dir / "frontend" / "src" / "ui").mkdir(parents=True)
+    (status_dir / "README.md").write_text("# Nexus Status\n", encoding="utf-8")
+    (status_dir / "frontend" / "src" / "ui" / "App.tsx").write_text(
+        "import React from 'react';\nimport { status } from '../domain/status';\nimport { Badge } from './Badge';\n",
+        encoding="utf-8",
+    )
+
+    errors: list[str] = []
+    check_monorepo_boundaries(errors, repo_root=tmp_path)
+    assert errors == [], f"Expected clean fixture to pass, got: {errors}"
+
+
+def test_monorepo_boundaries_catches_frontend_to_status_relative_leak(tmp_path: Path):
+    """Negative behavioral test: frontend relative import of nexus-status is rejected."""
+    frontend_src = tmp_path / "frontend" / "src" / "main"
+    frontend_src.mkdir(parents=True)
+    (frontend_src / "App.tsx").write_text(
+        "import { StatusBadge } from '../../nexus-status/frontend/src/ui/StatusBadge';\n",
+        encoding="utf-8",
+    )
+
+    status_dir = tmp_path / "nexus-status"
+    (status_dir / "frontend" / "src" / "ui").mkdir(parents=True)
+    (status_dir / "README.md").write_text("# Nexus Status\n", encoding="utf-8")
+
+    errors: list[str] = []
+    check_monorepo_boundaries(errors, repo_root=tmp_path)
+    assert len(errors) == 1
+    assert "frontend cannot import nexus-status" in errors[0]
+
+
+def test_monorepo_boundaries_catches_frontend_to_status_package_leak(tmp_path: Path):
+    """Negative behavioral test: frontend package/alias import of nexus-status is rejected."""
+    frontend_src = tmp_path / "frontend" / "src" / "main"
+    frontend_src.mkdir(parents=True)
+    (frontend_src / "App.tsx").write_text(
+        "import { StatusBadge } from 'nexus-status-frontend/ui/StatusBadge';\n",
+        encoding="utf-8",
+    )
+
+    status_dir = tmp_path / "nexus-status"
+    (status_dir / "frontend" / "src" / "ui").mkdir(parents=True)
+    (status_dir / "README.md").write_text("# Nexus Status\n", encoding="utf-8")
+
+    errors: list[str] = []
+    check_monorepo_boundaries(errors, repo_root=tmp_path)
+    assert len(errors) == 1
+    assert "frontend cannot import nexus-status" in errors[0]
+
+
+def test_monorepo_boundaries_catches_status_to_frontend_relative_leak(tmp_path: Path):
+    """Negative behavioral test: nexus-status relative import of frontend is rejected."""
+    (tmp_path / "frontend" / "src" / "main").mkdir(parents=True)
+    status_dir = tmp_path / "nexus-status"
+    ui_dir = status_dir / "frontend" / "src" / "ui"
+    ui_dir.mkdir(parents=True)
+    (status_dir / "README.md").write_text("# Nexus Status\n", encoding="utf-8")
+    (ui_dir / "App.tsx").write_text(
+        "import { ResultsView } from '../../../../frontend/src/main/components/ResultsView';\n",
+        encoding="utf-8",
+    )
+
+    errors: list[str] = []
+    check_monorepo_boundaries(errors, repo_root=tmp_path)
+    assert len(errors) == 1
+    assert "nexus-status cannot import frontend" in errors[0]
+
+
+def test_monorepo_boundaries_catches_status_to_frontend_package_leak(tmp_path: Path):
+    """Negative behavioral test: nexus-status package import of frontend is rejected."""
+    (tmp_path / "frontend" / "src" / "main").mkdir(parents=True)
+    status_dir = tmp_path / "nexus-status"
+    ui_dir = status_dir / "frontend" / "src" / "ui"
+    ui_dir.mkdir(parents=True)
+    (status_dir / "README.md").write_text("# Nexus Status\n", encoding="utf-8")
+    (ui_dir / "App.tsx").write_text(
+        "import { ResultsView } from 'patent-innovation-agent-frontend/components/ResultsView';\n",
+        encoding="utf-8",
+    )
+
+    errors: list[str] = []
+    check_monorepo_boundaries(errors, repo_root=tmp_path)
+    assert len(errors) == 1
+    assert "nexus-status cannot import core backend/frontend" in errors[0]
+
+
+def test_monorepo_boundaries_catches_status_to_backend_relative_leak(tmp_path: Path):
+    """Negative behavioral test: nexus-status relative import of backend is rejected."""
+    (tmp_path / "backend" / "src" / "main" / "domain").mkdir(parents=True)
+    status_dir = tmp_path / "nexus-status"
+    ui_dir = status_dir / "frontend" / "src" / "ui"
+    ui_dir.mkdir(parents=True)
+    (status_dir / "README.md").write_text("# Nexus Status\n", encoding="utf-8")
+    (ui_dir / "App.tsx").write_text(
+        "import { Patent } from '../../../../backend/src/main/domain/patent';\n",
+        encoding="utf-8",
+    )
+
+    errors: list[str] = []
+    check_monorepo_boundaries(errors, repo_root=tmp_path)
+    assert len(errors) == 1
+    assert "nexus-status cannot import backend" in errors[0]
+
+
+def test_monorepo_boundaries_catches_stray_file_in_status_root(tmp_path: Path):
+    """Structural invariant test: unexpected entries in nexus-status root are rejected."""
+    status_dir = tmp_path / "nexus-status"
+    (status_dir / "frontend").mkdir(parents=True)
+    (status_dir / "README.md").write_text("# Nexus Status\n", encoding="utf-8")
+    (status_dir / "stray_script.py").write_text("print('rogue')\n", encoding="utf-8")
+
+    errors: list[str] = []
+    check_monorepo_boundaries(errors, repo_root=tmp_path)
+    assert len(errors) == 1
+    assert "unexpected entry in nexus-status workspace root" in errors[0]
+
+

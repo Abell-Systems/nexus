@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "commit_sha": "0d82ec51b3edf4043b0dd2047a42e2c883d35a8f",
-  "evaluated_at": "2026-09-09T07:22:38.704196+00:00",
+  "commit_sha": "6f12f61e9a2128dd3ca98706159d8c43b4c7ec85",
+  "evaluated_at": "2026-09-09T07:39:28.017941+00:00",
   "overall_status": "PASS",
   "aggregation_rule": "All required dimensions verified and passed.",
   "summary": "Nexus Project Status evaluates to PASS. All required dimensions verified and passed.",
@@ -163,7 +163,7 @@
           "name": "docs_correctness",
           "status": "PASS",
           "value": 0,
-          "detail": "Docs correctness gate: PASS (65 markdown files, 23 ADRs checked)"
+          "detail": "Docs correctness gate: PASS (66 markdown files, 24 ADRs checked)"
         }
       ]
     },
