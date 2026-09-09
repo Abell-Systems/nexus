@@ -5,15 +5,18 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-function canonicalContractPlugin(): Plugin {
+// Serves and bundles a canonical repo-root artifact (project_status.json,
+// scientific_results.json) as a plain static file — both are statically-published,
+// git-tracked sibling artifacts (ADR 0022/0023/0025); neither is a live backend/API.
+function staticContractPlugin(fileName: string): Plugin {
   const currentDir = path.dirname(fileURLToPath(import.meta.url));
-  const rootContractPath = path.resolve(currentDir, '../../project_status.json');
+  const rootContractPath = path.resolve(currentDir, '../../', fileName);
 
   return {
-    name: 'canonical-contract-plugin',
+    name: `static-contract-plugin:${fileName}`,
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        if (req.url === '/project_status.json' || req.url === './project_status.json') {
+        if (req.url === `/${fileName}` || req.url === `./${fileName}`) {
           if (fs.existsSync(rootContractPath)) {
             res.setHeader('Content-Type', 'application/json');
             res.end(fs.readFileSync(rootContractPath, 'utf-8'));
@@ -27,7 +30,7 @@ function canonicalContractPlugin(): Plugin {
       if (fs.existsSync(rootContractPath)) {
         this.emitFile({
           type: 'asset',
-          fileName: 'project_status.json',
+          fileName,
           source: fs.readFileSync(rootContractPath, 'utf-8'),
         });
       }
@@ -37,7 +40,11 @@ function canonicalContractPlugin(): Plugin {
 
 export default defineConfig({
   base: './',
-  plugins: [react(), canonicalContractPlugin()],
+  plugins: [
+    react(),
+    staticContractPlugin('project_status.json'),
+    staticContractPlugin('scientific_results.json'),
+  ],
   build: {
     outDir: 'dist',
   },
@@ -47,5 +54,3 @@ export default defineConfig({
     include: ['test/**/*.{test,spec}.{ts,tsx}'],
   },
 })
-
-
