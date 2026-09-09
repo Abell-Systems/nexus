@@ -12,13 +12,20 @@ Track semantics (ADR 0025 §1-2):
   verified, and must carry the exact `DISCOVERY_DISCLAIMER` wherever rendered.
 - `verification` (Head B, ADR 0017): deterministic, policy-sealed matching evidence.
 
-Reuses existing payload shapes rather than redefining them: `InventionCandidate`,
-`AdversarialVerdict`, `ScoreCard` (domain.models.runtime_schemas, Head A) and
-`MatchAssessment` (domain.models.matching, Head B). This module adds only the
-publication envelope, execution scoping, evidence-citation structure, and the
+Reuses existing payload shapes rather than redefining them: `PatentCluster`,
+`InventionCandidate`, `AdversarialVerdict`, `ScoreCard` (domain.models.runtime_schemas,
+Head A) and `MatchAssessment` (domain.models.matching, Head B). This module adds only
+the publication envelope, execution scoping, evidence-citation structure, and the
 epistemic invariants ADR 0025 requires around them — it does not create producers
 for `OpportunityScore`/`OpportunityHypothesis` (domain.models.opportunity), which
 remain unused by any pipeline.
+
+`TechnologyClusterObservation` was added to carry the white-space metrics
+(density/recency/citation_traction/demand_intensity/quadrant/mean_age_years) that
+`application.landscape.metrics.compute_white_space_metrics` already computes but
+`PatentCluster`/`cluster_patents` discard — this is the concrete publisher requirement
+(the first real snapshot, see `scripts/publish_scientific_results.py`) that justified
+extending this contract beyond PR #71's original scope.
 
 Discovery-track free text is additionally checked against a fixed phrase denylist
 (see `_FORBIDDEN_DISCOVERY_CLAIM_PHRASES` below). That check is a conservative
@@ -34,7 +41,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from domain.models.matching import MatchAssessment
-from domain.models.runtime_schemas import AdversarialVerdict, InventionCandidate, ScoreCard
+from domain.models.runtime_schemas import AdversarialVerdict, InventionCandidate, PatentCluster, ScoreCard
 
 
 class Track(StrEnum):
@@ -83,6 +90,15 @@ _FORBIDDEN_DISCOVERY_CLAIM_PHRASES: tuple[str, ...] = (
 )
 
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+
+
+def _require_exact_discovery_disclaimer(v: str, record_kind: str) -> str:
+    if v != DISCOVERY_DISCLAIMER:
+        raise ValueError(
+            f"a discovery {record_kind} record must carry the exact required epistemic "
+            "disclaimer verbatim (ADR 0025 §2) — not a paraphrase or omission"
+        )
+    return v
 
 
 def _reject_forbidden_discovery_claims(*texts: str | None) -> None:
@@ -150,8 +166,36 @@ def _validate_utc_aware(v: datetime) -> datetime:
     return v
 
 
+class DataSourceProvenance(BaseModel):
+    """Which concrete datasource implementation produced an execution's input data.
+
+    `kind` reuses whatever identity string the datasource itself already exposes —
+    e.g. the `"type"` field `MockPatentsDataSource`/`BigQueryPatentsDataSource.get_status()`
+    already return (`domain.models.runtime_schemas` producers, `infrastructure.sources.
+    bigquery_patents`) — rather than inventing a new taxonomy of source kinds. Where a
+    datasource exposes no such status method (no demand datasource does today), `kind`
+    falls back to that datasource's own class name, which is equally real and equally
+    not invented, just less structured. This exists so a reader of a published record
+    never has to consult a CI log to learn whether its input came from a live source or
+    a fixture — that fact belongs in the artifact itself.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    role: Literal["patents", "demand"]
+    kind: str = Field(min_length=1)
+
+
 class ScientificResultsExecution(BaseModel):
     """Identity and provenance of one execution that produced published records.
+
+    `execution_id` identifies *this published execution* — the record now sitting in
+    `scientific_results.json` — not a durable runtime identity for Head A in general.
+    Head A's live `job_id` (`infrastructure/storage/job_store.py`, `uuid4().hex`,
+    in-memory only) remains exactly as ephemeral as before this contract existed; ADR
+    0017 §7's "no durable Head A execution identity" gap is unchanged by publishing one
+    execution's id into a git-tracked file. Git tracking makes *this one record*
+    citable and stable; it does not retroactively make Head A's job store durable.
 
     `dataset_id`/`dataset_version`/`policy_id`/`policy_version`/`policy_sha256`/
     `engine_commit` are optional: the deterministic (`verification`) track already
@@ -160,6 +204,9 @@ class ScientificResultsExecution(BaseModel):
     them optional here reflects that gap honestly rather than fabricating values; see
     `executions_are_aggregable` below for why an absent field blocks aggregation rather
     than being treated as a wildcard match.
+
+    `source_provenance` records which concrete datasource implementation(s) actually
+    produced this execution's input — see `DataSourceProvenance`.
     """
 
     model_config = ConfigDict(frozen=True)
@@ -175,6 +222,7 @@ class ScientificResultsExecution(BaseModel):
     policy_id: str | None = None
     policy_version: str | None = None
     policy_sha256: str | None = None
+    source_provenance: tuple[DataSourceProvenance, ...] = Field(default_factory=tuple)
 
     @field_validator("created_at")
     @classmethod
@@ -187,6 +235,16 @@ class ScientificResultsExecution(BaseModel):
         if v is not None and not _SHA256_RE.match(v.lower()):
             raise ValueError(f"Invalid SHA-256 digest format: {v}")
         return v.lower() if v is not None else v
+
+    @field_validator("source_provenance")
+    @classmethod
+    def validate_source_provenance_roles_are_unique(
+        cls, v: tuple[DataSourceProvenance, ...]
+    ) -> tuple[DataSourceProvenance, ...]:
+        roles = [entry.role for entry in v]
+        if len(roles) != len(set(roles)):
+            raise ValueError(f"source_provenance must not repeat a role, got: {roles}")
+        return v
 
 
 def executions_are_aggregable(a: ScientificResultsExecution, b: ScientificResultsExecution) -> bool:
@@ -218,12 +276,7 @@ class DiscoveryCandidateRecord(BaseModel):
     @field_validator("disclaimer")
     @classmethod
     def validate_disclaimer_is_exact(cls, v: str) -> str:
-        if v != DISCOVERY_DISCLAIMER:
-            raise ValueError(
-                "a discovery candidate record must carry the exact required epistemic "
-                "disclaimer verbatim (ADR 0025 §2) — not a paraphrase or omission"
-            )
-        return v
+        return _require_exact_discovery_disclaimer(v, "candidate")
 
     @model_validator(mode="after")
     def validate_no_forbidden_claims(self) -> "DiscoveryCandidateRecord":
@@ -256,12 +309,7 @@ class DiscoveryVerificationRecord(BaseModel):
     @field_validator("disclaimer")
     @classmethod
     def validate_disclaimer_is_exact(cls, v: str) -> str:
-        if v != DISCOVERY_DISCLAIMER:
-            raise ValueError(
-                "a discovery verification record must carry the exact required "
-                "epistemic disclaimer verbatim (ADR 0025 §2) — not a paraphrase or omission"
-            )
-        return v
+        return _require_exact_discovery_disclaimer(v, "verification")
 
     @model_validator(mode="after")
     def validate_challenge_consistency(self) -> "DiscoveryVerificationRecord":
@@ -297,6 +345,44 @@ class VerificationMatchRecord(BaseModel):
     assessment: MatchAssessment
 
 
+class TechnologyClusterObservation(BaseModel):
+    """A published cluster observation: the existing `PatentCluster` plus the fuller
+    white-space metrics `compute_white_space_metrics`
+    (application.landscape.metrics) already computes but `cluster_patents`
+    (application.landscape.clustering) discards before returning. No new computation
+    is introduced by this type — every field is copied verbatim from data Nexus's
+    existing landscape pipeline already produces (SCIENTIFIC_RESULTS_CONTRACT.md §4,
+    `TechnologyCluster` "Derivable" row).
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    cluster: PatentCluster
+    density: float
+    recency: float
+    citation_traction: float
+    citation_coverage: float
+    demand_intensity: float
+    quadrant: str = Field(min_length=1)
+    mean_age_years: float
+
+
+class DiscoveryLandscapeRecord(BaseModel):
+    """A published `discovery`-track landscape observation, scoped to its execution."""
+
+    model_config = ConfigDict(frozen=True)
+
+    execution_id: str = Field(min_length=1)
+    query: str = Field(min_length=1)
+    clusters: tuple[TechnologyClusterObservation, ...] = Field(default_factory=tuple)
+    disclaimer: str = Field(default=DISCOVERY_DISCLAIMER)
+
+    @field_validator("disclaimer")
+    @classmethod
+    def validate_disclaimer_is_exact(cls, v: str) -> str:
+        return _require_exact_discovery_disclaimer(v, "landscape")
+
+
 class ScientificResultsDocument(BaseModel):
     """Top-level `scientific_results.json` contract.
 
@@ -312,6 +398,7 @@ class ScientificResultsDocument(BaseModel):
     schema_version: str = Field(min_length=1)
     generated_at: datetime
     executions: tuple[ScientificResultsExecution, ...] = Field(default_factory=tuple)
+    landscapes: tuple[DiscoveryLandscapeRecord, ...] = Field(default_factory=tuple)
     candidates: tuple[DiscoveryCandidateRecord, ...] = Field(default_factory=tuple)
     verifications: tuple[DiscoveryVerificationRecord, ...] = Field(default_factory=tuple)
     matches: tuple[VerificationMatchRecord, ...] = Field(default_factory=tuple)
@@ -329,6 +416,8 @@ class ScientificResultsDocument(BaseModel):
                 raise ValueError(f"duplicate execution_id in executions: '{execution.execution_id}'")
             executions_by_id[execution.execution_id] = execution
 
+        for landscape in self.landscapes:
+            self._require_track(landscape.execution_id, executions_by_id, Track.DISCOVERY, "landscape")
         for candidate in self.candidates:
             self._require_track(candidate.execution_id, executions_by_id, Track.DISCOVERY, "candidate")
         for verification in self.verifications:
