@@ -1,15 +1,15 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import "@testing-library/jest-dom";
-import { VerificationHero } from "../components/VerificationHero";
-import { ProjectContextCard } from "../components/ProjectContextCard";
-import { MilestonesProgress } from "../components/MilestonesProgress";
-import { EpistemicBoundaryCard } from "../components/EpistemicBoundaryCard";
-import { VerificationPillars } from "../components/VerificationPillars";
-import { ScientificConclusion } from "../components/ScientificConclusion";
-import { EvidenceDrawer } from "../components/EvidenceDrawer";
-import contextData from "../scientific_context.json";
-import type { PillarViewModel, ProjectStatusPayload } from "../types";
+import { VerificationHero } from "../../src/main/components/ScientificVerification/components/VerificationHero";
+import { ProjectContextCard } from "../../src/main/components/ScientificVerification/components/ProjectContextCard";
+import { MilestonesProgress } from "../../src/main/components/ScientificVerification/components/MilestonesProgress";
+import { EpistemicBoundaryCard } from "../../src/main/components/ScientificVerification/components/EpistemicBoundaryCard";
+import { VerificationPillars } from "../../src/main/components/ScientificVerification/components/VerificationPillars";
+import { ScientificConclusion } from "../../src/main/components/ScientificVerification/components/ScientificConclusion";
+import { EvidenceDrawer } from "../../src/main/components/ScientificVerification/components/EvidenceDrawer";
+import contextData from "../../src/main/components/ScientificVerification/scientific_context.json";
+import type { PillarViewModel, ProjectStatusPayload } from "../../src/main/components/ScientificVerification/types";
 
 describe("Scientific Verification Components", () => {
   it("VerificationHero renders exact point-in-time provenance statement", () => {

@@ -46,6 +46,7 @@ from audit_project_status import (  # noqa: E402
     evaluate_scientific_integrity,
     generate_markdown_report,
     generate_readme_status_snippet,
+    generate_scientific_verification_report,
     parse_junit_xml,
     status_badge_color,
     update_readme_status,
@@ -581,3 +582,60 @@ class TestReadmeObservatory:
         assert "Architecture-FAIL-red" in snippet
         assert "Tests-FAIL-red" in snippet
         assert "Coverage-73.5%25-red" in snippet
+
+
+class TestScientificVerificationReport:
+    def test_generate_scientific_verification_report_structure(self) -> None:
+        payload = {
+            "schema_version": "1.0.0",
+            "commit_sha": "7928e22abcdef0123456789",
+            "evaluated_at": "2026-09-09T08:00:00Z",
+            "overall_status": STATUS_PASS,
+            "aggregation_rule": "all required pass",
+            "dimensions": {
+                "scientific_integrity": {
+                    "status": STATUS_PASS,
+                    "requirement_level": REQ_REQUIRED,
+                    "evidence_source": "scripts/audit_dataset_identity.py",
+                    "evidence_available": True,
+                    "checks": [
+                        {"name": "dataset_sha_sidecar", "status": STATUS_PASS, "detail": "ok"},
+                        {"name": "dataset_sha_manifest", "status": STATUS_PASS, "detail": "ok"},
+                        {"name": "temporal_policy_binding", "status": STATUS_PASS, "detail": "ok"},
+                        {
+                            "name": "temporal_eligibility",
+                            "status": STATUS_SKIPPED,
+                            "detail": "3 temporal violations formally accepted as exceptions under ADR-0018/ADR-0019",
+                        },
+                    ],
+                }
+            },
+        }
+
+        report = generate_scientific_verification_report(payload)
+
+        # Primary assertions
+        assert "# Abell Nexus — Verificación Científica" in report
+        assert "7928e22" in report
+        assert "nexus-pilot-16-evaluation-corpus-v1" in report
+        assert "https://abell-systems.github.io/nexus/#/scientific-verification" in report
+
+        # Pillars
+        assert "Integridad de los Datos" in report
+        assert "Protocolo Temporal" in report
+        assert "Reproducibilidad" in report
+
+        # Accepted exceptions
+        assert "ADR-0018 §6 / ADR-0019" in report or "ADR-0018/ADR-0019" in report
+        assert "3 violaciones temporales congeladas" in report
+
+        # Epistemic Boundaries
+        assert "Frontera Epistemológica" in report
+        assert "Demostrado con Evidencia Objetiva" in report
+        assert "No Demostrado Aún" in report
+        assert "Siguiente Paso Científico" in report
+
+        # Restraint assertions: no overclaiming
+        assert "100% reproducible" not in report
+        assert "universalmente válido" not in report
+

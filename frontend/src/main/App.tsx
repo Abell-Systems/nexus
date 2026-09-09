@@ -6,7 +6,7 @@ import { HistoryView } from "./components/UserZero/HistoryView";
 import { LandingView } from "./components/UserZero/LandingView";
 import { ResultsView } from "./components/UserZero/ResultsView";
 import { useAnalyzeJob } from "./application/useAnalyzeJob";
-import { ScientificVerificationView } from "./features/scientific-verification/ScientificVerificationView";
+import { ScientificVerificationView } from "./components/ScientificVerification/ScientificVerificationView";
 
 function isVerificationRoute(hash: string, pathname: string): boolean {
   return (
