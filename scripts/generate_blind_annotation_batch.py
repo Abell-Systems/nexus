@@ -2,8 +2,8 @@
 """Generates the canonical blinded annotation candidate pool under strict temporal eligibility (PR-E.1)."""
 
 import hashlib
-from pathlib import Path
 import sys
+from pathlib import Path
 
 # Ensure backend/src/main is on sys.path
 repo_root = Path(__file__).resolve().parent.parent
