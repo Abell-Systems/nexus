@@ -760,6 +760,37 @@ body {
 }
 
 /* Methodology */
+.methodology-notice {
+  background: var(--unverified-bg);
+  border: 1px solid var(--unverified-border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.methodology-notice-badge {
+  display: inline-block;
+  color: var(--unverified-text);
+  border: 1px solid var(--unverified-border);
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.methodology-notice p {
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.methodology-notice a {
+  color: #7dd3fc;
+}
+
 .methodology-stages {
   list-style: none;
   margin: 0;

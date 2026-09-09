@@ -121,6 +121,15 @@ Accepted. `SCIENTIFIC_RESULTS_CONTRACT.md` §8 steps 1–3 (stop discarding comp
 metrics → persist executions → publish a snapshot) remain the correct, smallest first
 implementation once this ADR lands.
 
+**Placeholder scaffolding is not implementation.** `nexus-status` may ship the
+`Landscape`/`Opportunities`/`Candidates`/`Evidence` navigation entries ahead of this ADR's
+acceptance — as it does today — provided every one of them renders an explicit, unambiguous
+"not yet available" state and no `track`-labeled record. Such scaffolding is UI navigation
+only; it does not constitute, and must not be described in review or documentation as,
+implementation of either track. The gate this ADR imposes is on rendering real `discovery`
+or `verification` data, not on the existence of the nav items or empty-state components
+themselves.
+
 ## Consequences
 
 ### Positive

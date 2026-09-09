@@ -10,7 +10,7 @@ export const ReproducibilityView: React.FC<ReproducibilityViewProps> = ({ status
 
   return (
     <section className="view-section reproducibility-view" aria-label="Reproducibility">
-      <h2 className="section-title">Which exact data and version produced this result?</h2>
+      <h2 className="section-title">Which project state was evaluated?</h2>
       <dl className="reproducibility-grid">
         <div className="repro-item">
           <dt>Evaluated commit</dt>
@@ -32,7 +32,9 @@ export const ReproducibilityView: React.FC<ReproducibilityViewProps> = ({ status
       <p className="repro-note">
         Dataset identity, manifest hashes and temporal-integrity checks are independently
         verified as part of the <code>scientific_integrity</code> dimension — see the
-        Engineering view for the full evidence trail.
+        Engineering view for the full evidence trail. This identifies the project state that
+        was audited, not a scientific-result execution — that identifier
+        (<code>execution_id</code>) is defined in ADR 0025 and is not yet published.
       </p>
     </section>
   );
