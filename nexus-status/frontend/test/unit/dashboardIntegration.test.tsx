@@ -63,4 +63,44 @@ describe('ScientificDashboard End-to-End Live Contract Integration', () => {
     const dimensionBadges = screen.getAllByTestId('status-badge');
     expect(dimensionBadges.length).toBeGreaterThanOrEqual(7);
   });
+
+  it('successfully loads and renders the canonical repository scientific_results.json on the Landscape tab', async () => {
+    const rootStatusPath = path.resolve(__dirname, '../../../../project_status.json');
+    const rootScientificResultsPath = path.resolve(__dirname, '../../../../scientific_results.json');
+    expect(fs.existsSync(rootScientificResultsPath)).toBe(true);
+
+    const statusRaw = JSON.parse(fs.readFileSync(rootStatusPath, 'utf-8'));
+    const scientificResultsRaw = JSON.parse(fs.readFileSync(rootScientificResultsPath, 'utf-8'));
+
+    // Serve each real, distinct artifact from its own URL — proves the two
+    // fetches are independent, not the same request duplicated.
+    globalThis.fetch = vi.fn().mockImplementation((input: RequestInfo | URL) => {
+      const url = String(input);
+      const body = url.includes('scientific_results.json') ? scientificResultsRaw : statusRaw;
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: async () => body,
+      } as Response);
+    });
+
+    render(<ScientificDashboard />);
+    await waitFor(() => {
+      expect(screen.getByText(/what nexus does/i)).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Landscape' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('landscape-discovery-disclaimer')).toBeInTheDocument();
+    });
+
+    const execution = scientificResultsRaw.executions[0];
+    const cluster = scientificResultsRaw.landscapes[0].clusters[0].cluster;
+    expect(screen.getByText(execution.domain)).toBeInTheDocument();
+    expect(screen.getByText(cluster.label)).toBeInTheDocument();
+    expect(screen.getByTestId('landscape-discovery-disclaimer')).toHaveTextContent(
+      scientificResultsRaw.landscapes[0].disclaimer
+    );
+  });
 });
