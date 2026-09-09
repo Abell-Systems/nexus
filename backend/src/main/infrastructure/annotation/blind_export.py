@@ -33,6 +33,20 @@ class AnnotationBatch(BaseModel):
     entries: tuple[AnnotationCandidateEntry, ...] = Field(default_factory=tuple)
 
 
+class BlindedAnnotationSet(BaseModel):
+    """Canonical multi-demand blinded annotation set. Built once per (benchmark, policy, seed)
+    and completely deterministic without timestamps or scores."""
+
+    model_config = ConfigDict(frozen=True)
+
+    schema_version: str = Field(min_length=1)
+    dataset_id: str = Field(min_length=1)
+    dataset_sha256: str = Field(min_length=64, max_length=64)
+    temporal_pool_mode: str = Field(min_length=1)
+    seed: int
+    demands: list[AnnotationBatch] = Field(default_factory=list)
+
+
 def build_annotation_batch(
     pool: CandidatePool,
     demand: DemandRecord | DemandSignal,
@@ -41,11 +55,13 @@ def build_annotation_batch(
 ) -> AnnotationBatch:
     """Strips retrieval provenance and applies a deterministic seeded shuffle.
 
+    Pre-sorts publication IDs alphabetically before shuffling to guarantee bit-for-bit
+    reproducibility regardless of the order candidates were inserted into the pool.
+
     Raises KeyError if a pool candidate has no corresponding patent — an
     AnnotationBatch must never silently drop or skip a pool member.
     """
-    publication_ids = [c.publication_id for c in pool.candidates]
-    order = list(publication_ids)
+    order = sorted([c.publication_id for c in pool.candidates])
     # Deterministic reproducible shuffle for annotation-batch ordering, not
     # security-sensitive. Rule python:S2245 is suppressed project-wide via
     # sonar-project.properties; inline NOSONAR does not work for this rule.

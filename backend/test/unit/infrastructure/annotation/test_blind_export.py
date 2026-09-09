@@ -5,7 +5,11 @@ import pytest
 from domain.models.demand import DemandSignal
 from domain.models.matching import Candidate, CandidatePool, EligibilityReason, RetrievalMethod
 from domain.models.patent import PatentDocument
-from infrastructure.annotation.blind_export import build_annotation_batch, export_temporal_provenance
+from infrastructure.annotation.blind_export import (
+    BlindedAnnotationSet,
+    build_annotation_batch,
+    export_temporal_provenance,
+)
 
 
 def _pool() -> CandidatePool:
@@ -147,3 +151,66 @@ class ExportTemporalProvenanceTest:
         assert "eligibility_reason" not in batch_field_names
         assert "temporal_reasons" not in entry_field_names
         assert "eligibility_reason" not in entry_field_names
+
+
+class BlindExportOrderingTest:
+    def test_should_produce_identical_batch_regardless_of_candidate_input_order(self):
+        pool_forward = CandidatePool(
+            demand_id="D1",
+            candidates=[
+                Candidate(publication_id="ES-3", retrieval_scores={RetrievalMethod.LEXICAL: 0.5}),
+                Candidate(publication_id="ES-1", retrieval_scores={RetrievalMethod.LEXICAL: 0.9}),
+                Candidate(publication_id="ES-2", retrieval_scores={RetrievalMethod.LEXICAL: 0.7}),
+            ],
+        )
+        pool_reverse = CandidatePool(
+            demand_id="D1",
+            candidates=[
+                Candidate(publication_id="ES-1", retrieval_scores={RetrievalMethod.LEXICAL: 0.9}),
+                Candidate(publication_id="ES-2", retrieval_scores={RetrievalMethod.LEXICAL: 0.7}),
+                Candidate(publication_id="ES-3", retrieval_scores={RetrievalMethod.LEXICAL: 0.5}),
+            ],
+        )
+        batch_a = build_annotation_batch(pool_forward, _demand(), _patents(), seed=42)
+        batch_b = build_annotation_batch(pool_reverse, _demand(), _patents(), seed=42)
+        assert [e.publication_id for e in batch_a.entries] == [e.publication_id for e in batch_b.entries]
+        assert batch_a.model_dump_json() == batch_b.model_dump_json()
+
+
+class BlindedAnnotationSetModelTest:
+    def test_should_require_explicit_schema_version_and_mandatory_provenance(self):
+        batch = build_annotation_batch(_pool(), _demand(), _patents(), seed=42)
+        annotation_set = BlindedAnnotationSet(
+            schema_version="1.0.0",
+            dataset_id="nexus-pilot-16-evaluation-corpus-v1",
+            dataset_sha256="bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453",
+            temporal_pool_mode="strict",
+            seed=42,
+            demands=[batch],
+        )
+        assert annotation_set.schema_version == "1.0.0"
+        assert annotation_set.temporal_pool_mode == "strict"
+        assert len(annotation_set.demands) == 1
+        assert not hasattr(annotation_set, "created_at")
+
+    def test_should_reject_empty_schema_version_or_mismatched_sha_length(self):
+        batch = build_annotation_batch(_pool(), _demand(), _patents(), seed=42)
+        with pytest.raises(ValueError):
+            BlindedAnnotationSet(
+                schema_version="",
+                dataset_id="nexus-pilot-16-evaluation-corpus-v1",
+                dataset_sha256="bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453",
+                temporal_pool_mode="strict",
+                seed=42,
+                demands=[batch],
+            )
+        with pytest.raises(ValueError):
+            BlindedAnnotationSet(
+                schema_version="1.0.0",
+                dataset_id="nexus-pilot-16-evaluation-corpus-v1",
+                dataset_sha256="short_hash",
+                temporal_pool_mode="strict",
+                seed=42,
+                demands=[batch],
+            )
+
