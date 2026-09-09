@@ -1,0 +1,635 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "nexus-pilot-16-evaluation-corpus-v1",
+  "dataset_sha256": "bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453",
+  "temporal_pool_mode": "strict",
+  "seed": 42,
+  "demands": [
+    {
+      "demand_id": "INNOGET-2415",
+      "demand_title": "Optimized sink and sanitary plumbing drainage systems",
+      "demand_description": "Seeking durable high-flow sanitary drainage and sink fixtures",
+      "seed": 42,
+      "entries": [
+        {
+          "publication_id": "ES-2789123-B2",
+          "evidence": {
+            "publication_id": "ES-2789123-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "H01M10/0565",
+              "H01M10/052",
+              "C08L27/16",
+              "H01B1/12"
+            ],
+            "shared_terms": [],
+            "title": "Membrana polimérica híbrida ionoconductora con sales de bis(fluorosulfonil)imida para baterías de estado sólido flexibles",
+            "abstract": "Capa interfacial electrolítica polimérica compuesta por poli(fluoruro de vinilideno-co-hexafluoropropileno) y nanopartículas cerámicas de LLZO para celdas electroquímicas de alta densidad energética."
+          }
+        },
+        {
+          "publication_id": "ES-2754890-B2",
+          "evidence": {
+            "publication_id": "ES-2754890-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "A47J47/00",
+              "E03C1/18",
+              "C08L33/08",
+              "C08K3/36"
+            ],
+            "shared_terms": [],
+            "title": "Superficie de encimera y fregadero integrado fabricada con material compuesto polimérico antibacteriano e hidrofóbico",
+            "abstract": "Encimera monobloque con fregadero embutido compuesta por matriz de resina acrílica reforzada con nanopartículas de sílice funcionalizadas con iones de plata y silanos hidrofóbicos."
+          }
+        },
+        {
+          "publication_id": "ES-2684913-B1",
+          "evidence": {
+            "publication_id": "ES-2684913-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "E03C1/18",
+              "E03C1/04",
+              "C02F1/00",
+              "A47J47/00"
+            ],
+            "shared_terms": [],
+            "title": "Fregadero modular con sistema integrado de recirculación, filtración por etapas y desinfección de aguas grises",
+            "abstract": "Dispositivo sanitario de cocina que incorpora sensor ultrasónico de caudal, módulo de filtración electroquímica para reutilización de aguas grises en lavavajillas y control IoT de consumo hídrico."
+          }
+        },
+        {
+          "publication_id": "ES-2798124-B1",
+          "evidence": {
+            "publication_id": "ES-2798124-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C08L67/02",
+              "C08L3/02",
+              "B65D65/46",
+              "C08K5/09"
+            ],
+            "shared_terms": [],
+            "title": "Biopolímero termoplástico compostable derivado de almidón modificado y poli(succinato de butileno) para packaging sostenible",
+            "abstract": "Mezcla polimérica biodegradable con compatibilizante de anhídrido maleico injertado para películas de envasado alimentario con alta barrera a vapor de agua y oxígeno."
+          }
+        },
+        {
+          "publication_id": "ES-2812345-B1",
+          "evidence": {
+            "publication_id": "ES-2812345-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "H01M10/0562",
+              "H01M10/0525",
+              "C01B25/45",
+              "H01M4/13"
+            ],
+            "shared_terms": [],
+            "title": "Electrolito sólido cerámico nanoestructurado de tipo NASICON con alta conductividad iónica para celdas de ion-litio y litio-metal",
+            "abstract": "Material electrolítico sólido inorgánico basado en Li1.5Al0.5Ti1.5(PO4)3 sintetizado por sol-gel con microestructura densificada para inhibición dendrítica a densidades de corriente superiores a 2 mA/cm2."
+          }
+        },
+        {
+          "publication_id": "ES-2765431-B2",
+          "evidence": {
+            "publication_id": "ES-2765431-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "G01R31/00",
+              "G05B17/02",
+              "H02J3/00",
+              "G01R21/00"
+            ],
+            "shared_terms": [],
+            "title": "Dispositivo de monitorización no intrusiva de cargas eléctricas industriales (NILM) con desagregación armónica de alta frecuencia",
+            "abstract": "Hardware y algoritmo embebido para identificación y desagregación de consumos de motores individuales a partir de la firma armónica transitoria en el cuadro general de distribución."
+          }
+        },
+        {
+          "publication_id": "ES-2876540-B1",
+          "evidence": {
+            "publication_id": "ES-2876540-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "H01M10/42",
+              "H02J7/00",
+              "G01R31/382",
+              "B60L58/12"
+            ],
+            "shared_terms": [],
+            "title": "Sistema de gestión electrónica de baterías (BMS) con balanceo activo inductivo y estimación de estado de salud (SOH) por impedanciometría",
+            "abstract": "Circuito integrado y metodología de cálculo de degradación electroquímica para paquetes de baterías de tracción en autobuses eléctricos y almacenamiento estacionario."
+          }
+        },
+        {
+          "publication_id": "ES-2715482-B2",
+          "evidence": {
+            "publication_id": "ES-2715482-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C11D3/50",
+              "B01J13/02",
+              "C11D3/22"
+            ],
+            "shared_terms": [],
+            "title": "Procedimiento de microencapsulación de fragancias y agentes bioactivos estables en formulaciones detergentes acuosas",
+            "abstract": "Método para encapsular aceites esenciales y fragancias en matrices poliméricas biocompatibles de alginato-quitosano para liberación prolongada durante el ciclo de aclarado textil."
+          }
+        },
+        {
+          "publication_id": "ES-2739812-B2",
+          "evidence": {
+            "publication_id": "ES-2739812-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "B23B1/00",
+              "B23B27/14",
+              "C23C16/27",
+              "C22C9/00"
+            ],
+            "shared_terms": [],
+            "title": "Procedimiento de mecanizado de ultraprecisión con recubrimiento autolubricante de diamante nanocristalino en herramientas de microdecoletaje",
+            "abstract": "Método para torneado de cilindros micrométricos en aleaciones de baja ductilidad empleando fresas recubiertas de CVD nanocristalino dopado con boro para evacuación rápida de viruta."
+          }
+        },
+        {
+          "publication_id": "ES-2634129-B1",
+          "evidence": {
+            "publication_id": "ES-2634129-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C11D1/66",
+              "C11D3/48",
+              "A01N63/00"
+            ],
+            "shared_terms": [],
+            "title": "Composición desinfectante y detergente de superficies duras basada en biosurfactantes de origen microbiano",
+            "abstract": "Formulación para limpieza industrial y doméstica conteniendo ramnolípidos y soforolípidos producidos por fermentación bacteriana con alta actividad antimicrobiana a pH neutro."
+          }
+        },
+        {
+          "publication_id": "ES-2654981-B1",
+          "evidence": {
+            "publication_id": "ES-2654981-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C22C9/04",
+              "B23B1/00",
+              "B23B27/00",
+              "C22F1/08"
+            ],
+            "shared_terms": [],
+            "title": "Aleación de latón ecológica libre de plomo con adición de bismuto y silicio para decoletaje de alta velocidad",
+            "abstract": "Aleación ternaria Cu-Zn con contenido de plomo inferior a 100 ppm, adicionada con 0.8-1.5% de bismuto y 0.2-0.5% de silicio para optimizar la fragmentación de viruta y durabilidad de herramienta."
+          }
+        },
+        {
+          "publication_id": "ES-2849102-B2",
+          "evidence": {
+            "publication_id": "ES-2849102-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C11D1/00",
+              "C11D3/386",
+              "C11D3/20",
+              "C11D11/00"
+            ],
+            "shared_terms": [],
+            "title": "Formulación detergente enzimática líquida biodegradable para lavado textil a temperatura ambiente",
+            "abstract": "Composición detergente acuosa concentrada con tensioactivos no iónicos derivados de poliglucósidos de alquilo y complejo enzimático estabilizado con proteasas y amilasas optimizadas para lavado entre 15°C y 25°C sin fosfatos."
+          }
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2292",
+      "demand_title": "Industrial formulation for concentrated detergent",
+      "demand_description": "Seeking enzymatic biodegradable surfactant formulations",
+      "seed": 42,
+      "entries": [
+        {
+          "publication_id": "ES-2789123-B2",
+          "evidence": {
+            "publication_id": "ES-2789123-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "H01M10/0565",
+              "H01M10/052",
+              "C08L27/16",
+              "H01B1/12"
+            ],
+            "shared_terms": [],
+            "title": "Membrana polimérica híbrida ionoconductora con sales de bis(fluorosulfonil)imida para baterías de estado sólido flexibles",
+            "abstract": "Capa interfacial electrolítica polimérica compuesta por poli(fluoruro de vinilideno-co-hexafluoropropileno) y nanopartículas cerámicas de LLZO para celdas electroquímicas de alta densidad energética."
+          }
+        },
+        {
+          "publication_id": "ES-2765431-B2",
+          "evidence": {
+            "publication_id": "ES-2765431-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "G01R31/00",
+              "G05B17/02",
+              "H02J3/00",
+              "G01R21/00"
+            ],
+            "shared_terms": [],
+            "title": "Dispositivo de monitorización no intrusiva de cargas eléctricas industriales (NILM) con desagregación armónica de alta frecuencia",
+            "abstract": "Hardware y algoritmo embebido para identificación y desagregación de consumos de motores individuales a partir de la firma armónica transitoria en el cuadro general de distribución."
+          }
+        },
+        {
+          "publication_id": "ES-2684913-B1",
+          "evidence": {
+            "publication_id": "ES-2684913-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "E03C1/18",
+              "E03C1/04",
+              "C02F1/00",
+              "A47J47/00"
+            ],
+            "shared_terms": [],
+            "title": "Fregadero modular con sistema integrado de recirculación, filtración por etapas y desinfección de aguas grises",
+            "abstract": "Dispositivo sanitario de cocina que incorpora sensor ultrasónico de caudal, módulo de filtración electroquímica para reutilización de aguas grises en lavavajillas y control IoT de consumo hídrico."
+          }
+        },
+        {
+          "publication_id": "ES-2812345-B1",
+          "evidence": {
+            "publication_id": "ES-2812345-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "H01M10/0562",
+              "H01M10/0525",
+              "C01B25/45",
+              "H01M4/13"
+            ],
+            "shared_terms": [],
+            "title": "Electrolito sólido cerámico nanoestructurado de tipo NASICON con alta conductividad iónica para celdas de ion-litio y litio-metal",
+            "abstract": "Material electrolítico sólido inorgánico basado en Li1.5Al0.5Ti1.5(PO4)3 sintetizado por sol-gel con microestructura densificada para inhibición dendrítica a densidades de corriente superiores a 2 mA/cm2."
+          }
+        },
+        {
+          "publication_id": "ES-2895412-B1",
+          "evidence": {
+            "publication_id": "ES-2895412-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "G05B19/418",
+              "G05B23/02",
+              "H02J13/00",
+              "G06N20/00"
+            ],
+            "shared_terms": [],
+            "title": "Sistema ciberfísico para optimización del consumo eléctrico en líneas de manufactura continua mediante gemelo digital y machine learning",
+            "abstract": "Arquitectura IoT industrial con red de sensores edge computing para monitorización en tiempo real de potencia activa/reactiva y modelos predictivos de eficiencia energética en maquinaria rotativa."
+          }
+        },
+        {
+          "publication_id": "ES-2754890-B2",
+          "evidence": {
+            "publication_id": "ES-2754890-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "A47J47/00",
+              "E03C1/18",
+              "C08L33/08",
+              "C08K3/36"
+            ],
+            "shared_terms": [],
+            "title": "Superficie de encimera y fregadero integrado fabricada con material compuesto polimérico antibacteriano e hidrofóbico",
+            "abstract": "Encimera monobloque con fregadero embutido compuesta por matriz de resina acrílica reforzada con nanopartículas de sílice funcionalizadas con iones de plata y silanos hidrofóbicos."
+          }
+        },
+        {
+          "publication_id": "ES-2876540-B1",
+          "evidence": {
+            "publication_id": "ES-2876540-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "H01M10/42",
+              "H02J7/00",
+              "G01R31/382",
+              "B60L58/12"
+            ],
+            "shared_terms": [],
+            "title": "Sistema de gestión electrónica de baterías (BMS) con balanceo activo inductivo y estimación de estado de salud (SOH) por impedanciometría",
+            "abstract": "Circuito integrado y metodología de cálculo de degradación electroquímica para paquetes de baterías de tracción en autobuses eléctricos y almacenamiento estacionario."
+          }
+        },
+        {
+          "publication_id": "ES-2798124-B1",
+          "evidence": {
+            "publication_id": "ES-2798124-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C08L67/02",
+              "C08L3/02",
+              "B65D65/46",
+              "C08K5/09"
+            ],
+            "shared_terms": [],
+            "title": "Biopolímero termoplástico compostable derivado de almidón modificado y poli(succinato de butileno) para packaging sostenible",
+            "abstract": "Mezcla polimérica biodegradable con compatibilizante de anhídrido maleico injertado para películas de envasado alimentario con alta barrera a vapor de agua y oxígeno."
+          }
+        },
+        {
+          "publication_id": "ES-2715482-B2",
+          "evidence": {
+            "publication_id": "ES-2715482-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C11D3/50",
+              "B01J13/02",
+              "C11D3/22"
+            ],
+            "shared_terms": [],
+            "title": "Procedimiento de microencapsulación de fragancias y agentes bioactivos estables en formulaciones detergentes acuosas",
+            "abstract": "Método para encapsular aceites esenciales y fragancias en matrices poliméricas biocompatibles de alginato-quitosano para liberación prolongada durante el ciclo de aclarado textil."
+          }
+        },
+        {
+          "publication_id": "ES-2739812-B2",
+          "evidence": {
+            "publication_id": "ES-2739812-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "B23B1/00",
+              "B23B27/14",
+              "C23C16/27",
+              "C22C9/00"
+            ],
+            "shared_terms": [],
+            "title": "Procedimiento de mecanizado de ultraprecisión con recubrimiento autolubricante de diamante nanocristalino en herramientas de microdecoletaje",
+            "abstract": "Método para torneado de cilindros micrométricos en aleaciones de baja ductilidad empleando fresas recubiertas de CVD nanocristalino dopado con boro para evacuación rápida de viruta."
+          }
+        },
+        {
+          "publication_id": "ES-2634129-B1",
+          "evidence": {
+            "publication_id": "ES-2634129-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C11D1/66",
+              "C11D3/48",
+              "A01N63/00"
+            ],
+            "shared_terms": [],
+            "title": "Composición desinfectante y detergente de superficies duras basada en biosurfactantes de origen microbiano",
+            "abstract": "Formulación para limpieza industrial y doméstica conteniendo ramnolípidos y soforolípidos producidos por fermentación bacteriana con alta actividad antimicrobiana a pH neutro."
+          }
+        },
+        {
+          "publication_id": "ES-2654981-B1",
+          "evidence": {
+            "publication_id": "ES-2654981-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C22C9/04",
+              "B23B1/00",
+              "B23B27/00",
+              "C22F1/08"
+            ],
+            "shared_terms": [],
+            "title": "Aleación de latón ecológica libre de plomo con adición de bismuto y silicio para decoletaje de alta velocidad",
+            "abstract": "Aleación ternaria Cu-Zn con contenido de plomo inferior a 100 ppm, adicionada con 0.8-1.5% de bismuto y 0.2-0.5% de silicio para optimizar la fragmentación de viruta y durabilidad de herramienta."
+          }
+        },
+        {
+          "publication_id": "ES-2849102-B2",
+          "evidence": {
+            "publication_id": "ES-2849102-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C11D1/00",
+              "C11D3/386",
+              "C11D3/20",
+              "C11D11/00"
+            ],
+            "shared_terms": [],
+            "title": "Formulación detergente enzimática líquida biodegradable para lavado textil a temperatura ambiente",
+            "abstract": "Composición detergente acuosa concentrada con tensioactivos no iónicos derivados de poliglucósidos de alquilo y complejo enzimático estabilizado con proteasas y amilasas optimizadas para lavado entre 15°C y 25°C sin fosfatos."
+          }
+        }
+      ]
+    },
+    {
+      "demand_id": "INNOGET-2501",
+      "demand_title": "Industrial process automation numerical control software",
+      "demand_description": "Seeking program-control algorithms for factory robotics",
+      "seed": 42,
+      "entries": [
+        {
+          "publication_id": "ES-2789123-B2",
+          "evidence": {
+            "publication_id": "ES-2789123-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "H01M10/0565",
+              "H01M10/052",
+              "C08L27/16",
+              "H01B1/12"
+            ],
+            "shared_terms": [],
+            "title": "Membrana polimérica híbrida ionoconductora con sales de bis(fluorosulfonil)imida para baterías de estado sólido flexibles",
+            "abstract": "Capa interfacial electrolítica polimérica compuesta por poli(fluoruro de vinilideno-co-hexafluoropropileno) y nanopartículas cerámicas de LLZO para celdas electroquímicas de alta densidad energética."
+          }
+        },
+        {
+          "publication_id": "ES-2765431-B2",
+          "evidence": {
+            "publication_id": "ES-2765431-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "G01R31/00",
+              "G05B17/02",
+              "H02J3/00",
+              "G01R21/00"
+            ],
+            "shared_terms": [],
+            "title": "Dispositivo de monitorización no intrusiva de cargas eléctricas industriales (NILM) con desagregación armónica de alta frecuencia",
+            "abstract": "Hardware y algoritmo embebido para identificación y desagregación de consumos de motores individuales a partir de la firma armónica transitoria en el cuadro general de distribución."
+          }
+        },
+        {
+          "publication_id": "ES-2684913-B1",
+          "evidence": {
+            "publication_id": "ES-2684913-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "E03C1/18",
+              "E03C1/04",
+              "C02F1/00",
+              "A47J47/00"
+            ],
+            "shared_terms": [],
+            "title": "Fregadero modular con sistema integrado de recirculación, filtración por etapas y desinfección de aguas grises",
+            "abstract": "Dispositivo sanitario de cocina que incorpora sensor ultrasónico de caudal, módulo de filtración electroquímica para reutilización de aguas grises en lavavajillas y control IoT de consumo hídrico."
+          }
+        },
+        {
+          "publication_id": "ES-2812345-B1",
+          "evidence": {
+            "publication_id": "ES-2812345-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "H01M10/0562",
+              "H01M10/0525",
+              "C01B25/45",
+              "H01M4/13"
+            ],
+            "shared_terms": [],
+            "title": "Electrolito sólido cerámico nanoestructurado de tipo NASICON con alta conductividad iónica para celdas de ion-litio y litio-metal",
+            "abstract": "Material electrolítico sólido inorgánico basado en Li1.5Al0.5Ti1.5(PO4)3 sintetizado por sol-gel con microestructura densificada para inhibición dendrítica a densidades de corriente superiores a 2 mA/cm2."
+          }
+        },
+        {
+          "publication_id": "ES-2895412-B1",
+          "evidence": {
+            "publication_id": "ES-2895412-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "G05B19/418",
+              "G05B23/02",
+              "H02J13/00",
+              "G06N20/00"
+            ],
+            "shared_terms": [],
+            "title": "Sistema ciberfísico para optimización del consumo eléctrico en líneas de manufactura continua mediante gemelo digital y machine learning",
+            "abstract": "Arquitectura IoT industrial con red de sensores edge computing para monitorización en tiempo real de potencia activa/reactiva y modelos predictivos de eficiencia energética en maquinaria rotativa."
+          }
+        },
+        {
+          "publication_id": "ES-2754890-B2",
+          "evidence": {
+            "publication_id": "ES-2754890-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "A47J47/00",
+              "E03C1/18",
+              "C08L33/08",
+              "C08K3/36"
+            ],
+            "shared_terms": [],
+            "title": "Superficie de encimera y fregadero integrado fabricada con material compuesto polimérico antibacteriano e hidrofóbico",
+            "abstract": "Encimera monobloque con fregadero embutido compuesta por matriz de resina acrílica reforzada con nanopartículas de sílice funcionalizadas con iones de plata y silanos hidrofóbicos."
+          }
+        },
+        {
+          "publication_id": "ES-2876540-B1",
+          "evidence": {
+            "publication_id": "ES-2876540-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "H01M10/42",
+              "H02J7/00",
+              "G01R31/382",
+              "B60L58/12"
+            ],
+            "shared_terms": [],
+            "title": "Sistema de gestión electrónica de baterías (BMS) con balanceo activo inductivo y estimación de estado de salud (SOH) por impedanciometría",
+            "abstract": "Circuito integrado y metodología de cálculo de degradación electroquímica para paquetes de baterías de tracción en autobuses eléctricos y almacenamiento estacionario."
+          }
+        },
+        {
+          "publication_id": "ES-2798124-B1",
+          "evidence": {
+            "publication_id": "ES-2798124-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C08L67/02",
+              "C08L3/02",
+              "B65D65/46",
+              "C08K5/09"
+            ],
+            "shared_terms": [],
+            "title": "Biopolímero termoplástico compostable derivado de almidón modificado y poli(succinato de butileno) para packaging sostenible",
+            "abstract": "Mezcla polimérica biodegradable con compatibilizante de anhídrido maleico injertado para películas de envasado alimentario con alta barrera a vapor de agua y oxígeno."
+          }
+        },
+        {
+          "publication_id": "ES-2715482-B2",
+          "evidence": {
+            "publication_id": "ES-2715482-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C11D3/50",
+              "B01J13/02",
+              "C11D3/22"
+            ],
+            "shared_terms": [],
+            "title": "Procedimiento de microencapsulación de fragancias y agentes bioactivos estables en formulaciones detergentes acuosas",
+            "abstract": "Método para encapsular aceites esenciales y fragancias en matrices poliméricas biocompatibles de alginato-quitosano para liberación prolongada durante el ciclo de aclarado textil."
+          }
+        },
+        {
+          "publication_id": "ES-2739812-B2",
+          "evidence": {
+            "publication_id": "ES-2739812-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "B23B1/00",
+              "B23B27/14",
+              "C23C16/27",
+              "C22C9/00"
+            ],
+            "shared_terms": [],
+            "title": "Procedimiento de mecanizado de ultraprecisión con recubrimiento autolubricante de diamante nanocristalino en herramientas de microdecoletaje",
+            "abstract": "Método para torneado de cilindros micrométricos en aleaciones de baja ductilidad empleando fresas recubiertas de CVD nanocristalino dopado con boro para evacuación rápida de viruta."
+          }
+        },
+        {
+          "publication_id": "ES-2634129-B1",
+          "evidence": {
+            "publication_id": "ES-2634129-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C11D1/66",
+              "C11D3/48",
+              "A01N63/00"
+            ],
+            "shared_terms": [],
+            "title": "Composición desinfectante y detergente de superficies duras basada en biosurfactantes de origen microbiano",
+            "abstract": "Formulación para limpieza industrial y doméstica conteniendo ramnolípidos y soforolípidos producidos por fermentación bacteriana con alta actividad antimicrobiana a pH neutro."
+          }
+        },
+        {
+          "publication_id": "ES-2654981-B1",
+          "evidence": {
+            "publication_id": "ES-2654981-B1",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C22C9/04",
+              "B23B1/00",
+              "B23B27/00",
+              "C22F1/08"
+            ],
+            "shared_terms": [],
+            "title": "Aleación de latón ecológica libre de plomo con adición de bismuto y silicio para decoletaje de alta velocidad",
+            "abstract": "Aleación ternaria Cu-Zn con contenido de plomo inferior a 100 ppm, adicionada con 0.8-1.5% de bismuto y 0.2-0.5% de silicio para optimizar la fragmentación de viruta y durabilidad de herramienta."
+          }
+        },
+        {
+          "publication_id": "ES-2849102-B2",
+          "evidence": {
+            "publication_id": "ES-2849102-B2",
+            "publication_date": null,
+            "classifications_cpc": [
+              "C11D1/00",
+              "C11D3/386",
+              "C11D3/20",
+              "C11D11/00"
+            ],
+            "shared_terms": [],
+            "title": "Formulación detergente enzimática líquida biodegradable para lavado textil a temperatura ambiente",
+            "abstract": "Composición detergente acuosa concentrada con tensioactivos no iónicos derivados de poliglucósidos de alquilo y complejo enzimático estabilizado con proteasas y amilasas optimizadas para lavado entre 15°C y 25°C sin fosfatos."
+          }
+        }
+      ]
+    }
+  ]
+}

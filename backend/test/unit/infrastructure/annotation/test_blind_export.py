@@ -1,3 +1,4 @@
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -316,4 +317,20 @@ class StructuralBlindnessInvariantTest:
                 assert "abstract" in evidence
                 assert "classifications_cpc" in evidence
                 assert evidence.get("publication_date") is None
+
+
+class SidecarAndArtifactIntegrityTest:
+    def test_emitted_artifact_matches_sidecar_digest(self):
+        batch_file = Path("data/annotations/pilot_strict_annotation_batch.json")
+        sidecar_file = Path("data/annotations/pilot_strict_annotation_batch.json.sha256")
+        if not batch_file.exists() or not sidecar_file.exists():
+            pytest.skip("Artifact not generated yet")
+
+        content_bytes = batch_file.read_bytes()
+        computed_sha = hashlib.sha256(content_bytes).hexdigest()
+
+        sidecar_line = sidecar_file.read_text(encoding="utf-8").strip()
+        expected_sha = sidecar_line.split()[0]
+
+        assert computed_sha == expected_sha
 
