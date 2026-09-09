@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 
@@ -9,6 +10,7 @@ from infrastructure.annotation.blind_export import (
     BlindedAnnotationSet,
     build_annotation_batch,
     export_temporal_provenance,
+    generate_blinded_annotation_set,
 )
 
 
@@ -213,4 +215,69 @@ class BlindedAnnotationSetModelTest:
                 seed=42,
                 demands=[batch],
             )
+
+
+class GenerateBlindedAnnotationSetTest:
+    def test_should_fail_fast_if_benchmark_does_not_exist(self, tmp_path: Path):
+        non_existent = tmp_path / "missing.json"
+        with pytest.raises(FileNotFoundError, match="Benchmark dataset file not found"):
+            generate_blinded_annotation_set(non_existent, temporal_pool_mode="strict", seed=42)
+
+    def test_should_fail_fast_if_temporal_pool_mode_not_strict(self, tmp_path: Path):
+        benchmark_file = tmp_path / "dummy.json"
+        benchmark_file.write_text("{}", encoding="utf-8")
+        with pytest.raises(ValueError, match="temporal_pool_mode must be 'strict'"):
+            generate_blinded_annotation_set(benchmark_file, temporal_pool_mode="unconstrained", seed=42)
+
+    def test_should_fail_fast_if_benchmark_sha256_mismatch(self, tmp_path: Path):
+        benchmark_file = tmp_path / "corrupted.json"
+        benchmark_file.write_text('{"dataset_id": "nexus-pilot-16"}', encoding="utf-8")
+        with pytest.raises(ValueError, match="SHA-256 digest mismatch"):
+            generate_blinded_annotation_set(
+                benchmark_file,
+                temporal_pool_mode="strict",
+                seed=42,
+                expected_sha256="0000000000000000000000000000000000000000000000000000000000000000",
+            )
+
+    def test_should_derive_exact_eligible_sets_from_real_pilot_benchmark(self):
+        real_benchmark = Path("data/evaluation/dataset_pilot_benchmark.json")
+        if not real_benchmark.exists():
+            pytest.skip("Benchmark file not present")
+
+        result = generate_blinded_annotation_set(real_benchmark, temporal_pool_mode="strict", seed=42)
+
+        assert result.schema_version == "1.0.0"
+        assert result.dataset_id == "nexus-pilot-16-evaluation-corpus-v1"
+        assert result.temporal_pool_mode == "strict"
+        assert result.seed == 42
+        assert len(result.demands) == 3
+
+        demands_by_id = {d.demand_id: d for d in result.demands}
+        assert set(demands_by_id.keys()) == {"INNOGET-2415", "INNOGET-2292", "INNOGET-2501"}
+
+        # Exact candidate counts per demand
+        assert len(demands_by_id["INNOGET-2415"].entries) == 12
+        assert len(demands_by_id["INNOGET-2292"].entries) == 13
+        assert len(demands_by_id["INNOGET-2501"].entries) == 13
+
+        # Total candidate pairs = 38
+        total_candidates = sum(len(d.entries) for d in result.demands)
+        assert total_candidates == 38
+
+        # Invariant: excluded publications must never appear
+        pub_2415 = {e.publication_id for e in demands_by_id["INNOGET-2415"].entries}
+        assert "ES-2856789-A1" not in pub_2415
+        assert "ES-2895412-B1" not in pub_2415
+        assert "ES-2901234-A1" not in pub_2415
+
+        pub_2292 = {e.publication_id for e in demands_by_id["INNOGET-2292"].entries}
+        assert "ES-2856789-A1" not in pub_2292
+        assert "ES-2901234-A1" not in pub_2292
+        assert "ES-2895412-B1" in pub_2292  # Eligible for 2292 (pub 2023-01-15 < demand 2023-02-15)
+
+        pub_2501 = {e.publication_id for e in demands_by_id["INNOGET-2501"].entries}
+        assert "ES-2856789-A1" not in pub_2501
+        assert "ES-2901234-A1" not in pub_2501
+        assert "ES-2895412-B1" in pub_2501
 
