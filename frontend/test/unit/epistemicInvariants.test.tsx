@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import "@testing-library/jest-dom";
-import { VerificationHero } from "../components/VerificationHero";
-import { VerificationPillars } from "../components/VerificationPillars";
-import { EpistemicBoundaryCard } from "../components/EpistemicBoundaryCard";
-import contextData from "../scientific_context.json";
-import type { PillarViewModel } from "../types";
+import { VerificationHero } from "../../src/main/components/ScientificVerification/components/VerificationHero";
+import { VerificationPillars } from "../../src/main/components/ScientificVerification/components/VerificationPillars";
+import { EpistemicBoundaryCard } from "../../src/main/components/ScientificVerification/components/EpistemicBoundaryCard";
+import contextData from "../../src/main/components/ScientificVerification/scientific_context.json";
+import type { PillarViewModel } from "../../src/main/components/ScientificVerification/types";
 
 describe("Epistemic Invariants", () => {
   it("never asserts universal model efficacy or '100% reproducible'", () => {

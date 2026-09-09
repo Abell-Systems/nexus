@@ -1,6 +1,6 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { useScientificVerification } from "../useScientificVerification";
+import { useScientificVerification } from "../../src/main/components/ScientificVerification/useScientificVerification";
 
 describe("useScientificVerification", () => {
   beforeEach(() => {

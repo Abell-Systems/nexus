@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import "@testing-library/jest-dom";
-import { ScientificVerificationView } from "../ScientificVerificationView";
+import { ScientificVerificationView } from "../../src/main/components/ScientificVerification/ScientificVerificationView";
 
 describe("ScientificVerificationView", () => {
   beforeEach(() => {
