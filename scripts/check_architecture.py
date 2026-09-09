@@ -272,18 +272,19 @@ def check_frontend_layer_dependencies(errors: list[str]) -> None:
                 )
 
 
-def check_monorepo_boundaries(errors: list[str]) -> None:
+def check_monorepo_boundaries(errors: list[str], repo_root: Path = REPO_ROOT) -> None:
     """Enforces ADR 0024 monorepo boundary invariants:
 
-    1. nexus/frontend must NEVER import from nexus-status.
-    2. nexus-status/frontend must NEVER import from frontend or backend.
-    3. nexus-status workspace structural integrity.
+    1. nexus/frontend must NEVER import from nexus-status (neither via relative paths nor package/alias).
+    2. nexus-status/frontend must NEVER import from frontend or backend (neither via relative paths nor package/alias).
+    3. Neither application may use relative imports that escape its own application root.
+    4. nexus-status workspace structural integrity.
     """
-    nexus_status_dir = REPO_ROOT / "nexus-status"
+    nexus_status_dir = repo_root / "nexus-status"
     if not nexus_status_dir.exists():
         return
 
-    # 1. Check nexus-status workspace structure
+    # 1. Check nexus-status workspace root structure
     allowed_status_root = {"frontend", "README.md"}
     for item in nexus_status_dir.iterdir():
         if item.name.startswith("."):
@@ -294,37 +295,98 @@ def check_monorepo_boundaries(errors: list[str]) -> None:
                 f"(expected: {sorted(allowed_status_root)})"
             )
 
-    # 2. Check no imports from nexus-status in nexus/frontend
-    frontend_dir = REPO_ROOT / "frontend" / "src"
-    if frontend_dir.exists():
-        for f in frontend_dir.rglob("*"):
-            if f.suffix not in (".ts", ".tsx", ".js", ".jsx"):
-                continue
-            content = f.read_text(encoding="utf-8")
-            for match in TS_IMPORT_PATTERN.finditer(content):
-                target = match.group(1) or match.group(2) or ""
-                if "nexus-status" in target:
-                    rel_file = f.relative_to(REPO_ROOT)
-                    errors.append(
-                        f"FAIL: forbidden cross-workspace import in {rel_file}: {target} "
-                        "(frontend cannot import nexus-status, ADR 0024)"
-                    )
+    frontend_dir = repo_root / "frontend"
+    status_frontend_dir = nexus_status_dir / "frontend"
+    backend_dir = repo_root / "backend"
 
-    # 3. Check no imports from frontend or backend in nexus-status/frontend
-    status_frontend_src = nexus_status_dir / "frontend" / "src"
-    if status_frontend_src.exists():
-        for f in status_frontend_src.rglob("*"):
+    status_src = status_frontend_dir / "src"
+    frontend_src = frontend_dir / "src"
+
+    forbidden_pkg_in_status = {
+        "frontend",
+        "backend",
+        "patent-innovation-agent-frontend",
+        "@frontend",
+        "@backend",
+    }
+
+    forbidden_pkg_in_frontend = {
+        "nexus-status",
+        "nexus-status-frontend",
+        "@nexus-status",
+    }
+
+    # 2. Check imports in frontend/src
+    if frontend_src.exists():
+        for f in frontend_src.rglob("*"):
             if f.suffix not in (".ts", ".tsx", ".js", ".jsx"):
                 continue
             content = f.read_text(encoding="utf-8")
             for match in TS_IMPORT_PATTERN.finditer(content):
-                target = match.group(1) or match.group(2) or ""
-                if any(k in target for k in ("backend", "patent_agent", "patent-innovation")):
-                    rel_file = f.relative_to(REPO_ROOT)
-                    errors.append(
-                        f"FAIL: forbidden cross-workspace import in {rel_file}: {target} "
-                        "(nexus-status cannot import core backend/frontend, ADR 0024)"
-                    )
+                target = (match.group(1) or match.group(2) or "").strip()
+                rel_file = f.relative_to(repo_root)
+
+                if target.startswith("."):
+                    resolved = (f.parent / target).resolve()
+                    parts = Path(target).parts
+                    if resolved == nexus_status_dir or resolved.is_relative_to(nexus_status_dir) or any(p == "nexus-status" for p in parts):
+                        errors.append(
+                            f"FAIL: forbidden cross-workspace import in {rel_file}: {target} "
+                            "(frontend cannot import nexus-status, ADR 0024)"
+                        )
+                    elif not resolved.is_relative_to(frontend_dir):
+                        errors.append(
+                            f"FAIL: relative import escapes frontend workspace in {rel_file}: {target} "
+                            "(ADR 0024)"
+                        )
+                else:
+                    pkg = Path(target).parts[0] if target else ""
+                    if pkg in forbidden_pkg_in_frontend or pkg.startswith("@nexus-status"):
+                        errors.append(
+                            f"FAIL: forbidden cross-workspace import in {rel_file}: {target} "
+                            "(frontend cannot import nexus-status, ADR 0024)"
+                        )
+
+    # 3. Check imports in nexus-status/frontend/src
+    if status_src.exists():
+        for f in status_src.rglob("*"):
+            if f.suffix not in (".ts", ".tsx", ".js", ".jsx"):
+                continue
+            content = f.read_text(encoding="utf-8")
+            for match in TS_IMPORT_PATTERN.finditer(content):
+                target = (match.group(1) or match.group(2) or "").strip()
+                rel_file = f.relative_to(repo_root)
+
+                if target.startswith("."):
+                    resolved = (f.parent / target).resolve()
+                    parts = Path(target).parts
+                    if resolved == frontend_dir or resolved.is_relative_to(frontend_dir):
+                        errors.append(
+                            f"FAIL: forbidden cross-workspace import in {rel_file}: {target} "
+                            "(nexus-status cannot import frontend, ADR 0024)"
+                        )
+                    elif resolved == backend_dir or resolved.is_relative_to(backend_dir):
+                        errors.append(
+                            f"FAIL: forbidden cross-workspace import in {rel_file}: {target} "
+                            "(nexus-status cannot import backend, ADR 0024)"
+                        )
+                    elif any(p in ("frontend", "backend") for p in parts):
+                        errors.append(
+                            f"FAIL: forbidden cross-workspace import in {rel_file}: {target} "
+                            "(nexus-status cannot import core backend/frontend, ADR 0024)"
+                        )
+                    elif not resolved.is_relative_to(status_frontend_dir):
+                        errors.append(
+                            f"FAIL: relative import escapes nexus-status workspace in {rel_file}: {target} "
+                            "(ADR 0024)"
+                        )
+                else:
+                    pkg = Path(target).parts[0] if target else ""
+                    if pkg in forbidden_pkg_in_status or pkg.startswith(("@frontend", "@backend")):
+                        errors.append(
+                            f"FAIL: forbidden cross-workspace import in {rel_file}: {target} "
+                            "(nexus-status cannot import core backend/frontend, ADR 0024)"
+                        )
 
 
 def check_import_linter_contracts(errors: list[str]) -> None:

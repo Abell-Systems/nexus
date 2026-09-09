@@ -2,6 +2,7 @@
   "name": "nexus-status-frontend",
   "private": true,
   "version": "0.1.0",
+  "description": "Scientific Verification standalone frontend workspace (scaffolding phase under ADR 0024)",
   "type": "module",
   "scripts": {
     "dev": "vite",

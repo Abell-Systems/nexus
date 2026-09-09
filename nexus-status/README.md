@@ -2,6 +2,11 @@
 
 This workspace contains the independent frontend application for **Nexus Scientific Verification**, providing transparent, human-auditable and researcher-friendly insights into the empirical health and reproducibility of Abell Nexus.
 
+## Workspace Scope & Current Status
+
+> **Status: Architectural Scaffolding (ADR 0024)**  
+> This PR establishes the physical workspace boundary, Clean Architecture layer skeleton, and automated import boundary enforcement. No React UI components, runtime dependencies, or build executions are active in this phase; full UI implementation will be introduced in subsequent feature PRs.
+
 ## Architectural Governance
 
 Under **[ADR 0024](../../docs/adr/0024-scientific-verification-workspace.md)** and **[ADR 0023](../../docs/adr/0023-scientific-verification-as-external-consumer.md)**:
