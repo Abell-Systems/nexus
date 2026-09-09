@@ -389,6 +389,59 @@ def check_monorepo_boundaries(errors: list[str], repo_root: Path = REPO_ROOT) ->
                         )
 
 
+def check_javascript_typescript_workspace_scope(errors: list[str], repo_root: Path = REPO_ROOT) -> None:
+    """Enforces that all JavaScript and TypeScript source files in the repository
+    reside strictly within approved frontend client workspaces (ADR 0021 & ADR 0024).
+
+    Nexus core backend is strictly Python (backend/src/main).
+    Client presentation code is restricted to:
+      - frontend/ (Nexus client SPA)
+      - nexus-status/frontend/ (Scientific Verification Dashboard SPA)
+
+    If any JS/TS source code is introduced outside these client SPA workspaces
+    (e.g., in backend/, root, or new backend services), this check fails fast.
+    This guarantees that Sonar's Jasmin bypass (sonar.jasmin.internal.disabled=true),
+    which is scoped for pure browser SPAs without server taint sources, cannot
+    accidentally leave server-side JS/TS uninspected without explicit architectural review.
+    """
+    allowed_workspace_roots = [
+        repo_root / "frontend",
+        repo_root / "nexus-status" / "frontend",
+    ]
+    ignored_dir_names = {
+        "node_modules",
+        "dist",
+        "coverage",
+        "__pycache__",
+        "venv",
+        ".venv",
+    }
+    js_ts_extensions = {".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"}
+
+    # Compiled static web assets served by backend FastAPI (backend/static/assets/*.js)
+    # are generated build artifacts, not source code.
+    allowed_static_dir = repo_root / "backend" / "static"
+
+    for path in repo_root.rglob("*"):
+        if not path.is_file():
+            continue
+        if path.suffix not in js_ts_extensions:
+            continue
+        # Skip hidden/dot directories (.git, .venv, .scannerwork, etc.) and vendor/build artifacts
+        if any(part.startswith(".") or part in ignored_dir_names for part in path.parts[:-1]):
+            continue
+        if path.is_relative_to(allowed_static_dir):
+            continue
+        if not any(path.is_relative_to(root) for root in allowed_workspace_roots):
+            rel_file = path.relative_to(repo_root)
+            errors.append(
+                f"FAIL: JS/TS file found outside approved client frontend workspaces: {rel_file}. "
+                "Nexus architecture restricts JS/TS strictly to client browser SPAs (frontend/, nexus-status/frontend/). "
+                "Any server-side or auxiliary JS/TS introduces potential security surface and requires "
+                "explicit architectural review and Sonar taint analysis re-evaluation (ADR 0021)."
+            )
+
+
 def check_import_linter_contracts(errors: list[str]) -> None:
     """Runs import-linter to verify declared architectural contracts in .importlinter."""
     config_file = REPO_ROOT / ".importlinter"
@@ -425,6 +478,7 @@ def main() -> int:
     check_backend_layer_dependencies(errors)
     check_frontend_layer_dependencies(errors)
     check_monorepo_boundaries(errors)
+    check_javascript_typescript_workspace_scope(errors)
     check_import_linter_contracts(errors)
 
     if errors:
