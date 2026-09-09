@@ -17,8 +17,11 @@ test-results/
 # --- Node / frontend ---
 node_modules/
 dist/
+*.tsbuildinfo
 frontend/dist/
 frontend/coverage/
+nexus-status/frontend/dist/
+nexus-status/frontend/coverage/
 
 # --- Env / secrets ---
 .env
