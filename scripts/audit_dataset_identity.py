@@ -45,6 +45,7 @@ EMBEDDINGS_PATH = REPO_ROOT / "data" / "evaluation" / "embeddings_pilot_benchmar
 RAW_PATH = REPO_ROOT / "data" / "raw" / "oepm_open_data_es.json"
 SNAPSHOT_JSONL_PATH = REPO_ROOT / "data" / "snapshots" / "patents_es_corpus.jsonl"
 SNAPSHOT_MANIFEST_PATH = REPO_ROOT / "data" / "snapshots" / "patents_es_manifest.json"
+DEFAULT_POLICY_PATH = REPO_ROOT / "config" / "policies" / "data" / "temporal_integrity_policy.json"
 
 EXPECTED_EMBEDDING_DIMENSION = 768
 
@@ -63,9 +64,16 @@ def _check(name: str, ok: bool, detail: str, checks: list, failures: list) -> No
         failures.append(name)
 
 
-def audit() -> dict:
+def audit(policy_path: Path | None = DEFAULT_POLICY_PATH) -> dict:
     checks: list = []
     failures: list = []
+
+    if policy_path is not None:
+        if not policy_path.exists():
+            raise FileNotFoundError(f"Temporal policy file not found: {policy_path}")
+        policy = json.loads(policy_path.read_text(encoding="utf-8"))
+    else:
+        policy = None
 
     dataset = json.loads(DATASET_PATH.read_text(encoding="utf-8"))
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
@@ -204,14 +212,88 @@ def audit() -> dict:
                 }
             )
     violations.sort(key=lambda v: (v["demand_id"], v["publication_id"]))
-    _check(
-        "temporal_eligibility",
-        not violations,
-        f"{len(violations)} of {len(annotations)} annotated pairs violate t_pub < t_demand",
-        checks, failures,
-    )
+
+    policy_binding_valid = False
+    if policy is not None:
+        policy_target_id = policy.get("target_dataset_id")
+        policy_target_sha = policy.get("target_dataset_sha256")
+        dataset_id = dataset.get("dataset_id")
+        policy_binding_valid = bool(
+            policy_target_id
+            and policy_target_sha
+            and policy_target_id == dataset_id
+            and policy_target_sha == file_sha
+        )
+        _check(
+            "temporal_policy_binding",
+            policy_binding_valid,
+            f"policy=({policy_target_id}, {str(policy_target_sha)[:12]}...) "
+            f"actual=({dataset_id}, {file_sha[:12]}...)",
+            checks,
+            failures,
+        )
+
+    if not violations:
+        checks.append({
+            "check": "temporal_eligibility",
+            "status": "PASS",
+            "detail": f"0 of {len(annotations)} annotated pairs violate t_pub < t_demand",
+        })
+    elif policy is not None and policy_binding_valid and "accepted_exceptions" in policy:
+        accepted_map = {
+            (e["demand_id"], e["publication_id"]): e
+            for e in policy.get("accepted_exceptions", [])
+        }
+        observed_set = {(v["demand_id"], v["publication_id"]) for v in violations}
+        unaccepted = observed_set - set(accepted_map.keys())
+
+        if not unaccepted:
+            reasons = sorted({accepted_map[p].get("reason", "accepted_temporal_exception") for p in observed_set})
+            policy_refs = sorted({accepted_map[p].get("policy_ref", "ADR-0018/ADR-0019") for p in observed_set})
+            ref_str = "/".join(policy_refs)
+            reason_str = ", ".join(reasons)
+            checks.append({
+                "check": "temporal_eligibility",
+                "status": "SKIPPED",
+                "reason": reason_str,
+                "policy_ref": ref_str,
+                "detail": (
+                    f"{len(violations)} temporal violations formally accepted as exceptions "
+                    f"under {ref_str} ({reason_str})"
+                ),
+            })
+        else:
+            checks.append({
+                "check": "temporal_eligibility",
+                "status": "FAIL",
+                "detail": f"{len(unaccepted)} unaccepted temporal violations detected",
+            })
+            failures.append("temporal_eligibility")
+    elif policy is not None and not policy_binding_valid:
+        checks.append({
+            "check": "temporal_eligibility",
+            "status": "FAIL",
+            "detail": (
+                f"Policy exceptions rejected: target dataset mismatch "
+                f"(policy target: {policy.get('target_dataset_id')}, actual: {dataset.get('dataset_id')})"
+            ),
+        })
+        failures.append("temporal_eligibility")
+    else:
+        _check(
+            "temporal_eligibility",
+            False,
+            f"{len(violations)} of {len(annotations)} annotated pairs violate t_pub < t_demand",
+            checks,
+            failures,
+        )
 
     verdict = "PASS" if not failures else "FAIL"
+    policy_str = (
+        str(policy_path.relative_to(REPO_ROOT))
+        if (policy_path and policy_path.is_relative_to(REPO_ROOT))
+        else (str(policy_path) if policy_path else None)
+    )
     report = {
         "audit_id": "nexus-dataset-identity-temporal-audit-v1",
         "generated_at": datetime.now(UTC).isoformat(),
@@ -230,6 +312,7 @@ def audit() -> dict:
         "temporal_rule": "t_pub < t_demand (strict; equivalent to <= on current data: no equal-date pairs)",
         "temporal_violations": violations,
         "temporal_violation_count": len(violations),
+        "temporal_policy": policy_str,
         "checks": checks,
         "failed_checks": failures,
         "verdict": verdict,
@@ -244,7 +327,20 @@ def audit() -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--output", type=Path, default=None, help="Optional path for the JSON audit report.")
+    parser.add_argument(
+        "--policy",
+        type=Path,
+        default=DEFAULT_POLICY_PATH,
+        help="Path to temporal integrity policy JSON (default: config/policies/data/temporal_integrity_policy.json).",
+    )
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Evaluate strict temporal eligibility without applying policy exceptions.",
+    )
     args = parser.parse_args()
+
+    policy_path = None if args.strict else args.policy
 
     for path in (DATASET_PATH, CHECKSUM_PATH, MANIFEST_PATH, EMBEDDINGS_PATH,
                  RAW_PATH, SNAPSHOT_JSONL_PATH, SNAPSHOT_MANIFEST_PATH):
@@ -252,7 +348,11 @@ def main() -> int:
             print(f"Audit input missing: {path}", file=sys.stderr)
             return 2
 
-    report = audit()
+    if policy_path is not None and not policy_path.exists():
+        print(f"Audit policy missing: {policy_path}", file=sys.stderr)
+        return 2
+
+    report = audit(policy_path=policy_path)
     print(f"Dataset: {report['dataset_id']} (SHA {report['dataset_sha256'][:12]}...)")
     print(f"Counts: {report['counts']}")
     print(f"Temporal violations: {report['temporal_violation_count']}")

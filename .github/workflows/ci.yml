@@ -78,11 +78,13 @@ jobs:
         run: npm run lint
       - name: Production Build
         run: npm run build
-      - name: Upload Frontend Coverage Artifact
+      - name: Upload Frontend Coverage & Test Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage-report
-          path: frontend/coverage/lcov.info
+          path: |
+            frontend/coverage/lcov.info
+            frontend/coverage/junit.xml
 
   # 4. Security & Secret Scanning (Parallel with Python/Frontend)
   security-scan:
@@ -121,16 +123,21 @@ jobs:
       - name: Install dependencies
         run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt
       - name: Unit Tests
-        run: pytest backend/test/unit -v --cov=backend/src/main --cov-report=xml:coverage.xml
+        run: pytest backend/test/unit -v --cov=backend/src/main --cov-report=xml:coverage.xml --junitxml=test-results/unit.xml
       - name: Integration Tests
-        run: pytest backend/test/integration -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml
+        run: pytest backend/test/integration -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml --junitxml=test-results/integration.xml
       - name: E2E Reproducibility Gate & Coverage Verification (Strict Fail Under)
-        run: pytest backend/test/e2e -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml --cov-report=term-missing --cov-fail-under=80
+        run: pytest backend/test/e2e -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml --cov-report=term-missing --cov-fail-under=80 --junitxml=test-results/e2e.xml
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage.xml
+      - name: Upload Backend Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-results
+          path: test-results/
       # Raw .coverage data (not the XML) so Sonar gets one correctly-merged report instead of
       # two independent XMLs — see the coverage-merge step in sonar-quality-gate for why.
       # include-hidden-files: actions/upload-artifact@v4 excludes dotfiles by default and only
@@ -258,12 +265,42 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  # 7. Final Consolidated Quality Gate (Must be all green)
+  # 7. Final Consolidated Quality Gate & Observability Telemetry (ADR 0022)
   quality-gate:
     name: 7. QUALITY GATE (Ready to Merge)
     needs: [architecture, python-quality, frontend-quality, security-scan, backend-tests, provider-adk-tests, sonar-quality-gate]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download Backend Coverage Report
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: .
+      - name: Download Backend Test Results
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-test-results
+          path: test-results
+      - name: Download Frontend Coverage & Test Report
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage
+      - name: Consolidate Project Status Telemetry (ADR 0022)
+        run: |
+          pip install import-linter>=2.14
+          python scripts/audit_project_status.py
+      - name: Upload Project Status Telemetry Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-status-telemetry
+          path: |
+            project_status.json
+            PROJECT_STATUS.md
       - name: Confirm All Strict Quality Gates Passed
         env:
           SONAR_SKIPPED: ${{ needs.sonar-quality-gate.outputs.skipped }}
@@ -284,4 +321,5 @@ jobs:
           else
             echo " - SonarCloud Analysis & Quality Gate: PASS"
           fi
+          echo " - Project Status Observability Telemetry (ADR 0022): PUBLISHED"
           echo "================================================================="

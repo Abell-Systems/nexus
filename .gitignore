@@ -10,6 +10,10 @@ venv/
 coverage*.xml
 coverage/
 htmlcov/
+pytest-results.xml
+test-results.xml
+test-results/
+project_status.json
 
 # --- Node / frontend ---
 node_modules/

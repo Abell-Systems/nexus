@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "policy_id": "PILOT_DATASET_TEMPORAL_INTEGRITY_POLICY",
+  "policy_version": "1.0.0",
+  "target_dataset_id": "nexus-pilot-16-evaluation-corpus-v1",
+  "target_dataset_sha256": "bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453",
+  "temporal_rule": "t_pub < t_demand",
+  "accepted_exceptions": [
+    {
+      "demand_id": "INNOGET-2292",
+      "publication_id": "ES-2856789-A1",
+      "reason": "accepted_temporal_exception",
+      "policy_ref": "ADR-0018/ADR-0019",
+      "description": "Historical pilot benchmark pair frozen under ADR 0018 §6; handled via harness pool selection"
+    },
+    {
+      "demand_id": "INNOGET-2415",
+      "publication_id": "ES-2901234-A1",
+      "reason": "accepted_temporal_exception",
+      "policy_ref": "ADR-0018/ADR-0019",
+      "description": "Historical pilot benchmark pair frozen under ADR 0018 §6; handled via harness pool selection"
+    },
+    {
+      "demand_id": "INNOGET-2501",
+      "publication_id": "ES-2901234-A1",
+      "reason": "accepted_temporal_exception",
+      "policy_ref": "ADR-0018/ADR-0019",
+      "description": "Historical pilot benchmark pair frozen under ADR 0018 §6; handled via harness pool selection"
+    }
+  ]
+}

@@ -77,8 +77,78 @@ class DatasetIdentityAuditTest:
         report = _run_audit(tmp_path / "audit.json")
         assert report["temporal_violation_count"] == 3
         assert report["temporal_violations"] == _KNOWN_TEMPORAL_VIOLATIONS
+        temp_check = next(c for c in report["checks"] if c["check"] == "temporal_eligibility")
+        assert temp_check["status"] == "SKIPPED"
+        assert temp_check["reason"] == "accepted_temporal_exception"
+        assert temp_check["policy_ref"] == "ADR-0018/ADR-0019"
+        assert report["verdict"] == "PASS"
+        assert report["failed_checks"] == []
+
+    def test_should_report_fail_under_strict_mode_without_policy(self, tmp_path: Path) -> None:
+        proc = subprocess.run(
+            [sys.executable, str(_AUDIT_SCRIPT), "--output", str(tmp_path / "strict.json"), "--strict"],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert proc.returncode == 0
+        report = json.loads((tmp_path / "strict.json").read_text(encoding="utf-8"))
         assert report["verdict"] == "FAIL"
         assert report["failed_checks"] == ["temporal_eligibility"]
+        temp_check = next(c for c in report["checks"] if c["check"] == "temporal_eligibility")
+        assert temp_check["status"] == "FAIL"
+
+    def test_should_fail_when_temporal_policy_target_dataset_id_mismatches(self, tmp_path: Path) -> None:
+        policy_path = _REPO_ROOT / "config" / "policies" / "data" / "temporal_integrity_policy.json"
+        policy_data = json.loads(policy_path.read_text(encoding="utf-8"))
+        policy_data["target_dataset_id"] = "wrong-corpus-id-v2"
+        tampered_policy = tmp_path / "tampered_policy.json"
+        tampered_policy.write_text(json.dumps(policy_data), encoding="utf-8")
+
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(_AUDIT_SCRIPT),
+                "--policy",
+                str(tampered_policy),
+                "--output",
+                str(tmp_path / "mismatch.json"),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert proc.returncode == 0
+        report = json.loads((tmp_path / "mismatch.json").read_text(encoding="utf-8"))
+        assert report["verdict"] == "FAIL"
+        assert "temporal_policy_binding" in report["failed_checks"]
+        assert "temporal_eligibility" in report["failed_checks"]
+
+    def test_should_fail_when_temporal_policy_target_dataset_sha_mismatches(self, tmp_path: Path) -> None:
+        policy_path = _REPO_ROOT / "config" / "policies" / "data" / "temporal_integrity_policy.json"
+        policy_data = json.loads(policy_path.read_text(encoding="utf-8"))
+        policy_data["target_dataset_sha256"] = "0000000000000000000000000000000000000000000000000000000000000000"
+        tampered_policy = tmp_path / "tampered_policy.json"
+        tampered_policy.write_text(json.dumps(policy_data), encoding="utf-8")
+
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(_AUDIT_SCRIPT),
+                "--policy",
+                str(tampered_policy),
+                "--output",
+                str(tmp_path / "mismatch.json"),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert proc.returncode == 0
+        report = json.loads((tmp_path / "mismatch.json").read_text(encoding="utf-8"))
+        assert report["verdict"] == "FAIL"
+        assert "temporal_policy_binding" in report["failed_checks"]
+        assert "temporal_eligibility" in report["failed_checks"]
 
     def test_should_be_reproducible_across_runs(self, tmp_path: Path) -> None:
         first = _run_audit(tmp_path / "audit1.json")
