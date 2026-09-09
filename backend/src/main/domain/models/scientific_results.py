@@ -12,13 +12,20 @@ Track semantics (ADR 0025 §1-2):
   verified, and must carry the exact `DISCOVERY_DISCLAIMER` wherever rendered.
 - `verification` (Head B, ADR 0017): deterministic, policy-sealed matching evidence.
 
-Reuses existing payload shapes rather than redefining them: `InventionCandidate`,
-`AdversarialVerdict`, `ScoreCard` (domain.models.runtime_schemas, Head A) and
-`MatchAssessment` (domain.models.matching, Head B). This module adds only the
-publication envelope, execution scoping, evidence-citation structure, and the
+Reuses existing payload shapes rather than redefining them: `PatentCluster`,
+`InventionCandidate`, `AdversarialVerdict`, `ScoreCard` (domain.models.runtime_schemas,
+Head A) and `MatchAssessment` (domain.models.matching, Head B). This module adds only
+the publication envelope, execution scoping, evidence-citation structure, and the
 epistemic invariants ADR 0025 requires around them — it does not create producers
 for `OpportunityScore`/`OpportunityHypothesis` (domain.models.opportunity), which
 remain unused by any pipeline.
+
+`TechnologyClusterObservation` was added to carry the white-space metrics
+(density/recency/citation_traction/demand_intensity/quadrant/mean_age_years) that
+`application.landscape.metrics.compute_white_space_metrics` already computes but
+`PatentCluster`/`cluster_patents` discard — this is the concrete publisher requirement
+(the first real snapshot, see `scripts/publish_scientific_results.py`) that justified
+extending this contract beyond PR #71's original scope.
 
 Discovery-track free text is additionally checked against a fixed phrase denylist
 (see `_FORBIDDEN_DISCOVERY_CLAIM_PHRASES` below). That check is a conservative
@@ -34,7 +41,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from domain.models.matching import MatchAssessment
-from domain.models.runtime_schemas import AdversarialVerdict, InventionCandidate, ScoreCard
+from domain.models.runtime_schemas import AdversarialVerdict, InventionCandidate, PatentCluster, ScoreCard
 
 
 class Track(StrEnum):
@@ -83,6 +90,15 @@ _FORBIDDEN_DISCOVERY_CLAIM_PHRASES: tuple[str, ...] = (
 )
 
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+
+
+def _require_exact_discovery_disclaimer(v: str, record_kind: str) -> str:
+    if v != DISCOVERY_DISCLAIMER:
+        raise ValueError(
+            f"a discovery {record_kind} record must carry the exact required epistemic "
+            "disclaimer verbatim (ADR 0025 §2) — not a paraphrase or omission"
+        )
+    return v
 
 
 def _reject_forbidden_discovery_claims(*texts: str | None) -> None:
@@ -218,12 +234,7 @@ class DiscoveryCandidateRecord(BaseModel):
     @field_validator("disclaimer")
     @classmethod
     def validate_disclaimer_is_exact(cls, v: str) -> str:
-        if v != DISCOVERY_DISCLAIMER:
-            raise ValueError(
-                "a discovery candidate record must carry the exact required epistemic "
-                "disclaimer verbatim (ADR 0025 §2) — not a paraphrase or omission"
-            )
-        return v
+        return _require_exact_discovery_disclaimer(v, "candidate")
 
     @model_validator(mode="after")
     def validate_no_forbidden_claims(self) -> "DiscoveryCandidateRecord":
@@ -256,12 +267,7 @@ class DiscoveryVerificationRecord(BaseModel):
     @field_validator("disclaimer")
     @classmethod
     def validate_disclaimer_is_exact(cls, v: str) -> str:
-        if v != DISCOVERY_DISCLAIMER:
-            raise ValueError(
-                "a discovery verification record must carry the exact required "
-                "epistemic disclaimer verbatim (ADR 0025 §2) — not a paraphrase or omission"
-            )
-        return v
+        return _require_exact_discovery_disclaimer(v, "verification")
 
     @model_validator(mode="after")
     def validate_challenge_consistency(self) -> "DiscoveryVerificationRecord":
@@ -297,6 +303,44 @@ class VerificationMatchRecord(BaseModel):
     assessment: MatchAssessment
 
 
+class TechnologyClusterObservation(BaseModel):
+    """A published cluster observation: the existing `PatentCluster` plus the fuller
+    white-space metrics `compute_white_space_metrics`
+    (application.landscape.metrics) already computes but `cluster_patents`
+    (application.landscape.clustering) discards before returning. No new computation
+    is introduced by this type — every field is copied verbatim from data Nexus's
+    existing landscape pipeline already produces (SCIENTIFIC_RESULTS_CONTRACT.md §4,
+    `TechnologyCluster` "Derivable" row).
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    cluster: PatentCluster
+    density: float
+    recency: float
+    citation_traction: float
+    citation_coverage: float
+    demand_intensity: float
+    quadrant: str = Field(min_length=1)
+    mean_age_years: float
+
+
+class DiscoveryLandscapeRecord(BaseModel):
+    """A published `discovery`-track landscape observation, scoped to its execution."""
+
+    model_config = ConfigDict(frozen=True)
+
+    execution_id: str = Field(min_length=1)
+    query: str = Field(min_length=1)
+    clusters: tuple[TechnologyClusterObservation, ...] = Field(default_factory=tuple)
+    disclaimer: str = Field(default=DISCOVERY_DISCLAIMER)
+
+    @field_validator("disclaimer")
+    @classmethod
+    def validate_disclaimer_is_exact(cls, v: str) -> str:
+        return _require_exact_discovery_disclaimer(v, "landscape")
+
+
 class ScientificResultsDocument(BaseModel):
     """Top-level `scientific_results.json` contract.
 
@@ -312,6 +356,7 @@ class ScientificResultsDocument(BaseModel):
     schema_version: str = Field(min_length=1)
     generated_at: datetime
     executions: tuple[ScientificResultsExecution, ...] = Field(default_factory=tuple)
+    landscapes: tuple[DiscoveryLandscapeRecord, ...] = Field(default_factory=tuple)
     candidates: tuple[DiscoveryCandidateRecord, ...] = Field(default_factory=tuple)
     verifications: tuple[DiscoveryVerificationRecord, ...] = Field(default_factory=tuple)
     matches: tuple[VerificationMatchRecord, ...] = Field(default_factory=tuple)
@@ -329,6 +374,8 @@ class ScientificResultsDocument(BaseModel):
                 raise ValueError(f"duplicate execution_id in executions: '{execution.execution_id}'")
             executions_by_id[execution.execution_id] = execution
 
+        for landscape in self.landscapes:
+            self._require_track(landscape.execution_id, executions_by_id, Track.DISCOVERY, "landscape")
         for candidate in self.candidates:
             self._require_track(candidate.execution_id, executions_by_id, Track.DISCOVERY, "candidate")
         for verification in self.verifications:

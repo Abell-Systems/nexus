@@ -5,16 +5,18 @@ import pytest
 from pydantic import ValidationError
 
 from domain.models.matching import EvidenceSufficiency, MatchAssessment, MatchConfidence, MatchFeatures
-from domain.models.runtime_schemas import AdversarialVerdict, InventionCandidate, ScoreCard
+from domain.models.runtime_schemas import AdversarialVerdict, InventionCandidate, PatentCluster, ScoreCard
 from domain.models.scientific_results import (
     DISCOVERY_DISCLAIMER,
     ChallengeStatus,
     CitationResolution,
     DiscoveryCandidateRecord,
+    DiscoveryLandscapeRecord,
     DiscoveryVerificationRecord,
     EvidenceCitation,
     ScientificResultsDocument,
     ScientificResultsExecution,
+    TechnologyClusterObservation,
     Track,
     VerificationMatchRecord,
     executions_are_aggregable,
@@ -53,6 +55,28 @@ def _verdict(**overrides) -> AdversarialVerdict:
     }
     defaults.update(overrides)
     return AdversarialVerdict(**defaults)
+
+
+def _cluster_observation(**overrides) -> TechnologyClusterObservation:
+    defaults = {
+        "cluster": PatentCluster(
+            cluster_id="H01M",
+            label="Solid State Battery - H01M",
+            representative_patents=["US-11223001-B2"],
+            patent_count=1,
+            white_space_score=0.42,
+            is_white_space=False,
+        ),
+        "density": 0.1,
+        "recency": 0.6,
+        "citation_traction": 0.3,
+        "citation_coverage": 1.0,
+        "demand_intensity": 0.5,
+        "quadrant": "Quadrant II (Co-developed / Saturated)",
+        "mean_age_years": 4.0,
+    }
+    defaults.update(overrides)
+    return TechnologyClusterObservation(**defaults)
 
 
 def _match_assessment(**overrides) -> MatchAssessment:
@@ -169,6 +193,36 @@ class EvidenceCitationTest:
                 resolution=CitationResolution.UNRESOLVED,
                 title="Should not be here",
             )
+
+
+class DiscoveryLandscapeRecordTest:
+    def test_should_construct_when_disclaimer_and_clusters_are_valid(self) -> None:
+        record = DiscoveryLandscapeRecord(
+            execution_id="exec-0001",
+            query="solid electrolyte",
+            clusters=(_cluster_observation(),),
+        )
+        assert record.disclaimer == DISCOVERY_DISCLAIMER
+        assert record.clusters[0].cluster.cluster_id == "H01M"
+
+    def test_should_construct_when_clusters_are_empty(self) -> None:
+        record = DiscoveryLandscapeRecord(execution_id="exec-0001", query="solid electrolyte")
+        assert record.clusters == ()
+
+    def test_should_reject_record_when_disclaimer_is_paraphrased(self) -> None:
+        with pytest.raises(ValidationError, match="exact required epistemic disclaimer"):
+            DiscoveryLandscapeRecord(
+                execution_id="exec-0001",
+                query="solid electrolyte",
+                disclaimer="AI-generated, use with caution.",
+            )
+
+    def test_should_expose_metrics_that_patent_cluster_alone_does_not_carry(self) -> None:
+        observation = _cluster_observation()
+        assert observation.quadrant == "Quadrant II (Co-developed / Saturated)"
+        assert observation.demand_intensity == 0.5
+        assert not hasattr(observation.cluster, "quadrant")
+        assert not hasattr(observation.cluster, "demand_intensity")
 
 
 class DiscoveryCandidateRecordTest:
@@ -316,6 +370,26 @@ class ScientificResultsDocumentTest:
         candidate = DiscoveryCandidateRecord(execution_id=execution.execution_id, candidate=_candidate())
         with pytest.raises(ValidationError, match="discovery and verification cannot be mixed"):
             ScientificResultsDocument(**self._document_kwargs(executions=(execution,), candidates=(candidate,)))
+
+    def test_should_construct_when_landscape_references_discovery_execution(self) -> None:
+        execution = _execution(track=Track.DISCOVERY)
+        landscape = DiscoveryLandscapeRecord(
+            execution_id=execution.execution_id, query="solid electrolyte", clusters=(_cluster_observation(),)
+        )
+        doc = ScientificResultsDocument(**self._document_kwargs(executions=(execution,), landscapes=(landscape,)))
+        assert len(doc.landscapes) == 1
+        assert doc.landscapes[0].clusters[0].cluster.cluster_id == "H01M"
+
+    def test_should_reject_document_when_landscape_references_verification_execution(self) -> None:
+        execution = _execution(track=Track.VERIFICATION)
+        landscape = DiscoveryLandscapeRecord(execution_id=execution.execution_id, query="solid electrolyte")
+        with pytest.raises(ValidationError, match="discovery and verification cannot be mixed"):
+            ScientificResultsDocument(**self._document_kwargs(executions=(execution,), landscapes=(landscape,)))
+
+    def test_should_reject_document_when_landscape_references_unknown_execution(self) -> None:
+        landscape = DiscoveryLandscapeRecord(execution_id="does-not-exist", query="solid electrolyte")
+        with pytest.raises(ValidationError, match="references unknown execution_id"):
+            ScientificResultsDocument(**self._document_kwargs(landscapes=(landscape,)))
 
     def test_should_reject_document_when_match_references_discovery_execution(self) -> None:
         execution = _execution(execution_id="exec-disc", track=Track.DISCOVERY)

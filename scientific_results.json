@@ -1,0 +1,52 @@
+{
+  "candidates": [],
+  "executions": [
+    {
+      "created_at": "2026-09-09T11:10:03.265017Z",
+      "dataset_id": null,
+      "dataset_version": null,
+      "domain": "solid_state_battery",
+      "engine_commit": null,
+      "execution_id": "d9e2fddb2dd44464b632b4fa0d21c8a6",
+      "policy_id": null,
+      "policy_sha256": null,
+      "policy_version": null,
+      "query": "solid electrolyte",
+      "track": "discovery"
+    }
+  ],
+  "generated_at": "2026-09-09T11:10:03.265017Z",
+  "landscapes": [
+    {
+      "clusters": [
+        {
+          "citation_coverage": 1.0,
+          "citation_traction": 0.4722,
+          "cluster": {
+            "cluster_id": "H01M",
+            "is_white_space": false,
+            "label": "Solid State Battery - H01M",
+            "patent_count": 3,
+            "representative_patents": [
+              "US-11223001-B2",
+              "US-11456502-B2",
+              "US-11784321-B2"
+            ],
+            "white_space_score": 0.4608
+          },
+          "demand_intensity": 1.0,
+          "density": 1.0,
+          "mean_age_years": 6.0,
+          "quadrant": "Quadrant II (Co-developed / Saturated)",
+          "recency": 0.7
+        }
+      ],
+      "disclaimer": "Nexus generated/discovered this output; it is model-synthesized technology discovery output, not scientifically verified evidence. It does not demonstrate patentability, freedom-to-operate, or commercial efficacy, and is not a substitute for a professional prior-art search. (ADR 0017 \u00a75, ADR 0025 \u00a72)",
+      "execution_id": "d9e2fddb2dd44464b632b4fa0d21c8a6",
+      "query": "solid electrolyte"
+    }
+  ],
+  "matches": [],
+  "schema_version": "0.1.0",
+  "verifications": []
+}
