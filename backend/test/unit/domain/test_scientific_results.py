@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
@@ -336,3 +337,49 @@ class ScientificResultsDocumentTest:
     def test_should_reject_document_when_payload_is_not_a_mapping(self) -> None:
         with pytest.raises(ValidationError):
             ScientificResultsDocument.model_validate("not-a-document")
+
+
+_REPO_ROOT = Path(__file__).resolve().parents[4]
+_ADR_0025_PATH = _REPO_ROOT / "docs" / "adr" / "0025-scientific-results-publication-and-track-semantics.md"
+_CONTRACT_DOC_PATH = _REPO_ROOT / "docs" / "SCIENTIFIC_RESULTS_CONTRACT.md"
+
+# The pre-ADR-0025 naming this codebase used to carry before ADR 0025 (the normative
+# document) settled on discovery/verification. Their presence as a *track value* in
+# either governing doc means the docs and this module's Track vocabulary have drifted.
+_LEGACY_TRACK_VALUE_PATTERNS: tuple[str, ...] = (
+    'track: "synthesis"',
+    'track: "deterministic"',
+    '"track": "synthesis"',
+    '"track": "deterministic"',
+    '`"synthesis"`',
+    '`"deterministic"`',
+)
+
+
+class TrackVocabularyDocumentationSyncTest:
+    """Guards against exactly the drift PR #71 review caught: ADR 0025 and
+    SCIENTIFIC_RESULTS_CONTRACT.md must use the same track vocabulary as this module's
+    `Track` enum, not an earlier or divergent naming.
+    """
+
+    def test_should_define_track_as_exactly_discovery_and_verification(self) -> None:
+        assert {t.value for t in Track} == {"discovery", "verification"}
+
+    @pytest.mark.parametrize("doc_path", [_ADR_0025_PATH, _CONTRACT_DOC_PATH])
+    def test_should_keep_governing_doc_free_of_legacy_track_values(self, doc_path: Path) -> None:
+        assert doc_path.exists(), f"expected governing doc at {doc_path}"
+        text = doc_path.read_text(encoding="utf-8")
+        for legacy in _LEGACY_TRACK_VALUE_PATTERNS:
+            assert legacy not in text, (
+                f"{doc_path.name} still contains legacy track-value literal {legacy!r} — "
+                "Track is now {'discovery', 'verification'} (ADR 0025 §1); update the doc "
+                "to match rather than letting code and documentation vocabulary diverge"
+            )
+
+    @pytest.mark.parametrize("doc_path", [_ADR_0025_PATH, _CONTRACT_DOC_PATH])
+    def test_should_use_current_track_values_in_governing_doc(self, doc_path: Path) -> None:
+        text = doc_path.read_text(encoding="utf-8")
+        # Docs render a track value either as a code span (`discovery`) or, in a JSON
+        # example, a quoted string ("discovery") — accept either form.
+        assert "`discovery`" in text or '"discovery"' in text
+        assert "`verification`" in text or '"verification"' in text

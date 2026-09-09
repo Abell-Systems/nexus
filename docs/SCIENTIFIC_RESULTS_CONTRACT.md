@@ -9,6 +9,12 @@ This document is the deliverable requested for Phase 2 of the UX/UI plan, produc
 inspecting the actual backend domain models, ADK pipeline, and ADRs 0001–0024 rather than
 assuming the plan's vocabulary already exists in the codebase.
 
+**Terminology note:** [ADR 0025](adr/0025-scientific-results-publication-and-track-semantics.md)
+(Accepted) is the normative source for track naming and now names the two tracks this
+document describes `discovery` (Head A) and `verification` (Head B) — this document has
+been updated to match. Where the two disagree in the future, ADR 0025 governs; this
+document is design rationale, not the contract itself.
+
 ---
 
 ## 1. Purpose
@@ -108,7 +114,7 @@ Field classification: **Existing** (already produced, unchanged), **Derivable**
 | field | class | note |
 |---|---|---|
 | `execution_id` | New | Head A's `job_id` is not durable; needs persistence to be citable evidence |
-| `track` | New | must be `"synthesis"` (Head A) or `"deterministic"` (Head B) — mandatory per ADR 0017 classification |
+| `track` | New | must be `"discovery"` (Head A) or `"verification"` (Head B) — mandatory per ADR 0025 §1 (supersedes this document's earlier "synthesis"/"deterministic" naming) |
 | `domain`, `query` | Existing | `AnalyzeRequest` |
 | `created_at` | Existing | job store timestamp |
 | `dataset_id`, `dataset_version` | Existing for Head B (`EvaluationRunReport`); New for Head A (no dataset stamped per job today) |
@@ -167,7 +173,7 @@ similar-but-not-identical shape and have no producer — adopting them wholesale
 ## 5. Scientific integrity invariants
 
 1. **Track label is mandatory and immutable per record.** Every `Execution`, and therefore
-   everything hanging off it, is stamped `track: "synthesis" | "deterministic"` and the
+   everything hanging off it, is stamped `track: "discovery" | "verification"` and the
    dashboard must render that distinction as prominently as `overall_status` is rendered
    today — collapsing Head A output into an undifferentiated "scientific result" would
    contradict ADR 0017 §2.3 directly.
@@ -210,7 +216,7 @@ text below are illustrative placeholders, not observed results.
   "executions": [
     {
       "execution_id": "exec-example-0001",
-      "track": "synthesis",
+      "track": "discovery",
       "domain": "solid_state_battery",
       "query": "example query text",
       "created_at": "2026-09-09T11:40:00Z",
@@ -286,7 +292,7 @@ domain/scientificResults.ts  (new parser, same shape as domain/status.ts:
    ↓
 Landscape / Opportunities / Candidates / Evidence views
    (each record's `track` badge rendered with the same prominence as
-    StatusBadge today; a "synthesis" record always shows the ADR 0017
+    StatusBadge today; a "discovery" record always shows the ADR 0017
     disclaimer inline, never only in a tooltip)
 ```
 
@@ -304,7 +310,7 @@ Smallest-first, each step independently shippable:
    `compute_white_space_metrics` already returns `density`/`recency`/`citation_traction`/
    `demand_intensity`/`quadrant`; they're discarded in `clustering.py` before constructing
    `PatentCluster`. This alone would make a real, honest `Landscape` view possible from
-   Head A, still labeled `track: "synthesis"`.
+   Head A, still labeled `track: "discovery"`.
 2. **Add a durable `Execution` record.** Persist what `job_id`/`AnalyzeRequest` already
    carry (domain, query, timestamp) past process restart — the smallest version of the
    "container restart is not data loss" requirement ADR 0017 §7 already lists as a Pilotable
@@ -320,7 +326,7 @@ Smallest-first, each step independently shippable:
    already-defined shape, just not wired to Head A entities yet.
 
 Steps 1–3 alone are enough to replace the `NotAvailableView` stub on Landscape with real
-data, still correctly labeled `track: "synthesis"` and carrying the ADR 0017 disclaimer.
+data, still correctly labeled `track: "discovery"` and carrying the ADR 0017 disclaimer.
 Opportunities/Candidates/Evidence follow the same script incrementally.
 
 ---

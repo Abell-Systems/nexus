@@ -19,6 +19,11 @@ publication envelope, execution scoping, evidence-citation structure, and the
 epistemic invariants ADR 0025 requires around them — it does not create producers
 for `OpportunityScore`/`OpportunityHypothesis` (domain.models.opportunity), which
 remain unused by any pipeline.
+
+Discovery-track free text is additionally checked against a fixed phrase denylist
+(see `_FORBIDDEN_DISCOVERY_CLAIM_PHRASES` below). That check is a conservative
+lexical guardrail against the most obvious mistakes reaching publication, not a
+semantic claim verifier — it can both over- and under-reject; see its docstring.
 """
 
 import re
@@ -48,9 +53,21 @@ DISCOVERY_DISCLAIMER = (
     "substitute for a professional prior-art search. (ADR 0017 §5, ADR 0025 §2)"
 )
 
-# Phrases a discovery-track record's free text must never assert (ADR 0025 §2;
-# SCIENTIFIC_RESULTS_CONTRACT.md §5 invariant 8). Matched case-insensitively as
-# substrings; deliberately conservative rather than exhaustive NLP.
+# CONSERVATIVE LEXICAL GUARDRAIL — not semantic/epistemic enforcement.
+#
+# This is a denylist substring match against a fixed phrase list, matched
+# case-insensitively. It catches the obvious, unambiguous case: free text that
+# asserts one of these exact phrases. It is deliberately NOT a claim-detection
+# model and must not be treated as one:
+#   - false positives are possible (e.g. text that *quotes* or *negates* a
+#     forbidden phrase to explicitly disclaim it would still be rejected here);
+#   - false negatives are possible (any rephrasing, translation, or claim not
+#     on this exact list passes silently).
+# Real enforcement of "discovery output must never imply patentability, FTO,
+# efficacy, or scientific verification" (ADR 0017 §5.5-5.6, ADR 0025 §2) is a
+# generation/review responsibility upstream of this contract — this guardrail
+# exists only to fail loudly on the most obvious mistakes reaching publication,
+# not to guarantee the invariant holds for everything that passes it.
 _FORBIDDEN_DISCOVERY_CLAIM_PHRASES: tuple[str, ...] = (
     "is patentable",
     "is not patentable",
@@ -69,13 +86,15 @@ _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _reject_forbidden_discovery_claims(*texts: str | None) -> None:
+    """Conservative lexical guardrail (see comment above) — not a semantic claim verifier."""
     for text in texts:
         lowered = (text or "").lower()
         for phrase in _FORBIDDEN_DISCOVERY_CLAIM_PHRASES:
             if phrase in lowered:
                 raise ValueError(
                     f"discovery-track text must not assert '{phrase}' "
-                    "(ADR 0017 §5.5-5.6, ADR 0025 §2)"
+                    "(ADR 0017 §5.5-5.6, ADR 0025 §2) — conservative lexical "
+                    "guardrail, not a semantic claim verifier"
                 )
 
 
