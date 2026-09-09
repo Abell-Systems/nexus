@@ -503,7 +503,9 @@ class TestReadmeObservatory:
         assert "Tests-566_passed" in snippet
         assert "Coverage-80.24%25" in snippet
         assert "SonarCloud-UNVERIFIED-yellow" in snippet
+        assert "Scientific_Dashboard-Live-blue" in snippet
         assert "Verified against:** `abcdef1234` · `2026-09-08T18:30:00Z`" in snippet
+        assert "https://abell-systems.github.io/nexus/" in snippet
 
     def test_update_readme_status_success(self, tmp_path: Path) -> None:
         readme = tmp_path / "README.md"

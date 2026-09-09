@@ -9,8 +9,9 @@
 [![Docs](https://img.shields.io/badge/Docs-PASS-brightgreen)](PROJECT_STATUS.md#documentation-pass)
 [![Scientific Integrity](https://img.shields.io/badge/Scientific_Integrity-PASS-brightgreen)](PROJECT_STATUS.md#scientific_integrity-pass)
 [![SonarCloud](https://img.shields.io/badge/SonarCloud-UNVERIFIED-yellow)](PROJECT_STATUS.md#sonar_cloud-unverified)
+[![Scientific Dashboard](https://img.shields.io/badge/Scientific_Dashboard-Live-blue)](https://abell-systems.github.io/nexus/)
 
-> **Verified against:** `fcd51649c0` · `2026-09-09T08:05:36.998795+00:00` · [Full Project Status](PROJECT_STATUS.md)
+> **Verified against:** `1cecb8b286` · `2026-09-09T08:38:20.799950+00:00` · [Scientific Dashboard](https://abell-systems.github.io/nexus/) · [Full Project Status](PROJECT_STATUS.md) · [Raw Contract](project_status.json)
 <!-- PROJECT_STATUS:END -->
 
 > **Autonomous Technology Discovery, White-Space Synthesis & Prior-Art Defense.**
@@ -75,6 +76,19 @@ npm run dev
 ## 4. Architecture & Engineering Governance
 
 Nexus enforces decoupled Clean Architecture and rigorous empirical standards backed by automated CI quality gates. Architectural decisions, scientific contracts, and non-regression policies are recorded as binding contracts in [docs/adr/](docs/adr/) and enforced via:
-- **Binding Architecture Decision Records**: [ADR 0001](docs/adr/0001-nexus-testing-strategy.md) through [ADR 0021](docs/adr/0021-engineering-quality-and-non-regression.md).
+- **Binding Architecture Decision Records**: [ADR 0001](docs/adr/0001-nexus-testing-strategy.md) through [ADR 0024](docs/adr/0024-scientific-verification-workspace.md).
 - **Automated Verification**: Ruff, Mypy, Import Linter, Vitest, Pytest, and docs correctness gates run on every pull request.
 - **Scientific Reproducibility**: Sealed datasets, manifests, SHA-256 sidecars, and pre-registered hypotheses.
+
+---
+
+## 5. Scientific Verification Dashboard (Lydia)
+
+Nexus publishes its live empirical status as an autonomous presentation consumer of the canonical [`project_status.json`](project_status.json) contract (governed by [ADR 0022](docs/adr/0022-project-status-contract.md), [ADR 0023](docs/adr/0023-scientific-verification-as-external-consumer.md), and [ADR 0024](docs/adr/0024-scientific-verification-workspace.md)):
+
+* **Live Dashboard:** [https://abell-systems.github.io/nexus/](https://abell-systems.github.io/nexus/)
+* **Canonical Machine Contract (Tier 3):** [`project_status.json`](project_status.json)
+* **Audited Telemetry Report (Tier 2):** [`PROJECT_STATUS.md`](PROJECT_STATUS.md)
+
+The dashboard is decoupled from the Nexus core engine, executes as a static SPA deployed to GitHub Pages from the bounded monorepo workspace `nexus-status/frontend/`, and strictly renders repository verdicts without synthesizing or recalculating evidence.
+

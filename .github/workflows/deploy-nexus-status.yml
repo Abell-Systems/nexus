@@ -1,0 +1,83 @@
+name: deploy-nexus-status
+
+on:
+  workflow_run:
+    workflows: ["ci"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build & Validate Static SPA
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    defaults:
+      run:
+        working-directory: nexus-status/frontend
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Cache nexus-status node_modules
+        id: nexus-status-cache
+        uses: actions/cache@v4
+        with:
+          path: nexus-status/frontend/node_modules
+          key: nexus-status-node-modules-${{ runner.os }}-${{ hashFiles('nexus-status/frontend/package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.nexus-status-cache.outputs.cache-hit != 'true'
+        run: npm ci --prefer-offline --no-audit --no-fund
+
+      - name: Run Test Suite
+        run: npm test
+
+      - name: Run Typecheck
+        run: npm run typecheck
+
+      - name: Build Static SPA
+        run: npm run build
+
+      - name: Verify Contract Invariant in dist/
+        run: |
+          if [ ! -f dist/project_status.json ]; then
+            echo "ERROR: dist/project_status.json missing from static build!"
+            exit 1
+          fi
+          diff -u ../../project_status.json dist/project_status.json
+          echo "Verified: dist/project_status.json matches root canonical contract exactly."
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: nexus-status/frontend/dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
