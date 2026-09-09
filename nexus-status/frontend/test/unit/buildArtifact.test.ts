@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterAll } from 'vitest';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { execSync } from 'node:child_process';
+import { build } from 'vite';
 import { parseProjectStatus } from '../../src/domain/status';
 
 describe('Nexus Status Build Artifact & Pages Deployment Invariant', () => {
@@ -11,16 +11,23 @@ describe('Nexus Status Build Artifact & Pages Deployment Invariant', () => {
   const distContractPath = path.resolve(distDir, 'project_status.json');
   const distIndexPath = path.resolve(distDir, 'index.html');
 
+  afterAll(() => {
+    // Clean up dist directory after test execution to prevent working tree side-effects
+    if (fs.existsSync(distDir)) {
+      fs.rmSync(distDir, { recursive: true, force: true });
+    }
+  });
+
   it('ensures root canonical contract exists before build', () => {
     expect(fs.existsSync(rootContractPath)).toBe(true);
   });
 
-  it('builds static SPA and emits canonical project_status.json into dist matching root', () => {
-    // Execute production build to verify Vite bundler emits canonical contract
-    execSync('npm run build', {
-      cwd: frontendDir,
-      stdio: 'pipe',
-      encoding: 'utf-8',
+  it('builds static SPA and emits canonical project_status.json into dist matching root', async () => {
+    // Programmatic build using Vite API with exact project configuration
+    await build({
+      root: frontendDir,
+      configFile: path.resolve(frontendDir, 'vite.config.ts'),
+      logLevel: 'silent',
     });
 
     // 1. Verify dist/index.html exists

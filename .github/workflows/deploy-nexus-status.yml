@@ -77,7 +77,11 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     needs: build
     runs-on: ubuntu-latest
+    # Gating Invariant: Deploy is exclusively permitted when triggered by a verified, successful CI run on main.
+    # Manual workflow_dispatch is restricted to build/validation and CANNOT publish to production Pages.
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
