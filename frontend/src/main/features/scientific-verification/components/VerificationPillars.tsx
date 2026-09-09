@@ -61,7 +61,7 @@ export const VerificationPillars: React.FC<VerificationPillarsProps> = ({ pillar
               </div>
 
               <div className="pt-3 border-t border-slate-700/50 text-[11px] text-slate-400 flex items-center justify-between">
-                <span>{pillar.checks.length} comprobaciones ejecutadas</span>
+                <span>{pillar.checks ? pillar.checks.length : 0} comprobaciones ejecutadas</span>
                 <span className="font-mono text-slate-500">ADR 0022</span>
               </div>
             </div>
