@@ -65,9 +65,10 @@ Crucially:
 
 ### Invariants:
 1. **Single Source of Truth for Evidence:** `project_status.json` provides all verified checks, metrics, statuses, commit SHA, and timestamps. The frontend does not calculate or guess check outcomes.
-2. **Separation of Context and Evidence:** Narrative context, research questions, and epistemic boundaries live in versioned `scientific_context.json` alongside the frontend code, preventing pollution of the machine-readable CI audit contract.
+2. **Separation of Semantic Context and Objective Evidence:** `scientific_context.json` is strictly for semantic and epistemological framing (*what the project means, what research questions it investigates, what has been demonstrated vs. what has not*), manually versioned in git. It does NOT track live verification states (no duplicate state machine). Milestone descriptions live here, but their verification status is derived dynamically from `project_status.json`.
 3. **Fail-Safe UI:** If `project_status.json` cannot be fetched or fails schema validation, the interface presents a clear `Verification Unavailable` state in neutral gray/amber. It *never* synthesizes an in-memory pass or default green badge.
-4. **Static Route Independence:** Routing is controlled via `window.location.hash === "#/scientific-verification"` (with fallback to pathname), ensuring seamless operation on static web hosts (GitHub Pages) without server rewrite rules.
+4. **Point-in-Time Provenance & Anti-Staleness:** Verification is never presented as an eternal, timeless property of Nexus. The dashboard must prominently display the exact evaluated commit SHA, the target dataset ID, and the evaluation timestamp: *"Esta versión de este corpus fue verificada bajo estas condiciones en esta fecha"*.
+5. **Static Route Independence:** Routing is controlled via `window.location.hash === "#/scientific-verification"` (with fallback to pathname), ensuring seamless operation on static web hosts (GitHub Pages) without server rewrite rules.
 
 ---
 
@@ -78,14 +79,14 @@ All files reside in a dedicated, self-contained feature folder: `frontend/src/ma
 ```text
 frontend/src/main/features/scientific-verification/
 ├── types.ts                     # TypeScript definitions for project_status and scientific_context
-├── scientific_context.json      # Versioned scientific narrative, milestones, and boundaries
+├── scientific_context.json      # Versioned scientific narrative, research questions, and boundaries
 ├── useScientificVerification.ts # Hook: fetch, contract validation, error states
 ├── ScientificVerificationView.tsx # Top-level view container
 ├── components/
-│   ├── VerificationHero.tsx     # Large semaphoric status: VERIFIED / NOT VERIFIED / UNAVAILABLE
+│   ├── VerificationHero.tsx     # Large semaphoric status + Point-in-time Provenance box
 │   ├── ProjectContextCard.tsx   # What is Abell Nexus? (Research objective and protocol link)
-│   ├── MilestonesProgress.tsx   # Where do we stand? (Current phase and milestone markers)
-│   ├── EpistemicBoundaryCard.tsx# Demonstrated vs. Not Yet Demonstrated vs. Next Step
+│   ├── MilestonesProgress.tsx   # Where do we stand? (Milestones linked to live check statuses)
+│   ├── EpistemicBoundaryCard.tsx# Demonstrated vs. Not Yet Demonstrated vs. Next Scientific Step
 │   ├── VerificationPillars.tsx  # 3 Pillars: Data Integrity, Protocol, Reproducibility
 │   ├── ScientificConclusion.tsx # Plain-language takeaway + "View Evidence" trigger
 │   └── EvidenceDrawer.tsx       # Slide-over panel with cryptographic hashes and ADR links
@@ -101,24 +102,21 @@ frontend/src/main/features/scientific-verification/
   - `VERIFICADO` (green) if `overall_status == PASS` and required scientific checks passed.
   - `NO VERIFICADO` (red) if any required check failed.
   - `VERIFICACIÓN NO DISPONIBLE` (amber/gray) if data is missing, loading, or unverified.
-- Surfaces audited corpus name, commit hash (clickable link to GitHub commit), and evaluation date.
+- **Provenance Statement**: Prominently anchors the assessment to its exact point-in-time evidence:
+  > *"Evaluación realizada sobre el dataset `{dataset_id}` en el commit `{commit_sha}` el `{evaluated_at}`."*
+  (Commit SHA links directly to GitHub commit).
 
 #### 2. `ProjectContextCard`
-- Brief, accessible overview of Abell Nexus: an open-science platform investigating relationships between scientific literature, technological patents, and commercial demands through auditable semantic and lexical matching.
+- Accessible overview of Abell Nexus: an open-science platform investigating relationships between scientific literature, technological patents, and commercial demands through auditable semantic and lexical matching.
 - Direct links to `docs/empirical-study-protocol.md` and repository root.
 
 #### 3. `MilestonesProgress` & `EpistemicBoundaryCard`
-- Loaded directly from `scientific_context.json`:
-  - **Milestones:**
-    - Pilot Benchmark (Sealed corpus) → *Verified*
-    - Matching Pipeline (M0/M1) → *Validated*
-    - Cryptographic Integrity → *Verified*
-    - Temporal Restrictions → *Verified (3 frozen exceptions accepted under protocol)*
-    - Industrial Corpus Scaling → *Next Phase*
+- Content rendered purely from versioned `scientific_context.json` (no hardcoded corpus counts, phase names, or domain constants in the component):
+  - **Milestones:** Research trajectory steps, whose status badges (e.g. verified / pending) are wired directly to `project_status.json` dimensions, preventing stale status claims in the narrative file.
   - **Epistemic Boundaries (Honest Scientific Delimitation):**
-    - **Demonstrated:** Byte-level integrity of pilot corpus, reproducibility of 768-dimensional embeddings, and protocol-compliant prior-art temporal filtering.
-    - **Not Yet Demonstrated:** Statistical generalizability across industrial-scale catalogs (>100k records), cross-lingual generalization beyond Spanish OEPM/InnoGet corpora.
-    - **Next Scientific Step:** Expansion to Phase-2 candidate pool (N=39) with blind dual annotation and inter-annotator agreement (IAA) verification.
+    - **Demostrado con evidencia objetiva:** Integridad byte-a-byte del corpus auditado, reproducibilidad de embeddings de representación semántica, y cumplimiento estricto de las restricciones temporales del protocolo.
+    - **No demostrado aún:** Generalización estadística sobre catálogos industriales a gran escala, validez transfronteriza fuera de jurisdicciones auditadas.
+    - **Siguiente paso científico:** Declarado dinámicamente desde `scientific_context.json` (p. ej. expansión a pool de anotación ciega con cálculo de acuerdo entre anotadores IAA).
 
 #### 4. `VerificationPillars` (The 3 Pillars)
 - **Data Integrity:**
@@ -132,9 +130,8 @@ frontend/src/main/features/scientific-verification/
   - Temporal prior-art compliance (`temporal_eligibility`)
   - Explicit notification of accepted exceptions (displaying reason and governance citations like `ADR-0018/ADR-0019`, never disguised as an unconditioned pass).
 - **Reproducibility:**
-  - Content-addressed identifiers
-  - Frozen artifact sidecars
-  - Reproducible conditions confirmed
+  - Identificación criptográfica de artefactos
+  - Trazabilidad reproducible de los artefactos confirmada (no afirma "100% reproducible" sin réplica experimental independiente).
 
 #### 5. `EvidenceDrawer`
 - Non-modal slide-over drawer triggered by "Ver Evidencia Técnica".
@@ -147,14 +144,15 @@ frontend/src/main/features/scientific-verification/
 Unit and component tests in Vitest will enforce:
 
 1. **Epistemic Honesty:**
-   - When evidence status is `PASS`, the UI renders "Integridad del corpus verificada" or "Condiciones reproducibles verificadas". It MUST NOT assert broad unverified claims like "El modelo es universalmente válido".
-   - When `temporal_eligibility` has status `SKIPPED`, the UI renders it as an amber warning with explicit accepted exceptions citation (`ADR 0018 / ADR 0019`), never as an unflagged green pass or hidden check.
+   - When evidence status is `PASS`, the UI renders "Integridad del corpus verificada" or "Trazabilidad reproducible confirmada". It MUST NOT assert unverified global claims like "El modelo es universalmente válido" o "100% reproducible".
+   - When `temporal_eligibility` has status `SKIPPED`, the UI renders it as an informative warning with explicit accepted exceptions citation (`ADR 0018 / ADR 0019`), never as an unflagged green pass or hidden check.
 2. **Fail-Fast & Zero False Positives:**
    - If `project_status.json` returns HTTP 404, empty payload, or schema mismatch, the UI displays `VERIFICACIÓN NO DISPONIBLE`. No default green fallback values (`PASS`, `566`, `80%`) are allowed.
 3. **Target Binding Invariant:**
    - If `temporal_policy_binding` is `FAIL`, the UI immediately marks the Protocol pillar as `NO VERIFICADO`.
-4. **Boundary Verification:**
-   - Assert that both `demonstrated` and `not_yet_demonstrated` sections are rendered in the DOM, guaranteeing that the researcher sees the boundaries of the experiment.
+4. **Boundary & Provenance Verification:**
+   - Assert that both `demonstrated` and `not_yet_demonstrated` sections from `scientific_context.json` are rendered in the DOM.
+   - Assert that the commit SHA, dataset ID, and timestamp provenance statement is displayed in the hero section.
 
 ---
 
