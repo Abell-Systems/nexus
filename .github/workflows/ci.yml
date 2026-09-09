@@ -86,6 +86,32 @@ jobs:
             frontend/coverage/lcov.info
             frontend/coverage/junit.xml
 
+      # Nexus Status Scientific Verification Workspace (ADR 0024)
+      - name: Cache nexus-status node_modules
+        id: nexus-status-node-modules-cache
+        uses: actions/cache@v4
+        with:
+          path: nexus-status/frontend/node_modules
+          key: nexus-status-node-modules-${{ runner.os }}-${{ hashFiles('nexus-status/frontend/package-lock.json') }}
+      - name: Install nexus-status dependencies
+        if: steps.nexus-status-node-modules-cache.outputs.cache-hit != 'true'
+        working-directory: nexus-status/frontend
+        run: npm ci --prefer-offline --no-audit --no-fund
+      - name: Nexus Status Tests
+        working-directory: nexus-status/frontend
+        run: npm test
+      - name: Nexus Status Typecheck
+        working-directory: nexus-status/frontend
+        run: npm run typecheck
+      - name: Nexus Status Production Build (Static SPA)
+        working-directory: nexus-status/frontend
+        run: npm run build
+      - name: Upload Nexus Status Static Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-status-dist
+          path: nexus-status/frontend/dist
+
   # 4. Security & Secret Scanning (Parallel with Python/Frontend)
   security-scan:
     name: 4. Security Scan (Gitleaks)
@@ -311,6 +337,7 @@ jobs:
           echo " - Ruff Static Analysis: PASS"
           echo " - Mypy Type Checking: PASS"
           echo " - Frontend Tests, Lint & Build: PASS"
+          echo " - Nexus Status Dashboard Tests & Static Build: PASS"
           echo " - Gitleaks Secret Scanner: PASS"
           echo " - Backend Core Tests (Unit, Integration, E2E): PASS"
           echo " - Provider Tests (Google ADK): PASS"
