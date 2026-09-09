@@ -287,6 +287,9 @@ class GenerateBlindedAnnotationSetTest:
 class StructuralBlindnessInvariantTest:
     def test_serialized_json_payload_must_not_contain_forbidden_keys(self):
         real_benchmark = Path("data/evaluation/dataset_pilot_benchmark.json")
+        if not real_benchmark.exists():
+            pytest.skip("Benchmark file not present")
+
         annotation_set = generate_blinded_annotation_set(real_benchmark, temporal_pool_mode="strict", seed=42)
         serialized = annotation_set.model_dump_json(indent=2)
         parsed = json.loads(serialized)
@@ -333,4 +336,15 @@ class SidecarAndArtifactIntegrityTest:
         expected_sha = sidecar_line.split()[0]
 
         assert computed_sha == expected_sha
+
+    def test_emitted_artifact_is_byte_for_byte_reproducible_from_source(self):
+        batch_file = Path("data/annotations/pilot_strict_annotation_batch.json")
+        real_benchmark = Path("data/evaluation/dataset_pilot_benchmark.json")
+        if not batch_file.exists() or not real_benchmark.exists():
+            pytest.skip("Artifact not generated yet")
+
+        regenerated = generate_blinded_annotation_set(real_benchmark, temporal_pool_mode="strict", seed=42)
+        regenerated_json = regenerated.model_dump_json(indent=2) + "\n"
+
+        assert regenerated_json == batch_file.read_text(encoding="utf-8")
 
