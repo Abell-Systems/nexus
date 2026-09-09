@@ -20,6 +20,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -693,8 +694,15 @@ def evaluate_documentation(repo_root: Path) -> DimensionResult:
         )
 
 
+KNOWN_FROZEN_TEMPORAL_VIOLATIONS = frozenset({
+    ("INNOGET-2292", "ES-2856789-A1"),
+    ("INNOGET-2415", "ES-2901234-A1"),
+    ("INNOGET-2501", "ES-2901234-A1"),
+})
+
+
 def evaluate_scientific_integrity(repo_root: Path) -> DimensionResult:
-    """Evaluates scientific dataset manifests, hashes, and identity audit."""
+    """Evaluates scientific dataset manifests, hashes, and identity audit (ADR 0018/0019/0022)."""
     script = repo_root / "scripts" / "audit_dataset_identity.py"
     if not script.exists():
         return DimensionResult(
@@ -706,41 +714,35 @@ def evaluate_scientific_integrity(repo_root: Path) -> DimensionResult:
             checks=[CheckResult("audit_dataset_identity", STATUS_UNVERIFIED, detail="Script not found")],
         )
 
+    with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as tmp:
+        tmp_output = Path(tmp.name)
+
     try:
         proc = subprocess.run(
-            [sys.executable, str(script)],
+            [sys.executable, str(script), "--output", str(tmp_output)],
             cwd=str(repo_root),
             capture_output=True,
             text=True,
             timeout=60,
         )
-        # Note: audit_dataset_identity exits with 0 and prints checks.
-        # Dataset identity audit checks manifests, sidecars, counts, and frozen temporal status.
-        stdout = proc.stdout
-        manifest_pass = "[PASS] dataset_sha_manifest" in stdout
-        sidecar_pass = "[PASS] dataset_sha_sidecar" in stdout
-        counts_pass = "[PASS] manifest_counts" in stdout
+        if proc.returncode != 0:
+            return DimensionResult(
+                status=STATUS_FAIL,
+                requirement_level=REQ_REQUIRED,
+                evidence_source="scripts/audit_dataset_identity.py",
+                evidence_available=True,
+                message=f"audit_dataset_identity.py failed with exit code {proc.returncode}",
+                checks=[
+                    CheckResult(
+                        name="audit_script_execution",
+                        status=STATUS_FAIL,
+                        value=proc.returncode,
+                        detail=proc.stderr.strip() or proc.stdout.strip(),
+                    )
+                ],
+            )
 
-        checks = [
-            CheckResult("dataset_sha_sidecar", STATUS_PASS if sidecar_pass else STATUS_FAIL),
-            CheckResult("dataset_sha_manifest", STATUS_PASS if manifest_pass else STATUS_FAIL),
-            CheckResult("manifest_counts", STATUS_PASS if counts_pass else STATUS_FAIL),
-        ]
-
-        # In pilot benchmark, 3 temporal violations are frozen and expected under ADR 0018/0019
-        temporal_check = STATUS_PASS if "[PASS] temporal_eligibility" in stdout else STATUS_FAIL
-        checks.append(CheckResult("temporal_eligibility_strict", temporal_check, detail="3 frozen violations in pilot"))
-
-        status = STATUS_PASS if (manifest_pass and sidecar_pass and counts_pass) else STATUS_FAIL
-
-        return DimensionResult(
-            status=status,
-            requirement_level=REQ_REQUIRED,
-            evidence_source="scripts/audit_dataset_identity.py",
-            evidence_available=True,
-            message="Scientific dataset identity and hashes verified",
-            checks=checks,
-        )
+        report = json.loads(tmp_output.read_text(encoding="utf-8"))
     except Exception as e:
         return DimensionResult(
             status=STATUS_FAIL,
@@ -750,6 +752,76 @@ def evaluate_scientific_integrity(repo_root: Path) -> DimensionResult:
             message=f"Execution error: {e}",
             checks=[CheckResult("audit_dataset_identity", STATUS_FAIL, detail=str(e))],
         )
+    finally:
+        if tmp_output.exists():
+            tmp_output.unlink()
+
+    checks: list[CheckResult] = []
+    observed_violations = {
+        (v["demand_id"], v["publication_id"])
+        for v in report.get("temporal_violations", [])
+    }
+
+    for c in report.get("checks", []):
+        c_name = c.get("check", "")
+        c_status = c.get("status")
+        c_detail = c.get("detail", "")
+
+        if c_name == "temporal_eligibility":
+            if observed_violations == KNOWN_FROZEN_TEMPORAL_VIOLATIONS:
+                # Explicit exception under ADR 0018 §6 / ADR 0019
+                checks.append(
+                    CheckResult(
+                        name="temporal_eligibility",
+                        status=STATUS_SKIPPED,
+                        detail=(
+                            "3 known temporal violations formally frozen as accepted exceptions "
+                            "under ADR 0018 §6 / ADR 0019 (handled via harness pool mode)"
+                        ),
+                    )
+                )
+            elif not observed_violations:
+                checks.append(
+                    CheckResult(
+                        name="temporal_eligibility",
+                        status=STATUS_PASS,
+                        detail="0 temporal violations; strict temporal eligibility holds",
+                    )
+                )
+            else:
+                unexpected = observed_violations - KNOWN_FROZEN_TEMPORAL_VIOLATIONS
+                checks.append(
+                    CheckResult(
+                        name="temporal_eligibility",
+                        status=STATUS_FAIL,
+                        detail=f"{len(unexpected)} unexpected temporal violations detected",
+                    )
+                )
+        else:
+            checks.append(
+                CheckResult(
+                    name=c_name,
+                    status=STATUS_PASS if c_status == "PASS" else STATUS_FAIL,
+                    detail=c_detail,
+                )
+            )
+
+    has_failures = any(c.status == STATUS_FAIL for c in checks)
+    dim_status = STATUS_FAIL if has_failures else STATUS_PASS
+    dim_message = (
+        "Scientific dataset integrity failure detected"
+        if has_failures
+        else "Scientific dataset identity, manifests, and frozen exceptions verified"
+    )
+
+    return DimensionResult(
+        status=dim_status,
+        requirement_level=REQ_REQUIRED,
+        evidence_source="scripts/audit_dataset_identity.py",
+        evidence_available=True,
+        message=dim_message,
+        checks=checks,
+    )
 
 
 def evaluate_sonar_cloud(repo_root: Path) -> DimensionResult:
@@ -914,6 +986,8 @@ def generate_markdown_report(payload: dict[str, Any]) -> str:
         "- **`UNVERIFIED != PASS`**: Absence of evidence is never reported as success.",
         "- **`SKIPPED != UNVERIFIED`**: Explicit precondition omission is distinguished from missing reports.",
         "- **`FAIL = explicit evidence of breach`**: Documents observable non-compliance.",
+        "- **`Tests count reflects executed reports`**: The test metric dynamically represents tests executed and recorded in observed JUnit XML artifacts for the specific evaluation run, not a static repository estimate.",
+        "- **`Exceptions must be formally explicit`**: Formally exempted legacy conditions (e.g. ADR 0018 §6 frozen temporal violations) evaluate to `SKIPPED`, never masking failures as undocumented passes.",
         "",
         "*(Document generated deterministically by `scripts/audit_project_status.py`)*",
     ])

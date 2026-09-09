@@ -1,6 +1,6 @@
 # Nexus Project Status
 
-> **Overall Status:** `[PASS]` | **Commit:** `2ef0d1b057768b4ceda4b171158dee91f5cc6dd8` | **Evaluated At:** `2026-09-08T16:49:26.613418+00:00`
+> **Overall Status:** `[PASS]` | **Commit:** `3bef0db054e5af530b9e08ea64e8dcb7e08c239c` | **Evaluated At:** `2026-09-09T06:01:00.080895+00:00`
 
 ![Status](https://img.shields.io/badge/Project_Status-PASS-brightgreen)
 
@@ -21,7 +21,7 @@ Nexus Project Status evaluates to PASS. All required dimensions verified and pas
 | **frontend_quality** | `required` | **`PASS`** | ✓ | `npm run typecheck & npm run lint` | Frontend quality status: PASS |
 | **architecture** | `required` | **`PASS`** | ✓ | `scripts/check_architecture.py` | Architecture check passed |
 | **documentation** | `required` | **`PASS`** | ✓ | `scripts/check_docs_correctness.py` | Documentation correctness passed |
-| **scientific_integrity** | `required` | **`PASS`** | ✓ | `scripts/audit_dataset_identity.py` | Scientific dataset identity and hashes verified |
+| **scientific_integrity** | `required` | **`PASS`** | ✓ | `scripts/audit_dataset_identity.py` | Scientific dataset identity, manifests, and frozen exceptions verified |
 | **sonar_cloud** | `optional` | **`UNVERIFIED`** | ✗ | `environment:SONAR_TOKEN` | SONAR_TOKEN not configured; analysis skipped in this environment |
 
 ---
@@ -55,10 +55,21 @@ Nexus Project Status evaluates to PASS. All required dimensions verified and pas
 - `[PASS]` **docs_correctness** — Docs correctness gate: PASS (64 markdown files, 22 ADRs checked)
 
 ### `scientific_integrity` (`PASS`)
-- `[PASS]` **dataset_sha_sidecar**
-- `[PASS]` **dataset_sha_manifest**
-- `[PASS]` **manifest_counts**
-- `[FAIL]` **temporal_eligibility_strict** — 3 frozen violations in pilot
+- `[PASS]` **dataset_sha_sidecar** — file=bf7c501f817f... sidecar=['bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453', 'dataset_pilot_benchmark.json']
+- `[PASS]` **dataset_sha_manifest** — manifest=bf7c501f817f... file=bf7c501f817f...
+- `[PASS]` **manifest_counts** — manifest=(3,15,23) actual=(3,15,23)
+- `[PASS]` **no_duplicate_demand_ids** — 3 demands
+- `[PASS]` **no_duplicate_patent_ids** — 15 patents
+- `[PASS]` **annotations_reference_known_ids** — dangling=[]
+- `[PASS]` **embeddings_artifact_sha** — declared=2ba27432607e...
+- `[PASS]` **embeddings_dataset_sha** — artifact_ds=bf7c501f817f... dataset=bf7c501f817f...
+- `[PASS]` **embeddings_demand_ids** — artifact=['INNOGET-2292', 'INNOGET-2415', 'INNOGET-2501']
+- `[PASS]` **embeddings_patent_ids** — artifact=15 dataset=15
+- `[PASS]` **embeddings_dimension** — expected_dim=768
+- `[PASS]` **snapshots_raw_sha** — manifest=2832dc5936b8... file=2832dc5936b8...
+- `[PASS]` **snapshots_count** — manifest=16 jsonl=16
+- `[PASS]` **evaluation_subset_of_snapshots** — snapshot_only=['ES-2918450-A1'] evaluation_only=[]
+- `[SKIPPED]` **temporal_eligibility** — 3 known temporal violations formally frozen as accepted exceptions under ADR 0018 §6 / ADR 0019 (handled via harness pool mode)
 
 ### `sonar_cloud` (`UNVERIFIED`)
 - `[UNVERIFIED]` **sonar_token_present** — SONAR_TOKEN not set; Sonar Quality Gate is UNVERIFIED
@@ -71,5 +82,7 @@ Nexus Project Status evaluates to PASS. All required dimensions verified and pas
 - **`UNVERIFIED != PASS`**: Absence of evidence is never reported as success.
 - **`SKIPPED != UNVERIFIED`**: Explicit precondition omission is distinguished from missing reports.
 - **`FAIL = explicit evidence of breach`**: Documents observable non-compliance.
+- **`Tests count reflects executed reports`**: The test metric dynamically represents tests executed and recorded in observed JUnit XML artifacts for the specific evaluation run, not a static repository estimate.
+- **`Exceptions must be formally explicit`**: Formally exempted legacy conditions (e.g. ADR 0018 §6 frozen temporal violations) evaluate to `SKIPPED`, never masking failures as undocumented passes.
 
 *(Document generated deterministically by `scripts/audit_project_status.py`)*

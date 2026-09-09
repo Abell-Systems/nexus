@@ -32,6 +32,7 @@ from audit_project_status import (  # noqa: E402
     STATUS_FAIL,
     STATUS_NA,
     STATUS_PASS,
+    STATUS_SKIPPED,
     STATUS_UNVERIFIED,
     CheckResult,
     DimensionResult,
@@ -42,6 +43,7 @@ from audit_project_status import (  # noqa: E402
     evaluate_backend_testing,
     evaluate_coverage_xml,
     evaluate_frontend_testing,
+    evaluate_scientific_integrity,
     generate_markdown_report,
     generate_readme_status_snippet,
     parse_junit_xml,
@@ -278,6 +280,54 @@ class TestEvidenceEvaluation:
         assert res.status == STATUS_FAIL
         assert res.evidence_available is True
         assert res.metrics["failed"] == 3
+
+    def test_evaluate_scientific_integrity_pass_with_frozen_exceptions(self) -> None:
+        """Scientific integrity evaluates to PASS when manifests match and temporal violations are frozen exceptions."""
+        res = evaluate_scientific_integrity(_REPO_ROOT)
+        assert res.status == STATUS_PASS
+        assert res.evidence_available is True
+        # Check that temporal_eligibility is explicitly marked SKIPPED (not FAIL, not undocumented PASS)
+        temporal_checks = [c for c in res.checks if c.name == "temporal_eligibility"]
+        assert len(temporal_checks) == 1
+        assert temporal_checks[0].status == STATUS_SKIPPED
+        assert "ADR 0018" in temporal_checks[0].detail
+        # Invariant: NO check within a PASS dimension may have status FAIL
+        assert all(c.status != STATUS_FAIL for c in res.checks), "Found FAIL check within PASS scientific_integrity!"
+
+    def test_evaluate_scientific_integrity_fails_when_unexpected_violations_exist(
+        self, tmp_path: Path
+    ) -> None:
+        """Scientific integrity evaluates to FAIL if an unknown/unexempted violation is present."""
+        scripts_dir = tmp_path / "scripts"
+        scripts_dir.mkdir()
+        mock_audit = scripts_dir / "audit_dataset_identity.py"
+        mock_audit.write_text(
+            'import json, sys, argparse\n'
+            'p = argparse.ArgumentParser()\n'
+            'p.add_argument("--output", type=str)\n'
+            'args = p.parse_args()\n'
+            'report = {\n'
+            '    "temporal_violations": [\n'
+            '        {"demand_id": "NEW-DEMAND", "publication_id": "NEW-PATENT"}\n'
+            '    ],\n'
+            '    "checks": [\n'
+            '        {"check": "dataset_sha_manifest", "status": "PASS", "detail": "ok"},\n'
+            '        {"check": "temporal_eligibility", "status": "FAIL", "detail": "1 violation"}\n'
+            '    ]\n'
+            '}\n'
+            'with open(args.output, "w") as f: json.dump(report, f)\n',
+            encoding="utf-8",
+        )
+        res = evaluate_scientific_integrity(tmp_path)
+        assert res.status == STATUS_FAIL
+        temporal_checks = [c for c in res.checks if c.name == "temporal_eligibility"]
+        assert len(temporal_checks) == 1
+        assert temporal_checks[0].status == STATUS_FAIL
+
+    def test_evaluate_scientific_integrity_missing_script(self, tmp_path: Path) -> None:
+        res = evaluate_scientific_integrity(tmp_path)
+        assert res.status == STATUS_UNVERIFIED
+        assert res.evidence_available is False
 
 
 class TestSchemaValidationAndSerialization:

@@ -66,7 +66,7 @@ The repository evaluates ten canonical dimensions grouped under four domains:
 | **Frontend** | `frontend_quality` | `required` | `oxlint` & `tsc --noEmit` | `errors == 0` and `warnings == 0` |
 | **Architecture** | `architecture` | `required` | `scripts/check_architecture.py` | Exit code 0 (AST & `.importlinter`) |
 | **Docs** | `documentation` | `required` | `scripts/check_docs_correctness.py` | Exit code 0 (all links & ADRs valid) |
-| **Science** | `scientific_integrity`| `required` | `scripts/audit_dataset_identity.py` | Sealed manifests and SHA-256 match |
+| **Science** | `scientific_integrity`| `required` | `scripts/audit_dataset_identity.py` | Sealed manifests, sidecars, and hashes match; zero unhandled temporal violations (known frozen exceptions evaluate to `SKIPPED` under ADR 0018 §6 / ADR 0019) |
 | **External** | `sonar_cloud` | `optional` | SonarQube Cloud API / CI step output | Quality Gate `OK` (or `SKIPPED`/`UNVERIFIED`) |
 
 ### 4. Conservative Aggregation Procedure
@@ -105,6 +105,8 @@ Badges displayed on the repository README MUST derive directly from the canonica
 * `[SonarCloud: PASS | UNVERIFIED | FAIL]`
 
 Every badge MUST link directly to `PROJECT_STATUS.md` or to the corresponding CI workflow execution, never to a static external placeholder.
+
+**Note on `Tests` Dynamic Count:** The test count badge (`Tests-{N}_passed`) dynamically reflects the exact number of tests executed and reported in the observed JUnit XML test artifacts for that specific evaluation run (e.g. core unit suite, or full unit + integration + e2e suites), never a static repository estimate. Detail of included suites is traceable in `PROJECT_STATUS.md`.
 
 ### 6. Distinction Between Commit Identity and Evaluation Instant
 
