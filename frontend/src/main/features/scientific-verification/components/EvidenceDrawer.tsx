@@ -1,5 +1,5 @@
 import React from "react";
-import { ProjectStatusPayload, CheckResult } from "../types";
+import type { ProjectStatusPayload, CheckResult } from "../types";
 
 interface EvidenceDrawerProps {
   isOpen: boolean;

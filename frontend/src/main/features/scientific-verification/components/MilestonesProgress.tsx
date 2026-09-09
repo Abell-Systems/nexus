@@ -1,5 +1,5 @@
 import React from "react";
-import { MilestoneItem, DimensionResult } from "../types";
+import type { MilestoneItem, DimensionResult } from "../types";
 
 interface MilestonesProgressProps {
   milestones: MilestoneItem[];

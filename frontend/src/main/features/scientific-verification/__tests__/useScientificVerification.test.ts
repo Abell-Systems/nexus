@@ -8,7 +8,7 @@ describe("useScientificVerification", () => {
   });
 
   it("handles missing project_status.json as unavailable without crashing", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: false,
       status: 404,
       json: async () => ({}),
@@ -20,7 +20,7 @@ describe("useScientificVerification", () => {
   });
 
   it("handles malformed JSON payload as unavailable", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ unexpected: "payload" }),
     });
@@ -48,7 +48,7 @@ describe("useScientificVerification", () => {
         }
       }
     };
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => mockStatus,
     });
@@ -82,7 +82,7 @@ describe("useScientificVerification", () => {
         }
       }
     };
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => mockStatus,
     });

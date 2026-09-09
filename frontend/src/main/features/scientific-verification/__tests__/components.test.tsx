@@ -9,7 +9,7 @@ import { VerificationPillars } from "../components/VerificationPillars";
 import { ScientificConclusion } from "../components/ScientificConclusion";
 import { EvidenceDrawer } from "../components/EvidenceDrawer";
 import contextData from "../scientific_context.json";
-import { PillarViewModel, ProjectStatusPayload } from "../types";
+import type { PillarViewModel, ProjectStatusPayload } from "../types";
 
 describe("Scientific Verification Components", () => {
   it("VerificationHero renders exact point-in-time provenance statement", () => {

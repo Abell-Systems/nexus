@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import contextData from "./scientific_context.json";
-import {
+import type {
   ProjectStatusPayload,
   ScientificContext,
   VerificationViewModel,

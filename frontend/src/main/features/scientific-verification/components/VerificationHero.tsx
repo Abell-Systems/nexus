@@ -1,5 +1,5 @@
 import React from "react";
-import { VerificationState } from "../useScientificVerification";
+import type { VerificationState } from "../useScientificVerification";
 
 interface VerificationHeroProps {
   state: VerificationState;
