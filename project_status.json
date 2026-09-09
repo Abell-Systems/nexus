@@ -1,0 +1,276 @@
+{
+  "schema_version": "1.0.0",
+  "commit_sha": "0d82ec51b3edf4043b0dd2047a42e2c883d35a8f",
+  "evaluated_at": "2026-09-09T07:22:38.704196+00:00",
+  "overall_status": "PASS",
+  "aggregation_rule": "All required dimensions verified and passed.",
+  "summary": "Nexus Project Status evaluates to PASS. All required dimensions verified and passed.",
+  "dimensions": {
+    "backend_testing": {
+      "status": "PASS",
+      "requirement_level": "required",
+      "evidence_source": "pytest-results.xml",
+      "evidence_available": true,
+      "message": "Backend test suites completed successfully: 497 passed, 0 skipped in 497 tests",
+      "metrics": {
+        "total": 497,
+        "passed": 497,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "checks": [
+        {
+          "name": "report_pytest-results",
+          "status": "PASS",
+          "value": 497,
+          "detail": "pytest-results.xml: 497/497 passed (0 failed, 0 errors, 0 skipped)"
+        }
+      ]
+    },
+    "backend_coverage": {
+      "status": "PASS",
+      "requirement_level": "required",
+      "evidence_source": "coverage.xml",
+      "evidence_available": true,
+      "message": "Line coverage is 80.24% (threshold: 80.0%)",
+      "metrics": {
+        "line_coverage": 80.24,
+        "threshold": 80.0
+      },
+      "checks": [
+        {
+          "name": "line_coverage_threshold",
+          "status": "PASS",
+          "value": 80.24,
+          "threshold": 80.0,
+          "detail": "Line coverage is 80.24% (threshold: 80.0%)"
+        }
+      ]
+    },
+    "python_quality": {
+      "status": "PASS",
+      "requirement_level": "required",
+      "evidence_source": "ruff & mypy CLI",
+      "evidence_available": true,
+      "message": "Python static quality status: PASS",
+      "metrics": {},
+      "checks": [
+        {
+          "name": "ruff_check",
+          "status": "PASS",
+          "value": 0,
+          "detail": "0 lint errors"
+        },
+        {
+          "name": "mypy_typecheck",
+          "status": "PASS",
+          "value": 0,
+          "detail": "0 type errors"
+        }
+      ]
+    },
+    "frontend_testing": {
+      "status": "PASS",
+      "requirement_level": "required",
+      "evidence_source": "frontend/coverage/junit.xml",
+      "evidence_available": true,
+      "message": "Frontend Vitest test suite completed successfully: 40 passed in 40 tests",
+      "metrics": {
+        "total": 40,
+        "passed": 40,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "checks": [
+        {
+          "name": "vitest_execution",
+          "status": "PASS",
+          "value": 40,
+          "detail": "40/40 tests passed (0 failures)"
+        }
+      ]
+    },
+    "frontend_coverage": {
+      "status": "PASS",
+      "requirement_level": "required",
+      "evidence_source": "frontend/coverage/lcov.info",
+      "evidence_available": true,
+      "message": "Frontend line coverage is 90.88% (target: 80.0%)",
+      "metrics": {
+        "lines_found": 285,
+        "lines_hit": 259,
+        "line_coverage": 90.88
+      },
+      "checks": [
+        {
+          "name": "frontend_line_coverage",
+          "status": "PASS",
+          "value": 90.88,
+          "threshold": 80.0,
+          "detail": "259/285 lines covered"
+        }
+      ]
+    },
+    "frontend_quality": {
+      "status": "PASS",
+      "requirement_level": "required",
+      "evidence_source": "npm run typecheck & npm run lint",
+      "evidence_available": true,
+      "message": "Frontend quality status: PASS",
+      "metrics": {},
+      "checks": [
+        {
+          "name": "tsc_typecheck",
+          "status": "PASS",
+          "value": 0,
+          "detail": "0 type errors"
+        },
+        {
+          "name": "oxlint",
+          "status": "PASS",
+          "value": 0,
+          "detail": "0 lint errors"
+        }
+      ]
+    },
+    "architecture": {
+      "status": "PASS",
+      "requirement_level": "required",
+      "evidence_source": "scripts/check_architecture.py",
+      "evidence_available": true,
+      "message": "Architecture check passed",
+      "metrics": {},
+      "checks": [
+        {
+          "name": "clean_architecture_layers",
+          "status": "PASS",
+          "value": 0,
+          "detail": "Architecture check: PASS (Clean Architecture 3-Tier Layer Invariants & Import Linter Contracts Validated)"
+        }
+      ]
+    },
+    "documentation": {
+      "status": "PASS",
+      "requirement_level": "required",
+      "evidence_source": "scripts/check_docs_correctness.py",
+      "evidence_available": true,
+      "message": "Documentation correctness passed",
+      "metrics": {},
+      "checks": [
+        {
+          "name": "docs_correctness",
+          "status": "PASS",
+          "value": 0,
+          "detail": "Docs correctness gate: PASS (65 markdown files, 23 ADRs checked)"
+        }
+      ]
+    },
+    "scientific_integrity": {
+      "status": "PASS",
+      "requirement_level": "required",
+      "evidence_source": "scripts/audit_dataset_identity.py",
+      "evidence_available": true,
+      "message": "Scientific dataset identity, manifests, and temporal integrity verified",
+      "metrics": {},
+      "checks": [
+        {
+          "name": "dataset_sha_sidecar",
+          "status": "PASS",
+          "detail": "file=bf7c501f817f... sidecar=['bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453', 'dataset_pilot_benchmark.json']"
+        },
+        {
+          "name": "dataset_sha_manifest",
+          "status": "PASS",
+          "detail": "manifest=bf7c501f817f... file=bf7c501f817f..."
+        },
+        {
+          "name": "manifest_counts",
+          "status": "PASS",
+          "detail": "manifest=(3,15,23) actual=(3,15,23)"
+        },
+        {
+          "name": "no_duplicate_demand_ids",
+          "status": "PASS",
+          "detail": "3 demands"
+        },
+        {
+          "name": "no_duplicate_patent_ids",
+          "status": "PASS",
+          "detail": "15 patents"
+        },
+        {
+          "name": "annotations_reference_known_ids",
+          "status": "PASS",
+          "detail": "dangling=[]"
+        },
+        {
+          "name": "embeddings_artifact_sha",
+          "status": "PASS",
+          "detail": "declared=2ba27432607e..."
+        },
+        {
+          "name": "embeddings_dataset_sha",
+          "status": "PASS",
+          "detail": "artifact_ds=bf7c501f817f... dataset=bf7c501f817f..."
+        },
+        {
+          "name": "embeddings_demand_ids",
+          "status": "PASS",
+          "detail": "artifact=['INNOGET-2292', 'INNOGET-2415', 'INNOGET-2501']"
+        },
+        {
+          "name": "embeddings_patent_ids",
+          "status": "PASS",
+          "detail": "artifact=15 dataset=15"
+        },
+        {
+          "name": "embeddings_dimension",
+          "status": "PASS",
+          "detail": "expected_dim=768"
+        },
+        {
+          "name": "snapshots_raw_sha",
+          "status": "PASS",
+          "detail": "manifest=2832dc5936b8... file=2832dc5936b8..."
+        },
+        {
+          "name": "snapshots_count",
+          "status": "PASS",
+          "detail": "manifest=16 jsonl=16"
+        },
+        {
+          "name": "evaluation_subset_of_snapshots",
+          "status": "PASS",
+          "detail": "snapshot_only=['ES-2918450-A1'] evaluation_only=[]"
+        },
+        {
+          "name": "temporal_policy_binding",
+          "status": "PASS",
+          "detail": "policy=(nexus-pilot-16-evaluation-corpus-v1, bf7c501f817f...) actual=(nexus-pilot-16-evaluation-corpus-v1, bf7c501f817f...)"
+        },
+        {
+          "name": "temporal_eligibility",
+          "status": "SKIPPED",
+          "detail": "3 temporal violations formally accepted as exceptions under ADR-0018/ADR-0019 (accepted_temporal_exception)"
+        }
+      ]
+    },
+    "sonar_cloud": {
+      "status": "UNVERIFIED",
+      "requirement_level": "optional",
+      "evidence_source": "environment:SONAR_TOKEN",
+      "evidence_available": false,
+      "message": "SONAR_TOKEN not configured; analysis skipped in this environment",
+      "metrics": {},
+      "checks": [
+        {
+          "name": "sonar_token_present",
+          "status": "UNVERIFIED",
+          "detail": "SONAR_TOKEN not set; Sonar Quality Gate is UNVERIFIED"
+        }
+      ]
+    }
+  }
+}

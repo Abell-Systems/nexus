@@ -55,11 +55,30 @@ External Presentation Consumers
 
 All temporary in-tree verification view components, routes, and contextual JSON files introduced in `frontend/src/main/components/ScientificVerification/` are removed from the Nexus repository. The primary Nexus user interface remains exclusively dedicated to industrial patent intelligence and demand matching.
 
+### 4. Physical Location and Publication Mechanism of the Canonical Contract
+
+To guarantee deterministic, zero-friction consumption by external clients without introducing secondary copies or ambiguous build-only lifecycles:
+
+1. **Physical Location in Core:** The machine-readable contract `project_status.json` is versioned directly at the repository root (`/project_status.json`), completing the 3-tier representation model established by ADR 0022:
+   * **Tier 1 (Surface):** `README.md`
+   * **Tier 2 (Human Report):** `PROJECT_STATUS.md`
+   * **Tier 3 (Machine Contract):** `project_status.json`
+   `project_status.json` is formally tracked in Git alongside `PROJECT_STATUS.md` and removed from `.gitignore`.
+
+2. **Atomic Telemetry Invariant:** Any execution of `scripts/audit_project_status.py` updates Tier 1, Tier 2, and Tier 3 in lockstep. The three files MUST share the identical `commit_sha` and `evaluated_at` timestamp.
+
+3. **Public HTTP Consumption Endpoints:** External consumers access the canonical contract via standard, unauthenticated HTTPS endpoints:
+   * **Default Tracked Head:** `https://raw.githubusercontent.com/Abell-Systems/nexus/main/project_status.json`
+   * **CDN / High Availability:** `https://cdn.jsdelivr.net/gh/Abell-Systems/nexus@main/project_status.json`
+   * **Pinned Commit / Release:** `https://raw.githubusercontent.com/Abell-Systems/nexus/<commit-sha>/project_status.json`
+   * **Local / Submodule Consumers:** Filesystem path `project_status.json` at repository root.
+
 ## Consequences
 
 ### Positive
 * **Architectural Hygiene:** Nexus core maintains zero coupling to external verification dashboards or ad-hoc researcher interfaces.
-* **Single Source of Truth:** No duplicate `project_status.json` files exist in the repository.
+* **Single Source of Truth:** No duplicate `project_status.json` files exist in the repository; the root contract is the sole authoritative instance.
+* **Deterministic Contract Publication:** External visualizers have a dependable, versioned HTTPS endpoint without needing private GitHub Actions API access or artifact unzipping.
 * **Commodity Portability:** The external verification dashboard can be developed, tested, and reused across any project that emits an ADR 0022-compliant `project_status.json` contract.
 * **Zero UI Epistemic Drift:** Eliminates the risk of React components fabricating passing verdicts or masking unverified states.
 
