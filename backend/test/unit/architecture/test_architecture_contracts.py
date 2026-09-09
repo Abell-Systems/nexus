@@ -197,3 +197,13 @@ def test_check_architecture_script_integrates_import_linter():
     assert "check_import_linter_contracts" in code
     assert "lint-imports" in code
     assert ".importlinter" in code
+
+
+def test_check_architecture_script_enforces_monorepo_boundaries():
+    """Verify scripts/check_architecture.py enforces ADR 0024 monorepo boundaries."""
+    script_path = _get_repo_root() / "scripts" / "check_architecture.py"
+    code = script_path.read_text(encoding="utf-8")
+
+    assert "check_monorepo_boundaries" in code
+    assert "nexus-status" in code
+

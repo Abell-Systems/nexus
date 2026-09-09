@@ -1,0 +1,3 @@
+# Infrastructure Layer (Nexus Status)
+# HTTP fetch client for canonical project_status.json and JSON schema validation.
+# Depends on Domain contracts; zero presentation UI dependencies.

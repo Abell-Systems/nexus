@@ -272,6 +272,61 @@ def check_frontend_layer_dependencies(errors: list[str]) -> None:
                 )
 
 
+def check_monorepo_boundaries(errors: list[str]) -> None:
+    """Enforces ADR 0024 monorepo boundary invariants:
+
+    1. nexus/frontend must NEVER import from nexus-status.
+    2. nexus-status/frontend must NEVER import from frontend or backend.
+    3. nexus-status workspace structural integrity.
+    """
+    nexus_status_dir = REPO_ROOT / "nexus-status"
+    if not nexus_status_dir.exists():
+        return
+
+    # 1. Check nexus-status workspace structure
+    allowed_status_root = {"frontend", "README.md"}
+    for item in nexus_status_dir.iterdir():
+        if item.name.startswith("."):
+            continue
+        if item.name not in allowed_status_root:
+            errors.append(
+                f"FAIL: unexpected entry in nexus-status workspace root: nexus-status/{item.name} "
+                f"(expected: {sorted(allowed_status_root)})"
+            )
+
+    # 2. Check no imports from nexus-status in nexus/frontend
+    frontend_dir = REPO_ROOT / "frontend" / "src"
+    if frontend_dir.exists():
+        for f in frontend_dir.rglob("*"):
+            if f.suffix not in (".ts", ".tsx", ".js", ".jsx"):
+                continue
+            content = f.read_text(encoding="utf-8")
+            for match in TS_IMPORT_PATTERN.finditer(content):
+                target = match.group(1) or match.group(2) or ""
+                if "nexus-status" in target:
+                    rel_file = f.relative_to(REPO_ROOT)
+                    errors.append(
+                        f"FAIL: forbidden cross-workspace import in {rel_file}: {target} "
+                        "(frontend cannot import nexus-status, ADR 0024)"
+                    )
+
+    # 3. Check no imports from frontend or backend in nexus-status/frontend
+    status_frontend_src = nexus_status_dir / "frontend" / "src"
+    if status_frontend_src.exists():
+        for f in status_frontend_src.rglob("*"):
+            if f.suffix not in (".ts", ".tsx", ".js", ".jsx"):
+                continue
+            content = f.read_text(encoding="utf-8")
+            for match in TS_IMPORT_PATTERN.finditer(content):
+                target = match.group(1) or match.group(2) or ""
+                if any(k in target for k in ("backend", "patent_agent", "patent-innovation")):
+                    rel_file = f.relative_to(REPO_ROOT)
+                    errors.append(
+                        f"FAIL: forbidden cross-workspace import in {rel_file}: {target} "
+                        "(nexus-status cannot import core backend/frontend, ADR 0024)"
+                    )
+
+
 def check_import_linter_contracts(errors: list[str]) -> None:
     """Runs import-linter to verify declared architectural contracts in .importlinter."""
     config_file = REPO_ROOT / ".importlinter"
@@ -307,6 +362,7 @@ def main() -> int:
     check_frontend_files(errors)
     check_backend_layer_dependencies(errors)
     check_frontend_layer_dependencies(errors)
+    check_monorepo_boundaries(errors)
     check_import_linter_contracts(errors)
 
     if errors:

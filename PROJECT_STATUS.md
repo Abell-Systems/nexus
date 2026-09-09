@@ -1,6 +1,6 @@
 # Nexus Project Status
 
-> **Overall Status:** `[PASS]` | **Commit:** `0d82ec51b3edf4043b0dd2047a42e2c883d35a8f` | **Evaluated At:** `2026-09-09T07:22:38.704196+00:00`
+> **Overall Status:** `[PASS]` | **Commit:** `758d68d79041bbdd1d711d2188cf001ccd493b3c` | **Evaluated At:** `2026-09-09T07:34:39.549054+00:00`
 
 ![Status](https://img.shields.io/badge/Project_Status-PASS-brightgreen)
 
@@ -52,7 +52,7 @@ Nexus Project Status evaluates to PASS. All required dimensions verified and pas
 - `[PASS]` **clean_architecture_layers** — Architecture check: PASS (Clean Architecture 3-Tier Layer Invariants & Import Linter Contracts Validated)
 
 ### `documentation` (`PASS`)
-- `[PASS]` **docs_correctness** — Docs correctness gate: PASS (65 markdown files, 23 ADRs checked)
+- `[PASS]` **docs_correctness** — Docs correctness gate: PASS (66 markdown files, 24 ADRs checked)
 
 ### `scientific_integrity` (`PASS`)
 - `[PASS]` **dataset_sha_sidecar** — file=bf7c501f817f... sidecar=['bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453', 'dataset_pilot_benchmark.json']
