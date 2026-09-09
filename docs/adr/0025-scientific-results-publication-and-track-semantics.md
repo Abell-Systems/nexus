@@ -1,6 +1,6 @@
 # ADR 0025: Scientific Results Publication and Track Semantics
 
-**Status:** Proposed
+**Status:** Accepted
 **Date:** 2026-09-09
 **Scope:** `scientific_results.json` (new, proposed), `nexus-status/frontend`, `application/landscape/`, `application/synthesis/`, `application/matching/`, `application/evaluation/`
 
