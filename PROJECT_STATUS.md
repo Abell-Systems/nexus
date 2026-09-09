@@ -1,6 +1,6 @@
 # Nexus Project Status
 
-> **Overall Status:** `[PASS]` | **Commit:** `3bef0db054e5af530b9e08ea64e8dcb7e08c239c` | **Evaluated At:** `2026-09-09T06:01:00.080895+00:00`
+> **Overall Status:** `[PASS]` | **Commit:** `1d06870dd9bfd2b83cd4cbaf0e10ff710511b028` | **Evaluated At:** `2026-09-09T06:07:51.745367+00:00`
 
 ![Status](https://img.shields.io/badge/Project_Status-PASS-brightgreen)
 
@@ -21,7 +21,7 @@ Nexus Project Status evaluates to PASS. All required dimensions verified and pas
 | **frontend_quality** | `required` | **`PASS`** | ✓ | `npm run typecheck & npm run lint` | Frontend quality status: PASS |
 | **architecture** | `required` | **`PASS`** | ✓ | `scripts/check_architecture.py` | Architecture check passed |
 | **documentation** | `required` | **`PASS`** | ✓ | `scripts/check_docs_correctness.py` | Documentation correctness passed |
-| **scientific_integrity** | `required` | **`PASS`** | ✓ | `scripts/audit_dataset_identity.py` | Scientific dataset identity, manifests, and frozen exceptions verified |
+| **scientific_integrity** | `required` | **`PASS`** | ✓ | `scripts/audit_dataset_identity.py` | Scientific dataset identity, manifests, and temporal integrity verified |
 | **sonar_cloud** | `optional` | **`UNVERIFIED`** | ✗ | `environment:SONAR_TOKEN` | SONAR_TOKEN not configured; analysis skipped in this environment |
 
 ---
@@ -69,7 +69,7 @@ Nexus Project Status evaluates to PASS. All required dimensions verified and pas
 - `[PASS]` **snapshots_raw_sha** — manifest=2832dc5936b8... file=2832dc5936b8...
 - `[PASS]` **snapshots_count** — manifest=16 jsonl=16
 - `[PASS]` **evaluation_subset_of_snapshots** — snapshot_only=['ES-2918450-A1'] evaluation_only=[]
-- `[SKIPPED]` **temporal_eligibility** — 3 known temporal violations formally frozen as accepted exceptions under ADR 0018 §6 / ADR 0019 (handled via harness pool mode)
+- `[SKIPPED]` **temporal_eligibility** — 3 temporal violations formally accepted as exceptions under ADR-0018/ADR-0019 (accepted_temporal_exception)
 
 ### `sonar_cloud` (`UNVERIFIED`)
 - `[UNVERIFIED]` **sonar_token_present** — SONAR_TOKEN not set; Sonar Quality Gate is UNVERIFIED

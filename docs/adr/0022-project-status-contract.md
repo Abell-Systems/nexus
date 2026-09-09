@@ -66,7 +66,7 @@ The repository evaluates ten canonical dimensions grouped under four domains:
 | **Frontend** | `frontend_quality` | `required` | `oxlint` & `tsc --noEmit` | `errors == 0` and `warnings == 0` |
 | **Architecture** | `architecture` | `required` | `scripts/check_architecture.py` | Exit code 0 (AST & `.importlinter`) |
 | **Docs** | `documentation` | `required` | `scripts/check_docs_correctness.py` | Exit code 0 (all links & ADRs valid) |
-| **Science** | `scientific_integrity`| `required` | `scripts/audit_dataset_identity.py` | Sealed manifests, sidecars, and hashes match; zero unhandled temporal violations (known frozen exceptions evaluate to `SKIPPED` under ADR 0018 §6 / ADR 0019) |
+| **Science** | `scientific_integrity`| `required` | `scripts/audit_dataset_identity.py` | Sealed manifests, sidecars, and hashes match; zero unhandled temporal violations (known frozen exceptions defined in versioned policy `config/policies/data/temporal_integrity_policy.json` evaluate to `SKIPPED` under ADR 0018 §6 / ADR 0019) |
 | **External** | `sonar_cloud` | `optional` | SonarQube Cloud API / CI step output | Quality Gate `OK` (or `SKIPPED`/`UNVERIFIED`) |
 
 ### 4. Conservative Aggregation Procedure

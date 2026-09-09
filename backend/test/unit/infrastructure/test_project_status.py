@@ -290,7 +290,7 @@ class TestEvidenceEvaluation:
         temporal_checks = [c for c in res.checks if c.name == "temporal_eligibility"]
         assert len(temporal_checks) == 1
         assert temporal_checks[0].status == STATUS_SKIPPED
-        assert "ADR 0018" in temporal_checks[0].detail
+        assert "ADR-0018" in temporal_checks[0].detail or "ADR 0018" in temporal_checks[0].detail
         # Invariant: NO check within a PASS dimension may have status FAIL
         assert all(c.status != STATUS_FAIL for c in res.checks), "Found FAIL check within PASS scientific_integrity!"
 

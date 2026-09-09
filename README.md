@@ -10,7 +10,7 @@
 [![Scientific Integrity](https://img.shields.io/badge/Scientific_Integrity-PASS-brightgreen)](PROJECT_STATUS.md#scientific_integrity-pass)
 [![SonarCloud](https://img.shields.io/badge/SonarCloud-UNVERIFIED-yellow)](PROJECT_STATUS.md#sonar_cloud-unverified)
 
-> **Verified against:** `3bef0db054` · `2026-09-09T06:01:00.080895+00:00` · [Full Project Status](PROJECT_STATUS.md)
+> **Verified against:** `1d06870dd9` · `2026-09-09T06:07:51.745367+00:00` · [Full Project Status](PROJECT_STATUS.md)
 <!-- PROJECT_STATUS:END -->
 
 > **Autonomous Technology Discovery, White-Space Synthesis & Prior-Art Defense.**

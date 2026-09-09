@@ -77,8 +77,26 @@ class DatasetIdentityAuditTest:
         report = _run_audit(tmp_path / "audit.json")
         assert report["temporal_violation_count"] == 3
         assert report["temporal_violations"] == _KNOWN_TEMPORAL_VIOLATIONS
+        temp_check = next(c for c in report["checks"] if c["check"] == "temporal_eligibility")
+        assert temp_check["status"] == "SKIPPED"
+        assert temp_check["reason"] == "accepted_temporal_exception"
+        assert temp_check["policy_ref"] == "ADR-0018/ADR-0019"
+        assert report["verdict"] == "PASS"
+        assert report["failed_checks"] == []
+
+    def test_should_report_fail_under_strict_mode_without_policy(self, tmp_path: Path) -> None:
+        proc = subprocess.run(
+            [sys.executable, str(_AUDIT_SCRIPT), "--output", str(tmp_path / "strict.json"), "--strict"],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert proc.returncode == 0
+        report = json.loads((tmp_path / "strict.json").read_text(encoding="utf-8"))
         assert report["verdict"] == "FAIL"
         assert report["failed_checks"] == ["temporal_eligibility"]
+        temp_check = next(c for c in report["checks"] if c["check"] == "temporal_eligibility")
+        assert temp_check["status"] == "FAIL"
 
     def test_should_be_reproducible_across_runs(self, tmp_path: Path) -> None:
         first = _run_audit(tmp_path / "audit1.json")

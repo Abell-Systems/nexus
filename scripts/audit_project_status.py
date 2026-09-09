@@ -694,13 +694,6 @@ def evaluate_documentation(repo_root: Path) -> DimensionResult:
         )
 
 
-KNOWN_FROZEN_TEMPORAL_VIOLATIONS = frozenset({
-    ("INNOGET-2292", "ES-2856789-A1"),
-    ("INNOGET-2415", "ES-2901234-A1"),
-    ("INNOGET-2501", "ES-2901234-A1"),
-})
-
-
 def evaluate_scientific_integrity(repo_root: Path) -> DimensionResult:
     """Evaluates scientific dataset manifests, hashes, and identity audit (ADR 0018/0019/0022)."""
     script = repo_root / "scripts" / "audit_dataset_identity.py"
@@ -757,61 +750,32 @@ def evaluate_scientific_integrity(repo_root: Path) -> DimensionResult:
             tmp_output.unlink()
 
     checks: list[CheckResult] = []
-    observed_violations = {
-        (v["demand_id"], v["publication_id"])
-        for v in report.get("temporal_violations", [])
+    status_map = {
+        "PASS": STATUS_PASS,
+        "FAIL": STATUS_FAIL,
+        "SKIPPED": STATUS_SKIPPED,
+        "UNVERIFIED": STATUS_UNVERIFIED,
     }
 
     for c in report.get("checks", []):
         c_name = c.get("check", "")
-        c_status = c.get("status")
+        raw_status = c.get("status", "")
         c_detail = c.get("detail", "")
-
-        if c_name == "temporal_eligibility":
-            if observed_violations == KNOWN_FROZEN_TEMPORAL_VIOLATIONS:
-                # Explicit exception under ADR 0018 §6 / ADR 0019
-                checks.append(
-                    CheckResult(
-                        name="temporal_eligibility",
-                        status=STATUS_SKIPPED,
-                        detail=(
-                            "3 known temporal violations formally frozen as accepted exceptions "
-                            "under ADR 0018 §6 / ADR 0019 (handled via harness pool mode)"
-                        ),
-                    )
-                )
-            elif not observed_violations:
-                checks.append(
-                    CheckResult(
-                        name="temporal_eligibility",
-                        status=STATUS_PASS,
-                        detail="0 temporal violations; strict temporal eligibility holds",
-                    )
-                )
-            else:
-                unexpected = observed_violations - KNOWN_FROZEN_TEMPORAL_VIOLATIONS
-                checks.append(
-                    CheckResult(
-                        name="temporal_eligibility",
-                        status=STATUS_FAIL,
-                        detail=f"{len(unexpected)} unexpected temporal violations detected",
-                    )
-                )
-        else:
-            checks.append(
-                CheckResult(
-                    name=c_name,
-                    status=STATUS_PASS if c_status == "PASS" else STATUS_FAIL,
-                    detail=c_detail,
-                )
+        c_status = status_map.get(raw_status, STATUS_UNVERIFIED)
+        checks.append(
+            CheckResult(
+                name=c_name,
+                status=c_status,
+                detail=c_detail,
             )
+        )
 
     has_failures = any(c.status == STATUS_FAIL for c in checks)
     dim_status = STATUS_FAIL if has_failures else STATUS_PASS
     dim_message = (
         "Scientific dataset integrity failure detected"
         if has_failures
-        else "Scientific dataset identity, manifests, and frozen exceptions verified"
+        else "Scientific dataset identity, manifests, and temporal integrity verified"
     )
 
     return DimensionResult(
