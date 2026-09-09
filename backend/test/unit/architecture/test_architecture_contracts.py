@@ -27,7 +27,10 @@ _REPO_ROOT = Path(__file__).resolve().parents[4]
 if str(_REPO_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
-from check_architecture import check_monorepo_boundaries  # noqa: E402
+from check_architecture import (  # noqa: E402
+    check_javascript_typescript_workspace_scope,
+    check_monorepo_boundaries,
+)
 
 
 def _get_repo_root() -> Path:
@@ -339,5 +342,43 @@ def test_monorepo_boundaries_catches_stray_file_in_status_root(tmp_path: Path):
     check_monorepo_boundaries(errors, repo_root=tmp_path)
     assert len(errors) == 1
     assert "unexpected entry in nexus-status workspace root" in errors[0]
+
+
+def test_javascript_typescript_workspace_scope_passes_on_current_repository():
+    """Invariant test: the current repository satisfies JS/TS workspace boundary rules."""
+    errors: list[str] = []
+    check_javascript_typescript_workspace_scope(errors, repo_root=_get_repo_root())
+    assert errors == [], f"Unexpected JS/TS boundary violations in clean repo: {errors}"
+
+
+def test_javascript_typescript_workspace_scope_catches_backend_js_ts(tmp_path: Path):
+    """Negative behavioral test: any JS/TS outside approved client workspaces is rejected."""
+    backend_src = tmp_path / "backend" / "src" / "main"
+    backend_src.mkdir(parents=True)
+    (backend_src / "server.ts").write_text("console.log('backend TS');\n", encoding="utf-8")
+
+    errors: list[str] = []
+    check_javascript_typescript_workspace_scope(errors, repo_root=tmp_path)
+    assert len(errors) == 1
+    assert "JS/TS file found outside approved client frontend workspaces" in errors[0]
+    assert "backend/src/main/server.ts" in errors[0]
+    assert "ADR 0021" in errors[0]
+
+
+def test_javascript_typescript_workspace_scope_allows_approved_frontends(tmp_path: Path):
+    """Positive behavioral test: approved frontend workspaces and static assets are permitted."""
+    (tmp_path / "frontend" / "src" / "main").mkdir(parents=True)
+    (tmp_path / "frontend" / "src" / "main" / "App.tsx").write_text("export const App = () => null;\n", encoding="utf-8")
+
+    (tmp_path / "nexus-status" / "frontend" / "src").mkdir(parents=True)
+    (tmp_path / "nexus-status" / "frontend" / "src" / "main.tsx").write_text("console.log('status');\n", encoding="utf-8")
+
+    (tmp_path / "backend" / "static" / "assets").mkdir(parents=True)
+    (tmp_path / "backend" / "static" / "assets" / "index-hash.js").write_text("/* compiled */\n", encoding="utf-8")
+
+    errors: list[str] = []
+    check_javascript_typescript_workspace_scope(errors, repo_root=tmp_path)
+    assert errors == []
+
 
 
