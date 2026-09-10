@@ -94,6 +94,11 @@ to `experiments` (e.g. `from experiments...`, `Path("experiments/...")`,
 string literals containing `experiments/` as a path prefix) and fails on any
 match. This is a reference-boundary check, not a prose linter — a comment
 containing the word "experiments" in running text does not trip it.
+`experiments/shared/` is exempt from the path-string check — it holds
+reusable fixture data (e.g. the ES Pilot-16 pilot benchmark), not
+paper-specific scientific evidence, so integration tests may legitimately
+reference it (see backend/test/unit/infrastructure/annotation/test_blind_export.py)
+without violating the boundary this ADR protects.
 
 No magic-number linter is built. `39`/`24`/`13` are scientific observations,
 not architectural violations, and a literal-scanning guard would be brittle

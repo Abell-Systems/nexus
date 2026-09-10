@@ -3,9 +3,12 @@
 Invariant enforced: backend/src and backend/test never reference the
 experiments/ tree by path or import. This is a reference-boundary check, not
 a prose linter — a comment or string containing the word "experiments" in
-running text (not as a path segment) does not trip it. No magic-number
-check is included here by design (ADR 0026 §Enforcement) — expected counts
-belong in experiments/<paper>/checks/, manifest-driven.
+running text (not as a path segment) does not trip it.
+experiments/shared/ (reusable fixture data, not paper-specific evidence) is
+exempt from the path-string check; the guard also excludes its own file from
+self-scanning. No magic-number check is included here by design (ADR 0026
+§Enforcement) — expected counts belong in experiments/<paper>/checks/,
+manifest-driven.
 """
 
 import re
@@ -16,12 +19,13 @@ from pathlib import Path
 #   import experiments...
 #   "experiments/..."  or  'experiments/...'
 #   Path("experiments/...")
-# but NOT plain running-text mentions like "the experiments boundary".
+# but NOT plain running-text mentions like "the experiments boundary", and
+# NOT experiments/shared/ (reusable fixture data, exempt from the path check).
 _FORBIDDEN_PATTERN = re.compile(
     r"""
     (?:from|import)\s+experiments\b   # from experiments... / import experiments...
     |
-    ['"]experiments/                  # "experiments/..." or 'experiments/...'
+    ['"]experiments/(?!shared/)       # "experiments/..." or 'experiments/...', except experiments/shared/
     """,
     re.VERBOSE,
 )
@@ -32,8 +36,11 @@ def _get_repo_root() -> Path:
 
 
 def _scan(directory: Path) -> list[str]:
+    self_path = Path(__file__).resolve()
     violations = []
     for py_file in directory.rglob("*.py"):
+        if py_file.resolve() == self_path:
+            continue
         code = py_file.read_text(encoding="utf-8")
         if _FORBIDDEN_PATTERN.search(code):
             violations.append(str(py_file.relative_to(_get_repo_root())))
@@ -68,6 +75,13 @@ def test_forbidden_pattern_does_not_trip_on_running_prose():
     assert not _FORBIDDEN_PATTERN.search(prose)
 
 
-def test_forbidden_pattern_does_trip_on_a_path_reference():
+def test_forbidden_pattern_does_not_trip_on_shared_fixture_paths():
+    """Regression: experiments/shared/ holds reusable fixture data, not
+    paper-specific evidence -- referencing it (e.g. to load a real shared
+    dataset for an integration test) must not trip the guard."""
+    assert not _FORBIDDEN_PATTERN.search('Path("experiments/shared/dataset_pilot_benchmark.json")')
+
+
+def test_forbidden_pattern_does_trip_on_a_paper_specific_path_reference():
     assert _FORBIDDEN_PATTERN.search('Path("experiments/wpi-demand-patent-matching/data")')
     assert _FORBIDDEN_PATTERN.search("from experiments.shared import fixtures")
