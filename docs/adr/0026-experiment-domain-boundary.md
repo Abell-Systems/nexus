@@ -55,6 +55,14 @@ that experiment's `checks/`, not in `backend/test/unit`. Likewise: if changing
 a paper's taxonomy or sample requires changing `backend/src/main`, domain
 knowledge has leaked and must be extracted to configuration/data.
 
+`experiments/shared/` is the one deliberate, stated exception to this test:
+a `backend/test` file that loads a shared fixture (e.g.
+`test_blind_export.py` reading `experiments/shared/dataset_pilot_benchmark.json`
+for integration verification) would stop *executing* if `experiments/shared/`
+were deleted, but does not stop *making sense* — the fixture is reusable
+infrastructure, not this paper's scientific evidence, so this is a conscious
+carve-out (see Enforcement), not a case the litmus test is meant to catch.
+
 ### Directory contract
 
 ```
@@ -96,6 +104,15 @@ string literals containing `experiments/` as a path prefix, and the
 `repo_root / "experiments" / "..."` split-path construction form) and fails
 on any match. This is a reference-boundary check, not a prose linter — a
 comment containing the word "experiments" in running text does not trip it.
+
+This is a **textual/structural pattern match, not a semantic guarantee.** It
+catches the path-construction styles this codebase actually uses today, not
+every conceivable way code could resolve a path under `experiments/` — an
+indirected reference (a variable built from string parts, a config-driven
+path, `os.path.join`) could evade it. Treat it as a reference-boundary smoke
+test that makes the common violation loud and immediate, not as proof that no
+`experiments/` coupling can exist in `backend/`. Closing that gap, if it ever
+matters in practice, is a follow-up, not a claim this ADR makes today.
 
 The `experiments/shared/` exemption is **asymmetric** between the two scans:
 `backend/test` is exempt from flagging `experiments/shared/` references — it
