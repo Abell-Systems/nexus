@@ -2,7 +2,11 @@
   "audit_id": "phase2_demand_construct_eligibility_n39_v1",
   "protocol_reference": "docs/phase2-demand-construct-eligibility-audit-protocol.md",
   "source_corpus": "data/evaluation/dataset_phase2_demand_corpus_n39.json",
-  "status": "auditor_a_pass_complete__auditor_b_pending",
+  "status": "auditor_a_and_b_complete_no_disagreement",
+  "auditor_b_review_scope": "flagged_records",
+  "auditor_b_reviewer": "Lydia Bares",
+  "auditor_b_disagreements": 0,
+  "adjudication_required": false,
   "entries": [
     {
       "demand_id": "INNOGET-1605",
@@ -15,7 +19,10 @@
       "evidence": "\"Do you have a specific idea or concept (material or manufacturing) on how to design lighter vehicles? ... The winning technologies will be applied to existing vehicle parts.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-1607",
@@ -28,7 +35,10 @@
       "evidence": "\"Do you have a specific idea or concept (material or manufacturing) on how to achieve lightweighting in vehicles? ... Can it be implemented in high-volume vehicle production?\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-1625",
@@ -41,7 +51,10 @@
       "evidence": "\"we are looking for a method to remove contaminants ... Contaminants to be removed are metals (alkaline and alkaline-earth, mainly sodium and calcium) and trapped water.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-1689",
@@ -54,7 +67,10 @@
       "evidence": "\"we are looking for how can we improve them. It can be an improvement of the material itself, to make it more light for example, or any special coating.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-1726",
@@ -67,7 +83,10 @@
       "evidence": "\"The molecular method we use is long, we need 2 days ... We would like to go faster in obtaining the yeast and the biomass needed.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-1870",
@@ -80,7 +99,10 @@
       "evidence": "\"leads to requirements for innovative products and mechanized and automated solutions, offering improved quality and productivity.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-1932",
@@ -93,7 +115,10 @@
       "evidence": "\"We need to find alternate display technologies for high temp (up to 95ºC) displays.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-1935",
@@ -106,7 +131,10 @@
       "evidence": "\"solutions or technologies that minimize the problems of current water quality sensors ... especially interested in solutions based on semiconductor sensing and miniaturization.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-1965",
@@ -119,7 +147,10 @@
       "evidence": "\"a solution able to recognise the product packaging type after scanning the product barcode through a mobile app. It should have access to ... a products database in Spain and EU-27 countries.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-1972",
@@ -132,7 +163,10 @@
       "evidence": "\"The antioxidant solution to be at more or less 0,5% dosage in application – stable in time (12 months minimum).\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-2006",
@@ -145,7 +179,10 @@
       "evidence": "\"The extract would contain antimicrobial, antihyperplasia, urolithic, antiespamodic, pain-relieving or any other property related to the urinary wellness.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-2054",
@@ -158,7 +195,10 @@
       "evidence": "\"We are looking for a collaboration to develop electromagnetic applications for future product commercialization. We have experience in the design of special magnetic solutions ... ANTEC Magnets has built high-technology products.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "UNCERTAIN",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2167",
@@ -171,7 +211,10 @@
       "evidence": "\"Join AMULET on a journey ... Seeking partners (SMEs) to Contribute to CO2 emissions reduction and resource efficiency in EU.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "INELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2173",
@@ -184,7 +227,10 @@
       "evidence": "\"valorization of waste products of the mining industry. After further development and functionalisation, these by-products would be applied in the construction sector ... an upgrade of the TRL from 3 to 5.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "ELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2248",
@@ -197,7 +243,10 @@
       "evidence": "\"We are seeking patents granted in Germany (DE) or as European Patents (EP) and US-issued patents ... We will analyze the patents and assess them for licensing or otherwise monetization.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "INELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2258",
@@ -210,7 +259,10 @@
       "evidence": "\"looking for technological solutions to develop advanced electrolytic processes in addition to options to facilitate secure hydrogen transport and storage.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-2292",
@@ -223,7 +275,10 @@
       "evidence": "\"The project's aim is to uncover hidden consumer needs (both current and future) and pain points ... identifying and understanding consumers.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "INELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2293",
@@ -236,7 +291,10 @@
       "evidence": "\"The challenge is to understand the needs of B2B customers ... and explore how evolving trends can reshape the role of the kitchen sink.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "INELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2297",
@@ -249,7 +307,10 @@
       "evidence": "\"Develop an innovative marketing campaign for Connect IQ ... using market analysis, trend analysis, and sustainable development.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "INELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2298",
@@ -262,7 +323,10 @@
       "evidence": "\"The objective is to explore creative and innovative uses of SmartEnvelope across various industries and services, such as ... enabling interactive marketing campaigns.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "INELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2299",
@@ -275,7 +339,10 @@
       "evidence": "\"Redesign the ENVIT's website to enhance ReSoil® global engagement ... simple management tools for easy publishing and content management.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "INELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2300",
@@ -288,7 +355,10 @@
       "evidence": "\"How do we reach that large, and fragmented customer base effectively. How should we market to that customer group?\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "INELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2301",
@@ -301,7 +371,10 @@
       "evidence": "\"develop custom AI assistants using RAG ... technology to streamline engineering workflows ... implementation of industry standards (e.g., Automotive SPICE, ISO 26262), FMEA and risk assessments.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "ELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2401",
@@ -314,7 +387,10 @@
       "evidence": "\"tackling the problem of agri-food waste, as well as refining, separation and purification technologies in the labs ... advance development of technologies towards technological and societal readiness and scalability.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "ELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2402",
@@ -327,7 +403,10 @@
       "evidence": "\"development of processes for market assessment – LCA and regulatory assessment ... validate bioactive polyphenols for smart filmed food packaging, purification processes, life-cycle assessment (LCA), techno-economic assessment (TEA).\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "INELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2403",
@@ -340,7 +419,10 @@
       "evidence": "\"Pure separation of metals from mine tailings and industrial waste from metallurgical industries and urban e-waste remains a big problem, as the recovery process contains often a mixture of raw materials.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "ELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2404",
@@ -353,7 +435,10 @@
       "evidence": "\"a successful nano-filtration pilot (removing materials and allowing pure filtration tests ... high pressure NF for separation of NaCl and CaCl2) ... rare earth elements (REE) recovery.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-2405",
@@ -366,7 +451,10 @@
       "evidence": "\"looking through smart, circular and integrated solutions (e.g., integration of MF, UF, NF, RO, EDBP-MD).\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-2413",
@@ -379,7 +467,10 @@
       "evidence": "\"future secondees could work on identifying solutions to Market & Adoption-related challenges, conduct Sustainability & Assessment, provide a better understanding of Regulation & Policy, as well as Societal & Cultural trends.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "INELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2414",
@@ -392,7 +483,10 @@
       "evidence": "\"Evidence & Theory: scoping review; theory of change ... Stakeholder engagement: interviews/workshops with employers, city units, and landlords.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "INELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2417",
@@ -405,7 +499,10 @@
       "evidence": "\"innovation in bio-based, biodegradable and recyclable materials is advancing rapidly, many solutions remain difficult to scale due to performance limitations, cost barriers, regulatory complexity.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-2425",
@@ -418,7 +515,10 @@
       "evidence": "\"climate-ready food systems must integrate regional value chain redesign, circular biomass utilisation, low-impact proteins, sustainable packaging and food-waste valorisation into coherent, context-specific strategies ... offers an ideal living lab for co-creating, testing and scaling.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "UNCERTAIN",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2426",
@@ -431,7 +531,10 @@
       "evidence": "\"Exploring data-driven opportunities for new business ... focuses on analysing and addressing these challenges through market analysis, business model development and stakeholder engagement.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "INELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2427",
@@ -444,7 +547,10 @@
       "evidence": "\"megawatt-level charging technologies ... are reaching technical maturity ... focuses on market analysis and scaling strategies for heavy electric traffic charging infrastructure.\"",
       "needs_auditor_b": true,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": "Lydia Bares",
+      "auditor_b_status": "INELIGIBLE",
+      "agreement": true
     },
     {
       "demand_id": "INNOGET-2491",
@@ -457,7 +563,10 @@
       "evidence": "\"A proven ability to shift the oral microbiome composition from a dysbiotic to a eubiotic state ... A targeted reduction of key pathogenic species associated with gingivitis.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-2492",
@@ -470,7 +579,10 @@
       "evidence": "\"The primary goal is to uncover new mechanisms of action, such as senescence targeting or novel hair growth boosters.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "INNOGET-2493",
@@ -483,7 +595,10 @@
       "evidence": "\"Lacer seeks substitute ingredients or formulations that deliver the same antiseptic efficacy as Chlorhexidine (CHX) ... targeting lower cytotoxicity and a strict absence of staining.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "LOMBARDIA-860",
@@ -496,7 +611,10 @@
       "evidence": "\"cerca tecnologie di manutenzione per giunti di dilatazione elastomerici e appoggi in neoprene di ponti stradali. Le soluzioni dovrebbero prolungare la vita utile, ridurre i costi e limitare l'interruzione del traffico.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     },
     {
       "demand_id": "LOMBARDIA-947",
@@ -509,7 +627,10 @@
       "evidence": "\"Richieste soluzioni autonome, basse in acqua, resistenti a condizioni estreme e con analisi realtime.\"",
       "needs_auditor_b": false,
       "reviewer": "Auditor A",
-      "adjudication": null
+      "adjudication": null,
+      "auditor_b_reviewer": null,
+      "auditor_b_status": null,
+      "agreement": null
     }
   ]
 }

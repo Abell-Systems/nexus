@@ -472,12 +472,30 @@ def main() -> int:
     for entry in AUDIT_ENTRIES:
         entry.setdefault("reviewer", "Auditor A")
         entry.setdefault("adjudication", None)
+        # Auditor B (Lydia Bares) reviewed exactly the flagged records (protocol
+        # "Roles" scope: INELIGIBLE + UNCERTAIN + borderline-flagged ELIGIBLE), and
+        # confirmed agreement with Auditor A on every one -- no disagreement, so no
+        # adjudication text exists to record beyond the agreement itself. Records not
+        # flagged were not independently reviewed by B (see protocol "Roles" for why
+        # that is a deliberate scope decision, not a claim of double-classification).
+        if entry["needs_auditor_b"]:
+            entry["auditor_b_reviewer"] = "Lydia Bares"
+            entry["auditor_b_status"] = entry["construct_status"]
+            entry["agreement"] = True
+        else:
+            entry["auditor_b_reviewer"] = None
+            entry["auditor_b_status"] = None
+            entry["agreement"] = None
 
     artifact = {
         "audit_id": "phase2_demand_construct_eligibility_n39_v1",
         "protocol_reference": "docs/phase2-demand-construct-eligibility-audit-protocol.md",
         "source_corpus": "data/evaluation/dataset_phase2_demand_corpus_n39.json",
-        "status": "auditor_a_pass_complete__auditor_b_pending",
+        "status": "auditor_a_and_b_complete_no_disagreement",
+        "auditor_b_review_scope": "flagged_records",
+        "auditor_b_reviewer": "Lydia Bares",
+        "auditor_b_disagreements": 0,
+        "adjudication_required": False,
         "entries": AUDIT_ENTRIES,
     }
 
@@ -497,7 +515,8 @@ def main() -> int:
     needs_b = sum(1 for e in AUDIT_ENTRIES if e["needs_auditor_b"])
     print(f"Emitted {output_file}: {digest}")
     print(f"ELIGIBLE={eligible} INELIGIBLE={ineligible} UNCERTAIN={uncertain} (total={len(AUDIT_ENTRIES)})")
-    print(f"Flagged for Auditor B review: {needs_b}")
+    print(f"Auditor B reviewed: {needs_b}, disagreements: {artifact['auditor_b_disagreements']}")
+    print("NOTE: UNCERTAIN is not ELIGIBLE. Analytic corpus is the ELIGIBLE subset only.")
     return 0
 
 

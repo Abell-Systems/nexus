@@ -112,9 +112,35 @@ class TestPhase2ConstructEligibilityAudit:
             if entry["construct_status"] in ("INELIGIBLE", "UNCERTAIN"):
                 assert entry["needs_auditor_b"] is True, entry["demand_id"]
 
-    def test_audit_status_declares_auditor_b_pending(self) -> None:
+    def test_audit_status_declares_auditor_a_and_b_complete(self) -> None:
         audit = self._load_audit()
-        assert audit["status"] == "auditor_a_pass_complete__auditor_b_pending"
+        assert audit["status"] == "auditor_a_and_b_complete_no_disagreement"
+        assert audit["auditor_b_disagreements"] == 0
+        assert audit["adjudication_required"] is False
+
+    def test_flagged_entries_have_auditor_b_agreement_with_no_adjudication(self) -> None:
+        """Every record Auditor B reviewed must record agreement with Auditor A and
+        carry no adjudication text, since no disagreement exists to adjudicate
+        (protocol doc, 'Closure')."""
+        audit = self._load_audit()
+        for entry in audit["entries"]:
+            if entry["needs_auditor_b"]:
+                assert entry["agreement"] is True, entry["demand_id"]
+                assert entry["auditor_b_status"] == entry["construct_status"], entry["demand_id"]
+                assert entry["adjudication"] is None, entry["demand_id"]
+            else:
+                assert entry["agreement"] is None, entry["demand_id"]
+                assert entry["auditor_b_status"] is None, entry["demand_id"]
+
+    def test_uncertain_is_excluded_from_the_eligible_count(self) -> None:
+        """UNCERTAIN is not ELIGIBLE -- the analytic population is the ELIGIBLE
+        subset only (protocol doc, 'Closure')."""
+        audit = self._load_audit()
+        eligible = [e for e in audit["entries"] if e["construct_status"] == "ELIGIBLE"]
+        uncertain = [e for e in audit["entries"] if e["construct_status"] == "UNCERTAIN"]
+        assert len(eligible) == 24
+        assert len(uncertain) == 2
+        assert not (set(e["demand_id"] for e in eligible) & set(e["demand_id"] for e in uncertain))
 
     def test_artifact_matches_its_sha256_sidecar(self) -> None:
         root = self._root_path()
