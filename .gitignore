@@ -47,6 +47,9 @@ data/annotations/*
 !data/annotations/pilot_strict_annotation_batch.json
 !data/annotations/pilot_strict_annotation_batch.json.sha256
 !data/annotations/pilot_strict_annotation_template.csv
+!data/annotations/pilot_strict_annotation_valentin.csv
+!data/annotations/judgments-A.json
+!data/annotations/judgments-A.json.sha256
 !data/experiments/power_analysis_wilcoxon.json
 !data/experiments/pilot_evaluation_report.json
 !data/experiments/dataset_identity_audit.json
