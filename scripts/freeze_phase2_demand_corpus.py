@@ -9,7 +9,7 @@ it does not copy counts or fields from the prior feasibility audit
 converts that closed decision into a frozen dataset, it does not reopen it -- any
 record that fails re-verification here is a hard error, not a silent count adjustment.
 
-Outputs (data/evaluation/):
+Outputs (experiments/wpi-demand-patent-matching/data/):
 - dataset_phase2_demand_corpus_n39.json           canonical demand corpus (DemandCorpus)
 - dataset_phase2_demand_corpus_n39.manifest.json  identity/hash manifest
 - dataset_phase2_demand_corpus_n39.sha256          sha256sum-compatible sidecar
@@ -39,7 +39,7 @@ from domain.protocols.sources import RawPayload  # noqa: E402
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (NexusPhase2CorpusFreeze/1.0)"}
 POLICY_PATH = REPO_ROOT / "config" / "policies" / "data" / "jurisdiction_policy.json"
-OUT_DIR = REPO_ROOT / "data" / "evaluation"
+OUT_DIR = REPO_ROOT / "experiments" / "wpi-demand-patent-matching" / "data"
 OUT_BASENAME = "dataset_phase2_demand_corpus_n39"
 
 DATASET_ID = "nexus-phase2-demand-corpus-n39-v1"

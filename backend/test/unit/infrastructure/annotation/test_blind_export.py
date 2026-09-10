@@ -243,7 +243,7 @@ class GenerateBlindedAnnotationSetTest:
             )
 
     def test_should_derive_exact_eligible_sets_from_real_pilot_benchmark(self):
-        real_benchmark = Path("data/evaluation/dataset_pilot_benchmark.json")
+        real_benchmark = Path("experiments/shared/dataset_pilot_benchmark.json")
         if not real_benchmark.exists():
             pytest.skip("Benchmark file not present")
 
@@ -308,7 +308,7 @@ class GenerateBlindedAnnotationSetTest:
 
 class StructuralBlindnessInvariantTest:
     def test_serialized_json_payload_must_not_contain_forbidden_keys(self):
-        real_benchmark = Path("data/evaluation/dataset_pilot_benchmark.json")
+        real_benchmark = Path("experiments/shared/dataset_pilot_benchmark.json")
         if not real_benchmark.exists():
             pytest.skip("Benchmark file not present")
 
@@ -361,7 +361,7 @@ class SidecarAndArtifactIntegrityTest:
 
     def test_emitted_artifact_is_byte_for_byte_reproducible_from_source(self):
         batch_file = Path("data/annotations/pilot_strict_annotation_batch.json")
-        real_benchmark = Path("data/evaluation/dataset_pilot_benchmark.json")
+        real_benchmark = Path("experiments/shared/dataset_pilot_benchmark.json")
         if not batch_file.exists() or not real_benchmark.exists():
             pytest.skip("Artifact not generated yet")
 
