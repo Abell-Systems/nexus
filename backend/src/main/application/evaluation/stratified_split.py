@@ -8,16 +8,12 @@ value. dev_fraction and seed have no default value by design (see that spec's
 "Architecture" section) so a caller cannot silently inherit a backend-side default.
 """
 
-import random
 from collections.abc import Callable, Sequence
-from typing import TypeVar
 
-from domain.models.evaluation import DevPartition, StratifiedSplitResult, TestPartition
-
-T = TypeVar("T")
+from domain.models.evaluation import StratifiedSplitResult
 
 
-def stratified_split(
+def stratified_split[T](
     items: Sequence[T],
     stratum_key: Callable[[T], str | None],
     item_id: Callable[[T], str],
