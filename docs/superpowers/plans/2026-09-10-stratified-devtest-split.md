@@ -324,7 +324,7 @@ def stratified_split(
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `pytest backend/test/unit/application/evaluation/test_stratified_split.py -v`
-Expected: 9 passed (empty items; 4x bad `dev_fraction` by parametrization; non-int seed; duplicate `item_id`; `None` stratum key; empty-string stratum key; no-default signature)
+Expected: 10 passed (empty items; 4x bad `dev_fraction` by parametrization; non-int seed; duplicate `item_id`; `None` stratum key; empty-string stratum key; no-default signature)
 
 - [ ] **Step 5: Commit**
 
