@@ -8,8 +8,11 @@ devtest_split_v1.json (this experiment's config), per docs/superpowers/specs/
 appear in dev or test.
 
 Also recomputes the split in-memory via stratified_split() (same inputs/derivation
-as generate_devtest_split.py) and asserts it matches the committed artifact exactly,
-proving reproducibility on every run rather than as a one-time manual claim. This
+as generate_devtest_split.py) and asserts its dev/test demand_id sets are identical
+to the committed artifact's -- proving membership reproducibility on every run
+rather than as a one-time manual claim. This is a content check (which demand_ids
+land in dev/test), not a byte-for-byte file comparison of devtest_split_n13_v1.json
+itself (Task 5's own two-runs-diff already covers that, at generation time). This
 check only reads files and computes in memory -- it never writes to disk.
 """
 
@@ -133,7 +136,7 @@ def main() -> int:
     )
 
     print(f"OK: dev={len(dev_ids)} test={len(test_ids)} per_stratum={per_stratum}")
-    print("OK: recomputed split reproduces the committed artifact exactly")
+    print("OK: recomputed split's dev/test membership matches the committed artifact exactly")
     return 0
 
 

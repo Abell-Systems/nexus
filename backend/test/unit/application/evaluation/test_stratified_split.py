@@ -81,11 +81,15 @@ def _make_stratum(prefix: str, n: int) -> list[_Item]:
 )
 def test_floor_policy_table_at_dev_fraction_040(n, expected_dev, expected_test):
     # A COMPANION stratum (size 2, dev_fraction=0.4 -> dev=1/test=1, never triggers
-    # the floor) rides along so the call's aggregate dev/test are never both-empty --
-    # DevPartition/TestPartition (Task 1) require non-empty demand_ids, and the n=1
-    # case alone (dev=0) would otherwise leave the whole result's `dev` empty when it
-    # is the call's only stratum. The assertions below check stratum "S" specifically,
-    # not the companion.
+    # the floor) rides along so the call's aggregate dev/test are never both-empty.
+    # This is not merely a style choice: stratified_split() raises ValueError if the
+    # aggregate Dev (or Test) partition would be empty (see
+    # test_rejects_all_singleton_strata_as_empty_dev_partition, which covers that
+    # invariant on its own, in isolation). Calling this function with the n=1 case as
+    # the SOLE stratum -- no companion -- would therefore raise, not return a
+    # StratifiedSplitResult to inspect per_stratum_counts on; the companion is what
+    # makes the n=1 row of this table observable at all. The assertions below check
+    # stratum "S" specifically, not the companion.
     items = _make_stratum("S", n) + _make_stratum("COMPANION", 2)
     result = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=1)
     assert result.per_stratum_counts["S"] == {"dev": expected_dev, "test": expected_test}
