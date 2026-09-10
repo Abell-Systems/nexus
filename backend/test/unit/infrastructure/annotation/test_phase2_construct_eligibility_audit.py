@@ -78,13 +78,12 @@ class TestPhase2ConstructEligibilityAudit:
 
             if "indeterminate" in values.values():
                 expected = "UNCERTAIN"
-            elif values["exclusion_criterion_1"] == "yes":
-                expected = "INELIGIBLE"
-            elif values["technical_problem_present"] == "no":
-                expected = "INELIGIBLE"
-            elif values["technology_solution_requested"] == "no":
-                expected = "INELIGIBLE"
-            elif values["technical_specification_present"] == "no":
+            elif (
+                values["exclusion_criterion_1"] == "yes"
+                or values["technical_problem_present"] == "no"
+                or values["technology_solution_requested"] == "no"
+                or values["technical_specification_present"] == "no"
+            ):
                 expected = "INELIGIBLE"
             else:
                 expected = "ELIGIBLE"
