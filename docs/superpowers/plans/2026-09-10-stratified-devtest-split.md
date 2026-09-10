@@ -431,7 +431,33 @@ Expected: the Task 2 tests still pass; every new allocation test FAILs with `Not
 
 - [ ] **Step 3: Implement the allocation policy**
 
-In `backend/src/main/application/evaluation/stratified_split.py`, replace the final line
+Task 2 deliberately imports only what Task 2 itself uses (`Callable`, `Sequence`,
+`StratifiedSplitResult`) and defines `stratified_split` with PEP 695 generic syntax
+(`def stratified_split[T](...)`, no top-level `TypeVar`) — a ruling made during Task 2's
+review to avoid unused-import/UP047 ruff failures on that task's own commit. This task
+now needs `random` and the two partition types, so first change the import block at the
+top of `backend/src/main/application/evaluation/stratified_split.py` from:
+
+```python
+import random
+from collections.abc import Callable, Sequence
+
+from domain.models.evaluation import StratifiedSplitResult
+```
+
+to:
+
+```python
+import random
+from collections.abc import Callable, Sequence
+
+from domain.models.evaluation import DevPartition, StratifiedSplitResult, TestPartition
+```
+
+(Only add what's missing — `import random` may already be present depending on Task 2's
+exact final form; check the file's current imports before editing rather than assuming.)
+
+Then, in the same file, replace the final line
 `raise NotImplementedError("allocation policy implemented in Task 3")` with:
 
 ```python
