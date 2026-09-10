@@ -60,20 +60,18 @@ removed, split, or merged on the basis of the observed Phase 2 demand corpus.
 | `METALLURGY`                | Metallurgy                           | §4.1 / RQ4 |
 | `BIOTECHNOLOGY`              | Biotechnology                        | §4.1 |
 
-Six categories, closed. No thirteenth "Other"/"Miscellaneous" bucket is defined —
-ambiguous cases are resolved by D5 below, into one of these six, not into a residual
+Six categories, closed. No residual "Other"/"Miscellaneous" bucket is defined —
+ambiguous cases are resolved by D6 below, into one of these six, not into a residual
 category that would itself need justification.
 
 `§4.1`'s single combined example "Industrial IoT/Energy" is resolved into two separate
 categories (`INDUSTRIAL_MACHINERY_IOT`, `ENERGY_STORAGE`), because RQ4 independently
-names "renewable energy storage" as its own technologically distinct example alongside
-"industrial machinery/IoT" — the two are not the same technical domain (mechanical/
-control systems vs. energy storage chemistry/hardware), and RQ4's separate mention is
-itself part of the pre-registered design being materialized here, not an invention.
-They are not split further (e.g. separating "machinery" from "IoT", or "storage" from
-"generation") because §4.1/RQ4 give no basis to draw those finer lines, and doing so
-with only 39 demands would risk single-digit strata with no pre-registered support for
-the split.
+enumerates "industrial machinery/IoT" and "renewable energy storage" as distinct
+example domains, not a single combined one — RQ4's separate mention is itself part of
+the pre-registered design being materialized here, not an invention. They are not
+split further (e.g. separating "machinery" from "IoT", or "storage" from "generation")
+because §4.1/RQ4 give no basis to draw those finer lines, and doing so with only 39
+demands would risk single-digit strata with no pre-registered support for the split.
 
 ### D2 — Classification unit: exactly one sector per demand
 
@@ -108,22 +106,29 @@ Rule: **sector classification is a property of the demand, determined independen
 the experiment being evaluated.** This prevents leakage into #79's partition and, later,
 into ADR 0016's normalization decision.
 
-### D4 — Assignment rule
+### D4 — Assignment rule (single normative algorithm)
 
-Applied in strict order, stopping at the first level that resolves a single sector:
+One algorithm, applied in strict order, stopping at the first step that resolves
+exactly one sector:
 
 1. **Primary technical object** of the demand (what is being sought/described).
 2. **Primary technical problem** the demand seeks to solve, if (1) alone does not
    disambiguate.
 3. **Industrial domain of application**, used only when (1) and (2) do not
    disambiguate — never as the first-pass criterion.
+4. If (1)–(3) leave more than one sector equally supported, re-read the demand's
+   `title` and `description` jointly (not in isolation) and re-apply steps 1–3 once.
+5. If still tied after (4), the assignment is resolved by the primary technical
+   object named *first* in the `title` (titles are the demand's own stated framing
+   of its primary need). Step 5 applies only when steps 1–4 leave exactly a tie —
+   it is a tie-break, never a substitute for steps 1–3.
 
 Example: a demand describing a solution usable across chemistry, automotive, and
 energy contexts is not counted in all three. The rule asks: *what technical object/
 problem constitutes the core of the expressed need?* — and assigns exactly the one
 sector that answers that.
 
-`CPC/IPC is explicitly not used` (D5): sector assignment is demand-side and
+CPC/IPC is explicitly not used at any step (D5): sector assignment is demand-side and
 text-based only.
 
 ### D5 — CPC/IPC is not used
@@ -131,33 +136,26 @@ text-based only.
 Sector assignment does **not** use CPC/IPC codes, demand-side or patent-side.
 
 Reasons:
-- `target_cpc_prefixes` is empty for all 39 frozen demand records — there is no
-  existing demand-side CPC to reuse.
-- Deriving one now (via `map_concept_to_cpc`/`extract_demand_cpc_auto` or any other
-  method) would introduce a classification layer the protocol never specified for this
-  purpose, and would conflate two distinct constructs: `sector` (§4.1, a demand
-  attribute) and `classified_cpc_prefixes`/CPC concordance (§4.2, the matching
-  engine's own signal, deliberately structured as a separate, pre-registered
-  automated/expert-assisted modality to avoid circularity — see §4.2).
+- `sector` (§4.1) and `classified_cpc_prefixes`/CPC concordance (§4.2) are two
+  distinct pre-registered constructs. §4.2 deliberately structures demand CPC
+  classification as a separate, pre-registered automated/expert-assisted modality
+  precisely to avoid leakage and circularity in the matching engine's own signal.
+  Using CPC/IPC to determine `sector` would collapse that separation and introduce a
+  classification layer the protocol never specified for this purpose.
 - It is not needed: sector is fully determinable from demand text under D4.
 
-### D6 — Ambiguity handling
+### D6 — Ambiguity handling: audit requirement
 
-If, after applying D4's full ordered rule, more than one sector remains equally
-supported by the demand text:
-
-1. Re-read the demand's `title` and `description` jointly (not in isolation) and
-   re-apply D4 once.
-2. If still tied, the assignment is resolved by the primary technical object named
-   *first* in the `title` (titles are the demand's own stated framing of its
-   primary need).
-3. Every ambiguous case resolved by step 2 must be recorded with an explicit
-   rationale in the assignment artifact (#80) — which candidate sectors were tied,
-   and why the title-order tie-break selected the one it did. This is auditability,
-   not silent disambiguation.
+D4 steps 4–5 already define how a tie is resolved. This section adds the
+auditability requirement: every ambiguous case resolved via D4 step 5 must be
+recorded, in the assignment artifact (#80), with an explicit rationale — which
+candidate sectors were tied after step 3, what step 4's re-read produced, and why
+the step 5 tie-break selected the sector it did. This is auditability, not silent
+disambiguation.
 
 No sector is assigned by guessing or by convenience toward a better-balanced
-stratum — this rule is fixed now, before any of the 39 demands are read against it.
+stratum — D4's algorithm is fixed now, before any of the 39 demands are read
+against it.
 
 ### D7 — Versioning and freezing
 
