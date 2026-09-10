@@ -36,39 +36,61 @@ brief. The two questions are evaluated independently, using only §4.1's own cri
 For each demand, using only `title` + `description` (the same permitted-information
 scope as #83's D3 — no CPC, no retrieval results, no experimental output):
 
+Each of the four rubric fields below takes one of three values: `yes`, `no`, or
+`indeterminate`. `indeterminate` is reserved for a field the text genuinely does not
+permit a defensible yes/no call on — it is not a synonym for "no" and not a
+convenience default for a difficult-but-resolvable case.
+
 | Field | Values | Meaning |
 |---|---|---|
-| `technical_problem_present` | yes / no | Does the text name a defined technical problem, limitation, or performance gap to be solved? |
-| `technology_solution_requested` | yes / no | Is an external technology/material/method/product being solicited (not an existing product being marketed, sold, licensed *out*, or analyzed for business adoption)? |
-| `technical_specification_present` | yes / no | Are there concrete operational constraints, parameters, or target metrics (§4.1 inclusion criterion 2)? |
-| `exclusion_criterion_1` | yes / no | Does the text match §4.1's "pure business partnership or marketing requests lacking technical specifications"? |
-| `construct_status` | `ELIGIBLE` / `INELIGIBLE` / `UNCERTAIN` | Final determination, per the decision rule below. |
-| `rationale` | free text | Why, referencing the fields above. |
-| `evidence` | quoted fragment(s) | The specific text the determination rests on. |
+| `technical_problem_present` | yes / no / indeterminate | Does the text name a defined technical problem, limitation, or performance gap to be solved? |
+| `technology_solution_requested` | yes / no / indeterminate | Is an external technology/material/method/product being solicited (not an existing product being marketed, sold, licensed *out*, or analyzed for business adoption)? |
+| `technical_specification_present` | yes / no / indeterminate | Are there concrete operational constraints, parameters, or target metrics? This is §4.1 Demand Inclusion Criterion 2 verbatim ("Identifies specific operational constraints or target technical metrics") — a required inclusion condition, not a descriptive/auxiliary field. |
+| `exclusion_criterion_1` | yes / no / indeterminate | Does the text match §4.1 Demand Exclusion Criterion 1, "pure business partnership or marketing requests lacking technical specifications"? |
+| `construct_status` | `ELIGIBLE` / `INELIGIBLE` / `UNCERTAIN` | Final determination, mechanically derived from the four fields above by the decision rule below — never set independently of them. |
+| `rationale` | free text | Why, referencing the fields above, using only §4.1's own terms (technical problem / solution requested / specification / exclusion criterion). Does not introduce undefined derived concepts (e.g. "patent-relevant", "inverse construct") that §4.1 does not itself use — construct eligibility is evaluated against the demand text alone, not against how well-suited the demand later turns out to be for patent retrieval. |
+| `evidence` | quoted fragment(s) | The specific text the determination rests on. For a demand where the frozen corpus record's `title`/`description` conflicts with any other repository document's characterization of the same or a similarly-named record (see "Provenance discrepancies" below), evidence is drawn from the frozen corpus record only. |
 | `reviewer` | identifier | Who made this pass. |
 | `adjudication` | free text or null | Filled only if Auditor A and B disagree (see roles). |
 
 ### Decision rule
 
 ```text
-IF exclusion_criterion_1 == yes
+IF technical_problem_present == indeterminate
+   OR technology_solution_requested == indeterminate
+   OR technical_specification_present == indeterminate
+   OR exclusion_criterion_1 == indeterminate
+      → UNCERTAIN
+
+ELSE IF exclusion_criterion_1 == yes
       → INELIGIBLE
 ELSE IF technical_problem_present == no
       → INELIGIBLE
 ELSE IF technology_solution_requested == no
       → INELIGIBLE
+ELSE IF technical_specification_present == no
+      → INELIGIBLE
+
 ELSE
       → ELIGIBLE
 ```
 
-`UNCERTAIN` is used only when the text genuinely does not permit a defensible
-determination under the above — not as a default for difficult-but-resolvable cases.
+`construct_status` is a pure function of the four fields — there is no path to
+`UNCERTAIN` (or to `ELIGIBLE`/`INELIGIBLE`) that does not go through this rule. A
+record is `UNCERTAIN` precisely when at least one rubric field itself could not be
+assigned a defensible `yes`/`no` from the text — not when the auditor finds the
+*outcome* uncomfortable. `technical_specification_present == no` is a first-class
+inclusion failure per §4.1 Criterion 2, on equal footing with the other two positive
+requirements — not a descriptive-only field, matching the reading that all three of
+§4.1's Demand Inclusion Criteria are conjunctive requirements, not illustrative
+guidance.
 
 **Sector fit ("does it belong to one of the six taxonomy categories") is never an
-input to this rule.** A demand naming a real technical problem and requesting a real
-technical solution is `ELIGIBLE` even if no current sector category covers its domain
-(e.g. automotive lightweighting materials, LCD thermal performance) — that outcome
-feeds #83/#84 path B (taxonomy coverage), not this audit's exclusion decision.
+input to this rule.** A demand naming a real technical problem, a real technical
+solution, and concrete specifications is `ELIGIBLE` even if no current sector category
+covers its domain (e.g. automotive lightweighting materials, LCD thermal performance)
+— that outcome feeds #83/#84 path B (taxonomy coverage), not this audit's exclusion
+decision.
 
 ### Worked calibration examples
 
@@ -81,22 +103,38 @@ feeds #83/#84 path B (taxonomy coverage), not this audit's exclusion decision.
 - **`INNOGET-2297`** ("Designing the Future Marketing Campaign for Connect IQ"): the
   demand *is* a request to design a marketing campaign, not a technology → matches
   §4.1 exclusion text verbatim → `exclusion_criterion_1=yes` → **INELIGIBLE**,
-  regardless of the fact that "Connect IQ" (machine performance/energy monitoring)
-  would otherwise map cleanly to `INDUSTRIAL_MACHINERY_IOT`. Sector-fit does not
-  override construct exclusion.
+  independent of the underlying product's technical domain (machine
+  performance/energy monitoring). Sector-fit does not override construct exclusion.
 - **`INNOGET-2054`** ("Seeking electromagnetic applications to be converted into a
   final product"): the text describes the requesting company's *own* existing magnet
-  manufacturing capabilities and solicits commercialization collaborators, without
-  stating a technical problem to be solved → `technical_problem_present=no` →
-  **UNCERTAIN** (reads as a capability/partnership listing, not clearly the exclusion
-  class either — flagged for Auditor B).
+  manufacturing capabilities and solicits commercialization collaborators; whether
+  this states an external technical problem to be solved, versus a capability
+  advertisement seeking partners, cannot be resolved from the text alone →
+  `technical_problem_present=indeterminate` → **UNCERTAIN** (flagged for Auditor B).
+
+## Provenance discrepancies
+
+If, during this audit, a frozen corpus record's actual `title`/`description` is found
+to conflict with how the same or a similarly-numbered record is characterized
+elsewhere in the repository (e.g. an illustrative example in another document), the
+**frozen corpus record is the sole authority for this audit's determination.** The
+discrepancy itself is noted in `rationale`/`evidence` as a flag for Auditor B, and, if
+substantive, tracked as a separate provenance issue — it is never used as additional
+evidence for, or against, construct eligibility. This audit determines eligibility of
+what is actually in `dataset_phase2_demand_corpus_n39.json`, not of what any other
+document says that record represents.
 
 ## Roles
 
-- **Auditor A** performs the full pass over all 39 records.
-- **Auditor B** independently reviews every record marked `INELIGIBLE` or `UNCERTAIN`
-  by Auditor A, plus any record Auditor A flags as difficult even where resolved
-  `ELIGIBLE`.
+- **Auditor A** performs the full primary pass over all 39 records.
+- **Auditor B independently reviews every record marked `INELIGIBLE` or `UNCERTAIN`
+  by Auditor A, plus any `ELIGIBLE` record Auditor A flags as borderline** — this is
+  full-primary-audit-plus-independent-review-of-all-adverse/uncertain/borderline-cases,
+  **not** a second independent full classification of all 39 records. For any
+  unflagged `ELIGIBLE` record, the final determination rests on Auditor A alone; that
+  is a deliberate scope decision (targeted independent review of every
+  non-straightforward case), not a claim of double-classification coverage, and must
+  not be described as an "independent audit" of all 39 without this qualification.
 - Agreement (`A == B`) resolves the record. Disagreement is adjudicated jointly and the
   `adjudication` field records the resolution and reasoning. This is a corpus-integrity
   audit, not a new inter-rater-reliability endpoint — no kappa statistic is computed

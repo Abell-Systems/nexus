@@ -3,7 +3,13 @@ import json
 from pathlib import Path
 
 VALID_STATUSES = {"ELIGIBLE", "INELIGIBLE", "UNCERTAIN"}
-VALID_YES_NO = {"yes", "no"}
+VALID_RUBRIC_VALUES = {"yes", "no", "indeterminate"}
+RUBRIC_FIELDS = (
+    "technical_problem_present",
+    "technology_solution_requested",
+    "technical_specification_present",
+    "exclusion_criterion_1",
+)
 
 
 class TestPhase2ConstructEligibilityAudit:
@@ -54,36 +60,52 @@ class TestPhase2ConstructEligibilityAudit:
             assert entry["rationale"].strip(), f"{entry['demand_id']}: empty rationale"
             assert entry["evidence"].strip(), f"{entry['demand_id']}: empty evidence"
 
-    def test_every_rubric_field_is_a_valid_yes_no_value(self) -> None:
+    def test_every_rubric_field_is_a_valid_value(self) -> None:
         audit = self._load_audit()
         for entry in audit["entries"]:
-            for field in (
-                "technical_problem_present",
-                "technology_solution_requested",
-                "technical_specification_present",
-                "exclusion_criterion_1",
-            ):
-                assert entry[field] in VALID_YES_NO, f"{entry['demand_id']}.{field}"
+            for field in RUBRIC_FIELDS:
+                assert entry[field] in VALID_RUBRIC_VALUES, f"{entry['demand_id']}.{field}"
 
     def test_decision_rule_is_applied_consistently(self) -> None:
-        """construct_status must follow the protocol's decision rule from the rubric
-        fields -- not be set independently of them (docs/
-        phase2-demand-construct-eligibility-audit-protocol.md, 'Decision rule')."""
+        """construct_status must be a pure function of the four rubric fields, per
+        the protocol's decision rule (docs/
+        phase2-demand-construct-eligibility-audit-protocol.md, 'Decision rule').
+        There is no path to any construct_status, including UNCERTAIN, that bypasses
+        this rule."""
         audit = self._load_audit()
         for entry in audit["entries"]:
-            if entry["construct_status"] == "UNCERTAIN":
-                continue  # UNCERTAIN is a genuinely-undecidable escape hatch, not rule output
-            if entry["exclusion_criterion_1"] == "yes":
+            values = {field: entry[field] for field in RUBRIC_FIELDS}
+
+            if "indeterminate" in values.values():
+                expected = "UNCERTAIN"
+            elif values["exclusion_criterion_1"] == "yes":
                 expected = "INELIGIBLE"
-            elif entry["technical_problem_present"] == "no":
+            elif values["technical_problem_present"] == "no":
                 expected = "INELIGIBLE"
-            elif entry["technology_solution_requested"] == "no":
+            elif values["technology_solution_requested"] == "no":
+                expected = "INELIGIBLE"
+            elif values["technical_specification_present"] == "no":
                 expected = "INELIGIBLE"
             else:
                 expected = "ELIGIBLE"
+
             assert entry["construct_status"] == expected, (
                 f"{entry['demand_id']}: rule implies {expected}, got {entry['construct_status']}"
             )
+
+    def test_uncertain_status_always_has_an_indeterminate_field(self) -> None:
+        """UNCERTAIN must be traceable to a specific field the text couldn't
+        resolve -- never a bare auditor judgment call detached from the rubric."""
+        audit = self._load_audit()
+        for entry in audit["entries"]:
+            if entry["construct_status"] == "UNCERTAIN":
+                assert any(entry[f] == "indeterminate" for f in RUBRIC_FIELDS), (
+                    f"{entry['demand_id']}: UNCERTAIN but no rubric field is indeterminate"
+                )
+            else:
+                assert all(entry[f] != "indeterminate" for f in RUBRIC_FIELDS), (
+                    f"{entry['demand_id']}: has an indeterminate field but status is not UNCERTAIN"
+                )
 
     def test_ineligible_and_uncertain_entries_are_flagged_for_auditor_b(self) -> None:
         audit = self._load_audit()
