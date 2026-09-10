@@ -2,13 +2,16 @@
 """Manifest-conformance check for the WPI Phase 2 sector assignment artifact (#80).
 
 Verifies sector_assignments_n24_v1.json against dataset_phase2_eligible_corpus_n24_v1.json
-(#88) and phase2_sector_taxonomy_v1.json (#83), per
-docs/phase2-sector-assignment-protocol.md's contract.
+(#88), phase2_sector_taxonomy_v1.json (#83), and docs/phase2-sector-coverage-decision.md
+(#90), per docs/phase2-sector-assignment-protocol.md's contract. The artifact splits the
+N=24 corpus between `assignments` (demands with a defensible sector) and
+`no_sector_coverage` (demands D4 cannot place in any of the six categories, per #90's
+decision) -- a demand is in exactly one of the two.
 
 Intentionally RED right now: sector_assignments_n24_v1.json does not exist yet (no
 classification has been done -- see that protocol doc, "What this protocol does not
 do"). This check exists so the contract is executable and fixed before the follow-up
-PR performs the actual 24 classifications.
+PR performs the actual classification.
 """
 
 import hashlib
@@ -16,6 +19,7 @@ import json
 import sys
 from pathlib import Path
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 CONFIG_DIR = Path(__file__).resolve().parent.parent / "config"
 
@@ -26,6 +30,7 @@ TAXONOMY_SHA_NAME = "phase2_sector_taxonomy_v1.sha256"
 ASSIGNMENTS_NAME = "sector_assignments_n24_v1.json"
 ASSIGNMENTS_SHA_NAME = "sector_assignments_n24_v1.sha256"
 ASSIGNMENTS_MANIFEST_NAME = "sector_assignments_n24_v1.manifest.json"
+DECISION_PATH = "docs/phase2-sector-coverage-decision.md"
 
 # resolved_at_step -> which decision_trace fields must be set (not null) vs null.
 # Per docs/phase2-sector-assignment-protocol.md's invariant table.
@@ -54,8 +59,9 @@ ALL_CONDITIONAL_FIELDS = {
 # No extra/unknown fields permitted anywhere in the artifact -- an entry with a
 # surprise key (e.g. a post-hoc "scientifically_convenient" flag) must fail loudly,
 # not be silently ignored by dict.get().
-TOP_LEVEL_KEYS = {"dataset_id", "assignments"}
+TOP_LEVEL_KEYS = {"dataset_id", "assignments", "no_sector_coverage"}
 ENTRY_KEYS = {"demand_id", "sector_code", "decision_trace", "rationale", "evidence", "assignment", "audit"}
+NO_COVERAGE_KEYS = {"demand_id", "rationale", "evidence", "reviewer"}
 DECISION_TRACE_KEYS = {
     "resolved_at_step",
     "primary_technical_object",
@@ -100,6 +106,7 @@ def main() -> int:
     eligible_sha = _verify_sidecar(DATA_DIR / ELIGIBLE_NAME, DATA_DIR / ELIGIBLE_SHA_NAME)
     taxonomy_sha = _verify_sidecar(CONFIG_DIR / TAXONOMY_NAME, CONFIG_DIR / TAXONOMY_SHA_NAME)
     assignments_sha = _verify_sidecar(DATA_DIR / ASSIGNMENTS_NAME, DATA_DIR / ASSIGNMENTS_SHA_NAME)
+    decision_sha = _sha256(REPO_ROOT / DECISION_PATH)
 
     eligible = json.loads((DATA_DIR / ELIGIBLE_NAME).read_text(encoding="utf-8"))
     taxonomy = json.loads((CONFIG_DIR / TAXONOMY_NAME).read_text(encoding="utf-8"))
@@ -109,6 +116,11 @@ def main() -> int:
     assert manifest["content_sha256"] == assignments_sha
     assert manifest["derived_from"]["eligible_corpus_sha256"] == eligible_sha
     assert manifest["derived_from"]["taxonomy_config_sha256"] == taxonomy_sha
+    assert manifest["derived_from"]["decision_sha256"] == decision_sha, (
+        "docs/phase2-sector-coverage-decision.md changed since the assignment artifact "
+        "was frozen -- this artifact's no_sector_coverage mechanism is invalid until "
+        "regenerated deliberately against the current decision text."
+    )
 
     _assert_exact_keys(assignments, TOP_LEVEL_KEYS, "top-level assignments object")
     assert isinstance(assignments["dataset_id"], str) and assignments["dataset_id"].strip()
@@ -118,12 +130,35 @@ def main() -> int:
 
     entries = assignments["assignments"]
     entry_ids = [e["demand_id"] for e in entries]
+    no_coverage_entries = assignments["no_sector_coverage"]
+    no_coverage_ids = [e["demand_id"] for e in no_coverage_entries]
 
     assert len(entry_ids) == len(set(entry_ids)), "Duplicate demand_id in sector assignments"
-    assert set(entry_ids) == eligible_ids, (
-        "Sector assignments do not cover exactly the N=24 eligible corpus "
-        f"(missing={eligible_ids - set(entry_ids)}, extra={set(entry_ids) - eligible_ids})"
+    assert len(no_coverage_ids) == len(set(no_coverage_ids)), "Duplicate demand_id in no_sector_coverage"
+    assert not (set(entry_ids) & set(no_coverage_ids)), (
+        "A demand_id appears in both assignments and no_sector_coverage: "
+        f"{set(entry_ids) & set(no_coverage_ids)}"
     )
+    covered_ids = set(entry_ids) | set(no_coverage_ids)
+    assert covered_ids == eligible_ids, (
+        "assignments + no_sector_coverage do not cover exactly the N=24 eligible corpus "
+        f"(missing={eligible_ids - covered_ids}, extra={covered_ids - eligible_ids})"
+    )
+
+    for entry in no_coverage_entries:
+        _assert_exact_keys(entry, NO_COVERAGE_KEYS, f"{entry.get('demand_id', '?')}: no_sector_coverage entry")
+        assert isinstance(entry["demand_id"], str) and entry["demand_id"].strip()
+        assert isinstance(entry["rationale"], str) and entry["rationale"].strip(), (
+            f"{entry['demand_id']}: empty rationale in no_sector_coverage"
+        )
+        assert (
+            isinstance(entry["evidence"], list)
+            and entry["evidence"]
+            and all(isinstance(e, str) and e.strip() for e in entry["evidence"])
+        ), f"{entry['demand_id']}: empty or missing evidence in no_sector_coverage"
+        assert isinstance(entry["reviewer"], str) and entry["reviewer"].strip(), (
+            f"{entry['demand_id']}: empty reviewer in no_sector_coverage"
+        )
 
     per_sector_counts: dict[str, int] = {}
     for entry in entries:
@@ -217,12 +252,21 @@ def main() -> int:
             assert audit["adjudication_required"] is False
             assert audit["adjudication"] is None
 
-    assert manifest["demand_count"] == len(entries) == 24, manifest["demand_count"]
+    assert manifest["demand_count"] == len(entries), manifest["demand_count"]
+    assert manifest["no_sector_coverage_count"] == len(no_coverage_entries), manifest["no_sector_coverage_count"]
+    assert set(manifest["no_sector_coverage_demand_ids"]) == set(no_coverage_ids)
+    assert len(manifest["no_sector_coverage_demand_ids"]) == len(no_coverage_ids)
+    assert len(entries) + len(no_coverage_entries) == len(eligible_ids), (
+        len(entries), len(no_coverage_entries), len(eligible_ids)
+    )
     for code, expected_count in manifest["per_sector_counts"].items():
         assert per_sector_counts.get(code, 0) == expected_count, (code, per_sector_counts.get(code, 0), expected_count)
     assert sum(manifest["per_sector_counts"].values()) == len(entries)
 
-    print(f"OK: {len(entries)} sector assignments, per_sector_counts={per_sector_counts}")
+    print(
+        f"OK: {len(entries)} sector assignments, {len(no_coverage_entries)} no_sector_coverage, "
+        f"per_sector_counts={per_sector_counts}"
+    )
     return 0
 
 
