@@ -859,3 +859,59 @@ class FrozenEmbeddingArtifact(BaseModel):
 
         data["artifact_sha256"] = computed_sha
         return cls(**data)
+
+
+# ---------------------------------------------------------------------------
+# Stratified Dev/Test Split Models (Issue #79)
+# ---------------------------------------------------------------------------
+
+
+class DevPartition(BaseModel):
+    """Frozen membership set for a Development split (protocol §3 D_dev). A future
+    tuning component (ADR 0016 alpha/beta/gamma grid search) must be constructible
+    only from this type -- never from TestPartition or an undivided corpus -- so
+    that no-leakage is an interface property, not only a test (see
+    docs/superpowers/specs/2026-09-10-stratified-devtest-split-design.md).
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    demand_ids: tuple[str, ...] = Field(min_length=1)
+
+    @field_validator("demand_ids")
+    @classmethod
+    def validate_unique(cls, v: tuple[str, ...]) -> tuple[str, ...]:
+        if len(v) != len(set(v)):
+            raise ValueError("DevPartition.demand_ids must not contain duplicates")
+        return v
+
+
+class TestPartition(BaseModel):
+    """Mirror of DevPartition for the Test split (protocol §3 D_test)."""
+
+    __test__ = False  # not a pytest test class despite the name
+
+    model_config = ConfigDict(frozen=True)
+
+    demand_ids: tuple[str, ...] = Field(min_length=1)
+
+    @field_validator("demand_ids")
+    @classmethod
+    def validate_unique(cls, v: tuple[str, ...]) -> tuple[str, ...]:
+        if len(v) != len(set(v)):
+            raise ValueError("TestPartition.demand_ids must not contain duplicates")
+        return v
+
+
+class StratifiedSplitResult(BaseModel):
+    """Return type of application.evaluation.stratified_split.stratified_split().
+    Exists only to carry the algorithm's output and to be frozen to a content-
+    addressed artifact -- a future consumer must be constructed from .dev / .test
+    individually, never from this whole object.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    dev: DevPartition
+    test: TestPartition
+    per_stratum_counts: dict[str, dict[str, int]]
