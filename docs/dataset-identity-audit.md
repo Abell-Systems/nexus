@@ -14,7 +14,7 @@ The sealed evaluation corpus is exactly one triple:
 
 | Artifact | SHA-256 |
 |---|---|
-| `data/evaluation/dataset_pilot_benchmark.json` | `bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453` |
+| `experiments/shared/dataset_pilot_benchmark.json` | `bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453` |
 | sidecar `.sha256` | same digest, `dataset_pilot_benchmark.json` filename |
 | `dataset_pilot_benchmark.manifest.json` → `content_sha256` | same digest; counts `(3, 15, 23)` verified against content |
 | `embeddings_pilot_benchmark.json` → `dataset_sha256` | same digest; demand/patent id sets equal to the dataset's; dim 768 |
