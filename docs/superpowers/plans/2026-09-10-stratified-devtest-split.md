@@ -440,7 +440,7 @@ Expected: the Task 2 tests still pass; every new allocation test FAILs with `Not
 
 Task 2 deliberately imports only what Task 2 itself uses (`Callable`, `Sequence`,
 `StratifiedSplitResult`) and defines `stratified_split` with PEP 695 generic syntax
-(`def stratified_split[T](...)`, no top-level `TypeVar`) — a ruling made during Task 2's
+(PEP 695 generic function syntax, no top-level `TypeVar`) — a ruling made during Task 2's
 review to avoid unused-import/UP047 ruff failures on that task's own commit. This task
 now needs `random` and the two partition types, so first change the import block at the
 top of `backend/src/main/application/evaluation/stratified_split.py` from:
