@@ -8,9 +8,10 @@ value. dev_fraction and seed have no default value by design (see that spec's
 "Architecture" section) so a caller cannot silently inherit a backend-side default.
 """
 
+import random
 from collections.abc import Callable, Sequence
 
-from domain.models.evaluation import StratifiedSplitResult
+from domain.models.evaluation import DevPartition, StratifiedSplitResult, TestPartition
 
 
 def stratified_split[T](
@@ -41,4 +42,36 @@ def stratified_split[T](
             )
         strata.setdefault(key, []).append(item)
 
-    raise NotImplementedError("allocation policy implemented in Task 3")
+    dev_ids: list[str] = []
+    test_ids: list[str] = []
+    per_stratum_counts: dict[str, dict[str, int]] = {}
+
+    for stratum, members in strata.items():
+        n_s = len(members)
+        ordered = sorted(members, key=item_id)
+
+        if n_s == 1:
+            dev_count = 0
+        else:
+            dev_count = int(dev_fraction * n_s + 0.5)  # round-half-up: floor(x + 0.5)
+            if dev_count == 0:
+                dev_count = 1
+            elif dev_count == n_s:
+                dev_count = n_s - 1
+
+        rng = random.Random(seed)
+        shuffled = ordered[:]
+        rng.shuffle(shuffled)
+
+        stratum_dev = shuffled[:dev_count]
+        stratum_test = shuffled[dev_count:]
+
+        dev_ids.extend(item_id(i) for i in stratum_dev)
+        test_ids.extend(item_id(i) for i in stratum_test)
+        per_stratum_counts[stratum] = {"dev": len(stratum_dev), "test": len(stratum_test)}
+
+    return StratifiedSplitResult(
+        dev=DevPartition(demand_ids=tuple(sorted(dev_ids))),
+        test=TestPartition(demand_ids=tuple(sorted(test_ids))),
+        per_stratum_counts=per_stratum_counts,
+    )

@@ -69,3 +69,85 @@ def test_dev_fraction_and_seed_have_no_default_value():
     sig = inspect.signature(stratified_split)
     assert sig.parameters["dev_fraction"].default is inspect.Parameter.empty
     assert sig.parameters["seed"].default is inspect.Parameter.empty
+
+
+def _make_stratum(prefix: str, n: int) -> list[_Item]:
+    return [_Item(f"{prefix}{i}", prefix) for i in range(n)]
+
+
+@pytest.mark.parametrize(
+    "n,expected_dev,expected_test",
+    [(1, 0, 1), (2, 1, 1), (3, 1, 2), (4, 2, 2), (5, 2, 3), (10, 4, 6)],
+)
+def test_floor_policy_table_at_dev_fraction_040(n, expected_dev, expected_test):
+    # A COMPANION stratum (size 2, dev_fraction=0.4 -> dev=1/test=1, never triggers
+    # the floor) rides along so the call's aggregate dev/test are never both-empty --
+    # DevPartition/TestPartition (Task 1) require non-empty demand_ids, and the n=1
+    # case alone (dev=0) would otherwise leave the whole result's `dev` empty when it
+    # is the call's only stratum. The assertions below check stratum "S" specifically,
+    # not the companion.
+    items = _make_stratum("S", n) + _make_stratum("COMPANION", 2)
+    result = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=1)
+    assert result.per_stratum_counts["S"] == {"dev": expected_dev, "test": expected_test}
+    assert result.per_stratum_counts["COMPANION"] == {"dev": 1, "test": 1}
+    assert len(result.dev.demand_ids) == expected_dev + 1
+    assert len(result.test.demand_ids) == expected_test + 1
+
+
+def test_floor_bumps_zero_dev_up_to_one():
+    """dev_fraction=0.1, n=2: formula alone gives floor(0.2+0.5)=0. Floor must bump to 1."""
+    items = _make_stratum("S", 2)
+    result = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.1, seed=1)
+    assert result.per_stratum_counts["S"] == {"dev": 1, "test": 1}
+
+
+def test_floor_reduces_full_dev_down_to_n_minus_one():
+    """dev_fraction=0.9, n=2: formula alone gives floor(1.8+0.5)=2=n. Floor must reduce to 1."""
+    items = _make_stratum("S", 2)
+    result = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.9, seed=1)
+    assert result.per_stratum_counts["S"] == {"dev": 1, "test": 1}
+
+
+def test_no_overlap_and_exact_union_across_multiple_strata():
+    items = _make_stratum("A", 3) + _make_stratum("B", 4) + _make_stratum("C", 1)
+    result = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=7)
+    dev = set(result.dev.demand_ids)
+    test = set(result.test.demand_ids)
+    all_ids = {i.item_id for i in items}
+    assert dev & test == set()
+    assert dev | test == all_ids
+    assert len(dev) + len(test) == len(items)
+
+
+def test_deterministic_for_same_seed():
+    items = _make_stratum("A", 5) + _make_stratum("B", 4)
+    r1 = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=99)
+    r2 = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=99)
+    assert r1.dev.demand_ids == r2.dev.demand_ids
+    assert r1.test.demand_ids == r2.test.demand_ids
+
+
+def test_different_seed_changes_membership():
+    items = _make_stratum("A", 4)
+    r1 = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=1)
+    r2 = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=2)
+    assert r1.dev.demand_ids != r2.dev.demand_ids
+
+
+def test_result_independent_of_input_order():
+    items = _make_stratum("A", 5) + _make_stratum("B", 4)
+    reversed_items = list(reversed(items))
+    r1 = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=13)
+    r2 = stratified_split(reversed_items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=13)
+    assert r1.dev.demand_ids == r2.dev.demand_ids
+    assert r1.test.demand_ids == r2.test.demand_ids
+
+
+def test_dev_and_test_are_distinct_partition_types_on_real_result():
+    from domain.models.evaluation import DevPartition, TestPartition
+
+    items = _make_stratum("A", 3)
+    result = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=1)
+    assert isinstance(result.dev, DevPartition)
+    assert isinstance(result.test, TestPartition)
+    assert not isinstance(result.dev, TestPartition)
