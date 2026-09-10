@@ -38,7 +38,8 @@ as a default — these are always caller-supplied parameters.
 ```text
 backend/src/main
   domain/models/evaluation.py       — DevPartition, TestPartition (frozen data contracts)
-  application/evaluation/stratified_split.py  — stratified_split() (the algorithm)
+  application/evaluation/stratified_split.py  — stratified_split() (the algorithm),
+                                                 StratifiedSplitResult, StratumCount
 
 experiments/wpi-demand-patent-matching
   config/devtest_split_v1.json      — dev_fraction, seed, stratum_key, input hash pins
@@ -61,12 +62,22 @@ requirement B's "interface property" — enforced by the type system for whateve
 consumes these types next (ADR 0016 and beyond, out of this issue's scope), not by a
 convention someone has to remember.
 
-`StratifiedSplitResult` (a third type, also in `domain/models/evaluation.py`) wraps
-`dev: DevPartition`, `test: TestPartition`, and `per_stratum_counts: dict[str, dict[str, int]]`
-(`{stratum: {"dev": n, "test": n}}`, for audit — not itself a membership source of
-truth). A future component must be constructed from `.dev`/`.test` individually, never
-from `StratifiedSplitResult` as a whole — that type exists only as the algorithm's
-return value and the thing frozen to the content-addressed artifact.
+`StratifiedSplitResult` wraps `dev: DevPartition`, `test: TestPartition`, and
+`per_stratum_counts: tuple[StratumCount, ...]` (for audit — not itself a membership
+source of truth). Unlike `DevPartition`/`TestPartition`, it lives in
+`application/evaluation/stratified_split.py`, not `domain/models/evaluation.py`: per
+ADR 0026's own domain/application split (`domain` = structural types with no known
+values; `application` = generic mechanism), `StratifiedSplitResult` exists only to
+carry `stratified_split()`'s output and isn't a structural contract any other
+component is meant to depend on — so it belongs beside the mechanism that returns it,
+not beside the types (`DevPartition`/`TestPartition`) a future consumer's constructor
+is meant to type-hint against. A future component must be constructed from
+`.dev`/`.test` individually, never from `StratifiedSplitResult` as a whole — that type
+exists only as the algorithm's return value and the thing frozen to the
+content-addressed artifact. `per_stratum_counts` is a tuple of frozen `StratumCount`
+models rather than `dict[str, dict[str, int]]`: pydantic's `frozen=True` blocks
+reassigning a model field but not mutating a dict *value* in place, so a plain dict
+field would not have been genuinely immutable despite the model being "frozen".
 
 ### `application/evaluation/stratified_split.py`: `stratified_split()`
 

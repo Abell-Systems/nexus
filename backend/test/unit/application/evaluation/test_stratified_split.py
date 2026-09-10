@@ -8,8 +8,16 @@ here. See docs/superpowers/specs/2026-09-10-stratified-devtest-split-design.md.
 import inspect
 
 import pytest
+from pydantic import ValidationError
 
-from application.evaluation.stratified_split import stratified_split
+from application.evaluation.stratified_split import StratifiedSplitResult, StratumCount, stratified_split
+from domain.models.evaluation import DevPartition, TestPartition
+
+
+def _counts_by_stratum(result: StratifiedSplitResult) -> dict[str, dict[str, int]]:
+    """Test-only convenience view; production code must consume StratumCount
+    objects directly, never through a dict rebuilt like this."""
+    return {c.stratum: {"dev": c.dev, "test": c.test} for c in result.per_stratum_counts}
 
 
 class _Item:
@@ -77,39 +85,40 @@ def _make_stratum(prefix: str, n: int) -> list[_Item]:
 
 @pytest.mark.parametrize(
     "n,expected_dev,expected_test",
-    [(1, 0, 1), (2, 1, 1), (3, 1, 2), (4, 2, 2), (5, 2, 3), (10, 4, 6)],
+    [(2, 1, 1), (3, 1, 2), (4, 2, 2), (5, 2, 3), (10, 4, 6)],
 )
 def test_floor_policy_table_at_dev_fraction_040(n, expected_dev, expected_test):
-    # A COMPANION stratum (size 2, dev_fraction=0.4 -> dev=1/test=1, never triggers
-    # the floor) rides along so the call's aggregate dev/test are never both-empty.
-    # This is not merely a style choice: stratified_split() raises ValueError if the
-    # aggregate Dev (or Test) partition would be empty (see
-    # test_rejects_all_singleton_strata_as_empty_dev_partition, which covers that
-    # invariant on its own, in isolation). Calling this function with the n=1 case as
-    # the SOLE stratum -- no companion -- would therefore raise, not return a
-    # StratifiedSplitResult to inspect per_stratum_counts on; the companion is what
-    # makes the n=1 row of this table observable at all. The assertions below check
-    # stratum "S" specifically, not the companion.
-    items = _make_stratum("S", n) + _make_stratum("COMPANION", 2)
+    """n>=2 always yields a non-empty Dev and Test on its own -- no companion
+    stratum needed (unlike n=1, see test_n1_floor_requires_companion_to_observe)."""
+    items = _make_stratum("S", n)
     result = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=1)
-    assert result.per_stratum_counts["S"] == {"dev": expected_dev, "test": expected_test}
-    assert result.per_stratum_counts["COMPANION"] == {"dev": 1, "test": 1}
-    assert len(result.dev.demand_ids) == expected_dev + 1
-    assert len(result.test.demand_ids) == expected_test + 1
+    assert _counts_by_stratum(result)["S"] == {"dev": expected_dev, "test": expected_test}
+    assert len(result.dev.demand_ids) == expected_dev
+    assert len(result.test.demand_ids) == expected_test
+
+
+def test_n1_floor_requires_companion_to_observe():
+    """n=1 always gets dev=0 (hardcoded, not the general formula). A companion
+    stratum is required so the call doesn't hit the aggregate-empty-Dev ValueError
+    that test_rejects_all_singleton_strata_as_empty_dev_partition covers in
+    isolation -- this test is only about observing the n=1 count itself."""
+    items = _make_stratum("S", 1) + _make_stratum("COMPANION", 2)
+    result = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=1)
+    assert _counts_by_stratum(result)["S"] == {"dev": 0, "test": 1}
 
 
 def test_floor_bumps_zero_dev_up_to_one():
     """dev_fraction=0.1, n=2: formula alone gives floor(0.2+0.5)=0. Floor must bump to 1."""
     items = _make_stratum("S", 2)
     result = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.1, seed=1)
-    assert result.per_stratum_counts["S"] == {"dev": 1, "test": 1}
+    assert _counts_by_stratum(result)["S"] == {"dev": 1, "test": 1}
 
 
 def test_floor_reduces_full_dev_down_to_n_minus_one():
     """dev_fraction=0.9, n=2: formula alone gives floor(1.8+0.5)=2=n. Floor must reduce to 1."""
     items = _make_stratum("S", 2)
     result = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.9, seed=1)
-    assert result.per_stratum_counts["S"] == {"dev": 1, "test": 1}
+    assert _counts_by_stratum(result)["S"] == {"dev": 1, "test": 1}
 
 
 def test_no_overlap_and_exact_union_across_multiple_strata():
@@ -157,10 +166,34 @@ def test_rejects_all_singleton_strata_as_empty_dev_partition():
 
 
 def test_dev_and_test_are_distinct_partition_types_on_real_result():
-    from domain.models.evaluation import DevPartition, TestPartition
-
     items = _make_stratum("A", 3)
     result = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=1)
     assert isinstance(result.dev, DevPartition)
     assert isinstance(result.test, TestPartition)
+
+
+def test_stratified_split_result_wraps_both_partitions_and_counts():
+    result = StratifiedSplitResult(
+        dev=DevPartition(demand_ids=("A",)),
+        test=TestPartition(demand_ids=("B", "C")),
+        per_stratum_counts=(StratumCount(stratum="SECTOR_X", dev=1, test=2),),
+    )
+    assert result.dev.demand_ids == ("A",)
+    assert result.test.demand_ids == ("B", "C")
+    assert _counts_by_stratum(result) == {"SECTOR_X": {"dev": 1, "test": 2}}
+
+
+def test_per_stratum_counts_is_genuinely_immutable():
+    """Regression for the review finding that frozen=True on StratifiedSplitResult
+    did not stop `result.per_stratum_counts["S"]["dev"] = 999` when the field was a
+    plain dict[str, dict[str, int]] -- a tuple of frozen StratumCount closes this at
+    both the container (no __setitem__) and element (frozen model) level."""
+    items = _make_stratum("A", 3)
+    result = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=1)
+
+    with pytest.raises(TypeError):
+        result.per_stratum_counts[0] = StratumCount(stratum="A", dev=999, test=0)
+
+    with pytest.raises(ValidationError):
+        result.per_stratum_counts[0].dev = 999
     assert not isinstance(result.dev, TestPartition)

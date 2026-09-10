@@ -1,15 +1,19 @@
-"""Tests for DevPartition/TestPartition/StratifiedSplitResult (#79).
+"""Tests for DevPartition/TestPartition (#79).
 
 DevPartition and TestPartition are deliberately distinct types -- not two fields
 on one class -- so a future consumer's constructor can type-hint one and be
 statically/structurally unable to accept the other. See
 docs/superpowers/specs/2026-09-10-stratified-devtest-split-design.md.
+
+StratifiedSplitResult lives in application/evaluation/stratified_split.py, not
+here: it exists only as that algorithm's return value, not as a domain contract
+consumed elsewhere -- see test_stratified_split.py for its tests.
 """
 
 import pytest
 from pydantic import ValidationError
 
-from domain.models.evaluation import DevPartition, StratifiedSplitResult, TestPartition
+from domain.models.evaluation import DevPartition, TestPartition
 
 
 def test_dev_partition_holds_demand_ids():
@@ -49,14 +53,3 @@ def test_dev_partition_and_test_partition_are_distinct_types():
     assert type(dev) is not type(test)
     assert not isinstance(dev, TestPartition)
     assert not isinstance(test, DevPartition)
-
-
-def test_stratified_split_result_wraps_both_partitions_and_counts():
-    result = StratifiedSplitResult(
-        dev=DevPartition(demand_ids=("A",)),
-        test=TestPartition(demand_ids=("B", "C")),
-        per_stratum_counts={"SECTOR_X": {"dev": 1, "test": 2}},
-    )
-    assert result.dev.demand_ids == ("A",)
-    assert result.test.demand_ids == ("B", "C")
-    assert result.per_stratum_counts == {"SECTOR_X": {"dev": 1, "test": 2}}
