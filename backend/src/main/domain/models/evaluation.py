@@ -901,17 +901,3 @@ class TestPartition(BaseModel):
         if len(v) != len(set(v)):
             raise ValueError("TestPartition.demand_ids must not contain duplicates")
         return v
-
-
-class StratifiedSplitResult(BaseModel):
-    """Return type of application.evaluation.stratified_split.stratified_split().
-    Exists only to carry the algorithm's output and to be frozen to a content-
-    addressed artifact -- a future consumer must be constructed from .dev / .test
-    individually, never from this whole object.
-    """
-
-    model_config = ConfigDict(frozen=True)
-
-    dev: DevPartition
-    test: TestPartition
-    per_stratum_counts: dict[str, dict[str, int]]

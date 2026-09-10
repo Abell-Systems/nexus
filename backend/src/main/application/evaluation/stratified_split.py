@@ -11,7 +11,41 @@ value. dev_fraction and seed have no default value by design (see that spec's
 import random
 from collections.abc import Callable, Sequence
 
-from domain.models.evaluation import DevPartition, StratifiedSplitResult, TestPartition
+from pydantic import BaseModel, ConfigDict
+
+from domain.models.evaluation import DevPartition, TestPartition
+
+
+class StratumCount(BaseModel):
+    """One stratum's Dev/Test counts, frozen (pydantic ConfigDict(frozen=True)) so a
+    caller cannot mutate an audit figure after the fact -- see StratifiedSplitResult.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    stratum: str
+    dev: int
+    test: int
+
+
+class StratifiedSplitResult(BaseModel):
+    """Return type of stratified_split(). Exists only to carry the algorithm's output
+    and to be frozen to a content-addressed artifact -- a future consumer must be
+    constructed from .dev / .test individually, never from this whole object.
+
+    per_stratum_counts is a tuple of StratumCount, not dict[str, dict[str, int]]:
+    pydantic's frozen=True blocks reassigning a model field, but does not make a
+    mutable dict *value* immutable -- `result.per_stratum_counts["S"]["dev"] = 999`
+    would silently succeed against a dict-valued field despite the model being
+    "frozen". A tuple of frozen models closes that gap at both the container and
+    element level.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    dev: DevPartition
+    test: TestPartition
+    per_stratum_counts: tuple[StratumCount, ...]
 
 
 def stratified_split[T](
@@ -44,7 +78,7 @@ def stratified_split[T](
 
     dev_ids: list[str] = []
     test_ids: list[str] = []
-    per_stratum_counts: dict[str, dict[str, int]] = {}
+    per_stratum_counts: list[StratumCount] = []
 
     for stratum, members in strata.items():
         n_s = len(members)
@@ -68,7 +102,9 @@ def stratified_split[T](
 
         dev_ids.extend(item_id(i) for i in stratum_dev)
         test_ids.extend(item_id(i) for i in stratum_test)
-        per_stratum_counts[stratum] = {"dev": len(stratum_dev), "test": len(stratum_test)}
+        per_stratum_counts.append(
+            StratumCount(stratum=stratum, dev=len(stratum_dev), test=len(stratum_test))
+        )
 
     if not dev_ids:
         raise ValueError(
@@ -84,5 +120,5 @@ def stratified_split[T](
     return StratifiedSplitResult(
         dev=DevPartition(demand_ids=tuple(sorted(dev_ids))),
         test=TestPartition(demand_ids=tuple(sorted(test_ids))),
-        per_stratum_counts=per_stratum_counts,
+        per_stratum_counts=tuple(per_stratum_counts),
     )
