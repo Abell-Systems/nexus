@@ -40,6 +40,16 @@ def main() -> int:
     manifest = _load("phase2_demand_construct_eligibility_n39_v1.manifest.json")
     corpus = _load("dataset_phase2_demand_corpus_n39.json")
 
+    protocol_ref_path = Path(__file__).resolve().parent.parent / "protocol" / "protocol-reference.json"
+    protocol_ref = json.loads(protocol_ref_path.read_text(encoding="utf-8"))
+    protocol_path = REPO_ROOT / protocol_ref["protocol_path"]
+    protocol_computed = hashlib.sha256(protocol_path.read_bytes()).hexdigest()
+    assert protocol_computed == protocol_ref["protocol_sha256"], (
+        f"protocol-reference.json's protocol_sha256 is stale: recorded="
+        f"{protocol_ref['protocol_sha256']} actual={protocol_computed}. "
+        "Recompute it after editing docs/empirical-study-protocol.md."
+    )
+
     artifact_path = DATA_DIR / "phase2_demand_construct_eligibility_n39_v1.json"
     sidecar_path = DATA_DIR / "phase2_demand_construct_eligibility_n39_v1.json.sha256"
     computed = hashlib.sha256(artifact_path.read_bytes()).hexdigest()

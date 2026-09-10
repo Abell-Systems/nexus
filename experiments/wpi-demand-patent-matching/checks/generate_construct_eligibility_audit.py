@@ -480,7 +480,19 @@ def main() -> int:
     ineligible = sum(1 for e in AUDIT_ENTRIES if e["construct_status"] == "INELIGIBLE")
     uncertain = sum(1 for e in AUDIT_ENTRIES if e["construct_status"] == "UNCERTAIN")
     needs_b = sum(1 for e in AUDIT_ENTRIES if e["needs_auditor_b"])
+
+    manifest_file = data_dir / "phase2_demand_construct_eligibility_n39_v1.manifest.json"
+    manifest = {
+        "total": len(AUDIT_ENTRIES),
+        "eligible_count": eligible,
+        "ineligible_count": ineligible,
+        "uncertain_count": uncertain,
+        "needs_auditor_b_count": needs_b,
+    }
+    manifest_file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
     print(f"Emitted {output_file}: {digest}")
+    print(f"Emitted {manifest_file}")
     print(f"ELIGIBLE={eligible} INELIGIBLE={ineligible} UNCERTAIN={uncertain} (total={len(AUDIT_ENTRIES)})")
     print(f"Auditor B reviewed: {needs_b}, disagreements: {artifact['auditor_b_disagreements']}")
     print("NOTE: UNCERTAIN is not ELIGIBLE. Analytic corpus is the ELIGIBLE subset only.")

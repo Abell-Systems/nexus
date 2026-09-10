@@ -91,14 +91,21 @@ Root-level, sibling to `backend/` and `frontend/`, outside both apps'
 One automated guard, `backend/test/unit/architecture/test_adr_0026_invariants.py`:
 scans `backend/src` and `backend/test` for any path-segment/import reference
 to `experiments` (e.g. `from experiments...`, `Path("experiments/...")`,
-string literals containing `experiments/` as a path prefix) and fails on any
-match. This is a reference-boundary check, not a prose linter — a comment
-containing the word "experiments" in running text does not trip it.
-`experiments/shared/` is exempt from the path-string check — it holds
-reusable fixture data (e.g. the ES Pilot-16 pilot benchmark), not
+string literals containing `experiments/` as a path prefix, and the
+`repo_root / "experiments" / "..."` split-path construction form) and fails
+on any match. This is a reference-boundary check, not a prose linter — a
+comment containing the word "experiments" in running text does not trip it.
+
+The `experiments/shared/` exemption is **asymmetric** between the two scans:
+`backend/test` is exempt from flagging `experiments/shared/` references — it
+holds reusable fixture data (e.g. the ES Pilot-16 pilot benchmark), not
 paper-specific scientific evidence, so integration tests may legitimately
 reference it (see backend/test/unit/infrastructure/annotation/test_blind_export.py)
-without violating the boundary this ADR protects.
+without violating the boundary this ADR protects. `backend/src` gets **zero**
+exemptions — per ADR 0006's stricter existing precedent, production code
+(domain/application/infrastructure) must never hardcode any experiments/
+dataset path, shared or paper-specific; `backend/src`'s scan uses a strict
+pattern with no `shared/` carve-out.
 
 No magic-number linter is built. `39`/`24`/`13` are scientific observations,
 not architectural violations, and a literal-scanning guard would be brittle
