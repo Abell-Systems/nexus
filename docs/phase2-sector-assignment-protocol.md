@@ -5,6 +5,23 @@ the N=24 eligible demands are classified. Same discipline as
 `docs/phase2-demand-construct-eligibility-audit-protocol.md` (#85/#86): contract and
 executable check first, observation second, never the other way around.
 
+**Amended (closing #90):** applying D4 analytically to the real N=24 corpus — before
+writing any artifact — found demands with no defensible sector candidate under any of
+the six categories (not a tie-break case; an absence of coverage). Per
+`docs/phase2-sector-coverage-decision.md` (Option B: taxonomy kept unchanged, no
+seventh/`OTHER` category), the artifact contract below is extended with a
+`no_sector_coverage` list, separate from `assignments`, so this outcome is
+representable without adding a value to `sector_code`'s closed six-value domain or
+implying a failed classification attempt inside a per-demand `decision_trace`.
+
+Which `demand_id`s land in `no_sector_coverage` is not this artifact's call: it must
+match exactly the set `experiments/wpi-demand-patent-matching/config/phase2_sector_coverage_decision_v1.json`
+already declares (frozen alongside the decision, `.sha256`-pinned to it). This is
+deliberate — hashing only the decision *document* would let a future artifact accept
+any partition of N=24 that merely satisfies the shape/membership invariants, without
+actually matching the demands #90's decision was about. Pinning the declared ID set
+closes that gap.
+
 ## Why this exists
 
 `docs/phase2-sector-taxonomy-amendment.md` (#83, merged) closes the category set (D1)
@@ -34,11 +51,41 @@ metadata are permitted; retrieved patents, similarity/retrieval scores, CPC/IPC
 (demand- or patent-side), and any matching-pipeline output are forbidden. Restated
 here only as a reminder — D3 remains the normative source.
 
-## Assignment artifact: per-demand record shape
+## Assignment artifact: top-level shape
 
-One entry per `demand_id` in the N=24 corpus. Layered, not flattened, to keep three
-distinct concerns separable per the amendment's own D4/D6 distinction (a decision
-procedure is not the same thing as who reviewed it):
+```text
+{
+  "dataset_id": "...",
+  "assignments": [ ... ],           // one entry per demand WITH a defensible sector
+  "no_sector_coverage": [ ... ]     // one entry per demand WITHOUT one (#90/decision)
+}
+```
+
+`assignments` (demand_id) ∪ `no_sector_coverage` (demand_id) must equal exactly the
+N=24 eligible corpus, with no overlap and no duplicates across either list — a demand
+is in exactly one of the two.
+
+### `no_sector_coverage` entry shape
+
+```text
+{
+  "demand_id": "...",
+  "rationale": "...",     // why D4 produces no defensible candidate among the six
+  "evidence": ["...", "..."],
+  "reviewer": "Auditor A"
+}
+```
+
+No `sector_code`, no `decision_trace`, no `audit` block: this is a documented absence
+of a candidate, not an attempted-and-resolved classification, so it does not carry the
+fields that presuppose one. `rationale` and `evidence` are still required and
+non-empty — the absence of a candidate must be as auditable as a presence of one.
+
+## `assignments` entry shape
+
+One entry per `demand_id` with a defensible sector. Layered, not flattened, to keep
+three distinct concerns separable per the amendment's own D4/D6 distinction (a
+decision procedure is not the same thing as who reviewed it):
 
 ```text
 {
@@ -128,20 +175,35 @@ a silent adjustment of D4 or of this contract while classifying.
 
 ## Frozen artifact
 
-`experiments/wpi-demand-patent-matching/data/sector_assignments_n24_v1.json` — 24
-entries per the shape above, `dataset_id: "nexus-phase2-sector-assignments-n24-v1"`,
-`.sha256` sidecar, `.manifest.json` recording `demand_count`, per-sector counts,
-`derived_from.{eligible_corpus_sha256, taxonomy_config_sha256}`. Produced and
-validated in a follow-up PR — not this one.
+`experiments/wpi-demand-patent-matching/data/sector_assignments_n24_v1.json` —
+`dataset_id: "nexus-phase2-sector-assignments-n24-v1"`, `assignments` +
+`no_sector_coverage` covering the N=24 corpus exactly between them, `.sha256`
+sidecar, `.manifest.json` recording `demand_count` (len of `assignments`),
+`no_sector_coverage_count`, `no_sector_coverage_demand_ids`, per-sector counts,
+`derived_from.{eligible_corpus_sha256, taxonomy_config_sha256, coverage_decision_sha256}`
+— the third hash pins `phase2_sector_coverage_decision_v1.json` (not the decision
+document directly): this artifact is invalid both if that config changes underneath
+it, and — independently, checked by `check_sector_assignments.py` itself — if its own
+`no_sector_coverage` list's `demand_id`s do not match exactly what that config
+declares. Produced and validated in a follow-up PR — not this one.
 
 ## Verified by
 
-`experiments/wpi-demand-patent-matching/checks/check_sector_assignments.py`.
+`experiments/wpi-demand-patent-matching/checks/check_sector_assignments.py` and
+`check_sector_coverage_decision.py` (the latter verifies
+`phase2_sector_coverage_decision_v1.json` itself against its sidecar, against
+`docs/phase2-sector-coverage-decision.md`'s sha256, and that its declared IDs are a
+subset of the N=24 eligible corpus).
 
 ## What this protocol does not do
 
-- Does not classify any of the 24 demands. That is the next, separate PR.
-- Does not modify `phase2_sector_taxonomy_v1` (#83) or the amendment's D1–D7.
+- Does not classify any of the 24 demands, and does not decide which demands land in
+  `assignments` vs. `no_sector_coverage`. That is the next, separate PR.
+- Does not modify `phase2_sector_taxonomy_v1` (#83) or the amendment's D1–D7. The
+  `no_sector_coverage` mechanism is deliberately not a seventh `sector_code` value —
+  see `docs/phase2-sector-coverage-decision.md`.
 - Does not re-derive or modify `dataset_phase2_eligible_corpus_n24_v1.json` (#88).
-- Does not touch #79 (Dev/Test split) or ADR 0016's normalization decision.
+- Does not touch #79 (Dev/Test split) or ADR 0016's normalization decision. #79 must
+  consume `assignments` as the sector-stratifiable population once frozen, not
+  re-derive or re-decide coverage during the split.
 - Does not observe, and must not be revised based on, any actual sector distribution.
