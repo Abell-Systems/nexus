@@ -13,7 +13,7 @@ from infrastructure.annotation.blind_export import generate_blinded_annotation_s
 
 
 def main() -> int:
-    benchmark_path = repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.json"
+    benchmark_path = repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.json"
     output_dir = repo_root / "data" / "annotations"
     output_dir.mkdir(parents=True, exist_ok=True)
 

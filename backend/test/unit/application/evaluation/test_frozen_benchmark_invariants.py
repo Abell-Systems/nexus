@@ -24,9 +24,9 @@ def get_repo_root() -> Path:
 @pytest.fixture
 def pilot_paths() -> tuple[Path, Path, Path]:
     repo_root = get_repo_root()
-    dataset_path = repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.json"
-    checksum_path = repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.sha256"
-    manifest_path = repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.manifest.json"
+    dataset_path = repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.json"
+    checksum_path = repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.sha256"
+    manifest_path = repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.manifest.json"
     return dataset_path, checksum_path, manifest_path
 
 

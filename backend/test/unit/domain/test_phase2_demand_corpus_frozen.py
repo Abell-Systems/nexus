@@ -22,7 +22,7 @@ def get_repo_root() -> Path:
 @pytest.fixture
 def corpus_paths() -> tuple[Path, Path, Path]:
     repo_root = get_repo_root()
-    base = repo_root / "data" / "evaluation" / "dataset_phase2_demand_corpus_n39"
+    base = repo_root / "experiments" / "wpi-demand-patent-matching" / "data" / "dataset_phase2_demand_corpus_n39"
     return (
         base.with_suffix(".json"),
         Path(str(base) + ".sha256"),

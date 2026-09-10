@@ -150,12 +150,12 @@ def _build_comparative_provenance(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run the first M0 vs M1 pilot comparison (PR-E)")
-    parser.add_argument("--dataset", type=Path, default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.json")
-    parser.add_argument("--checksum", type=Path, default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.sha256")
-    parser.add_argument("--manifest", type=Path, default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.manifest.json")
+    parser.add_argument("--dataset", type=Path, default=repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.json")
+    parser.add_argument("--checksum", type=Path, default=repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.sha256")
+    parser.add_argument("--manifest", type=Path, default=repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.manifest.json")
     parser.add_argument("--policy", type=Path, default=repo_root / "config" / "policies" / "matching" / "default_matching_policy.json")
     parser.add_argument("--model-config", type=Path, dest="model_config", default=repo_root / "config" / "evaluations" / "model_configurations_m0_m6.json")
-    parser.add_argument("--embeddings", type=Path, default=repo_root / "data" / "evaluation" / "embeddings_pilot_benchmark.json")
+    parser.add_argument("--embeddings", type=Path, default=repo_root / "experiments" / "shared" / "embeddings_pilot_benchmark.json")
     parser.add_argument("--protocol", type=Path, default=repo_root / "config" / "evaluations" / "comparisons_m0_vs_m1_pilot.json")
     parser.add_argument("--output-dir", type=Path, dest="output_dir", default=repo_root / "data" / "experiments")
     parser.add_argument("--environment", type=str, default="local_benchmark")
