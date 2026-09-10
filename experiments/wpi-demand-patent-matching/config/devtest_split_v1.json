@@ -1,0 +1,8 @@
+{
+  "config_id": "phase2_devtest_split_v1",
+  "dev_fraction": 0.4,
+  "seed": 42,
+  "stratum_key": "sector_code",
+  "assignments_path": "experiments/wpi-demand-patent-matching/data/sector_assignments_n24_v1.json",
+  "assignments_sha256": "634ada0a3be36bc46c4b603c18efc21625cfb1609feee10f4df3d00ecef22916"
+}
