@@ -41,17 +41,21 @@ Rules that are non-negotiable (see ADR 0017 §5–§7 for the binding text):
 
 ---
 
-## 2. Where things stand (2026-09-07)
+## 2. Where things stand (2026-09-10)
 
-**Deterministic core:** `domain/` + `application/matching/` + `infrastructure/matching/` shareable but not consolidated. M0 (BM25) wired via frozen manifest; M1 artifact frozen and wired as raw cosine (#42). Fusion transform (ADR 0016) implemented (#41) — `evaluator.py` applies `f_lex`/`f_sem` at fusion time, no raw weighted sum.
+**Deterministic core:** `domain/` + `application/matching/` + `infrastructure/matching/` shareable but not consolidated. M0 (BM25) wired via frozen manifest; M1 artifact frozen and wired as raw cosine (#42). Fusion transform (ADR 0016) implemented (#41) — `evaluator.py` applies `f_lex`/`f_sem` at fusion time, no raw weighted sum. ADR 0016's normalization was re-audited against protocol §5.2.1 / ADR 0012 (#78); that audit left an open decision, not yet resolved.
 
-**Lab:** sealed pilot (3 demands × 15 patents, 23/45 pairs, `PILOT / PROOF_OF_HARNESS`). `IDCG=0` handling (undefined → `None`, excluded from macro, never imputed; #44, see §4 item 4) and the canonical dataset hash chain (dataset/manifest/embeddings triple verified against one SHA-256, #43, see `docs/dataset-identity-audit.md`) are resolved. Primary confirmatory endpoint is `nDCG@10` (see §4 item 3).
+**Lab — corpus:** ADR 0020 (D×P experimental corpus architecture) landed the multi-jurisdiction OPS-backed `PatentCorpus` (#57) with partitioned enumeration (#58). ADR 0019 resolved annotation-pool eligibility under unknown posting dates via `TEMPORAL_UNKNOWN` (superseding the earlier PR-E0.2 OAuth/volume blocker). The Phase-2 **target** demand sample size is frozen at `|D|=60` for a pre-registered minimum effect θ=0.2 (#52) — this is the eventual Phase-2 N, not yet reached. Against that target: a 39-demand corpus passed a per-record construct-eligibility audit (Auditor A #85, confirmed by Auditor B with no disagreements #86), and a 24-demand **eligible subset of those 39** is frozen (#88) — 24 is an intermediate eligibility count, not the Phase-2 dataset itself; growing it toward 60 is still open. A 6-sector taxonomy is frozen with an explicit `no_sector_coverage` escape hatch (#89–#92), and sector assignments over the frozen corpus are frozen (#92). The stratified Dev/Test split mechanism (stratified by sector, per protocol §5.3) and a frozen WPI split are implemented and merged (#79/#93).
 
-A first empirical M0-vs-M1 comparison ran under this protocol (#45): all three pre-registered hypotheses (`nDCG@10`, `Recall@5`, `MRR`) show no detectable difference on the 3-demand pilot. **`study_status: PILOT`, not `FINAL`.** This result does **not** demonstrate that the M1 semantic signal is useless — it demonstrates that, on this specific benchmark and policy, wiring it did not alter the ranking. Both readings remain open questions for the corrected/scaled dataset below.
+**Lab — annotation & IAA:** the IAA machinery (linear/quadratic-weighted Cohen's κ, confusion matrix, degenerate-case handling) is implemented and tested (#56, hardened for annotator-distinctness and NaN-vs-1.0 degenerate cases). PR-E.1 produced a blind re-annotation candidate pool under strict temporal eligibility (#72). PR-E.2 kicked off the pilot annotation template/instructions (#77); Annotator A (Valentín)'s pilot blind judgments are recorded (#82). Dual annotation + κ over the full Phase-2 pool has not yet run.
 
-The temporal pool eligibility contract (ADR 0018, proposed #48 / implemented #49) now exists — `temporal_pool_mode: "strict" | "unconstrained"`, mandatory, with a fail-fast on the contaminated combination. #45's frozen artifact predates this contract and is left completely untouched (it is not reproducible bit-for-bit by any contract-compliant run; see ADR 0018 Consequences). The temporal correction itself needs **no new dataset** — `strict` mode excludes the 3 flagged violations (#43) from the pool at runtime, over the same sealed dataset, with full provenance (`temporal_pool_mode` stamped on every report). Re-running the identical M0-vs-M1 protocol under `strict` (`data/experiments/*_strict.json`) still shows no statistically significant difference (`n=3` demands is too small to reject at any reasonable `α`), but for the first time one demand (`INNOGET-2292`) shows a small non-zero `nDCG@10` difference between M0 and M1 (`0.8253` vs `0.8379`) that was exactly zero under `unconstrained` — consistent with, but nowhere near sufficient to confirm, the hypothesis that temporal contamination was masking part of the semantic signal. Still open before any efficacy claim: dual blinded annotation + IAA, powered Phase-2 dataset at a scale where this kind of difference could actually reach significance.
+**Lab — prior pilot result (superseded status, not re-run):** the sealed 3-demand pilot (#45, `PILOT`) and its `strict`-mode re-run (ADR 0018, #48/#49) still stand as the only executed M0-vs-M1 comparison and remain non-significant at `n=3`; nothing above supersedes that result, it is simply not yet repeated at Phase-2 scale.
 
-**Product:** landscape/analyze APIs on in-memory jobs (demo-only), no Matching Store, no persistent jobs, no lifecycle, no audit export, no disclaimers in UI/API. Nothing billable yet by design.
+**Boundary:** ADR 0026 (Accepted, #87) establishes the experiment/domain boundary: Nexus (`backend/`) implements generic, taxonomy-agnostic evaluation mechanisms; experiment-specific configuration, frozen data, and observed results live under `experiments/<paper-slug>/` (e.g. `experiments/wpi-demand-patent-matching/`), never referenced from `backend/src` or `backend/test`, enforced by an automated boundary guard. #86's scientific conclusion stands unchanged under this move; future scientific work (sector taxonomy, Dev/Test split, and beyond) follows this same allocation from the start.
+
+**Observatory (new, undocumented track):** a public GitHub Pages "scientific verification" dashboard (`nexus-status`) was built end-to-end and is live — ADR 0022 (project status contract), ADR 0023 (verification as external consumer), ADR 0024 (workspace), ADR 0025 (scientific-results publication contract, deterministic atomic publisher, real Landscape execution wired in) (#61, #63–#67, #69–#76). This is a third initiative not represented anywhere in the §1 Lab/Product diagram — it publishes Lab results externally but is neither Lab nor Product machinery in the ADR 0017 sense. The diagram and rules in §1 should be amended to place it, rather than leaving it undocumented.
+
+**Product:** landscape/analyze APIs on in-memory jobs (demo-only), no Matching Store, no persistent jobs, no lifecycle, no audit export, no disclaimers in UI/API. Nothing billable yet by design. No visible progress on PR-G onward since the last roadmap update.
 
 ---
 
@@ -76,24 +80,24 @@ PR-B  #40 — ADR 0016 implementation (fusion + bounds)        [shared/lab]
  Phase-2 → efficacy → WPI
 ```
 
-| PR | Objective | Must NOT include | Acceptance | Track |
-|---|---|---|---|---|
-| **PR-A** | ADR-0017 + canonical roadmap + archive 15-day plan | Code changes; edits to existing ADRs; #40 | ADR-0017 merged, this file canonical, archive byte-identical, docs gate green | Both (decision) |
-| **PR-B (#40)** | Implement ADR 0016: `f_lex`/`f_sem` at fusion, `semantic ∈ [-1,1]`, provenance entry | M1 wiring; pilot numbers in same PR | `overall ∈ [0,1]` structural + tests, no benchmark-derived parameters | Shared/Lab |
-| **PR-C** | M1 wiring + end-to-end PILOT audit run | Re-tuning; efficacy claims | M0+M1+M2+M6 green over 45 pairs, `study_status: PILOT` | Lab |
-| **PR-D** | Canonical dataset + temporal + metric alignment | New annotations | Single hash chain, pool pre/post-`Φ_temporal` decided, one primary endpoint | Lab |
-| **PR-E** | Blinded re-annotation + IAA dry-run + CPC-auto card | Phase-2 collection | κ reported, classifier precision/recall reported | Lab |
-| **PR-F** | Phase-2 dataset + DEV/TEST freeze + powered efficacy + WPI | Product code | Wilcoxon + paired bootstrap + BH on untouched test | Lab |
-| **PR-G** | Guardrails: disclaimers + coverage disclosure + archive narrative fix | Scoring changes | Disclaimer on UI/API/exports | Product |
-| **PR-H** | Matching Store + persistent jobs (`tenant_id` field, no auth system) | Monitoring; auth | Restart-safe `MatchRun` with 5-version contract | Product |
-| **PR-I** | Reduced lifecycle + audit export | Alerting | CSV+JSON exports with hashes | Product |
-| **PR-J** | Monitoring events (no alerting yet) | SLA/scale | Versioned diffs as new runs | Product |
+The lettered rows below are the original conceptual sequence; **Status** is the current ground truth, since much of Lab work executed under its own PR numbers rather than these letters — treat Status, not the letter, as authoritative.
+
+| PR | Objective | Status | Track |
+|---|---|---|---|
+| **PR-A** | ADR-0017 + canonical roadmap + archive 15-day plan | **Done** — ADR-0017 merged, this file canonical | Both (decision) |
+| **PR-B (#40)** | Implement ADR 0016: `f_lex`/`f_sem` at fusion, `semantic ∈ [-1,1]`, provenance entry | **Done** (#40/#41). Normalization re-audited against protocol §5.2.1/ADR 0012 (#78) — that audit left the `k` constant an open decision, unresolved | Shared/Lab |
+| **PR-C** | M1 wiring + end-to-end PILOT audit run | **Done** — M1 wired (#42), first PILOT-status M0-vs-M1 comparison run (#45) | Lab |
+| **PR-D** | Canonical dataset + temporal + metric alignment | **Done, as a mechanism, not a one-off dataset edit** — hash chain (#43), `IDCG=0` alignment (#44), temporal eligibility contract `temporal_pool_mode: strict\|unconstrained` (ADR 0018, #48/#49). The sealed dataset stays byte-identical; `strict` excludes flagged violations **at runtime**, with provenance stamped on every report. There is no pending "correct the dataset" task. | Lab |
+| **PR-E** | Blinded re-annotation + IAA dry-run + CPC-auto card | **Partial** — IAA machinery (#56), blind re-annotation pool under strict temporal eligibility (#72), pilot annotation template/instructions (#77), Annotator A's pilot judgments recorded (#82). **Open:** dual annotation + κ over the full Phase-2 pool (not just the pilot); CPC-auto card | Lab |
+| **PR-F** | Phase-2 dataset + DEV/TEST freeze + powered efficacy + WPI | **Partial** — Dev/Test split mechanism + frozen WPI split done (#79/#93); corpus construct-eligibility audit done (#85/#86), 24-demand eligible subset frozen (#88) toward the `|D|=60` target. **Open:** growing the corpus to `|D|=60`, the two gaps in §6 (family-aware evaluation, demand-independence audit), dual annotation/κ at scale, and the powered efficacy run itself | Lab |
+| **PR-G** | Guardrails: disclaimers + coverage disclosure + archive narrative fix | **Open** — no visible progress | Product |
+| **PR-H** | Matching Store + persistent jobs (`tenant_id` field, no auth system) | **Open** | Product |
+| **PR-I** | Reduced lifecycle + audit export | **Open** | Product |
+| **PR-J** | Monitoring events (no alerting yet) | **Open** | Product |
 
 Licensing gate runs parallel to all Product PRs with veto power; it is not sequenced as a feature.
 
-**PR-D execution note:** the canonical-dataset and metric-alignment parts of PR-D's scope were executed as #43 (hash chain, read-only audit) and #44 (`IDCG=0`/primary-endpoint alignment; see §4 items 3–4) rather than as a single PR under this exact label — recorded here rather than rewritten into the table above. PR-D's temporal-eligibility part ("pool pre/post-`Φ_temporal` decided") is **partially** executed: ADR 0018 (#48/#49) delivers the mechanism (an explicit, tested `strict`/`unconstrained` contract), but the sealed dataset itself has not yet been corrected — that remains open, sequenced before the PR-F track below.
-
-**Naming note:** the table's lettered **PR-E** ("Blinded re-annotation + IAA dry-run + CPC-auto card") has **not** been executed — that work is fully open. A differently-scoped comparative experiment, the first empirical M0-vs-M1 comparison (#45), was informally called "PR-E" in project discussion around the same time; it is not a substitute for annotation/IAA work and does not close this table row. To avoid compounding the ambiguity, later ad hoc work is referenced here by its actual PR number (e.g. "#48/#49"), not by a reused letter.
+**Naming note:** the differently-scoped first empirical M0-vs-M1 comparison (#45) was informally called "PR-E" in older discussion around the same time as the letter above; it is not the same work and does not close the PR-E row. Work since #45 is referenced by actual PR number, not by a reused letter.
 
 ---
 
@@ -120,7 +124,27 @@ Licensing gate runs parallel to all Product PRs with veto power; it is not seque
 
 ---
 
-## 6. Future Research Extensions
+## 6. Reconciliation with external scientific-rigor review (2026-09-10)
+
+An external review of the empirical study (P0–P6 gap analysis) was checked against `docs/empirical-study-protocol.md` and the merged ADRs. Most of its P1–P3 asks are **already specified**, not new work:
+
+* Relevance-construct validation (0–3 rubric with worked boundary examples) — protocol §6.2.
+* Inter-rater agreement (weighted Cohen's κ, threshold κw ≥ 0.70) — protocol §6.3/7.3, implemented and tested (#56).
+* Ablation matrix over {BM25, Dense, CPC} and their unions — protocol §8.
+* Sector/domain heterogeneity analysis — protocol §7, frozen taxonomy (#89–#92).
+* Effect size (standardized θ), paired bootstrap CIs, Wilcoxon — protocol §7, power analysis frozen (#52).
+* External validation (cross-jurisdiction) — already correctly deferred, protocol §10.2 and this file's §7 (L2/L3).
+
+Two items are genuine gaps, not covered by the protocol or any merged ADR, and should be scheduled into the Lab track **before PR-F efficacy claims**, per the review's own P1 priority (avoid overclaiming on a flawed benchmark):
+
+* **Patent-family-aware evaluation:** no family/duplicate-detection policy exists anywhere in the codebase or protocol (`family_policy: allow|collapse|exclude_related` and a family-aware sensitivity re-run). Needed to rule out one invention contributing multiple ranked hits.
+* **Demand independence audit:** the existing Phase-2 audits (#84–#86) check whether each demand *is* a valid technology solicitation (construct eligibility), not whether the 39/24/60 demands are independent observations (same company, sector, tech family, or duplicate industrial problem). These are different questions; only the first has been done.
+
+One item (public benchmark packaging, review's P4) is a natural post-PR-F deliverable and fits the "done" criteria in §5 rather than needing its own PR row yet.
+
+---
+
+## 7. Future Research Extensions
 
 The Demand → Patent experiment is Nexus's first empirical case, not the scientific definition of Nexus.
 
