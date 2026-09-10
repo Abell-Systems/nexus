@@ -14,6 +14,14 @@ seventh/`OTHER` category), the artifact contract below is extended with a
 representable without adding a value to `sector_code`'s closed six-value domain or
 implying a failed classification attempt inside a per-demand `decision_trace`.
 
+Which `demand_id`s land in `no_sector_coverage` is not this artifact's call: it must
+match exactly the set `experiments/wpi-demand-patent-matching/config/phase2_sector_coverage_decision_v1.json`
+already declares (frozen alongside the decision, `.sha256`-pinned to it). This is
+deliberate — hashing only the decision *document* would let a future artifact accept
+any partition of N=24 that merely satisfies the shape/membership invariants, without
+actually matching the demands #90's decision was about. Pinning the declared ID set
+closes that gap.
+
 ## Why this exists
 
 `docs/phase2-sector-taxonomy-amendment.md` (#83, merged) closes the category set (D1)
@@ -172,15 +180,20 @@ a silent adjustment of D4 or of this contract while classifying.
 `no_sector_coverage` covering the N=24 corpus exactly between them, `.sha256`
 sidecar, `.manifest.json` recording `demand_count` (len of `assignments`),
 `no_sector_coverage_count`, `no_sector_coverage_demand_ids`, per-sector counts,
-`derived_from.{eligible_corpus_sha256, taxonomy_config_sha256, decision_sha256}` — the
-third hash pins `docs/phase2-sector-coverage-decision.md`, the same way
-`taxonomy_config_sha256` pins the taxonomy: this artifact is invalid if that decision
-document changes underneath it. Produced and validated in a follow-up PR — not this
-one.
+`derived_from.{eligible_corpus_sha256, taxonomy_config_sha256, coverage_decision_sha256}`
+— the third hash pins `phase2_sector_coverage_decision_v1.json` (not the decision
+document directly): this artifact is invalid both if that config changes underneath
+it, and — independently, checked by `check_sector_assignments.py` itself — if its own
+`no_sector_coverage` list's `demand_id`s do not match exactly what that config
+declares. Produced and validated in a follow-up PR — not this one.
 
 ## Verified by
 
-`experiments/wpi-demand-patent-matching/checks/check_sector_assignments.py`.
+`experiments/wpi-demand-patent-matching/checks/check_sector_assignments.py` and
+`check_sector_coverage_decision.py` (the latter verifies
+`phase2_sector_coverage_decision_v1.json` itself against its sidecar, against
+`docs/phase2-sector-coverage-decision.md`'s sha256, and that its declared IDs are a
+subset of the N=24 eligible corpus).
 
 ## What this protocol does not do
 

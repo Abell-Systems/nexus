@@ -70,7 +70,8 @@ judgment.
 - This decision does not itself classify any demand. #80's classification PR resumes
   against this decision plus #89's (amended) contract.
 - This decision does not touch #79. #79's stratification design must consume the
-  13-demand sector-coverable population as its stratification input once #80 freezes
-  it — not re-derive or re-decide coverage during the split.
+  sector-coverable population (`assignments` in the frozen artifact) as its
+  stratification input once #80 freezes it — its cardinality is whatever #80's
+  completed classification produces, not asserted here.
 
 Closes #90.

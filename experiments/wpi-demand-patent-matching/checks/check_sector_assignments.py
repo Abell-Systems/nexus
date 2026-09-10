@@ -2,11 +2,14 @@
 """Manifest-conformance check for the WPI Phase 2 sector assignment artifact (#80).
 
 Verifies sector_assignments_n24_v1.json against dataset_phase2_eligible_corpus_n24_v1.json
-(#88), phase2_sector_taxonomy_v1.json (#83), and docs/phase2-sector-coverage-decision.md
+(#88), phase2_sector_taxonomy_v1.json (#83), and phase2_sector_coverage_decision_v1.json
 (#90), per docs/phase2-sector-assignment-protocol.md's contract. The artifact splits the
 N=24 corpus between `assignments` (demands with a defensible sector) and
-`no_sector_coverage` (demands D4 cannot place in any of the six categories, per #90's
-decision) -- a demand is in exactly one of the two.
+`no_sector_coverage` (demands D4 cannot place in any of the six categories). Which
+demand_ids land in `no_sector_coverage` is NOT decided by this artifact: it is pinned
+to exactly the set #90's decision already declared (phase2_sector_coverage_decision_v1.json,
+verified by check_sector_coverage_decision.py) -- so this artifact cannot silently
+partition N=24 however it likes and still pass. A demand is in exactly one of the two.
 
 Intentionally RED right now: sector_assignments_n24_v1.json does not exist yet (no
 classification has been done -- see that protocol doc, "What this protocol does not
@@ -19,7 +22,6 @@ import json
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 CONFIG_DIR = Path(__file__).resolve().parent.parent / "config"
 
@@ -27,10 +29,11 @@ ELIGIBLE_NAME = "dataset_phase2_eligible_corpus_n24_v1.json"
 ELIGIBLE_SHA_NAME = "dataset_phase2_eligible_corpus_n24_v1.sha256"
 TAXONOMY_NAME = "phase2_sector_taxonomy_v1.json"
 TAXONOMY_SHA_NAME = "phase2_sector_taxonomy_v1.sha256"
+COVERAGE_DECISION_NAME = "phase2_sector_coverage_decision_v1.json"
+COVERAGE_DECISION_SHA_NAME = "phase2_sector_coverage_decision_v1.sha256"
 ASSIGNMENTS_NAME = "sector_assignments_n24_v1.json"
 ASSIGNMENTS_SHA_NAME = "sector_assignments_n24_v1.sha256"
 ASSIGNMENTS_MANIFEST_NAME = "sector_assignments_n24_v1.manifest.json"
-DECISION_PATH = "docs/phase2-sector-coverage-decision.md"
 
 # resolved_at_step -> which decision_trace fields must be set (not null) vs null.
 # Per docs/phase2-sector-assignment-protocol.md's invariant table.
@@ -105,22 +108,24 @@ def _verify_sidecar(artifact_path: Path, sidecar_path: Path) -> str:
 def main() -> int:
     eligible_sha = _verify_sidecar(DATA_DIR / ELIGIBLE_NAME, DATA_DIR / ELIGIBLE_SHA_NAME)
     taxonomy_sha = _verify_sidecar(CONFIG_DIR / TAXONOMY_NAME, CONFIG_DIR / TAXONOMY_SHA_NAME)
+    coverage_decision_sha = _verify_sidecar(CONFIG_DIR / COVERAGE_DECISION_NAME, CONFIG_DIR / COVERAGE_DECISION_SHA_NAME)
     assignments_sha = _verify_sidecar(DATA_DIR / ASSIGNMENTS_NAME, DATA_DIR / ASSIGNMENTS_SHA_NAME)
-    decision_sha = _sha256(REPO_ROOT / DECISION_PATH)
 
     eligible = json.loads((DATA_DIR / ELIGIBLE_NAME).read_text(encoding="utf-8"))
     taxonomy = json.loads((CONFIG_DIR / TAXONOMY_NAME).read_text(encoding="utf-8"))
+    coverage_decision = json.loads((CONFIG_DIR / COVERAGE_DECISION_NAME).read_text(encoding="utf-8"))
     assignments = json.loads((DATA_DIR / ASSIGNMENTS_NAME).read_text(encoding="utf-8"))
     manifest = json.loads((DATA_DIR / ASSIGNMENTS_MANIFEST_NAME).read_text(encoding="utf-8"))
 
     assert manifest["content_sha256"] == assignments_sha
     assert manifest["derived_from"]["eligible_corpus_sha256"] == eligible_sha
     assert manifest["derived_from"]["taxonomy_config_sha256"] == taxonomy_sha
-    assert manifest["derived_from"]["decision_sha256"] == decision_sha, (
-        "docs/phase2-sector-coverage-decision.md changed since the assignment artifact "
+    assert manifest["derived_from"]["coverage_decision_sha256"] == coverage_decision_sha, (
+        "phase2_sector_coverage_decision_v1.json changed since the assignment artifact "
         "was frozen -- this artifact's no_sector_coverage mechanism is invalid until "
-        "regenerated deliberately against the current decision text."
+        "regenerated deliberately against the current decision."
     )
+    declared_no_coverage_ids = set(coverage_decision["no_sector_coverage_demand_ids"])
 
     _assert_exact_keys(assignments, TOP_LEVEL_KEYS, "top-level assignments object")
     assert isinstance(assignments["dataset_id"], str) and assignments["dataset_id"].strip()
@@ -143,6 +148,13 @@ def main() -> int:
     assert covered_ids == eligible_ids, (
         "assignments + no_sector_coverage do not cover exactly the N=24 eligible corpus "
         f"(missing={eligible_ids - covered_ids}, extra={covered_ids - eligible_ids})"
+    )
+    assert set(no_coverage_ids) == declared_no_coverage_ids, (
+        "no_sector_coverage does not match exactly the demand_ids #90's decision "
+        "(phase2_sector_coverage_decision_v1.json) already declared -- this artifact "
+        "cannot choose its own partition of N=24: "
+        f"missing={declared_no_coverage_ids - set(no_coverage_ids)}, "
+        f"unexpected={set(no_coverage_ids) - declared_no_coverage_ids}"
     )
 
     for entry in no_coverage_entries:
