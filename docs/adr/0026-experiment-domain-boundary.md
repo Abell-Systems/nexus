@@ -1,6 +1,7 @@
 # ADR 0026: Experiment/Domain Boundary
 
 **Status:** Accepted
+**Date:** 2026-09-10
 
 **Scope:** `backend/src/main` (all layers), `backend/test`, `experiments/`
 
