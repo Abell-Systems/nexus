@@ -358,11 +358,18 @@ def _make_stratum(prefix: str, n: int) -> list[_Item]:
     [(1, 0, 1), (2, 1, 1), (3, 1, 2), (4, 2, 2), (5, 2, 3), (10, 4, 6)],
 )
 def test_floor_policy_table_at_dev_fraction_040(n, expected_dev, expected_test):
-    items = _make_stratum("S", n)
+    # A COMPANION stratum (size 2, dev_fraction=0.4 -> dev=1/test=1, never triggers
+    # the floor) rides along so the call's aggregate dev/test are never both-empty --
+    # DevPartition/TestPartition (Task 1) require non-empty demand_ids, and the n=1
+    # case alone (dev=0) would otherwise leave the whole result's `dev` empty when it
+    # is the call's only stratum. The assertions below check stratum "S" specifically,
+    # not the companion.
+    items = _make_stratum("S", n) + _make_stratum("COMPANION", 2)
     result = stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=1)
     assert result.per_stratum_counts["S"] == {"dev": expected_dev, "test": expected_test}
-    assert len(result.dev.demand_ids) == expected_dev
-    assert len(result.test.demand_ids) == expected_test
+    assert result.per_stratum_counts["COMPANION"] == {"dev": 1, "test": 1}
+    assert len(result.dev.demand_ids) == expected_dev + 1
+    assert len(result.test.demand_ids) == expected_test + 1
 
 
 def test_floor_bumps_zero_dev_up_to_one():
