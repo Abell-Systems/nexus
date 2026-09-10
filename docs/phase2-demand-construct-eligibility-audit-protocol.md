@@ -140,6 +140,24 @@ document says that record represents.
   audit, not a new inter-rater-reliability endpoint — no kappa statistic is computed
   unless separately decided.
 
+## Closure
+
+Auditor B (Lydia Bares) reviewed all 19 records flagged `needs_auditor_b` (the 13
+`INELIGIBLE`, the 2 `UNCERTAIN`, and the 4 borderline-flagged `ELIGIBLE` records) and
+confirmed agreement with Auditor A's determination on every one. There is no
+disagreement to adjudicate, so no `adjudication` text exists beyond the agreement
+itself — per the note under "Roles," this is Auditor B's scoped review of the flagged
+records, not an independent full re-classification of all 39.
+
+**Final result: 24 ELIGIBLE, 13 INELIGIBLE, 2 UNCERTAIN.**
+
+`UNCERTAIN` is not `ELIGIBLE`. Per the decision rule, it means construct eligibility
+could not be established from the text on at least one required field — it is not a
+form of provisional inclusion. The analytic population for Phase 2 going forward is
+therefore the **24 `ELIGIBLE` records**, not 26. The 2 `UNCERTAIN` records
+(`INNOGET-2054`, `INNOGET-2425`) are excluded from the confirmatory corpus alongside
+the 13 `INELIGIBLE` ones, unless a future, separately-decided amendment revisits them.
+
 ## Artifact
 
 `data/evaluation/phase2_demand_construct_eligibility_n39_v1.json` +
