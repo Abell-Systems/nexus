@@ -73,7 +73,7 @@ def main() -> int:
     manifest = {
         "dev_count": len(result.dev.demand_ids),
         "test_count": len(result.test.demand_ids),
-        "per_stratum_counts": result.per_stratum_counts,
+        "per_stratum_counts": {c.stratum: {"dev": c.dev, "test": c.test} for c in result.per_stratum_counts},
         "dev_fraction": config["dev_fraction"],
         "seed": config["seed"],
         "content_sha256": split_sha,
