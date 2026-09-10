@@ -143,6 +143,15 @@ def test_result_independent_of_input_order():
     assert r1.test.demand_ids == r2.test.demand_ids
 
 
+def test_rejects_all_singleton_strata_as_empty_dev_partition():
+    """All strata size 1 -> every stratum's dev_count is 0 -> aggregate Dev would be
+    empty. Must raise the module's own ValueError contract, not a raw pydantic
+    ValidationError from DevPartition's min_length=1."""
+    items = _make_stratum("A", 1) + _make_stratum("B", 1) + _make_stratum("C", 1)
+    with pytest.raises(ValueError, match="resulting Dev partition would be empty"):
+        stratified_split(items, stratum_key=_sk, item_id=_iid, dev_fraction=0.4, seed=1)
+
+
 def test_dev_and_test_are_distinct_partition_types_on_real_result():
     from domain.models.evaluation import DevPartition, TestPartition
 

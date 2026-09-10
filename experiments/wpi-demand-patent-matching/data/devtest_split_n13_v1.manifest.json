@@ -23,7 +23,9 @@
       "test": 1
     }
   },
-  "content_sha256": "88ddb6348813ac4bbae75dabf51ee40959ad34374d737254cbba511afdf38222",
+  "dev_fraction": 0.4,
+  "seed": 42,
+  "content_sha256": "8c8f2756646f5910d83648952521233a8c68fd8db9afc9c78214c07ac1135a7e",
   "derived_from": {
     "assignments_sha256": "634ada0a3be36bc46c4b603c18efc21625cfb1609feee10f4df3d00ecef22916",
     "config_sha256": "61ea7577354531fea1218c9288f4645abe67d97a3a09c9dce4cc37a393b9cf0c"

@@ -485,7 +485,7 @@ Then, in the same file, replace the final line
             elif dev_count == n_s:
                 dev_count = n_s - 1
 
-        rng = random.Random(seed)
+        rng = random.Random(f"{seed}:{stratum}")
         shuffled = ordered[:]
         rng.shuffle(shuffled)
 

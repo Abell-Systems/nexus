@@ -7,13 +7,21 @@ devtest_split_v1.json (this experiment's config), per docs/superpowers/specs/
 `assignments` entries -- the 11 `no_sector_coverage` entries (#90/#91) must never
 appear in dev or test.
 
-Intentionally RED right now: devtest_split_n13_v1.json does not exist yet.
+Also recomputes the split in-memory via stratified_split() (same inputs/derivation
+as generate_devtest_split.py) and asserts it matches the committed artifact exactly,
+proving reproducibility on every run rather than as a one-time manual claim. This
+check only reads files and computes in memory -- it never writes to disk.
 """
 
 import hashlib
 import json
 import sys
 from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(REPO_ROOT / "backend" / "src" / "main"))
+
+from application.evaluation.stratified_split import stratified_split  # noqa: E402
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 CONFIG_DIR = Path(__file__).resolve().parent.parent / "config"
@@ -65,6 +73,8 @@ def main() -> int:
     assert manifest["content_sha256"] == split_sha
     assert manifest["derived_from"]["assignments_sha256"] == assignments_sha
     assert manifest["derived_from"]["config_sha256"] == config_sha
+    assert manifest["dev_fraction"] == config["dev_fraction"]
+    assert manifest["seed"] == config["seed"]
 
     dev_ids = split["dev"]
     test_ids = split["test"]
@@ -90,7 +100,12 @@ def main() -> int:
         stratum_sizes[sector] = stratum_sizes.get(sector, 0) + 1
 
     for sector, size in stratum_sizes.items():
-        expected_dev, expected_test = EXPECTED_STRATUM_SIZE_TO_DEV_TEST[size]
+        expected = EXPECTED_STRATUM_SIZE_TO_DEV_TEST.get(size)
+        assert expected is not None, (
+            f"{sector}: no expected dev/test pair defined for stratum size {size} "
+            f"-- update EXPECTED_STRATUM_SIZE_TO_DEV_TEST"
+        )
+        expected_dev, expected_test = expected
         actual = per_stratum[sector]
         assert (actual["dev"], actual["test"]) == (expected_dev, expected_test), (
             f"{sector} (n={size}): expected dev/test={expected_dev}/{expected_test}, "
@@ -99,7 +114,26 @@ def main() -> int:
 
     assert manifest["per_stratum_counts"] == per_stratum
 
+    # Reproducibility: recompute the split in-memory (same derivation as
+    # generate_devtest_split.py) and assert it matches the committed artifact exactly.
+    recomputed = stratified_split(
+        assignments["assignments"],
+        stratum_key=lambda a: a[config["stratum_key"]],
+        item_id=lambda a: a["demand_id"],
+        dev_fraction=config["dev_fraction"],
+        seed=config["seed"],
+    )
+    assert set(recomputed.dev.demand_ids) == set(dev_ids), (
+        "Recomputed Dev partition does not match the committed artifact -- "
+        "stratified_split() is not reproducing devtest_split_n13_v1.json"
+    )
+    assert set(recomputed.test.demand_ids) == set(test_ids), (
+        "Recomputed Test partition does not match the committed artifact -- "
+        "stratified_split() is not reproducing devtest_split_n13_v1.json"
+    )
+
     print(f"OK: dev={len(dev_ids)} test={len(test_ids)} per_stratum={per_stratum}")
+    print("OK: recomputed split reproduces the committed artifact exactly")
     return 0
 
 

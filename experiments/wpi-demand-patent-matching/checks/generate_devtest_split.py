@@ -54,7 +54,7 @@ def main() -> int:
 
     result = stratified_split(
         covered,
-        stratum_key=lambda a: a["sector_code"],
+        stratum_key=lambda a: a[config["stratum_key"]],
         item_id=lambda a: a["demand_id"],
         dev_fraction=config["dev_fraction"],
         seed=config["seed"],
@@ -74,6 +74,8 @@ def main() -> int:
         "dev_count": len(result.dev.demand_ids),
         "test_count": len(result.test.demand_ids),
         "per_stratum_counts": result.per_stratum_counts,
+        "dev_fraction": config["dev_fraction"],
+        "seed": config["seed"],
         "content_sha256": split_sha,
         "derived_from": {
             "assignments_sha256": assignments_sha,

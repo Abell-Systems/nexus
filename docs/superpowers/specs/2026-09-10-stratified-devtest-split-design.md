@@ -100,9 +100,13 @@ incidental — per review). For each stratum of size $n_s$:
    non-empty, taking precedence over the exact `dev_fraction` target when the two
    conflict (per the accepted review decision).
 3. Which $d_s$ specific items land in Dev (vs. the remaining $n_s - d_s$ in Test) is
-   decided by `random.Random(seed).shuffle()` of the stratum's items (in `item_id`
-   sort order, for determinism independent of input iteration order), taking the
-   first $d_s$ post-shuffle as Dev.
+   decided by `random.Random(f"{seed}:{stratum}").shuffle()` of the stratum's items
+   (in `item_id` sort order, for determinism independent of input iteration order),
+   taking the first $d_s$ post-shuffle as Dev. The per-stratum seed is derived from
+   both the global `seed` and the stratum name -- not the bare global `seed` -- so
+   that strata of equal size get decorrelated (not identical) shuffle permutations,
+   while staying fully deterministic (same seed + same stratum name -> same
+   permutation, every time).
 
 **This is a property of `stratified_split()` itself, enforced by backend unit tests
 against synthetic strata** (#79 review requirement 2) — not only checked against the

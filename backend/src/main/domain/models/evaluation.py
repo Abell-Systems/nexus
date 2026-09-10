@@ -889,6 +889,8 @@ class DevPartition(BaseModel):
 class TestPartition(BaseModel):
     """Mirror of DevPartition for the Test split (protocol §3 D_test)."""
 
+    __test__ = False  # not a pytest test class despite the name
+
     model_config = ConfigDict(frozen=True)
 
     demand_ids: tuple[str, ...] = Field(min_length=1)

@@ -59,7 +59,7 @@ def stratified_split[T](
             elif dev_count == n_s:
                 dev_count = n_s - 1
 
-        rng = random.Random(seed)
+        rng = random.Random(f"{seed}:{stratum}")
         shuffled = ordered[:]
         rng.shuffle(shuffled)
 
@@ -69,6 +69,17 @@ def stratified_split[T](
         dev_ids.extend(item_id(i) for i in stratum_dev)
         test_ids.extend(item_id(i) for i in stratum_test)
         per_stratum_counts[stratum] = {"dev": len(stratum_dev), "test": len(stratum_test)}
+
+    if not dev_ids:
+        raise ValueError(
+            "stratified_split: resulting Dev partition would be empty -- every "
+            "stratum's size and dev_fraction combination produced zero Dev items"
+        )
+    if not test_ids:
+        raise ValueError(
+            "stratified_split: resulting Test partition would be empty -- every "
+            "stratum's size and dev_fraction combination produced zero Test items"
+        )
 
     return StratifiedSplitResult(
         dev=DevPartition(demand_ids=tuple(sorted(dev_ids))),
