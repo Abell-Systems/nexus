@@ -88,19 +88,19 @@ def main() -> int:
     parser.add_argument(
         "--dataset",
         type=Path,
-        default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.json",
+        default=repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.json",
         help="Path to evaluation dataset JSON",
     )
     parser.add_argument(
         "--checksum",
         type=Path,
-        default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.sha256",
+        default=repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.sha256",
         help="Path to dataset .sha256 file",
     )
     parser.add_argument(
         "--manifest",
         type=Path,
-        default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.manifest.json",
+        default=repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.manifest.json",
         help="Path to dataset .manifest.json file",
     )
     parser.add_argument(

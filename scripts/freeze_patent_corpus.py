@@ -8,7 +8,7 @@ acquisition -> committed dataset file -> manifest JSON -> sha256 sidecar. Unlike
 script, this one is fixture-testable end-to-end without live credentials (ADR 0020 §6);
 `main()` requires EPO_OPS_KEY/EPO_OPS_SECRET for the real ~50,000-record run.
 
-Outputs (data/evaluation/):
+Outputs (experiments/wpi-demand-patent-matching/data/):
 - dataset_patent_corpus_p.json            canonical patent corpus (PatentCorpus)
 - dataset_patent_corpus_p.manifest.json   identity/hash manifest
 - dataset_patent_corpus_p.sha256          sha256sum-compatible sidecar
@@ -37,7 +37,7 @@ from infrastructure.sources.patent.ops_partitioning import (  # noqa: E402
     enumerate_partition_tree,
 )
 
-OUT_DIR = REPO_ROOT / "data" / "evaluation"
+OUT_DIR = REPO_ROOT / "experiments" / "wpi-demand-patent-matching" / "data"
 OUT_BASENAME = "dataset_patent_corpus_p"
 
 JURISDICTIONS = ["EP", "US", "JP", "CN", "KR", "WO"]

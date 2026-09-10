@@ -38,10 +38,10 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
-DATASET_PATH = REPO_ROOT / "data" / "evaluation" / "dataset_pilot_benchmark.json"
-CHECKSUM_PATH = REPO_ROOT / "data" / "evaluation" / "dataset_pilot_benchmark.sha256"
-MANIFEST_PATH = REPO_ROOT / "data" / "evaluation" / "dataset_pilot_benchmark.manifest.json"
-EMBEDDINGS_PATH = REPO_ROOT / "data" / "evaluation" / "embeddings_pilot_benchmark.json"
+DATASET_PATH = REPO_ROOT / "experiments" / "shared" / "dataset_pilot_benchmark.json"
+CHECKSUM_PATH = REPO_ROOT / "experiments" / "shared" / "dataset_pilot_benchmark.sha256"
+MANIFEST_PATH = REPO_ROOT / "experiments" / "shared" / "dataset_pilot_benchmark.manifest.json"
+EMBEDDINGS_PATH = REPO_ROOT / "experiments" / "shared" / "embeddings_pilot_benchmark.json"
 RAW_PATH = REPO_ROOT / "data" / "raw" / "oepm_open_data_es.json"
 SNAPSHOT_JSONL_PATH = REPO_ROOT / "data" / "snapshots" / "patents_es_corpus.jsonl"
 SNAPSHOT_MANIFEST_PATH = REPO_ROOT / "data" / "snapshots" / "patents_es_manifest.json"

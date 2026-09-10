@@ -4,7 +4,7 @@
 
 ## Real-data correction to the spec's assumed criterion
 
-Before selecting, checked `data/evaluation/dataset_phase2_demand_corpus_n39.json` directly: `target_cpc_prefixes` is `[]` (empty) for **all 39 demands**, not just some. The spec's §4 criterion "at least one or two demands where CPC concordance is likely to carry real signal (a well-populated `target_cpc_prefixes`)" can't be applied as written — that field is never populated in this corpus.
+Before selecting, checked `experiments/wpi-demand-patent-matching/data/dataset_phase2_demand_corpus_n39.json` directly: `target_cpc_prefixes` is `[]` (empty) for **all 39 demands**, not just some. The spec's §4 criterion "at least one or two demands where CPC concordance is likely to carry real signal (a well-populated `target_cpc_prefixes`)" can't be applied as written — that field is never populated in this corpus.
 
 This doesn't block the criterion's intent, though: `DuckDbCPCRetriever` doesn't read `target_cpc_prefixes` at all — it derives CPC symbols from demand text via `extract_demand_cpc_auto()` → `map_concept_to_cpc()` (`application/landscape/cpc_taxonomy.py`) at retrieval time. So "CPC-informative" below is judged by whether a demand's title/description uses vocabulary a rule-based concept→CPC mapper could plausibly resolve (e.g. "arc welding," "electrolytic hydrogen production") — not by a corpus field.
 

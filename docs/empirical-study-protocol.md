@@ -132,7 +132,7 @@ To ensure scientific integrity and eliminate the risk of premature claims or fab
 
 ### 3.1 Phase 1 — Methodological Validation / Pilot Benchmark
 * **Purpose:** Verify the technical correctness of the end-to-end experimental apparatus.
-* **Data Footprint:** The frozen, content-addressed `ES Pilot-16` corpus (15 verified OEPM publications) and 3 verified InnoGet demand calls, sealed under ADR 0006's byte-exact SHA-256 provenance model (`data/evaluation/dataset_pilot_benchmark.json`/`.manifest.json`/`.sha256`).
+* **Data Footprint:** The frozen, content-addressed `ES Pilot-16` corpus (15 verified OEPM publications) and 3 verified InnoGet demand calls, sealed under ADR 0006's byte-exact SHA-256 provenance model (`experiments/shared/dataset_pilot_benchmark.json`/`.manifest.json`/`.sha256`).
 * **Relevance Assessment:** **Partial judgment** — 23 of the 45 possible demand-patent pairs (3 demands × 15 patents) are annotated, not exhaustive. This is not a shortfall to be corrected here: ADR 0007 defines `Judged@K` and the `UNCERTAIN` relevance grade specifically to make incomplete judgment an explicit, reportable epistemic state (`UNKNOWN != NEGATIVE`) rather than a silently absorbed one.
 * **Deliverables:** Unit and integration verification, deterministic pipeline execution, cryptographic manifest auditing, automated calculation of $\text{nDCG}@10$, $P@K$, $R@K$, $\text{MRR}$, and automated machine-readable export (`json`/`csv`/`md`).
 * **Reporting Boundary:** Phase 1 results are strictly reported as **methodological validation / pilot benchmark**. Phase 1 **must never be used to claim statistical superiority of one retrieval strategy over another**.

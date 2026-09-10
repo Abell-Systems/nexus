@@ -16,7 +16,7 @@ the per-record level — the same shortcut that same audit already self-correcte
 different criterion (content-completeness, 48→43→39).
 
 This document does not modify `phase2_sector_taxonomy_v1`, does not touch
-`data/evaluation/dataset_phase2_demand_corpus_n39.json`, and does not reopen #78. It
+`experiments/wpi-demand-patent-matching/data/dataset_phase2_demand_corpus_n39.json`, and does not reopen #78. It
 defines the rubric and produces an audit artifact that determines, per record, whether
 each of the 39 demands satisfies §4.1's construct — a question logically prior to, and
 independent of, which sector it would be assigned.
@@ -160,7 +160,7 @@ the 13 `INELIGIBLE` ones, unless a future, separately-decided amendment revisits
 
 ## Artifact
 
-`data/evaluation/phase2_demand_construct_eligibility_n39_v1.json` +
+`experiments/wpi-demand-patent-matching/data/phase2_demand_construct_eligibility_n39_v1.json` +
 `.sha256` sidecar, covering all 39 `demand_id`s from the frozen
 `dataset_phase2_demand_corpus_n39.json`, one entry each, produced against this rubric.
 

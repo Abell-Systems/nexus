@@ -67,16 +67,16 @@ def _encode_texts(model: SentenceTransformer, texts: list[str]) -> np.ndarray:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate the frozen M1 semantic embedding artifact (ADR 0014)")
     parser.add_argument(
-        "--dataset", type=Path, default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.json"
+        "--dataset", type=Path, default=repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.json"
     )
     parser.add_argument(
-        "--checksum", type=Path, default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.sha256"
+        "--checksum", type=Path, default=repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.sha256"
     )
     parser.add_argument(
-        "--manifest", type=Path, default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.manifest.json"
+        "--manifest", type=Path, default=repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.manifest.json"
     )
     parser.add_argument(
-        "--output", type=Path, default=repo_root / "data" / "evaluation" / "embeddings_pilot_benchmark.json"
+        "--output", type=Path, default=repo_root / "experiments" / "shared" / "embeddings_pilot_benchmark.json"
     )
     args = parser.parse_args()
 
