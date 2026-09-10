@@ -101,10 +101,15 @@ contradicts `resolved_at_step`:
 Same pattern as `phase2-demand-construct-eligibility-audit-protocol.md`:
 
 - **Auditor A** performs the full primary pass over all 24 records (`assignment.reviewer`).
-- **Auditor B independently reviews every record where `resolved_at_step >= 4`** (any
-  tie-break case, D6's explicit auditability trigger) **plus any record Auditor A
-  flags as borderline** at a lower step. Unflagged records resolved cleanly at step 1–3
-  rest on Auditor A alone — a deliberate scope decision, not a claim of full
+- D6 mandates auditability (a recorded rationale trail) for every case resolved via D4
+  step 5 (the title-first tie-break) — that obligation is already satisfied by
+  `decision_trace` itself and is not, by itself, a second-reviewer requirement.
+  **This protocol additionally requires independent Auditor B review of every record
+  where `resolved_at_step >= 4`** (step 4's joint re-read included, not just step 5) —
+  a stricter, deliberate quality-control decision of this protocol, not a restatement
+  of D6's own minimum. Auditor B also reviews **any record Auditor A flags as
+  borderline** at a lower step. Unflagged records resolved cleanly at step 1–3 rest on
+  Auditor A alone — a deliberate scope decision, not a claim of full
   double-classification.
 - Agreement (`sector_code` matches Auditor B's independent call) resolves the record.
   Disagreement is adjudicated jointly; `audit.adjudication` records the resolution and

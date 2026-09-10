@@ -9,6 +9,7 @@ frozen taxonomy config still matches what #83 decided.
 
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -18,19 +19,20 @@ CONFIG_DIR = Path(__file__).resolve().parent.parent / "config"
 CONFIG_NAME = "phase2_sector_taxonomy_v1.json"
 CONFIG_SHA_NAME = "phase2_sector_taxonomy_v1.sha256"
 
-# D1 table, docs/phase2-sector-taxonomy-amendment.md -- six closed categories.
-EXPECTED_CODES = (
-    "CONSUMER_CHEMISTRY",
-    "SANITARY_MATERIALS",
-    "INDUSTRIAL_MACHINERY_IOT",
-    "ENERGY_STORAGE",
-    "METALLURGY",
-    "BIOTECHNOLOGY",
-)
+# Matches a D1 table row's Code column, e.g. "| `CONSUMER_CHEMISTRY`        | ...".
+# Deliberately no hardcoded category list here: the amendment doc's D1 table is the
+# sole source of truth for which codes are closed (config.amendment_sha256 pins the
+# exact revision this was parsed from) -- duplicating the six strings as a literal
+# here would be a second, independently-editable copy of #83's decision.
+D1_ROW_PATTERN = re.compile(r"^\|\s*`([A-Z_]+)`\s*\|", re.MULTILINE)
 
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _d1_codes(amendment_text: str) -> set[str]:
+    return {m.group(1) for m in D1_ROW_PATTERN.finditer(amendment_text)}
 
 
 def main() -> int:
@@ -48,17 +50,8 @@ def main() -> int:
     assert config["taxonomy_version"] == "v1"
     assert config["closed"] is True
 
-    codes = [s["code"] for s in config["sectors"]]
-    assert len(codes) == len(set(codes)), "Duplicate sector code in taxonomy config"
-    assert set(codes) == set(EXPECTED_CODES), (
-        f"Taxonomy config does not match #83's D1 table: got={sorted(codes)} "
-        f"expected={sorted(EXPECTED_CODES)}"
-    )
-    for sector in config["sectors"]:
-        assert sector["label"].strip()
-        assert sector["traceable_to"].strip()
-
     amendment_path = REPO_ROOT / config["amendment_path"]
+    amendment_text = amendment_path.read_text(encoding="utf-8")
     amendment_computed = _sha256(amendment_path)
     assert amendment_computed == config["amendment_sha256"], (
         f"docs/phase2-sector-taxonomy-amendment.md changed since the taxonomy was frozen: "
@@ -66,6 +59,18 @@ def main() -> int:
         "A changed amendment must not silently revalidate an already-frozen taxonomy config -- "
         "recompute deliberately, or version the taxonomy (phase2_sector_taxonomy_v2)."
     )
+
+    codes = [s["code"] for s in config["sectors"]]
+    assert len(codes) == len(set(codes)), "Duplicate sector code in taxonomy config"
+    d1_codes = _d1_codes(amendment_text)
+    assert d1_codes, "No D1-table code rows found in the amendment -- parser or document format changed"
+    assert set(codes) == d1_codes, (
+        f"Taxonomy config does not match the amendment's D1 table: config={sorted(codes)} "
+        f"D1={sorted(d1_codes)}"
+    )
+    for sector in config["sectors"]:
+        assert sector["label"].strip()
+        assert sector["traceable_to"].strip()
 
     print(f"OK: {len(codes)} sectors, taxonomy_version={config['taxonomy_version']}")
     return 0

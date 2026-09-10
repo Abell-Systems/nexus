@@ -50,9 +50,42 @@ ALL_CONDITIONAL_FIELDS = {
     "title_first_object",
 }
 
+# Exact key sets per docs/phase2-sector-assignment-protocol.md's artifact shape.
+# No extra/unknown fields permitted anywhere in the artifact -- an entry with a
+# surprise key (e.g. a post-hoc "scientifically_convenient" flag) must fail loudly,
+# not be silently ignored by dict.get().
+TOP_LEVEL_KEYS = {"dataset_id", "assignments"}
+ENTRY_KEYS = {"demand_id", "sector_code", "decision_trace", "rationale", "evidence", "assignment", "audit"}
+DECISION_TRACE_KEYS = {
+    "resolved_at_step",
+    "primary_technical_object",
+    "primary_technical_problem",
+    "application_domain",
+    "candidates_after_step_3",
+    "joint_reread_result",
+    "title_first_object",
+}
+ASSIGNMENT_KEYS = {"reviewer"}
+AUDIT_KEYS = {
+    "needs_auditor_b",
+    "auditor_b_reviewer",
+    "auditor_b_status",
+    "agreement",
+    "adjudication_required",
+    "adjudication",
+}
+
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _assert_exact_keys(obj: dict, expected: set, label: str) -> None:
+    actual = set(obj.keys())
+    assert actual == expected, (
+        f"{label}: keys do not match the frozen contract -- "
+        f"missing={expected - actual or None}, unexpected={actual - expected or None}"
+    )
 
 
 def _verify_sidecar(artifact_path: Path, sidecar_path: Path) -> str:
@@ -77,6 +110,9 @@ def main() -> int:
     assert manifest["derived_from"]["eligible_corpus_sha256"] == eligible_sha
     assert manifest["derived_from"]["taxonomy_config_sha256"] == taxonomy_sha
 
+    _assert_exact_keys(assignments, TOP_LEVEL_KEYS, "top-level assignments object")
+    assert isinstance(assignments["dataset_id"], str) and assignments["dataset_id"].strip()
+
     eligible_ids = {d["demand_id"] for d in eligible["demands"]}
     valid_codes = {s["code"] for s in taxonomy["sectors"]}
 
@@ -91,22 +127,47 @@ def main() -> int:
 
     per_sector_counts: dict[str, int] = {}
     for entry in entries:
+        _assert_exact_keys(entry, ENTRY_KEYS, f"{entry.get('demand_id', '?')}: entry")
+        _assert_exact_keys(entry["decision_trace"], DECISION_TRACE_KEYS, f"{entry['demand_id']}: decision_trace")
+        _assert_exact_keys(entry["assignment"], ASSIGNMENT_KEYS, f"{entry['demand_id']}: assignment")
+        _assert_exact_keys(entry["audit"], AUDIT_KEYS, f"{entry['demand_id']}: audit")
+
+        assert isinstance(entry["demand_id"], str) and entry["demand_id"].strip()
+        assert isinstance(entry["sector_code"], str)
         assert entry["sector_code"] in valid_codes, (
             f"{entry['demand_id']}: sector_code '{entry['sector_code']}' is not in the closed "
             f"taxonomy {sorted(valid_codes)}"
         )
         per_sector_counts[entry["sector_code"]] = per_sector_counts.get(entry["sector_code"], 0) + 1
 
-        assert entry["rationale"].strip(), f"{entry['demand_id']}: empty rationale"
-        assert entry["evidence"] and all(e.strip() for e in entry["evidence"]), (
-            f"{entry['demand_id']}: empty or missing evidence"
+        assert isinstance(entry["rationale"], str) and entry["rationale"].strip(), (
+            f"{entry['demand_id']}: empty rationale"
         )
-        assert entry["assignment"]["reviewer"].strip(), f"{entry['demand_id']}: empty reviewer"
+        assert (
+            isinstance(entry["evidence"], list)
+            and entry["evidence"]
+            and all(isinstance(e, str) and e.strip() for e in entry["evidence"])
+        ), f"{entry['demand_id']}: empty or missing evidence"
+        assert isinstance(entry["assignment"]["reviewer"], str) and entry["assignment"]["reviewer"].strip(), (
+            f"{entry['demand_id']}: empty reviewer"
+        )
 
         trace = entry["decision_trace"]
-        assert trace["primary_technical_object"].strip(), f"{entry['demand_id']}: empty primary_technical_object"
+        assert isinstance(trace["primary_technical_object"], str) and trace["primary_technical_object"].strip(), (
+            f"{entry['demand_id']}: empty primary_technical_object"
+        )
         step = trace["resolved_at_step"]
-        assert step in STEP_REQUIRED_FIELDS, f"{entry['demand_id']}: invalid resolved_at_step={step}"
+        assert isinstance(step, int) and not isinstance(step, bool) and step in STEP_REQUIRED_FIELDS, (
+            f"{entry['demand_id']}: invalid resolved_at_step={step!r}"
+        )
+        for field in ("primary_technical_problem", "application_domain", "joint_reread_result", "title_first_object"):
+            assert trace[field] is None or (isinstance(trace[field], str) and trace[field].strip()), (
+                f"{entry['demand_id']}: decision_trace.{field} must be null or a non-empty string"
+            )
+        assert trace["candidates_after_step_3"] is None or (
+            isinstance(trace["candidates_after_step_3"], list)
+            and all(isinstance(c, str) for c in trace["candidates_after_step_3"])
+        ), f"{entry['demand_id']}: decision_trace.candidates_after_step_3 must be null or a list of strings"
 
         required = STEP_REQUIRED_FIELDS[step]
         for field in ALL_CONDITIONAL_FIELDS:
@@ -123,22 +184,38 @@ def main() -> int:
             )
 
         audit = entry["audit"]
+        assert isinstance(audit["needs_auditor_b"], bool)
+        assert isinstance(audit["adjudication_required"], bool)
+        assert audit["agreement"] is None or isinstance(audit["agreement"], bool)
         if step >= 4:
+            # This protocol's own QA policy (not D6 itself -- D6 mandates auditability
+            # only for step-5 tie-break cases; this PR additionally requires Auditor B
+            # review for every step-4/5 case as a stricter, deliberate choice).
             assert audit["needs_auditor_b"] is True, (
-                f"{entry['demand_id']}: resolved_at_step={step} requires needs_auditor_b=true (D6)"
+                f"{entry['demand_id']}: resolved_at_step={step} requires needs_auditor_b=true "
+                "(this protocol's step-4/5 Auditor B policy)"
             )
         if audit["needs_auditor_b"]:
-            assert audit["auditor_b_reviewer"], f"{entry['demand_id']}: missing auditor_b_reviewer"
+            assert isinstance(audit["auditor_b_reviewer"], str) and audit["auditor_b_reviewer"].strip(), (
+                f"{entry['demand_id']}: missing auditor_b_reviewer"
+            )
             assert audit["auditor_b_status"] in valid_codes, f"{entry['demand_id']}: invalid auditor_b_status"
             expected_agreement = audit["auditor_b_status"] == entry["sector_code"]
             assert audit["agreement"] == expected_agreement, f"{entry['demand_id']}: agreement flag inconsistent"
             if not expected_agreement:
                 assert audit["adjudication_required"] is True
-                assert audit["adjudication"], f"{entry['demand_id']}: disagreement with no adjudication recorded"
+                assert isinstance(audit["adjudication"], str) and audit["adjudication"].strip(), (
+                    f"{entry['demand_id']}: disagreement with no adjudication recorded"
+                )
+            else:
+                assert audit["adjudication_required"] is False
+                assert audit["adjudication"] is None
         else:
             assert audit["auditor_b_reviewer"] is None
             assert audit["auditor_b_status"] is None
             assert audit["agreement"] is None
+            assert audit["adjudication_required"] is False
+            assert audit["adjudication"] is None
 
     assert manifest["demand_count"] == len(entries) == 24, manifest["demand_count"]
     for code, expected_count in manifest["per_sector_counts"].items():
