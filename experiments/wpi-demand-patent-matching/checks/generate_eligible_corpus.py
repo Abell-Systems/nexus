@@ -32,7 +32,23 @@ def _sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _verify_sidecar(artifact_path: Path, sidecar_path: Path) -> str:
+    """Precondition, not an observation: an input must match its own frozen sidecar
+    before this script is allowed to read it as a derivation source."""
+    computed = _sha256_file(artifact_path)
+    declared_sha, declared_name = sidecar_path.read_text(encoding="utf-8").strip().split(maxsplit=1)
+    assert declared_sha == computed, (
+        f"{artifact_path.name}: bytes do not match {sidecar_path.name} -- refusing to derive "
+        "from a modified input. Investigate before regenerating."
+    )
+    assert declared_name == artifact_path.name
+    return computed
+
+
 def main() -> int:
+    corpus_sha = _verify_sidecar(DATA_DIR / CORPUS_NAME, DATA_DIR / CORPUS_SHA_NAME)
+    audit_sha = _verify_sidecar(DATA_DIR / AUDIT_NAME, DATA_DIR / AUDIT_SHA_NAME)
+
     corpus = _load(CORPUS_NAME)
     audit = _load(AUDIT_NAME)
     corpus_manifest = _load("dataset_phase2_demand_corpus_n39.manifest.json")
@@ -77,9 +93,9 @@ def main() -> int:
         "content_sha256": eligible_sha,
         "derived_from": {
             "source_corpus_path": f"experiments/wpi-demand-patent-matching/data/{CORPUS_NAME}",
-            "source_corpus_sha256": _sha256_file(DATA_DIR / CORPUS_NAME),
+            "source_corpus_sha256": corpus_sha,
             "construct_eligibility_audit_path": f"experiments/wpi-demand-patent-matching/data/{AUDIT_NAME}",
-            "construct_eligibility_audit_sha256": _sha256_file(DATA_DIR / AUDIT_NAME),
+            "construct_eligibility_audit_sha256": audit_sha,
         },
     }
 

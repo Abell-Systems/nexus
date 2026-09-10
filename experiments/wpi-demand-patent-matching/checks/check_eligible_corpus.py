@@ -9,8 +9,10 @@ ELIGIBLE entries of phase2_demand_construct_eligibility_n39_v1.json:
     is check_construct_eligibility.py's job);
   - the N=24 sequence is exactly the N=39 subsequence induced by ELIGIBLE, in N=39
     order (no reordering, no INELIGIBLE/UNCERTAIN leakage);
-  - each selected demand object is byte-identical (as parsed JSON) to its N=39
-    counterpart -- no field transformation.
+  - each selected demand object is field-for-field identical, as parsed JSON, to its
+    N=39 counterpart -- no field transformation. (The N=24 file itself cannot be
+    byte-identical to any part of N=39: it carries its own dataset_id/description
+    wrapper.)
 """
 
 import hashlib
