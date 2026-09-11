@@ -47,7 +47,6 @@ def load_corpus_expansion_policy(
     return CorpusExpansionPolicy.model_validate(data)
 
 
-
 def validate_demand_candidate(
     candidate: DemandCandidateContractRecord, policy: CorpusExpansionPolicy
 ) -> CandidateValidationResult:
