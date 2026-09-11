@@ -21,6 +21,8 @@ import pytest
 
 from application.evaluation.runner import (
     DefaultEvaluationRunner,
+    family_metadata_complete,
+    validate_family_policy_feasible,
     validate_temporal_pool_mode_consistency,
 )
 from domain.models.evaluation import (
@@ -188,6 +190,7 @@ def sample_context() -> EvaluationExecutionContext:
         execution_timestamp=datetime(2026, 9, 3, 14, 0, 0, tzinfo=UTC),
         environment="test",
         temporal_pool_mode="unconstrained",
+        family_policy="allow",
     )
 
 
@@ -200,6 +203,7 @@ def strict_context() -> EvaluationExecutionContext:
         execution_timestamp=datetime(2026, 9, 3, 14, 0, 0, tzinfo=UTC),
         environment="test",
         temporal_pool_mode="strict",
+        family_policy="allow",
     )
 
 
@@ -552,3 +556,317 @@ def test_validate_temporal_pool_mode_consistency_accepts_strict_regardless_of_fl
     whether the policy flag is True or False."""
     validate_temporal_pool_mode_consistency(temporal_pool_mode="strict", require_temporal_validity=True)
     validate_temporal_pool_mode_consistency(temporal_pool_mode="strict", require_temporal_validity=False)
+
+
+# ---------------------------------------------------------------------------
+# ADR 0027: family-aware evaluation fail-fast validator
+# ---------------------------------------------------------------------------
+
+
+def test_family_metadata_complete_true_when_all_patents_have_family_id(sample_validated_dataset):
+    patents = [
+        p.model_copy(update={"family_id": f"FAM-{i}"})
+        for i, p in enumerate(sample_validated_dataset.dataset.patents)
+    ]
+    assert family_metadata_complete(patents) is True
+
+
+def test_family_metadata_complete_false_when_any_patent_missing_family_id(sample_validated_dataset):
+    patents = list(sample_validated_dataset.dataset.patents)  # family_id is None on all of these
+    assert family_metadata_complete(patents) is False
+
+
+def test_validate_family_policy_feasible_allows_allow_regardless_of_metadata(sample_validated_dataset):
+    validate_family_policy_feasible("allow", sample_validated_dataset.dataset.patents)
+
+
+def test_validate_family_policy_feasible_raises_for_collapse_without_metadata(sample_validated_dataset):
+    with pytest.raises(ValueError, match="FAMILY_METADATA_UNAVAILABLE"):
+        validate_family_policy_feasible("collapse", sample_validated_dataset.dataset.patents)
+
+
+def test_validate_family_policy_feasible_raises_for_exclude_related_without_metadata(sample_validated_dataset):
+    with pytest.raises(ValueError, match="FAMILY_METADATA_UNAVAILABLE"):
+        validate_family_policy_feasible("exclude_related", sample_validated_dataset.dataset.patents)
+
+
+def test_validate_family_policy_feasible_accepts_collapse_with_full_metadata(sample_validated_dataset):
+    patents = [
+        p.model_copy(update={"family_id": f"FAM-{i}"})
+        for i, p in enumerate(sample_validated_dataset.dataset.patents)
+    ]
+    validate_family_policy_feasible("collapse", patents)
+
+
+# ---------------------------------------------------------------------------
+# ADR 0027: family-aware pool transform, wired into run_evaluation
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def dataset_with_known_family() -> ValidatedDataset:
+    """Two patents sharing FAM-A (P-A1, P-A2), one singleton family FAM-B (P-B1)."""
+    prov = EvaluationProvenance(
+        source_authority="oepm",
+        source_uri="https://example.com/p",
+        extraction_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+        raw_payload_sha256="1" * 64,
+        modality=DataModality.OBSERVED,
+    )
+    demand = EvaluationDemand(
+        demand_id="D-FAM",
+        title="Sanitary Fixtures",
+        description="Drainage equipment",
+        posted_date=date(2023, 1, 1),
+        target_cpc_prefixes=["E03C"],
+        provenance=prov,
+    )
+    patents = [
+        EvaluationPatent(
+            publication_id="P-A1", publication_date=date(2022, 1, 1),
+            classifications_cpc=["E03C"], title="Patent A1", abstract="Abstract",
+            provenance=prov, family_id="FAM-A",
+        ),
+        EvaluationPatent(
+            publication_id="P-A2", publication_date=date(2022, 1, 1),
+            classifications_cpc=["E03C"], title="Patent A2", abstract="Abstract",
+            provenance=prov, family_id="FAM-A",
+        ),
+        EvaluationPatent(
+            publication_id="P-B1", publication_date=date(2022, 1, 1),
+            classifications_cpc=["E03C"], title="Patent B1", abstract="Abstract",
+            provenance=prov, family_id="FAM-B",
+        ),
+    ]
+    annotations = [
+        EvaluationAnnotation(
+            demand_id="D-FAM", publication_id=pid, grade=RelevanceGrade.GRADE_2,
+            annotator_role="expert", modality=DataModality.EXPERT_LABELLED,
+        )
+        for pid in ("P-A1", "P-A2", "P-B1")
+    ]
+    dataset = EvaluationDataset(
+        dataset_id="eval-corpus-family", schema_version="1.0.0", dataset_version="1.0.0",
+        description="Family test corpus", demands=[demand], patents=patents, annotations=annotations,
+    )
+    manifest = EvaluationDatasetManifest(
+        dataset_id="eval-corpus-family", schema_version="1.0.0", dataset_version="1.0.0",
+        source_authorities=["oepm"], demand_count=1, patent_count=3, annotation_count=3,
+        content_sha256="f" * 64,
+    )
+    return ValidatedDataset(dataset=dataset, manifest=manifest)
+
+
+def _family_context(family_policy: str) -> EvaluationExecutionContext:
+    return EvaluationExecutionContext(
+        engine_name="FakeRankingPort", engine_version="1.0.0", engine_commit_hash="a321b0c",
+        execution_timestamp=datetime(2026, 9, 3, 14, 0, 0, tzinfo=UTC), environment="test",
+        temporal_pool_mode="unconstrained", family_policy=family_policy,
+    )
+
+
+def test_runner_allow_policy_passes_full_pool_unchanged(
+    dataset_with_known_family, sample_policy
+):
+    ranking_port = FakeRankingPort(fixed_order=["P-A1", "P-A2", "P-B1"])
+    runner = DefaultEvaluationRunner()
+
+    runner.run_evaluation(
+        dataset=dataset_with_known_family, ranking_port=ranking_port,
+        policy=sample_policy, context=_family_context("allow"),
+    )
+
+    received_ids = {p.publication_id for p in ranking_port.received_patents[0]}
+    assert received_ids == {"P-A1", "P-A2", "P-B1"}
+
+
+def test_runner_collapse_policy_keeps_one_representative_per_family(
+    dataset_with_known_family, sample_policy
+):
+    ranking_port = FakeRankingPort(fixed_order=["P-A1", "P-A2", "P-B1"])
+    runner = DefaultEvaluationRunner()
+
+    report = runner.run_evaluation(
+        dataset=dataset_with_known_family, ranking_port=ranking_port,
+        policy=sample_policy, context=_family_context("collapse"),
+    )
+
+    received_ids = {p.publication_id for p in ranking_port.received_patents[0]}
+    # FAM-A has two members (P-A1, P-A2): only the lexicographically smallest
+    # publication_id (P-A1) survives. FAM-B is a singleton and survives whole.
+    assert received_ids == {"P-A1", "P-B1"}
+    assert report.demand_reports[0].candidate_count == 2
+
+
+def test_run_evaluation_collapse_recall_denominator_is_not_shrunk_with_the_pool(
+    dataset_with_known_family, sample_policy
+):
+    """ADR 0027 "Known gap": collapse/exclude_related shrink the ranking pool but
+    NOT the relevance-judgement set used for Recall/nDCG denominators in
+    application/evaluation/metrics.py -- that file is untouched by ADR 0027 by
+    design. This pins the CURRENT, documented-as-known-gap behavior so it stays
+    visible in the test suite, not only in ADR prose: a perfect ranking over the
+    collapsed 2-patent pool (P-A1, P-B1) still reads Recall@5 < 1.0, because
+    P-A2 -- suppressed from the pool, unreachable by the ranker -- remains
+    counted as a relevant item in the denominator. Fixing this is explicitly out
+    of scope for ADR 0027 (see its "Known gap" section and Enforcement item 6);
+    a future PR that resolves it must update this assertion deliberately, not by
+    silently regressing it back to today's value.
+    """
+    ranking_port = FakeRankingPort(fixed_order=["P-A1", "P-B1"])
+    runner = DefaultEvaluationRunner()
+
+    report = runner.run_evaluation(
+        dataset=dataset_with_known_family, ranking_port=ranking_port,
+        policy=sample_policy, context=_family_context("collapse"),
+    )
+
+    d_rep = report.demand_reports[0]
+    assert d_rep.candidate_count == 2
+    # All 3 original annotations (P-A1, P-A2, P-B1, all GRADE_2/broad-relevant)
+    # still count toward the denominator even though P-A2 was collapsed away.
+    assert d_rep.broad_metrics.recall_at_5 == pytest.approx(2 / 3)
+
+
+def test_runner_exclude_related_policy_drops_every_multi_member_family(
+    dataset_with_known_family, sample_policy
+):
+    ranking_port = FakeRankingPort(fixed_order=["P-A1", "P-A2", "P-B1"])
+    runner = DefaultEvaluationRunner()
+
+    report = runner.run_evaluation(
+        dataset=dataset_with_known_family, ranking_port=ranking_port,
+        policy=sample_policy, context=_family_context("exclude_related"),
+    )
+
+    received_ids = {p.publication_id for p in ranking_port.received_patents[0]}
+    # FAM-A has two members: both are dropped entirely. FAM-B is a singleton: kept.
+    assert received_ids == {"P-B1"}
+    assert report.demand_reports[0].candidate_count == 1
+
+
+def test_run_evaluation_raises_when_collapse_requested_without_family_metadata(
+    sample_validated_dataset, sample_policy
+):
+    """sample_validated_dataset's patents all have family_id=None (Task 1 default)."""
+    ranking_port = FakeRankingPort(fixed_order=["P-1", "P-2", "P-3", "P-4", "P-5"])
+    runner = DefaultEvaluationRunner()
+
+    with pytest.raises(ValueError, match="FAMILY_METADATA_UNAVAILABLE"):
+        runner.run_evaluation(
+            dataset=sample_validated_dataset, ranking_port=ranking_port,
+            policy=sample_policy, context=_family_context("collapse"),
+        )
+
+    # The fail-fast must happen before any ranking -- not just "raises somewhere".
+    # A future refactor moving the validation after the demand loop would still
+    # satisfy pytest.raises() above (ranking would run first, then raise at the
+    # end) without this assertion catching the regression.
+    assert ranking_port.received_demands == []
+    assert ranking_port.received_patents == []
+
+
+def test_run_evaluation_records_family_metadata_complete_false_under_allow(
+    sample_validated_dataset, sample_policy
+):
+    ranking_port = FakeRankingPort(fixed_order=["P-1", "P-2", "P-3", "P-4", "P-5"])
+    runner = DefaultEvaluationRunner()
+
+    report = runner.run_evaluation(
+        dataset=sample_validated_dataset, ranking_port=ranking_port,
+        policy=sample_policy, context=_family_context("allow"),
+    )
+
+    assert report.family_metadata_complete is False
+
+
+def test_run_evaluation_records_family_metadata_complete_true_under_collapse(
+    dataset_with_known_family, sample_policy
+):
+    ranking_port = FakeRankingPort(fixed_order=["P-A1", "P-A2", "P-B1"])
+    runner = DefaultEvaluationRunner()
+
+    report = runner.run_evaluation(
+        dataset=dataset_with_known_family, ranking_port=ranking_port,
+        policy=sample_policy, context=_family_context("collapse"),
+    )
+
+    assert report.family_metadata_complete is True
+
+
+def test_runner_collapse_policy_keeps_lexicographically_smallest_publication_id_regardless_of_input_order(
+    sample_policy,
+):
+    """Task 5 fix: P-A9 is listed BEFORE P-A2 in input order, both in FAM-A. A naive
+    "keep whichever comes first in the input list" implementation would keep P-A9;
+    the ADR-mandated rule keeps the lexicographically smallest publication_id (P-A2)
+    regardless of input order.
+    """
+    prov = EvaluationProvenance(
+        source_authority="oepm",
+        source_uri="https://example.com/p",
+        extraction_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+        raw_payload_sha256="1" * 64,
+        modality=DataModality.OBSERVED,
+    )
+    demand = EvaluationDemand(
+        demand_id="D-FAM", title="Sanitary Fixtures", description="Drainage equipment",
+        posted_date=date(2023, 1, 1), target_cpc_prefixes=["E03C"], provenance=prov,
+    )
+    patents = [
+        EvaluationPatent(
+            publication_id="P-A9", publication_date=date(2022, 1, 1),
+            classifications_cpc=["E03C"], title="Patent A9", abstract="Abstract",
+            provenance=prov, family_id="FAM-A",
+        ),
+        EvaluationPatent(
+            publication_id="P-A2", publication_date=date(2022, 1, 1),
+            classifications_cpc=["E03C"], title="Patent A2", abstract="Abstract",
+            provenance=prov, family_id="FAM-A",
+        ),
+    ]
+    annotations = [
+        EvaluationAnnotation(
+            demand_id="D-FAM", publication_id=pid, grade=RelevanceGrade.GRADE_2,
+            annotator_role="expert", modality=DataModality.EXPERT_LABELLED,
+        )
+        for pid in ("P-A9", "P-A2")
+    ]
+    dataset = EvaluationDataset(
+        dataset_id="eval-corpus-order", schema_version="1.0.0", dataset_version="1.0.0",
+        description="Family order test corpus", demands=[demand], patents=patents, annotations=annotations,
+    )
+    manifest = EvaluationDatasetManifest(
+        dataset_id="eval-corpus-order", schema_version="1.0.0", dataset_version="1.0.0",
+        source_authorities=["oepm"], demand_count=1, patent_count=2, annotation_count=2,
+        content_sha256="f" * 64,
+    )
+    validated_dataset = ValidatedDataset(dataset=dataset, manifest=manifest)
+    ranking_port = FakeRankingPort(fixed_order=["P-A9", "P-A2"])
+    runner = DefaultEvaluationRunner()
+
+    runner.run_evaluation(
+        dataset=validated_dataset, ranking_port=ranking_port,
+        policy=sample_policy, context=_family_context("collapse"),
+    )
+
+    received_ids = {p.publication_id for p in ranking_port.received_patents[0]}
+    assert received_ids == {"P-A2"}
+
+
+def test_run_evaluation_raises_when_exclude_related_requested_without_family_metadata(
+    sample_validated_dataset, sample_policy
+):
+    """sample_validated_dataset's patents all have family_id=None (Task 1 default)."""
+    ranking_port = FakeRankingPort(fixed_order=["P-1", "P-2", "P-3", "P-4", "P-5"])
+    runner = DefaultEvaluationRunner()
+
+    with pytest.raises(ValueError, match="FAMILY_METADATA_UNAVAILABLE"):
+        runner.run_evaluation(
+            dataset=sample_validated_dataset, ranking_port=ranking_port,
+            policy=sample_policy, context=_family_context("exclude_related"),
+        )
+
+    # Same guarantee as the collapse case: fail-fast must precede any ranking.
+    assert ranking_port.received_demands == []
+    assert ranking_port.received_patents == []

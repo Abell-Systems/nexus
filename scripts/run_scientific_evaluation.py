@@ -168,6 +168,21 @@ def main() -> int:
             "fast rather than silently contaminating the condition."
         ),
     )
+    parser.add_argument(
+        "--family-policy",
+        type=str,
+        choices=["allow", "collapse", "exclude_related"],
+        required=True,
+        dest="family_policy",
+        help=(
+            "ADR 0027: mandatory, no default (same explicit-injection principle as "
+            "--temporal-pool-mode) -- the patent-family policy must always be a "
+            "conscious choice. 'allow': no family-based pool changes. 'collapse'/"
+            "'exclude_related' require every patent in the dataset to carry a "
+            "family_id (ADR 0027 §1: never inferred here) or the run fails fast "
+            "with FAMILY_METADATA_UNAVAILABLE."
+        ),
+    )
 
     args = parser.parse_args()
 
@@ -226,10 +241,11 @@ def main() -> int:
         execution_timestamp=datetime.now(UTC),
         environment=args.environment,
         temporal_pool_mode=args.temporal_pool_mode,
+        family_policy=args.family_policy,
     )
     print(
         f"✓ Execution Context:   Engine commit {commit_hash[:7]} at {context.execution_timestamp.isoformat()} "
-        f"(temporal_pool_mode={args.temporal_pool_mode})"
+        f"(temporal_pool_mode={args.temporal_pool_mode}, family_policy={args.family_policy})"
     )
 
     # 4. Instantiate engine and adapter in CLI layer (the appropriate place for concrete wiring)

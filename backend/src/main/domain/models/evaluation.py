@@ -107,6 +107,11 @@ class EvaluationPatent(BaseModel):
     title: str = Field(min_length=1)
     abstract: str = Field(min_length=1)
     provenance: EvaluationProvenance
+    # ADR 0027: externally-supplied patent-family identifier (e.g. from a future
+    # INPADOC/OPS-backed corpus source). None means "no family metadata available
+    # for this publication" -- this field is NEVER inferred here from title, CPC,
+    # or assignee similarity; only ever accepted as given on the sealed dataset.
+    family_id: str | None = None
 
 
 class EvaluationAnnotation(BaseModel):
@@ -337,6 +342,12 @@ class EvaluationExecutionContext(BaseModel):
     # behavior) and must be paired with require_temporal_validity=False by the
     # caller (see application.evaluation.runner.validate_temporal_pool_mode_consistency).
     temporal_pool_mode: Literal["strict", "unconstrained"]
+    # ADR 0027: family-aware evaluation policy. Mandatory, no default (ADR 0005
+    # explicit-injection principle, same as temporal_pool_mode / ADR 0018).
+    # "allow": no family-based collapsing/exclusion (pre-ADR-0027 baseline).
+    # "collapse": pool is reduced to one representative per family_id before ranking.
+    # "exclude_related": every patent in a multi-member family is dropped before ranking.
+    family_policy: Literal["allow", "collapse", "exclude_related"]
 
     @field_validator("engine_commit_hash")
     @classmethod
@@ -417,6 +428,10 @@ class EvaluationRunReport(BaseModel):
     # Excluded demands per metric = len(demand_reports) - macro_denominators[metric].
     macro_denominators: dict[str, int]
     uncertainty_rate: float = Field(ge=0.0, le=1.0)
+    # ADR 0027: whether every patent in this run's sealed universe carried family_id.
+    # Recorded unconditionally (even under family_policy="allow") so the audit trail
+    # is honest about whether a family-sensitive policy could have been requested.
+    family_metadata_complete: bool
 
     @field_validator("dataset_sha256", "policy_sha256")
     @classmethod
