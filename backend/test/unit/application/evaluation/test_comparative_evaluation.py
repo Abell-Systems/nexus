@@ -89,6 +89,7 @@ def _make_run_report(run_id: str, demand_mrrs: dict[str, float]) -> EvaluationRu
         macro_denominators=denominators,
         uncertainty_rate=0.0,
         family_metadata_complete=True,
+        denominator_semantics="eligible_universe_v1",
     )
 
 
@@ -197,6 +198,57 @@ def test_evaluate_study_protocol_applies_bh_fdr_across_all_hypotheses():
     for res in report.results:
         assert isinstance(res.adjusted_q_value, float)
         assert 0.0 <= res.adjusted_q_value <= 1.0
+
+
+def test_evaluate_study_protocol_rejects_mismatched_temporal_pool_mode():
+    """ADR 0018 Enforcement #6: pairing runs with different temporal_pool_mode
+    silently attributes a pool-composition difference to the ranking engine."""
+    baseline = _make_run_report("run-M0", _DEMANDS)
+    treatment = _make_run_report("run-M1", _TREATMENT_MRRS)
+    baseline = baseline.model_copy(
+        update={"context": _CTX.model_copy(update={"temporal_pool_mode": "strict"})}
+    )
+    treatment = treatment.model_copy(
+        update={"context": _CTX.model_copy(update={"temporal_pool_mode": "unconstrained"})}
+    )
+    h = StudyHypothesis(id="H01", baseline="M0", treatment="M1", metric="mrr", scope="strict", alternative="greater", description="")
+    protocol = _make_protocol([h])
+
+    with pytest.raises(ValueError, match="temporal_pool_mode"):
+        evaluate_study_protocol(runs={"M0": baseline, "M1": treatment}, protocol=protocol, study_status="PILOT")
+
+
+def test_evaluate_study_protocol_rejects_mismatched_family_policy():
+    """ADR 0027 Enforcement #6: pairing runs with different family_policy compares
+    pools of different composition, not a like-for-like ranking comparison."""
+    baseline = _make_run_report("run-M0", _DEMANDS)
+    treatment = _make_run_report("run-M1", _TREATMENT_MRRS)
+    baseline = baseline.model_copy(
+        update={"context": _CTX.model_copy(update={"family_policy": "allow"})}
+    )
+    treatment = treatment.model_copy(
+        update={"context": _CTX.model_copy(update={"family_policy": "collapse"})}
+    )
+    h = StudyHypothesis(id="H01", baseline="M0", treatment="M1", metric="mrr", scope="strict", alternative="greater", description="")
+    protocol = _make_protocol([h])
+
+    with pytest.raises(ValueError, match="family_policy"):
+        evaluate_study_protocol(runs={"M0": baseline, "M1": treatment}, protocol=protocol, study_status="PILOT")
+
+
+def test_evaluate_study_protocol_rejects_mismatched_denominator_semantics():
+    """ADR 0028: a frozen pre-fix run and a post-fix run must never be paired --
+    their Recall/nDCG values are not computed under the same definition."""
+    baseline = _make_run_report("run-M0", _DEMANDS)
+    treatment = _make_run_report("run-M1", _TREATMENT_MRRS)
+    treatment = treatment.model_construct(
+        **{**treatment.__dict__, "denominator_semantics": "some_other_value"}
+    )
+    h = StudyHypothesis(id="H01", baseline="M0", treatment="M1", metric="mrr", scope="strict", alternative="greater", description="")
+    protocol = _make_protocol([h])
+
+    with pytest.raises(ValueError, match="denominator_semantics"):
+        evaluate_study_protocol(runs={"M0": baseline, "M1": treatment}, protocol=protocol, study_status="PILOT")
 
 
 def test_comparative_harness_has_zero_matching_imports():

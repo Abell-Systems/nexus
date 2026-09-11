@@ -109,28 +109,89 @@ def validate_family_policy_feasible(family_policy: str, patents: list[Evaluation
         )
 
 
-def _apply_family_policy(family_policy: str, patents: list[EvaluationPatent]) -> list[EvaluationPatent]:
+def _apply_family_policy(
+    family_policy: str, patents: list[EvaluationPatent]
+) -> tuple[list[EvaluationPatent], dict[str, list[str]]]:
     """ADR 0027 §2/§4: pre-ranking pool transform, mirroring _filter_temporally_eligible_patents's
     placement. Caller must have already called validate_family_policy_feasible -- this function
     assumes family_id is populated on every patent when family_policy != "allow".
+
+    Returns (surviving_patents, collapse_groups). collapse_groups maps a surviving
+    representative's publication_id to every publication_id collapsed into it
+    (including itself) -- ADR 0028 uses this to remap a suppressed family member's
+    relevance judgement onto the representative that absorbed it. Non-empty only for
+    "collapse": "allow" and "exclude_related" never let one patent absorb another's
+    judgement, so their collapse_groups is always {}.
     """
     if family_policy == "allow":
-        return list(patents)
+        return list(patents), {}
 
     if family_policy == "collapse":
-        best_by_family: dict[str, EvaluationPatent] = {}
-        for p in sorted(patents, key=lambda p: p.publication_id):
+        by_family: dict[str, list[EvaluationPatent]] = {}
+        for p in patents:
             family_id = _require_family_id(p)
-            if family_id not in best_by_family:
-                best_by_family[family_id] = p
-        return sorted(best_by_family.values(), key=lambda p: p.publication_id)
+            by_family.setdefault(family_id, []).append(p)
+
+        representatives: list[EvaluationPatent] = []
+        collapse_groups: dict[str, list[str]] = {}
+        for members in by_family.values():
+            members_sorted = sorted(members, key=lambda p: p.publication_id)
+            rep = members_sorted[0]
+            representatives.append(rep)
+            collapse_groups[rep.publication_id] = [m.publication_id for m in members_sorted]
+        return sorted(representatives, key=lambda p: p.publication_id), collapse_groups
 
     # exclude_related
     family_counts: dict[str, int] = {}
     for p in patents:
         family_id = _require_family_id(p)
         family_counts[family_id] = family_counts.get(family_id, 0) + 1
-    return [p for p in patents if family_counts[_require_family_id(p)] == 1]
+    surviving = [p for p in patents if family_counts[_require_family_id(p)] == 1]
+    return surviving, {}
+
+
+def _restrict_judgements_to_eligible_universe(
+    eligible_patents: list[EvaluationPatent],
+    collapse_groups: dict[str, list[str]],
+    judgements: dict[str, RelevanceGrade],
+) -> dict[str, RelevanceGrade]:
+    """ADR 0028: the relevance-judgement set fed into compute_demand_metrics must
+    exactly match the eligible pool handed to the ranking port -- never the full,
+    unrestricted per-demand annotation set (the pre-ADR-0028 defect ADR 0018 §3 and
+    ADR 0027 both inherited: a patent excluded from the pool still counted as
+    relevant-but-missed in the Recall/nDCG denominator).
+
+    - A patent excluded from the pool (temporal ineligibility, exclude_related)
+      contributes nothing: its judgement, if any, is simply dropped.
+    - A patent collapsed into a representative (collapse) contributes its judged
+      grade to that representative via a max-relevance remap over the whole family
+      group, so a relevant family member is never lost from the denominator just
+      because a less-relevant sibling won the deterministic publication_id tie-break.
+    - RelevanceGrade.UNCERTAIN never counts as a "judged" grade for the remap (it
+      must never win a max() against a real grade) but is preserved verbatim when
+      no member of the group has a definitive grade, so uncertainty_rate stays an
+      accurate reflection of the eligible universe rather than silently dropping it.
+    """
+    restricted: dict[str, RelevanceGrade] = {}
+    for patent in eligible_patents:
+        pub_id = patent.publication_id
+        members = collapse_groups.get(pub_id, [pub_id])
+        judged_grades = [
+            judgements[m]
+            for m in members
+            if m in judgements and judgements[m] != RelevanceGrade.UNCERTAIN
+        ]
+        if judged_grades:
+            restricted[pub_id] = max(judged_grades, key=lambda g: g.value)
+        else:
+            # No definitive grade anywhere in the group -- if any member (the
+            # representative or a suppressed sibling) was judged at all, it can
+            # only be UNCERTAIN at this point; preserve it verbatim rather than
+            # silently dropping it from uncertainty_rate's accounting.
+            group_grades = [judgements[m] for m in members if m in judgements]
+            if group_grades:
+                restricted[pub_id] = group_grades[0]
+    return restricted
 
 
 def _require_family_id(patent: EvaluationPatent) -> str:
@@ -250,14 +311,19 @@ class DefaultEvaluationRunner(EvaluationRunner):
             # ADR 0027: family-policy pool transform, applied after temporal
             # eligibility and before ranking -- same insertion point convention
             # ADR 0018 established for _filter_temporally_eligible_patents.
-            eligible_patents = _apply_family_policy(context.family_policy, eligible_patents)
+            eligible_patents, collapse_groups = _apply_family_policy(context.family_policy, eligible_patents)
 
             # 1. Delegate ranking to port — receives only evaluation-domain objects,
             #    returns ranked publication_ids in engine's original order.
             ranked_ids = ranking_port.rank_candidates(eval_demand, eligible_patents)
 
-            # 2. Align with expert annotations and compute per-demand metrics
-            judgements = annotations_by_demand.get(d_id, {})
+            # 2. ADR 0028: restrict (and, for collapse, remap) judgements to the
+            #    eligible evaluation universe -- the same pool the ranking port
+            #    just received -- before computing per-demand metrics.
+            judgements_full = annotations_by_demand.get(d_id, {})
+            judgements = _restrict_judgements_to_eligible_universe(
+                eligible_patents, collapse_groups, judgements_full
+            )
             demand_report = compute_demand_metrics(
                 demand_id=d_id,
                 ranked_publication_ids=ranked_ids,
@@ -297,4 +363,5 @@ class DefaultEvaluationRunner(EvaluationRunner):
             macro_denominators=macro_denominators,
             uncertainty_rate=overall_uncertainty_rate,
             family_metadata_complete=family_metadata_complete(patent_universe),
+            denominator_semantics="eligible_universe_v1",
         )

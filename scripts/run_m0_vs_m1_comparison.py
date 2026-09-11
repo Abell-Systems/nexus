@@ -157,7 +157,7 @@ def main() -> int:
     parser.add_argument("--model-config", type=Path, dest="model_config", default=repo_root / "config" / "evaluations" / "model_configurations_m0_m6.json")
     parser.add_argument("--embeddings", type=Path, default=repo_root / "experiments" / "shared" / "embeddings_pilot_benchmark.json")
     parser.add_argument("--protocol", type=Path, default=repo_root / "config" / "evaluations" / "comparisons_m0_vs_m1_pilot.json")
-    parser.add_argument("--output-dir", type=Path, dest="output_dir", default=repo_root / "data" / "experiments")
+    parser.add_argument("--output-dir", type=Path, dest="output_dir", default=repo_root / "data" / "experiments" / "latest")
     parser.add_argument("--environment", type=str, default="local_benchmark")
     parser.add_argument("--engine-commit", type=str, dest="engine_commit", default=None)
     parser.add_argument(
