@@ -162,6 +162,7 @@ To ensure scientific integrity and eliminate the risk of premature claims or fab
   * Demands $\mathcal{D}$ are partitioned into a **Development Split ($\mathcal{D}_{\text{dev}}$)** (e.g., 40%) and a **Test Split ($\mathcal{D}_{\text{test}}$)** (e.g., 60%), stratified by industrial sector.
   * $\mathcal{D}_{\text{dev}}$ is used exclusively for tuning ranker weights $(\alpha, \beta, \gamma)$ and determining the primary comparator $S_{\text{best\_single}}$.
   * $\mathcal{D}_{\text{test}}$ remains completely untouched until final confirmatory evaluation.
+  * **Organization-Level Independence & Dev/Test Boundary Invariant (ADR 0029):** For the powered efficacy comparison, observations from the same requesting organization must not cross the Dev/Test boundary. Exact-match audit of the N=24 eligible corpus (`phase2_demand_independence_audit_n24_v1.json`) revealed 6 pseudoreplicates across two multi-member organizations (SMAR3TS ×5, Lacer S.A. ×3), yielding a derived independent corpus of N=18 (`dataset_phase2_independent_corpus_v1.json`). Audit of the historical split (`devtest_split_n13_v1.json`) identified organization-level contamination across Dev/Test; confirmatory evaluation therefore requires an un-contaminated split derived from independent observations. N=18 is an audit finding and derived independent corpus, not satisfying the pre-registered $|\mathcal{D}|=60$ powered study target.
 
 ---
 
