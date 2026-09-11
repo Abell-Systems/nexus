@@ -32,8 +32,8 @@ Per AGENTS.md §3 (*Symmetrical Tripartite Classification*), absence of evidence
   3. **`UNKNOWN`:** Organization identity is absent (`None`) or non-identifying (`"Anonymous Organization"`); organizational independence is indeterminate.
 
 ### 2.3 Verified Independent ($N=12$) vs. Operational Audited Corpus ($N=18$) vs. Powered Target ($N=60$)
-* **Eligible Corpus ($N=24$):** The construct-eligible universe from [dataset_phase2_eligible_corpus_n24_v1.json](file:///home/valentin/code/nexus/.claude/worktrees/demand-independence-audit-contract/experiments/wpi-demand-patent-matching/data/dataset_phase2_eligible_corpus_n24_v1.json).
-* **Operational Audited Corpus ($N=18$):** [dataset_phase2_organization_audited_corpus_v1.json](file:///home/valentin/code/nexus/.claude/worktrees/demand-independence-audit-contract/experiments/wpi-demand-patent-matching/data/dataset_phase2_organization_audited_corpus_v1.json) retains the 18 demands remaining after excluding the 6 observed pseudoreplicates (12 `INDEPENDENT` + 6 `UNKNOWN`).
+* **Eligible Corpus ($N=24$):** The construct-eligible universe from [`dataset_phase2_eligible_corpus_n24_v1.json`](../../experiments/wpi-demand-patent-matching/data/dataset_phase2_eligible_corpus_n24_v1.json).
+* **Operational Audited Corpus ($N=18$):** [`dataset_phase2_organization_audited_corpus_v1.json`](../../experiments/wpi-demand-patent-matching/data/dataset_phase2_organization_audited_corpus_v1.json) retains the 18 demands remaining after excluding the 6 observed pseudoreplicates (12 `INDEPENDENT` + 6 `UNKNOWN`).
 * **Confirmatory Statistical Degrees of Freedom:** For statistical hypothesis testing in the confirmatory study, **`UNKNOWN` observations cannot be counted as demonstrated independent degrees of freedom**. The verified independent sample is strictly **$N=12$**.
 * **Critical Principle:** Neither $N=18$ nor $N=12$ satisfies the pre-registered study target. The sample size required for 80% statistical power at standardized effect size $\theta = 0.2$ remains **$|\mathcal{D}| = 60$** (pre-registered in `docs/empirical-study-protocol.md` §3.2 and `data/experiments/power_analysis_wilcoxon.json`).
 
