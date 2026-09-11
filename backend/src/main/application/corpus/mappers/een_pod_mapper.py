@@ -75,9 +75,11 @@ class EenPodCandidateMapper:
 
         # 6. Geographic stratum
         orig_country = meta.get("origin_country") or country_code
-        geographic_stratum = "spain" if orig_country.upper() == "ES" else "international_european"
-
-        # 7. Language code
+        geographic_stratum = (
+            "spain"
+            if orig_country and orig_country.strip().upper() in ("ES", "SPAIN", "ESPAÑA", "ESPANA")
+            else "international_european"
+        ) # 7. Language code
         lang = meta.get("language_code")
         if not lang:
             html_tag = soup.find("html")
