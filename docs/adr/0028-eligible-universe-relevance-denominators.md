@@ -100,6 +100,14 @@ Enforcement #6 code-enforced rather than prose-only.
   explicitly-reviewed decision, not an automatic consequence of this ADR landing.
 - Does not add any new CLI flag or caller-facing configuration — `denominator_semantics`
   is a fact about the runner's own implementation, not a policy choice.
+- Does not restrict `EvaluationRunReport.uncertainty_rate` to the eligible universe:
+  it remains defined over the full sealed per-run annotation set (`all_grades`,
+  accumulated in `runner.py` before any pool filtering), a dataset-level property
+  computed once for the whole run — deliberately distinct from per-demand
+  `DemandMetricsReport.uncertain_count`/`judged_count`, which this ADR does restrict
+  to the eligible universe. Once the pool has been shrunk (`temporal_pool_mode="strict"`
+  or a non-`allow` `family_policy`), aggregating `demand_reports` will not reproduce
+  `uncertainty_rate` — the two are not directly comparable.
 
 ## Consequences
 
