@@ -62,3 +62,59 @@ class ConstructEligibilityRubric(BaseModel):
     technology_solution_requested: RubricValue
     technical_specification_present: RubricValue
     exclusion_criterion_1: RubricValue
+
+
+class DemandIndependenceStatus(StrEnum):
+    """Outcome of the demand-independence grouping decision (ADR 0029,
+    docs/phase2-demand-independence-audit-protocol.md).
+    - INDEPENDENT: Organization identity was observed and is unique across the
+      evaluated corpus (or selected as group representative).
+    - PSEUDOREPLICATE: Organization identity was observed and duplicates another
+      demand from the same organization (excluding representative).
+    - UNKNOWN: Organization identity is missing (None) or non-identifying
+      placeholder (e.g. 'Anonymous Organization'); organization independence
+      cannot be determined from observed metadata.
+    """
+
+    INDEPENDENT = "INDEPENDENT"
+    PSEUDOREPLICATE = "PSEUDOREPLICATE"
+    UNKNOWN = "UNKNOWN"
+
+
+class DemandOrganizationObservation(BaseModel):
+    """One demand's observed requesting-organization identity, as extracted at
+    acquisition time (domain.models.demand.RawExtractedDemandFields.organization_raw
+    / DemandRecord.requesting_organization) -- never inferred at audit time. The
+    sole basis this domain currently supports for grouping demands into
+    independence clusters is an exact string match on this field. A text- or
+    name-similarity heuristic (e.g. matching "Bax & Company" to "Indira from
+    Bax&Co" as the same entity) is explicitly out of scope -- see ADR 0029
+    Context, which rejects it for the same circularity reason ADR 0027 rejected
+    heuristic patent-family detection: any similarity signal strong enough to
+    merge near-duplicate names is also a signal that could correlate with the
+    relevance judgments this dataset exists to evaluate honestly.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    demand_id: str = Field(min_length=1)
+    requesting_organization: str | None = None
+
+
+class DemandIndependenceGroupEntry(BaseModel):
+    """Outcome of the demand-independence grouping decision for one demand
+    (ADR 0029). `independence_group_id` is the exact `requesting_organization`
+    string when the demand was assigned to a group (singletons and multi-member
+    groups); `None` when the demand's organization is missing or was excluded
+    as a known non-identifying placeholder (e.g. "Anonymous Organization") --
+    such a demand receives status=UNKNOWN since its organization independence
+    is unverified and indeterminate.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    demand_id: str = Field(min_length=1)
+    requesting_organization: str | None = None
+    independence_group_id: str | None = None
+    status: DemandIndependenceStatus
+
