@@ -56,7 +56,9 @@ Exactly the same placement decision ADR 0018 made for `temporal_pool_mode`: the 
 - Does not change `nDCG@10`'s status as the confirmatory endpoint, `MetricSet`, or any fusion/BM25/CPC scoring logic.
 - Does not touch `domain/models/patent.py`'s `PatentFamily`/`FamilyMembership` (matching/ingestion bounded context) or import it from the evaluation domain.
 
-## Known gap: the pool transform shrinks the pool but not the relevance-judgement denominator
+## Known gap (RESOLVED by ADR 0028): the pool transform shrinks the pool but not the relevance-judgement denominator
+
+Resolved by ADR 0028 (`docs/adr/0028-eligible-universe-relevance-denominators.md`), which fixes this defect jointly for `temporal_pool_mode` and `family_policy` — see that ADR for the mechanism.
 
 `_apply_family_policy`'s `collapse`/`exclude_related` transforms shrink the candidate pool passed to `ranking_port.rank_candidates`, but `application/evaluation/metrics.py`'s Recall/nDCG denominators are computed from the dataset's annotated relevance judgements, unchanged by this transform. A patent a family policy removed from the pool remains counted as a possible relevant item in the denominator. The practical effect: `collapse`/`exclude_related` will systematically produce **lower** Recall/nDCG scores than `allow` even for an otherwise-identical, equally-good ranking of the surviving pool — an artifact of an inflated denominator, not evidence that collapsing or excluding families makes ranking worse.
 
@@ -83,4 +85,4 @@ A future PR is **non-compliant** with this ADR if it:
 3. Permits a run with `family_policy` in `{"collapse", "exclude_related"}` to execute against a patent universe with incomplete `family_id` coverage without failing fast.
 4. Imports `domain.models.matching` or `domain.protocols.matching` from `domain/models/evaluation.py` or `domain/protocols/evaluation.py` to source family data.
 5. Reports a family-aware Phase-2 sensitivity result before a real family-metadata source has been sourced, reviewed, and sealed into the corpus.
-6. Reports, publishes, or acts on any comparative scientific claim between a `family_policy="collapse"` or `family_policy="exclude_related"` run and a `family_policy="allow"` run (or between two non-`allow` family policies) before the Recall/nDCG denominator gap described in "Known gap" above is fixed in a dedicated, independently reviewed follow-up PR — mirroring ADR 0018 Enforcement item 6's precedent for exactly this kind of premature-comparative-claim risk.
+6. **(Superseded by ADR 0028's code-enforced comparative guard — this item is now historical context, not an active constraint.)** Reports, publishes, or acts on any comparative scientific claim between a `family_policy="collapse"` or `family_policy="exclude_related"` run and a `family_policy="allow"` run (or between two non-`allow` family policies) before the Recall/nDCG denominator gap described in "Known gap" above is fixed in a dedicated, independently reviewed follow-up PR — mirroring ADR 0018 Enforcement item 6's precedent for exactly this kind of premature-comparative-claim risk.

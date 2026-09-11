@@ -48,6 +48,13 @@ Per #43, these 3 pairs are sealed, historical, annotated evidence and are **neve
 A run declares exactly one of:
 
 - **`strict`** — `Φ_temporal` is applied **before ranking**, constructing `P_eligible(d)` per demand. A temporally-ineligible patent never becomes a candidate: it is not scored, not ranked, not counted in any Recall/nDCG denominator, per protocol §5.3.
+
+  > **Correction (ADR 0028, 2026-09-11):** this claim was not accurate as originally
+  > implemented — `DefaultEvaluationRunner` filtered the *candidate pool* but continued
+  > to pass the demand's full, unrestricted annotation set to `compute_demand_metrics`,
+  > so a temporally-ineligible patent's judgement still inflated the Recall/nDCG
+  > denominator. Fixed by ADR 0028's `_restrict_judgements_to_eligible_universe`.
+
 - **`unconstrained`** — the full patent universe is retained, exactly as today's only behavior. For this to be a genuine no-temporal-enforcement condition (not merely "same pool, but still secretly zeroed"), a run declaring `unconstrained` **must** pair it with a policy whose `sufficiency_rules.require_temporal_validity` is `False`. A harness that allows `temporal_pool_mode="unconstrained"` together with a policy where `require_temporal_validity=True` produces a contaminated condition — neither truly unconstrained (scores are still zeroed) nor truly strict (ineligible candidates are still in the pool, just demoted) — and **must fail fast**, not silently run.
 
 This is a binding invariant, independent of any specific implementation:
