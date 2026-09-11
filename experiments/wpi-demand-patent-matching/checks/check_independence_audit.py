@@ -87,6 +87,7 @@ def main() -> int:
     # Verify Dev/Test leakage audit
     leakage = audit["historical_devtest_split_leakage_audit"]
     assert leakage["leakage_status"] == "CONTAMINATED"
+    assert leakage["total_split_demands"] == len(devtest_split["dev"]) + len(devtest_split["test"])
     assert "SMAR3TS" in leakage["straddling_organization_groups"]
     assert "Lacer, S.A" in leakage["straddling_organization_groups"]
     assert leakage["straddling_organization_groups"]["SMAR3TS"]["dev_demands"] == ["INNOGET-2404"]
@@ -94,6 +95,12 @@ def main() -> int:
     assert leakage["straddling_organization_groups"]["Lacer, S.A"]["dev_demands"] == ["INNOGET-2491"]
     assert leakage["straddling_organization_groups"]["Lacer, S.A"]["test_demands"] == ["INNOGET-2492", "INNOGET-2493"]
     assert leakage["contaminated_split_demand_count"] == 5
+
+    for org_data in leakage["straddling_organization_groups"].values():
+        for did in org_data["dev_demands"]:
+            assert did in devtest_split["dev"]
+        for did in org_data["test_demands"]:
+            assert did in devtest_split["test"]
 
     print(
         f"OK: {len(independent_ids)} INDEPENDENT, {len(pseudoreplicate_ids)} PSEUDOREPLICATE "
