@@ -1,0 +1,19 @@
+{
+  "dataset_id": "nexus-phase2-independent-corpus-v1",
+  "schema_version": "1.0.0",
+  "dataset_version": "1.0.0",
+  "source_authorities": [
+    "innoget",
+    "openinnovation-lombardia"
+  ],
+  "demand_count": 18,
+  "patent_count": 0,
+  "annotation_count": 0,
+  "content_sha256": "6bcf4965b587fad85cc0cfae7afbe81718f6ec5196f43c720c36c9796f51eea6",
+  "derived_from": {
+    "source_eligible_corpus_path": "experiments/wpi-demand-patent-matching/data/dataset_phase2_eligible_corpus_n24_v1.json",
+    "source_eligible_corpus_sha256": "445ffd3c9b56fce751da746596100cb753c3a712e5ea838b18ffd0413366df02",
+    "independence_audit_path": "experiments/wpi-demand-patent-matching/data/phase2_demand_independence_audit_n24_v1.json",
+    "independence_audit_sha256": "f73ac86430e559530e341470a6f0c972121fc7bdf1cfc44b6fb85b045ed4484c"
+  }
+}

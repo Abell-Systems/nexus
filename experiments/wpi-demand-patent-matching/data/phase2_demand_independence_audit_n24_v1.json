@@ -1,0 +1,278 @@
+{
+  "audit_id": "phase2_demand_independence_audit_n24_v1",
+  "protocol_reference": "docs/phase2-demand-independence-audit-protocol.md",
+  "adr_reference": "docs/adr/0029-demand-independence-audit-contract.md",
+  "derivation_rule": "Exact string match on requesting_organization, excluding documented placeholders",
+  "organization_identity_source": "dataset_phase2_demand_corpus_n39.origin_audit.json (acquisition-time observation)",
+  "source_eligible_corpus": "experiments/wpi-demand-patent-matching/data/dataset_phase2_eligible_corpus_n24_v1.json",
+  "source_eligible_corpus_sha256": "445ffd3c9b56fce751da746596100cb753c3a712e5ea838b18ffd0413366df02",
+  "source_origin_audit": "experiments/wpi-demand-patent-matching/data/dataset_phase2_demand_corpus_n39.origin_audit.json",
+  "source_origin_audit_sha256": "03c0f01c75958bf64f3926493b24e01f411bf5ab36b72010268ff61dc4cbaeea",
+  "non_identifying_values": [
+    "Anonymous Organization"
+  ],
+  "counts": {
+    "eligible_corpus_count": 24,
+    "independent_count": 18,
+    "pseudoreplicate_count": 6,
+    "multi_member_group_count": 2,
+    "multi_member_organization_names": [
+      "Lacer, S.A",
+      "SMAR3TS"
+    ]
+  },
+  "retained_independent_demand_ids": [
+    "INNOGET-1605",
+    "INNOGET-1607",
+    "INNOGET-1625",
+    "INNOGET-1689",
+    "INNOGET-1726",
+    "INNOGET-1870",
+    "INNOGET-1932",
+    "INNOGET-1935",
+    "INNOGET-1965",
+    "INNOGET-1972",
+    "INNOGET-2006",
+    "INNOGET-2173",
+    "INNOGET-2258",
+    "INNOGET-2301",
+    "INNOGET-2401",
+    "INNOGET-2491",
+    "LOMBARDIA-860",
+    "LOMBARDIA-947"
+  ],
+  "excluded_pseudoreplicate_demand_ids": [
+    "INNOGET-2403",
+    "INNOGET-2404",
+    "INNOGET-2405",
+    "INNOGET-2417",
+    "INNOGET-2492",
+    "INNOGET-2493"
+  ],
+  "group_membership": {
+    "Bax & Company": [
+      "INNOGET-1605"
+    ],
+    "ALLIANCE project": [
+      "INNOGET-1607"
+    ],
+    "Celsa Group": [
+      "INNOGET-1689"
+    ],
+    "Familia Torres": [
+      "INNOGET-1726"
+    ],
+    "Fundingbox": [
+      "INNOGET-1870"
+    ],
+    "Blue Room Innovation": [
+      "INNOGET-1965"
+    ],
+    "Alberto from Pharmactive Biotech Products": [
+      "INNOGET-2006"
+    ],
+    "Indira from Bax&Co": [
+      "INNOGET-2173"
+    ],
+    "Repsol": [
+      "INNOGET-2258"
+    ],
+    "INDUSAC": [
+      "INNOGET-2301"
+    ],
+    "SMAR3TS": [
+      "INNOGET-2401",
+      "INNOGET-2403",
+      "INNOGET-2404",
+      "INNOGET-2405",
+      "INNOGET-2417"
+    ],
+    "Lacer, S.A": [
+      "INNOGET-2491",
+      "INNOGET-2492",
+      "INNOGET-2493"
+    ]
+  },
+  "historical_devtest_split_leakage_audit": {
+    "source_devtest_split": "experiments/wpi-demand-patent-matching/data/devtest_split_n13_v1.json",
+    "source_devtest_split_sha256": "8c8f2756646f5910d83648952521233a8c68fd8db9afc9c78214c07ac1135a7e",
+    "split_dataset_id": "nexus-phase2-devtest-split-n13-v1",
+    "total_split_demands": 13,
+    "leakage_status": "CONTAMINATED",
+    "scientific_finding": "For the powered efficacy comparison, organization-level independent observations must not cross the Dev/Test boundary. The historical split is contaminated at the organization level because repeated organizations have observations in both Dev and Test.",
+    "contaminated_split_demand_count": 5,
+    "contaminated_split_demand_fraction": 0.3846,
+    "straddling_groups_count": 2,
+    "straddling_organization_groups": {
+      "SMAR3TS": {
+        "dev_demands": [
+          "INNOGET-2404"
+        ],
+        "test_demands": [
+          "INNOGET-2403"
+        ],
+        "unsplit_demands": [
+          "INNOGET-2401",
+          "INNOGET-2405",
+          "INNOGET-2417"
+        ]
+      },
+      "Lacer, S.A": {
+        "dev_demands": [
+          "INNOGET-2491"
+        ],
+        "test_demands": [
+          "INNOGET-2492",
+          "INNOGET-2493"
+        ],
+        "unsplit_demands": []
+      }
+    }
+  },
+  "entries": [
+    {
+      "demand_id": "INNOGET-1605",
+      "requesting_organization": "Bax & Company",
+      "independence_group_id": "Bax & Company",
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-1607",
+      "requesting_organization": "ALLIANCE project",
+      "independence_group_id": "ALLIANCE project",
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-1625",
+      "requesting_organization": "Anonymous Organization",
+      "independence_group_id": null,
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-1689",
+      "requesting_organization": "Celsa Group",
+      "independence_group_id": "Celsa Group",
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-1726",
+      "requesting_organization": "Familia Torres",
+      "independence_group_id": "Familia Torres",
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-1870",
+      "requesting_organization": "Fundingbox",
+      "independence_group_id": "Fundingbox",
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-1932",
+      "requesting_organization": "Anonymous Organization",
+      "independence_group_id": null,
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-1935",
+      "requesting_organization": "Anonymous Organization",
+      "independence_group_id": null,
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-1965",
+      "requesting_organization": "Blue Room Innovation",
+      "independence_group_id": "Blue Room Innovation",
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-1972",
+      "requesting_organization": "Anonymous Organization",
+      "independence_group_id": null,
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-2006",
+      "requesting_organization": "Alberto from Pharmactive Biotech Products",
+      "independence_group_id": "Alberto from Pharmactive Biotech Products",
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-2173",
+      "requesting_organization": "Indira from Bax&Co",
+      "independence_group_id": "Indira from Bax&Co",
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-2258",
+      "requesting_organization": "Repsol",
+      "independence_group_id": "Repsol",
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-2301",
+      "requesting_organization": "INDUSAC",
+      "independence_group_id": "INDUSAC",
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-2401",
+      "requesting_organization": "SMAR3TS",
+      "independence_group_id": "SMAR3TS",
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-2403",
+      "requesting_organization": "SMAR3TS",
+      "independence_group_id": "SMAR3TS",
+      "status": "PSEUDOREPLICATE"
+    },
+    {
+      "demand_id": "INNOGET-2404",
+      "requesting_organization": "SMAR3TS",
+      "independence_group_id": "SMAR3TS",
+      "status": "PSEUDOREPLICATE"
+    },
+    {
+      "demand_id": "INNOGET-2405",
+      "requesting_organization": "SMAR3TS",
+      "independence_group_id": "SMAR3TS",
+      "status": "PSEUDOREPLICATE"
+    },
+    {
+      "demand_id": "INNOGET-2417",
+      "requesting_organization": "SMAR3TS",
+      "independence_group_id": "SMAR3TS",
+      "status": "PSEUDOREPLICATE"
+    },
+    {
+      "demand_id": "INNOGET-2491",
+      "requesting_organization": "Lacer, S.A",
+      "independence_group_id": "Lacer, S.A",
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "INNOGET-2492",
+      "requesting_organization": "Lacer, S.A",
+      "independence_group_id": "Lacer, S.A",
+      "status": "PSEUDOREPLICATE"
+    },
+    {
+      "demand_id": "INNOGET-2493",
+      "requesting_organization": "Lacer, S.A",
+      "independence_group_id": "Lacer, S.A",
+      "status": "PSEUDOREPLICATE"
+    },
+    {
+      "demand_id": "LOMBARDIA-860",
+      "requesting_organization": null,
+      "independence_group_id": null,
+      "status": "INDEPENDENT"
+    },
+    {
+      "demand_id": "LOMBARDIA-947",
+      "requesting_organization": null,
+      "independence_group_id": null,
+      "status": "INDEPENDENT"
+    }
+  ]
+}
