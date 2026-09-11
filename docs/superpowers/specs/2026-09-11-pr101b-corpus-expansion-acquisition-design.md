@@ -1,6 +1,6 @@
 # PR #101b: Phase-2 Demand Corpus Expansion Acquisition & Evidence Design Specification
 
-**Status:** Proposed  
+**Status:** Frozen  
 **Date:** 2026-09-11  
 **Target Milestone:** Milestone #101b  
 **Binding Architecture:** ADR 0008, ADR 0009, ADR 0025, ADR 0026, ADR 0029, ADR 0030, ADR 0031, ADR 0032  
