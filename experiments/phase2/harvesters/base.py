@@ -9,7 +9,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-DEFAULT_USER_AGENT = "Mozilla/5.0 (NexusPhase2CorpusHarvester/1.0; +https://github.com/Abell-Systems/nexus)"
+DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 DEFAULT_HARVESTER_VERSION = "phase2_harvester_v1"
 
 
