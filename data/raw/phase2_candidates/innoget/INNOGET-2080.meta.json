@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:46.079691+00:00",
+  "demand_id": "INNOGET-2080",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "88de874065b1b1dca53c4ed7c2e22acdf6043b2de8f0fb540b4a25719ebdf610",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2080/seeking-innovative-technologies-to-harvest-water-from-air-humidity-in-harsh-conditions"
+}

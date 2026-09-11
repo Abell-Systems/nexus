@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:13.421713+00:00",
+  "demand_id": "TRFR20260728027",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "31bfc27bb246f78814e3bad6519bc5d16c0a770664f64bb3f1653d22c157b78a",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1963/pmi-francese-sviluppa-soluzioni-sostenibili-da-materiali-di-copertura"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:50.981218+00:00",
+  "demand_id": "INNOGET-1926",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8b6e8177ad8b081aaa88ae837950c3a8118a2d45bf25b04c7ec75a951df7a80e",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1926/seeking-suppliers-of-crushable-capsules-to-encapsulate-a-wide-spectrum-of-hydrophobic-and-hydrophilic-flavours"
+}

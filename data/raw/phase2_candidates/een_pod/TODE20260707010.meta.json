@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:56:41.618110+00:00",
+  "demand_id": "TODE20260707010",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7be32c04dc34588b9bc3a188c61eb0b16f7d25ce687a50c2575c49cc11cb837f",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/2202/pmi-tedesca-offre-tecnologia-digital-twin-per-previsioni-atmosferiche"
+}

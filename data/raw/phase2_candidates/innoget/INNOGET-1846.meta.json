@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:54.290558+00:00",
+  "demand_id": "INNOGET-1846",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7d4d1269e21359448357fa8fb8a2de1da4a3ed97a83c71668645ed8c2a8710ea",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1846/seeking-proposals-for-r-d-plans-of-industrial-products-for-the-prevention-and-treatment-of-the-covid-19-coronavirus"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:59.886335+00:00",
+  "demand_id": "INNOGET-1726",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ea7c75531601a61825911719560d4182d9e29853007618b012d52b194f81a72d",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1726/seeking-a-method-for-controlling-the-implantation-of-yeasts-during-alcoholic-fermentation"
+}

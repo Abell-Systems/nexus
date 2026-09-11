@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:18.181287+00:00",
+  "demand_id": "RDRTR20260814005",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "5641704dfe94c974318528f83e8c014fd9fa9de284d144990d72a380d0fafd9a",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1724/pmi-turca-cerca-partner-per-piattaforma-ai-di-generazione-musicale"
+}

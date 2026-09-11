@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:12.821558+00:00",
+  "demand_id": "INNOGET-1625",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6db76a579b0c8bea02aacff127b6d3bb6e8f12d6138bc1edb868608342e4b8cd",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1625/seeking-for-a-method-to-remove-sodium-and-trapped-water-from-residual-fuel-oil"
+}

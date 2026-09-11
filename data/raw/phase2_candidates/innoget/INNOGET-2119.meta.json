@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:23.013076+00:00",
+  "demand_id": "INNOGET-2119",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6b5ec17e2a9f80c8be789e31dd0217ed7f4259f6352267e863e27fbe7348d9a8",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2119/seeking-innovation-for-a-reliable-and-close-to-real-time-carbon-accounting-and-reporting-in-milaha-s-maritime-transportation-of-co"
+}

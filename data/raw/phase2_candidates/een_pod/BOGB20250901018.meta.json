@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:02:53.524687+00:00",
+  "demand_id": "BOGB20250901018",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "bd2a1e62de413dc739997c182fabcdf9e272f8f591c55f3154a9eef915ca8e1b",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/971/software-defined-radio-e-spectrum-sensing-per-applicazioni-nella-difes"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:28.023989+00:00",
+  "demand_id": "INNOGET-2409",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b6e012e27deb1bc3e56d46f5945e11d1dc984ea1eac1f8d1f6eb5e1bb3c46987",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2409/seeking-effective-safe-and-effortless-solutions-to-kill-or-repel-crawling-insects"
+}

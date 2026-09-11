@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:19.859248+00:00",
+  "demand_id": "INNOGET-1987",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "536f85a1539a302f2ecf9791da0fe118da7cfc1ef94e580e4da7a96588c48464",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1987/seeking-process-for-granulating-oxygen-bleach"
+}

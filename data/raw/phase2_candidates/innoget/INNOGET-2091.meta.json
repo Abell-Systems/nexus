@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:36.610589+00:00",
+  "demand_id": "INNOGET-2091",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1a7b8b0315017c6119b55b13fd5a9515854559684a2111f6a625c5584e358983",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2091/seeking-collaboration-to-understand-phenomenon-leading-to-the-creation-of-3-mcpd-in-pre-fried-food-products"
+}

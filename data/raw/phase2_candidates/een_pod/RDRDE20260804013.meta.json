@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:56:53.399818+00:00",
+  "demand_id": "RDRDE20260804013",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d5fa6ca347ab7b4985bb95a9c3e7f640490177f515a920b2b10e0d2e17c48a58",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1867/istituto-tedesco-cerca-partner-europei-per-riciclo-di-polveri-metallic"
+}

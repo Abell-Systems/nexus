@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:24.410764+00:00",
+  "demand_id": "INNOGET-1881",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8cf6641798398aae8d529618271d3f687a6c639ad744c51ab84de6880b2a86bd",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1881/seeking-proposals-to-transform-the-supply-chain-into-more-adaptive-sustainable-business-models"
+}

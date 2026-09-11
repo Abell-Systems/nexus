@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:57.720896+00:00",
+  "demand_id": "INNOGET-2189",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f6726c67be5410fcfd6704b21ff31d2a789064e9734b0497a90486aab7bf3b56",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2189/seeking-olive-compounds-with-antioxidation-and-or-preservation-activity-for-meat-products-cooked-fresh-and-dry-and-meat-alterna"
+}

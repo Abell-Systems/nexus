@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:02:39.763165+00:00",
+  "demand_id": "BRLT20260119006",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "84759f1c5e3a70868cd231a218d09c6db46244cf282225597b2de76aa843b004",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1000/ricerca-motori-endotermici-leggeri-per-uav"
+}

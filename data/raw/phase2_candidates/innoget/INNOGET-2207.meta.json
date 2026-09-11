@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:46.133155+00:00",
+  "demand_id": "INNOGET-2207",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "70b130cc04c92d33d2a87686e7f0c529a0d427f30a6820bbd9b94e8a4d2c7cad",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2207/seeking-technology-to-control-mechanical-impurities-in-the-preparation-and-injection-of-water"
+}

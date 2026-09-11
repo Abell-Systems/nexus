@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:04:54.428099+00:00",
+  "demand_id": "TOES20250821010",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b00b7713640caf8fa98f95bb8176455da9c40b921f8ee928c5f98f6eed4ae1f2",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/880/sistema-adattivo-per-controllo-hvac"
+}

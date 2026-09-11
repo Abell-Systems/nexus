@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:25.776727+00:00",
+  "demand_id": "TODE20260703001",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "96305c5efdd38483da6a46a8529932c06dcd42527a82d5c2c6c315983771177e",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/2216/startup-tedesca-sviluppa-tecnologia-di-stampa-3d-robotica-con-material"
+}

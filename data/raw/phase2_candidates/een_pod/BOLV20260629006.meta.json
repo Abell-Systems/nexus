@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:59:44.904486+00:00",
+  "demand_id": "BOLV20260629006",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "fe1f56219c0ca598d4467df5807dc4f81b2f9a6e3948cb2771e334993f1dc82d",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1470/produzione-conto-terzi-di-miscele-proteiche-e-funzionali-in-polvere"
+}

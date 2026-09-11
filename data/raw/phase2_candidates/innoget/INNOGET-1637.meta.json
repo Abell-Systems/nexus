@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:26.019963+00:00",
+  "demand_id": "INNOGET-1637",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d342604a069b7a79ba85e48f8df9d03b02bf6fa8b6adc4a866536b7a01f2888f",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1637/seeking-a-solution-for-low-air-pressure-preservation-of-fruits-and-vegetables"
+}

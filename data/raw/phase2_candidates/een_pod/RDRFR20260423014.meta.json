@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:15.537499+00:00",
+  "demand_id": "RDRFR20260423014",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6c2b5092574cdfeb297274b5fd64b572690f0f1ab7f590eae9c690ee21451e3e",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1068/universit-francese-cerca-partner-per-ia-e-data-sharing-in-sistemi-ener"
+}

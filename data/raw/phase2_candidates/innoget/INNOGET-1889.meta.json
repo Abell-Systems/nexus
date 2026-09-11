@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:16.982716+00:00",
+  "demand_id": "INNOGET-1889",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7d13258fe4b1acdbbe90ed210906b004c6b7000f41f486fa05b5bb0f637d8c8f",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1889/seeking-ideas-for-a-new-process-to-separate-close-boiling-nitrile-isomers-more-cost-effectively"
+}

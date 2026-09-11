@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:58.710326+00:00",
+  "demand_id": "INNOGET-2345",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "de5fcd00194142f7e10614f054dc3fce4aadc9716dd99e1e996e847dacc22227",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2345/seeking-natural-chelating-agents"
+}

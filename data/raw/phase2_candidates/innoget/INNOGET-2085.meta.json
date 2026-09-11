@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:41.488770+00:00",
+  "demand_id": "INNOGET-2085",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "568ef97b2abeae1e834484bc09dafbe2fc2d42d0ce7bc478070b676cac24e025",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2085/seeking-materials-or-technologies-to-enable-recyclable-paper-based-meal-tray-bowl-packaging-for-frozen-foods"
+}

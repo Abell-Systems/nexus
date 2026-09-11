@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:00:53.371673+00:00",
+  "demand_id": "TOES20260422024",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "77b3471dac588bfaef07607123566c55ad8661b555613a4276fad2c39624938b",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1087/know-how-in-biotecnologia-da-microrganismi-estremofili-per-applicazion"
+}

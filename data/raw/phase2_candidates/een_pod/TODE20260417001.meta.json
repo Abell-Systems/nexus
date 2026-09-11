@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:00:37.296297+00:00",
+  "demand_id": "TODE20260417001",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "874c0a600be39ff8415707bb4f898a53d6640df934563c935c3f754905b8cbf0",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1099/pmi-tedesca-offre-piattaforma-webar-per-turismo-intelligente-e-patrimo"
+}

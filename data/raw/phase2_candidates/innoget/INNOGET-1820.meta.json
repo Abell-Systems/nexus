@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:08.677590+00:00",
+  "demand_id": "INNOGET-1820",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "dab36e4a12f031a7c17abd1e032f4c7d80e64c90736a6068e0eb5652154c71fa",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1820/seeking-products-technologies-and-packaging-that-will-improve-the-benefit-areas-of-manage-and-or-enhance-digestive-wellness"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:18.986491+00:00",
+  "demand_id": "INNOGET-1664",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b955d0741ddc0107cc98d2f29a35954ee7f1580268e3b521d377c1838e31f445",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1664/seeking-water-technologies-forest-and-wood-related-technologies"
+}

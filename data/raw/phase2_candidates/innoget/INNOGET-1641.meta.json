@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:29.965550+00:00",
+  "demand_id": "INNOGET-1641",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "89907b0fe09422020b9d2dc785ebcc0d678eb391883c8039d85f7a5361eba67b",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1641/seeking-uv-intrinsic-fluorescence-detection-technology"
+}

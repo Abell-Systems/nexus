@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:37.112346+00:00",
+  "demand_id": "TOES20260703013",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "991527645eff8308db760bcd22e79daf2c516857e7cef077c2963202507c62ec",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/2218/pmi-spagnola-offre-soluzioni-cementizie-a-basse-emissioni-per-progetti"
+}

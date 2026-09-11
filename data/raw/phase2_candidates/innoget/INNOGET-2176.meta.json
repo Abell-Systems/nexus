@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:02.476531+00:00",
+  "demand_id": "INNOGET-2176",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a659b825aac14d302f2bb42b1d03ae55653b86494c64d3b87a06e7a125960c29",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2176/seeking-empowering-packaging-sustainability-in-the-asia-pacific-and-accelerating-climate-solutions-for-a-sustainable-future"
+}

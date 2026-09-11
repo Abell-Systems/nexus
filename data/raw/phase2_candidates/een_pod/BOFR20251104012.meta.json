@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:04:02.713121+00:00",
+  "demand_id": "BOFR20251104012",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a3c57f4a03334090c1a194deb8c691f4832e9dd807b8876d5aa4499c1ecfa8be",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/919/soluzione-francese-per-il-comfort-termico-sostenibile"
+}

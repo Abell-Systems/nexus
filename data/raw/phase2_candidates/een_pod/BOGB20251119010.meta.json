@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:02:25.610046+00:00",
+  "demand_id": "BOGB20251119010",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ccb66f4755770fe2d751a5dac2bf1816a7f46f33adc9795a6502db1d8e7b7244",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1011/produttore-tessile-uk-offre-sviluppo-prodotto-e-fabbricazione-su-misur"
+}

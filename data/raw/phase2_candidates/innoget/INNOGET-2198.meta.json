@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:56.590702+00:00",
+  "demand_id": "INNOGET-2198",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "080046bb4fc2dd5d385879c4ee4f0a4b44349f8d4b26bb75be7a4b395aeca7bb",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2198/seeking-integrateable-solution-for-electrical-household-appliances-enabling-gas-venting-and-at-the-same-time-water-tightness"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:04:17.818567+00:00",
+  "demand_id": "BOHR20251105015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "dcf57fa62c16767cda56c9a51b3d46c5ca490c372578b7e8f1112a4fd0b5db75",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/907/salina-croata-cerca-distributori-per-sale-bio"
+}

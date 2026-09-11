@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:56:54.652430+00:00",
+  "demand_id": "RDRTR20260812020",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "52af01c3086b76acbd9c4b4401f09ae9699f59c3c1f1f77f57b4e994281e085a",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1757/consorzio-turco-greco-cerca-pmi-marine-per-progetto-eurostars-su-prote"
+}

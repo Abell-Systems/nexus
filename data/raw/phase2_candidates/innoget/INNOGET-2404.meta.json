@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:35.807289+00:00",
+  "demand_id": "INNOGET-2404",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1f8a1458cc0c7eba5321210cf673a8f0da8769e6f84610c880f3979829a6cf7b",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2404/scaling-industrial-processes-of-critical-raw-materials-recovery-and-application-upc-barcelonatech-spain"
+}

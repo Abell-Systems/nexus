@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:56:56.954976+00:00",
+  "demand_id": "BRCY20260731009",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8bf99b1583c4fc0df22be0642954e6944d10413008ab36c228dba8fba14bbfff",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1915/azienda-cipriota-cerca-produttori-di-burro-e-ghee-per-settore-horeca-s"
+}

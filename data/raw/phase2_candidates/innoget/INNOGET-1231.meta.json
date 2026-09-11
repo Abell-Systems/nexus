@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:45.055965+00:00",
+  "demand_id": "INNOGET-1231",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "737e6624b4dd4fe0c494d0b85eecb353f353544555101c12244804b452c76845",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1231/seeking-commercially-available-process-for-conversion-of-hydrogen-and-carbon-monoxide-rich-syngas-into-dimethyl-ether-methanol-g"
+}

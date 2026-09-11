@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:58:09.544573+00:00",
+  "demand_id": "BOUA20260703015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d32161afba2f613e31e1831b3893c5b118b93cc2df459cdcbba153a553e69972",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1406/produttore-ucraino-di-componenti-in-metallurgia-delle-polveri-cerca-pa"
+}

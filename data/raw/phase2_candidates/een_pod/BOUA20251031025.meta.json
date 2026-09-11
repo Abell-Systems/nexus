@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:03:59.283511+00:00",
+  "demand_id": "BOUA20251031025",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1385fd22c58277b4ca3e19fee5496127bf157712ce4b37db75541e7990de1e52",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/922/logistica-ucraina-specializzata-in-carichi-eccezionali"
+}

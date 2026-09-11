@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:24.074737+00:00",
+  "demand_id": "INNOGET-2265",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7a28794ff4b458a670344f086a29ad60a05f884f909385155e7e5f7b9dd42b9b",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2265/seeking-machining-processes-of-lead-free-brass-cylindrical-parts-of-small-size-factor"
+}

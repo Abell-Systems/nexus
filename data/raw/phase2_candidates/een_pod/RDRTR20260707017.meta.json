@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:38.521958+00:00",
+  "demand_id": "RDRTR20260707017",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d886ed3a833ac75e284edec4d36e6b5864a31569c8833872aa68e9f143cd4213",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/2193/pmi-turca-cerca-partner-per-ia-federata-e-compressione-immagini-medich"
+}

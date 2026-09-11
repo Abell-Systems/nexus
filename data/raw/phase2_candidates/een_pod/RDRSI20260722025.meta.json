@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:00:06.626599+00:00",
+  "demand_id": "RDRSI20260722025",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a362bd7311fae6e2ba314137d66683a0c03a752828ffd839565be08e54c9163d",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1122/ong-slovena-cerca-consorzio-horizon-europe-su-ai-e-inclusione-nelle-in"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:04:30.331854+00:00",
+  "demand_id": "BOPL20251024010",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f062922db117d16dffa0a96444e73ae5561ff6e7bb5711b1955322a887cf28ec",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/898/anime-in-schiuma-pet-pe-e-materiali-plastici-per-oem-dell-eolico-fotov"
+}

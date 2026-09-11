@@ -378,20 +378,22 @@ git commit -m "feat(experiments): add Phase-2 corpus expansion audit script (ADR
 - Output directory: `data/raw/phase2_candidates/`
 - Output directory: `data/experiments/phase2/`
 
-- [ ] **Step 1: Run candidate harvesting**
+- [x] **Step 1: Run candidate harvesting**
 Run: `python -m experiments.phase2.acquire --out-dir data/raw/phase2_candidates`
 Verify raw files and `.meta.json` files are created in `data/raw/phase2_candidates/`.
+Result: 824 raw payloads (innoget: 424, een_pod: 400), 0 acquisition errors.
 
-- [ ] **Step 2: Run offline validation pipeline**
+- [x] **Step 2: Run offline validation pipeline**
 Run: `python -m experiments.phase2.validate --raw-dir data/raw/phase2_candidates --out-dir data/experiments/phase2`
 Verify all sealed datasets, manifests, and `.sha256` sidecars are generated.
+Result: mapped=824, accepted=10, rejected=814, mapping_errors=0.
 
-- [ ] **Step 3: Run audit verification script**
+- [x] **Step 3: Run audit verification script**
 Run: `python -m experiments.phase2.audit --experiments-dir data/experiments/phase2 --raw-dir data/raw/phase2_candidates`
 Verify audit completes 100% green with exit code 0.
-Verify candidate volume provides a plausible margin for Milestone #102.
+Result: PASSED. Candidate volume does **not** provide a plausible margin for Milestone #102 (10 eligible, need ~60) — see spec Section 8 for root cause (source-frame failure, not implementation defect) and closure decision.
 
-- [ ] **Step 4: Run full test suite and quality gates**
+- [x] **Step 4: Run full test suite and quality gates**
 Run:
 ```bash
 pytest backend/test/unit -v --cov=backend/src/main --cov-report=xml:coverage.xml
@@ -400,10 +402,12 @@ mypy backend/src/main
 python scripts/check_architecture.py
 PYTHONPATH=backend/src/main lint-imports
 ```
-Expected: 100% PASS, zero errors.
+Result: 805 passed, ruff/mypy/architecture/import-linter all green.
 
-- [ ] **Step 5: Commit generated datasets, manifests, and code**
+- [x] **Step 5: Commit generated datasets, manifests, and code**
 ```bash
 git add data/raw/phase2_candidates/ data/experiments/phase2/
-git commit -m "data(phase2): acquire raw European candidates and freeze validated candidate pools (ADR 0032)"
+git commit -m "data(phase2): seal diagnostic acquisition run (10/824 eligible, ADR 0032)"
 ```
+
+**Milestone #101b closed as a diagnostic outcome (2026-09-11).** See design spec Section 8 for full analysis. Follow-up (historical-source acquisition feasibility) continues as a separate milestone, #101c — not a retroactive extension of this plan.

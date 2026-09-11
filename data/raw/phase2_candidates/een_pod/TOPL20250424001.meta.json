@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:03:10.731768+00:00",
+  "demand_id": "TOPL20250424001",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "97598b1f9dbfce2b04f75d7ee74e7299911e291a04e97d4f565dea1cd37de41a",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/959/piattaforma-web-3d-gaussian-splatting-per-digital-twins-e-visualizzazi"
+}

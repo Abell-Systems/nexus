@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:53.527040+00:00",
+  "demand_id": "TOBE20260317030",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a84d55d64631b9b4cef6d9209ac65d9b8fbcfc00cfa8f88f49418ac5a4e94186",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1037/pmi-belga-offre-tecnologia-di-posizionamento-locale-resiliente-per-dro"
+}

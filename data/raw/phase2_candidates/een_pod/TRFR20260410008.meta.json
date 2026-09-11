@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:07.259084+00:00",
+  "demand_id": "TRFR20260410008",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "90189de3a339ddb497db83fb4f659c601d955db689a772921c2eaa7778e647a7",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1075/azienda-tech-francese-cerca-partner-per-infrastruttura-proof-of-impact"
+}

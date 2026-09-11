@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:54.026226+00:00",
+  "demand_id": "INNOGET-1731",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "fb33cad4e1c5cc6651c343b85954c17000c285e3d1f7cd151cd0e9e9515a2ca8",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1731/seeking-solutions-for-community-driven-innovation"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:11.086456+00:00",
+  "demand_id": "INNOGET-2292",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "bb15c20b3bf2dd23d5f07072379958188b4a0d27b6aa3e4e2f136e9a5d7c3ef3",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2292/project-3in1-innovative-approaches-to-discovering-consumer-needs-an-in-depth-detergent-market-overview-and-trend-analysis-call"
+}

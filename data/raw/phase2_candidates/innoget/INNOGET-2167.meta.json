@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:08.027765+00:00",
+  "demand_id": "INNOGET-2167",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "19f0d2a72562d7ba845a4bf87541ed49917285e0c73f31377763c46f13415a8b",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2167/seeking-partners-smes-to-contribute-to-co2-emissions-reduction-and-resource-efficiency-in-eu"
+}

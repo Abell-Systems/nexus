@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:51.791388+00:00",
+  "demand_id": "TRLV20260720022",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "64536936d1ff4be00ec69a051da76d95c74e95185c2f43390a19d01ae9a2c470",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/2016/ricerca-produttore-ue-di-motori-marini-compatibili-con-e-fuel-per-prog"
+}

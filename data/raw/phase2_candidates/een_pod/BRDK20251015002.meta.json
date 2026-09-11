@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:04:24.508891+00:00",
+  "demand_id": "BRDK20251015002",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7bec77dd4f9aae3429dd3035e8dce3e6648d45742d6f3781cbdf9a74c97b3529",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/903/outsourcing-alimentare-per-private-label"
+}

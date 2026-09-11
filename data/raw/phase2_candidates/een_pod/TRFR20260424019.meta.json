@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:01.922111+00:00",
+  "demand_id": "TRFR20260424019",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "88979f432bacd3cd659d9c650f9205c277ba38c977a90f96c9b1451f1359adf5",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1079/startup-francese-cerca-imprese-alimentari-per-testare-trattamento-acqu"
+}

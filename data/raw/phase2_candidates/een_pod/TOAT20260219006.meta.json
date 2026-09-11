@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:02:00.150403+00:00",
+  "demand_id": "TOAT20260219006",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8ae6d0b1197294ba1d22f30ccfbc7bd5d54b7647b7ce5de8a1db49610efc63b2",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1030/laboratorio-5g-austriaco-offre-accesso-per-sviluppo-e-validazione-di-a"
+}

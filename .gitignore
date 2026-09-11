@@ -61,6 +61,8 @@ data/annotations/*
 !data/experiments/power_analysis_wilcoxon_n48_sensitivity.json
 !data/experiments/power_analysis_wilcoxon_n43_sensitivity.json
 !data/experiments/power_analysis_wilcoxon_n39_sensitivity.json
+!data/experiments/phase2/
+!data/experiments/phase2/*
 # --- OS / IDE ---
 .DS_Store
 .vscode/

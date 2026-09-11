@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:52.008033+00:00",
+  "demand_id": "INNOGET-1848",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "0ca93d3656f7d2ac81a8617a22c4f7cf52289b7239641fda3f8f551afe481094",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1848/seeking-research-into-covid-19-in-response-to-the-sars-cov-2-outbreak-by-ffg"
+}

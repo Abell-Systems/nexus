@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:22.176943+00:00",
+  "demand_id": "INNOGET-1806",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "abe2ee2dc85a83a4060d0d42ca3756e4d4df1ecb9b4420ce874779ccfca61bf8",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1806/seeking-diamondback-moth-dm-control-technologies"
+}

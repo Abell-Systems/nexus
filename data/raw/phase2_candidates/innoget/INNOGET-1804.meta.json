@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:20.214354+00:00",
+  "demand_id": "INNOGET-1804",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "838890f59411b1d560f4a8c1b0579fc3b6b15a451a11e2719926ba72822b738a",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1804/seeking-technology-for-increasing-the-shelf-life-of-carrots-in-industrial-environment-of-up-to-8-months"
+}

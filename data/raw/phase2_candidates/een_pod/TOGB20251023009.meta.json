@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:05:08.828713+00:00",
+  "demand_id": "TOGB20251023009",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ebbeaf34586a130a92220e2b88f9428d292d8991ebeeae89dc5436fce20ad89d",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/865/passaporti-digitali-di-prodotto-dpp-per-moda-e-tessile-tracciabilit-e"
+}

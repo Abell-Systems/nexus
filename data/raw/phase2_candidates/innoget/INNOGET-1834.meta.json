@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:59.509363+00:00",
+  "demand_id": "INNOGET-1834",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "eee9fcc725dfd5cfcfe513f9f881d5402fb1c1b8068f9ca164a3f1e3fae810e3",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1834/seeking-startups-and-smes-with-technologies-and-innovations-that-could-help-in-treating-testing-monitoring-or-other-aspects-of-t"
+}

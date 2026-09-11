@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:00.196049+00:00",
+  "demand_id": "INNOGET-1903",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a9d1804b2d89a3e2354c417d7e6b0694c6aba2bca0d5addc64eecbe93a321d65",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1903/seeking-novel-proposals-to-reduce-accident-rates-among-drivers"
+}

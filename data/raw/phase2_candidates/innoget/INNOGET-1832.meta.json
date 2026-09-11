@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:11.667203+00:00",
+  "demand_id": "INNOGET-1832",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "58540a8e10904863c7d08dc2dfcea925a64eec6d708359733f8720f0de190174",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1832/seeking-innovative-technologies-for-dermatology-applications"
+}

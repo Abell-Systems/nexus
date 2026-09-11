@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:04:44.542440+00:00",
+  "demand_id": "BOES20251027015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c9ee6516b98b36b9fc0633bf4957ca8aca7ec353e57666fe4dff2f0974952c63",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/887/recinzione-virtuale-e-gestione-dei-pascoli-con-ia-per-bovini-cavalli"
+}

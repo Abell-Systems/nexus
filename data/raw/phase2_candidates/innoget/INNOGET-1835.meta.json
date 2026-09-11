@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:09.194697+00:00",
+  "demand_id": "INNOGET-1835",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f2825551c36037264e538fb5125037462331f8f8c80d3801736bbda6f9c14307",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1835/seeking-startups-and-individuals-to-participate-in-the-covid-19-solution-challenge-by-the-government-of-india"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:00:00.541102+00:00",
+  "demand_id": "BOES20260311013",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "230c1e8c44084b16534cf34c44d459afec560e484094ab000df4a8a9e6ad16a9",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1489/produttore-spagnolo-di-sistemi-avanzati-di-purificazione-dell-aria-cer"
+}

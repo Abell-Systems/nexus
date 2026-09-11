@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:00:58.462464+00:00",
+  "demand_id": "RDRES20260505013",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c2470a1fffb2c7571f02245dbe3bca054dbe9b8a6475f04534a138b92ff1ed17",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1084/infrastruttura-intelligente-green-grey-per-il-riuso-sicuro-delle-acque"
+}

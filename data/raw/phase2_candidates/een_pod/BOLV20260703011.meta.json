@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:58:02.862747+00:00",
+  "demand_id": "BOLV20260703011",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "496058c6ba3cc7344073add127032795a6972b48438d6710161f075c6c8f0ca8",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1407/soluzioni-di-nastri-tecnici-personalizzati-fino-a-300mm-di-larghezza"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:36.265856+00:00",
+  "demand_id": "INNOGET-2256",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "554c5393e8aa3d48618602b6232cc00bcb86dcd373e87f50c130b8125f5270cb",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2256/seeking-sustainable-packaging-development-of-barrier-properties-to-oil-and-grease-in-molded-fiber-cellulose-articles-mfa-for"
+}

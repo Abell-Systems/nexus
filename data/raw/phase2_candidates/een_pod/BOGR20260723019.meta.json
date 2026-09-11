@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:58:19.334648+00:00",
+  "demand_id": "BOGR20260723019",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "828910e37798463fb7032b0c66d3e9b2ad8803ca478ba21ffde07a88161a77b7",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1327/azienda-greca-cerca-distributori-per-integratore-alimentare-a-base-di"
+}

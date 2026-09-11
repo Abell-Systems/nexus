@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:02:27.965922+00:00",
+  "demand_id": "BOPT20251118013",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "529524002cff069cebd31dc5af1a8c5e8ad1a6a149e0b05fbed2d9b05b5ca0b4",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1009/produttore-portoghese-di-stampi-per-iniezione-plastica-e-pressofusione"
+}

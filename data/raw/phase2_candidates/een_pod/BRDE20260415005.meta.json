@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:00:22.483113+00:00",
+  "demand_id": "BRDE20260415005",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f64993a66e20f869c90cbce7c9262bb1378178604d19a89056fd1a4c02711011",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1109/integratore-specializzato-in-sistemi-di-misura-e-visione-industriale-c"
+}

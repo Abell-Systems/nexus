@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:02:04.121551+00:00",
+  "demand_id": "TOTR20260225002",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "49c993001c72ff9b2cc5960ac77f0d06a3d97062b8b91f1c55a77f097b1be56f",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1027/universit-turca-offre-brevetto-per-attuatori-tessili-per-robotica-morb"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:52.721769+00:00",
+  "demand_id": "INNOGET-2349",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1ef58cf33ddfc999d067aab5ffaff0d752ccfdeb45ea74f867b1ffbafbbadf79",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2349/seeking-early-stage-therapeutic-and-monitoring-device-technologies"
+}

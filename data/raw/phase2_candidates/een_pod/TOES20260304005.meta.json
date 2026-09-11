@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:21.219184+00:00",
+  "demand_id": "TOES20260304005",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "dbc50b0361ee7d6be023b8b6ce533478cd08da3f1af582974161afbc8fbf0cbe",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1059/startup-spagnola-con-tecnologia-fotoelettrochimica-per-convertire-co-i"
+}

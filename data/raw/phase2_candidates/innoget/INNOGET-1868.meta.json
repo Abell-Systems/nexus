@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:34.499184+00:00",
+  "demand_id": "INNOGET-1868",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6d54abccd7ea012ec406855d245bb99f9e060f757480ed923311c5796f0b6108",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1868/seeking-recognised-scientists-research-organisations-and-suppliers-of-research-tools-working-in-the-cannabinoid-and-related-com"
+}

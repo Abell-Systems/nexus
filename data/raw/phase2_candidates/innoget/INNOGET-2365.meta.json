@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:43.786241+00:00",
+  "demand_id": "INNOGET-2365",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "816705d5dbeb659b11482ed3ee6cc7b6d5a32c3136e1a3bd16d83e23b5ac5705",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2365/seeking-biodegradable-thermoplastic-resin-for-injection-molding"
+}

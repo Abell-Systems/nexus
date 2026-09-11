@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:54.984531+00:00",
+  "demand_id": "INNOGET-2341",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "45be6283957cafb626877f33dcba4f8937e601777733a69a802bda021f080a18",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2341/seeking-corrosion-protection-methods-based-on-replaceable-sacrificial-anodes-for-automotive-applications"
+}

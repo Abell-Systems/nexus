@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:30.078495+00:00",
+  "demand_id": "RDRTR20260804024",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "5e28c9d519ea3850780983fbfd091f45d09884b92a3aac0e62b6d64604c21553",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1869/pmi-turche-cercano-partner-tecnologico-per-piattaforma-modulare-di-cyb"
+}

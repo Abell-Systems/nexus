@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:59:16.480829+00:00",
+  "demand_id": "BODE20260626012",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7531e1ac5973eb7bbecb990baa686d6b1e58697f89b6166346a79565220aa217",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1474/importatore-tedesco-cerca-distributori-per-collezioni-di-piastrelle-ce"
+}

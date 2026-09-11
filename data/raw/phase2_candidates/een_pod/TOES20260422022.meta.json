@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:00:36.256333+00:00",
+  "demand_id": "TOES20260422022",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b6cf02f9b87fc96725f5235f617fbd4e6c18a167f3355742f4fb09041fa9daa8",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1100/dispositivo-per-connessione-sicura-e-rapida-tra-flacone-farmaceutico-e"
+}

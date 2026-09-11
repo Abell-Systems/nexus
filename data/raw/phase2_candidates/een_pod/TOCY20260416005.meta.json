@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:00:39.845730+00:00",
+  "demand_id": "TOCY20260416005",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b56f3e54d2378fc928a6f2322e0b0f5e3c0fda7aff200db30b7c93f70c6ba3cd",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1097/pmi-cipriota-offre-piattaforma-ehr-modulare-con-ia-e-interoperabilit-e"
+}

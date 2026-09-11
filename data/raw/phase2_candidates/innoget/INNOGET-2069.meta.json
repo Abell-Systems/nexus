@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:04.377146+00:00",
+  "demand_id": "INNOGET-2069",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e19c05fe49ef88110562300068dbde944d9c2c4f1a447b8a68c2db38dfbf79ad",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2069/seeking-materials-or-technologies-to-replicate-the-functional-properties-of-methyl-cellulose-e461-in-frozen-food-applications"
+}

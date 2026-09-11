@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:58:26.329090+00:00",
+  "demand_id": "BOUA20260724028",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c72603b27124a939681f00a7fed1db4c88a9e2c903f8d0bf9ab7341a290fd4c6",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1309/azienda-di-ingegneria-offre-soluzioni-su-misura-per-automazione-e-prod"
+}

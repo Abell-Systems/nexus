@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:21.266537+00:00",
+  "demand_id": "INNOGET-2070",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "56d73a50c5c8218dc0821e1c8be7b2004ce1d9d45fac7a4b96efe48736b34a5c",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2070/seeking-partners-to-develop-innovative-bi-valve-solutions-along-the-whole-supply-chain-from-sea-to-plate-beyond"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:33.725223+00:00",
+  "demand_id": "INNOGET-1648",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "64cf7f50907b105fc0e29144fc7f876ceced2c149f2490ac771bbc7cd2e55210",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1648/seeking-alcohol-soluble-materials-to-prevent-fabric-textile-staining"
+}

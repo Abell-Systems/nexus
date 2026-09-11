@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:49.183881+00:00",
+  "demand_id": "INNOGET-1925",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "631733ae3a05f10af39a8937259ce24936db101c0444ceb3715f8e96c5736da1",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1925/seeking-for-biodegradable-coatings-for-controlled-release-fertilizers"
+}

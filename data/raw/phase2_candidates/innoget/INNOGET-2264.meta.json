@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:23.208415+00:00",
+  "demand_id": "INNOGET-2264",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "af2b2c8c82d5070603995847dbe169e93fbcbe2e334d773153a624e8309163e3",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2264/seeking-lead-free-brass-alloys-for-the-production-of-cylindrical-parts-of-small-size-factor"
+}

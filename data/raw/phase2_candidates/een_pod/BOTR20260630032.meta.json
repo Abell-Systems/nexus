@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:59:01.977569+00:00",
+  "demand_id": "BOTR20260630032",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e6ad08633e05b3e78dc08dbbc3b4d90fc39359567c6e6bf6204a765fc261f373",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1455/produttore-turco-di-componenti-per-interni-ed-esterni-di-bus-e-treni-c"
+}

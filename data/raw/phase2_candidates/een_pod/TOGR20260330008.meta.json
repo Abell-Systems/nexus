@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:34.016422+00:00",
+  "demand_id": "TOGR20260330008",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c0fe617c53cca3f4cc299da226a0c562e70a07d05167f2a9d9a1d62c9c2c59d5",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1050/organizzazione-greca-offre-metodologia-esperienziale-per-insegnare-il"
+}

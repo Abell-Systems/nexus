@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:04:26.674692+00:00",
+  "demand_id": "BRNL20250714008",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e30cdfe683d11381bc847acfeab97451c4554bd593e806e2c8aef50f6217ee3b",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/901/produzione-accessori-uomo-in-lana"
+}

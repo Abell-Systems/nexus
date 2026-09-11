@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:02:45.729057+00:00",
+  "demand_id": "BRDE20251121025",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6fceb149012f9d88cbe0e8d7bd434c9a28dddb89fd1a694a21392fecb298c25a",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/995/retailer-e-commerce-tedesco-cerca-produttore-di-spray-anti-vespe-a-mar"
+}

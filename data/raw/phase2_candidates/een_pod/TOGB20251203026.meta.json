@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:02:47.907010+00:00",
+  "demand_id": "TOGB20251203026",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "88e3f16a7c0a2132f581dee8d45d1cfb9a4bc571f35ac511a1d0e41c6ca4d0eb",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/993/4d-bioprinting-microfluidico-per-biomateriali-a-bassa-viscosit-e-costr"
+}

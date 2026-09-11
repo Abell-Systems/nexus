@@ -1,6 +1,6 @@
 # PR #101b: Phase-2 Demand Corpus Expansion Acquisition & Evidence Design Specification
 
-**Status:** Frozen  
+**Status:** Closed — Diagnostic Outcome (see Section 8)  
 **Date:** 2026-09-11  
 **Target Milestone:** Milestone #101b  
 **Binding Architecture:** ADR 0008, ADR 0009, ADR 0025, ADR 0026, ADR 0029, ADR 0030, ADR 0031, ADR 0032  
@@ -325,3 +325,52 @@ A pull request for Milestone #101b is merge-ready if and only if:
    - 100% green linting & types: `ruff check .` and `mypy backend/src/main`.
    - 100% green architectural gates: `python scripts/check_architecture.py` and `PYTHONPATH=backend/src/main lint-imports`.
 8. **Evaluation Immutability:** Zero modifications have been made to matching engine, rankers, or evaluation runner.
+
+---
+
+## 8. Diagnostic Acquisition Outcome & Closure (2026-09-11)
+
+Milestone #101b executed the full pipeline end-to-end against live sources and is closed as a **diagnostic run**: it correctly implemented and exercised the contract from #101a, and the result exposes a **source-frame failure**, not an implementation failure. DoD items 1–5, 7, and 8 above are satisfied. DoD item 6 (sufficiency) is **not** satisfied by this harvest, and per its own stated fallback, expansion must continue before benchmark freeze — see below.
+
+### 8.1 Sealed diagnostic dataset
+
+- Raw: 824 payloads (`innoget`: 424, `een_pod`: 400) under `data/raw/phase2_candidates/`, immutable with `.meta.json` SHA-256 sidecars.
+- Mapped: 824 (0 mapping errors) → `data/experiments/phase2/candidates_mapped.json`.
+- Accepted: **10** / Rejected: **814** → `candidates_accepted.json`, `candidates_rejected.json`, both sealed with `.sha256` sidecars.
+- `python -m experiments.phase2.audit` result: **PASSED** — all cryptographic, partition, and field invariants hold.
+- This dataset is committed as-is (not discarded, not relaxed to manufacture eligibility) as evidence that the live-mirror sourcing strategy is insufficient.
+
+### 8.2 Rejection breakdown and root cause
+
+| Reason | Count | Root cause |
+| :--- | ---: | :--- |
+| `UNVERIFIABLE_PUBLICATION_DATE` | 483 | InnoGet: 424/424 candidates — the live site exposes no publication-date signal anywhere (no `article:published_time`/`datePublished`/`<time>`), only a future `Deadline at DD/MM/YYYY`. EEN/POD: 59/400 — POD references whose date segment doesn't parse. |
+| `NO_TECHNICAL_PROBLEM` | 422 | Genuinely non-technical constructs (`Business offer`, `Technology offer`, `Business request`) correctly excluded; InnoGet's `Details of the Innovation Need` section is frequently absent. |
+| `INCOMPATIBLE_CONSTRUCT` | 362 | EEN/POD live listing is dominated by non-`Technology request` constructs. |
+| `OUT_OF_TEMPORAL_WINDOW` | 208 | Of 97 genuine EEN/POD `Technology request`/`R&D request` candidates, only 10 fall inside `[2020-01-01, 2025-12-31]`; the other 87 are current/future (mostly 2026) listings — the Lombardia mirror surfaces **live active proposals, not a historical archive**. |
+
+Two extraction bugs surfaced and were fixed with regression tests during this run (both are storage/labeling-correctness fixes, not eligibility changes): a harvester `demand_id` collision from borrowing an unrelated sidebar POD reference, and the same failure mode in the mapper's construct/date resolution (`RD`-prefixed references were scattered across all four other `source_construct` labels). A source-specific extraction rule was also added: for EEN/POD `Technology request`/`R&D request` records where no dedicated technical-problem section exists, the `Abstract` block is used verbatim as `technical_problem_evidence_text` — validated against a diagnostic sample (10/10 Technology request, 10/10 R&D request positive; 5/5 Business offer negative control). `corpus_expansion_policy_v1` was **not modified** at any point.
+
+### 8.3 Conclusion
+
+With the current acquisition frame (live InnoGet + live Lombardia EEN/POD mirror), it is **not plausible** to reach $N_{\mathrm{power}} \ge 60$: 10 eligible candidates is a full order of magnitude short, before the #102 independence audit even runs. This is a sourcing-strategy gap, not a validator or mapper defect.
+
+### 8.4 Path forward
+
+Per DoD item 6's fallback clause, expansion continues — but as a **separate milestone**, not a retroactive extension of #101b:
+
+```text
+#101a  contract (frozen)
+   |
+#101b  live-source acquisition -> diagnostic: 10 / 824 -> CLOSED
+   |
+#101c  historical-source acquisition feasibility / design (NEW, separate task)
+   |
+revised acquisition design
+   |
+new harvest
+   |
+#102  independence audit (NOT run against the 10 — would be superseded)
+```
+
+#101c must establish a defensible **historical** source frame for 2020–2025 (e.g. official EEN POD records rather than the Lombardia live mirror; an archival/historical-feed source for InnoGet publication dates) before any further harvest, per the same provenance rules in this document (Golden Invariant #3 in particular: archive/crawl-capture dates must never substitute for $t_{\mathrm{demand}}$ any more than deadlines may). #101c is out of scope for this document and requires its own design pass.

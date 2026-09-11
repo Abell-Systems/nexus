@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:18.071563+00:00",
+  "demand_id": "INNOGET-1885",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7f39c305c0e16f247e5b2e6eaeb4530756f905fcb7e8b4c523cf899554d0ed40",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1885/seeking-consumer-products-to-protect-enhance-measure-immunity"
+}

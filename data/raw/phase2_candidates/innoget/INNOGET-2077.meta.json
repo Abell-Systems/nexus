@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:38.402214+00:00",
+  "demand_id": "INNOGET-2077",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "760cac861cd53b77cc6573c446c560472dfa57d62b8a533f846ca1defec93c29",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2077/seeking-solutions-for-turf-heat-reduction-without-the-use-of-water"
+}

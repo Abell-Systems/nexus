@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:00:11.501343+00:00",
+  "demand_id": "TOGR20260702024",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4fbcefadc527d952a2129029ea594d23b42a459fcc7d237209326d54db2d75c6",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1116/piattaforma-digitale-per-la-gestione-tesi-universitarie-e-validazione"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:02.592164+00:00",
+  "demand_id": "RDRRS20260813020",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6f5b28a8146970f97246e215e8099df1acff1d01b87b876c89f1e442c9ad53fb",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1732/studio-serbo-cerca-partner-per-consorzio-r-s-su-prototipazione-di-gioc"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:27.083617+00:00",
+  "demand_id": "TOES20260326005",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e44c9766b94af59cdb61c60ed548f3637950d37b6bf3c8392e2e16d4e7dbaaf4",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1056/universit-spagnola-offre-simulatore-solare-led-a-basso-costo-per-celle"
+}

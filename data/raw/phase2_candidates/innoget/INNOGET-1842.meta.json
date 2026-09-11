@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:02.883085+00:00",
+  "demand_id": "INNOGET-1842",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "24b06e733fd64e3bf54b73c500cc9b02e12b54413c6361f718c26a16f12d0569",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1842/seeking-students-ages-13-17-from-around-the-world-to-form-virtual-teams-to-develop-technology-based-solutions-to-slow-the-spread-o"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:56.643795+00:00",
+  "demand_id": "RDRES20260309017",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f4080ae62eb65f2e5e402051c9628b8029231de00ccf46232483f3b1fe7d64b5",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1036/gruppo-di-ricerca-spagnolo-offre-expertise-biologica-per-consorzi-virt"
+}

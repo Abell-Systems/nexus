@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:01.550751+00:00",
+  "demand_id": "INNOGET-2177",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e6f67714749663b9fa3ae62ec456df0f35cd30a4ee4ccf10a144d1902e4e23b9",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2177/seeking-sustainable-electronics-for-use-within-portable-consumer-devices"
+}

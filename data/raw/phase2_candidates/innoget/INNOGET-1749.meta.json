@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:22.564815+00:00",
+  "demand_id": "INNOGET-1749",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1fa0531e31565202173b24a2c1ed5079c703c8528ef822d34cd305b1f6884628",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1749/seeking-for-ideas-technologies-related-to-the-emerging-field-of-cellular-agriculture"
+}

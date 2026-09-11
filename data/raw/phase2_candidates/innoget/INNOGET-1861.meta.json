@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:36.700319+00:00",
+  "demand_id": "INNOGET-1861",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d7e81fb4b922baecd6dfd56f3c4846a8980c442826c803f3a15c65d406c606b5",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1861/seeking-iot-based-health-care-solutions"
+}

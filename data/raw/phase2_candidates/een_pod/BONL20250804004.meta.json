@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:04:35.448531+00:00",
+  "demand_id": "BONL20250804004",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "95e24183ef2a0fb0277d67dfb80360d904698f7bdf2b3fb1867897315ed4c5d2",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/895/macchine-a-ozono-per-pulizia-sostenibile"
+}

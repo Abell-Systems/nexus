@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:34.372175+00:00",
+  "demand_id": "RDRLV20260720026",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7dac0aa088cbb612b70fd967efb2d802a7e288f72d8af83d5a41f2cfd2addf93",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/2014/organizzazione-lettone-cerca-partner-per-ricerca-su-hdpe-riciclato-per"
+}

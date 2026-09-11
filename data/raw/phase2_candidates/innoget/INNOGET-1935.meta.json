@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:31.933340+00:00",
+  "demand_id": "INNOGET-1935",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "9074019372be8f1a86c5f9d0b30d8031318b9315fb0d9a48f4335d37d3c7ddd2",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1935/seeking-for-new-available-technologies-for-water-quality-measurement"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:27.572547+00:00",
+  "demand_id": "INNOGET-1980",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8eee46b58499922665b6a8479761944bb172a1bb239e1b307deae735fd1be405",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1980/seeking-renewable-raw-materials-polymers-and-resins-with-reactive-functionality-for-improved-uv-resistance"
+}

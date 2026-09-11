@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:40.963353+00:00",
+  "demand_id": "INNOGET-2379",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "dee445174301f448e8d59a9e8405c43daf59dfd93d2e33418f5cd7de4d36e75e",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2379/seeking-business-enablers-to-optimize-processes-enhance-supply-chains-and-drive-digital-transformation-in-frozen-foods-industry"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:19.095005+00:00",
+  "demand_id": "INNOGET-1666",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "26e1a90be21d43fda850e28a6b6f529f20a404bfeb8196b5d82a1a1a8337e0e1",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1666/seeking-groundbreaking-powder-application-technologies-novel-technologies-for-seasoning-application-on-fabricated-potato-chips"
+}

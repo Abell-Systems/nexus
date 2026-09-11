@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:59:50.567153+00:00",
+  "demand_id": "BOPL20260616012",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "2e8dec7a57bf1280c49197022db9e445bd39486c7e8d6b3ea7cb26838957ed08",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1481/pmi-polacca-offre-mezzi-galleggianti-con-equipaggio-per-cantieri-idrot"
+}

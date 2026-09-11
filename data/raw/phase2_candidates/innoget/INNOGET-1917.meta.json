@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:53:31.079309+00:00",
+  "demand_id": "INNOGET-1917",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "3f0ee4a7872e5f8f9ce5fb52d93e57f88a69850e91b02109ed1d9a0739e945ac",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1917/seeking-powerbi-dashboard-automation"
+}

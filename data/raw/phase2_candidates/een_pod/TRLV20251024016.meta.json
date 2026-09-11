@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:05:07.706635+00:00",
+  "demand_id": "TRLV20251024016",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f1dcc57d6351973cf8f80361be95d6ba896a3185191e73c0fcc22012d9b7bdee",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/866/recupero-chimico-di-silicio-ad-alta-purezza-da-rifiuti-fotovoltaici-ri"
+}

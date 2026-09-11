@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:26.544041+00:00",
+  "demand_id": "INNOGET-2118",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "cca483f7775ba22ded4bd4c7ca7ec249daf90867bdaf69e863504f743d0ca910",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2118/seeking-innovative-solutions-to-automation-and-optimization-of-stowage-planning"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:13.458298+00:00",
+  "demand_id": "INNOGET-2293",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6be334b971d158465c61b92fd41047d3fd503a9295bb09ea897569d2d23c5153",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2293/seeking-kitchen-sink-the-centerpiece-of-your-kitchen-call-for-eu-university-students-only"
+}

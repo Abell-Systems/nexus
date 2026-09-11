@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:00:23.617280+00:00",
+  "demand_id": "BRDE20260417025",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "43e9817c1d7d341ed925c6212b2bc90b7ab06c23ffe0cda989049976f17553c9",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1108/distributore-tedesco-di-attrezzi-pneumatici-cerca-produttori-di-valvol"
+}

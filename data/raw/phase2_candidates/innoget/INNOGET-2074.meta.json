@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:39.298827+00:00",
+  "demand_id": "INNOGET-2074",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7b2bda395b62318a4ce594fb88d7c848f7b0beedc20f3e818205ee37477cd4c2",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2074/seeking-solutions-for-the-recycling-of-cardboard-cores-for-artificial-turf-carpets"
+}

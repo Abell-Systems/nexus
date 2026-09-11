@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:16.598245+00:00",
+  "demand_id": "RDRDE20260408023",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "eef85ade87d26ce73b1d7cc8b4690b651cdb5c6c2273ca00daa1fe33f8a3c188",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1065/universit-tedesca-cerca-partner-per-materiali-sostenibili-nelledilizia"
+}

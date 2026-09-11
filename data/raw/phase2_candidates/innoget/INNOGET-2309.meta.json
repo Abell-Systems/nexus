@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:06.736528+00:00",
+  "demand_id": "INNOGET-2309",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6ca0d89c39167a36d8d7bd08915bff3c5cf5e18191b4a3006290f59fd9b8e417",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2309/seeking-digital-technologies-for-sensory-experiences"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:03:50.500916+00:00",
+  "demand_id": "BONL20251111011",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "52fb9d46e6c75184e7eebca1636c9c0b1a2f3adb7b822d736aa8fcb9b1807a80",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/928/sistema-acustico-per-allontanamento-pipistrelli"
+}

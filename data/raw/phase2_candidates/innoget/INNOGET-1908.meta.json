@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:53.835096+00:00",
+  "demand_id": "INNOGET-1908",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8657dff2c22dc00bfac54bc73d10c49f9b4fada0473addbe058bf26a07577057",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1908/seeking-novel-proposals-to-digitalise-the-cargo-handling-process-to-allow-for-monitoring-and-real-time-tracking-of-shipments"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:03:42.286343+00:00",
+  "demand_id": "BRPL20251105003",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "411d7b610b25c2ddf6295f998cb4b5210344e113707c43cd16f23cd5693ebbbe",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/933/fornitore-di-filati-hot-melt-per-maglieria-tecnica"
+}

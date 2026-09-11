@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:29.074954+00:00",
+  "demand_id": "INNOGET-1643",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "527e2df2d1a3cef0a04b2c70f34c2641b0e6868fee60c63ba4fb7f7fea967da8",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1643/seeking-a-air-duct-design-team-to-cooperate-with-the-air-system-improvement"
+}

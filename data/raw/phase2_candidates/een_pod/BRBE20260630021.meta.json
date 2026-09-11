@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:59:08.609579+00:00",
+  "demand_id": "BRBE20260630021",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a86b0b6119d30511614ab03b1b15648f39b90637ed11df8847ef97f3720b45c5",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1466/azienda-belga-cerca-fornitore-di-concentrato-di-pomodoro-per-piatti-pr"
+}

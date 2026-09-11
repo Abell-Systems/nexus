@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:10.723701+00:00",
+  "demand_id": "INNOGET-1833",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4001f50ce9d34c69848e466d5a58c083f30436af5bdf46632941f18211a5ced9",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1833/seeking-data-analytics-expertise-for-motion-inertial-and-physiology-data-sets-from-wearables-consumer-products"
+}

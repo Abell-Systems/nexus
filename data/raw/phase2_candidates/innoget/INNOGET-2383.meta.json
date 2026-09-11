@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:39.491398+00:00",
+  "demand_id": "INNOGET-2383",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "373705ada591cca33772de1e2548aba747a360a7d98638aea6368adef585bfc7",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2383/seeking-probiotic-strains-for-feminine-hygiene-product-development"
+}

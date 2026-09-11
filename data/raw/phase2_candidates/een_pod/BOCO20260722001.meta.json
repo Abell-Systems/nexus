@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:58:22.464469+00:00",
+  "demand_id": "BOCO20260722001",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "84e9b80ec3443244fa7afa5e930574feaf582d3cb9b966172e226ec7309fd542",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1364/cooperativa-colombiana-offre-caff-specialty-tracciabile-e-cerca-distri"
+}

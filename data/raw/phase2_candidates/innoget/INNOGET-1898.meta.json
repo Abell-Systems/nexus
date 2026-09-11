@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:04.243713+00:00",
+  "demand_id": "INNOGET-1898",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1a742c7ad3f4bdeef8c32d93e24519d95d31d3f0f810674b58204b908547dd22",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1898/seeking-novel-tagging-solutions-to-replace-normal-printed-air-waybill-awb-label"
+}

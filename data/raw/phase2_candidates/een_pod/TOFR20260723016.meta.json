@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:58:32.219239+00:00",
+  "demand_id": "TOFR20260723016",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "9f962ec6facfa81be4888bb69ccbac0be1cd7a0d829026914403a53540a4a643",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1333/start-up-francese-offre-workspace-per-collaborazione-su-dati-multi-omi"
+}

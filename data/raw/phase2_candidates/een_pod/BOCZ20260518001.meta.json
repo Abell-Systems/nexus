@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:59:57.068347+00:00",
+  "demand_id": "BOCZ20260518001",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1855fa27a5bc5c42b7850313485d7294929e33c9d5a1898e8eaa9cbcef55d91e",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1486/produttore-ceco-di-letti-elettrici-per-assistenza-cerca-distributori-e"
+}

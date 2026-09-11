@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:10.563742+00:00",
+  "demand_id": "RDRRO20260813011",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "2ee8ddb0e3ee8f087e761eec8081aea981418726e34e17288eeea79860d02067",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1741/ente-pubblico-rumeno-cerca-partner-per-progetti-ue-su-sviluppo-sosteni"
+}

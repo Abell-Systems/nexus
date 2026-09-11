@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:41.814165+00:00",
+  "demand_id": "BORO20260720019",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4d767b52973eba48948ebe9dd66c03d8b5d2e4e7938c3e521d4bf862c95e2bd6",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1383/sistema-automatico-di-smistamento-rifiuti-con-monitoraggio-ai-cerca-di"
+}

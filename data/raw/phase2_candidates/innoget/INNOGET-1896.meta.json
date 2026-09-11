@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:07.159779+00:00",
+  "demand_id": "INNOGET-1896",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "5dd3ab0ca6ad4176950fc914b3e3d61b8ac9e75a785e808821bdb53e037ad87e",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1896/seeking-novel-proposals-aiming-to-address-and-enable-healthcare-solutions-in-the-post-covid-era"
+}

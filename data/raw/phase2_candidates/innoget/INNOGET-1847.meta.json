@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:53.380173+00:00",
+  "demand_id": "INNOGET-1847",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "9c31dc95f9427bbd6631e3e70a12a3594c878e083182588d1f2cb8798cd2921a",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1847/seeking-researchers-in-better-understanding-and-addressing-covid-19-outbreak-by-bsac"
+}

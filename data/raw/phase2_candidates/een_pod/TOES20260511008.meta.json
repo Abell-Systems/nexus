@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:59:59.501507+00:00",
+  "demand_id": "TOES20260511008",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1ca30f035c71e7d64594592914c7b0d450e288f8cdac9134b6020cb3896ef038",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1488/centro-di-ricerca-spagnolo-offre-competenze-in-ia-e-cybersecurity-per"
+}

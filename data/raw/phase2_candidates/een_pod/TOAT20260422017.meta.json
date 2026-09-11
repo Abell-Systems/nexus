@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:00:43.338551+00:00",
+  "demand_id": "TOAT20260422017",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "2dd773b4256bc2dc484d24aeb8a54a9f3b8288f5b1079ef4a7f5d956ecf36dfe",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1094/pmi-austriaca-specializzata-in-test-di-batterie-cerca-partner-per-prog"
+}

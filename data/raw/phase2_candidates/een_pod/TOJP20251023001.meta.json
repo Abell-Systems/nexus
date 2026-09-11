@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:05:11.477708+00:00",
+  "demand_id": "TOJP20251023001",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "97c9423b770668e5ae34457f0d5df1cd189fd82269a469f08cb332af5449c0ec",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/863/analitiche-satellitari-ai-per-agricoltura-e-ambiente-collaborazione-r"
+}

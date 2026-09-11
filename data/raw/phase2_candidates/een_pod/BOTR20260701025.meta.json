@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:58:45.189464+00:00",
+  "demand_id": "BOTR20260701025",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d260edf84a4cee5e3d99530101816e2d13ebe61d40304c0c01b73bd9d704606f",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1433/pmi-turca-offre-tecnologie-avanzate-per-upgrading-del-biogas-e-produzi"
+}

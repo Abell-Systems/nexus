@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:06.380498+00:00",
+  "demand_id": "INNOGET-2020",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7518b53ce0d220249f0fb371787e851533295b067ab2569d4a3cedf302d0aad4",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2020/seeking-new-materials-coatings-methods-and-technologies-to-improve-packaging-and-polymer-sustainability"
+}
