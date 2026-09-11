@@ -45,9 +45,9 @@ A run declares exactly one of, on `EvaluationExecutionContext.family_policy` (ma
 
 Exactly the same placement decision ADR 0018 made for `temporal_pool_mode`: the transform runs in `DefaultEvaluationRunner.run_evaluation`, immediately after the existing temporal-eligibility filter and before `ranking_port.rank_candidates` is called. `DefaultMatchingAdapter`'s closed-universe guarantee is untouched — it still receives whatever patent list it's given.
 
-### 5. Provenance: the run records whether metadata was actually available
+### 5. Provenance: the run records whether metadata coverage was complete
 
-`EvaluationRunReport` gains `family_metadata_available: bool`, populated from the sealed patent universe regardless of which policy was selected. This makes an `allow` run's report distinguishable from a `collapse`-eligible run's report without re-deriving the fact from the raw dataset — the audit trail stays honest even when no family-sensitive policy was requested.
+`EvaluationRunReport` gains `family_metadata_complete: bool` — true iff *every* patent in the sealed universe carried a non-`None` `family_id`, not merely "some family metadata existed." Populated from the sealed patent universe regardless of which policy was selected. This makes an `allow` run's report distinguishable from a `collapse`-eligible run's report without re-deriving the fact from the raw dataset — the audit trail stays honest even when no family-sensitive policy was requested.
 
 ## What this ADR does not do
 

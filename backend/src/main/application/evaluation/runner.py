@@ -79,7 +79,7 @@ def validate_temporal_pool_mode_consistency(temporal_pool_mode: str, require_tem
         )
 
 
-def family_metadata_available(patents: list[EvaluationPatent]) -> bool:
+def family_metadata_complete(patents: list[EvaluationPatent]) -> bool:
     """ADR 0027: True iff every patent in the given pool carries a non-None family_id.
 
     A single missing family_id makes the pool's family composition only partially
@@ -99,7 +99,7 @@ def validate_family_policy_feasible(family_policy: str, patents: list[Evaluation
     """
     if family_policy == "allow":
         return
-    if not family_metadata_available(patents):
+    if not family_metadata_complete(patents):
         raise ValueError(
             f"FAMILY_METADATA_UNAVAILABLE: family_policy='{family_policy}' requires "
             "family_id to be populated on every patent in the candidate universe, "
@@ -296,5 +296,5 @@ class DefaultEvaluationRunner(EvaluationRunner):
             macro_broad=macro_broad,
             macro_denominators=macro_denominators,
             uncertainty_rate=overall_uncertainty_rate,
-            family_metadata_available=family_metadata_available(patent_universe),
+            family_metadata_complete=family_metadata_complete(patent_universe),
         )

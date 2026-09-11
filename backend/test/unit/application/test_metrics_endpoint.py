@@ -267,7 +267,7 @@ def _run(run_id: str, values: dict[str, float | None]) -> EvaluationRunReport:
         policy_id="p", policy_version="1.0.0", policy_sha256=_SHA64,
         demand_reports=reports, macro_strict=macro, macro_broad=macro,
         macro_denominators=denominators, uncertainty_rate=0.0,
-        family_metadata_available=True,
+        family_metadata_complete=True,
     )
 
 

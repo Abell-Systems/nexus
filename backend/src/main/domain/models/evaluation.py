@@ -431,7 +431,7 @@ class EvaluationRunReport(BaseModel):
     # ADR 0027: whether every patent in this run's sealed universe carried family_id.
     # Recorded unconditionally (even under family_policy="allow") so the audit trail
     # is honest about whether a family-sensitive policy could have been requested.
-    family_metadata_available: bool
+    family_metadata_complete: bool
 
     @field_validator("dataset_sha256", "policy_sha256")
     @classmethod

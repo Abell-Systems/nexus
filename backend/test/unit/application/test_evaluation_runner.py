@@ -21,7 +21,7 @@ import pytest
 
 from application.evaluation.runner import (
     DefaultEvaluationRunner,
-    family_metadata_available,
+    family_metadata_complete,
     validate_family_policy_feasible,
     validate_temporal_pool_mode_consistency,
 )
@@ -563,17 +563,17 @@ def test_validate_temporal_pool_mode_consistency_accepts_strict_regardless_of_fl
 # ---------------------------------------------------------------------------
 
 
-def test_family_metadata_available_true_when_all_patents_have_family_id(sample_validated_dataset):
+def test_family_metadata_complete_true_when_all_patents_have_family_id(sample_validated_dataset):
     patents = [
         p.model_copy(update={"family_id": f"FAM-{i}"})
         for i, p in enumerate(sample_validated_dataset.dataset.patents)
     ]
-    assert family_metadata_available(patents) is True
+    assert family_metadata_complete(patents) is True
 
 
-def test_family_metadata_available_false_when_any_patent_missing_family_id(sample_validated_dataset):
+def test_family_metadata_complete_false_when_any_patent_missing_family_id(sample_validated_dataset):
     patents = list(sample_validated_dataset.dataset.patents)  # family_id is None on all of these
-    assert family_metadata_available(patents) is False
+    assert family_metadata_complete(patents) is False
 
 
 def test_validate_family_policy_feasible_allows_allow_regardless_of_metadata(sample_validated_dataset):
@@ -698,6 +698,36 @@ def test_runner_collapse_policy_keeps_one_representative_per_family(
     assert report.demand_reports[0].candidate_count == 2
 
 
+def test_run_evaluation_collapse_recall_denominator_is_not_shrunk_with_the_pool(
+    dataset_with_known_family, sample_policy
+):
+    """ADR 0027 "Known gap": collapse/exclude_related shrink the ranking pool but
+    NOT the relevance-judgement set used for Recall/nDCG denominators in
+    application/evaluation/metrics.py -- that file is untouched by ADR 0027 by
+    design. This pins the CURRENT, documented-as-known-gap behavior so it stays
+    visible in the test suite, not only in ADR prose: a perfect ranking over the
+    collapsed 2-patent pool (P-A1, P-B1) still reads Recall@5 < 1.0, because
+    P-A2 -- suppressed from the pool, unreachable by the ranker -- remains
+    counted as a relevant item in the denominator. Fixing this is explicitly out
+    of scope for ADR 0027 (see its "Known gap" section and Enforcement item 6);
+    a future PR that resolves it must update this assertion deliberately, not by
+    silently regressing it back to today's value.
+    """
+    ranking_port = FakeRankingPort(fixed_order=["P-A1", "P-B1"])
+    runner = DefaultEvaluationRunner()
+
+    report = runner.run_evaluation(
+        dataset=dataset_with_known_family, ranking_port=ranking_port,
+        policy=sample_policy, context=_family_context("collapse"),
+    )
+
+    d_rep = report.demand_reports[0]
+    assert d_rep.candidate_count == 2
+    # All 3 original annotations (P-A1, P-A2, P-B1, all GRADE_2/broad-relevant)
+    # still count toward the denominator even though P-A2 was collapsed away.
+    assert d_rep.broad_metrics.recall_at_5 == pytest.approx(2 / 3)
+
+
 def test_runner_exclude_related_policy_drops_every_multi_member_family(
     dataset_with_known_family, sample_policy
 ):
@@ -728,8 +758,15 @@ def test_run_evaluation_raises_when_collapse_requested_without_family_metadata(
             policy=sample_policy, context=_family_context("collapse"),
         )
 
+    # The fail-fast must happen before any ranking -- not just "raises somewhere".
+    # A future refactor moving the validation after the demand loop would still
+    # satisfy pytest.raises() above (ranking would run first, then raise at the
+    # end) without this assertion catching the regression.
+    assert ranking_port.received_demands == []
+    assert ranking_port.received_patents == []
 
-def test_run_evaluation_records_family_metadata_available_false_under_allow(
+
+def test_run_evaluation_records_family_metadata_complete_false_under_allow(
     sample_validated_dataset, sample_policy
 ):
     ranking_port = FakeRankingPort(fixed_order=["P-1", "P-2", "P-3", "P-4", "P-5"])
@@ -740,10 +777,10 @@ def test_run_evaluation_records_family_metadata_available_false_under_allow(
         policy=sample_policy, context=_family_context("allow"),
     )
 
-    assert report.family_metadata_available is False
+    assert report.family_metadata_complete is False
 
 
-def test_run_evaluation_records_family_metadata_available_true_under_collapse(
+def test_run_evaluation_records_family_metadata_complete_true_under_collapse(
     dataset_with_known_family, sample_policy
 ):
     ranking_port = FakeRankingPort(fixed_order=["P-A1", "P-A2", "P-B1"])
@@ -754,7 +791,7 @@ def test_run_evaluation_records_family_metadata_available_true_under_collapse(
         policy=sample_policy, context=_family_context("collapse"),
     )
 
-    assert report.family_metadata_available is True
+    assert report.family_metadata_complete is True
 
 
 def test_runner_collapse_policy_keeps_lexicographically_smallest_publication_id_regardless_of_input_order(
@@ -829,3 +866,7 @@ def test_run_evaluation_raises_when_exclude_related_requested_without_family_met
             dataset=sample_validated_dataset, ranking_port=ranking_port,
             policy=sample_policy, context=_family_context("exclude_related"),
         )
+
+    # Same guarantee as the collapse case: fail-fast must precede any ranking.
+    assert ranking_port.received_demands == []
+    assert ranking_port.received_patents == []
