@@ -143,3 +143,24 @@ class BaseHarvester:
 
         meta_file.write_text(json.dumps(meta_record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         return target_file
+
+    @staticmethod
+    def get_known_source_uris(out_dir: Path, source_id: str) -> dict[str, Path]:
+        """Scan out_dir / source_id for existing raw payloads by source_uri."""
+        target_dir = out_dir if out_dir.name == source_id else (out_dir / source_id)
+        if not target_dir.exists():
+            return {}
+        known: dict[str, Path] = {}
+        for meta_path in target_dir.glob("*.meta.json"):
+            try:
+                data = json.loads(meta_path.read_text(encoding="utf-8"))
+                uri = data.get("source_uri")
+                demand_id = data.get("demand_id")
+                if uri and demand_id:
+                    for payload_file in target_dir.glob(f"{demand_id}.*"):
+                        if not payload_file.name.endswith(".meta.json"):
+                            known[uri] = payload_file
+                            break
+            except Exception:
+                continue
+        return known

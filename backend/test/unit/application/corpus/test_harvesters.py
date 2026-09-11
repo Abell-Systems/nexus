@@ -500,3 +500,58 @@ def test_een_pod_determine_demand_id_deterministic_hash():
     # Verify deterministic recurrence
     assert harvester._determine_demand_id(b"<html>No POD</html>", test_url) == id3
 
+
+def test_harvester_skips_already_harvested_uris(tmp_path: Path):
+    """Test that existing payloads on disk are detected and not re-fetched."""
+    harvester = InnogetHarvester(delay_seconds=0.0)
+
+    # Pre-save payload on disk
+    initial_payload = b"<html><head><title>Initial</title></head><body>Initial</body></html>"
+    uri = "https://www.innoget.com/technology-calls/101/seeking-polymer-solutions"
+    harvester.save_raw_payload(
+        demand_id="INNOGET-101",
+        source_id="innoget",
+        source_uri=uri,
+        payload_bytes=initial_payload,
+        out_dir=tmp_path,
+    )
+
+    listing_html = b"""
+    <html>
+    <body>
+        <div class="call-card">
+            <a href="/technology-calls/101/seeking-polymer-solutions">Polymer Challenge</a>
+        </div>
+    </body>
+    </html>
+    """
+
+    fetch_counts: dict[str, int] = {}
+
+    def mock_urlopen(req, timeout=30):
+        url = req.get_full_url() if hasattr(req, "get_full_url") else str(req)
+        fetch_counts[url] = fetch_counts.get(url, 0) + 1
+        mock_resp = MagicMock()
+        mock_resp.__enter__.return_value = mock_resp
+        mock_resp.getcode.return_value = 200
+        mock_resp.status = 200
+        if "/technology-calls?page=" in url:
+            mock_resp.read.return_value = listing_html
+        elif "/technology-calls/101" in url:
+            # If fetched, this would be a re-fetch
+            mock_resp.read.return_value = b"<html>New content</html>"
+        else:
+            raise urllib.error.HTTPError(url, 404, "Not Found", {}, None)  # type: ignore
+        return mock_resp
+
+    with patch("urllib.request.urlopen", side_effect=mock_urlopen):
+        saved = harvester.harvest(out_dir=tmp_path, max_pages=1)
+
+    assert len(saved) == 1
+    # Verify detail URL was NOT fetched because it already exists on disk
+    assert uri not in fetch_counts
+    # Verify existing payload on disk was preserved unchanged
+    payload_file = tmp_path / "innoget" / "INNOGET-101.html"
+    assert payload_file.read_bytes() == initial_payload
+
+

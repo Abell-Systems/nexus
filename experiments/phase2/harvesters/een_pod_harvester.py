@@ -55,6 +55,11 @@ class EenPodHarvester(BaseHarvester):
         saved_paths: list[Path] = []
         seen_urls: set[str] = set()
 
+        known_uris = self.get_known_source_uris(out_dir, self.source_id)
+        for existing_path in known_uris.values():
+            if existing_path not in saved_paths:
+                saved_paths.append(existing_path)
+
         while True:
             if max_pages is not None and page > max_pages:
                 break
@@ -93,6 +98,10 @@ class EenPodHarvester(BaseHarvester):
             for detail_url in new_items_on_page:
                 if limit is not None and len(saved_paths) >= limit:
                     break
+
+                if detail_url in known_uris:
+                    logger.debug("Skipping already harvested URI: %s", detail_url)
+                    continue
 
                 demand_id: str | None = None
                 try:

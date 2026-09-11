@@ -49,6 +49,11 @@ class InnogetHarvester(BaseHarvester):
         seen_demand_ids: set[str] = set()
         seen_urls: set[str] = set()
 
+        known_uris = self.get_known_source_uris(out_dir, self.source_id)
+        for existing_path in known_uris.values():
+            if existing_path not in saved_paths:
+                saved_paths.append(existing_path)
+
         while True:
             if max_pages is not None and page > max_pages:
                 break
@@ -97,6 +102,10 @@ class InnogetHarvester(BaseHarvester):
                 seen_demand_ids.add(demand_id)
 
                 detail_url = urllib.parse.urljoin(self.base_url, href)
+                if detail_url in known_uris:
+                    logger.debug("Skipping already harvested URI: %s", detail_url)
+                    continue
+
                 try:
                     detail_bytes, detail_status = self.fetch_url(detail_url)
                     saved = self.save_raw_payload(
