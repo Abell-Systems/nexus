@@ -1,0 +1,25 @@
+{
+  "dataset_id": "nexus-phase2-devtest-split-n18-v2",
+  "dev": [
+    "INNOGET-1607",
+    "INNOGET-1625",
+    "INNOGET-1726",
+    "INNOGET-1932",
+    "INNOGET-1935",
+    "INNOGET-1972",
+    "INNOGET-2301",
+    "INNOGET-2401",
+    "LOMBARDIA-860",
+    "LOMBARDIA-947"
+  ],
+  "test": [
+    "INNOGET-1605",
+    "INNOGET-1689",
+    "INNOGET-1870",
+    "INNOGET-1965",
+    "INNOGET-2006",
+    "INNOGET-2173",
+    "INNOGET-2258",
+    "INNOGET-2491"
+  ]
+}
