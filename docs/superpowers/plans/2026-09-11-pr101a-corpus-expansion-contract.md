@@ -321,6 +321,8 @@ class DemandCandidateContractRecord(BaseModel):
     organization_raw: str | None = None
     is_publicly_accessible: bool
     has_confidentiality_redaction: bool
+    has_articulated_technical_problem: bool
+    technical_problem_evidence_text: str | None = None
 
 
 class CandidateRejectionReason(str, Enum):
@@ -333,6 +335,7 @@ class CandidateRejectionReason(str, Enum):
     CONTENT_TOO_SHORT = "CONTENT_TOO_SHORT"
     CONFIDENTIALITY_REDACTED = "CONFIDENTIALITY_REDACTED"
     ACCESS_NOT_PUBLIC = "ACCESS_NOT_PUBLIC"
+    NO_TECHNICAL_PROBLEM = "NO_TECHNICAL_PROBLEM"
 
 
 class CandidateValidationResult(BaseModel):

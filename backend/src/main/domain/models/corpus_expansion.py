@@ -94,6 +94,9 @@ class TargetSampleSizeConfig(BaseModel):
     power_analysis_reference: str = Field(..., min_length=1)
 
 
+FROZEN_CORPUS_EXPANSION_POLICY_VERSION: str = "corpus_expansion_policy_v1"
+
+
 class CorpusExpansionPolicy(BaseModel):
     """Declarative versioned policy governing Phase-2 corpus expansion."""
 
@@ -111,9 +114,9 @@ class CorpusExpansionPolicy(BaseModel):
 
     @field_validator("policy_version")
     @classmethod
-    def validate_policy_version_prefix(cls, v: str) -> str:
-        if not v.startswith("corpus_expansion_policy_"):
-            raise ValueError("policy_version must start with 'corpus_expansion_policy_'")
+    def validate_policy_version_exact(cls, v: str) -> str:
+        if v != FROZEN_CORPUS_EXPANSION_POLICY_VERSION:
+            raise ValueError(f"policy_version must be strictly '{FROZEN_CORPUS_EXPANSION_POLICY_VERSION}', got '{v}'")
         return v
 
 

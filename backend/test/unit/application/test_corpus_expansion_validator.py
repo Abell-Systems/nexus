@@ -1,5 +1,6 @@
 """Unit tests for corpus expansion policy loader and candidate validator."""
 
+import hashlib
 from datetime import date
 from pathlib import Path
 
@@ -54,6 +55,29 @@ def test_load_corpus_expansion_policy_empty_hash_raises(tmp_path: Path) -> None:
     fake_json.write_text('{"policy_version": "test"}', encoding="utf-8")
     fake_hash.write_text("   \n", encoding="utf-8")
     with pytest.raises(PolicyIntegrityError, match="Policy hash sidecar file is empty"):
+        load_corpus_expansion_policy(fake_json, fake_hash)
+
+
+def test_load_corpus_expansion_policy_version_mismatch_raises(tmp_path: Path) -> None:
+    # 1. Loading real v1 policy with mismatched expected_version
+    with pytest.raises(
+        PolicyIntegrityError,
+        match="Policy version mismatch: expected 'corpus_expansion_policy_v2', got 'corpus_expansion_policy_v1'",
+    ):
+        load_corpus_expansion_policy(POLICY_PATH, expected_version="corpus_expansion_policy_v2")
+
+    # 2. Loading policy file containing v999 with valid hash sidecar
+    fake_json = tmp_path / "policy_v999.json"
+    fake_hash = tmp_path / "policy_v999.sha256"
+    content = b'{"policy_version": "corpus_expansion_policy_v999"}'
+    fake_json.write_bytes(content)
+    actual_hash = hashlib.sha256(content).hexdigest()
+    fake_hash.write_text(f"{actual_hash}  policy_v999.json\n", encoding="utf-8")
+
+    with pytest.raises(
+        PolicyIntegrityError,
+        match="Policy version mismatch: expected 'corpus_expansion_policy_v1', got 'corpus_expansion_policy_v999'",
+    ):
         load_corpus_expansion_policy(fake_json, fake_hash)
 
 

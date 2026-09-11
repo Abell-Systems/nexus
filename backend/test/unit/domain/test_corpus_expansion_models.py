@@ -6,6 +6,7 @@ import pytest
 from pydantic import ValidationError
 
 from domain.models.corpus_expansion import (
+    FROZEN_CORPUS_EXPANSION_POLICY_VERSION,
     CandidateRejectionReason,
     CandidateValidationResult,
     ConcentrationMonitoringConfig,
@@ -99,6 +100,58 @@ def test_corpus_expansion_policy_frozen() -> None:
     )
     with pytest.raises(ValidationError):
         policy.policy_version = "corpus_expansion_policy_v2"
+
+
+def test_corpus_expansion_policy_version_strict_v1() -> None:
+    base_kwargs = {
+        "description": "Phase 2 expansion policy",
+        "target_sample_size": TargetSampleSizeConfig(
+            target_independent_demands=60,
+            power_analysis_reference="data/experiments/power_analysis_wilcoxon.json",
+        ),
+        "sources": (
+            PermittedSourceConfig(
+                source_id="innoget",
+                display_name="InnoGet",
+                permitted_constructs=("Technology call",),
+                public_access_mode="unauthenticated_public_http",
+            ),
+        ),
+        "temporal_window": TemporalWindowConfig(
+            min_publication_date=date(2020, 1, 1),
+            max_publication_date=date(2025, 12, 31),
+            date_interpretation="public_publication_date",
+        ),
+        "geographic_strata": (GeographicStratumConfig(stratum_id="spain", description="Spain"),),
+        "content_requirements": ContentRequirementsConfig(
+            min_word_count=25,
+            require_technical_problem=True,
+            allow_explicit_confidentiality_redaction=False,
+        ),
+        "concentration_monitoring": ConcentrationMonitoringConfig(
+            sector_warning_threshold=0.35,
+            max_independent_per_organization=1,
+        ),
+        "unknown_handling": UnknownHandlingConfig(
+            unknown_organization_split_policy="dev_only",
+            counts_towards_independent_target=False,
+        ),
+    }
+
+    # Valid v1 succeeds
+    p = CorpusExpansionPolicy(policy_version=FROZEN_CORPUS_EXPANSION_POLICY_VERSION, **base_kwargs)
+    assert p.policy_version == "corpus_expansion_policy_v1"
+
+    # Any other version string is strictly rejected
+    for invalid_version in [
+        "corpus_expansion_policy_v2",
+        "corpus_expansion_policy_v999",
+        "corpus_expansion_policy_draft",
+        "random_policy",
+    ]:
+        with pytest.raises(ValidationError) as exc_info:
+            CorpusExpansionPolicy(policy_version=invalid_version, **base_kwargs)
+        assert "policy_version must be strictly 'corpus_expansion_policy_v1'" in str(exc_info.value)
 
 
 def test_demand_candidate_contract_record_frozen_extra_forbid() -> None:

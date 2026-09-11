@@ -74,14 +74,14 @@ The expansion and evaluation pipeline is strictly decomposed into decoupled, seq
 
 ### 3.5 Pre-Specified Candidate Exclusion Criteria
 A candidate is deterministically evaluated by the policy validator and rejected (`POLICY_REJECTED`) if any of the following apply:
-1. `UNAUTHORIZED_SOURCE`: Source not in authorized primary sources.
-2. `UNAUTHORIZED_RECORD_TYPE`: Record type not permitted for the source.
-3. `OUTSIDE_TEMPORAL_WINDOW`: Publication date outside [2020-01-01, 2025-12-31] or unverified.
-4. `UNAUTHORIZED_GEOGRAPHIC_STRATUM`: Stratum not recognized by policy.
+1. `UNAUTHORIZED_SOURCE`: Source not registered in the active expansion policy.
+2. `INCOMPATIBLE_CONSTRUCT`: Document construct not permitted for the source (e.g., commercial offers or marketing calls).
+3. `OUT_OF_TEMPORAL_WINDOW`: Publication date outside [2020-01-01, 2025-12-31] or unverified.
+4. `UNAUTHORIZED_GEOGRAPHIC_STRATUM`: Geographic stratum not recognized by policy.
 5. `CONTENT_TOO_SHORT`: Problem description text under 25 canonical words (`calculate_canonical_word_count`).
 6. `NO_TECHNICAL_PROBLEM`: Demand does not articulate an authentic technical problem with verifiable evidence text.
 7. `CONFIDENTIALITY_REDACTED`: Source record explicitly states that key technical details or problem formulation are confidential or redacted.
-8. `ACCESS_NOT_PUBLIC`: Record requires user credentials, active login, or defeats bot challenges.
+8. `ACCESS_NOT_PUBLIC`: Record requires user credentials, active login, paywall access, or defeats bot challenges.
 
 ### 3.6 Absolute Prohibition of Outcome-Dependent Selection
 > **No candidate demand may be included or excluded based on retrieved patents, ranking scores, relevance judgments, expected benchmark difficulty, or any downstream matching result.**
