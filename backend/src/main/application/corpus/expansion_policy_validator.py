@@ -16,9 +16,7 @@ class PolicyIntegrityError(Exception):
     """Raised when policy configuration file is corrupted or hash does not match."""
 
 
-def load_corpus_expansion_policy(
-    policy_path: Path, hash_path: Path | None = None
-) -> CorpusExpansionPolicy:
+def load_corpus_expansion_policy(policy_path: Path, hash_path: Path | None = None) -> CorpusExpansionPolicy:
     """Load, verify cryptographic integrity, and parse a CorpusExpansionPolicy."""
     p_path = Path(policy_path)
     if not p_path.is_file():
