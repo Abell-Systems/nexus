@@ -93,6 +93,29 @@ def sample_policy() -> MatchingPolicyConfig:
     )
 
 
+def _make_policy_for_uncertain_test() -> MatchingPolicyConfig:
+    """Non-fixture policy loader for the one test that needs a MatchingPolicyConfig
+    outside pytest's fixture injection (it builds its own dataset). Mirrors
+    sample_policy's own direct-construction pattern verbatim -- sample_policy does
+    not load from a JSON file, so neither does this."""
+    return MatchingPolicyConfig(
+        policy_id="test_matching_policy",
+        policy_version="1.0.0",
+        description="Deterministic test policy",
+        weights=RankerWeights(alpha=0.25, beta=0.45, gamma=0.30),
+        operational_limits=OperationalLimits(retrieval_limit=100, max_candidate_pool_size=300),
+        cpc_concordance_levels=CPCConcordanceLevels(
+            subgroup=1.0, main_group=0.8, subclass=0.5, section=0.2, none=0.0
+        ),
+        confidence_thresholds=ConfidenceThresholds(strong=0.75, moderate=0.50, weak=0.25),
+        sufficiency_rules=SufficiencyRules(
+            min_active_signals=2, min_signals_for_sufficient=3, require_temporal_validity=True
+        ),
+        concept_to_cpc_taxonomy={"drainage": ["E03C"]},
+        policy_sha256="c" * 64,
+    )
+
+
 @pytest.fixture
 def sample_validated_dataset() -> ValidatedDataset:
     prov = EvaluationProvenance(
@@ -508,6 +531,27 @@ def test_runner_strict_mode_computes_candidate_universe_size_from_filtered_pool(
     )
 
 
+def test_runner_strict_mode_excludes_temporally_ineligible_judgement_from_denominator(
+    dataset_with_temporal_violation, sample_policy, strict_context
+):
+    """ADR 0028: P-INELIGIBLE's GRADE_3 judgement must not count in the Recall/nDCG
+    denominator once strict mode has excluded it from the pool -- this is the exact
+    defect ADR 0018 §3 claimed was already fixed but wasn't (P-INELIGIBLE remained
+    in the raw judgements dict passed to compute_demand_metrics)."""
+    ranking_port = FakeRankingPort(fixed_order=["P-ELIGIBLE"])
+    runner = DefaultEvaluationRunner()
+
+    report = runner.run_evaluation(
+        dataset=dataset_with_temporal_violation, ranking_port=ranking_port,
+        policy=sample_policy, context=strict_context,
+    )
+
+    d_rep = report.demand_reports[0]
+    # Only P-ELIGIBLE (GRADE_2, broad-relevant) is in the eligible universe.
+    # P-INELIGIBLE's GRADE_3 must not inflate the denominator to 2.
+    assert d_rep.broad_metrics.recall_at_5 == pytest.approx(1.0)
+
+
 def test_runner_unconstrained_mode_preserves_full_universe_including_ineligible_patents(
     dataset_with_temporal_violation, sample_policy, sample_context
 ):
@@ -698,20 +742,16 @@ def test_runner_collapse_policy_keeps_one_representative_per_family(
     assert report.demand_reports[0].candidate_count == 2
 
 
-def test_run_evaluation_collapse_recall_denominator_is_not_shrunk_with_the_pool(
+def test_run_evaluation_collapse_recall_denominator_reflects_eligible_universe(
     dataset_with_known_family, sample_policy
 ):
-    """ADR 0027 "Known gap": collapse/exclude_related shrink the ranking pool but
-    NOT the relevance-judgement set used for Recall/nDCG denominators in
-    application/evaluation/metrics.py -- that file is untouched by ADR 0027 by
-    design. This pins the CURRENT, documented-as-known-gap behavior so it stays
-    visible in the test suite, not only in ADR prose: a perfect ranking over the
-    collapsed 2-patent pool (P-A1, P-B1) still reads Recall@5 < 1.0, because
-    P-A2 -- suppressed from the pool, unreachable by the ranker -- remains
-    counted as a relevant item in the denominator. Fixing this is explicitly out
-    of scope for ADR 0027 (see its "Known gap" section and Enforcement item 6);
-    a future PR that resolves it must update this assertion deliberately, not by
-    silently regressing it back to today's value.
+    """ADR 0028: supersedes the old "known gap" pin. collapse's relevance-judgement
+    denominator must now reflect the same 2-patent eligible universe the ranking
+    port received (P-A1, P-B1), not the original 3-patent annotation set. P-A2's
+    GRADE_2 judgement is remapped onto its family's surviving representative
+    (P-A1, the lexicographically smallest publication_id), so a perfect ranking of
+    the eligible pool reads Recall@5 == 1.0 -- not 2/3 as it incorrectly did before
+    ADR 0028 fixed the shared ADR 0018/ADR 0027 denominator defect.
     """
     ranking_port = FakeRankingPort(fixed_order=["P-A1", "P-B1"])
     runner = DefaultEvaluationRunner()
@@ -723,9 +763,7 @@ def test_run_evaluation_collapse_recall_denominator_is_not_shrunk_with_the_pool(
 
     d_rep = report.demand_reports[0]
     assert d_rep.candidate_count == 2
-    # All 3 original annotations (P-A1, P-A2, P-B1, all GRADE_2/broad-relevant)
-    # still count toward the denominator even though P-A2 was collapsed away.
-    assert d_rep.broad_metrics.recall_at_5 == pytest.approx(2 / 3)
+    assert d_rep.broad_metrics.recall_at_5 == pytest.approx(1.0)
 
 
 def test_runner_exclude_related_policy_drops_every_multi_member_family(
@@ -743,6 +781,25 @@ def test_runner_exclude_related_policy_drops_every_multi_member_family(
     # FAM-A has two members: both are dropped entirely. FAM-B is a singleton: kept.
     assert received_ids == {"P-B1"}
     assert report.demand_reports[0].candidate_count == 1
+
+
+def test_run_evaluation_exclude_related_denominator_excludes_dropped_family_judgements(
+    dataset_with_known_family, sample_policy
+):
+    """ADR 0028: exclude_related drops both FAM-A members entirely -- their GRADE_2
+    judgements must not survive anywhere (not remapped, unlike collapse). Only
+    P-B1's judgement remains in the denominator."""
+    ranking_port = FakeRankingPort(fixed_order=["P-B1"])
+    runner = DefaultEvaluationRunner()
+
+    report = runner.run_evaluation(
+        dataset=dataset_with_known_family, ranking_port=ranking_port,
+        policy=sample_policy, context=_family_context("exclude_related"),
+    )
+
+    d_rep = report.demand_reports[0]
+    assert d_rep.candidate_count == 1
+    assert d_rep.broad_metrics.recall_at_5 == pytest.approx(1.0)
 
 
 def test_run_evaluation_raises_when_collapse_requested_without_family_metadata(
@@ -870,3 +927,132 @@ def test_run_evaluation_raises_when_exclude_related_requested_without_family_met
     # Same guarantee as the collapse case: fail-fast must precede any ranking.
     assert ranking_port.received_demands == []
     assert ranking_port.received_patents == []
+
+
+@pytest.fixture
+def dataset_with_partially_judged_family() -> ValidatedDataset:
+    """FAM-C: P-C1 (lexicographically first, unjudged) and P-C2 (GRADE_3, judged).
+    Tests that collapse's remap picks up a relevant judgement from a suppressed
+    member even when the surviving representative itself carries no judgement."""
+    prov = EvaluationProvenance(
+        source_authority="oepm",
+        source_uri="https://example.com/p",
+        extraction_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+        raw_payload_sha256="1" * 64,
+        modality=DataModality.OBSERVED,
+    )
+    demand = EvaluationDemand(
+        demand_id="D-FAM-C",
+        title="Sanitary Fixtures",
+        description="Drainage equipment",
+        posted_date=date(2023, 1, 1),
+        target_cpc_prefixes=["E03C"],
+        provenance=prov,
+    )
+    patents = [
+        EvaluationPatent(
+            publication_id="P-C1", publication_date=date(2022, 1, 1),
+            classifications_cpc=["E03C"], title="Patent C1", abstract="Abstract",
+            provenance=prov, family_id="FAM-C",
+        ),
+        EvaluationPatent(
+            publication_id="P-C2", publication_date=date(2022, 1, 1),
+            classifications_cpc=["E03C"], title="Patent C2", abstract="Abstract",
+            provenance=prov, family_id="FAM-C",
+        ),
+    ]
+    annotations = [
+        EvaluationAnnotation(
+            demand_id="D-FAM-C", publication_id="P-C2", grade=RelevanceGrade.GRADE_3,
+            annotator_role="expert", modality=DataModality.EXPERT_LABELLED,
+        ),
+    ]
+    dataset = EvaluationDataset(
+        dataset_id="eval-corpus-family-c", schema_version="1.0.0", dataset_version="1.0.0",
+        description="Partially-judged family test corpus", demands=[demand], patents=patents,
+        annotations=annotations,
+    )
+    manifest = EvaluationDatasetManifest(
+        dataset_id="eval-corpus-family-c", schema_version="1.0.0", dataset_version="1.0.0",
+        source_authorities=["oepm"], demand_count=1, patent_count=2, annotation_count=1,
+        content_sha256="a" * 64,
+    )
+    return ValidatedDataset(dataset=dataset, manifest=manifest)
+
+
+def test_run_evaluation_collapse_remaps_relevance_from_suppressed_member_to_representative(
+    dataset_with_partially_judged_family, sample_policy
+):
+    """P-C1 (representative) has no judgement of its own; P-C2 (suppressed) is
+    GRADE_3. The remap must carry P-C2's relevance onto P-C1, or a perfect
+    ranking of the collapsed pool would score Recall@5 == 0.0 despite the family
+    genuinely containing the target solution."""
+    ranking_port = FakeRankingPort(fixed_order=["P-C1"])
+    runner = DefaultEvaluationRunner()
+
+    report = runner.run_evaluation(
+        dataset=dataset_with_partially_judged_family, ranking_port=ranking_port,
+        policy=sample_policy, context=_family_context("collapse"),
+    )
+
+    d_rep = report.demand_reports[0]
+    assert d_rep.candidate_count == 1
+    assert d_rep.strict_metrics.recall_at_5 == pytest.approx(1.0)
+
+
+def test_run_evaluation_collapse_remap_never_promotes_uncertain_to_relevant():
+    """A family where every judged grade is UNCERTAIN must not surface as relevant
+    on the representative after collapse -- UNCERTAIN is excluded from the max()
+    comparison entirely, per RelevanceGrade's epistemic invariant (never coerced
+    to a real grade, ADR 0007)."""
+    prov = EvaluationProvenance(
+        source_authority="oepm", source_uri="https://example.com/p",
+        extraction_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+        raw_payload_sha256="1" * 64, modality=DataModality.OBSERVED,
+    )
+    demand = EvaluationDemand(
+        demand_id="D-FAM-D", title="Sanitary Fixtures", description="Drainage equipment",
+        posted_date=date(2023, 1, 1), target_cpc_prefixes=["E03C"], provenance=prov,
+    )
+    patents = [
+        EvaluationPatent(
+            publication_id="P-D1", publication_date=date(2022, 1, 1),
+            classifications_cpc=["E03C"], title="Patent D1", abstract="Abstract",
+            provenance=prov, family_id="FAM-D",
+        ),
+        EvaluationPatent(
+            publication_id="P-D2", publication_date=date(2022, 1, 1),
+            classifications_cpc=["E03C"], title="Patent D2", abstract="Abstract",
+            provenance=prov, family_id="FAM-D",
+        ),
+    ]
+    annotations = [
+        EvaluationAnnotation(
+            demand_id="D-FAM-D", publication_id="P-D2", grade=RelevanceGrade.UNCERTAIN,
+            annotator_role="expert", modality=DataModality.EXPERT_LABELLED,
+        ),
+    ]
+    dataset = EvaluationDataset(
+        dataset_id="eval-corpus-family-d", schema_version="1.0.0", dataset_version="1.0.0",
+        description="Uncertain-only family test corpus", demands=[demand], patents=patents,
+        annotations=annotations,
+    )
+    manifest = EvaluationDatasetManifest(
+        dataset_id="eval-corpus-family-d", schema_version="1.0.0", dataset_version="1.0.0",
+        source_authorities=["oepm"], demand_count=1, patent_count=2, annotation_count=1,
+        content_sha256="b" * 64,
+    )
+    validated_dataset = ValidatedDataset(dataset=dataset, manifest=manifest)
+
+    ranking_port = FakeRankingPort(fixed_order=["P-D1"])
+    runner = DefaultEvaluationRunner()
+    sample_policy_instance = _make_policy_for_uncertain_test()
+
+    report = runner.run_evaluation(
+        dataset=validated_dataset, ranking_port=ranking_port,
+        policy=sample_policy_instance, context=_family_context("collapse"),
+    )
+
+    d_rep = report.demand_reports[0]
+    assert d_rep.broad_metrics.recall_at_5 is None  # zero relevant judged items: undefined, not 0.0
+    assert d_rep.uncertain_count == 1

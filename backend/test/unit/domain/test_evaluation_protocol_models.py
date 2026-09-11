@@ -151,6 +151,7 @@ def test_demand_metrics_report_and_run_report():
         macro_denominators={"strict.ndcg_at_10": 1, "broad.ndcg_at_10": 1},
         uncertainty_rate=0.10,
         family_metadata_complete=True,
+        denominator_semantics="eligible_universe_v1",
     )
 
     assert report.run_id == "run-test-123"

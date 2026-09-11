@@ -432,6 +432,15 @@ class EvaluationRunReport(BaseModel):
     # Recorded unconditionally (even under family_policy="allow") so the audit trail
     # is honest about whether a family-sensitive policy could have been requested.
     family_metadata_complete: bool
+    # ADR 0028: fixed identifier for how this run's Recall/nDCG denominators were
+    # computed. Always "eligible_universe_v1" for any run produced by this codebase's
+    # current DefaultEvaluationRunner -- never caller-selected, never a policy choice.
+    # Its purpose is comparative safety: a frozen pre-ADR-0028 EvaluationRunReport
+    # (e.g. data/experiments/m0_run_report.json) has no such field and therefore
+    # fails to parse as this model at all, which is the correct, honest outcome --
+    # it must never be silently paired against a post-fix run (see comparative.py's
+    # guard, Task 2 of the eligible-universe-denominators plan).
+    denominator_semantics: Literal["eligible_universe_v1"]
 
     @field_validator("dataset_sha256", "policy_sha256")
     @classmethod

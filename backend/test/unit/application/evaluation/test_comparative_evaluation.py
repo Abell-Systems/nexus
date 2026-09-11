@@ -89,6 +89,7 @@ def _make_run_report(run_id: str, demand_mrrs: dict[str, float]) -> EvaluationRu
         macro_denominators=denominators,
         uncertainty_rate=0.0,
         family_metadata_complete=True,
+        denominator_semantics="eligible_universe_v1",
     )
 
 
