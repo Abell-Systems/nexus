@@ -23,6 +23,7 @@ _TECH_PROBLEM_HEADING_RE = re.compile(
     r"technical\s+problem|technical\s+specification|challenge|problem\s+solved",
     re.IGNORECASE,
 )
+_CONSTRUCTS_WITH_TECHNICAL_ABSTRACT = frozenset({"Technology request", "R&D request"})
 
 
 class EenPodCandidateMapper:
@@ -52,6 +53,16 @@ class EenPodCandidateMapper:
         # 1. Reference and temporal evidence
         pod_ref, country_code, date_evidence, construct_prefix = cls._extract_date_evidence(soup, html_text, meta)
 
+        # 1b. Construct resolution (needed ahead of technical problem evidence, below)
+        construct_map = {
+            "TR": "Technology request",
+            "TO": "Technology offer",
+            "BR": "Business request",
+            "BO": "Business offer",
+            "RD": "R&D request",
+        }
+        source_construct = meta.get("source_construct") or construct_map.get(construct_prefix, "Technology request")
+
         # 2. Demand ID
         demand_id = meta.get("demand_id")
         if not demand_id:
@@ -65,13 +76,24 @@ class EenPodCandidateMapper:
         if not title:
             raise MappingError("Title could not be extracted from EEN/POD payload")
 
-        # 4. Technical problem evidence
-        has_tech_prob, tech_prob_text = cls._extract_technical_problem(soup, meta)
-
-        # 5. Abstract / description
+        # 4. Abstract / description
         description = cls._extract_description(soup, meta)
         if not description:
             raise MappingError("Description could not be extracted from EEN/POD payload")
+
+        # 5. Technical problem evidence
+        has_tech_prob, tech_prob_text = cls._extract_technical_problem(soup, meta)
+        if not has_tech_prob and source_construct in _CONSTRUCTS_WITH_TECHNICAL_ABSTRACT:
+            abstract_block = cls._extract_abstract_block(soup, meta)
+            if abstract_block:
+                # This mirror exposes no dedicated technical-problem section for these
+                # constructs, only a general "Abstract". For Technology request / R&D
+                # request the Abstract itself articulates the technical need (verified
+                # by manual sampling against a Business offer negative control), so it
+                # is used verbatim as the technical problem evidence. Pure extraction
+                # rule, not an eligibility decision -- the policy validator still gates.
+                has_tech_prob = True
+                tech_prob_text = abstract_block
 
         # 6. Geographic stratum
         orig_country = meta.get("origin_country") or country_code
@@ -94,17 +116,7 @@ class EenPodCandidateMapper:
         if len(language_code) < 2:
             language_code = "en"
 
-        # 8. Construct resolution
-        construct_map = {
-            "TR": "Technology request",
-            "TO": "Technology offer",
-            "BR": "Business request",
-            "BO": "Business offer",
-            "RD": "R&D request",
-        }
-        source_construct = meta.get("source_construct") or construct_map.get(construct_prefix, "Technology request")
-
-        # 9. Confidentiality and accessibility
+        # 8. Confidentiality and accessibility
         has_confidentiality = bool(_CONFIDENTIALITY_RE.search(html_text))
         is_public = meta.get("is_publicly_accessible", True)
         organization_raw = meta.get("organization_raw") or meta.get("organization")
@@ -274,7 +286,9 @@ class EenPodCandidateMapper:
         return False, None
 
     @classmethod
-    def _extract_description(cls, soup: BeautifulSoup, meta: dict[str, Any]) -> str | None:
+    def _extract_abstract_block(cls, soup: BeautifulSoup, meta: dict[str, Any]) -> str | None:
+        """Extract the dedicated Abstract/summary block, distinct from lower-priority
+        description fallbacks (og:description, generic paragraph accumulation)."""
         if meta.get("description"):
             return str(meta["description"]).strip()
 
@@ -285,6 +299,14 @@ class EenPodCandidateMapper:
             text = desc_elem.get_text(separator=" ", strip=True)
             if text:
                 return text
+
+        return None
+
+    @classmethod
+    def _extract_description(cls, soup: BeautifulSoup, meta: dict[str, Any]) -> str | None:
+        abstract_block = cls._extract_abstract_block(soup, meta)
+        if abstract_block:
+            return abstract_block
 
         og_desc = soup.find("meta", property="og:description")
         if og_desc and isinstance(og_desc, Tag):

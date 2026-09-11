@@ -273,6 +273,73 @@ def test_een_pod_mapper_malformed_payload_raises_error() -> None:
         EenPodCandidateMapper.map_payload(b"<html><body>Nothing here</body></html>", metadata={})
 
 
+def _een_html_with_abstract_only(pod_reference: str, abstract_text: str) -> bytes:
+    """Build a minimal EEN/POD-shaped page with only an Abstract, no dedicated
+    technical-problem section -- matching the real Lombardia mirror structure."""
+    return f"""
+    <html lang="en">
+    <head><title>Test proposal</title></head>
+    <body>
+        <h1>Test proposal</h1>
+        <span class="collaborations-info-value lead">{pod_reference}</span>
+        <div class="summary"><p>{abstract_text}</p></div>
+    </body>
+    </html>
+    """.encode()
+
+
+def test_een_pod_mapper_technology_request_abstract_becomes_technical_problem() -> None:
+    abstract = "Abstract Startup austriaca cerca capacita produttiva roll-to-roll per componenti elettrochimici."
+    html = _een_html_with_abstract_only("TRAT20260630016", abstract)
+
+    candidate = EenPodCandidateMapper.map_payload(html, metadata={})
+
+    assert candidate.source_construct == "Technology request"
+    assert candidate.has_articulated_technical_problem is True
+    assert candidate.technical_problem_evidence_text == abstract
+
+
+def test_een_pod_mapper_rd_request_abstract_becomes_technical_problem() -> None:
+    abstract = "Abstract Universita tedesca cerca partner per meccanica della frattura in Horizon Europe."
+    html = _een_html_with_abstract_only("RDDE20260408014", abstract)
+
+    candidate = EenPodCandidateMapper.map_payload(html, metadata={})
+
+    assert candidate.source_construct == "R&D request"
+    assert candidate.has_articulated_technical_problem is True
+    assert candidate.technical_problem_evidence_text == abstract
+
+
+def test_een_pod_mapper_business_offer_abstract_not_treated_as_technical_problem() -> None:
+    abstract = "Abstract Produttore belga di dolci cerca partner per vendita all'ingrosso e private label."
+    html = _een_html_with_abstract_only("BOBE20260702029", abstract)
+
+    candidate = EenPodCandidateMapper.map_payload(html, metadata={})
+
+    assert candidate.source_construct == "Business offer"
+    assert candidate.has_articulated_technical_problem is False
+    assert candidate.technical_problem_evidence_text is None
+
+
+def test_een_pod_mapper_technology_request_missing_abstract_no_technical_problem() -> None:
+    html = b"""
+    <html lang="en">
+    <head><title>Test proposal without abstract</title></head>
+    <body>
+        <h1>Test proposal without abstract</h1>
+        <span class="collaborations-info-value lead">TRAT20260630016</span>
+        <p>Some unrelated paragraph text long enough to serve as a description fallback.</p>
+    </body>
+    </html>
+    """
+
+    candidate = EenPodCandidateMapper.map_payload(html, metadata={})
+
+    assert candidate.source_construct == "Technology request"
+    assert candidate.has_articulated_technical_problem is False
+    assert candidate.technical_problem_evidence_text is None
+
+
 # --------------------------------------------------------------------------
 # InnoGet Candidate Mapper Tests
 # --------------------------------------------------------------------------
