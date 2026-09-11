@@ -144,9 +144,17 @@ class EenPodHarvester(BaseHarvester):
         soup = BeautifulSoup(html_text, "html.parser")
         info_el = soup.find(class_=_POD_LEAD_RE)
         if info_el:
-            m_lead = _POD_REF_RE.search(info_el.get_text(strip=True))
+            lead_text = info_el.get_text(strip=True)
+            m_lead = _POD_REF_RE.search(lead_text)
             if m_lead:
                 return m_lead.group(1)
+            # The site's own authoritative ID field is trusted verbatim even when
+            # it doesn't match the expected reference shape, rather than falling
+            # through to a full-page search that can pick up an unrelated
+            # reference from a sidebar/related-proposals list.
+            sanitized = re.sub(r"[^A-Za-z0-9]", "", lead_text)
+            if sanitized:
+                return sanitized
 
         # 2. Fallback to full-text reference search
         m_pod = _POD_REF_RE.search(html_text)

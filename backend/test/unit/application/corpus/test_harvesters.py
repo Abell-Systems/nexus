@@ -501,6 +501,30 @@ def test_een_pod_determine_demand_id_deterministic_hash():
     assert harvester._determine_demand_id(b"<html>No POD</html>", test_url) == id3
 
 
+def test_een_pod_determine_demand_id_trusts_lead_field_even_if_unrecognized_shape():
+    """Lead ID field text that doesn't match the POD reference regex must still be
+    used verbatim (sanitized), never replaced by an unrelated reference found
+    elsewhere on the page (e.g. a 'related proposals' sidebar list)."""
+    harvester = EenPodHarvester()
+
+    html = b"""
+    <html><body>
+        <div class="collaborations-info-item">
+            <span class="collaborations-info-label">ID</span>
+            <span class="collaborations-info-value lead">RDRDE20260728021</span>
+        </div>
+        <div class="related-proposals">
+            <a href="/en/collaborations/collaboration-proposals/2219/other">
+                Unrelated proposal BOFR20260702022
+            </a>
+        </div>
+    </body></html>
+    """
+
+    demand_id = harvester._determine_demand_id(html, "https://example.com/arbitrary")
+    assert demand_id == "RDRDE20260728021"
+
+
 def test_harvester_skips_already_harvested_uris(tmp_path: Path):
     """Test that existing payloads on disk are detected and not re-fetched."""
     harvester = InnogetHarvester(delay_seconds=0.0)
