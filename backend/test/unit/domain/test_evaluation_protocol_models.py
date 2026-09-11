@@ -7,14 +7,17 @@ Invariants verified:
 - Zero filesystem interaction in domain models.
 """
 
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 
 import pytest
 from pydantic import ValidationError
 
 from domain.models.evaluation import (
+    DataModality,
     DemandMetricsReport,
     EvaluationExecutionContext,
+    EvaluationPatent,
+    EvaluationProvenance,
     EvaluationRunReport,
     MetricSet,
 )
@@ -28,6 +31,17 @@ def _sample_context() -> EvaluationExecutionContext:
         execution_timestamp=datetime(2026, 9, 3, 14, 0, 0, tzinfo=UTC),
         environment="ci",
         temporal_pool_mode="unconstrained",
+        family_policy="allow",
+    )
+
+
+def _sample_provenance() -> EvaluationProvenance:
+    return EvaluationProvenance(
+        source_authority="oepm",
+        source_uri="https://example.com/p",
+        extraction_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+        raw_payload_sha256="1" * 64,
+        modality=DataModality.OBSERVED,
     )
 
 
@@ -45,6 +59,7 @@ def test_evaluation_execution_context_validation():
             execution_timestamp=datetime.now(UTC),
             environment="test",
             temporal_pool_mode="unconstrained",
+            family_policy="allow",
         )
 
     # Non-hex characters
@@ -56,6 +71,7 @@ def test_evaluation_execution_context_validation():
             execution_timestamp=datetime.now(UTC),
             environment="test",
             temporal_pool_mode="unconstrained",
+            family_policy="allow",
         )
 
     # Missing timezone on execution_timestamp
@@ -67,6 +83,7 @@ def test_evaluation_execution_context_validation():
             execution_timestamp=datetime(2026, 9, 3, 14, 0, 0),  # Naive
             environment="test",
             temporal_pool_mode="unconstrained",
+            family_policy="allow",
         )
 
     # Immutability
@@ -133,6 +150,7 @@ def test_demand_metrics_report_and_run_report():
         macro_broad=broad_metrics,
         macro_denominators={"strict.ndcg_at_10": 1, "broad.ndcg_at_10": 1},
         uncertainty_rate=0.10,
+        family_metadata_available=True,
     )
 
     assert report.run_id == "run-test-123"
@@ -144,3 +162,53 @@ def test_demand_metrics_report_and_run_report():
     # Immutability
     with pytest.raises(ValidationError):
         report.run_id = "modified"  # type: ignore[misc]
+
+
+def test_evaluation_patent_family_id_defaults_to_none():
+    patent = EvaluationPatent(
+        publication_id="P-1",
+        publication_date=date(2022, 1, 1),
+        classifications_cpc=["E03C"],
+        title="Patent",
+        abstract="Abstract",
+        provenance=_sample_provenance(),
+    )
+    assert patent.family_id is None
+
+
+def test_evaluation_patent_accepts_explicit_family_id():
+    patent = EvaluationPatent(
+        publication_id="P-1",
+        publication_date=date(2022, 1, 1),
+        classifications_cpc=["E03C"],
+        title="Patent",
+        abstract="Abstract",
+        provenance=_sample_provenance(),
+        family_id="FAM-42",
+    )
+    assert patent.family_id == "FAM-42"
+
+
+def test_evaluation_execution_context_requires_family_policy():
+    with pytest.raises(ValidationError):
+        EvaluationExecutionContext(
+            engine_name="Test",
+            engine_version="1.0",
+            engine_commit_hash="a321b0c",
+            execution_timestamp=datetime.now(UTC),
+            environment="test",
+            temporal_pool_mode="unconstrained",
+        )
+
+
+def test_evaluation_execution_context_rejects_invalid_family_policy():
+    with pytest.raises(ValidationError):
+        EvaluationExecutionContext(
+            engine_name="Test",
+            engine_version="1.0",
+            engine_commit_hash="a321b0c",
+            execution_timestamp=datetime.now(UTC),
+            environment="test",
+            temporal_pool_mode="unconstrained",
+            family_policy="infer_from_title",
+        )
