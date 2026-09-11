@@ -17,6 +17,7 @@ from domain.models.corpus_expansion import (
     TargetSampleSizeConfig,
     TemporalWindowConfig,
     UnknownHandlingConfig,
+    calculate_canonical_word_count,
 )
 
 
@@ -115,8 +116,11 @@ def test_demand_candidate_contract_record_frozen_extra_forbid() -> None:
         organization_raw="EcoClean S.L.",
         is_publicly_accessible=True,
         has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="Seeking surfactant with high biodegradability under 20 degrees Celsius.",
     )
     assert candidate.demand_id == "INNOGET-3001"
+    assert candidate.has_articulated_technical_problem is True
     with pytest.raises(ValidationError):
         candidate.title = "New title"
 
@@ -126,10 +130,26 @@ def test_candidate_validation_result_deterministic_sorting() -> None:
         [
             CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW,
             CandidateRejectionReason.CONTENT_TOO_SHORT,
+            CandidateRejectionReason.NO_TECHNICAL_PROBLEM,
         ]
     )
     assert res.status == "REJECT"
     assert res.rejection_reasons == (
         CandidateRejectionReason.CONTENT_TOO_SHORT,
+        CandidateRejectionReason.NO_TECHNICAL_PROBLEM,
         CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW,
     )
+
+
+def test_calculate_canonical_word_count() -> None:
+    # Normative test cases
+    assert calculate_canonical_word_count("state-of-the-art") == 1
+    assert calculate_canonical_word_count("high-performance") == 1
+    assert calculate_canonical_word_count("company's") == 1
+    assert calculate_canonical_word_count("<p>Hello &amp; world!</p>") == 2
+    assert calculate_canonical_word_count("Line 1\nLine 2\r\nLine 3") == 6
+    assert calculate_canonical_word_count("") == 0
+    assert calculate_canonical_word_count("   ") == 0
+    assert calculate_canonical_word_count("15-25 °C temperature range") == 4
+    assert calculate_canonical_word_count("Innovación y tecnología española en biomateriales.") == 6
+    assert calculate_canonical_word_count("word - other") == 2

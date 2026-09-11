@@ -9,6 +9,7 @@ from domain.models.corpus_expansion import (
     CandidateValidationResult,
     CorpusExpansionPolicy,
     DemandCandidateContractRecord,
+    calculate_canonical_word_count,
 )
 
 
@@ -22,7 +23,7 @@ def load_corpus_expansion_policy(policy_path: Path, hash_path: Path | None = Non
     if not p_path.is_file():
         raise FileNotFoundError(f"Policy configuration file not found: {p_path}")
 
-    h_path = Path(hash_path) if hash_path is not None else p_path.with_suffix(".sha256")
+    h_path = hash_path or p_path.with_suffix(".sha256")
     if not h_path.is_file():
         raise FileNotFoundError(f"Policy hash sidecar file not found: {h_path}")
 
@@ -40,9 +41,8 @@ def load_corpus_expansion_policy(policy_path: Path, hash_path: Path | None = Non
         )
 
     data = json.loads(content_bytes.decode("utf-8"))
-    if isinstance(data, dict):
-        data = {k: v for k, v in data.items() if k != "$schema"}
-    return CorpusExpansionPolicy.model_validate(data)
+    clean_data = {k: v for k, v in data.items() if k != "$schema"}
+    return CorpusExpansionPolicy.model_validate(clean_data)
 
 
 def validate_demand_candidate(
@@ -72,19 +72,27 @@ def validate_demand_candidate(
     if candidate.geographic_stratum not in allowed_strata:
         reasons.append(CandidateRejectionReason.UNAUTHORIZED_GEOGRAPHIC_STRATUM)
 
-    # 5. Content requirements: word count
-    word_count = len(candidate.description_text.split())
+    # 5. Content requirements: canonical word count
+    word_count = calculate_canonical_word_count(candidate.description_text)
     if word_count < policy.content_requirements.min_word_count:
         reasons.append(CandidateRejectionReason.CONTENT_TOO_SHORT)
 
-    # 6. Confidentiality redaction
+    # 6. Technical problem requirement
+    if policy.content_requirements.require_technical_problem and (
+        not candidate.has_articulated_technical_problem
+        or not candidate.technical_problem_evidence_text
+        or not candidate.technical_problem_evidence_text.strip()
+    ):
+        reasons.append(CandidateRejectionReason.NO_TECHNICAL_PROBLEM)
+
+    # 7. Confidentiality redaction
     if (
         not policy.content_requirements.allow_explicit_confidentiality_redaction
         and candidate.has_confidentiality_redaction
     ):
         reasons.append(CandidateRejectionReason.CONFIDENTIALITY_REDACTED)
 
-    # 7. Public access verification
+    # 8. Public access verification
     if not candidate.is_publicly_accessible:
         reasons.append(CandidateRejectionReason.ACCESS_NOT_PUBLIC)
 

@@ -749,7 +749,7 @@ Create operational protocol detailing sampling universe, explicit geographic str
 
 - [ ] **Step 3: Update `docs/roadmap.md`**
 
-Update `docs/roadmap.md` to record PR #101a as complete (contract frozen) and mark PR #101 (data acquisition against frozen contract) as the active next step.
+Update `docs/roadmap.md` to record Milestone #101a as complete (contract frozen) and mark Milestone #101b (data acquisition against frozen contract) as the active next step.
 
 - [ ] **Step 4: Update `docs/empirical-study-protocol.md`**
 

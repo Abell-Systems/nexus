@@ -76,6 +76,8 @@ def test_validate_demand_candidate_valid_passes() -> None:
         organization_raw="Packaging Corp",
         is_publicly_accessible=True,
         has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="fast curing under thirty seconds in automated corrugated board production lines",
     )
     res = validate_demand_candidate(candidate, policy)
     assert res.status == "ACCEPT"
@@ -84,7 +86,7 @@ def test_validate_demand_candidate_valid_passes() -> None:
 
 def test_validate_demand_candidate_rejections_deterministic_exhaustive() -> None:
     policy = load_corpus_expansion_policy(POLICY_PATH)
-    # Fails 3 criteria: unauthorized source, out of date window (2019), and short text (<25 words)
+    # Fails 4 criteria: unauthorized source, out of date window (2019), short text (<25 words), and no technical problem
     candidate = DemandCandidateContractRecord(
         demand_id="UNKNOWN_PORTAL-01",
         source_id="unknown_portal",
@@ -99,11 +101,14 @@ def test_validate_demand_candidate_rejections_deterministic_exhaustive() -> None
         organization_raw=None,
         is_publicly_accessible=True,
         has_confidentiality_redaction=False,
+        has_articulated_technical_problem=False,
+        technical_problem_evidence_text=None,
     )
     res = validate_demand_candidate(candidate, policy)
     assert res.status == "REJECT"
     assert res.rejection_reasons == (
         CandidateRejectionReason.CONTENT_TOO_SHORT,
+        CandidateRejectionReason.NO_TECHNICAL_PROBLEM,
         CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW,
         CandidateRejectionReason.UNAUTHORIZED_SOURCE,
     )
@@ -126,6 +131,8 @@ def test_validate_demand_candidate_date_boundaries() -> None:
         "language_code": "en",
         "is_publicly_accessible": True,
         "has_confidentiality_redaction": False,
+        "has_articulated_technical_problem": True,
+        "technical_problem_evidence_text": "strict energy consumption standards and minimal thermal distortion",
     }
     # 2020-01-01 -> ACCEPT
     c1 = DemandCandidateContractRecord(publication_date=date(2020, 1, 1), **base_dict)
@@ -158,6 +165,8 @@ def test_validate_demand_candidate_word_count_boundaries() -> None:
         "language_code": "en",
         "is_publicly_accessible": True,
         "has_confidentiality_redaction": False,
+        "has_articulated_technical_problem": True,
+        "technical_problem_evidence_text": "technical problem statement excerpt",
     }
     # 24 words -> REJECT
     words_24 = " ".join([f"word{i}" for i in range(24)])
@@ -190,6 +199,8 @@ def test_validate_demand_candidate_confidentiality_and_access() -> None:
             "cleanly without releasing toxic chemical substances into groundwater or municipal infrastructure networks in European facilities."
         ),
         "language_code": "es",
+        "has_articulated_technical_problem": True,
+        "technical_problem_evidence_text": "recycling polymer components safely and cleanly",
     }
     # Confidentiality redacted -> REJECT
     c1 = DemandCandidateContractRecord(
@@ -228,6 +239,8 @@ def test_validate_demand_candidate_incompatible_construct_and_geographic_stratum
         "language_code": "en",
         "is_publicly_accessible": True,
         "has_confidentiality_redaction": False,
+        "has_articulated_technical_problem": True,
+        "technical_problem_evidence_text": "recycling polymer components safely and cleanly",
     }
     candidate = DemandCandidateContractRecord(**base_dict)
     res = validate_demand_candidate(candidate, policy)
@@ -236,3 +249,84 @@ def test_validate_demand_candidate_incompatible_construct_and_geographic_stratum
         CandidateRejectionReason.INCOMPATIBLE_CONSTRUCT,
         CandidateRejectionReason.UNAUTHORIZED_GEOGRAPHIC_STRATUM,
     )
+
+
+def test_validate_demand_candidate_technical_problem_requirement() -> None:
+    policy = load_corpus_expansion_policy(POLICY_PATH)
+    base_dict = {
+        "demand_id": "INNOGET-TECH-PROB-TEST",
+        "source_id": "innoget",
+        "source_construct": "Technology call",
+        "publication_date": date(2023, 1, 15),
+        "publication_date_evidence_field": "posted_date",
+        "publication_date_evidence_text": "15 Jan 2023",
+        "geographic_stratum": "spain",
+        "title": "Technical problem requirement test",
+        "description_text": (
+            "Seeking innovative high efficiency membrane for industrial wastewater filtration with high chemical resistance "
+            "under acidic operating conditions between pH 1.5 and 3.0 at elevated temperatures."
+        ),
+        "language_code": "en",
+        "is_publicly_accessible": True,
+        "has_confidentiality_redaction": False,
+    }
+    # 1. has_articulated_technical_problem is False -> REJECT
+    c1 = DemandCandidateContractRecord(
+        has_articulated_technical_problem=False,
+        technical_problem_evidence_text=None,
+        **base_dict,
+    )
+    res1 = validate_demand_candidate(c1, policy)
+    assert res1.status == "REJECT"
+    assert CandidateRejectionReason.NO_TECHNICAL_PROBLEM in res1.rejection_reasons
+
+    # 2. has_articulated_technical_problem is True but evidence is empty -> REJECT
+    c2 = DemandCandidateContractRecord(
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="   ",
+        **base_dict,
+    )
+    res2 = validate_demand_candidate(c2, policy)
+    assert res2.status == "REJECT"
+    assert CandidateRejectionReason.NO_TECHNICAL_PROBLEM in res2.rejection_reasons
+
+    # 3. has_articulated_technical_problem is True and evidence is present -> ACCEPT
+    c3 = DemandCandidateContractRecord(
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="membrane for industrial wastewater filtration with high chemical resistance under acidic conditions",
+        **base_dict,
+    )
+    res3 = validate_demand_candidate(c3, policy)
+    assert res3.status == "ACCEPT"
+    assert res3.rejection_reasons == ()
+
+
+def test_validate_demand_candidate_canonical_word_count_normalization() -> None:
+    policy = load_corpus_expansion_policy(POLICY_PATH)
+    # 25 words wrapped in HTML tags and HTML entities
+    html_description = (
+        "<p>Seeking <b>state-of-the-art</b> high-performance &amp; reliable <i>technology</i> solution "
+        "for continuous monitoring of industrial pressure vessels operating under extreme temperature conditions.</p>"
+    )
+    # Word count: Seeking(1) state-of-the-art(1) high-performance(1) reliable(1) technology(1) solution(1)
+    # for(1) continuous(1) monitoring(1) of(1) industrial(1) pressure(1) vessels(1) operating(1) under(1)
+    # extreme(1) temperature(1) conditions(1) = 18 words -> below 25
+    c_short = DemandCandidateContractRecord(
+        demand_id="INNOGET-HTML-SHORT",
+        source_id="innoget",
+        source_construct="Technology call",
+        publication_date=date(2023, 1, 15),
+        publication_date_evidence_field="posted_date",
+        publication_date_evidence_text="15 Jan 2023",
+        geographic_stratum="spain",
+        title="HTML short test",
+        description_text=html_description,
+        language_code="en",
+        is_publicly_accessible=True,
+        has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="continuous monitoring of industrial pressure vessels",
+    )
+    res_short = validate_demand_candidate(c_short, policy)
+    assert res_short.status == "REJECT"
+    assert CandidateRejectionReason.CONTENT_TOO_SHORT in res_short.rejection_reasons

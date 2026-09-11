@@ -68,22 +68,37 @@ A candidate record is deterministically evaluated by the policy validator and re
 2. `INCOMPATIBLE_CONSTRUCT`: Document construct not permitted for the source (e.g., commercial offers or marketing calls).
 3. `OUT_OF_TEMPORAL_WINDOW`: Publication date earlier than 2020-01-01 or later than 2025-12-31.
 4. `UNAUTHORIZED_GEOGRAPHIC_STRATUM`: Geographic stratum not recognized by policy.
-5. `CONTENT_TOO_SHORT`: Problem description text contains fewer than 25 words.
-6. `CONFIDENTIALITY_REDACTED`: Source record explicitly states that key technical details or problem formulation are confidential or redacted.
-7. `ACCESS_NOT_PUBLIC`: Record requires user credentials, active login, paywall access, or bot-mitigation bypass.
+5. `CONTENT_TOO_SHORT`: Problem description text contains fewer than 25 words under canonical word counting.
+6. `NO_TECHNICAL_PROBLEM`: Candidate lacks an authentic articulated technical problem (`has_articulated_technical_problem is False` or `technical_problem_evidence_text` is empty/missing).
+7. `CONFIDENTIALITY_REDACTED`: Source record explicitly states that key technical details or problem formulation are confidential or redacted.
+8. `ACCESS_NOT_PUBLIC`: Record requires user credentials, active login, paywall access, or bot-mitigation bypass.
 
-### 2.6 Absolute Prohibition of Outcome-Dependent Selection
+### 2.6 Canonical Word Count Normalization Procedure
+To eliminate divergence across scrapers, extraction formats, and document templates, word counting against the 25-word threshold is defined by a canonical, normative procedure (`calculate_canonical_word_count`):
+1. **Markup Stripping:** Replace all HTML/XML tags (`<[^>]+>`) with a single whitespace.
+2. **Entity Unescaping:** Decode standard HTML character entities (e.g. `&amp;` $\to$ `&`, `&nbsp;` $\to$ ` `).
+3. **Word Tokenization:** Extract tokens using Unicode word characters (`\w`) permitting single internal hyphens and apostrophes (`\b[\w]+(?:[-'][\w]+)*\b`).
+
+**Normative Test Vectors:**
+* `"state-of-the-art"` $\to$ 1 word.
+* `"high-performance"` $\to$ 1 word.
+* `"company's"` $\to$ 1 word.
+* `"<p>Hello &amp; world!</p>"` $\to$ 2 words (`Hello`, `world`).
+* `"15-25 °C temperature range"` $\to$ 4 words (`15-25`, `C`, `temperature`, `range`).
+* `""` or whitespace $\to$ 0 words.
+
+### 2.7 Absolute Prohibition of Outcome-Dependent Selection
 > **No candidate demand may be included or excluded based on retrieved patents, ranking scores, relevance judgments, expected benchmark difficulty, or any downstream matching result.**
 
 All candidate filtering decisions must occur strictly at the acquisition and policy validation boundary prior to candidate pooling and retrieval execution.
 
-### 2.7 Language Invariant
+### 2.8 Language Invariant
 Language is not an exclusion criterion per se. Solicitations formulated in European languages (English, Spanish, Italian, German, French, etc.) are valid candidates. The original text is preserved immutable; any downstream translation or normalization must be documented as an auditable transformation distinct from source text.
 
-### 2.8 UNKNOWN Organization Policy & Dev/Test Split Preservation
+### 2.9 UNKNOWN Organization Policy & Dev/Test Split Preservation
 * **Quarantine Policy (ADR 0030):** All `UNKNOWN` organization demands are quarantined strictly to `Dev` (`unknown_split_policy = "dev_only"`). Test contains strictly zero `UNKNOWN` demands; 100% of Test demands are demonstrated `INDEPENDENT`.
 * **Historical Split Preservation:** `devtest_split_n18_v2.json` remains immutable as a historical audit artifact.
-* **Global Resplit for Expanded Corpus (PR #103):** Once the expanded corpus is frozen and audited in PR #102, a global deterministic resplit will be computed in PR #103 using ADR 0030's `organization_aware_split` algorithm, yielding `devtest_split_v3.json`.
+* **Global Resplit for Expanded Corpus (Milestone #103):** Once the expanded corpus is frozen and audited in Milestone #102, a global deterministic resplit will be computed in Milestone #103 using ADR 0030's `organization_aware_split` algorithm, yielding `devtest_split_v3.json`.
 
 ---
 
@@ -95,27 +110,40 @@ Per ADR 0008, ADR 0009, and ADR 0026:
 3. **Application Validator (`backend/src/main/application/corpus/expansion_policy_validator.py`):**
    - `load_corpus_expansion_policy`: Enforces fail-fast integrity (raising `PolicyIntegrityError` or `FileNotFoundError` on corrupt or missing policy).
    - `validate_demand_candidate`: Evaluates candidate compliance deterministically, returning exhaustive rejection reasons in stable order without side effects.
-4. **Provider-Agnostic Core:** Neither `domain` nor `application` contains HTTP clients, web scrapers, HTML parsers, or network dependencies. Acquisition scripts exist exclusively in experiment tooling boundaries (PR #101).
+4. **Provider-Agnostic Core:** Neither `domain` nor `application` contains HTTP clients, web scrapers, HTML parsers, or network dependencies. Acquisition scripts exist exclusively in experiment tooling boundaries (Milestone #101b).
 
 ---
 
 ## 4. Experimental Milestones & PR Sequencing
 
-The expansion and evaluation pipeline is strictly decomposed into decoupled, sequential PRs:
+The expansion and evaluation pipeline is strictly decomposed into decoupled, sequential milestones:
 
-1. **PR #101a (Current):** Frozen corpus expansion contract, declarative policy configuration (`corpus_expansion_policy_v1.json`), canonical candidate record contract, typed policy validator, and ADR 0031. Zero new data records.
-2. **PR #101:** Data acquisition against the frozen contract. Produces raw acquired candidates and partitions them deterministically into `POLICY_ACCEPTED` and `POLICY_REJECTED` candidate sets with exhaustive exclusion reasons.
-3. **PR #102:** Multidimensional independence audit over accepted candidates (organization, sector, technology-family, and duplicate industrial problem). Resolves `INDEPENDENT`, `PSEUDOREPLICATE`, and `UNKNOWN` status. Evaluates corpus sufficiency ($N_{\mathrm{independent}} \ge 60$) and sector concentration ($>0.35 \to \text{CONCENTRATION\_WARNING}$).
-4. **PR #103:** Deterministic Dev/Test split freeze (`devtest_split_v3.json`) over the expanded audited corpus using ADR 0030's `organization_aware_split` algorithm, preserving historical `v2` artifacts and enforcing strict UNKNOWN quarantine (`unknown_split_policy = "dev_only"`).
-5. **PR #104:** Dual blind multi-expert annotation on the expanded candidate pool and Cohen's $\kappa$ inter-annotator agreement at scale.
-6. **PR #105:** Family-aware evaluation integration (`allow`, `collapse`, `exclude_related`) with authentic patent family metadata.
-7. **PR #106:** Confirmatory powered efficacy evaluation on the untouched Test split ($H_1$ Wilcoxon signed-rank test on primary endpoint nDCG@10, secondary endpoints with Benjamini–Hochberg FDR control).
+1. **Milestone #101a (Current PR #101):** Frozen corpus expansion contract, declarative policy configuration (`corpus_expansion_policy_v1.json`), canonical candidate record contract, typed policy validator, and ADR 0031. Zero new data records.
+2. **Milestone #101b:** Data acquisition against the frozen contract. Produces raw acquired candidates and partitions them deterministically into `POLICY_ACCEPTED` and `POLICY_REJECTED` candidate sets with exhaustive exclusion reasons.
+3. **Milestone #102:** Multidimensional independence audit over accepted candidates (organization, sector, technology-family, and duplicate industrial problem). Resolves `INDEPENDENT`, `PSEUDOREPLICATE`, and `UNKNOWN` status. Evaluates corpus sufficiency ($N_{\mathrm{independent}} \ge 60$) and sector concentration ($>0.35 \to \text{CONCENTRATION\_WARNING}$).
+4. **Milestone #103:** Deterministic Dev/Test split freeze (`devtest_split_v3.json`) over the expanded audited corpus using ADR 0030's `organization_aware_split` algorithm, preserving historical `v2` artifacts and enforcing strict UNKNOWN quarantine (`unknown_split_policy = "dev_only"`).
+5. **Milestone #104:** Dual blind multi-expert annotation on the expanded candidate pool and Cohen's $\kappa$ inter-annotator agreement at scale.
+6. **Milestone #105:** Family-aware evaluation integration (`allow`, `collapse`, `exclude_related`) with authentic patent family metadata.
+7. **Milestone #106:** Confirmatory powered efficacy evaluation on the untouched Test split ($H_1$ Wilcoxon signed-rank test on primary endpoint nDCG@10, secondary endpoints with Benjamini–Hochberg FDR control).
 
 ---
 
 ## 5. Non-Goals & Invariants
 
-1. **Zero Data Acquisition in PR #101a:** No demands are scraped, downloaded, or added in this PR.
+1. **Zero Data Acquisition in Milestone #101a:** No demands are scraped, downloaded, or added in this PR.
 2. **No Fallback Policy Synthesis:** In-memory fallback policies are strictly prohibited. Missing or modified policy configuration fails fast.
 3. **No Relaxation of Independence:** The exact-match organization independence rule and UNKNOWN quarantine rule from ADR 0029 and ADR 0030 are invariant across all expansion phases.
-4. **No Premature Efficacy Claims:** Efficacy evaluation remains strictly blocked until PR #106 executes on the frozen, untouched Test split.
+4. **No Premature Efficacy Claims:** Efficacy evaluation remains strictly blocked until Milestone #106 executes on the frozen, untouched Test split.
+
+---
+
+## 6. Consequences
+
+### Positive
+- Prevents post-hoc convenience sampling and outcome-dependent selection bias prior to data collection.
+- Establishes a machine-verifiable, cryptographically guarded declarative policy for Phase-2 expansion.
+- Provides a canonical contract (`DemandCandidateContractRecord`) and deterministic validator for subsequent ingestion tools.
+
+### Negative
+- Demands lacking verifiable public publication dates or articulated technical problems are strictly excluded, potentially limiting total candidate yield.
+- Requires dedicated multi-source extraction adapters to conform strictly to the canonical contract.

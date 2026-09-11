@@ -95,8 +95,18 @@ If the publication date cannot be independently evidenced or falls outside `[202
 ## 5. Technical Content & Problem Description Requirements
 
 Each candidate demand must articulate a substantive technical challenge:
-1. **Word Count Invariant:** The technical description text (`problem_description`) must contain at least **25 words** (excluding boilerplate disclaimers). Shorter records lack sufficient technological context for semantic or taxonomic retrieval and are rejected (`CONTENT_TOO_SHORT`).
-2. **Articulated Problem Invariant:** The text must formulate a technical problem, technical barrier, operating conditions, or performance specifications.
+1. **Word Count Invariant & Canonical Procedure:** The technical description text (`problem_description`) must contain at least **25 words** under the canonical normalization procedure (`calculate_canonical_word_count`). Shorter records lack sufficient technological context for semantic or taxonomic retrieval and are rejected (`CONTENT_TOO_SHORT`).
+   - **Markup Stripping:** Replace all HTML/XML tags (`<[^>]+>`) with a single whitespace.
+   - **Entity Unescaping:** Decode standard HTML entities (e.g. `&amp;` $\to$ `&`, `&nbsp;` $\to$ ` `).
+   - **Tokenization:** Match Unicode alphanumeric sequences permitting internal hyphens and apostrophes (`\b[\w]+(?:[-'][\w]+)*\b`).
+   - **Normative Examples:**
+     - `"state-of-the-art"` $\to$ 1 word.
+     - `"high-performance"` $\to$ 1 word.
+     - `"company's"` $\to$ 1 word.
+     - `"<p>Hello &amp; world!</p>"` $\to$ 2 words (`Hello`, `world`).
+     - `"15-25 °C temperature range"` $\to$ 4 words (`15-25`, `C`, `temperature`, `range`).
+     - `""` or whitespace $\to$ 0 words.
+2. **Articulated Technical Problem Invariant:** The candidate must provide an authentic articulated technical problem. The source adapter must set `has_articulated_technical_problem = True` and supply `technical_problem_evidence_text` containing the excerpt articulating the problem statement. Candidates with `has_articulated_technical_problem = False` or empty evidence text are rejected (`NO_TECHNICAL_PROBLEM`). Downstream construct eligibility audit (Milestone #102) independently verifies this evidence against ADR 0025.
 3. **No Confidentiality Redactions:** Demands that explicitly indicate that technical parameters or specifications have been withheld under non-disclosure agreements or confidentiality redaction are rejected (`CONFIDENTIALITY_REDACTED`).
 4. **Public Access Invariant:** Demands requiring registered user access or session tokens are rejected (`ACCESS_NOT_PUBLIC`).
 
@@ -117,14 +127,14 @@ $$N_{\mathrm{power}} = N_{\mathrm{eligible, independent}}$$
 
 ### 6.3 Sector Concentration Monitoring
 * **Warning Threshold:** $\tau_{\mathrm{warning}} = 0.35$ (35% of independent observations).
-* **Concentration Audit:** If upon completion of PR #102 any single industrial sector accounts for more than 35% of independent observations, the audit script emits a `CONCENTRATION_WARNING` and logs an explicit provenance review.
+* **Concentration Audit:** If upon completion of Milestone #102 any single industrial sector accounts for more than 35% of independent observations, the audit script emits a `CONCENTRATION_WARNING` and logs an explicit provenance review.
 * **No Artificial Pruning:** Valid independent demands are not artificially dropped or excluded to force an equal sector distribution; rather, domain heterogeneity is preserved and reported transparently, with sector sensitivity evaluations conducted in downstream analyses.
 
 ---
 
 ## 7. Pre-Specified Candidate Rejection Taxonomy
 
-The policy validator evaluates each candidate against the 7 pre-specified rejection codes:
+The policy validator evaluates each candidate against the 8 pre-specified rejection codes:
 
 | Rejection Code | Policy Invariant Trigger |
 | :--- | :--- |
@@ -132,7 +142,8 @@ The policy validator evaluates each candidate against the 7 pre-specified reject
 | `INCOMPATIBLE_CONSTRUCT` | Candidate `source_construct` is not in `permitted_constructs` for the source. |
 | `OUT_OF_TEMPORAL_WINDOW` | Publication date is before `2020-01-01` or after `2025-12-31`, or unresolvable. |
 | `UNAUTHORIZED_GEOGRAPHIC_STRATUM` | Candidate `geographic_stratum` is not in `policy.geographic_strata`. |
-| `CONTENT_TOO_SHORT` | Word count of `problem_description` is strictly fewer than 25 words. |
+| `CONTENT_TOO_SHORT` | Canonical word count of `description_text` is strictly fewer than 25 words. |
+| `NO_TECHNICAL_PROBLEM` | Candidate lacks articulated technical problem (`has_articulated_technical_problem is False` or empty evidence). |
 | `CONFIDENTIALITY_REDACTED` | Candidate contains explicit confidentiality disclaimers or redacted technical core. |
 | `ACCESS_NOT_PUBLIC` | Candidate record requires private authentication, login, or defeats bot challenge. |
 
@@ -144,7 +155,7 @@ The policy validator evaluates each candidate against the 7 pre-specified reject
 Phase 2 Expansion Execution Workflow:
 
   ┌─────────────────────────────────────────────────────────────┐
-  │ PR #101a: Frozen Expansion Contract & Declarative Policy    │
+  │ Milestone #101a: Frozen Expansion Contract & Declarative   │
   │ • corpus_expansion_policy_v1.json + .sha256                 │
   │ • DemandCandidateContractRecord & ExpansionPolicyValidator  │
   │ • ADR 0031 & Operational Protocol Document                 │
@@ -153,13 +164,13 @@ Phase 2 Expansion Execution Workflow:
                                  │
                                  ▼
   ┌─────────────────────────────────────────────────────────────┐
-  │ PR #101: Data Acquisition & Deterministic Policy Validation │
+  │ Milestone #101b: Data Acquisition & Deterministic Policy    │
   │ • Acquisition scripts harvest raw European candidates       │
   │ • Map raw records -> DemandCandidateContractRecord          │
   │ • Execute validate_demand_candidate()                       │
   │ • Deterministic partition:                                  │
-  │   - candidates_accepted_v1.json (POLICY_ACCEPTED)           │
-  │   - candidates_rejected_v1.json (POLICY_REJECTED + reasons) │
+  │   - dataset_phase2_expansion_candidates_accepted.json       │
+  │   - dataset_phase2_expansion_candidates_rejected.json       │
   └──────────────────────────────┬──────────────────────────────┘
                                  │
                                  ▼

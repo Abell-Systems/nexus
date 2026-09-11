@@ -28,8 +28,8 @@ To expand the corpus to $N \ge 60$ independent observations without introducing 
 
 The expansion and evaluation pipeline is strictly decomposed into decoupled, sequential PRs:
 
-1. **PR #101a (Current):** Frozen corpus expansion contract, declarative policy configuration (`corpus_expansion_policy_v1.json`), canonical candidate record contract, typed policy validator, and ADR 0031. Zero new data records.
-2. **PR #101:** Data acquisition against the frozen contract. Produces raw acquired candidates and partitions them deterministically into `POLICY_ACCEPTED` and `POLICY_REJECTED` candidate sets with exhaustive exclusion reasons.
+1. **Milestone #101a (Current / PR #101):** Frozen corpus expansion contract, declarative policy configuration (`corpus_expansion_policy_v1.json`), canonical candidate record contract, typed policy validator, and ADR 0031. Zero new data records.
+2. **Milestone #101b:** Data acquisition against the frozen contract. Produces raw acquired candidates and partitions them deterministically into `POLICY_ACCEPTED` and `POLICY_REJECTED` candidate sets with exhaustive exclusion reasons.
 3. **PR #102:** Multidimensional independence audit over accepted candidates (organization, sector, technology-family, and duplicate industrial problem). Resolves `INDEPENDENT`, `PSEUDOREPLICATE`, and `UNKNOWN` status. Evaluates corpus sufficiency ($N_{\mathrm{independent}} \ge 60$) and sector concentration ($>0.35 \to \text{CONCENTRATION\_WARNING}$).
 4. **PR #103:** Deterministic Dev/Test split freeze (`devtest_split_v3.json`) over the expanded audited corpus using ADR 0030's `organization_aware_split` algorithm, preserving historical `v2` artifacts and enforcing strict UNKNOWN quarantine (`unknown_split_policy = "dev_only"`).
 5. **PR #104:** Dual blind multi-expert annotation on the expanded candidate pool and Cohen's $\kappa$ inter-annotator agreement at scale.
@@ -74,13 +74,14 @@ The expansion and evaluation pipeline is strictly decomposed into decoupled, seq
 
 ### 3.5 Pre-Specified Candidate Exclusion Criteria
 A candidate is deterministically evaluated by the policy validator and rejected (`POLICY_REJECTED`) if any of the following apply:
-1. `UNAUTHORIZED_SOURCE`: Source not registered in active policy.
-2. `INCOMPATIBLE_CONSTRUCT`: Document construct not permitted for the source.
-3. `OUT_OF_TEMPORAL_WINDOW`: Publication date before 2020-01-01 or after 2025-12-31.
+1. `UNAUTHORIZED_SOURCE`: Source not in authorized primary sources.
+2. `UNAUTHORIZED_RECORD_TYPE`: Record type not permitted for the source.
+3. `OUTSIDE_TEMPORAL_WINDOW`: Publication date outside [2020-01-01, 2025-12-31] or unverified.
 4. `UNAUTHORIZED_GEOGRAPHIC_STRATUM`: Stratum not recognized by policy.
-5. `CONTENT_TOO_SHORT`: Problem description text under 25 words.
-6. `CONFIDENTIALITY_REDACTED`: Source record explicitly states that key technical details or problem formulation are confidential or redacted.
-7. `ACCESS_NOT_PUBLIC`: Record requires user credentials, active login, or defeats bot challenges.
+5. `CONTENT_TOO_SHORT`: Problem description text under 25 canonical words (`calculate_canonical_word_count`).
+6. `NO_TECHNICAL_PROBLEM`: Demand does not articulate an authentic technical problem with verifiable evidence text.
+7. `CONFIDENTIALITY_REDACTED`: Source record explicitly states that key technical details or problem formulation are confidential or redacted.
+8. `ACCESS_NOT_PUBLIC`: Record requires user credentials, active login, or defeats bot challenges.
 
 ### 3.6 Absolute Prohibition of Outcome-Dependent Selection
 > **No candidate demand may be included or excluded based on retrieved patents, ranking scores, relevance judgments, expected benchmark difficulty, or any downstream matching result.**
@@ -144,7 +145,7 @@ Language is not an exclusion criterion. Solicitations in European languages (Eng
    - The validator evaluates individual candidate compliance against policy.
    - Multi-candidate relationships (organization grouping, pseudoreplication, sector dominance, and $N \ge 60$ sufficiency) belong strictly to downstream audit modules in #102.
 4. **No Scrapers or Network Code in Core:**
-   - Neither `domain` nor `application` contains HTTP clients, scrapers, HTML parsers, or network dependencies. Source acquisition tooling belongs to the experiment scripts boundary in #101.
+   - Neither `domain` nor `application` contains HTTP clients, scrapers, HTML parsers, or network dependencies. Source acquisition tooling belongs to the experiment scripts boundary in Milestone #101b.
 
 ---
 

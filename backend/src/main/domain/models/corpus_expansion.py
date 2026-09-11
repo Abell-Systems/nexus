@@ -1,5 +1,5 @@
-"""Domain models and contracts for Phase-2 demand corpus expansion."""
-
+import html
+import re
 from collections.abc import Sequence
 from datetime import date
 from enum import StrEnum
@@ -117,6 +117,24 @@ class CorpusExpansionPolicy(BaseModel):
         return v
 
 
+def calculate_canonical_word_count(text: str) -> int:
+    """Calculate the canonical word count for technical demand text.
+
+    Normalization procedure:
+    1. Strip HTML/XML markup tags (<[^>]+>).
+    2. Unescape HTML entities (&amp; -> &, &nbsp; -> space, etc.).
+    3. Tokenize words with Unicode word characters (\\w) allowing internal
+       single hyphens and apostrophes (e.g. 'state-of-the-art', 'company\\'s').
+    """
+    if not text:
+        return 0
+
+    clean = re.sub(r"<[^>]+>", " ", text)
+    clean = html.unescape(clean)
+    tokens = re.findall(r"\b[\w]+(?:[-'][\w]+)*\b", clean, flags=re.UNICODE)
+    return len(tokens)
+
+
 class DemandCandidateContractRecord(BaseModel):
     """Canonical representation of an acquired candidate prior to policy validation."""
 
@@ -135,6 +153,8 @@ class DemandCandidateContractRecord(BaseModel):
     organization_raw: str | None = None
     is_publicly_accessible: bool
     has_confidentiality_redaction: bool
+    has_articulated_technical_problem: bool
+    technical_problem_evidence_text: str | None = None
 
 
 class CandidateRejectionReason(StrEnum):
@@ -147,6 +167,7 @@ class CandidateRejectionReason(StrEnum):
     CONTENT_TOO_SHORT = "CONTENT_TOO_SHORT"
     CONFIDENTIALITY_REDACTED = "CONFIDENTIALITY_REDACTED"
     ACCESS_NOT_PUBLIC = "ACCESS_NOT_PUBLIC"
+    NO_TECHNICAL_PROBLEM = "NO_TECHNICAL_PROBLEM"
 
 
 class CandidateValidationResult(BaseModel):

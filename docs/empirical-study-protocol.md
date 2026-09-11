@@ -169,7 +169,7 @@ To ensure scientific integrity and eliminate the risk of premature claims or fab
     * **Zero Leakage Invariant:** $\text{orgs}(\mathcal{D}_{\text{dev}} \cap \text{INDEPENDENT}) \cap \text{orgs}(\mathcal{D}_{\text{test}}) = \emptyset$.
     * **Historical Preservation:** The contaminated historical split `devtest_split_n13_v1.json` remains preserved as an immutable historical audit artifact.
     * **Statistical Power Caveat:** For confirmatory statistical power, unknown observations cannot be treated as proven independent degrees of freedom ($N=12$), and neither $N=18$ nor $N=12$ satisfies the pre-registered $|\mathcal{D}|=60$ target.
-  * **Phase-2 Corpus Expansion Contract (ADR 0031, PR #101a):** To achieve the confirmatory sample size $N_{\mathrm{power}} = |\mathcal{D}_{\mathrm{independent}}| \ge 60$ without post-hoc convenience sampling, cherry-picking, or HARKing, a pre-registered sampling contract and declarative policy ([`corpus_expansion_policy_v1.json`](../config/policies/data/corpus_expansion_policy_v1.json)) are established prior to acquiring or evaluating new demand data. The contract governs a European sampling frame (`spain` and `international_european` strata), authorized primary sources (InnoGet `Technology call` and EEN/POD `Technology request`), temporal boundaries (2020-01-01 to 2025-12-31, 2026 excluded), hierarchical date evidence, and pre-specified candidate exclusion criteria. Following acquisition (PR #101) and multidimensional independence audit (PR #102), a global organization-isolated Dev/Test split (`devtest_split_v3.json`) will be generated (PR #103) under the ADR 0030 algorithm, preserving `devtest_split_n18_v2.json` as an immutable audit record and maintaining strict UNKNOWN quarantine to Dev.
+  * **Phase-2 Corpus Expansion Contract (ADR 0031, Milestone #101a):** To achieve the confirmatory sample size $N_{\mathrm{power}} = |\mathcal{D}_{\mathrm{independent}}| \ge 60$ without post-hoc convenience sampling, cherry-picking, or HARKing, a pre-registered sampling contract and declarative policy ([`corpus_expansion_policy_v1.json`](../config/policies/data/corpus_expansion_policy_v1.json)) are established prior to acquiring or evaluating new demand data. The contract governs a European sampling frame (`spain` and `international_european` strata), authorized primary sources (InnoGet `Technology call` and EEN/POD `Technology request`), temporal boundaries (2020-01-01 to 2025-12-31, 2026 excluded), hierarchical date evidence, canonical word count normalization, and pre-specified candidate exclusion criteria. Following acquisition (Milestone #101b) and multidimensional independence audit (Milestone #102), a global organization-isolated Dev/Test split (`devtest_split_v3.json`) will be generated (Milestone #103) under the ADR 0030 algorithm, preserving `devtest_split_n18_v2.json` as an immutable audit record and maintaining strict UNKNOWN quarantine to Dev.
 
 ---
 
@@ -196,22 +196,30 @@ To ensure scientific integrity and eliminate the risk of premature claims or fab
   * `publication_date`: ISO 8601 publication date ($t_{\mathrm{demand}}$).
   * `publication_date_evidence_field`: Source attribute name establishing publication date.
   * `publication_date_evidence_text`: Verifiable textual date snippet from source payload.
-  * `problem_description`: Expanded technological problem statement, operating parameters, and constraints ($\ge 25$ words).
+  * `problem_description`: Expanded technological problem statement, operating parameters, and constraints ($\ge 25$ words under canonical word counting).
   * `title`: Concise title of the industrial need.
   * `url`: Verifiable primary source hyperlink.
   * `geographic_stratum`: Designated stratum (`spain`, `international_european`).
   * `country_code`: ISO 3166-1 alpha-2 country code (or `None`).
   * `requesting_organization`: Authentic extracted requesting entity (or `None` if unstated).
+  * `has_articulated_technical_problem`: Explicit assertion of articulated technical problem.
+  * `technical_problem_evidence_text`: Extracted excerpt formulating technical problem/parameters.
   * `sector_hint`: Optional domain hint.
 * **Deterministic Pre-Specified Exclusion Criteria (ADR 0031):**
-  Candidates are evaluated deterministically by the application validator (`validate_demand_candidate`) against 7 pre-specified rejection reasons:
+  Candidates are evaluated deterministically by the application validator (`validate_demand_candidate`) against 8 pre-specified rejection reasons:
   1. `UNAUTHORIZED_SOURCE`: Source not in active policy.
   2. `INCOMPATIBLE_CONSTRUCT`: Document construct not permitted for the source.
   3. `OUT_OF_TEMPORAL_WINDOW`: Publication date outside `[2020-01-01, 2025-12-31]`.
   4. `UNAUTHORIZED_GEOGRAPHIC_STRATUM`: Geographic stratum not recognized by policy.
-  5. `CONTENT_TOO_SHORT`: Problem description text under 25 words.
-  6. `CONFIDENTIALITY_REDACTED`: Explicit confidentiality redaction of key technical specifications.
-  7. `ACCESS_NOT_PUBLIC`: Record requires non-public credentials, login, or bot evasion.
+  5. `CONTENT_TOO_SHORT`: Canonical word count of problem description strictly fewer than 25 words.
+  6. `NO_TECHNICAL_PROBLEM`: Candidate lacks articulated technical problem (`has_articulated_technical_problem is False` or empty evidence).
+  7. `CONFIDENTIALITY_REDACTED`: Explicit confidentiality redaction of key technical specifications.
+  8. `ACCESS_NOT_PUBLIC`: Record requires non-public credentials, login, or bot evasion.
+* **Canonical Word Count Procedure (`calculate_canonical_word_count`):**
+  1. Strip HTML/XML tags (`<[^>]+>`) to single space.
+  2. Unescape HTML entities (`&amp;` $\to$ `&`, `&nbsp;` $\to$ ` `).
+  3. Tokenize Unicode alphanumeric sequences allowing internal hyphens and apostrophes (`\b[\w]+(?:[-'][\w]+)*\b`).
+  4. Normative counts: `"state-of-the-art"` $\to$ 1, `"high-performance"` $\to$ 1, `"company's"` $\to$ 1, `"<p>Hello &amp; world!</p>"` $\to$ 2.
 * **Strict Prohibition of Outcome-Dependent Selection:**
   Under no circumstances may candidate demands be selected, included, or rejected based on retrieved patents, similarity scores, relevance grades, or expected benchmark difficulty.
 
