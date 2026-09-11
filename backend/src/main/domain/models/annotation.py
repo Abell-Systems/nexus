@@ -66,10 +66,19 @@ class ConstructEligibilityRubric(BaseModel):
 
 class DemandIndependenceStatus(StrEnum):
     """Outcome of the demand-independence grouping decision (ADR 0029,
-    docs/phase2-demand-independence-audit-protocol.md)."""
+    docs/phase2-demand-independence-audit-protocol.md).
+    - INDEPENDENT: Organization identity was observed and is unique across the
+      evaluated corpus (or selected as group representative).
+    - PSEUDOREPLICATE: Organization identity was observed and duplicates another
+      demand from the same organization (excluding representative).
+    - UNKNOWN: Organization identity is missing (None) or non-identifying
+      placeholder (e.g. 'Anonymous Organization'); organization independence
+      cannot be determined from observed metadata.
+    """
 
     INDEPENDENT = "INDEPENDENT"
     PSEUDOREPLICATE = "PSEUDOREPLICATE"
+    UNKNOWN = "UNKNOWN"
 
 
 class DemandOrganizationObservation(BaseModel):
@@ -95,11 +104,11 @@ class DemandOrganizationObservation(BaseModel):
 class DemandIndependenceGroupEntry(BaseModel):
     """Outcome of the demand-independence grouping decision for one demand
     (ADR 0029). `independence_group_id` is the exact `requesting_organization`
-    string when the demand was assigned to a group; `None` when the demand's
-    organization is missing or was excluded as a known non-identifying
-    placeholder (e.g. "Anonymous Organization") -- such a demand is always
-    INDEPENDENT and is never grouped with any other demand, including another
-    demand that also has `independence_group_id=None`.
+    string when the demand was assigned to a group (singletons and multi-member
+    groups); `None` when the demand's organization is missing or was excluded
+    as a known non-identifying placeholder (e.g. "Anonymous Organization") --
+    such a demand receives status=UNKNOWN since its organization independence
+    is unverified and indeterminate.
     """
 
     model_config = ConfigDict(frozen=True)
@@ -108,3 +117,4 @@ class DemandIndependenceGroupEntry(BaseModel):
     requesting_organization: str | None = None
     independence_group_id: str | None = None
     status: DemandIndependenceStatus
+

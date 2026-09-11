@@ -2,7 +2,7 @@
   "audit_id": "phase2_demand_independence_audit_n24_v1",
   "protocol_reference": "docs/phase2-demand-independence-audit-protocol.md",
   "adr_reference": "docs/adr/0029-demand-independence-audit-contract.md",
-  "derivation_rule": "Exact string match on requesting_organization, excluding documented placeholders",
+  "derivation_rule": "Exact string match on requesting_organization, with tripartite classification (INDEPENDENT, PSEUDOREPLICATE, UNKNOWN)",
   "organization_identity_source": "dataset_phase2_demand_corpus_n39.origin_audit.json (acquisition-time observation)",
   "source_eligible_corpus": "experiments/wpi-demand-patent-matching/data/dataset_phase2_eligible_corpus_n24_v1.json",
   "source_eligible_corpus_sha256": "445ffd3c9b56fce751da746596100cb753c3a712e5ea838b18ffd0413366df02",
@@ -13,7 +13,9 @@
   ],
   "counts": {
     "eligible_corpus_count": 24,
-    "independent_count": 18,
+    "verified_independent_count": 12,
+    "unknown_independence_count": 6,
+    "operational_audited_corpus_count": 18,
     "pseudoreplicate_count": 6,
     "multi_member_group_count": 2,
     "multi_member_organization_names": [
@@ -21,7 +23,7 @@
       "SMAR3TS"
     ]
   },
-  "retained_independent_demand_ids": [
+  "retained_audited_demand_ids": [
     "INNOGET-1605",
     "INNOGET-1607",
     "INNOGET-1625",
@@ -38,6 +40,28 @@
     "INNOGET-2301",
     "INNOGET-2401",
     "INNOGET-2491",
+    "LOMBARDIA-860",
+    "LOMBARDIA-947"
+  ],
+  "verified_independent_demand_ids": [
+    "INNOGET-1605",
+    "INNOGET-1607",
+    "INNOGET-1689",
+    "INNOGET-1726",
+    "INNOGET-1870",
+    "INNOGET-1965",
+    "INNOGET-2006",
+    "INNOGET-2173",
+    "INNOGET-2258",
+    "INNOGET-2301",
+    "INNOGET-2401",
+    "INNOGET-2491"
+  ],
+  "unknown_independence_demand_ids": [
+    "INNOGET-1625",
+    "INNOGET-1932",
+    "INNOGET-1935",
+    "INNOGET-1972",
     "LOMBARDIA-860",
     "LOMBARDIA-947"
   ],
@@ -99,7 +123,8 @@
     "split_dataset_id": "nexus-phase2-devtest-split-n13-v1",
     "total_split_demands": 13,
     "leakage_status": "CONTAMINATED",
-    "scientific_finding": "For the powered efficacy comparison, organization-level independent observations must not cross the Dev/Test boundary. The historical split is contaminated at the organization level because repeated organizations have observations in both Dev and Test.",
+    "scientific_invariant": "No puede haber dos demandas con una identidad organizativa observada común en lados distintos de Dev/Test. (No two demands with a shared observed organization identity may appear on opposite sides of the Dev/Test boundary.)",
+    "finding": "The historical split is contaminated at the organization level because repeated organizations have observations in both Dev and Test (SMAR3TS and Lacer, S.A).",
     "contaminated_split_demand_count": 5,
     "contaminated_split_demand_fraction": 0.3846,
     "straddling_groups_count": 2,
@@ -146,7 +171,7 @@
       "demand_id": "INNOGET-1625",
       "requesting_organization": "Anonymous Organization",
       "independence_group_id": null,
-      "status": "INDEPENDENT"
+      "status": "UNKNOWN"
     },
     {
       "demand_id": "INNOGET-1689",
@@ -170,13 +195,13 @@
       "demand_id": "INNOGET-1932",
       "requesting_organization": "Anonymous Organization",
       "independence_group_id": null,
-      "status": "INDEPENDENT"
+      "status": "UNKNOWN"
     },
     {
       "demand_id": "INNOGET-1935",
       "requesting_organization": "Anonymous Organization",
       "independence_group_id": null,
-      "status": "INDEPENDENT"
+      "status": "UNKNOWN"
     },
     {
       "demand_id": "INNOGET-1965",
@@ -188,7 +213,7 @@
       "demand_id": "INNOGET-1972",
       "requesting_organization": "Anonymous Organization",
       "independence_group_id": null,
-      "status": "INDEPENDENT"
+      "status": "UNKNOWN"
     },
     {
       "demand_id": "INNOGET-2006",
@@ -266,13 +291,13 @@
       "demand_id": "LOMBARDIA-860",
       "requesting_organization": null,
       "independence_group_id": null,
-      "status": "INDEPENDENT"
+      "status": "UNKNOWN"
     },
     {
       "demand_id": "LOMBARDIA-947",
       "requesting_organization": null,
       "independence_group_id": null,
-      "status": "INDEPENDENT"
+      "status": "UNKNOWN"
     }
   ]
 }

@@ -53,10 +53,10 @@ def test_representative_selection_is_independent_of_input_order():
     }
 
 
-def test_demand_with_none_organization_is_always_independent_and_ungrouped():
+def test_demand_with_none_organization_has_unknown_status_and_is_ungrouped():
     entries = derive_independence_groups([_obs("D-1", None), _obs("D-2", None)], frozenset())
     for e in entries:
-        assert e.status == DemandIndependenceStatus.INDEPENDENT
+        assert e.status == DemandIndependenceStatus.UNKNOWN
         assert e.independence_group_id is None
 
 
@@ -66,7 +66,7 @@ def test_demands_with_shared_non_identifying_value_are_not_grouped_with_each_oth
         frozenset({"Anonymous Organization"}),
     )
     for e in entries:
-        assert e.status == DemandIndependenceStatus.INDEPENDENT
+        assert e.status == DemandIndependenceStatus.UNKNOWN
         assert e.independence_group_id is None
 
 
@@ -97,9 +97,11 @@ def test_real_n24_eligible_corpus_organizations_reproduce_expected_grouping():
     """Regression pin using the WPI corpus's real, already-extracted
     requesting_organization values for the frozen N=24 eligible corpus (from
     dataset_phase2_demand_corpus_n39.origin_audit.json) -- confirms this pure
-    function's real-world result before Task 2 freezes it as an artifact.
-    18 INDEPENDENT (24 - 4 SMAR3TS pseudoreplicates - 2 Lacer pseudoreplicates),
-    6 PSEUDOREPLICATE."""
+    function's real-world result:
+    12 INDEPENDENT (10 singletons + 2 multi-member representatives),
+    6 PSEUDOREPLICATE (4 SMAR3TS + 2 Lacer pseudoreplicates),
+    6 UNKNOWN (4 Anonymous Organization + 2 None organization).
+    Total operational audited corpus: 12 INDEPENDENT + 6 UNKNOWN = 18."""
     real_data = [
         ("INNOGET-1605", "Bax & Company"),
         ("INNOGET-1607", "ALLIANCE project"),
@@ -132,17 +134,21 @@ def test_real_n24_eligible_corpus_organizations_reproduce_expected_grouping():
 
     independent = {did for did, e in by_id.items() if e.status == DemandIndependenceStatus.INDEPENDENT}
     pseudoreplicate = {did for did, e in by_id.items() if e.status == DemandIndependenceStatus.PSEUDOREPLICATE}
+    unknown = {did for did, e in by_id.items() if e.status == DemandIndependenceStatus.UNKNOWN}
 
     assert pseudoreplicate == {
         "INNOGET-2403", "INNOGET-2404", "INNOGET-2405", "INNOGET-2417",  # SMAR3TS, keep 2401
         "INNOGET-2492", "INNOGET-2493",  # Lacer, S.A, keep 2491
     }
-    assert len(independent) == 18
+    assert len(independent) == 12
     assert len(pseudoreplicate) == 6
+    assert len(unknown) == 6
+    assert len(independent | unknown) == 18
     assert by_id["INNOGET-2401"].status == DemandIndependenceStatus.INDEPENDENT
     assert by_id["INNOGET-2491"].status == DemandIndependenceStatus.INDEPENDENT
     # The 4 "Anonymous Organization" demands and both None-organization demands
-    # must all be INDEPENDENT with no group_id, never merged with each other.
+    # must all be UNKNOWN with no group_id, never merged with each other.
     for did in ("INNOGET-1625", "INNOGET-1932", "INNOGET-1935", "INNOGET-1972", "LOMBARDIA-860", "LOMBARDIA-947"):
-        assert by_id[did].status == DemandIndependenceStatus.INDEPENDENT
+        assert by_id[did].status == DemandIndependenceStatus.UNKNOWN
         assert by_id[did].independence_group_id is None
+

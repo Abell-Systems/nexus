@@ -34,7 +34,8 @@ def derive_independence_groups(
 
     A demand whose `requesting_organization` is None or in
     `non_identifying_values` always receives `independence_group_id=None` and
-    `status=INDEPENDENT`, and is never grouped with any other such demand.
+    `status=UNKNOWN`, since its organization identity is missing or unverified,
+    and is never grouped with any other such demand.
 
     Returns entries in the same order as `observations`.
     """
@@ -55,7 +56,7 @@ def derive_independence_groups(
             demand_id=obs.demand_id,
             requesting_organization=obs.requesting_organization,
             independence_group_id=None,
-            status=DemandIndependenceStatus.INDEPENDENT,
+            status=DemandIndependenceStatus.UNKNOWN,
         )
 
     for org, members in groups.items():

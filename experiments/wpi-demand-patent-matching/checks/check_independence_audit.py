@@ -79,10 +79,17 @@ def main() -> int:
 
     independent_ids = {e["demand_id"] for e in audit["entries"] if e["status"] == "INDEPENDENT"}
     pseudoreplicate_ids = {e["demand_id"] for e in audit["entries"] if e["status"] == "PSEUDOREPLICATE"}
-    assert independent_ids | pseudoreplicate_ids == set(eligible_ids)
+    unknown_ids = {e["demand_id"] for e in audit["entries"] if e["status"] == "UNKNOWN"}
+
+    assert independent_ids | pseudoreplicate_ids | unknown_ids == set(eligible_ids)
     assert not (independent_ids & pseudoreplicate_ids)
-    assert len(independent_ids) == 18
+    assert not (independent_ids & unknown_ids)
+    assert not (pseudoreplicate_ids & unknown_ids)
+
+    assert len(independent_ids) == 12
     assert len(pseudoreplicate_ids) == 6
+    assert len(unknown_ids) == 6
+    assert len(independent_ids | unknown_ids) == 18
 
     # Verify Dev/Test leakage audit
     leakage = audit["historical_devtest_split_leakage_audit"]
@@ -103,7 +110,8 @@ def main() -> int:
             assert did in devtest_split["test"]
 
     print(
-        f"OK: {len(independent_ids)} INDEPENDENT, {len(pseudoreplicate_ids)} PSEUDOREPLICATE "
+        f"OK: {len(independent_ids)} INDEPENDENT, {len(unknown_ids)} UNKNOWN, "
+        f"{len(pseudoreplicate_ids)} PSEUDOREPLICATE "
         f"(re-derivation matches exactly, Dev/Test leakage verified: {leakage['leakage_status']})"
     )
     return 0

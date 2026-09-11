@@ -8,7 +8,8 @@ Nexus's generic exact-match grouping rule
 
 Also audits whether repeated organizations straddle the frozen Dev/Test split
 (devtest_split_n13_v1.json), quantifying and encoding any organization-level
-leakage across the boundary.
+leakage across the boundary under the invariant:
+"No puede haber dos demandas con una identidad organizativa observada común en lados distintos de Dev/Test."
 
 This is experiment tooling: it supplies the concrete non_identifying_values
 exclusion list (a literal, documented property of the InnoGet source data, not
@@ -88,6 +89,8 @@ def main() -> int:
 
     independent_ids = [e.demand_id for e in entries if e.status == "INDEPENDENT"]
     pseudoreplicate_ids = [e.demand_id for e in entries if e.status == "PSEUDOREPLICATE"]
+    unknown_ids = [e.demand_id for e in entries if e.status == "UNKNOWN"]
+    audited_corpus_ids = [e.demand_id for e in entries if e.status in ("INDEPENDENT", "UNKNOWN")]
 
     # Organization group membership
     group_membership: dict[str, list[str]] = {}
@@ -123,12 +126,15 @@ def main() -> int:
         "split_dataset_id": devtest_split.get("dataset_id"),
         "total_split_demands": len(split_demands),
         "leakage_status": "CONTAMINATED" if straddling_groups else "CLEAN",
-        "scientific_finding": (
-            "For the powered efficacy comparison, organization-level independent observations "
-            "must not cross the Dev/Test boundary. The historical split is contaminated at the "
-            "organization level because repeated organizations have observations in both Dev and Test."
+        "scientific_invariant": (
+            "No puede haber dos demandas con una identidad organizativa observada común en lados distintos de Dev/Test. "
+            "(No two demands with a shared observed organization identity may appear on opposite sides of the Dev/Test boundary.)"
+        ),
+        "finding": (
+            "The historical split is contaminated at the organization level because repeated organizations "
+            "have observations in both Dev and Test (SMAR3TS and Lacer, S.A)."
             if straddling_groups
-            else "No organization group crosses the Dev/Test boundary."
+            else "No two demands with a shared observed organization identity appear on opposite sides of Dev/Test."
         ),
         "contaminated_split_demand_count": len(contaminated_split_demands),
         "contaminated_split_demand_fraction": (
@@ -142,7 +148,7 @@ def main() -> int:
         "audit_id": "phase2_demand_independence_audit_n24_v1",
         "protocol_reference": "docs/phase2-demand-independence-audit-protocol.md",
         "adr_reference": "docs/adr/0029-demand-independence-audit-contract.md",
-        "derivation_rule": "Exact string match on requesting_organization, excluding documented placeholders",
+        "derivation_rule": "Exact string match on requesting_organization, with tripartite classification (INDEPENDENT, PSEUDOREPLICATE, UNKNOWN)",
         "organization_identity_source": "dataset_phase2_demand_corpus_n39.origin_audit.json (acquisition-time observation)",
         "source_eligible_corpus": f"experiments/wpi-demand-patent-matching/data/{ELIGIBLE_NAME}",
         "source_eligible_corpus_sha256": eligible_sha,
@@ -151,14 +157,18 @@ def main() -> int:
         "non_identifying_values": sorted(NON_IDENTIFYING_VALUES),
         "counts": {
             "eligible_corpus_count": len(eligible_ids),
-            "independent_count": len(independent_ids),
+            "verified_independent_count": len(independent_ids),
+            "unknown_independence_count": len(unknown_ids),
+            "operational_audited_corpus_count": len(audited_corpus_ids),
             "pseudoreplicate_count": len(pseudoreplicate_ids),
             "multi_member_group_count": sum(1 for members in group_membership.values() if len(members) > 1),
             "multi_member_organization_names": sorted(
                 [org for org, members in group_membership.items() if len(members) > 1]
             ),
         },
-        "retained_independent_demand_ids": independent_ids,
+        "retained_audited_demand_ids": audited_corpus_ids,
+        "verified_independent_demand_ids": independent_ids,
+        "unknown_independence_demand_ids": unknown_ids,
         "excluded_pseudoreplicate_demand_ids": pseudoreplicate_ids,
         "group_membership": group_membership,
         "historical_devtest_split_leakage_audit": devtest_leakage_audit,
@@ -175,7 +185,9 @@ def main() -> int:
     manifest = {
         "audit_id": artifact["audit_id"],
         "total": len(entries),
-        "independent_count": len(independent_ids),
+        "verified_independent_count": len(independent_ids),
+        "unknown_independence_count": len(unknown_ids),
+        "operational_audited_corpus_count": len(audited_corpus_ids),
         "pseudoreplicate_count": len(pseudoreplicate_ids),
         "content_sha256": digest,
         "devtest_split_leakage_status": devtest_leakage_audit["leakage_status"],
@@ -186,7 +198,10 @@ def main() -> int:
     (DATA_DIR / AUDIT_MANIFEST_NAME).write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
     print(f"Emitted {output_file}: {digest}")
-    print(f"INDEPENDENT={len(independent_ids)} PSEUDOREPLICATE={len(pseudoreplicate_ids)} (total={len(entries)})")
+    print(
+        f"INDEPENDENT={len(independent_ids)} UNKNOWN={len(unknown_ids)} "
+        f"PSEUDOREPLICATE={len(pseudoreplicate_ids)} (total={len(entries)}, audited_corpus={len(audited_corpus_ids)})"
+    )
     print(f"Groups with >1 member: { {k: len(v) for k, v in group_membership.items() if len(v) > 1} }")
     print(f"Dev/Test leakage status: {devtest_leakage_audit['leakage_status']} ({len(straddling_groups)} straddling groups, {len(contaminated_split_demands)}/13 demands)")
     return 0

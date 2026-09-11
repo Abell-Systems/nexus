@@ -1,8 +1,8 @@
 {
-  "dataset_id": "nexus-phase2-independent-corpus-v1",
+  "dataset_id": "nexus-phase2-organization-audited-corpus-v1",
   "schema_version": "1.0.0",
   "dataset_version": "1.0.0",
-  "description": "Nexus Phase 2 independent demand corpus: deterministic projection of dataset_phase2_eligible_corpus_n24_v1.json onto the status == INDEPENDENT entries of phase2_demand_independence_audit_n24_v1.json (ADR 0029). One demand per requesting-organization identity (exact string match); a demand whose organization is missing or a known non-identifying placeholder is always included. See docs/phase2-demand-independence-audit-protocol.md.",
+  "description": "Nexus Phase 2 organization-audited demand corpus: deterministic projection of dataset_phase2_eligible_corpus_n24_v1.json onto the status in {INDEPENDENT, UNKNOWN} entries of phase2_demand_independence_audit_n24_v1.json (ADR 0029). Excludes the 6 detected organizational pseudoreplicates while retaining 12 verified independent demands and 6 demands with unverified/unknown organization identity (None or Anonymous Organization placeholder). See docs/phase2-demand-independence-audit-protocol.md.",
   "demands": [
     {
       "demand_id": "INNOGET-1605",
