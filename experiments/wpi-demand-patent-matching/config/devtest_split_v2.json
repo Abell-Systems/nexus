@@ -1,0 +1,14 @@
+{
+  "config_id": "phase2_devtest_split_v2",
+  "dev_fraction": 0.5,
+  "base_seed": 42,
+  "unknown_split_policy": "dev_only",
+  "stratification_key": "sector_code",
+  "missing_stratum": "_NO_SECTOR",
+  "corpus_path": "experiments/wpi-demand-patent-matching/data/dataset_phase2_organization_audited_corpus_v1.json",
+  "corpus_sha256": "0abcf29f6035b316bef805717760f2f7fbec6878fda3f5396894becc34f18f83",
+  "audit_path": "experiments/wpi-demand-patent-matching/data/phase2_demand_independence_audit_n24_v1.json",
+  "audit_sha256": "085447a2feada007f6c4a732a0fa7b9688b9e720db005c3b90b64a54a56fa814",
+  "assignments_path": "experiments/wpi-demand-patent-matching/data/sector_assignments_n24_v1.json",
+  "assignments_sha256": "634ada0a3be36bc46c4b603c18efc21625cfb1609feee10f4df3d00ecef22916"
+}
