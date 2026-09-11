@@ -33,7 +33,11 @@ def _run_cli(output_dir: Path) -> subprocess.CompletedProcess:
     # require_temporal_validity=True — pairing that with "unconstrained" is
     # exactly the contaminated combination the script's own fail-fast rejects.
     return subprocess.run(
-        [sys.executable, str(_SCRIPT), "--output-dir", str(output_dir), "--temporal-pool-mode", "strict"],
+        [
+            sys.executable, str(_SCRIPT), "--output-dir", str(output_dir),
+            "--temporal-pool-mode", "strict",
+            "--family-policy", "allow",
+        ],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,
