@@ -1,5 +1,6 @@
 """EEN / POD Harvester for Phase-2 corpus expansion (ADR 0032)."""
 
+import hashlib
 import logging
 import re
 import urllib.error
@@ -8,7 +9,7 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup
 
-from experiments.phase2.harvesters.base import BaseHarvester
+from experiments.phase2.harvesters.base import BaseHarvester, PayloadCollisionError
 
 logger = logging.getLogger(__name__)
 
@@ -62,12 +63,15 @@ class EenPodHarvester(BaseHarvester):
             listing_url = f"{self.listing_base}?page={page}"
             try:
                 listing_bytes, status = self.fetch_url(listing_url)
+            except PayloadCollisionError:
+                raise
             except Exception as exc:
                 self.record_error(
                     source_id=self.source_id,
                     uri=listing_url,
                     error_type=type(exc).__name__,
                     message=str(exc),
+                    http_status=getattr(exc, "code", None),
                 )
                 break
 
@@ -75,15 +79,21 @@ class EenPodHarvester(BaseHarvester):
             if not discovered:
                 break
 
+            new_items_on_page: list[str] = []
             for href in discovered:
+                detail_url = urllib.parse.urljoin(self.base_url, href)
+                if detail_url not in seen_urls:
+                    seen_urls.add(detail_url)
+                    new_items_on_page.append(detail_url)
+
+            if len(new_items_on_page) == 0:
+                break
+
+            for detail_url in new_items_on_page:
                 if limit is not None and len(saved_paths) >= limit:
                     break
 
-                detail_url = urllib.parse.urljoin(self.base_url, href)
-                if detail_url in seen_urls:
-                    continue
-                seen_urls.add(detail_url)
-
+                demand_id: str | None = None
                 try:
                     detail_bytes, detail_status = self.fetch_url(detail_url)
                     demand_id = self._determine_demand_id(detail_bytes, detail_url)
@@ -96,12 +106,16 @@ class EenPodHarvester(BaseHarvester):
                         metadata={"http_status": detail_status},
                     )
                     saved_paths.append(saved)
+                except PayloadCollisionError:
+                    raise
                 except Exception as exc:
                     self.record_error(
                         source_id=self.source_id,
                         uri=detail_url,
                         error_type=type(exc).__name__,
                         message=str(exc),
+                        demand_id=demand_id,
+                        http_status=getattr(exc, "code", None),
                     )
                     continue
 
@@ -124,7 +138,8 @@ class EenPodHarvester(BaseHarvester):
         if m_link:
             return f"LOMBARDIA-{m_link.group(1)}"
 
-        return f"EEN-{abs(hash(url)) % 10_000_000}"
+        url_hash = hashlib.sha256(url.encode("utf-8")).hexdigest()[:8]
+        return f"EEN-{url_hash}"
 
     def _extract_proposal_links(self, html_bytes: bytes) -> list[str]:
         """Extract collaboration proposal detail links from listing page."""

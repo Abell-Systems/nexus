@@ -8,7 +8,7 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup
 
-from experiments.phase2.harvesters.base import BaseHarvester
+from experiments.phase2.harvesters.base import BaseHarvester, PayloadCollisionError
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +47,7 @@ class InnogetHarvester(BaseHarvester):
         page = 1
         saved_paths: list[Path] = []
         seen_demand_ids: set[str] = set()
+        seen_urls: set[str] = set()
 
         while True:
             if max_pages is not None and page > max_pages:
@@ -57,12 +58,15 @@ class InnogetHarvester(BaseHarvester):
             listing_url = f"{self.base_url}/technology-calls?page={page}"
             try:
                 listing_bytes, status = self.fetch_url(listing_url)
+            except PayloadCollisionError:
+                raise
             except Exception as exc:
                 self.record_error(
                     source_id=self.source_id,
                     uri=listing_url,
                     error_type=type(exc).__name__,
                     message=str(exc),
+                    http_status=getattr(exc, "code", None),
                 )
                 break
 
@@ -70,7 +74,17 @@ class InnogetHarvester(BaseHarvester):
             if not discovered:
                 break
 
+            new_items_on_page: list[str] = []
             for href in discovered:
+                detail_url = urllib.parse.urljoin(self.base_url, href)
+                if detail_url not in seen_urls:
+                    seen_urls.add(detail_url)
+                    new_items_on_page.append(href)
+
+            if len(new_items_on_page) == 0:
+                break
+
+            for href in new_items_on_page:
                 if limit is not None and len(saved_paths) >= limit:
                     break
 
@@ -94,6 +108,8 @@ class InnogetHarvester(BaseHarvester):
                         metadata={"http_status": detail_status},
                     )
                     saved_paths.append(saved)
+                except PayloadCollisionError:
+                    raise
                 except Exception as exc:
                     self.record_error(
                         source_id=self.source_id,
@@ -101,6 +117,7 @@ class InnogetHarvester(BaseHarvester):
                         error_type=type(exc).__name__,
                         message=str(exc),
                         demand_id=demand_id,
+                        http_status=getattr(exc, "code", None),
                     )
                     continue
 

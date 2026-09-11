@@ -10,6 +10,7 @@ from experiments.phase2.harvesters import (
     BaseHarvester,
     EenPodHarvester,
     InnogetHarvester,
+    PayloadCollisionError,
 )
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
@@ -89,6 +90,8 @@ def main(argv: list[str] | None = None) -> int:
             )
             total_acquired += len(acquired)
             logger.info("Acquired %d payloads from %s", len(acquired), source)
+        except PayloadCollisionError:
+            raise
         except Exception as exc:
             logger.exception("Harvester execution failed for %s: %s", source, exc)
             harvester.record_error(

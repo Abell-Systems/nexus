@@ -297,3 +297,206 @@ def test_acquire_cli_runner(tmp_path: Path):
         assert exit_code == 0
         assert mock_inno_harvest.called
         assert mock_een_harvest.called
+
+
+def test_acquire_cli_propagates_collision_error(tmp_path: Path):
+    out_dir = tmp_path / "raw"
+    with (
+        patch.object(
+            InnogetHarvester,
+            "harvest",
+            side_effect=PayloadCollisionError("Fatal payload collision"),
+        ),
+        pytest.raises(PayloadCollisionError) as exc_info,
+    ):
+        acquire_main(
+            [
+                "--out-dir",
+                str(out_dir),
+                "--sources",
+                "innoget",
+                "--delay",
+                "0.0",
+            ]
+        )
+    assert "Fatal payload collision" in str(exc_info.value)
+
+
+# --------------------------------------------------------------------------
+# Fatal Collision & Pagination Termination Invariant Tests
+# --------------------------------------------------------------------------
+
+
+def test_innoget_harvester_collision_raises_fatal_error(tmp_path: Path):
+    # Pre-populate disk with differing content for INNOGET-101
+    out_dir = tmp_path / "raw"
+    inno_dir = out_dir / "innoget"
+    inno_dir.mkdir(parents=True, exist_ok=True)
+    (inno_dir / "INNOGET-101.html").write_bytes(b"Original pre-existing content")
+
+    listing_html = b"""
+    <html><body>
+        <a href="/technology-calls/101/conflicting-call">Conflicting Call</a>
+    </body></html>
+    """
+    detail_html = b"<html><body>Incoming different content</body></html>"
+
+    def mock_urlopen(req, timeout=30):
+        url = req.get_full_url() if hasattr(req, "get_full_url") else str(req)
+        mock_resp = MagicMock()
+        mock_resp.__enter__.return_value = mock_resp
+        mock_resp.getcode.return_value = 200
+        mock_resp.status = 200
+        if "/technology-calls?page=" in url:
+            mock_resp.read.return_value = listing_html
+        elif "/technology-calls/101" in url:
+            mock_resp.read.return_value = detail_html
+        return mock_resp
+
+    harvester = InnogetHarvester(delay_seconds=0.0)
+    with (
+        patch("urllib.request.urlopen", side_effect=mock_urlopen),
+        pytest.raises(PayloadCollisionError) as exc_info,
+    ):
+        harvester.harvest(out_dir=out_dir, max_pages=1)
+
+    assert "Payload collision for INNOGET-101" in str(exc_info.value)
+    # Ensure collision was NOT swallowed into operational acquisition_errors
+    assert len(harvester.acquisition_errors) == 0
+
+
+def test_een_pod_harvester_collision_raises_fatal_error(tmp_path: Path):
+    out_dir = tmp_path / "raw"
+    een_dir = out_dir / "een_pod"
+    een_dir.mkdir(parents=True, exist_ok=True)
+    (een_dir / "TRES20250806011.html").write_bytes(b"Original EEN content")
+
+    listing_html = b"""
+    <html><body>
+        <a href="/en/collaborations/collaboration-proposals/999/test-link">Test Link</a>
+    </body></html>
+    """
+    detail_html = b"""
+    <html><body>
+        <span>POD Reference:</span><span>TRES20250806011</span>
+        <div>Differing body content</div>
+    </body></html>
+    """
+
+    def mock_urlopen(req, timeout=30):
+        url = req.get_full_url() if hasattr(req, "get_full_url") else str(req)
+        mock_resp = MagicMock()
+        mock_resp.__enter__.return_value = mock_resp
+        mock_resp.getcode.return_value = 200
+        mock_resp.status = 200
+        if "collaboration-proposals" in url and "/999/" not in url:
+            mock_resp.read.return_value = listing_html
+        elif "/999/" in url:
+            mock_resp.read.return_value = detail_html
+        return mock_resp
+
+    harvester = EenPodHarvester(delay_seconds=0.0)
+    with (
+        patch("urllib.request.urlopen", side_effect=mock_urlopen),
+        pytest.raises(PayloadCollisionError) as exc_info,
+    ):
+        harvester.harvest(out_dir=out_dir, max_pages=1)
+
+    assert "Payload collision for TRES20250806011" in str(exc_info.value)
+    assert len(harvester.acquisition_errors) == 0
+
+
+def test_innoget_harvester_terminates_pagination_when_exhausted(tmp_path: Path):
+    listing_page = b"""
+    <html><body>
+        <a href="/technology-calls/101/duplicate-call">Duplicate Call</a>
+    </body></html>
+    """
+    detail_html = b"<html><body>Detail</body></html>"
+
+    fetch_counts: dict[str, int] = {}
+
+    def mock_urlopen(req, timeout=30):
+        url = req.get_full_url() if hasattr(req, "get_full_url") else str(req)
+        fetch_counts[url] = fetch_counts.get(url, 0) + 1
+        mock_resp = MagicMock()
+        mock_resp.__enter__.return_value = mock_resp
+        mock_resp.getcode.return_value = 200
+        mock_resp.status = 200
+        if "/technology-calls?page=" in url:
+            mock_resp.read.return_value = listing_page
+        else:
+            mock_resp.read.return_value = detail_html
+        return mock_resp
+
+    harvester = InnogetHarvester(delay_seconds=0.0)
+    with patch("urllib.request.urlopen", side_effect=mock_urlopen):
+        # max_pages is 10, but page 2 yields 0 new unseen URLs
+        saved = harvester.harvest(out_dir=tmp_path, max_pages=10)
+
+    assert len(saved) == 1
+    # Page 1 was fetched, Page 2 was fetched (found 0 new unseen items and terminated)
+    # Pages 3..10 must NOT have been fetched
+    assert "https://www.innoget.com/technology-calls?page=1" in fetch_counts
+    assert "https://www.innoget.com/technology-calls?page=2" in fetch_counts
+    assert "https://www.innoget.com/technology-calls?page=3" not in fetch_counts
+
+
+def test_een_pod_harvester_terminates_pagination_when_exhausted(tmp_path: Path):
+    listing_page = b"""
+    <html><body>
+        <a href="/en/collaborations/collaboration-proposals/501/repeat">Repeat Proposal</a>
+    </body></html>
+    """
+    detail_html = b"<html><body><span>POD Reference:</span><span>TRUK20250101001</span></body></html>"
+
+    fetch_counts: dict[str, int] = {}
+
+    def mock_urlopen(req, timeout=30):
+        url = req.get_full_url() if hasattr(req, "get_full_url") else str(req)
+        fetch_counts[url] = fetch_counts.get(url, 0) + 1
+        mock_resp = MagicMock()
+        mock_resp.__enter__.return_value = mock_resp
+        mock_resp.getcode.return_value = 200
+        mock_resp.status = 200
+        if "collaboration-proposals?page=" in url:
+            mock_resp.read.return_value = listing_page
+        else:
+            mock_resp.read.return_value = detail_html
+        return mock_resp
+
+    harvester = EenPodHarvester(delay_seconds=0.0)
+    with patch("urllib.request.urlopen", side_effect=mock_urlopen):
+        saved = harvester.harvest(out_dir=tmp_path, max_pages=10)
+
+    assert len(saved) == 1
+    assert "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals?page=1" in fetch_counts
+    assert "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals?page=2" in fetch_counts
+    assert "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals?page=3" not in fetch_counts
+
+
+def test_een_pod_determine_demand_id_deterministic_hash():
+    harvester = EenPodHarvester()
+
+    # Case 1: POD reference found in HTML
+    id1 = harvester._determine_demand_id(
+        b"<html><span>POD Reference: TRDE20251111001</span></html>",
+        "https://example.com/arbitrary",
+    )
+    assert id1 == "TRDE20251111001"
+
+    # Case 2: URL ID match from Lombardia URL
+    id2 = harvester._determine_demand_id(
+        b"<html><span>No POD</span></html>",
+        "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/12345/my-slug",
+    )
+    assert id2 == "LOMBARDIA-12345"
+
+    # Case 3: Fallback using SHA-256 slice (deterministic across runs)
+    test_url = "https://example.com/external-proposal/unmatched"
+    expected_hash = hashlib.sha256(test_url.encode("utf-8")).hexdigest()[:8]
+    id3 = harvester._determine_demand_id(b"<html>No POD</html>", test_url)
+    assert id3 == f"EEN-{expected_hash}"
+    # Verify deterministic recurrence
+    assert harvester._determine_demand_id(b"<html>No POD</html>", test_url) == id3
+
