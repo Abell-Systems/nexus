@@ -13,7 +13,7 @@ from domain.models.corpus_expansion import (
     PublicationDateEvidenceType,
 )
 
-_POD_DATE_RE = re.compile(r"TR([A-Z]{2})(\d{4})(\d{2})(\d{2})\d+")
+_POD_DATE_RE = re.compile(r"(TR|TO|BO|BR|RD)([A-Z]{2})(\d{4})(\d{2})(\d{2})\d+")
 _POD_LABEL_RE = re.compile(
     r"(?:(?:POD\s+Reference|POD\s+Ref)\s*[:\s]\s*|Reference\s*(?:Number|Code|Record)?\s*:\s*)([A-Z0-9_-]+)",
     re.IGNORECASE,
@@ -50,7 +50,7 @@ class EenPodCandidateMapper:
         soup = BeautifulSoup(html_text, "html.parser")
 
         # 1. Reference and temporal evidence
-        pod_ref, country_code, date_evidence = cls._extract_date_evidence(soup, html_text, meta)
+        pod_ref, country_code, date_evidence, construct_prefix = cls._extract_date_evidence(soup, html_text, meta)
 
         # 2. Demand ID
         demand_id = meta.get("demand_id")
@@ -79,7 +79,9 @@ class EenPodCandidateMapper:
             "spain"
             if orig_country and orig_country.strip().upper() in ("ES", "SPAIN", "ESPAÑA", "ESPANA")
             else "international_european"
-        ) # 7. Language code
+        )
+
+        # 7. Language code
         lang = meta.get("language_code")
         if not lang:
             html_tag = soup.find("html")
@@ -92,7 +94,17 @@ class EenPodCandidateMapper:
         if len(language_code) < 2:
             language_code = "en"
 
-        # 8. Confidentiality and accessibility
+        # 8. Construct resolution
+        construct_map = {
+            "TR": "Technology request",
+            "TO": "Technology offer",
+            "BR": "Business request",
+            "BO": "Business offer",
+            "RD": "R&D request",
+        }
+        source_construct = meta.get("source_construct") or construct_map.get(construct_prefix, "Technology request")
+
+        # 9. Confidentiality and accessibility
         has_confidentiality = bool(_CONFIDENTIALITY_RE.search(html_text))
         is_public = meta.get("is_publicly_accessible", True)
         organization_raw = meta.get("organization_raw") or meta.get("organization")
@@ -100,7 +112,7 @@ class EenPodCandidateMapper:
         return DemandCandidateContractRecord(
             demand_id=demand_id,
             source_id="een_pod",
-            source_construct="Technology request",
+            source_construct=source_construct,
             publication_date_evidence=date_evidence,
             geographic_stratum=geographic_stratum,
             title=title,
@@ -119,8 +131,8 @@ class EenPodCandidateMapper:
         soup: BeautifulSoup,
         html_text: str,
         meta: dict[str, Any],
-    ) -> tuple[str | None, str, PublicationDateEvidence]:
-        """Extract POD reference code, country, and structured PublicationDateEvidence."""
+    ) -> tuple[str | None, str, PublicationDateEvidence, str]:
+        """Extract POD reference code, country, structured PublicationDateEvidence, and construct prefix."""
         ref_candidate: str | None = meta.get("pod_reference")
 
         if not ref_candidate:
@@ -153,14 +165,15 @@ class EenPodCandidateMapper:
                 evidence_field="pod_reference",
                 evidence_value="missing",
             )
-            return None, "", evidence
+            return None, "", evidence, ""
 
         m_date = _POD_DATE_RE.search(ref_candidate)
         if m_date:
-            country_code = m_date.group(1)
-            year = int(m_date.group(2))
-            month = int(m_date.group(3))
-            day = int(m_date.group(4))
+            prefix = m_date.group(1).upper()
+            country_code = m_date.group(2)
+            year = int(m_date.group(3))
+            month = int(m_date.group(4))
+            day = int(m_date.group(5))
             try:
                 pub_date = date(year, month, day)
                 evidence = PublicationDateEvidence(
@@ -169,20 +182,25 @@ class EenPodCandidateMapper:
                     evidence_field="pod_reference",
                     evidence_value=ref_candidate,
                 )
-                return ref_candidate, country_code, evidence
+                return ref_candidate, country_code, evidence, prefix
             except ValueError:
                 pass
 
         # Reference exists but does not conform to valid YYYYMMDD date
-        country_match = re.search(r"^TR([A-Z]{2})", ref_candidate)
-        country_code = country_match.group(1) if country_match else ""
+        country_code = ""
+        country_match = re.search(r"(?:TR|TO|BO|BR|RD)([A-Z]{2})", ref_candidate)
+        prefix = ""
+        if country_match:
+            country_code = country_match.group(1)
+            prefix = ref_candidate[:2].upper()
+
         evidence = PublicationDateEvidence(
             publication_date=None,
             evidence_type=PublicationDateEvidenceType.UNVERIFIABLE,
             evidence_field="pod_reference",
             evidence_value=ref_candidate,
         )
-        return ref_candidate, country_code, evidence
+        return ref_candidate, country_code, evidence, prefix
 
     @classmethod
     def _extract_title(cls, soup: BeautifulSoup, meta: dict[str, Any]) -> str | None:
