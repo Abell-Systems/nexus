@@ -237,6 +237,34 @@ def test_een_pod_mapper_missing_reference() -> None:
     assert candidate.publication_date_evidence.evidence_value == "missing"
 
 
+def test_een_pod_mapper_trusts_lead_field_over_unrelated_sidebar_reference() -> None:
+    """A lead ID field whose text doesn't match the strict POD reference shape
+    must be trusted verbatim (construct/date resolved from it), never replaced
+    by an unrelated reference found elsewhere on the page (e.g. a related
+    proposals sidebar)."""
+    html = b"""
+    <html lang="en">
+    <head><title>German institute seeks partners for metal powder recycling</title></head>
+    <body>
+        <h1>German institute seeks partners for metal powder recycling</h1>
+        <span class="collaborations-info-value lead">RDRDE20260804013</span>
+        <div class="summary"><p>Abstract describing the R&amp;D collaboration proposal in detail.</p></div>
+        <div class="related-proposals">
+            <a href="/en/collaborations/collaboration-proposals/2219/other">
+                Unrelated proposal BOFR20260702022
+            </a>
+        </div>
+    </body>
+    </html>
+    """
+    candidate = EenPodCandidateMapper.map_payload(html, metadata={"demand_id": "RDRDE20260804013"})
+
+    assert candidate.source_construct == "R&D request"
+    assert candidate.publication_date is None
+    assert candidate.publication_date_evidence.evidence_type == PublicationDateEvidenceType.UNVERIFIABLE
+    assert candidate.publication_date_evidence.evidence_value == "RDRDE20260804013"
+
+
 def test_een_pod_mapper_malformed_payload_raises_error() -> None:
     with pytest.raises(MappingError):
         EenPodCandidateMapper.map_payload(b"", metadata={})

@@ -148,6 +148,15 @@ class EenPodCandidateMapper:
                     m_date = _POD_DATE_RE.search(ref_text)
                     if m_date:
                         ref_candidate = m_date.group(0).strip()
+                    else:
+                        # The scoped reference container was located but its text
+                        # doesn't match the expected shape. Trust it verbatim
+                        # rather than falling through to an unscoped full-page
+                        # search, which can pick up an unrelated reference from
+                        # a sidebar/related-proposals list.
+                        sanitized = re.sub(r"[^A-Za-z0-9]", "", ref_text)
+                        if sanitized:
+                            ref_candidate = sanitized
 
         if not ref_candidate:
             m_label = _POD_LABEL_RE.search(html_text)
