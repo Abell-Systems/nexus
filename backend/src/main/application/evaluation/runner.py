@@ -109,6 +109,28 @@ def validate_family_policy_feasible(family_policy: str, patents: list[Evaluation
         )
 
 
+def _apply_family_policy(family_policy: str, patents: list[EvaluationPatent]) -> list[EvaluationPatent]:
+    """ADR 0027 §2/§4: pre-ranking pool transform, mirroring _filter_temporally_eligible_patents's
+    placement. Caller must have already called validate_family_policy_feasible -- this function
+    assumes family_id is populated on every patent when family_policy != "allow".
+    """
+    if family_policy == "allow":
+        return list(patents)
+
+    if family_policy == "collapse":
+        best_by_family: dict[str, EvaluationPatent] = {}
+        for p in sorted(patents, key=lambda p: p.publication_id):
+            if p.family_id not in best_by_family:
+                best_by_family[p.family_id] = p
+        return sorted(best_by_family.values(), key=lambda p: p.publication_id)
+
+    # exclude_related
+    family_counts: dict[str, int] = {}
+    for p in patents:
+        family_counts[p.family_id] = family_counts.get(p.family_id, 0) + 1
+    return [p for p in patents if family_counts[p.family_id] == 1]
+
+
 def _filter_temporally_eligible_patents(
     demand: EvaluationDemand, patents: list[EvaluationPatent]
 ) -> list[EvaluationPatent]:
@@ -187,6 +209,11 @@ class DefaultEvaluationRunner(EvaluationRunner):
         # Sealed candidate universe: all patents in the dataset
         patent_universe = eval_dataset.patents
 
+        # ADR 0027: fail fast, once, on the full sealed universe -- before any
+        # per-demand work happens -- if the requested policy cannot be honestly
+        # applied to this dataset.
+        validate_family_policy_feasible(context.family_policy, patent_universe)
+
         demand_reports: list[DemandMetricsReport] = []
 
         for eval_demand in eval_dataset.demands:
@@ -200,6 +227,11 @@ class DefaultEvaluationRunner(EvaluationRunner):
                 eligible_patents = _filter_temporally_eligible_patents(eval_demand, patent_universe)
             else:
                 eligible_patents = patent_universe
+
+            # ADR 0027: family-policy pool transform, applied after temporal
+            # eligibility and before ranking -- same insertion point convention
+            # ADR 0018 established for _filter_temporally_eligible_patents.
+            eligible_patents = _apply_family_policy(context.family_policy, eligible_patents)
 
             # 1. Delegate ranking to port — receives only evaluation-domain objects,
             #    returns ranked publication_ids in engine's original order.
@@ -245,4 +277,5 @@ class DefaultEvaluationRunner(EvaluationRunner):
             macro_broad=macro_broad,
             macro_denominators=macro_denominators,
             uncertainty_rate=overall_uncertainty_rate,
+            family_metadata_available=family_metadata_available(patent_universe),
         )
