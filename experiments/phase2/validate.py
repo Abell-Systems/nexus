@@ -15,16 +15,21 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from application.corpus.expansion_policy_validator import (
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SRC_ROOT = REPO_ROOT / "backend" / "src" / "main"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from application.corpus.expansion_policy_validator import (  # noqa: E402
     load_corpus_expansion_policy,
     validate_demand_candidate,
 )
-from application.corpus.mappers import (
+from application.corpus.mappers import (  # noqa: E402
     EenPodCandidateMapper,
     InnogetCandidateMapper,
     MappingError,
 )
-from domain.models.corpus_expansion import (
+from domain.models.corpus_expansion import (  # noqa: E402
     CandidateRejectionReason,
     CorpusExpansionPolicy,
     DemandCandidateContractRecord,
