@@ -21,6 +21,8 @@ import pytest
 
 from application.evaluation.runner import (
     DefaultEvaluationRunner,
+    family_metadata_available,
+    validate_family_policy_feasible,
     validate_temporal_pool_mode_consistency,
 )
 from domain.models.evaluation import (
@@ -552,3 +554,43 @@ def test_validate_temporal_pool_mode_consistency_accepts_strict_regardless_of_fl
     whether the policy flag is True or False."""
     validate_temporal_pool_mode_consistency(temporal_pool_mode="strict", require_temporal_validity=True)
     validate_temporal_pool_mode_consistency(temporal_pool_mode="strict", require_temporal_validity=False)
+
+
+# ---------------------------------------------------------------------------
+# ADR 0027: family-aware evaluation fail-fast validator
+# ---------------------------------------------------------------------------
+
+
+def test_family_metadata_available_true_when_all_patents_have_family_id(sample_validated_dataset):
+    patents = [
+        p.model_copy(update={"family_id": f"FAM-{i}"})
+        for i, p in enumerate(sample_validated_dataset.dataset.patents)
+    ]
+    assert family_metadata_available(patents) is True
+
+
+def test_family_metadata_available_false_when_any_patent_missing_family_id(sample_validated_dataset):
+    patents = list(sample_validated_dataset.dataset.patents)  # family_id is None on all of these
+    assert family_metadata_available(patents) is False
+
+
+def test_validate_family_policy_feasible_allows_allow_regardless_of_metadata(sample_validated_dataset):
+    validate_family_policy_feasible("allow", sample_validated_dataset.dataset.patents)
+
+
+def test_validate_family_policy_feasible_raises_for_collapse_without_metadata(sample_validated_dataset):
+    with pytest.raises(ValueError, match="FAMILY_METADATA_UNAVAILABLE"):
+        validate_family_policy_feasible("collapse", sample_validated_dataset.dataset.patents)
+
+
+def test_validate_family_policy_feasible_raises_for_exclude_related_without_metadata(sample_validated_dataset):
+    with pytest.raises(ValueError, match="FAMILY_METADATA_UNAVAILABLE"):
+        validate_family_policy_feasible("exclude_related", sample_validated_dataset.dataset.patents)
+
+
+def test_validate_family_policy_feasible_accepts_collapse_with_full_metadata(sample_validated_dataset):
+    patents = [
+        p.model_copy(update={"family_id": f"FAM-{i}"})
+        for i, p in enumerate(sample_validated_dataset.dataset.patents)
+    ]
+    validate_family_policy_feasible("collapse", patents)

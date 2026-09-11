@@ -79,6 +79,36 @@ def validate_temporal_pool_mode_consistency(temporal_pool_mode: str, require_tem
         )
 
 
+def family_metadata_available(patents: list[EvaluationPatent]) -> bool:
+    """ADR 0027: True iff every patent in the given pool carries a non-None family_id.
+
+    A single missing family_id makes the pool's family composition only partially
+    known -- treated as fully unavailable, since a partial collapse/exclusion would
+    silently distort metrics for the unlabelled patents in a way indistinguishable
+    from inventing the metadata.
+    """
+    return all(p.family_id is not None for p in patents)
+
+
+def validate_family_policy_feasible(family_policy: str, patents: list[EvaluationPatent]) -> None:
+    """ADR 0027 §3: fails fast when the requested policy cannot be honestly applied.
+
+    "allow" never requires family metadata. "collapse" and "exclude_related" require
+    it on every patent in the pool being validated -- never silently degrade to
+    "allow" and never partially apply the policy.
+    """
+    if family_policy == "allow":
+        return
+    if not family_metadata_available(patents):
+        raise ValueError(
+            f"FAMILY_METADATA_UNAVAILABLE: family_policy='{family_policy}' requires "
+            "family_id to be populated on every patent in the candidate universe, "
+            "but at least one patent is missing it. Use family_policy='allow', or "
+            "supply a dataset with complete family metadata (ADR 0027 §1: family_id "
+            "is only ever accepted from the sealed dataset, never inferred here)."
+        )
+
+
 def _filter_temporally_eligible_patents(
     demand: EvaluationDemand, patents: list[EvaluationPatent]
 ) -> list[EvaluationPatent]:
