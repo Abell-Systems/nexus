@@ -245,7 +245,7 @@ def main() -> int:
     )
     print(
         f"✓ Execution Context:   Engine commit {commit_hash[:7]} at {context.execution_timestamp.isoformat()} "
-        f"(temporal_pool_mode={args.temporal_pool_mode})"
+        f"(temporal_pool_mode={args.temporal_pool_mode}, family_policy={args.family_policy})"
     )
 
     # 4. Instantiate engine and adapter in CLI layer (the appropriate place for concrete wiring)

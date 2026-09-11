@@ -755,3 +755,77 @@ def test_run_evaluation_records_family_metadata_available_true_under_collapse(
     )
 
     assert report.family_metadata_available is True
+
+
+def test_runner_collapse_policy_keeps_lexicographically_smallest_publication_id_regardless_of_input_order(
+    sample_policy,
+):
+    """Task 5 fix: P-A9 is listed BEFORE P-A2 in input order, both in FAM-A. A naive
+    "keep whichever comes first in the input list" implementation would keep P-A9;
+    the ADR-mandated rule keeps the lexicographically smallest publication_id (P-A2)
+    regardless of input order.
+    """
+    prov = EvaluationProvenance(
+        source_authority="oepm",
+        source_uri="https://example.com/p",
+        extraction_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+        raw_payload_sha256="1" * 64,
+        modality=DataModality.OBSERVED,
+    )
+    demand = EvaluationDemand(
+        demand_id="D-FAM", title="Sanitary Fixtures", description="Drainage equipment",
+        posted_date=date(2023, 1, 1), target_cpc_prefixes=["E03C"], provenance=prov,
+    )
+    patents = [
+        EvaluationPatent(
+            publication_id="P-A9", publication_date=date(2022, 1, 1),
+            classifications_cpc=["E03C"], title="Patent A9", abstract="Abstract",
+            provenance=prov, family_id="FAM-A",
+        ),
+        EvaluationPatent(
+            publication_id="P-A2", publication_date=date(2022, 1, 1),
+            classifications_cpc=["E03C"], title="Patent A2", abstract="Abstract",
+            provenance=prov, family_id="FAM-A",
+        ),
+    ]
+    annotations = [
+        EvaluationAnnotation(
+            demand_id="D-FAM", publication_id=pid, grade=RelevanceGrade.GRADE_2,
+            annotator_role="expert", modality=DataModality.EXPERT_LABELLED,
+        )
+        for pid in ("P-A9", "P-A2")
+    ]
+    dataset = EvaluationDataset(
+        dataset_id="eval-corpus-order", schema_version="1.0.0", dataset_version="1.0.0",
+        description="Family order test corpus", demands=[demand], patents=patents, annotations=annotations,
+    )
+    manifest = EvaluationDatasetManifest(
+        dataset_id="eval-corpus-order", schema_version="1.0.0", dataset_version="1.0.0",
+        source_authorities=["oepm"], demand_count=1, patent_count=2, annotation_count=2,
+        content_sha256="f" * 64,
+    )
+    validated_dataset = ValidatedDataset(dataset=dataset, manifest=manifest)
+    ranking_port = FakeRankingPort(fixed_order=["P-A9", "P-A2"])
+    runner = DefaultEvaluationRunner()
+
+    runner.run_evaluation(
+        dataset=validated_dataset, ranking_port=ranking_port,
+        policy=sample_policy, context=_family_context("collapse"),
+    )
+
+    received_ids = {p.publication_id for p in ranking_port.received_patents[0]}
+    assert received_ids == {"P-A2"}
+
+
+def test_run_evaluation_raises_when_exclude_related_requested_without_family_metadata(
+    sample_validated_dataset, sample_policy
+):
+    """sample_validated_dataset's patents all have family_id=None (Task 1 default)."""
+    ranking_port = FakeRankingPort(fixed_order=["P-1", "P-2", "P-3", "P-4", "P-5"])
+    runner = DefaultEvaluationRunner()
+
+    with pytest.raises(ValueError, match="FAMILY_METADATA_UNAVAILABLE"):
+        runner.run_evaluation(
+            dataset=sample_validated_dataset, ranking_port=ranking_port,
+            policy=sample_policy, context=_family_context("exclude_related"),
+        )

@@ -120,15 +120,34 @@ def _apply_family_policy(family_policy: str, patents: list[EvaluationPatent]) ->
     if family_policy == "collapse":
         best_by_family: dict[str, EvaluationPatent] = {}
         for p in sorted(patents, key=lambda p: p.publication_id):
-            if p.family_id not in best_by_family:
-                best_by_family[p.family_id] = p
+            family_id = _require_family_id(p)
+            if family_id not in best_by_family:
+                best_by_family[family_id] = p
         return sorted(best_by_family.values(), key=lambda p: p.publication_id)
 
     # exclude_related
     family_counts: dict[str, int] = {}
     for p in patents:
-        family_counts[p.family_id] = family_counts.get(p.family_id, 0) + 1
-    return [p for p in patents if family_counts[p.family_id] == 1]
+        family_id = _require_family_id(p)
+        family_counts[family_id] = family_counts.get(family_id, 0) + 1
+    return [p for p in patents if family_counts[_require_family_id(p)] == 1]
+
+
+def _require_family_id(patent: EvaluationPatent) -> str:
+    """Narrows EvaluationPatent.family_id (str | None) to str for collapse/exclude_related.
+
+    Precondition enforced here as a real assertion, not just a type-checker hint:
+    validate_family_policy_feasible must already have confirmed every patent in the
+    pool has a family_id before _apply_family_policy is called for these two policies.
+    A caller that skips that check would otherwise silently collapse every
+    family_id=None patent into one pseudo-family -- an assertion failure here is the
+    correct outcome instead.
+    """
+    assert patent.family_id is not None, (
+        f"_apply_family_policy precondition violated: patent {patent.publication_id} "
+        "has no family_id. Caller must call validate_family_policy_feasible first."
+    )
+    return patent.family_id
 
 
 def _filter_temporally_eligible_patents(
