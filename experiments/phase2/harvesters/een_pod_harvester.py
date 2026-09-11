@@ -17,7 +17,8 @@ _PROPOSAL_LINK_RE = re.compile(
     r"/(?:en/)?collaborations/collaboration-proposals/(\d+)(?:/.*)?",
     re.IGNORECASE,
 )
-_POD_REF_RE = re.compile(r"\bTR([A-Z]{2}\d{8}\d+)\b")
+_POD_REF_RE = re.compile(r"\b((?:TR|TO|BO|BR|RD)[A-Z]{2}\d{8}\d+)\b")
+_POD_LEAD_RE = re.compile(r"collaborations-info-value lead|pod-ref|reference", re.I)
 
 
 class EenPodHarvester(BaseHarvester):
@@ -130,10 +131,20 @@ class EenPodHarvester(BaseHarvester):
         except UnicodeDecodeError:
             html_text = html_bytes.decode("latin-1", errors="replace")
 
+        # 1. Prioritize official reference container (avoids matching sidebar/related items)
+        soup = BeautifulSoup(html_text, "html.parser")
+        info_el = soup.find(class_=_POD_LEAD_RE)
+        if info_el:
+            m_lead = _POD_REF_RE.search(info_el.get_text(strip=True))
+            if m_lead:
+                return m_lead.group(1)
+
+        # 2. Fallback to full-text reference search
         m_pod = _POD_REF_RE.search(html_text)
         if m_pod:
-            return f"TR{m_pod.group(1)}"
+            return m_pod.group(1)
 
+        # 3. Fallback to URL ID
         m_link = _PROPOSAL_LINK_RE.search(url)
         if m_link:
             return f"LOMBARDIA-{m_link.group(1)}"

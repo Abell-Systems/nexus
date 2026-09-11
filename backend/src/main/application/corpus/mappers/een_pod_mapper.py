@@ -137,7 +137,7 @@ class EenPodCandidateMapper:
 
         if not ref_candidate:
             ref_elem = soup.find(
-                attrs={"class": re.compile(r"pod-ref|reference-info|reference", re.I)}
+                attrs={"class": re.compile(r"pod-ref|reference-info|reference|collaborations-info-value", re.I)}
             )
             if ref_elem and isinstance(ref_elem, Tag):
                 ref_text = ref_elem.get_text(separator=" ", strip=True)
