@@ -14,6 +14,8 @@ from application.corpus.expansion_policy_validator import (
 from domain.models.corpus_expansion import (
     CandidateRejectionReason,
     DemandCandidateContractRecord,
+    PublicationDateEvidence,
+    PublicationDateEvidenceType,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
@@ -87,9 +89,12 @@ def test_validate_demand_candidate_valid_passes() -> None:
         demand_id="INNOGET-3001",
         source_id="innoget",
         source_construct="Technology call",
-        publication_date=date(2023, 5, 14),
-        publication_date_evidence_field="posted_date",
-        publication_date_evidence_text="14 May 2023",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=date(2023, 5, 14),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value="14 May 2023",
+        ),
         geographic_stratum="spain",
         title="Industrial bio-based adhesive demand",
         description_text=(
@@ -115,9 +120,12 @@ def test_validate_demand_candidate_rejections_deterministic_exhaustive() -> None
         demand_id="UNKNOWN_PORTAL-01",
         source_id="unknown_portal",
         source_construct="Technology call",
-        publication_date=date(2019, 12, 31),
-        publication_date_evidence_field="date",
-        publication_date_evidence_text="2019-12-31",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=date(2019, 12, 31),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="date",
+            evidence_value="2019-12-31",
+        ),
         geographic_stratum="spain",
         title="Short demand",
         description_text="Short description with few words only.",
@@ -144,8 +152,6 @@ def test_validate_demand_candidate_date_boundaries() -> None:
         "demand_id": "INNOGET-DATE-TEST",
         "source_id": "innoget",
         "source_construct": "Technology call",
-        "publication_date_evidence_field": "posted_date",
-        "publication_date_evidence_text": "text",
         "geographic_stratum": "international_european",
         "title": "Date boundary test",
         "description_text": (
@@ -158,20 +164,32 @@ def test_validate_demand_candidate_date_boundaries() -> None:
         "has_articulated_technical_problem": True,
         "technical_problem_evidence_text": "strict energy consumption standards and minimal thermal distortion",
     }
+
+    def _make_candidate(d: date) -> DemandCandidateContractRecord:
+        return DemandCandidateContractRecord(
+            publication_date_evidence=PublicationDateEvidence(
+                publication_date=d,
+                evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+                evidence_field="posted_date",
+                evidence_value=str(d),
+            ),
+            **base_dict,
+        )
+
     # 2020-01-01 -> ACCEPT
-    c1 = DemandCandidateContractRecord(publication_date=date(2020, 1, 1), **base_dict)
+    c1 = _make_candidate(date(2020, 1, 1))
     assert validate_demand_candidate(c1, policy).status == "ACCEPT"
 
     # 2025-12-31 -> ACCEPT
-    c2 = DemandCandidateContractRecord(publication_date=date(2025, 12, 31), **base_dict)
+    c2 = _make_candidate(date(2025, 12, 31))
     assert validate_demand_candidate(c2, policy).status == "ACCEPT"
 
     # 2019-12-31 -> REJECT
-    c3 = DemandCandidateContractRecord(publication_date=date(2019, 12, 31), **base_dict)
+    c3 = _make_candidate(date(2019, 12, 31))
     assert validate_demand_candidate(c3, policy).status == "REJECT"
 
     # 2026-01-01 -> REJECT
-    c4 = DemandCandidateContractRecord(publication_date=date(2026, 1, 1), **base_dict)
+    c4 = _make_candidate(date(2026, 1, 1))
     assert validate_demand_candidate(c4, policy).status == "REJECT"
 
 
@@ -181,9 +199,12 @@ def test_validate_demand_candidate_word_count_boundaries() -> None:
         "demand_id": "INNOGET-WORD-TEST",
         "source_id": "innoget",
         "source_construct": "Technology call",
-        "publication_date": date(2023, 6, 1),
-        "publication_date_evidence_field": "posted_date",
-        "publication_date_evidence_text": "text",
+        "publication_date_evidence": PublicationDateEvidence(
+            publication_date=date(2023, 6, 1),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value="text",
+        ),
         "geographic_stratum": "spain",
         "title": "Word count boundary test",
         "language_code": "en",
@@ -213,9 +234,12 @@ def test_validate_demand_candidate_confidentiality_and_access() -> None:
         "demand_id": "INNOGET-CONF-TEST",
         "source_id": "innoget",
         "source_construct": "Technology call",
-        "publication_date": date(2022, 6, 1),
-        "publication_date_evidence_field": "posted_date",
-        "publication_date_evidence_text": "text",
+        "publication_date_evidence": PublicationDateEvidence(
+            publication_date=date(2022, 6, 1),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value="text",
+        ),
         "geographic_stratum": "spain",
         "title": "Access test",
         "description_text": (
@@ -251,9 +275,12 @@ def test_validate_demand_candidate_incompatible_construct_and_geographic_stratum
         "demand_id": "EEN-CONSTRUCT-TEST",
         "source_id": "een_pod",
         "source_construct": "Technology offer",  # Permitted is "Technology request"
-        "publication_date": date(2022, 6, 1),
-        "publication_date_evidence_field": "posted_date",
-        "publication_date_evidence_text": "text",
+        "publication_date_evidence": PublicationDateEvidence(
+            publication_date=date(2022, 6, 1),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value="text",
+        ),
         "geographic_stratum": "unauthorized_asia",  # Not in allowed strata
         "title": "Incompatible construct and stratum test",
         "description_text": (
@@ -281,9 +308,12 @@ def test_validate_demand_candidate_technical_problem_requirement() -> None:
         "demand_id": "INNOGET-TECH-PROB-TEST",
         "source_id": "innoget",
         "source_construct": "Technology call",
-        "publication_date": date(2023, 1, 15),
-        "publication_date_evidence_field": "posted_date",
-        "publication_date_evidence_text": "15 Jan 2023",
+        "publication_date_evidence": PublicationDateEvidence(
+            publication_date=date(2023, 1, 15),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value="15 Jan 2023",
+        ),
         "geographic_stratum": "spain",
         "title": "Technical problem requirement test",
         "description_text": (
@@ -339,9 +369,12 @@ def test_validate_demand_candidate_canonical_word_count_normalization() -> None:
         demand_id="INNOGET-HTML-SHORT",
         source_id="innoget",
         source_construct="Technology call",
-        publication_date=date(2023, 1, 15),
-        publication_date_evidence_field="posted_date",
-        publication_date_evidence_text="15 Jan 2023",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=date(2023, 1, 15),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value="15 Jan 2023",
+        ),
         geographic_stratum="spain",
         title="HTML short test",
         description_text=html_description,
@@ -354,3 +387,92 @@ def test_validate_demand_candidate_canonical_word_count_normalization() -> None:
     res_short = validate_demand_candidate(c_short, policy)
     assert res_short.status == "REJECT"
     assert CandidateRejectionReason.CONTENT_TOO_SHORT in res_short.rejection_reasons
+
+
+def test_should_reject_unverifiable_publication_date() -> None:
+    policy = load_corpus_expansion_policy(POLICY_PATH)
+    candidate = DemandCandidateContractRecord(
+        demand_id="INNOGET-UNVERIFIABLE-DATE",
+        source_id="innoget",
+        source_construct="Technology call",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=None,
+            evidence_type=PublicationDateEvidenceType.UNVERIFIABLE,
+            evidence_field="unverifiable",
+            evidence_value="no date metadata available",
+        ),
+        geographic_stratum="spain",
+        title="Valid title with unverifiable date",
+        description_text=(
+            "Seeking high strength bio adhesive for paper packaging with fast curing under thirty seconds "
+            "in automated corrugated board production lines without emitting harmful volatile compounds."
+        ),
+        language_code="en",
+        is_publicly_accessible=True,
+        has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="fast curing under thirty seconds in automated corrugated board production lines",
+    )
+    res = validate_demand_candidate(candidate, policy)
+    assert res.status == "REJECT"
+    assert res.rejection_reasons == (CandidateRejectionReason.UNVERIFIABLE_PUBLICATION_DATE,)
+    assert CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW not in res.rejection_reasons
+
+
+def test_should_reject_out_of_temporal_window_only_when_date_verified() -> None:
+    policy = load_corpus_expansion_policy(POLICY_PATH)
+    candidate = DemandCandidateContractRecord(
+        demand_id="INNOGET-OLD-DATE",
+        source_id="innoget",
+        source_construct="Technology call",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=date(2019, 12, 31),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value="2019-12-31",
+        ),
+        geographic_stratum="spain",
+        title="Valid title with out-of-window date",
+        description_text=(
+            "Seeking high strength bio adhesive for paper packaging with fast curing under thirty seconds "
+            "in automated corrugated board production lines without emitting harmful volatile compounds."
+        ),
+        language_code="en",
+        is_publicly_accessible=True,
+        has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="fast curing under thirty seconds in automated corrugated board production lines",
+    )
+    res = validate_demand_candidate(candidate, policy)
+    assert res.status == "REJECT"
+    assert res.rejection_reasons == (CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW,)
+    assert CandidateRejectionReason.UNVERIFIABLE_PUBLICATION_DATE not in res.rejection_reasons
+
+
+def test_should_combine_multiple_rejection_reasons_in_deterministic_order() -> None:
+    policy = load_corpus_expansion_policy(POLICY_PATH)
+    candidate = DemandCandidateContractRecord(
+        demand_id="INNOGET-MULTI-REJECT",
+        source_id="innoget",
+        source_construct="Technology call",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=None,
+            evidence_type=PublicationDateEvidenceType.UNVERIFIABLE,
+            evidence_field="unverifiable",
+            evidence_value="no date metadata available",
+        ),
+        geographic_stratum="spain",
+        title="Short description with unverifiable date",
+        description_text="Too short.",
+        language_code="en",
+        is_publicly_accessible=True,
+        has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="technical problem evidence present here",
+    )
+    res = validate_demand_candidate(candidate, policy)
+    assert res.status == "REJECT"
+    assert res.rejection_reasons == (
+        CandidateRejectionReason.CONTENT_TOO_SHORT,
+        CandidateRejectionReason.UNVERIFIABLE_PUBLICATION_DATE,
+    )

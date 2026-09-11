@@ -71,7 +71,9 @@ def validate_demand_candidate(
             reasons.append(CandidateRejectionReason.INCOMPATIBLE_CONSTRUCT)
 
     # 3. Temporal window boundary
-    if (
+    if candidate.publication_date is None:
+        reasons.append(CandidateRejectionReason.UNVERIFIABLE_PUBLICATION_DATE)
+    elif (
         candidate.publication_date < policy.temporal_window.min_publication_date
         or candidate.publication_date > policy.temporal_window.max_publication_date
     ):
