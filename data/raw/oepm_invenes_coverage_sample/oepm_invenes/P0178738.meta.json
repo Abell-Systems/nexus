@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T14:15:38.458073+00:00",
+  "demand_id": "P0178738",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e71417dd797b7c1f2bda8d17b1005e99c1ea671c715eaee21f4f85518d6ed331",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P0178738"
+}

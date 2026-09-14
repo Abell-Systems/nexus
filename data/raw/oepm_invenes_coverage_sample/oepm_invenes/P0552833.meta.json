@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T14:16:10.315933+00:00",
+  "demand_id": "P0552833",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "5430d9de822f9363bb2111bf44b586c5880afc48205e624089f64552a6cf3038",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P0552833"
+}

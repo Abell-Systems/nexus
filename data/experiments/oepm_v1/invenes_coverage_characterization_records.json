@@ -1,0 +1,845 @@
+[
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "F16D55/22"
+    ],
+    "classifications_ipc": [
+      "F16D55/22"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1970-10-16",
+    "publication_id": "ES0360287A1",
+    "query": "aleacion metalica",
+    "referencia": "P0360287"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "B65D77/206",
+      "Y10T156/1056",
+      "Y10T156/1062",
+      "B65D2577/2066",
+      "B65D2577/2091"
+    ],
+    "classifications_ipc": [
+      "B32B3/10",
+      "B65D17/28",
+      "B65D53/00",
+      "B65D77/20",
+      "B65D77/30"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1985-05-16",
+    "publication_id": "ES8505307A1",
+    "query": "aleacion metalica",
+    "referencia": "P0535348"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "H02K5/1282",
+      "F04D13/0666",
+      "H02K5/128"
+    ],
+    "classifications_ipc": [
+      "F04D13/06",
+      "H02K5/128"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A2",
+    "publication_date": "1970-06-01",
+    "publication_id": "ES0359291A2",
+    "query": "aleacion metalica",
+    "referencia": "P0359291"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_kind_code",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A3",
+    "publication_date": "1975-06-16",
+    "publication_id": "ES0398884A3",
+    "query": "aleacion metalica",
+    "referencia": "P0398884"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1946-10-16",
+    "publication_id": "ES0174790A1",
+    "query": "aleacion metalica",
+    "referencia": "P0174790"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1947-09-01",
+    "publication_id": "ES0178738A1",
+    "query": "aleacion metalica",
+    "referencia": "P0178738"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [
+      "B01D53/00"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1961-11-16",
+    "publication_id": "ES0269237A1",
+    "query": "aleacion metalica",
+    "referencia": "P0269237"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "B29C33/02",
+      "B29C35/12",
+      "B29C43/52",
+      "B29C33/08",
+      "Y10S264/45",
+      "Y10S264/46",
+      "Y10S264/65",
+      "B29K2101/10",
+      "B29K2105/06",
+      "B29C2033/023",
+      "B29K2105/007",
+      "B29L2031/712",
+      "B29L2031/7404"
+    ],
+    "classifications_ipc": [
+      "B29C33/02",
+      "B29C33/08",
+      "B29C35/12",
+      "B29C43/52"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1985-02-01",
+    "publication_id": "ES8502641A1",
+    "query": "aleacion metalica",
+    "referencia": "P0521039"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "H04R19/01",
+      "H04R25/604",
+      "Y10T29/49226"
+    ],
+    "classifications_ipc": [
+      "H04R19/01",
+      "H04R19/00",
+      "H04R25/00"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1988-05-01",
+    "publication_id": "ES8802357A1",
+    "query": "aleacion metalica",
+    "referencia": "P0552833"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1964-11-01",
+    "publication_id": "ES0304204A1",
+    "query": "aleacion metalica",
+    "referencia": "P0304204"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "B21C23/32",
+      "B21C26/00"
+    ],
+    "classifications_ipc": [
+      "B21C23/32",
+      "B21C26/00"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1960-08-16",
+    "publication_id": "ES0255316A1",
+    "query": "aleacion metalica",
+    "referencia": "P0255316"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "F23D14/06",
+      "F24C3/103",
+      "F23D14/725"
+    ],
+    "classifications_ipc": [
+      "F23D14/06",
+      "F23D14/72",
+      "F24C3/10"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "2000s",
+    "has_abstract": false,
+    "kind_code": "U",
+    "publication_date": "2004-11-16",
+    "publication_id": "ES1058228U",
+    "query": "aleacion metalica",
+    "referencia": "U200401863"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1961-04-16",
+    "publication_id": "ES0264723A1",
+    "query": "aleacion metalica",
+    "referencia": "P0264723"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "C22C1/02",
+      "C22C5/00",
+      "C22C9/00",
+      "C22C18/00",
+      "C22C20/00",
+      "C22C28/00"
+    ],
+    "classifications_ipc": [
+      "C22C1/02",
+      "C22C5/00",
+      "C22C9/00",
+      "C22C18/00",
+      "C22C20/00",
+      "C22C28/00"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1961-03-16",
+    "publication_id": "ES0264015A1",
+    "query": "aleacion metalica",
+    "referencia": "P0264015"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1956-01-01",
+    "publication_id": "ES0220334A1",
+    "query": "aleacion metalica",
+    "referencia": "P0220334"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [
+      "F24S10/75"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "2005s",
+    "has_abstract": false,
+    "kind_code": "U",
+    "publication_date": "2008-05-01",
+    "publication_id": "ES1067285U",
+    "query": "aleacion metalica",
+    "referencia": "U200800251"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "included",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": true,
+    "kind_code": "A1",
+    "publication_date": "1979-10-16",
+    "publication_id": "ES0478003A1",
+    "query": "aleacion metalica",
+    "referencia": "P0478003"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "B23K35/36",
+      "B23K35/025"
+    ],
+    "classifications_ipc": [
+      "B23K35/22",
+      "B23K35/02",
+      "B23K35/36"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1980-08-16",
+    "publication_id": "ES0479819A1",
+    "query": "aleacion metalica",
+    "referencia": "P0479819"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "H01G4/228"
+    ],
+    "classifications_ipc": [
+      "H01G4/228",
+      "H01G13/00",
+      "H01R12/00",
+      "H01R12/04"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "U",
+    "publication_date": "1975-04-16",
+    "publication_id": "ES0197398U",
+    "query": "aleacion metalica",
+    "referencia": "U0197398"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1926-04-16",
+    "publication_id": "ES0097035A1",
+    "query": "aleacion metalica",
+    "referencia": "P0097035"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1970-10-16",
+    "publication_id": "ES0360470A1",
+    "query": "composicion farmaceutica",
+    "referencia": "P0360470"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [
+      "A61K31/40",
+      "A61K31/435",
+      "C07D207/24",
+      "C07D211/74"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1981-11-16",
+    "publication_id": "ES8200869A1",
+    "query": "composicion farmaceutica",
+    "referencia": "P0496711"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "A61P31/04",
+      "C07D277/20",
+      "C07D285/06",
+      "C07D285/08",
+      "C07D285/10",
+      "C07D501/20",
+      "C07D501/22"
+    ],
+    "classifications_ipc": [
+      "A61K31/545",
+      "A61K31/546",
+      "A61P31/04",
+      "C07D277/20",
+      "C07D285/06",
+      "C07D285/08",
+      "C07D285/10",
+      "C07D501/20",
+      "C07D501/22",
+      "C07D501/59"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1984-04-16",
+    "publication_id": "ES8404360A1",
+    "query": "composicion farmaceutica",
+    "referencia": "P0520364"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [
+      "C07D493/08",
+      "A61K31/335",
+      "A61K31/34",
+      "A61K31/41",
+      "A61P7/02",
+      "A61P11/08",
+      "C07D305/14",
+      "C07D307/12",
+      "C07D307/28",
+      "C07D307/93",
+      "C07D405/14"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1986-02-01",
+    "publication_id": "ES8604595A1",
+    "query": "composicion farmaceutica",
+    "referencia": "P0544172"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "C07D213/68",
+      "C07D235/28",
+      "C07D401/12",
+      "A61K31/4439"
+    ],
+    "classifications_ipc": [
+      "C07D401/12",
+      "A61K31/4439",
+      "A61P1/04",
+      "C07D213/68",
+      "C07D235/28"
+    ],
+    "disposition": "included",
+    "era": "2005s",
+    "has_abstract": true,
+    "kind_code": "A1",
+    "publication_date": "2007-09-16",
+    "publication_id": "ES2281292A1",
+    "query": "composicion farmaceutica",
+    "referencia": "P200600571"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "C07H17/07"
+    ],
+    "classifications_ipc": [
+      "A61K31/35",
+      "C07D311/00",
+      "C07D311/30",
+      "C07H17/07"
+    ],
+    "disposition": "excluded_kind_code",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A6",
+    "publication_date": "1989-10-16",
+    "publication_id": "ES2009914A6",
+    "query": "composicion farmaceutica",
+    "referencia": "P8801445"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "included",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": true,
+    "kind_code": "A1",
+    "publication_date": "1980-12-16",
+    "publication_id": "ES0444194A1",
+    "query": "composicion farmaceutica",
+    "referencia": "P0444194"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "C07C5/322",
+      "C07C5/325",
+      "C07C5/3337"
+    ],
+    "classifications_ipc": [
+      "C07C5/32",
+      "C07C5/333"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1967-11-16",
+    "publication_id": "ES0335022A1",
+    "query": "composicion farmaceutica",
+    "referencia": "P0335022"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "A61P3/00",
+      "A61P9/06",
+      "A61P9/08",
+      "A61P9/10",
+      "A61P9/12",
+      "A61P25/02",
+      "C07C205/44",
+      "C07D209/48",
+      "C07D211/84",
+      "C07D211/90",
+      "C07D401/12",
+      "C07D405/12",
+      "C07D417/12"
+    ],
+    "classifications_ipc": [
+      "A61K31/4427",
+      "A61K31/443",
+      "A61K31/455",
+      "A61K31/535",
+      "A61P3/00",
+      "A61P9/06",
+      "A61P9/08",
+      "A61P9/10",
+      "A61P9/12",
+      "A61P25/02",
+      "C07D209/48",
+      "C07D211/82",
+      "C07D211/90",
+      "C07D319/00",
+      "C07D401/12",
+      "C07D405/12",
+      "C07D413/04",
+      "C07D417/12",
+      "C07D521/00"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1988-04-01",
+    "publication_id": "ES8802139A1",
+    "query": "composicion farmaceutica",
+    "referencia": "P0551844"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "A61K9/2081",
+      "A61K9/5015",
+      "A61K9/5031",
+      "A61K9/5042",
+      "A61K9/5047"
+    ],
+    "classifications_ipc": [
+      "A61K9/20",
+      "A61K9/50"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1959-06-16",
+    "publication_id": "ES0247237A1",
+    "query": "composicion farmaceutica",
+    "referencia": "P0247237"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [
+      "A61K31/395",
+      "C07D205/08"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1983-12-01",
+    "publication_id": "ES8401024A1",
+    "query": "composicion farmaceutica",
+    "referencia": "P0514308"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "A61P31/04",
+      "C07H17/08"
+    ],
+    "classifications_ipc": [
+      "A61K31/70",
+      "A61K31/7042",
+      "A61K31/7048",
+      "A61P31/04",
+      "C07H17/08"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1984-04-01",
+    "publication_id": "ES8403928A1",
+    "query": "composicion farmaceutica",
+    "referencia": "P0520177"
+  },
+  {
+    "assignees": [
+      "GUTIÉRREZ ONTALVILLA, Patricia"
+    ],
+    "classifications_cpc": [
+      "A61K35/16",
+      "A61K35/28",
+      "A61K35/35"
+    ],
+    "classifications_ipc": [
+      "A61K35/16",
+      "A61K35/28",
+      "A61K35/35",
+      "A61P15/00"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "2020s",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "2022-02-21",
+    "publication_id": "ES2895425A1",
+    "query": "composicion farmaceutica",
+    "referencia": "P202030879"
+  },
+  {
+    "assignees": [
+      "Signpath Pharma Inc."
+    ],
+    "classifications_cpc": [
+      "A61P9/00",
+      "A61P9/04",
+      "A61K31/12",
+      "A61K31/18",
+      "A61K9/127",
+      "A61K31/445"
+    ],
+    "classifications_ipc": [
+      "A61K9/127",
+      "A61K31/12",
+      "A61K31/18",
+      "A61K31/445",
+      "A61P9/00",
+      "A61P9/04"
+    ],
+    "disposition": "excluded_kind_code",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": true,
+    "kind_code": "T3",
+    "publication_date": "2022-02-23",
+    "publication_id": "ES2896105T3",
+    "query": "composicion farmaceutica",
+    "referencia": "E17202117"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [
+      "A01D46/28"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "U",
+    "publication_date": "1988-10-01",
+    "publication_id": "ES1004575U",
+    "query": "maquina agricola",
+    "referencia": "U8800282"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1975-02-16",
+    "publication_id": "ES0401521A1",
+    "query": "maquina agricola",
+    "referencia": "P0401521"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1972-05-16",
+    "publication_id": "ES0375433A1",
+    "query": "maquina agricola",
+    "referencia": "P0375433"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [
+      "A01M21/00",
+      "B05B9/00"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "U",
+    "publication_date": "1994-09-01",
+    "publication_id": "ES1027572U",
+    "query": "maquina agricola",
+    "referencia": "U9400888"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1962-05-01",
+    "publication_id": "ES0275048A1",
+    "query": "maquina agricola",
+    "referencia": "P0275048"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1977-07-01",
+    "publication_id": "ES0449935A1",
+    "query": "maquina agricola",
+    "referencia": "P0449935"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "A01D46/04",
+      "A01D47/00"
+    ],
+    "classifications_ipc": [
+      "A01D46/04",
+      "A01D47/00"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1977-01-01",
+    "publication_id": "ES0436475A1",
+    "query": "maquina agricola",
+    "referencia": "P0436475"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [
+      "B60N2/502",
+      "B60N2/505",
+      "B60N2/507",
+      "B60N2/542",
+      "B60N2/548"
+    ],
+    "classifications_ipc": [
+      "B60N2/50"
+    ],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1976-10-16",
+    "publication_id": "ES0430624A1",
+    "query": "maquina agricola",
+    "referencia": "P0430624"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1963-07-16",
+    "publication_id": "ES0287275A1",
+    "query": "maquina agricola",
+    "referencia": "P0287275"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1976-09-16",
+    "publication_id": "ES0431743A1",
+    "query": "maquina agricola",
+    "referencia": "P0431743"
+  },
+  {
+    "assignees": [],
+    "classifications_cpc": [],
+    "classifications_ipc": [],
+    "disposition": "excluded_missing_text",
+    "era": "pre-2000 (legacy numbering)",
+    "has_abstract": false,
+    "kind_code": "A1",
+    "publication_date": "1960-03-01",
+    "publication_id": "ES0253966A1",
+    "query": "maquina agricola",
+    "referencia": "P0253966"
+  }
+]

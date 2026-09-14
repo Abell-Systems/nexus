@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T14:19:30.535970+00:00",
+  "demand_id": "P0335022",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a887c85251301923e6c39d4bf9a2986b20c5d07fe672e285ab9eeb89a88b050c",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P0335022"
+}

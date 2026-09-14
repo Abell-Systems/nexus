@@ -1,0 +1,166 @@
+{
+  "abstract_presence_by_era": {
+    "2000s": {
+      "with_abstract": 0,
+      "without_abstract": 1
+    },
+    "2005s": {
+      "with_abstract": 1,
+      "without_abstract": 1
+    },
+    "2020s": {
+      "with_abstract": 0,
+      "without_abstract": 1
+    },
+    "pre-2000 (legacy numbering)": {
+      "with_abstract": 3,
+      "without_abstract": 38
+    }
+  },
+  "exact_duplicate_publication_ids": {},
+  "invenes_reported_total_results_sum": 182245,
+  "kind_code_distribution": {
+    "A1": 36,
+    "A2": 1,
+    "A3": 1,
+    "A6": 1,
+    "T3": 1,
+    "U": 5
+  },
+  "note_on_population_estimate": "Sum of INVENES 'Number of results' across the 8 queries is 182245, but queries overlap heavily (broad terms) and include non-domestic/non-eligible records (PCT, EP-ES/T3, foreign Latipat) -- this is NOT a usable estimate of the eligible accessible population without further deduplication and eligibility filtering at scale. Reported for context only.",
+  "purpose": "Coverage/scalability characterization of INVENES as a corpus source -- NOT a corpus build, NOT input to #104. Disjoint from build_oepm_corpus.py's smoke-test referencias by construction.",
+  "queries": {
+    "aleacion metalica": {
+      "included_from_page1": 1,
+      "invenes_reported_total_results": 21119,
+      "page1_inclusion_rate": 0.05,
+      "page1_referencias_attempted": 20
+    },
+    "bateria recargable": {
+      "included_from_page1": 0,
+      "invenes_reported_total_results": 7801,
+      "page1_inclusion_rate": 0.0,
+      "page1_referencias_attempted": 15
+    },
+    "composicion farmaceutica": {
+      "included_from_page1": 2,
+      "invenes_reported_total_results": 70791,
+      "page1_inclusion_rate": 0.143,
+      "page1_referencias_attempted": 14
+    },
+    "envase alimentario (latest first)": {
+      "included_from_page1": 0,
+      "invenes_reported_total_results": 2118,
+      "page1_inclusion_rate": 0.0,
+      "page1_referencias_attempted": 12
+    },
+    "maquina agricola": {
+      "included_from_page1": 0,
+      "invenes_reported_total_results": 4883,
+      "page1_inclusion_rate": 0.0,
+      "page1_referencias_attempted": 19
+    },
+    "motor combustion": {
+      "included_from_page1": 0,
+      "invenes_reported_total_results": 33289,
+      "page1_inclusion_rate": 0.0,
+      "page1_referencias_attempted": 20
+    },
+    "sensor optico": {
+      "included_from_page1": 0,
+      "invenes_reported_total_results": 23374,
+      "page1_inclusion_rate": 0.0,
+      "page1_referencias_attempted": 15
+    },
+    "tejido textil": {
+      "included_from_page1": 0,
+      "invenes_reported_total_results": 18870,
+      "page1_inclusion_rate": 0.0,
+      "page1_referencias_attempted": 20
+    }
+  },
+  "rate_limit_disclosure": "90/135 referencias were never harvested: a real, reproducible rate limit/block from OEPM's infrastructure (confirmed in isolation outside this script -- a previously-successful URL started timing out after ~40-45 requests within a short window, on both this run and the earlier build_oepm_corpus.py run). This is itself a characterization finding, not a code defect: INVENES's practical per-session throughput ceiling appears to be roughly 40-45 detail-page requests before a cooldown is required. Scaling acquisition to N>=60 net-included records will need either much slower pacing across a longer wall-clock window, or a different acquisition strategy (e.g. spread across days), not just more queries.",
+  "top_assignees": [
+    [
+      "GUTIÉRREZ ONTALVILLA, Patricia",
+      1
+    ],
+    [
+      "Signpath Pharma Inc.",
+      1
+    ]
+  ],
+  "top_ipc_subclasses": [
+    [
+      "C07D",
+      30
+    ],
+    [
+      "A61K",
+      26
+    ],
+    [
+      "A61P",
+      14
+    ],
+    [
+      "C22C",
+      6
+    ],
+    [
+      "B65D",
+      4
+    ],
+    [
+      "B29C",
+      4
+    ],
+    [
+      "H04R",
+      3
+    ],
+    [
+      "B23K",
+      3
+    ],
+    [
+      "A01D",
+      3
+    ],
+    [
+      "B21C",
+      2
+    ],
+    [
+      "F23D",
+      2
+    ],
+    [
+      "H01G",
+      2
+    ],
+    [
+      "H01R",
+      2
+    ],
+    [
+      "C07H",
+      2
+    ],
+    [
+      "C07C",
+      2
+    ]
+  ],
+  "totals": {
+    "dispositions": {
+      "excluded_kind_code": 3,
+      "excluded_missing_text": 39,
+      "included": 3,
+      "not_harvested": 90
+    },
+    "included_rate": 0.022,
+    "referencias_attempted": 135,
+    "referencias_harvested": 45
+  }
+}

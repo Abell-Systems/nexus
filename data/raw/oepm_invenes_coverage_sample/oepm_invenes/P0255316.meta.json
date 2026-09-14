@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T14:16:31.008874+00:00",
+  "demand_id": "P0255316",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8c05b14f9b59147517d880ece54e1bedf0dfa73e8ba5ebfe9cce3abd32740c57",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P0255316"
+}

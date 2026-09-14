@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T14:17:23.908594+00:00",
+  "demand_id": "U200800251",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "68cd0d195bb859b34f2ed68ec2baa0f1efbbd3cb7b9bf67ab5452a98c1fb687b",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=U200800251"
+}
