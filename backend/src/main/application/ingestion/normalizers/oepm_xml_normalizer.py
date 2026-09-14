@@ -24,7 +24,13 @@ from domain.models.ingestion import (
 from domain.models.patent import PatentDocument
 from domain.protocols.sources import RawPayload
 
-NORMATIVE_KIND_CODES: frozenset[str] = frozenset({"A1", "A2", "B1", "B2", "U", "T3"})
+# T3 (EP-ES: a European patent's Spanish-translated validation, granted by the EPO,
+# not OEPM) is deliberately excluded by default -- ADR 0035 SS3 scopes "domestic
+# Spanish patent corpus" to OEPM-granted ES patents/utility models only. Callers
+# needing EP-ES records (not currently done anywhere in this study) can still pass
+# allowed_kind_codes=NORMATIVE_KIND_CODES | {"T3"} explicitly; the T3 claims/
+# description fallback in _resolve_text_fields is kept for that opt-in path.
+NORMATIVE_KIND_CODES: frozenset[str] = frozenset({"A1", "A2", "B1", "B2", "U"})
 DATE_PATTERNS = [
     (re.compile(r"^(\d{2})/(\d{2})/(\d{4})$"), "%d/%m/%Y"),  # Official Tomo2.xsd dd/MM/yyyy
     (re.compile(r"^(\d{4})-(\d{2})-(\d{2})$"), "%Y-%m-%d"),  # ISO-8601 YYYY-MM-DD

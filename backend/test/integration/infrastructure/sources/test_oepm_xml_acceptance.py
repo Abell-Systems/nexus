@@ -55,8 +55,8 @@ def test_oepm_xml_vertical_slice_end_to_end() -> None:
     excluded = [r for r in results if r.disposition == RecordDisposition.EXCLUDED]
     quarantined = [r for r in results if r.disposition == RecordDisposition.QUARANTINED]
 
-    assert len(included) == 3
-    assert len(excluded) == 2
+    assert len(included) == 2
+    assert len(excluded) == 3
     assert len(quarantined) == 2
 
     # Verify each included record has fully populated canonical fields
@@ -64,7 +64,8 @@ def test_oepm_xml_vertical_slice_end_to_end() -> None:
         doc = res.document
         assert doc is not None
         assert doc.publication_id.startswith("ES")
-        assert doc.kind_code in {"A1", "A2", "B1", "B2", "U", "T3"}
+        # T3 (EP-ES) excluded by default -- ADR 0035 SS3 "domestic" scope
+        assert doc.kind_code in {"A1", "A2", "B1", "B2", "U"}
         assert doc.title and len(doc.title) > 5
         assert doc.abstract and len(doc.abstract) > 10
         assert len(doc.assignees) > 0
