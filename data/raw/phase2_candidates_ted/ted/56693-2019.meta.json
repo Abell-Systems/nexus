@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T11:31:04.674022+00:00",
+  "demand_id": "56693-2019",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b89dea87b300943bc550acc458ff23940b18e65bd57339d9133879ede17348b0",
+  "source_id": "ted",
+  "source_uri": "https://ted.europa.eu/en/notice/56693-2019/html"
+}

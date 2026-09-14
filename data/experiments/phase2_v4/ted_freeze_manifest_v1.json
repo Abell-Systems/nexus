@@ -1,0 +1,89 @@
+{
+  "base_seed": 42,
+  "corpus_sha256": "ee0b106cb1edece2195d595bba22d94f71a37ba06ffe4fe2b353b55cc52dd3b1",
+  "dev_count": 30,
+  "dev_fraction": 0.5,
+  "execution_timestamp": "2026-09-14T11:46:06.361638+00:00",
+  "independent_count": 65,
+  "manifest_id": "nexus-phase2-ted-freeze-v1",
+  "n_power": 65,
+  "not_combined_with": "data/experiments/phase2_v3 (EEN/POD, 76 accepted, all organization_raw=UNKNOWN, N_power contribution=0) -- kept as a separate, distinctly-labeled dataset, never merged into this N as if 65+76 were 141 independent observations",
+  "organization_isolation": "exact",
+  "organization_overlap": [],
+  "per_stratum_counts": {
+    "19": {
+      "dev": 0,
+      "test": 1
+    },
+    "24": {
+      "dev": 0,
+      "test": 1
+    },
+    "30": {
+      "dev": 0,
+      "test": 1
+    },
+    "33": {
+      "dev": 2,
+      "test": 2
+    },
+    "38": {
+      "dev": 2,
+      "test": 1
+    },
+    "42": {
+      "dev": 0,
+      "test": 1
+    },
+    "44": {
+      "dev": 0,
+      "test": 1
+    },
+    "45": {
+      "dev": 7,
+      "test": 6
+    },
+    "63": {
+      "dev": 0,
+      "test": 1
+    },
+    "65": {
+      "dev": 2,
+      "test": 1
+    },
+    "71": {
+      "dev": 0,
+      "test": 1
+    },
+    "72": {
+      "dev": 9,
+      "test": 9
+    },
+    "73": {
+      "dev": 6,
+      "test": 5
+    },
+    "79": {
+      "dev": 2,
+      "test": 1
+    },
+    "80": {
+      "dev": 0,
+      "test": 1
+    },
+    "90": {
+      "dev": 0,
+      "test": 1
+    },
+    "92": {
+      "dev": 0,
+      "test": 1
+    }
+  },
+  "pseudoreplicate_count_excluded": 7,
+  "split_sha256": "55a98036eb6f75a64b6ee3d33ba87e01d5abf53cd1c6e1d78c2d4fd73471b0b4",
+  "stratification_key": "cpv_division",
+  "test_count": 35,
+  "unknown_count": 0,
+  "unknown_split_policy": "dev_only"
+}
