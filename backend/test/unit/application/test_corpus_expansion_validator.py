@@ -20,6 +20,7 @@ from domain.models.corpus_expansion import (
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 POLICY_PATH = REPO_ROOT / "config" / "policies" / "data" / "corpus_expansion_policy_v1.json"
+POLICY_V2_PATH = REPO_ROOT / "config" / "policies" / "data" / "corpus_expansion_policy_v2.json"
 
 
 def test_load_corpus_expansion_policy_success() -> None:
@@ -447,6 +448,93 @@ def test_should_reject_out_of_temporal_window_only_when_date_verified() -> None:
     assert res.status == "REJECT"
     assert res.rejection_reasons == (CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW,)
     assert CandidateRejectionReason.UNVERIFIABLE_PUBLICATION_DATE not in res.rejection_reasons
+
+
+def test_load_corpus_expansion_policy_v2_requires_explicit_expected_version() -> None:
+    # v2 policy_version does not match the default expected_version (v1) -> mismatch
+    with pytest.raises(
+        PolicyIntegrityError,
+        match="Policy version mismatch: expected 'corpus_expansion_policy_v1', got 'corpus_expansion_policy_v2'",
+    ):
+        load_corpus_expansion_policy(POLICY_V2_PATH)
+
+
+def test_load_corpus_expansion_policy_v2_success() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V2_PATH, expected_version="corpus_expansion_policy_v2")
+    assert policy.policy_version == "corpus_expansion_policy_v2"
+    assert policy.temporal_window.min_publication_date == date(2024, 1, 1)
+    assert policy.temporal_window.max_publication_date == date(2025, 12, 31)
+    # Every other criterion carried forward unmodified from v1
+    assert policy.target_sample_size.target_independent_demands == 60
+    assert len(policy.sources) == 2
+    assert policy.content_requirements.min_word_count == 25
+    assert policy.concentration_monitoring.sector_warning_threshold == 0.35
+    assert policy.unknown_handling.unknown_organization_split_policy == "dev_only"
+
+
+def _v2_candidate(publication_date: date) -> DemandCandidateContractRecord:
+    return DemandCandidateContractRecord(
+        demand_id="EEN_POD-TEMPORAL-AMENDMENT-TEST",
+        source_id="een_pod",
+        source_construct="Technology request",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=publication_date,
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value=str(publication_date),
+        ),
+        geographic_stratum="spain",
+        title="Amended temporal window boundary test",
+        description_text=(
+            "Seeking technical solution for high precision industrial manufacturing process with strict energy "
+            "consumption standards and minimal thermal distortion during high speed continuous operation cycles "
+            "for aerospace components."
+        ),
+        language_code="en",
+        is_publicly_accessible=True,
+        has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="strict energy consumption standards and minimal thermal distortion",
+    )
+
+
+def test_validate_demand_candidate_v2_accepts_2024_2025() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V2_PATH, expected_version="corpus_expansion_policy_v2")
+
+    assert validate_demand_candidate(_v2_candidate(date(2024, 1, 1)), policy).status == "ACCEPT"
+    assert validate_demand_candidate(_v2_candidate(date(2025, 12, 31)), policy).status == "ACCEPT"
+
+
+def test_validate_demand_candidate_v2_rejects_pre_2024() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V2_PATH, expected_version="corpus_expansion_policy_v2")
+
+    for rejected_date in (date(2020, 1, 1), date(2023, 12, 31)):
+        res = validate_demand_candidate(_v2_candidate(rejected_date), policy)
+        assert res.status == "REJECT"
+        assert res.rejection_reasons == (CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW,)
+
+
+def test_validate_demand_candidate_v2_rejects_2026_and_later() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V2_PATH, expected_version="corpus_expansion_policy_v2")
+
+    res = validate_demand_candidate(_v2_candidate(date(2026, 1, 1)), policy)
+    assert res.status == "REJECT"
+    assert res.rejection_reasons == (CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW,)
+
+
+def test_load_corpus_expansion_policy_v2_hash_mismatch_raises(tmp_path: Path) -> None:
+    tampered_json = tmp_path / "corpus_expansion_policy_v2.json"
+    tampered_json.write_text(
+        POLICY_V2_PATH.read_text(encoding="utf-8").replace("2024-01-01", "2023-01-01"),
+        encoding="utf-8",
+    )
+    # Reuse the real v2 sidecar unmodified -> hash no longer matches tampered content
+    real_hash_path = POLICY_V2_PATH.with_suffix(".sha256")
+    tampered_hash = tmp_path / "corpus_expansion_policy_v2.sha256"
+    tampered_hash.write_text(real_hash_path.read_text(encoding="utf-8"), encoding="utf-8")
+
+    with pytest.raises(PolicyIntegrityError, match="SHA-256 hash mismatch"):
+        load_corpus_expansion_policy(tampered_json, tampered_hash, expected_version="corpus_expansion_policy_v2")
 
 
 def test_should_combine_multiple_rejection_reasons_in_deterministic_order() -> None:

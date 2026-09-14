@@ -1,17 +1,21 @@
-# Phase 2 Temporal Window Amendment: 2020–2025 (pre-registered) → 2024–2025 (proposed)
+# Phase 2 Temporal Window Amendment: 2020–2025 (pre-registered) → 2024–2025 (applied)
 
-**Status:** Proposed. This is a **methodological amendment record**, kept separate from
-`docs/adr/0031-corpus-expansion-contract.md` §2.3 by design: ADR 0031's frozen
-pre-registered window (`2020-01-01` to `2025-12-31`) is not rewritten here as if it had
-always said 2024. This document records a decision made *after* pre-registration and
-after two empirical feasibility findings (#101b, #101c), following the same pattern
-`docs/phase2-sample-size-amendment.md` uses for the N=60→39 gap and
-`docs/phase2-sector-taxonomy-amendment.md` uses for closing the `sector` attribute.
+**Status:** Approved and applied (2026-09-14). This is a **methodological amendment
+record**, kept separate from `docs/adr/0031-corpus-expansion-contract.md` §2.3 by
+design: ADR 0031's frozen pre-registered window (`2020-01-01` to `2025-12-31`) is not
+rewritten here as if it had always said 2024. This document records a decision made
+*after* pre-registration and after two empirical feasibility findings (#101b, #101c),
+following the same pattern `docs/phase2-sample-size-amendment.md` uses for the
+N=60→39 gap and `docs/phase2-sector-taxonomy-amendment.md` uses for closing the
+`sector` attribute.
 
-**Nothing in this amendment has been applied yet.** `corpus_expansion_policy_v1.json`,
-ADR 0031, and the #101b design spec are unmodified as of this writing. Applying it
-(editing the policy, updating ADR 0031, re-running acquisition) is a separate,
-explicit next step, listed in §6 below — not taken here.
+**Applied as of this writing:** ADR 0031 §2.3 now carries this amendment as a
+post-preregistration decision (original `2020-01-01` window left unmodified as
+historical record), and `corpus_expansion_policy_v2.json` narrows
+`temporal_window.min_publication_date` to `2024-01-01` (`corpus_expansion_policy_v1.json`
+is unmodified and remains the frozen pre-registered artifact). Steps 1–2 of §6 below
+are done; steps 3–4 (re-running #101b's acquisition pipeline under `v2` and measuring
+`N_power`) are separate, not-yet-taken next steps.
 
 ---
 
@@ -135,17 +139,15 @@ even before any filtering. Whether 108 raw EEN/POD records clear 60 independent,
 content-complete, construct-compatible observations is an empirical question for a
 re-run of #101b, not something this document can answer analytically.
 
-**If this amendment is approved, the chain is:**
-1. Edit ADR 0031 §2.3 (temporal window) to reflect this amendment; record the amendment
-   reference in the ADR per repository convention.
-2. Version `corpus_expansion_policy_v1.json` accordingly (new `temporal_window` bounds;
-   consider whether the frozen-artifact convention used elsewhere in this repo warrants
-   a new `corpus_expansion_policy_v2` rather than an in-place edit, given no corpus has
-   yet been frozen against v1).
-3. Re-run #101b's acquisition pipeline (harvest → map → validate → audit) against the
-   amended window — EEN/POD only, `Technology request` construct only, per §3's
-   findings.
-4. Only once that run produces a sealed, audited candidate pool does #102 (independence
-   audit) proceed.
-
-None of steps 1–4 are taken by this document.
+**Chain, and what's done:**
+1. **Done.** ADR 0031 §2.3 now records this amendment as a post-preregistration
+   decision (original `2020-01-01` pre-registered window left unmodified).
+2. **Done.** `corpus_expansion_policy_v2.json` (+ `.sha256` sidecar) versions the
+   contract with the narrowed `2024-01-01` lower bound; every other criterion is
+   carried forward unmodified from `v1`. `corpus_expansion_policy_v1.json` is not
+   edited in place — it remains the frozen artifact for the pre-registered window.
+3. **Not yet taken.** Re-run #101b's acquisition pipeline (harvest → map → validate →
+   audit) against the amended window — EEN/POD only, `Technology request` construct
+   only, per §3's findings.
+4. **Not yet taken.** Only once that run produces a sealed, audited candidate pool does
+   #102 (independence audit) proceed.

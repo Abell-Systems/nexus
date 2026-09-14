@@ -6,6 +6,7 @@ import pytest
 from pydantic import ValidationError
 
 from domain.models.corpus_expansion import (
+    CORPUS_EXPANSION_POLICY_V2_VERSION,
     FROZEN_CORPUS_EXPANSION_POLICY_VERSION,
     CandidateRejectionReason,
     CandidateValidationResult,
@@ -104,7 +105,7 @@ def test_corpus_expansion_policy_frozen() -> None:
         policy.policy_version = "corpus_expansion_policy_v2"
 
 
-def test_corpus_expansion_policy_version_strict_v1() -> None:
+def test_corpus_expansion_policy_version_must_be_known() -> None:
     def _create_policy(policy_version: str) -> CorpusExpansionPolicy:
         return CorpusExpansionPolicy(
             policy_version=policy_version,
@@ -143,19 +144,22 @@ def test_corpus_expansion_policy_version_strict_v1() -> None:
         )
 
     # Valid v1 succeeds
-    p = _create_policy(FROZEN_CORPUS_EXPANSION_POLICY_VERSION)
-    assert p.policy_version == "corpus_expansion_policy_v1"
+    p1 = _create_policy(FROZEN_CORPUS_EXPANSION_POLICY_VERSION)
+    assert p1.policy_version == "corpus_expansion_policy_v1"
 
-    # Any other version string is strictly rejected
+    # Valid v2 (temporal window amendment) succeeds
+    p2 = _create_policy(CORPUS_EXPANSION_POLICY_V2_VERSION)
+    assert p2.policy_version == "corpus_expansion_policy_v2"
+
+    # Any unknown version string is strictly rejected
     for invalid_version in [
-        "corpus_expansion_policy_v2",
         "corpus_expansion_policy_v999",
         "corpus_expansion_policy_draft",
         "random_policy",
     ]:
         with pytest.raises(ValidationError) as exc_info:
             _create_policy(invalid_version)
-        assert "policy_version must be strictly 'corpus_expansion_policy_v1'" in str(exc_info.value)
+        assert "policy_version must be one of" in str(exc_info.value)
 
 
 def test_demand_candidate_contract_record_frozen_extra_forbid() -> None:

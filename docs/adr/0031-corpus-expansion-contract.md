@@ -45,8 +45,25 @@ To ensure scientific integrity, **PR #101a establishes a pre-specified, binding 
 * **New Source Gate (`ADMISSIBLE_SOURCE_CANDIDATE`):** No additional platform, intermediary, or registry may contribute observations to the corpus without completing an independent, peer-reviewed source qualification protocol auditing public access, persistence, identity resolution, publication date verifiable evidence, and construct fidelity.
 
 ### 2.3 Temporal Window & Hierarchical Date Evidence
-* **Permitted Window:** `2020-01-01` to `2025-12-31` inclusive.
+* **Permitted Window (pre-registered):** `2020-01-01` to `2025-12-31` inclusive. This is
+  the original pre-registered window and is left unmodified here as the historical
+  record; it is frozen, alongside this figure, in `corpus_expansion_policy_v1.json`.
 * **Exclusion of 2026:** Solicitations published in 2026 are excluded to decouple benchmark construction from unresolved, actively evolving industrial contexts.
+
+> **Amendment (2026-09-14):** Milestone #101b (live-source acquisition under the
+> pre-registered window) and #101c (historical-source feasibility) established that
+> `2020-01-01` is not operationally sustainable under the currently authorized sources:
+> InnoGet carries no reproducible publication-date evidence at any point in its
+> history, and EEN/POD's authorized `Technology request` construct does not populate
+> earlier than ~2024-09. Full finding: `docs/phase2-temporal-window-amendment.md`.
+>
+> **The canonical operational contract for Phase-2 corpus expansion going forward is
+> the narrowed window `2024-01-01` to `2025-12-31` inclusive**, carried in the new
+> policy artifact `corpus_expansion_policy_v2.json` (`corpus_expansion_policy_v1.json`
+> and its `2020-01-01` window remain immutable as the pre-registered historical
+> artifact; `v1` is not edited in place). Every other criterion in this ADR — §2.2
+> sources/constructs, §2.4 independence, §2.5 exclusion taxonomy, §2.6 word-count
+> normalization, §2.7 outcome-independence — is carried forward unmodified into `v2`.
 * **Canonical $t_{\mathrm{demand}}$:** Must represent the verifiable **public publication date** of the demand. Crawl dates, scrape dates, access dates, cache timestamps, or syndicate republishing dates are strictly prohibited.
 * **Date Evidence Provenance:** Source adapters must explicitly provide `publication_date_evidence_field` and `publication_date_evidence_text` documenting the exact source artifact verifying $t_{\mathrm{demand}}$.
 * **Indeterminate Dates:** Missing, ambiguous, or unverifiable publication dates trigger immediate candidate rejection (`OUT_OF_TEMPORAL_WINDOW`).

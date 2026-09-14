@@ -95,6 +95,11 @@ class TargetSampleSizeConfig(BaseModel):
 
 
 FROZEN_CORPUS_EXPANSION_POLICY_VERSION: str = "corpus_expansion_policy_v1"
+CORPUS_EXPANSION_POLICY_V2_VERSION: str = "corpus_expansion_policy_v2"
+KNOWN_CORPUS_EXPANSION_POLICY_VERSIONS: tuple[str, ...] = (
+    FROZEN_CORPUS_EXPANSION_POLICY_VERSION,
+    CORPUS_EXPANSION_POLICY_V2_VERSION,
+)
 
 
 class CorpusExpansionPolicy(BaseModel):
@@ -114,9 +119,9 @@ class CorpusExpansionPolicy(BaseModel):
 
     @field_validator("policy_version")
     @classmethod
-    def validate_policy_version_exact(cls, v: str) -> str:
-        if v != FROZEN_CORPUS_EXPANSION_POLICY_VERSION:
-            raise ValueError(f"policy_version must be strictly '{FROZEN_CORPUS_EXPANSION_POLICY_VERSION}', got '{v}'")
+    def validate_policy_version_known(cls, v: str) -> str:
+        if v not in KNOWN_CORPUS_EXPANSION_POLICY_VERSIONS:
+            raise ValueError(f"policy_version must be one of {KNOWN_CORPUS_EXPANSION_POLICY_VERSIONS}, got '{v}'")
         return v
 
 
