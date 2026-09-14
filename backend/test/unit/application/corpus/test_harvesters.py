@@ -585,13 +585,17 @@ def test_harvester_skips_already_harvested_uris(tmp_path: Path):
 # --------------------------------------------------------------------------
 
 
-def test_een_pod_official_harvester_uses_technology_request_facet_and_zero_indexed_pagination():
+def test_een_pod_official_harvester_uses_authorized_construct_facets_and_zero_indexed_pagination():
     harvester = EenPodOfficialHarvester(delay_seconds=0.0)
-    assert harvester._listing_url(0) == (
+    assert harvester.profile_type_ids == (4320, 4355)
+    assert harvester._listing_url(4320, 0) == (
         "https://een.ec.europa.eu/partnering-opportunities?f%5B0%5D=p%3A4320&page=0"
     )
-    assert harvester._listing_url(1) == (
+    assert harvester._listing_url(4320, 1) == (
         "https://een.ec.europa.eu/partnering-opportunities?f%5B0%5D=p%3A4320&page=1"
+    )
+    assert harvester._listing_url(4355, 0) == (
+        "https://een.ec.europa.eu/partnering-opportunities?f%5B0%5D=p%3A4355&page=0"
     )
 
 
@@ -686,6 +690,50 @@ def test_een_pod_official_determine_demand_id():
         "https://een.ec.europa.eu/partnering-opportunities/some-fallback-slug",
     )
     assert demand_id_fallback == "EEN-OFFICIAL-some-fallback-slug"
+
+
+def test_een_pod_official_harvester_crawls_both_authorized_construct_facets(tmp_path: Path):
+    """Both `Technology request` (p:4320) and `R&D request` (p:4355) facets must be
+    crawled -- per docs/phase2-construct-expansion-amendment.md -- and each facet's
+    own detail records saved, not just the first."""
+    tr_listing = b"""
+    <html><body>
+        <article class="ecl-card"><a href="/partnering-opportunities/tr-slug">TR</a></article>
+    </body></html>
+    """
+    dr_listing = b"""
+    <html><body>
+        <article class="ecl-card"><a href="/partnering-opportunities/dr-slug">DR</a></article>
+    </body></html>
+    """
+    tr_detail = b"<html><body><dl><dt>POD Reference</dt><dd>TRGB20250912011</dd></dl></body></html>"
+    dr_detail = b"<html><body><dl><dt>POD Reference</dt><dd>DRDE20250815003</dd></dl></body></html>"
+
+    def mock_urlopen(req, timeout=30):
+        url = req.get_full_url() if hasattr(req, "get_full_url") else str(req)
+        mock_resp = MagicMock()
+        mock_resp.__enter__.return_value = mock_resp
+        mock_resp.getcode.return_value = 200
+        mock_resp.status = 200
+        if "p%3A4320" in url and "partnering-opportunities?" in url:
+            mock_resp.read.return_value = tr_listing
+        elif "p%3A4355" in url and "partnering-opportunities?" in url:
+            mock_resp.read.return_value = dr_listing
+        elif "tr-slug" in url:
+            mock_resp.read.return_value = tr_detail
+        elif "dr-slug" in url:
+            mock_resp.read.return_value = dr_detail
+        else:
+            raise urllib.error.HTTPError(url, 404, "Not Found", {}, None)  # type: ignore
+        return mock_resp
+
+    harvester = EenPodOfficialHarvester(delay_seconds=0.0)
+    with patch("urllib.request.urlopen", side_effect=mock_urlopen):
+        saved = harvester.harvest(out_dir=tmp_path, max_pages=1)
+
+    assert len(saved) == 2
+    assert (tmp_path / "een_pod" / "TRGB20250912011.html").exists()
+    assert (tmp_path / "een_pod" / "DRDE20250815003.html").exists()
 
 
 def test_acquire_cli_runner_een_pod_official(tmp_path: Path):

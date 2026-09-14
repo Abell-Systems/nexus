@@ -1,11 +1,12 @@
-"""EEN/POD Official Portal Harvester for Phase-2 corpus expansion v2 (ADR 0031 amendment).
+"""EEN/POD Official Portal Harvester for Phase-2 corpus expansion v2+ (ADR 0031 amendments).
 
 Targets `een.ec.europa.eu/partnering-opportunities`, which supersedes the Open
 Innovation Lombardia mirror used by `EenPodHarvester` in #101b -- see #101c
-Section 3/7 and `docs/phase2-temporal-window-amendment.md`. Restricted to the
-`Technology request` construct facet (`profile_type` id 4320), the only
-construct #101c verified and the only one ADR 0031 SS2.2 authorizes for this
-source.
+Section 3/7 and `docs/phase2-temporal-window-amendment.md`. Crawls the
+`Technology request` (`profile_type` id 4320) and `R&D request` (id 4355)
+construct facets -- the two constructs ADR 0031 SS2.2 authorizes for this
+source per `docs/phase2-temporal-window-amendment.md` and
+`docs/phase2-construct-expansion-amendment.md`.
 """
 
 import logging
@@ -20,29 +21,36 @@ from experiments.phase2.harvesters.base import BaseHarvester, PayloadCollisionEr
 logger = logging.getLogger(__name__)
 
 TECHNOLOGY_REQUEST_PROFILE_TYPE_ID = 4320
+RD_REQUEST_PROFILE_TYPE_ID = 4355
+AUTHORIZED_PROFILE_TYPE_IDS: tuple[int, ...] = (
+    TECHNOLOGY_REQUEST_PROFILE_TYPE_ID,
+    RD_REQUEST_PROFILE_TYPE_ID,
+)
 
 _DETAIL_LINK_RE = re.compile(r"^/partnering-opportunities/[a-z0-9-]+$")
-_POD_REF_RE = re.compile(r"\b((?:TR|TO|BO|BR|RD)[A-Z]{2}\d{8,}\d)\b")
+# "DR" is the official portal's R&D request prefix, distinct from the Lombardia
+# mirror's "RD" seen in #101b (#101c SS7.2) -- both map to the same construct.
+_POD_REF_RE = re.compile(r"\b((?:TR|TO|BO|BR|RD|DR)[A-Z]{2}\d{8,}\d)\b")
 
 
 class EenPodOfficialHarvester(BaseHarvester):
-    """Polite harvester crawling the official EEN/POD portal, Technology request only."""
+    """Polite harvester crawling the official EEN/POD portal, authorized constructs only."""
 
     def __init__(
         self,
         delay_seconds: float = 1.0,
         user_agent: str | None = None,
         base_url: str = "https://een.ec.europa.eu",
-        profile_type_id: int = TECHNOLOGY_REQUEST_PROFILE_TYPE_ID,
+        profile_type_ids: tuple[int, ...] = AUTHORIZED_PROFILE_TYPE_IDS,
     ) -> None:
         super().__init__(delay_seconds=delay_seconds, user_agent=user_agent)
         self.base_url = base_url.rstrip("/")
         self.listing_base = f"{self.base_url}/partnering-opportunities"
-        self.profile_type_id = profile_type_id
+        self.profile_type_ids = profile_type_ids
         self.source_id = "een_pod"
 
-    def _listing_url(self, page: int) -> str:
-        query = urllib.parse.urlencode({"f[0]": f"p:{self.profile_type_id}", "page": page})
+    def _listing_url(self, profile_type_id: int, page: int) -> str:
+        query = urllib.parse.urlencode({"f[0]": f"p:{profile_type_id}", "page": page})
         return f"{self.listing_base}?{query}"
 
     def harvest(
@@ -51,19 +59,18 @@ class EenPodOfficialHarvester(BaseHarvester):
         max_pages: int | None = None,
         limit: int | None = None,
     ) -> list[Path]:
-        """Crawl the construct-filtered partnering-opportunities listing, page by page
-        (zero-indexed, 10 results per page per the confirmed #101c pagination contract),
-        extract detail pages, and store raw payloads.
+        """Crawl each authorized construct facet, page by page (zero-indexed, 10
+        results per page per the confirmed #101c pagination contract), extract
+        detail pages, and store raw payloads.
 
         Args:
             out_dir: Directory where raw payloads and sidecars are stored.
-            max_pages: Maximum number of pagination pages to crawl.
-            limit: Maximum total detail payloads to acquire.
+            max_pages: Maximum number of pagination pages to crawl per construct facet.
+            limit: Maximum total detail payloads to acquire, across all facets.
 
         Returns:
             List of Paths to saved raw payloads.
         """
-        page = 0
         saved_paths: list[Path] = []
         seen_urls: set[str] = set()
 
@@ -72,13 +79,40 @@ class EenPodOfficialHarvester(BaseHarvester):
             if existing_path not in saved_paths:
                 saved_paths.append(existing_path)
 
+        for profile_type_id in self.profile_type_ids:
+            if limit is not None and len(saved_paths) >= limit:
+                break
+            self._harvest_construct_facet(
+                profile_type_id=profile_type_id,
+                out_dir=out_dir,
+                max_pages=max_pages,
+                limit=limit,
+                known_uris=known_uris,
+                seen_urls=seen_urls,
+                saved_paths=saved_paths,
+            )
+
+        return saved_paths
+
+    def _harvest_construct_facet(
+        self,
+        profile_type_id: int,
+        out_dir: Path,
+        max_pages: int | None,
+        limit: int | None,
+        known_uris: dict[str, Path],
+        seen_urls: set[str],
+        saved_paths: list[Path],
+    ) -> None:
+        page = 0
+
         while True:
             if max_pages is not None and page >= max_pages:
                 break
             if limit is not None and len(saved_paths) >= limit:
                 break
 
-            listing_url = self._listing_url(page)
+            listing_url = self._listing_url(profile_type_id, page)
             try:
                 listing_bytes, _status = self.fetch_url(listing_url)
             except PayloadCollisionError:
@@ -142,8 +176,6 @@ class EenPodOfficialHarvester(BaseHarvester):
                     continue
 
             page += 1
-
-        return saved_paths
 
     def _determine_demand_id(self, html_bytes: bytes, url: str) -> str:
         """Determine demand_id from the embedded POD reference, falling back to a URL slug hash."""

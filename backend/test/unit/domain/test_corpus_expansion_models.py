@@ -7,6 +7,7 @@ from pydantic import ValidationError
 
 from domain.models.corpus_expansion import (
     CORPUS_EXPANSION_POLICY_V2_VERSION,
+    CORPUS_EXPANSION_POLICY_V3_VERSION,
     FROZEN_CORPUS_EXPANSION_POLICY_VERSION,
     CandidateRejectionReason,
     CandidateValidationResult,
@@ -150,6 +151,10 @@ def test_corpus_expansion_policy_version_must_be_known() -> None:
     # Valid v2 (temporal window amendment) succeeds
     p2 = _create_policy(CORPUS_EXPANSION_POLICY_V2_VERSION)
     assert p2.policy_version == "corpus_expansion_policy_v2"
+
+    # Valid v3 (construct expansion amendment) succeeds
+    p3 = _create_policy(CORPUS_EXPANSION_POLICY_V3_VERSION)
+    assert p3.policy_version == "corpus_expansion_policy_v3"
 
     # Any unknown version string is strictly rejected
     for invalid_version in [

@@ -381,6 +381,24 @@ def test_een_pod_mapper_official_portal_definition_list_layout() -> None:
     assert "thermal cycling" in (candidate.technical_problem_evidence_text or "")
 
 
+def test_een_pod_mapper_official_portal_dr_prefix_resolves_to_rd_request() -> None:
+    """The official een.ec.europa.eu portal uses a "DR" reference prefix for R&D
+    request (e.g. DRTR20240925006, #101c SS7.2), distinct from the Lombardia mirror's
+    "RD" prefix used in #101b (test_een_pod_mapper_rd_request_abstract_becomes_technical_problem
+    above). Both must resolve to the same "R&D request" construct."""
+    html = _een_html_with_abstract_only(
+        "DRDE20250815003",
+        "Abstract Universita cerca partner per sviluppo di nuovi biomateriali per protesi ortopediche.",
+    )
+
+    candidate = EenPodCandidateMapper.map_payload(html, metadata={})
+
+    assert candidate.source_construct == "R&D request"
+    assert candidate.publication_date == date(2025, 8, 15)
+    assert candidate.publication_date_evidence.evidence_type == PublicationDateEvidenceType.POD_REFERENCE
+    assert candidate.has_articulated_technical_problem is True
+
+
 # --------------------------------------------------------------------------
 # InnoGet Candidate Mapper Tests
 # --------------------------------------------------------------------------

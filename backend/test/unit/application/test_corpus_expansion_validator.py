@@ -22,6 +22,7 @@ from domain.models.corpus_expansion import (
 REPO_ROOT = Path(__file__).resolve().parents[4]
 POLICY_PATH = REPO_ROOT / "config" / "policies" / "data" / "corpus_expansion_policy_v1.json"
 POLICY_V2_PATH = REPO_ROOT / "config" / "policies" / "data" / "corpus_expansion_policy_v2.json"
+POLICY_V3_PATH = REPO_ROOT / "config" / "policies" / "data" / "corpus_expansion_policy_v3.json"
 
 
 def test_load_corpus_expansion_policy_success() -> None:
@@ -519,6 +520,72 @@ def test_validate_demand_candidate_v2_rejects_2026_and_later() -> None:
     res = validate_demand_candidate(_v2_candidate(date(2026, 1, 1)), policy)
     assert res.status == "REJECT"
     assert res.rejection_reasons == (CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW,)
+
+
+def _rd_request_candidate(publication_date: date = date(2025, 3, 1)) -> DemandCandidateContractRecord:
+    return DemandCandidateContractRecord(
+        demand_id="EEN_POD-CONSTRUCT-AMENDMENT-TEST",
+        source_id="een_pod",
+        source_construct="R&D request",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=publication_date,
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value=str(publication_date),
+        ),
+        geographic_stratum="spain",
+        title="Construct expansion boundary test",
+        description_text=(
+            "Seeking a research partner for a joint R&D collaboration on high precision industrial "
+            "manufacturing process with strict energy consumption standards and minimal thermal distortion "
+            "during high speed continuous operation cycles for aerospace components."
+        ),
+        language_code="en",
+        is_publicly_accessible=True,
+        has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="strict energy consumption standards and minimal thermal distortion",
+    )
+
+
+def test_load_corpus_expansion_policy_v3_success() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V3_PATH, expected_version="corpus_expansion_policy_v3")
+    assert policy.policy_version == "corpus_expansion_policy_v3"
+    een_pod = next(s for s in policy.sources if s.source_id == "een_pod")
+    assert een_pod.permitted_constructs == ("Technology request", "R&D request")
+    # Temporal window and every other criterion carried forward unmodified from v2
+    assert policy.temporal_window.min_publication_date == date(2024, 1, 1)
+    assert policy.temporal_window.max_publication_date == date(2025, 12, 31)
+    assert policy.content_requirements.min_word_count == 25
+
+
+def test_validate_demand_candidate_rd_request_rejected_under_v2() -> None:
+    """R&D request is not yet an authorized een_pod construct under v2 -- only v3
+    (docs/phase2-construct-expansion-amendment.md) authorizes it."""
+    policy = load_corpus_expansion_policy(POLICY_V2_PATH, expected_version="corpus_expansion_policy_v2")
+
+    res = validate_demand_candidate(_rd_request_candidate(), policy)
+    assert res.status == "REJECT"
+    assert res.rejection_reasons == (CandidateRejectionReason.INCOMPATIBLE_CONSTRUCT,)
+
+
+def test_validate_demand_candidate_rd_request_accepted_under_v3() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V3_PATH, expected_version="corpus_expansion_policy_v3")
+
+    res = validate_demand_candidate(_rd_request_candidate(), policy)
+    assert res.status == "ACCEPT"
+    assert res.rejection_reasons == ()
+
+    # Technology request remains authorized under v3 too
+    tr_candidate = _rd_request_candidate()
+    tr_candidate = tr_candidate.model_copy(update={"source_construct": "Technology request"})
+    assert validate_demand_candidate(tr_candidate, policy).status == "ACCEPT"
+
+    # Unrelated constructs (e.g. Business offer) remain rejected under v3
+    bo_candidate = _rd_request_candidate().model_copy(update={"source_construct": "Business offer"})
+    res_bo = validate_demand_candidate(bo_candidate, policy)
+    assert res_bo.status == "REJECT"
+    assert res_bo.rejection_reasons == (CandidateRejectionReason.INCOMPATIBLE_CONSTRUCT,)
 
 
 def test_load_corpus_expansion_policy_v2_hash_mismatch_raises(tmp_path: Path) -> None:

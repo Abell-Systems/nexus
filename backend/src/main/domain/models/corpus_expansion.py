@@ -96,9 +96,11 @@ class TargetSampleSizeConfig(BaseModel):
 
 FROZEN_CORPUS_EXPANSION_POLICY_VERSION: str = "corpus_expansion_policy_v1"
 CORPUS_EXPANSION_POLICY_V2_VERSION: str = "corpus_expansion_policy_v2"
+CORPUS_EXPANSION_POLICY_V3_VERSION: str = "corpus_expansion_policy_v3"
 KNOWN_CORPUS_EXPANSION_POLICY_VERSIONS: tuple[str, ...] = (
     FROZEN_CORPUS_EXPANSION_POLICY_VERSION,
     CORPUS_EXPANSION_POLICY_V2_VERSION,
+    CORPUS_EXPANSION_POLICY_V3_VERSION,
 )
 
 

@@ -13,7 +13,7 @@ from domain.models.corpus_expansion import (
     PublicationDateEvidenceType,
 )
 
-_POD_DATE_RE = re.compile(r"(TR|TO|BO|BR|RD)([A-Z]{2})(\d{4})(\d{2})(\d{2})\d+")
+_POD_DATE_RE = re.compile(r"\b(TR|TO|BO|BR|RD|DR)([A-Z]{2})(\d{4})(\d{2})(\d{2})\d+")
 _POD_LABEL_RE = re.compile(
     r"(?:(?:POD\s+Reference|POD\s+Ref)\s*[:\s]\s*|Reference\s*(?:Number|Code|Record)?\s*:\s*)([A-Z0-9_-]+)",
     re.IGNORECASE,
@@ -60,6 +60,9 @@ class EenPodCandidateMapper:
             "BR": "Business request",
             "BO": "Business offer",
             "RD": "R&D request",
+            # Official een.ec.europa.eu portal uses "DR" for R&D request, distinct from
+            # the Lombardia mirror's "RD" (#101c SS7.2) -- same construct, two prefixes.
+            "DR": "R&D request",
         }
         source_construct = meta.get("source_construct") or construct_map.get(construct_prefix, "Technology request")
 
@@ -209,7 +212,7 @@ class EenPodCandidateMapper:
 
         # Reference exists but does not conform to valid YYYYMMDD date
         country_code = ""
-        country_match = re.search(r"(?:TR|TO|BO|BR|RD)([A-Z]{2})", ref_candidate)
+        country_match = re.search(r"(?:TR|TO|BO|BR|RD|DR)([A-Z]{2})", ref_candidate)
         prefix = ""
         if country_match:
             country_code = country_match.group(1)

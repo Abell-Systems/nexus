@@ -39,10 +39,27 @@ To ensure scientific integrity, **PR #101a establishes a pre-specified, binding 
 * **Demand Origin $\neq$ Patent Corpus:** The patent evaluation universe remains grounded in the domestic technology base (OEPM gazette publications). Expanding demand diversity does not alter the patent corpus or dilute the domestic prior-art evaluation context.
 
 ### 2.2 Authorized Primary Sources & Source Qualification Gate
-* **Permitted Primary Sources:**
+* **Permitted Primary Sources (pre-registered):**
   1. **InnoGet (`source_id = "innoget"`):** Permitted construct `Technology call`. Public HTTP access without authentication.
   2. **Enterprise Europe Network / POD (`source_id = "een_pod"`):** Permitted construct `Technology request`. Public HTTP access without authentication (central portal or regional mirrors such as Lombardia). Substantive technical problem description $\ge 25$ words.
 * **New Source Gate (`ADMISSIBLE_SOURCE_CANDIDATE`):** No additional platform, intermediary, or registry may contribute observations to the corpus without completing an independent, peer-reviewed source qualification protocol auditing public access, persistence, identity resolution, publication date verifiable evidence, and construct fidelity.
+
+> **Amendment (2026-09-14):** #101b-v2 (acquisition under the amended §2.3 window,
+> `een_pod` / `Technology request` only) closed with `N_power ≤ 47 < 60` — the entire
+> raw population of the one authorized `een_pod` construct is 108 records, a hard
+> ceiling independently confirmed by #101c's pagination walk and #101b-v2's actual
+> harvest. Full finding: `docs/phase2-temporal-window-amendment.md` §7.
+>
+> Per `docs/phase2-construct-expansion-amendment.md` (approved 2026-09-14), **the
+> canonical operational contract authorizes `R&D request` as a second permitted
+> `een_pod` construct**, alongside `Technology request`. Both instantiate the same
+> operationalized construct this study measures (a publicly-solicited technology
+> demand with an articulated technical problem, per `has_articulated_technical_problem`
+> / `technical_problem_evidence_text`), evidenced by #101b's own finding that both
+> constructs' `Abstract` sections articulate technical problems (verified against a
+> `Business offer` negative control). `Business offer`, `Business request`, and
+> `Technology offer` remain unauthorized. `InnoGet`'s `Technology call` remains
+> pre-registered and unaffected by this amendment.
 
 ### 2.3 Temporal Window & Hierarchical Date Evidence
 * **Permitted Window (pre-registered):** `2020-01-01` to `2025-12-31` inclusive. This is
