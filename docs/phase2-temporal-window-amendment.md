@@ -146,8 +146,65 @@ re-run of #101b, not something this document can answer analytically.
    contract with the narrowed `2024-01-01` lower bound; every other criterion is
    carried forward unmodified from `v1`. `corpus_expansion_policy_v1.json` is not
    edited in place — it remains the frozen artifact for the pre-registered window.
-3. **Not yet taken.** Re-run #101b's acquisition pipeline (harvest → map → validate →
-   audit) against the amended window — EEN/POD only, `Technology request` construct
-   only, per §3's findings.
-4. **Not yet taken.** Only once that run produces a sealed, audited candidate pool does
-   #102 (independence audit) proceed.
+3. **Done (2026-09-14).** Re-ran the acquisition pipeline (harvest → map → validate →
+   audit) against the amended window — EEN/POD official portal only, `Technology
+   request` construct only, per §3's findings. See §7 below.
+4. **Not taken.** Per §7's outcome, #102 (independence audit) does not proceed.
+
+## 7. #101b-v2 outcome (2026-09-14)
+
+A new harvester (`EenPodOfficialHarvester`) was written to target the official
+`een.ec.europa.eu` portal (superseding the Lombardia mirror harvester used in #101b,
+which was never the source #101c actually verified) with the confirmed reproducible
+facet query `?f[0]=p:4320` (`Technology request`). Fixed one latent mapper bug found
+along the way: `EenPodCandidateMapper._extract_abstract_block`'s generic
+class-substring search for "description" false-matched the official portal's metadata
+`dl` (Profile Type/POD Reference/Term of Validity), which also carries an
+`ecl-description-list` class, instead of the actual "Full Description" content —
+fixed with a dt/dd label-lookup checked first (`_extract_by_term_label`); does not
+change behavior on the existing Lombardia-shaped fixtures (all pre-existing mapper
+tests still pass unmodified).
+
+Raw acquisition (out-dir `data/raw/phase2_candidates_v2`, kept separate from #101b's
+`data/raw/phase2_candidates` so v1's raw payloads stay untouched):
+
+| Stage | Count |
+| :--- | ---: |
+| Raw harvested | 108 (matches #101c's pagination-walk population exactly) |
+| Mapping errors | 0 |
+| Mapped | 108 |
+| **Accepted** | **47** |
+| Rejected | 61 (all `OUT_OF_TEMPORAL_WINDOW` — live 2026 listings past `max_publication_date`) |
+
+Accepted breakdown: 10 published in 2024, 37 in 2025; 44 `international_european` / 3
+`spain`. Audit (`experiments.phase2.audit` against `corpus_expansion_policy_v2`):
+**PASSED** — all cryptographic, partition, and field invariants hold. Sealed artifacts
+in `data/experiments/phase2_v2/`.
+
+**Decision gate:** $N_{\mathrm{power}} = N_{\mathrm{eligible,\ independent}} \le
+N_{\mathrm{accepted}} = 47 < 60$ — independence status (`#102`) can only ever shrink
+this count (each organization contributes at most one `INDEPENDENT` observation), so
+47 accepted is already a hard upper bound and the gate resolves to **"stop" without
+needing to run #102**: no criteria were relaxed, and the deficit is real, not a
+computation this document's own decision could paper over.
+
+**What this establishes:** the amendment's core hypothesis — that #101b's 10/824
+shortfall was a source-frame/historical-window problem, not an implementation defect —
+is strongly confirmed: yield jumped from 1.2% (10/824) to 43.5% (47/108) once the
+window matched the source's actual population and InnoGet (structurally
+`t_demand`-unverifiable at any window) was dropped. But the **absolute** population
+of the one authorized, reproducible EEN/POD construct is itself capped at 108 raw
+records total (per #101c), and no temporal-window adjustment within 2024–2026 changes
+that population ceiling. This is the "market structure" finding, not a window finding:
+even the maximal accepted count achievable under this construct/source combination
+(all 108, if the window were widened to include 2026) would be well under 60.
+
+**Also noted, not decided here:** `organization_raw` was `UNKNOWN` for all 47 accepted
+records — the official-portal mapper does not yet extract an organization identity
+field (unlike the Lombardia mirror mapper path), a separate gap that would need
+closing before any future `#102` regardless of the count above.
+
+**Not decided by this document:** whether to pursue `R&D request` construct
+authorization (207 raw, would need a distinct ADR 0031 §2.2 decision), a third source
+class, or accept that Phase-2 cannot reach $N \ge 60$ under the current source/construct
+authorization and must renegotiate the confirmatory design itself.

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:36:05.458299+00:00",
+  "demand_id": "TRFR20251216013",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7b1e9616a60fd356b465951af35aa481806aeccb2d63f61ef57d8941cbe1dbc9",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/ai-enabled-component-recognition-and-automated-listing-technology-support"
+}

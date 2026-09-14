@@ -340,6 +340,47 @@ def test_een_pod_mapper_technology_request_missing_abstract_no_technical_problem
     assert candidate.technical_problem_evidence_text is None
 
 
+def test_een_pod_mapper_official_portal_definition_list_layout() -> None:
+    """The official een.ec.europa.eu portal (superseding the Lombardia mirror per
+    #101c) renders both its metadata box AND its content sections as `dl > dt/dd`
+    pairs sharing the same ECL `ecl-description-list` component class. A naive
+    class-substring search for "description" would wrongly match the metadata box
+    (POD Reference, Profile Type, ...) instead of the actual "Full Description"
+    term. This locks in the dt/dd label-based extraction that avoids that trap."""
+    html = """
+    <html lang="en">
+    <head><title>Official portal layout test</title></head>
+    <body>
+        <h1>Official portal layout test</h1>
+        <dl class="ecl-description-list ecl-description-list--horizontal">
+            <dt class="ecl-description-list__term">Profile Type</dt>
+            <dd class="ecl-description-list__definition">Technology request</dd>
+            <dt class="ecl-description-list__term">POD Reference</dt>
+            <dd class="ecl-description-list__definition">TRGB20250912011</dd>
+        </dl>
+        <dl class="ecl-description-list ecl-description-list--default">
+            <dt class="ecl-description-list__term">Short Summary</dt>
+            <dd class="ecl-description-list__definition">Short summary text, not the field under test.</dd>
+            <dt class="ecl-description-list__term">Full Description</dt>
+            <dd class="ecl-description-list__definition">Seeking a high precision industrial coating process partner for corrosion resistant aerospace components under extreme thermal cycling conditions.</dd>
+            <dt class="ecl-description-list__term">Technical Specification or Expertise Sought</dt>
+            <dd class="ecl-description-list__definition">Coating must withstand thermal cycling between minus 60 and 300 degrees Celsius without delamination.</dd>
+        </dl>
+    </body>
+    </html>
+    """.encode()
+
+    candidate = EenPodCandidateMapper.map_payload(html, metadata={})
+
+    assert candidate.demand_id == "TRGB20250912011"
+    assert candidate.source_construct == "Technology request"
+    assert "aerospace components" in candidate.description_text
+    assert "Short summary text" not in candidate.description_text
+    assert "Profile Type" not in candidate.description_text
+    assert candidate.has_articulated_technical_problem is True
+    assert "thermal cycling" in (candidate.technical_problem_evidence_text or "")
+
+
 # --------------------------------------------------------------------------
 # InnoGet Candidate Mapper Tests
 # --------------------------------------------------------------------------

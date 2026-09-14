@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:36:41.268449+00:00",
+  "demand_id": "TRTR20241209011",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "df0af576dc16b4fc4cc6c69ce0e2a1eae30d8222bc7471bd40194a8634c215c3",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/innovative-turkish-textile-manufacturer-seeking-partner-develop-new"
+}

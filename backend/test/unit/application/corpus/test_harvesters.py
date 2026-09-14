@@ -21,6 +21,7 @@ acquire_main = _acquire.main
 _harvesters = importlib.import_module("experiments.phase2.harvesters")
 BaseHarvester = _harvesters.BaseHarvester
 EenPodHarvester = _harvesters.EenPodHarvester
+EenPodOfficialHarvester = _harvesters.EenPodOfficialHarvester
 InnogetHarvester = _harvesters.InnogetHarvester
 PayloadCollisionError = _harvesters.PayloadCollisionError
 
@@ -577,5 +578,134 @@ def test_harvester_skips_already_harvested_uris(tmp_path: Path):
     # Verify existing payload on disk was preserved unchanged
     payload_file = tmp_path / "innoget" / "INNOGET-101.html"
     assert payload_file.read_bytes() == initial_payload
+
+
+# --------------------------------------------------------------------------
+# EEN/POD Official Portal Harvester Tests (#101b-v2, ADR 0031 amendment)
+# --------------------------------------------------------------------------
+
+
+def test_een_pod_official_harvester_uses_technology_request_facet_and_zero_indexed_pagination():
+    harvester = EenPodOfficialHarvester(delay_seconds=0.0)
+    assert harvester._listing_url(0) == (
+        "https://een.ec.europa.eu/partnering-opportunities?f%5B0%5D=p%3A4320&page=0"
+    )
+    assert harvester._listing_url(1) == (
+        "https://een.ec.europa.eu/partnering-opportunities?f%5B0%5D=p%3A4320&page=1"
+    )
+
+
+def test_een_pod_official_harvester_discovers_and_saves_payloads(tmp_path: Path):
+    listing_html = b"""
+    <html><body>
+        <article class="ecl-card">
+            <a href="/partnering-opportunities/some-technology-request-slug">Title</a>
+        </article>
+    </body></html>
+    """
+    detail_html = b"""
+    <html><body>
+        <dl><dt>POD Reference</dt><dd>TRGB20250912011</dd></dl>
+    </body></html>
+    """
+
+    def mock_urlopen(req, timeout=30):
+        url = req.get_full_url() if hasattr(req, "get_full_url") else str(req)
+        mock_resp = MagicMock()
+        mock_resp.__enter__.return_value = mock_resp
+        mock_resp.getcode.return_value = 200
+        mock_resp.status = 200
+        if "partnering-opportunities?" in url:
+            mock_resp.read.return_value = listing_html
+        elif "some-technology-request-slug" in url:
+            mock_resp.read.return_value = detail_html
+        else:
+            raise urllib.error.HTTPError(url, 404, "Not Found", {}, None)  # type: ignore
+        return mock_resp
+
+    harvester = EenPodOfficialHarvester(delay_seconds=0.0)
+    with patch("urllib.request.urlopen", side_effect=mock_urlopen):
+        saved = harvester.harvest(out_dir=tmp_path, max_pages=1)
+
+    assert len(saved) == 1
+    assert (tmp_path / "een_pod" / "TRGB20250912011.html").exists()
+    assert (tmp_path / "een_pod" / "TRGB20250912011.meta.json").exists()
+
+
+def test_een_pod_official_harvester_terminates_pagination_when_exhausted(tmp_path: Path):
+    listing_page = b"""
+    <html><body>
+        <article class="ecl-card">
+            <a href="/partnering-opportunities/repeat-slug">Repeat</a>
+        </article>
+    </body></html>
+    """
+    detail_html = b"<html><body><dl><dt>POD Reference</dt><dd>TRUK20250101001</dd></dl></body></html>"
+
+    fetch_counts: dict[str, int] = {}
+
+    def mock_urlopen(req, timeout=30):
+        url = req.get_full_url() if hasattr(req, "get_full_url") else str(req)
+        fetch_counts[url] = fetch_counts.get(url, 0) + 1
+        mock_resp = MagicMock()
+        mock_resp.__enter__.return_value = mock_resp
+        mock_resp.getcode.return_value = 200
+        mock_resp.status = 200
+        if "partnering-opportunities?" in url:
+            mock_resp.read.return_value = listing_page
+        else:
+            mock_resp.read.return_value = detail_html
+        return mock_resp
+
+    harvester = EenPodOfficialHarvester(delay_seconds=0.0)
+    with patch("urllib.request.urlopen", side_effect=mock_urlopen):
+        saved = harvester.harvest(out_dir=tmp_path, max_pages=10)
+
+    assert len(saved) == 1
+    assert (
+        "https://een.ec.europa.eu/partnering-opportunities?f%5B0%5D=p%3A4320&page=1" in fetch_counts
+    )
+    assert (
+        "https://een.ec.europa.eu/partnering-opportunities?f%5B0%5D=p%3A4320&page=2" not in fetch_counts
+    )
+
+
+def test_een_pod_official_determine_demand_id():
+    harvester = EenPodOfficialHarvester()
+
+    # Case 1: POD reference found in HTML
+    demand_id = harvester._determine_demand_id(
+        b"<html><dl><dt>POD Reference</dt><dd>TRDE20251111001</dd></dl></html>",
+        "https://een.ec.europa.eu/partnering-opportunities/arbitrary-slug",
+    )
+    assert demand_id == "TRDE20251111001"
+
+    # Case 2: Fallback to URL slug when no POD reference is present
+    demand_id_fallback = harvester._determine_demand_id(
+        b"<html>No POD reference here</html>",
+        "https://een.ec.europa.eu/partnering-opportunities/some-fallback-slug",
+    )
+    assert demand_id_fallback == "EEN-OFFICIAL-some-fallback-slug"
+
+
+def test_acquire_cli_runner_een_pod_official(tmp_path: Path):
+    out_dir = tmp_path / "raw"
+
+    with patch.object(EenPodOfficialHarvester, "harvest") as mock_harvest:
+        mock_harvest.return_value = [out_dir / "een_pod" / "TRGB1.html"]
+
+        exit_code = acquire_main(
+            [
+                "--out-dir",
+                str(out_dir),
+                "--sources",
+                "een_pod_official",
+                "--delay",
+                "0.0",
+            ]
+        )
+
+        assert exit_code == 0
+        assert mock_harvest.called
 
 

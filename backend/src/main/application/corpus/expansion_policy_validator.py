@@ -5,7 +5,6 @@ import json
 from pathlib import Path
 
 from domain.models.corpus_expansion import (
-    FROZEN_CORPUS_EXPANSION_POLICY_VERSION,
     CandidateRejectionReason,
     CandidateValidationResult,
     CorpusExpansionPolicy,
@@ -21,9 +20,15 @@ class PolicyIntegrityError(Exception):
 def load_corpus_expansion_policy(
     policy_path: Path,
     hash_path: Path | None = None,
-    expected_version: str = FROZEN_CORPUS_EXPANSION_POLICY_VERSION,
+    expected_version: str | None = None,
 ) -> CorpusExpansionPolicy:
-    """Load, verify cryptographic integrity, and parse a CorpusExpansionPolicy."""
+    """Load, verify cryptographic integrity, and parse a CorpusExpansionPolicy.
+
+    `expected_version`, when given, pins the load to that exact policy version
+    (fail-fast if the file declares a different one). When omitted, any version
+    `CorpusExpansionPolicy` itself recognizes as known (see
+    `KNOWN_CORPUS_EXPANSION_POLICY_VERSIONS`) is accepted.
+    """
     p_path = Path(policy_path)
     if not p_path.is_file():
         raise FileNotFoundError(f"Policy configuration file not found: {p_path}")
@@ -49,7 +54,7 @@ def load_corpus_expansion_policy(
     clean_data = {k: v for k, v in data.items() if k != "$schema"}
 
     policy_version = clean_data.get("policy_version")
-    if policy_version != expected_version:
+    if expected_version is not None and policy_version != expected_version:
         raise PolicyIntegrityError(f"Policy version mismatch: expected '{expected_version}', got '{policy_version}'")
 
     return CorpusExpansionPolicy.model_validate(clean_data)

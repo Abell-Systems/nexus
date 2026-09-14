@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:35:05.102318+00:00",
+  "demand_id": "TRUA20260821019",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c69402ef5e4489e78feebdb5372c533cc8835cb31dc2fc979729d2efcd8f548e",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/ukrainian-manufacturer-seeks-dutch-expertise-circular-modular-metal-and"
+}

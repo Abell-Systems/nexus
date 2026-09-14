@@ -5,6 +5,7 @@ from datetime import date
 from pathlib import Path
 
 import pytest
+from pydantic import ValidationError
 
 from application.corpus.expansion_policy_validator import (
     PolicyIntegrityError,
@@ -62,14 +63,17 @@ def test_load_corpus_expansion_policy_empty_hash_raises(tmp_path: Path) -> None:
 
 
 def test_load_corpus_expansion_policy_version_mismatch_raises(tmp_path: Path) -> None:
-    # 1. Loading real v1 policy with mismatched expected_version
+    # Loading real v1 policy with an explicitly mismatched expected_version fails fast.
     with pytest.raises(
         PolicyIntegrityError,
         match="Policy version mismatch: expected 'corpus_expansion_policy_v2', got 'corpus_expansion_policy_v1'",
     ):
         load_corpus_expansion_policy(POLICY_PATH, expected_version="corpus_expansion_policy_v2")
 
-    # 2. Loading policy file containing v999 with valid hash sidecar
+
+def test_load_corpus_expansion_policy_unknown_version_raises_without_expected_version(tmp_path: Path) -> None:
+    # With no expected_version pin, an unrecognized policy_version is still rejected --
+    # by CorpusExpansionPolicy's own known-version whitelist, not a pinned mismatch.
     fake_json = tmp_path / "policy_v999.json"
     fake_hash = tmp_path / "policy_v999.sha256"
     content = b'{"policy_version": "corpus_expansion_policy_v999"}'
@@ -77,10 +81,7 @@ def test_load_corpus_expansion_policy_version_mismatch_raises(tmp_path: Path) ->
     actual_hash = hashlib.sha256(content).hexdigest()
     fake_hash.write_text(f"{actual_hash}  policy_v999.json\n", encoding="utf-8")
 
-    with pytest.raises(
-        PolicyIntegrityError,
-        match="Policy version mismatch: expected 'corpus_expansion_policy_v1', got 'corpus_expansion_policy_v999'",
-    ):
+    with pytest.raises(ValidationError, match="policy_version must be one of"):
         load_corpus_expansion_policy(fake_json, fake_hash)
 
 
@@ -450,13 +451,11 @@ def test_should_reject_out_of_temporal_window_only_when_date_verified() -> None:
     assert CandidateRejectionReason.UNVERIFIABLE_PUBLICATION_DATE not in res.rejection_reasons
 
 
-def test_load_corpus_expansion_policy_v2_requires_explicit_expected_version() -> None:
-    # v2 policy_version does not match the default expected_version (v1) -> mismatch
-    with pytest.raises(
-        PolicyIntegrityError,
-        match="Policy version mismatch: expected 'corpus_expansion_policy_v1', got 'corpus_expansion_policy_v2'",
-    ):
-        load_corpus_expansion_policy(POLICY_V2_PATH)
+def test_load_corpus_expansion_policy_v2_success_without_expected_version() -> None:
+    # No expected_version pin needed -- v2 is a known version, loadable by default,
+    # so pipeline scripts (validate.py, audit.py) work unmodified against --policy-path.
+    policy = load_corpus_expansion_policy(POLICY_V2_PATH)
+    assert policy.policy_version == "corpus_expansion_policy_v2"
 
 
 def test_load_corpus_expansion_policy_v2_success() -> None:

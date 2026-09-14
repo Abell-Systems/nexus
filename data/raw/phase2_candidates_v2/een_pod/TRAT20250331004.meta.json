@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:35:02.098849+00:00",
+  "demand_id": "TRAT20250331004",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1104e56dce65dffa090b5f820ed02c224e7c41c9792fb75b3aa976388ad8a034",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/austrian-company-looking-expertise-reducing-flocculants-and-water-content"
+}

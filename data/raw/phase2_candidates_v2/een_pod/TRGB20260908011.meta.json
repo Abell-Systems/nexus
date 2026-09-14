@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:34:54.082716+00:00",
+  "demand_id": "TRGB20260908011",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "17654a9f9380dfca956fb1cff02d74ba10a6b3329d0bdb88f32afa80524e5103",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/two-uk-smes-seek-european-municipal-waste-authorities-and-partners-multi"
+}

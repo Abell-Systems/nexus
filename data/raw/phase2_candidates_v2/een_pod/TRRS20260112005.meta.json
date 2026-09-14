@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:36:02.406767+00:00",
+  "demand_id": "TRRS20260112005",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1b4a216a83262a44b66d3be9745e33ec104255645ef823e3ea47a05c3e259521",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/investing-industrial-saas-solutions-proven-technology-trl6-9-field"
+}

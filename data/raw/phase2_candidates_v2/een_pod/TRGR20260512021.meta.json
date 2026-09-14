@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:35:42.247975+00:00",
+  "demand_id": "TRGR20260512021",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "630377c49973dac6086065e68f3da81692c02652b8fbaae3156a52ccb0136bdd",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/greek-maritime-company-looking-technical-partner-help-build-and-integrate"
+}

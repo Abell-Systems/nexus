@@ -9,6 +9,7 @@ from pathlib import Path
 from experiments.phase2.harvesters import (
     BaseHarvester,
     EenPodHarvester,
+    EenPodOfficialHarvester,
     InnogetHarvester,
     PayloadCollisionError,
 )
@@ -78,8 +79,12 @@ def main(argv: list[str] | None = None) -> int:
             harvester = InnogetHarvester(delay_seconds=args.delay)
         elif source in ("een_pod", "een", "lombardia"):
             harvester = EenPodHarvester(delay_seconds=args.delay)
+        elif source in ("een_pod_official", "een_official"):
+            harvester = EenPodOfficialHarvester(delay_seconds=args.delay)
         else:
-            logger.error("Unknown source: %s (supported: innoget, een_pod)", source)
+            logger.error(
+                "Unknown source: %s (supported: innoget, een_pod, een_pod_official)", source
+            )
             continue
 
         try:

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:35:46.067172+00:00",
+  "demand_id": "TRFR20260424019",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f7e32f1f226471bfe38fad02c36662a18c5e23a8d1cd9f4382b91d63447eb8c7",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/french-startup-specialized-microalgae-based-solutions-indoor-air-0"
+}

@@ -1,0 +1,974 @@
+[
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:02.098849+00:00",
+    "demand_id": "TRAT20250331004",
+    "file_name": "TRAT20250331004.html",
+    "file_path": "een_pod/TRAT20250331004.html",
+    "raw_payload_sha256": "1104e56dce65dffa090b5f820ed02c224e7c41c9792fb75b3aa976388ad8a034",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/austrian-company-looking-expertise-reducing-flocculants-and-water-content"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:38.188939+00:00",
+    "demand_id": "TRAT20260526015",
+    "file_name": "TRAT20260526015.html",
+    "file_path": "een_pod/TRAT20260526015.html",
+    "raw_payload_sha256": "ad9359803f5ac3450fa7f878765298005a13ed6c27ca258716e7ad0378721861",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/austrian-sme-seeking-industrial-partners-field-aluminum-etching"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:28.982929+00:00",
+    "demand_id": "TRAT20260619006",
+    "file_name": "TRAT20260619006.html",
+    "file_path": "een_pod/TRAT20260619006.html",
+    "raw_payload_sha256": "0cb5b78f41420edd9f954811bd6a6caee41e07522071f7894423bb4e10ba658b",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/austrian-construction-company-seeks-circular-and-demountable-connection"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:27.031715+00:00",
+    "demand_id": "TRAT20260630016",
+    "file_name": "TRAT20260630016.html",
+    "file_path": "een_pod/TRAT20260630016.html",
+    "raw_payload_sha256": "90e2125b5ceaf2eb7d98878c38d45256234f2569c3001321a3cc7428a2dc9725",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/seeking-roll-roll-slot-die-manufacturing-capacity-electrochemical-membrane"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:59.359315+00:00",
+    "demand_id": "TRBE20260217012",
+    "file_name": "TRBE20260217012.html",
+    "file_path": "een_pod/TRBE20260217012.html",
+    "raw_payload_sha256": "33a064236fbc68a167dde7954cb53a953a648dca02e9c0d148aac4d88d3bbc79",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/belgian-energy-technology-company-developing-advanced-bess-and-intelligent"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:53.413727+00:00",
+    "demand_id": "TRBE20260409023",
+    "file_name": "TRBE20260409023.html",
+    "file_path": "een_pod/TRBE20260409023.html",
+    "raw_payload_sha256": "f0b5ca9fb869d3b54c3b6c09fd85017f2340e8c70c91e60a8ff15b73ea0e5caa",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/looking-vegetable-fat-be-used-alternative-cocoa-manufacturing-large-range"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:40.910190+00:00",
+    "demand_id": "TRBE20260521016",
+    "file_name": "TRBE20260521016.html",
+    "file_path": "een_pod/TRBE20260521016.html",
+    "raw_payload_sha256": "3ee4bc2fdc4d47ce98fa55517ab0c4573ef1720f9030ace041e54d77e87bc666",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/seeking-partners-and-feedback-online-sensor-technologies-wastewater"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:09.081738+00:00",
+    "demand_id": "TRBG20260811008",
+    "file_name": "TRBG20260811008.html",
+    "file_path": "een_pod/TRBG20260811008.html",
+    "raw_payload_sha256": "f7ff149f2c6f72caab54b2b4cdae234a46768c22b7c832094e364eca1c871760",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/bulgarian-deep-tech-sme-seeks-partners-integration-and-validation"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:50.403666+00:00",
+    "demand_id": "TRCH20240917026",
+    "file_name": "TRCH20240917026.html",
+    "file_path": "een_pod/TRCH20240917026.html",
+    "raw_payload_sha256": "fcdf449b665939f12ebb302358041ff29aadb5c0229eca4297407886c0acd9c9",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/looking-european-manufacturers-watches-luxury-goods-and-products-open-use"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:49.259901+00:00",
+    "demand_id": "TRCH20240919005",
+    "file_name": "TRCH20240919005.html",
+    "file_path": "een_pod/TRCH20240919005.html",
+    "raw_payload_sha256": "78a82f607d95b517802fb79cd0b8dd7097ee52fd44403cfc27cf8289bead755d",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/seeking-eco-responsible-sourcing-metals-and-crystals-jewellery-and-luxury"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:47.366314+00:00",
+    "demand_id": "TRCH20241001025",
+    "file_name": "TRCH20241001025.html",
+    "file_path": "een_pod/TRCH20241001025.html",
+    "raw_payload_sha256": "ca3d8bb048ca70cce6d7e204163d9a1387082d4562c645832217e7459824d46b",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/seeking-eu-manufacturers-jewellery-and-subcomponents-open-use-eco"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:39.238982+00:00",
+    "demand_id": "TRCH20250123005",
+    "file_name": "TRCH20250123005.html",
+    "file_path": "een_pod/TRCH20250123005.html",
+    "raw_payload_sha256": "effbfc242f74aac0ab4dec2db5f0f4c0894f43b82deb612734dce7718f2d8930",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/swiss-company-seeks-food-side-streams-suppliers-turn-waste-innovative"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:06.288333+00:00",
+    "demand_id": "TRCH20251216001",
+    "file_name": "TRCH20251216001.html",
+    "file_path": "een_pod/TRCH20251216001.html",
+    "raw_payload_sha256": "c31ea5b95903d035bbdde1cd98d5d4406477d09a513e23ceb4b724da6e6d13f1",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/seeking-chemical-contract-manufacturing-partner-scale-and-produce-1000l"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:00.948555+00:00",
+    "demand_id": "TRCH20251216014",
+    "file_name": "TRCH20251216014.html",
+    "file_path": "een_pod/TRCH20251216014.html",
+    "raw_payload_sha256": "f06d74c601cdb3ad10b1154b3aa412708e4c1fba082331292f0ae2106a41127c",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/process-optimisation-925-silver-moldjet-additive-manufacturing-luxury"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:33.085494+00:00",
+    "demand_id": "TRCH20260608023",
+    "file_name": "TRCH20260608023.html",
+    "file_path": "een_pod/TRCH20260608023.html",
+    "raw_payload_sha256": "096cfa3e5e9cbccfb1f949a8ea2d383aa938c9292a981dad11cb0516d801519f",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/manufacturers-rubber-products-sought-co-development-sustainable-and"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:32.051521+00:00",
+    "demand_id": "TRCH20260608032",
+    "file_name": "TRCH20260608032.html",
+    "file_path": "een_pod/TRCH20260608032.html",
+    "raw_payload_sha256": "bd38accfcf14a9ac49e0b068ce86965a9fd9ef95029c32c6ed5e46f137b5c92c",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/seeking-organisations-worldwide-test-use-and-deploy-agile-and-simple"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:45.261108+00:00",
+    "demand_id": "TRCL20241018048",
+    "file_name": "TRCL20241018048.html",
+    "file_path": "een_pod/TRCL20241018048.html",
+    "raw_payload_sha256": "84f5512345040eb5a1d65132b182d95dc4c461ad9de52d1e55e3bbd9b48f8fc9",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/lounge-located-nunoa-neighborhood-santiago-chile-looking-technology-europe"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:44.456242+00:00",
+    "demand_id": "TRCL20241018050",
+    "file_name": "TRCL20241018050.html",
+    "file_path": "een_pod/TRCL20241018050.html",
+    "raw_payload_sha256": "3d801501c9b4801a93861c149961538f13b8f79937bb587af8516e1a9b38d203",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/chilean-company-specailized-plants-looking-technology-europe-introduce"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:32.368077+00:00",
+    "demand_id": "TRCL20250414026",
+    "file_name": "TRCL20250414026.html",
+    "file_path": "een_pod/TRCL20250414026.html",
+    "raw_payload_sha256": "c777e1fccd388a637768f85048f82350d5da379658152299faee6ed7c7c9a9a3",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/chilean-bioconstruction-company-searching-innovative-technologies-enhance"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:30.376796+00:00",
+    "demand_id": "TRCL20250414028",
+    "file_name": "TRCL20250414028.html",
+    "file_path": "een_pod/TRCL20250414028.html",
+    "raw_payload_sha256": "30c132dbe5da692cc846b2326ba9c92bcbcddbf570f1f9b1d08dffff80153e96",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/chilean-sustainable-architecture-company-looking-innovative-technologies"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:29.457576+00:00",
+    "demand_id": "TRCL20250414029",
+    "file_name": "TRCL20250414029.html",
+    "file_path": "een_pod/TRCL20250414029.html",
+    "raw_payload_sha256": "293c320a5d008d6418c6574ddc5c317ebb941a866b2ec5e9c3ba87f5db6f4a45",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/chilean-structural-thermal-insulation-company-searching-innovative"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:21.375062+00:00",
+    "demand_id": "TRCL20251009018",
+    "file_name": "TRCL20251009018.html",
+    "file_path": "een_pod/TRCL20251009018.html",
+    "raw_payload_sha256": "e7a1d11ea27060707294ae84e7882f39d2f3f74b1a590ffe111a118ec324de3e",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/chilean-consulting-company-specialized-climate-change-management-seeks"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:06.052067+00:00",
+    "demand_id": "TRCZ20260818027",
+    "file_name": "TRCZ20260818027.html",
+    "file_path": "een_pod/TRCZ20260818027.html",
+    "raw_payload_sha256": "d217f7902777be72b5f986d01cdfc332b533db5bc046322d9639132c72e819d3",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/research-and-development-partners-sought-next-generation-charging-and"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:23.512493+00:00",
+    "demand_id": "TRDE20250723011",
+    "file_name": "TRDE20250723011.html",
+    "file_path": "een_pod/TRDE20250723011.html",
+    "raw_payload_sha256": "0535b7be3be27355e2af2f0cc39d2472b5d32bbd1f50e94817b0095eddcde768",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/strategic-partner-sought-innovative-nutritional-solutions-development-high"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:18.315019+00:00",
+    "demand_id": "TRDE20251015017",
+    "file_name": "TRDE20251015017.html",
+    "file_path": "een_pod/TRDE20251015017.html",
+    "raw_payload_sha256": "8ed26d7d2b38dc5546b8ac91864cadeb0dc551025e277505dc7e75a53a38ff67",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/partner-processing-or-technology-provider-sought-re-use-unique-product"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:51.421668+00:00",
+    "demand_id": "TRDE20260413017",
+    "file_name": "TRDE20260413017.html",
+    "file_path": "een_pod/TRDE20260413017.html",
+    "raw_payload_sha256": "a3dd7838a5bfabbfdb9451a022d3a16c9ac25b7e943a0098ab5b3987391a4714",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/partner-sought-system-level-integration-multi-source-renewable-energy"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:49.681231+00:00",
+    "demand_id": "TRDE20260420006",
+    "file_name": "TRDE20260420006.html",
+    "file_path": "een_pod/TRDE20260420006.html",
+    "raw_payload_sha256": "30d689d1ddcb174a42d300c571e05abe677af6abe02eaf684933cbe2b47bcf34",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/german-sme-seeks-research-and-supplier-partnerships-electric-vehicle-ev"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:36.032329+00:00",
+    "demand_id": "TRDE20260512019",
+    "file_name": "TRDE20260512019.html",
+    "file_path": "een_pod/TRDE20260512019.html",
+    "raw_payload_sha256": "43c71939b8e620a8a72743933448925e5b4c3d60428704e7bb183c8351630b0a",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/partners-sought-digital-teaching-hospital-and-smart-healthcare"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:12.065935+00:00",
+    "demand_id": "TRDE20260615011",
+    "file_name": "TRDE20260615011.html",
+    "file_path": "een_pod/TRDE20260615011.html",
+    "raw_payload_sha256": "e7db9dba93dda3c162af906564974a3972dbfd4f5d1abaea12d81e16b08f59f1",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/bavarian-publishing-technology-sme-operational-semantic-anchoring-system"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:24.079530+00:00",
+    "demand_id": "TRDE20260714016",
+    "file_name": "TRDE20260714016.html",
+    "file_path": "een_pod/TRDE20260714016.html",
+    "raw_payload_sha256": "8821ebd0640bd46924b5c6aaf0ae3ebcaef6239070bc8eb4d137c80f79860e68",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/german-healthcare-facility-seeks-software-solution-coordinate-and-manage"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:16.248858+00:00",
+    "demand_id": "TRDE20260721016",
+    "file_name": "TRDE20260721016.html",
+    "file_path": "een_pod/TRDE20260721016.html",
+    "raw_payload_sha256": "5d2b2c2dbd8c0f3c7d4caafc279fb38e1ac96c380a464187d592dd09df52022d",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/innovative-solutions-sought-cold-preparation-sauces-and-other-foods"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:14.035051+00:00",
+    "demand_id": "TRDE20260721021",
+    "file_name": "TRDE20260721021.html",
+    "file_path": "een_pod/TRDE20260721021.html",
+    "raw_payload_sha256": "075323f79b4a42763db2bf84792a25106c7ecdf1296a33f19a8713551fa7e720",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/cleaning-solutions-based-ozonated-water-sought-significantly-reduce"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:13.120311+00:00",
+    "demand_id": "TRDE20260723020",
+    "file_name": "TRDE20260723020.html",
+    "file_path": "een_pod/TRDE20260723020.html",
+    "raw_payload_sha256": "4572d148436dda199b9a9365c97f768a84543832880d1b8b25cb8ce0fa7980cf",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/northern-german-company-machinery-maintenance-sector-seeking-digital"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:45.245195+00:00",
+    "demand_id": "TRDK20260506001",
+    "file_name": "TRDK20260506001.html",
+    "file_path": "een_pod/TRDK20260506001.html",
+    "raw_payload_sha256": "77c9b328a639a014b0ed9451a746cb09622b8739e6f7a2fa349d77ce2f33832b",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/single-item-identification-reusable-food-containers-using-surface-based"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:35.054112+00:00",
+    "demand_id": "TRDK20260601025",
+    "file_name": "TRDK20260601025.html",
+    "file_path": "een_pod/TRDK20260601025.html",
+    "raw_payload_sha256": "4449cb5ba24b58658f11e602532882717fa763f64df4c7ec20283294f5aa75a4",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/danish-sme-seeks-german-university-hospital-or-clinical-research"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:26.411786+00:00",
+    "demand_id": "TRES20250625001",
+    "file_name": "TRES20250625001.html",
+    "file_path": "een_pod/TRES20250625001.html",
+    "raw_payload_sha256": "98601b57440815d37f6f5639f8d7ad96991911c274f89e7d7cb11c1afc6e8501",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/collaboration-opportunity-unreal-engine-5-blueprint-experts-wanted-aa"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:25.137973+00:00",
+    "demand_id": "TRES20250709018",
+    "file_name": "TRES20250709018.html",
+    "file_path": "een_pod/TRES20250709018.html",
+    "raw_payload_sha256": "d7ab6a3f58bc5c7dfd9eabd4aa823dc88cef78b316adb5f11d02b3d6110222e1",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/advanced-high-durability-containment-system-aluminium-based-thermal-energy"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:08.425881+00:00",
+    "demand_id": "TRES20251113019",
+    "file_name": "TRES20251113019.html",
+    "file_path": "een_pod/TRES20251113019.html",
+    "raw_payload_sha256": "c31864783d7e870a6c9c41a4ae7f6c9f27c621c27cafda1d3fc059640b27bcef",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/technology-providers-sought-development-integrated-pyrolytic-reactor"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:46.670350+00:00",
+    "demand_id": "TRES20260408022",
+    "file_name": "TRES20260408022.html",
+    "file_path": "een_pod/TRES20260408022.html",
+    "raw_payload_sha256": "c2a12b8bda3fc79b2f508810cca45e26874f35b97d794199d5f208a5f24c4011",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/spanish-startup-renewable-energy-analytics-platform-investment-assessment"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:40.174551+00:00",
+    "demand_id": "TRES20260522011",
+    "file_name": "TRES20260522011.html",
+    "file_path": "een_pod/TRES20260522011.html",
+    "raw_payload_sha256": "3a631d563aed967316fbae9bd44ff2f77a4d4c43ee61fc4c5b60e43090626147",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/auditing-and-quality-certification-services-sought-plant-based-raw"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:46.408588+00:00",
+    "demand_id": "TRFR20241007025",
+    "file_name": "TRFR20241007025.html",
+    "file_path": "een_pod/TRFR20241007025.html",
+    "raw_payload_sha256": "c5fa02c8cc307d672a74bb684a5c0f537d3daeb1812c163f65f6c6f74a429365",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/french-company-seeks-solution-eliminating-bacteria-high-quality-vanilla"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:35.247816+00:00",
+    "demand_id": "TRFR20250210041",
+    "file_name": "TRFR20250210041.html",
+    "file_path": "een_pod/TRFR20250210041.html",
+    "raw_payload_sha256": "ccde5c2e583d51840546abf607c13b436398647f17022cc380013045041d3dc0",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/french-company-offering-predictive-maintenance-software-solution-industry"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:14.310406+00:00",
+    "demand_id": "TRFR20250929025",
+    "file_name": "TRFR20250929025.html",
+    "file_path": "een_pod/TRFR20250929025.html",
+    "raw_payload_sha256": "abf8e8a42e490f7d0456cfc1c37f285c5001b86a8423e52eb2e5c87bde828374",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/french-start-seeks-research-partners-integrate-or-adapt-prior-research"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:19.322094+00:00",
+    "demand_id": "TRFR20251013012",
+    "file_name": "TRFR20251013012.html",
+    "file_path": "een_pod/TRFR20251013012.html",
+    "raw_payload_sha256": "c3af151ab9de80d1d4807448de887eb4cf43f65e58a4434c9dafd6a285e9279e",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/end-users-manufacturers-service-companies-outsource-sterilisation-medical"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:16.351617+00:00",
+    "demand_id": "TRFR20251023005",
+    "file_name": "TRFR20251023005.html",
+    "file_path": "een_pod/TRFR20251023005.html",
+    "raw_payload_sha256": "a1bc660ff81a971b789c4afe10c5a77d199dcdcc6b4d1eb3aee805ab8920eeec",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/french-company-seeks-partner-equipped-robust-shredders-cut-used-polyester"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:05.458299+00:00",
+    "demand_id": "TRFR20251216013",
+    "file_name": "TRFR20251216013.html",
+    "file_path": "een_pod/TRFR20251216013.html",
+    "raw_payload_sha256": "7b1e9616a60fd356b465951af35aa481806aeccb2d63f61ef57d8941cbe1dbc9",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/ai-enabled-component-recognition-and-automated-listing-technology-support"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:03.287438+00:00",
+    "demand_id": "TRFR20251218029",
+    "file_name": "TRFR20251218029.html",
+    "file_path": "een_pod/TRFR20251218029.html",
+    "raw_payload_sha256": "012244549b348cb395e33f6f0b4474ee5ed3430065e45945f110a3261a4dc62f",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/high-density-electroencephalogram-eeg-babies"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:52.232282+00:00",
+    "demand_id": "TRFR20260410008",
+    "file_name": "TRFR20260410008.html",
+    "file_path": "een_pod/TRFR20260410008.html",
+    "raw_payload_sha256": "fcd08fcb36fa02c909a5fb5a6f54d781b0a8c166d1cb35ebb49f5774e43b3823",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/french-tech-company-looking-partner-co-develop-proof-impact-infrastructure"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:46.067172+00:00",
+    "demand_id": "TRFR20260424019",
+    "file_name": "TRFR20260424019.html",
+    "file_path": "een_pod/TRFR20260424019.html",
+    "raw_payload_sha256": "f7e32f1f226471bfe38fad02c36662a18c5e23a8d1cd9f4382b91d63447eb8c7",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/french-startup-specialized-microalgae-based-solutions-indoor-air-0"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:39.092589+00:00",
+    "demand_id": "TRFR20260520018",
+    "file_name": "TRFR20260520018.html",
+    "file_path": "een_pod/TRFR20260520018.html",
+    "raw_payload_sha256": "428937853b804211be212e09da2120ed6efc92be99c18ae5fc11af1efc160317",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/seeking-expertise-supercritical-co2-extraction-isolate-bioactive-compound"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:28.031774+00:00",
+    "demand_id": "TRFR20260529025",
+    "file_name": "TRFR20260529025.html",
+    "file_path": "een_pod/TRFR20260529025.html",
+    "raw_payload_sha256": "e018163732b68964384bf0e986886df2688205902b82c83e43f1a5976260e33c",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/chemical-removal-unwanted-metal-components-metal-alloy-recycling-process"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:29.946418+00:00",
+    "demand_id": "TRFR20260618018",
+    "file_name": "TRFR20260618018.html",
+    "file_path": "een_pod/TRFR20260618018.html",
+    "raw_payload_sha256": "fa09183881d131f3c8e15c839ddde9cbf38f6e4cf7fd5b07f369fdfed1ca51ec",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/french-confectionery-company-seeking-innovative-technology-recycling-and"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:11.054005+00:00",
+    "demand_id": "TRFR20260728027",
+    "file_name": "TRFR20260728027.html",
+    "file_path": "een_pod/TRFR20260728027.html",
+    "raw_payload_sha256": "d608308e0fabcbcf23a353f6383416e510ff332d2b30206352bd905b9e98f35b",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/french-circular-construction-innovator-transforming-reclaimed-roofing"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:34:55.314045+00:00",
+    "demand_id": "TRFR20260907008",
+    "file_name": "TRFR20260907008.html",
+    "file_path": "een_pod/TRFR20260907008.html",
+    "raw_payload_sha256": "4362c0dd6c445aab39bfdecd040d5ab31d34b6deb5df902a6033c868d1384888",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/french-underwater-imaging-sme-seeks-3d-reconstruction-software-partners"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:43.253648+00:00",
+    "demand_id": "TRGB20241111016",
+    "file_name": "TRGB20241111016.html",
+    "file_path": "een_pod/TRGB20241111016.html",
+    "raw_payload_sha256": "02bff985dbb922675db87692b35efe648eaa68865cbbf0ecbfaceae4666ac787",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/uk-sme-seeks-supplier-5g-non-terrestrial-network-ntn-satellite"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:33.358903+00:00",
+    "demand_id": "TRGB20250331014",
+    "file_name": "TRGB20250331014.html",
+    "file_path": "een_pod/TRGB20250331014.html",
+    "raw_payload_sha256": "0f5b5aa08970c75bad6b674c28ca376d7e58fcb214ced28d96eccbbd91a65bdb",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/london-based-biotechnology-rd-sme-seeking-datasets-related-gut-microbiome"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:28.267571+00:00",
+    "demand_id": "TRGB20250424008",
+    "file_name": "TRGB20250424008.html",
+    "file_path": "een_pod/TRGB20250424008.html",
+    "raw_payload_sha256": "c9fd90ba6a1fc91066ba607ee6ae570d0e278565817900225e5ac8e800c8bc3e",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/uk-sustainable-circular-textile-producer-seeking-collaborators-sustainable"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:27.239591+00:00",
+    "demand_id": "TRGB20250424023",
+    "file_name": "TRGB20250424023.html",
+    "file_path": "een_pod/TRGB20250424023.html",
+    "raw_payload_sha256": "c3afd095789f5c2001f5e87b0d3fcff087ac093d5128b3dd4018ef481cb9918f",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/uk-provider-chemistry-services-seeks-novel-methodology-and-novel-compounds"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:08.055052+00:00",
+    "demand_id": "TRGB20260811012",
+    "file_name": "TRGB20260811012.html",
+    "file_path": "een_pod/TRGB20260811012.html",
+    "raw_payload_sha256": "7eb3c6218ed5cd36f678a2d404fd2b5f226a1f37b437a3333d69c734bef08a0e",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/uk-based-company-develops-genome-inactivated-bacteria-particles-blips-safe"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:34:54.082716+00:00",
+    "demand_id": "TRGB20260908011",
+    "file_name": "TRGB20260908011.html",
+    "file_path": "een_pod/TRGB20260908011.html",
+    "raw_payload_sha256": "17654a9f9380dfca956fb1cff02d74ba10a6b3329d0bdb88f32afa80524e5103",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/two-uk-smes-seek-european-municipal-waste-authorities-and-partners-multi"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:04.369409+00:00",
+    "demand_id": "TRGR20251126003",
+    "file_name": "TRGR20251126003.html",
+    "file_path": "een_pod/TRGR20251126003.html",
+    "raw_payload_sha256": "4b04cd135f5e335943aff3256ee8ef55451d8a9999147ba714a4b737af8a560d",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/greek-maritime-company-looking-integrated-maritime-threat-detection-and"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:55.981492+00:00",
+    "demand_id": "TRGR20251212002",
+    "file_name": "TRGR20251212002.html",
+    "file_path": "een_pod/TRGR20251212002.html",
+    "raw_payload_sha256": "9a35dc33046c074a499ad051bd6b29ea94ce4949289083cdba89e2ea712f927e",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/greek-company-producing-agricultural-metal-spare-parts-seeks-metal"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:42.247975+00:00",
+    "demand_id": "TRGR20260512021",
+    "file_name": "TRGR20260512021.html",
+    "file_path": "een_pod/TRGR20260512021.html",
+    "raw_payload_sha256": "630377c49973dac6086065e68f3da81692c02652b8fbaae3156a52ccb0136bdd",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/greek-maritime-company-looking-technical-partner-help-build-and-integrate"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:25.048484+00:00",
+    "demand_id": "TRGR20260710001",
+    "file_name": "TRGR20260710001.html",
+    "file_path": "een_pod/TRGR20260710001.html",
+    "raw_payload_sha256": "462b4abb185800c78d3be46a318f77946c4605c151de91f036b7d5a2012747e8",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/greek-sme-developing-patent-pending-dermocosmetic-delivery-system-seeks"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:17.344573+00:00",
+    "demand_id": "TRHU20251018001",
+    "file_name": "TRHU20251018001.html",
+    "file_path": "een_pod/TRHU20251018001.html",
+    "raw_payload_sha256": "60de8e0ec9795d74f1cc41f1570147c8c134f011d55e12c2e3c2174ca9cde82e",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/hungarian-sme-seeks-partners-sustainable-lignite-use-bio-waste-treatment"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:00.189424+00:00",
+    "demand_id": "TRHU20260831007",
+    "file_name": "TRHU20260831007.html",
+    "file_path": "een_pod/TRHU20260831007.html",
+    "raw_payload_sha256": "c21074f3d18c4e6376392b2a4dd42a1a6ecfb216c7327de50dc7559df5cebaf0",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/forestry-machinery-and-sensor-automation-technologies-are-sought-co"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:37.378432+00:00",
+    "demand_id": "TRIT20250204009",
+    "file_name": "TRIT20250204009.html",
+    "file_path": "een_pod/TRIT20250204009.html",
+    "raw_payload_sha256": "2af82dc98789cb504b74dacc685601b21ccccc8e01cad6e520201564d7089a53",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/expert-sme-electronic-systems-highway-evs-seeks-technological-strategic"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:11.369143+00:00",
+    "demand_id": "TRIT20251104011",
+    "file_name": "TRIT20251104011.html",
+    "file_path": "een_pod/TRIT20251104011.html",
+    "raw_payload_sha256": "9fef9bd026b51cfa9acc3829e3faa858affcef77ede0bfd4637de2922d178684",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/italian-neurologic-rehabilitation-hospital-seeks-research-partnerships-co"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:10.371000+00:00",
+    "demand_id": "TRIT20251110007",
+    "file_name": "TRIT20251110007.html",
+    "file_path": "een_pod/TRIT20251110007.html",
+    "raw_payload_sha256": "d45543eaf542e0c7b883883ce85ec9ce1a83fc694674658e3660082b71b43440",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/italian-software-house-over-17-years-experience-specializing-development"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:07.251170+00:00",
+    "demand_id": "TRIT20251215002",
+    "file_name": "TRIT20251215002.html",
+    "file_path": "een_pod/TRIT20251215002.html",
+    "raw_payload_sha256": "7bfc632025012ec485338f70c1b275f487fbc1ecd60a18bd6b6f7d6670f6af90",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/italian-company-seeks-partners-specialized-compacting-systems-fine-wood"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:55.253912+00:00",
+    "demand_id": "TRIT20260324010",
+    "file_name": "TRIT20260324010.html",
+    "file_path": "een_pod/TRIT20260324010.html",
+    "raw_payload_sha256": "0b5106492ef09cca9aeb86677614e6c0ac4c2dd5d3fa085246af75ead189e6e3",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/innovative-start-aerospace-propulsion-sector-seeking-industrial-partners"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:44.129134+00:00",
+    "demand_id": "TRIT20260512031",
+    "file_name": "TRIT20260512031.html",
+    "file_path": "een_pod/TRIT20260512031.html",
+    "raw_payload_sha256": "f79616e9a244cb675f0c2e002a4f5ff504c03ae474d53f26dec15d22e1356211",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/looking-passive-deodorizing-technology"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:34:59.063851+00:00",
+    "demand_id": "TRIT20260831024",
+    "file_name": "TRIT20260831024.html",
+    "file_path": "een_pod/TRIT20260831024.html",
+    "raw_payload_sha256": "d908e5a64091173dd33e61552488e2c4e136399c3b964f2b7ac885eba4ef2fc1",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/technological-solutions-urban-growth-night-light-analysis-sought-nereus"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:34:58.041559+00:00",
+    "demand_id": "TRIT20260831026",
+    "file_name": "TRIT20260831026.html",
+    "file_path": "een_pod/TRIT20260831026.html",
+    "raw_payload_sha256": "f2db8906375414bb4b9907bef5c2e95227524e5440c57bc157ec9edc0d03ddb8",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/technological-solutions-post-flood-landslide-monitoring-sought-nereus"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:34:57.149252+00:00",
+    "demand_id": "TRIT20260831029",
+    "file_name": "TRIT20260831029.html",
+    "file_path": "een_pod/TRIT20260831029.html",
+    "raw_payload_sha256": "6f79e2543790c36358f5dba6d259c5da85ec0648794d10b7ee0643b8ade18bba",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/technological-solutions-urban-monitoring-regarding-green-rings-sought"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:23.036372+00:00",
+    "demand_id": "TRLT20260720004",
+    "file_name": "TRLT20260720004.html",
+    "file_path": "een_pod/TRLT20260720004.html",
+    "raw_payload_sha256": "046c25a4ab190ff4334d9105e92f8a0877c2ab705673552330c08c414a95fa8e",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/lithuanian-company-seeking-innovative-technologies-and-business-partners"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:15.282425+00:00",
+    "demand_id": "TRLV20251024016",
+    "file_name": "TRLV20251024016.html",
+    "file_path": "een_pod/TRLV20251024016.html",
+    "raw_payload_sha256": "e5339260d743535c27ad705016f6a9d4f9e49cfaa8cbbd2fae68a84ad4a0cd33",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/chemical-technology-silicon-recovery-high-purity-photovoltaic-panel-waste"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:13.273075+00:00",
+    "demand_id": "TRLV20251028009",
+    "file_name": "TRLV20251028009.html",
+    "file_path": "een_pod/TRLV20251028009.html",
+    "raw_payload_sha256": "f3aa78edc8741968643e98536602265134bf4037a5ff3759bb4bc83df78bdf2f",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/sme-latvia-looking-technology-small-production-line-production-gluten-free"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:30.976467+00:00",
+    "demand_id": "TRLV20260615015",
+    "file_name": "TRLV20260615015.html",
+    "file_path": "een_pod/TRLV20260615015.html",
+    "raw_payload_sha256": "cfe6b94ed6b0fd406e22b87178bbc96d10736432076b7d37795367633091e774",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/seeking-manufacturing-partner-long-shelf-life-energy-protein-bars"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:22.056765+00:00",
+    "demand_id": "TRLV20260720012",
+    "file_name": "TRLV20260720012.html",
+    "file_path": "een_pod/TRLV20260720012.html",
+    "raw_payload_sha256": "de36a708e06d8b478410a52f50df05f1c66c2d7f6bd7a14614522704ab554c0f",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/eu-based-sea-drone-manufacturer-minimum-trl-6-platform-sought-further"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:21.036800+00:00",
+    "demand_id": "TRLV20260720016",
+    "file_name": "TRLV20260720016.html",
+    "file_path": "een_pod/TRLV20260720016.html",
+    "raw_payload_sha256": "e8a15edd01c8497f004ab5729c1896f8b72dd6a3c7e77ae84228af351b42d5c5",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/manufacturer-established-european-union-sought-electric-marine-propulsion"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:20.048824+00:00",
+    "demand_id": "TRLV20260720021",
+    "file_name": "TRLV20260720021.html",
+    "file_path": "een_pod/TRLV20260720021.html",
+    "raw_payload_sha256": "37d6f2618dc8fe0f5289202a91b6d577ec68c4a13d6455d0cc9fd169c1ee2220",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/hydrogen-based-marine-propulsion-manufacturer-eu-member-state-sought"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:19.049637+00:00",
+    "demand_id": "TRLV20260720022",
+    "file_name": "TRLV20260720022.html",
+    "file_path": "een_pod/TRLV20260720022.html",
+    "raw_payload_sha256": "ab6b1e5a1211a8079b94bfa3279ba2662d6b4bf9bf1c649110b3d2069a4c8690",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/e-fuel-capable-engine-and-hybrid-propulsion-manufacturer-established-eu"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:18.032127+00:00",
+    "demand_id": "TRLV20260720031",
+    "file_name": "TRLV20260720031.html",
+    "file_path": "een_pod/TRLV20260720031.html",
+    "raw_payload_sha256": "66bd4f11cd9bf95572b5713f07a6857d3cb985250c5513ca3f36a688545cb6ff",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/i3-2026-inv2a-latvian-led-consortium-seeks-experienced-manufacturer"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:17.079227+00:00",
+    "demand_id": "TRLV20260720032",
+    "file_name": "TRLV20260720032.html",
+    "file_path": "een_pod/TRLV20260720032.html",
+    "raw_payload_sha256": "d49b157a56a46b5a13f1412446844bd4947e2965c84a379368cfad7ded3d94dd",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/innovative-technologies-sought-reduce-weight-and-improve-uv-and-heat"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:10.039481+00:00",
+    "demand_id": "TRMT20260804002",
+    "file_name": "TRMT20260804002.html",
+    "file_path": "een_pod/TRMT20260804002.html",
+    "raw_payload_sha256": "1431fbee85a230075ad839025815a1080f6580d37d6025a1fc071989c19af65b",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/maltese-company-seeks-technology-partners-rd-institutions-or-domain"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:48.261503+00:00",
+    "demand_id": "TRNL20240926006",
+    "file_name": "TRNL20240926006.html",
+    "file_path": "een_pod/TRNL20240926006.html",
+    "raw_payload_sha256": "2f40444a31227a9d3e96e3dcb09fd6cec9b0bed36034d5bf666ee1e0ae6cca8d",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/dutch-sme-specializing-predictive-ai-brain-anomalies-focus-seizures-seeks"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:38.390429+00:00",
+    "demand_id": "TRNL20250128010",
+    "file_name": "TRNL20250128010.html",
+    "file_path": "een_pod/TRNL20250128010.html",
+    "raw_payload_sha256": "a9a4fd764d377060ca780bffff5172640290c4a1e4f22659e7f2fae5e09cac15",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/dutch-edih-nn-looking-technology-autonomous-reliable-identification"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:12.239122+00:00",
+    "demand_id": "TRNL20251104009",
+    "file_name": "TRNL20251104009.html",
+    "file_path": "een_pod/TRNL20251104009.html",
+    "raw_payload_sha256": "74f89054b7b835777e40bc7ea91fca3e351445deb7cd5a20842dcb4554accc9c",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/dutch-research-institute-seeks-european-partners-co-development"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:06.960271+00:00",
+    "demand_id": "TRNL20260817023",
+    "file_name": "TRNL20260817023.html",
+    "file_path": "een_pod/TRNL20260817023.html",
+    "raw_payload_sha256": "38404ea4d2f085b23d8adea9d99039b766e33bb9a85210ad1fd416ca752889ac",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/dutch-diamond-rd-company-active-field-quantum-sensing-seeks-measurement"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:34:56.046673+00:00",
+    "demand_id": "TRNL20260901011",
+    "file_name": "TRNL20260901011.html",
+    "file_path": "een_pod/TRNL20260901011.html",
+    "raw_payload_sha256": "a3338481cc4e09e914276e96073d97ca0ef6746b372b6321ad30237876836b4f",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/innovative-monitoring-solutions-and-sensor-technologies-sought-prevent"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:57.488299+00:00",
+    "demand_id": "TRPL20260227004",
+    "file_name": "TRPL20260227004.html",
+    "file_path": "een_pod/TRPL20260227004.html",
+    "raw_payload_sha256": "55498acb9b3c9707a4b2f5f82bd2bf819fd66359ea136fd4bd44e472d32a0850",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/polish-sme-seeks-rd-partner-develop-directional-vibrational-freezing"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:36.396807+00:00",
+    "demand_id": "TRPT20250203032",
+    "file_name": "TRPT20250203032.html",
+    "file_path": "een_pod/TRPT20250203032.html",
+    "raw_payload_sha256": "1c30145807e1e73f6770f13cd5b0ba860d69a8ad3058aab0336b5f860df7b8d5",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/pt-company-looking-partners-able-test-animals-feed-formulations-research"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:34.165236+00:00",
+    "demand_id": "TRPT20260605029",
+    "file_name": "TRPT20260605029.html",
+    "file_path": "een_pod/TRPT20260605029.html",
+    "raw_payload_sha256": "92c6cc74aff0362e0c95391f38462b47e2784c4c9eb5fcaf62a8c97bb7e5a476",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/portuguese-health-innovation-organisation-seeks-legal-manufacturer-0"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:40.337540+00:00",
+    "demand_id": "TRRS20241216026",
+    "file_name": "TRRS20241216026.html",
+    "file_path": "een_pod/TRRS20241216026.html",
+    "raw_payload_sha256": "9735ab019308145dbc38cf31c0cbf5c24fe7f8c5d057bec020cb491f13947f52",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/serbian-women-led-agri-food-educational-and-digital-startup-seeking"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:02.406767+00:00",
+    "demand_id": "TRRS20260112005",
+    "file_name": "TRRS20260112005.html",
+    "file_path": "een_pod/TRRS20260112005.html",
+    "raw_payload_sha256": "1b4a216a83262a44b66d3be9745e33ec104255645ef823e3ea47a05c3e259521",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/investing-industrial-saas-solutions-proven-technology-trl6-9-field"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:34.255619+00:00",
+    "demand_id": "TRSE20250219008",
+    "file_name": "TRSE20250219008.html",
+    "file_path": "een_pod/TRSE20250219008.html",
+    "raw_payload_sha256": "951d1516414760906162020c6919ede44661c3e02270973bc3d999f31315c705",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/no-code-medical-imaging-platform-seeking-rd-partners-collaborative"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:50.815445+00:00",
+    "demand_id": "TRSI20260415013",
+    "file_name": "TRSI20260415013.html",
+    "file_path": "een_pod/TRSI20260415013.html",
+    "raw_payload_sha256": "818ecd20137cbc15419da7cb832403fbcdf034890796c7f39aacddaa165235e5",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/slovenian-company-seeks-smes-rd-institutes-partners-specialised-measure"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:03.034474+00:00",
+    "demand_id": "TRSI20260825015",
+    "file_name": "TRSI20260825015.html",
+    "file_path": "een_pod/TRSI20260825015.html",
+    "raw_payload_sha256": "bc7c94773f4262c3bfd84cd2a34c3d6ff8ea1f3cca45a76aa5e69d3952ce7d7e",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/slovenian-company-seeks-smes-rd-institutes-laboratory-partners-measure"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:01.179878+00:00",
+    "demand_id": "TRSI20260826012",
+    "file_name": "TRSI20260826012.html",
+    "file_path": "een_pod/TRSI20260826012.html",
+    "raw_payload_sha256": "64453ce953b6f9b89f8fe8fb96c06cfe70a52147e045d5ae396d1764434920fa",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/slovenian-sme-looking-experienced-manufacturing-partner-specialising"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:41.268449+00:00",
+    "demand_id": "TRTR20241209011",
+    "file_name": "TRTR20241209011.html",
+    "file_path": "een_pod/TRTR20241209011.html",
+    "raw_payload_sha256": "df0af576dc16b4fc4cc6c69ce0e2a1eae30d8222bc7471bd40194a8634c215c3",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/innovative-turkish-textile-manufacturer-seeking-partner-develop-new"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:24.315314+00:00",
+    "demand_id": "TRTR20250717008",
+    "file_name": "TRTR20250717008.html",
+    "file_path": "een_pod/TRTR20250717008.html",
+    "raw_payload_sha256": "d1023e4660f67cdfc10352d8e74fb18826367abb781a448fe40b2cf5fcd1b631",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/turkish-tier-1-automotive-supplier-rd-expertise-seeks-consortium-partner"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:22.409250+00:00",
+    "demand_id": "TRTR20251005001",
+    "file_name": "TRTR20251005001.html",
+    "file_path": "een_pod/TRTR20251005001.html",
+    "raw_payload_sha256": "d45cbaf9bb274b06b625a5e2a7e782555cdad03591afc93756bbe2deae2778d1",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/turkish-company-looking-rd-or-university-partner-experience-polymer"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:36:00.275464+00:00",
+    "demand_id": "TRTR20260202029",
+    "file_name": "TRTR20260202029.html",
+    "file_path": "een_pod/TRTR20260202029.html",
+    "raw_payload_sha256": "daf58236f3e63482613a6c639215e91e2a9c1f83fe5cd99a2832fe20e219bf6f",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/industrial-coordinator-sought-horizon-europe-innovation-action-ia-project"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:43.122511+00:00",
+    "demand_id": "TRUA20260429020",
+    "file_name": "TRUA20260429020.html",
+    "file_path": "een_pod/TRUA20260429020.html",
+    "raw_payload_sha256": "7eeeeed4cf503b394a537d6422120df9281257af53b6959d68e038e5f1e05b85",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/ukrainian-ice-cream-manufacturer-seeks-green-energy-heat-recovery-and"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:05.102318+00:00",
+    "demand_id": "TRUA20260821019",
+    "file_name": "TRUA20260821019.html",
+    "file_path": "een_pod/TRUA20260821019.html",
+    "raw_payload_sha256": "c69402ef5e4489e78feebdb5372c533cc8835cb31dc2fc979729d2efcd8f548e",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/ukrainian-manufacturer-seeks-dutch-expertise-circular-modular-metal-and"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:54.268497+00:00",
+    "demand_id": "TRVN20260326006",
+    "file_name": "TRVN20260326006.html",
+    "file_path": "een_pod/TRVN20260326006.html",
+    "raw_payload_sha256": "8e2b37fbe6a41c09294467da48abff47305836e8adf67d0851b1a491ffc01fff",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/vietnam-based-energy-company-seeks-smart-grid-and-power-system-technology"
+  },
+  {
+    "acquisition_timestamp": "2026-09-14T09:35:48.638168+00:00",
+    "demand_id": "TRVN20260421003",
+    "file_name": "TRVN20260421003.html",
+    "file_path": "een_pod/TRVN20260421003.html",
+    "raw_payload_sha256": "15527f65bd018a72585e299ca8b64a58076aa31a3fa73ce2d2a0f14974ced7ab",
+    "source_id": "een_pod",
+    "source_uri": "https://een.ec.europa.eu/partnering-opportunities/vietnam-based-high-tech-integrator-seeking-solid-state-battery-technology"
+  }
+]

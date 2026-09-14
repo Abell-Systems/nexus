@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:36:36.396807+00:00",
+  "demand_id": "TRPT20250203032",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1c30145807e1e73f6770f13cd5b0ba860d69a8ad3058aab0336b5f860df7b8d5",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/pt-company-looking-partners-able-test-animals-feed-formulations-research"
+}

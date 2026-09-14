@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:35:54.268497+00:00",
+  "demand_id": "TRVN20260326006",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8e2b37fbe6a41c09294467da48abff47305836e8adf67d0851b1a491ffc01fff",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/vietnam-based-energy-company-seeks-smart-grid-and-power-system-technology"
+}

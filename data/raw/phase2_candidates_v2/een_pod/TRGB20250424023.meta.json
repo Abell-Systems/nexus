@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:36:27.239591+00:00",
+  "demand_id": "TRGB20250424023",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c3afd095789f5c2001f5e87b0d3fcff087ac093d5128b3dd4018ef481cb9918f",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/uk-provider-chemistry-services-seeks-novel-methodology-and-novel-compounds"
+}

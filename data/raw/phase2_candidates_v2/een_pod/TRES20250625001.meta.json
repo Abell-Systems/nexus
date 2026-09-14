@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:36:26.411786+00:00",
+  "demand_id": "TRES20250625001",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "98601b57440815d37f6f5639f8d7ad96991911c274f89e7d7cb11c1afc6e8501",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/collaboration-opportunity-unreal-engine-5-blueprint-experts-wanted-aa"
+}

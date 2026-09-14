@@ -285,12 +285,37 @@ class EenPodCandidateMapper:
 
         return False, None
 
+    _DESCRIPTION_LABELS: tuple[str, ...] = ("Full Description", "Short Summary", "Abstract", "Summary")
+
+    @classmethod
+    def _extract_by_term_label(cls, soup: BeautifulSoup, labels: tuple[str, ...]) -> str | None:
+        """Find a term/label element (dt, dd-preceding heading, etc.) whose exact text
+        matches one of `labels` (checked in priority order) and return its associated
+        value's text. Handles the official EEN/POD portal's `dl > dt/dd` definition-list
+        layout, where a generic class-substring search (e.g. "description") false-matches
+        the unrelated metadata `dl` (POD Reference, Profile Type, ...) that shares the
+        same `ecl-description-list` component class."""
+        for label in labels:
+            for term in soup.find_all(re.compile(r"h[1-6]|dt")):
+                if term.get_text(separator=" ", strip=True).casefold() != label.casefold():
+                    continue
+                value = term.find_next_sibling(["dd", "p", "div"])
+                if value and isinstance(value, Tag):
+                    text = value.get_text(separator=" ", strip=True)
+                    if text:
+                        return text
+        return None
+
     @classmethod
     def _extract_abstract_block(cls, soup: BeautifulSoup, meta: dict[str, Any]) -> str | None:
         """Extract the dedicated Abstract/summary block, distinct from lower-priority
         description fallbacks (og:description, generic paragraph accumulation)."""
         if meta.get("description"):
             return str(meta["description"]).strip()
+
+        labeled = cls._extract_by_term_label(soup, cls._DESCRIPTION_LABELS)
+        if labeled:
+            return labeled
 
         desc_elem = soup.find(
             attrs={"class": re.compile(r"summary|abstract|description|pod-summary", re.I)}

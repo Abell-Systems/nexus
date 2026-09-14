@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:35:43.122511+00:00",
+  "demand_id": "TRUA20260429020",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7eeeeed4cf503b394a537d6422120df9281257af53b6959d68e038e5f1e05b85",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/ukrainian-ice-cream-manufacturer-seeks-green-energy-heat-recovery-and"
+}
