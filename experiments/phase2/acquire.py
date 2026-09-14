@@ -12,6 +12,7 @@ from experiments.phase2.harvesters import (
     EenPodOfficialHarvester,
     InnogetHarvester,
     PayloadCollisionError,
+    TedHarvester,
 )
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
@@ -81,9 +82,11 @@ def main(argv: list[str] | None = None) -> int:
             harvester = EenPodHarvester(delay_seconds=args.delay)
         elif source in ("een_pod_official", "een_official"):
             harvester = EenPodOfficialHarvester(delay_seconds=args.delay)
+        elif source == "ted":
+            harvester = TedHarvester(delay_seconds=args.delay)
         else:
             logger.error(
-                "Unknown source: %s (supported: innoget, een_pod, een_pod_official)", source
+                "Unknown source: %s (supported: innoget, een_pod, een_pod_official, ted)", source
             )
             continue
 

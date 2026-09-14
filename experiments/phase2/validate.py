@@ -28,6 +28,7 @@ from application.corpus.mappers import (  # noqa: E402
     EenPodCandidateMapper,
     InnogetCandidateMapper,
     MappingError,
+    TedCandidateMapper,
 )
 from domain.models.corpus_expansion import (  # noqa: E402
     CandidateRejectionReason,
@@ -168,6 +169,8 @@ def infer_source_id(payload_path: Path, demand_id: str, meta: dict[str, Any]) ->
         return "een_pod"
     if parent_name in ("innoget", "challenges"):
         return "innoget"
+    if parent_name == "ted":
+        return "ted"
 
     demand_upper = demand_id.upper()
     if demand_upper.startswith("TR") or demand_upper.startswith("LOMBARDIA"):
@@ -261,6 +264,8 @@ def run_offline_validation(
                 candidate = EenPodCandidateMapper.map_payload(raw_bytes, metadata=meta)
             elif source_id == "innoget":
                 candidate = InnogetCandidateMapper.map_payload(raw_bytes, metadata=meta)
+            elif source_id == "ted":
+                candidate = TedCandidateMapper.map_payload(raw_bytes, metadata=meta)
             else:
                 raise MappingError(f"Unsupported source_id '{source_id}' for {payload_path}")
 

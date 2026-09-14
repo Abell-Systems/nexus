@@ -23,6 +23,7 @@ REPO_ROOT = Path(__file__).resolve().parents[4]
 POLICY_PATH = REPO_ROOT / "config" / "policies" / "data" / "corpus_expansion_policy_v1.json"
 POLICY_V2_PATH = REPO_ROOT / "config" / "policies" / "data" / "corpus_expansion_policy_v2.json"
 POLICY_V3_PATH = REPO_ROOT / "config" / "policies" / "data" / "corpus_expansion_policy_v3.json"
+POLICY_V4_PATH = REPO_ROOT / "config" / "policies" / "data" / "corpus_expansion_policy_v4.json"
 
 
 def test_load_corpus_expansion_policy_success() -> None:
@@ -586,6 +587,79 @@ def test_validate_demand_candidate_rd_request_accepted_under_v3() -> None:
     res_bo = validate_demand_candidate(bo_candidate, policy)
     assert res_bo.status == "REJECT"
     assert res_bo.rejection_reasons == (CandidateRejectionReason.INCOMPATIBLE_CONSTRUCT,)
+
+
+def _ted_candidate(
+    publication_date: date = date(2025, 3, 1),
+    organization_raw: str | None = "Suomen metsäkeskus",
+) -> DemandCandidateContractRecord:
+    return DemandCandidateContractRecord(
+        demand_id="462609-2026",
+        source_id="ted",
+        source_construct="Innovation partnership",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=publication_date,
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="oj_s_publication_date",
+            evidence_value=f"OJ S 100/{publication_date.year} {publication_date.isoformat()}",
+        ),
+        geographic_stratum="international_european",
+        title="TED source admission boundary test",
+        description_text=(
+            "Seeking an innovation partner to co-develop a data-driven monitoring system "
+            "for industrial process biodiversity impact combining multi-source sensor data "
+            "with AI-assisted risk detection across production sites."
+        ),
+        language_code="fi",
+        organization_raw=organization_raw,
+        is_publicly_accessible=True,
+        has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="data-driven monitoring system for industrial process biodiversity impact",
+    )
+
+
+def test_load_corpus_expansion_policy_v4_success() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V4_PATH, expected_version="corpus_expansion_policy_v4")
+    assert policy.policy_version == "corpus_expansion_policy_v4"
+    assert len(policy.sources) == 3
+    ted = next(s for s in policy.sources if s.source_id == "ted")
+    assert ted.permitted_constructs == ("Innovation partnership",)
+    een_pod = next(s for s in policy.sources if s.source_id == "een_pod")
+    assert een_pod.permitted_constructs == ("Technology request", "R&D request")
+    # Temporal window and every other criterion carried forward unmodified from v3
+    assert policy.temporal_window.min_publication_date == date(2024, 1, 1)
+    assert policy.temporal_window.max_publication_date == date(2025, 12, 31)
+    assert policy.content_requirements.min_word_count == 25
+
+
+def test_validate_demand_candidate_ted_rejected_under_v3() -> None:
+    """TED is not an authorized source under v3 -- only v4
+    (docs/adr/0034-ted-source-admission-contract.md) admits it."""
+    policy = load_corpus_expansion_policy(POLICY_V3_PATH, expected_version="corpus_expansion_policy_v3")
+
+    res = validate_demand_candidate(_ted_candidate(), policy)
+    assert res.status == "REJECT"
+    assert res.rejection_reasons == (CandidateRejectionReason.UNAUTHORIZED_SOURCE,)
+
+
+def test_validate_demand_candidate_ted_accepted_under_v4() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V4_PATH, expected_version="corpus_expansion_policy_v4")
+
+    res = validate_demand_candidate(_ted_candidate(), policy)
+    assert res.status == "ACCEPT"
+    assert res.rejection_reasons == ()
+
+    # Prior sources/constructs remain authorized under v4 too
+    assert validate_demand_candidate(_rd_request_candidate(), policy).status == "ACCEPT"
+
+
+def test_validate_demand_candidate_ted_temporal_window_unchanged_under_v4() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V4_PATH, expected_version="corpus_expansion_policy_v4")
+
+    res = validate_demand_candidate(_ted_candidate(publication_date=date(2023, 12, 31)), policy)
+    assert res.status == "REJECT"
+    assert res.rejection_reasons == (CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW,)
 
 
 def test_load_corpus_expansion_policy_v2_hash_mismatch_raises(tmp_path: Path) -> None:

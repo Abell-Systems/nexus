@@ -4,6 +4,7 @@ from experiments.phase2.harvesters.base import BaseHarvester, PayloadCollisionEr
 from experiments.phase2.harvesters.een_pod_harvester import EenPodHarvester
 from experiments.phase2.harvesters.een_pod_official_harvester import EenPodOfficialHarvester
 from experiments.phase2.harvesters.innoget_harvester import InnogetHarvester
+from experiments.phase2.harvesters.ted_harvester import TedHarvester
 
 __all__ = [
     "BaseHarvester",
@@ -11,4 +12,5 @@ __all__ = [
     "InnogetHarvester",
     "EenPodHarvester",
     "EenPodOfficialHarvester",
+    "TedHarvester",
 ]

@@ -24,6 +24,8 @@ EenPodHarvester = _harvesters.EenPodHarvester
 EenPodOfficialHarvester = _harvesters.EenPodOfficialHarvester
 InnogetHarvester = _harvesters.InnogetHarvester
 PayloadCollisionError = _harvesters.PayloadCollisionError
+TedHarvester = _harvesters.TedHarvester
+_ted_harvester_module = importlib.import_module("experiments.phase2.harvesters.ted_harvester")
 
 
 # --------------------------------------------------------------------------
@@ -782,6 +784,174 @@ def test_acquire_cli_runner_een_pod_official(tmp_path: Path):
                 str(out_dir),
                 "--sources",
                 "een_pod_official",
+                "--delay",
+                "0.0",
+            ]
+        )
+
+        assert exit_code == 0
+        assert mock_harvest.called
+
+
+# --------------------------------------------------------------------------
+# TED (Tenders Electronic Daily) Harvester Tests (ADR 0034)
+# --------------------------------------------------------------------------
+
+
+def _ted_search_response(publication_numbers: list[str]) -> bytes:
+    return json.dumps(
+        {
+            "notices": [{"publication-number": n} for n in publication_numbers],
+            "totalNoticeCount": len(publication_numbers),
+        }
+    ).encode()
+
+
+def test_ted_harvester_discovers_and_saves_payloads(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(_ted_harvester_module, "PAGE_SIZE", 50)
+    search_body = _ted_search_response(["462609-2026"])
+    detail_html = (
+        b"<html><body><span class='data'>Suomen metsakeskus</span>"
+        b"<div>OJ S 127/2026 06/07/2026</div></body></html>"
+    )
+
+    def mock_urlopen(req, timeout=30):
+        url = req.get_full_url() if hasattr(req, "get_full_url") else str(req)
+        mock_resp = MagicMock()
+        mock_resp.__enter__.return_value = mock_resp
+        mock_resp.getcode.return_value = 200
+        mock_resp.status = 200
+        if "api.ted.europa.eu" in url:
+            mock_resp.read.return_value = search_body
+        elif "462609-2026" in url:
+            mock_resp.read.return_value = detail_html
+        else:
+            raise urllib.error.HTTPError(url, 404, "Not Found", {}, None)  # type: ignore
+        return mock_resp
+
+    harvester = TedHarvester(delay_seconds=0.0)
+    with patch("urllib.request.urlopen", side_effect=mock_urlopen):
+        saved = harvester.harvest(out_dir=tmp_path, max_pages=1)
+
+    assert len(saved) == 1
+    assert (tmp_path / "ted" / "462609-2026.html").exists()
+    assert (tmp_path / "ted" / "462609-2026.meta.json").exists()
+
+
+def test_ted_harvester_search_request_is_correctly_formed(tmp_path: Path, monkeypatch):
+    """The search call must be a POST with the fixed Innovation Partnership /
+    Competition-only expert query -- never a free-text search."""
+    monkeypatch.setattr(_ted_harvester_module, "PAGE_SIZE", 50)
+    captured_requests = []
+
+    def mock_urlopen(req, timeout=30):
+        captured_requests.append(req)
+        mock_resp = MagicMock()
+        mock_resp.__enter__.return_value = mock_resp
+        mock_resp.getcode.return_value = 200
+        mock_resp.status = 200
+        mock_resp.read.return_value = _ted_search_response([])
+        return mock_resp
+
+    harvester = TedHarvester(delay_seconds=0.0)
+    with patch("urllib.request.urlopen", side_effect=mock_urlopen):
+        harvester.harvest(out_dir=tmp_path, max_pages=1)
+
+    assert len(captured_requests) == 1
+    req = captured_requests[0]
+    assert req.get_method() == "POST"
+    body = json.loads(req.data.decode("utf-8"))
+    assert body["query"] == "procedure-type=innovation AND notice-type=cn-standard"
+    assert body["scope"] == "ALL"
+
+
+def test_ted_harvester_pagination_stops_on_short_page(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(_ted_harvester_module, "PAGE_SIZE", 2)
+    pages = {
+        1: _ted_search_response(["1-2026", "2-2026"]),
+        2: _ted_search_response(["3-2026"]),  # shorter than PAGE_SIZE -> last page
+    }
+    detail_html = b"<html><body>detail</body></html>"
+    search_calls: list[int] = []
+
+    def mock_urlopen(req, timeout=30):
+        url = req.get_full_url() if hasattr(req, "get_full_url") else str(req)
+        mock_resp = MagicMock()
+        mock_resp.__enter__.return_value = mock_resp
+        mock_resp.getcode.return_value = 200
+        mock_resp.status = 200
+        if "api.ted.europa.eu" in url:
+            body = json.loads(req.data.decode("utf-8"))
+            page = body["page"]
+            search_calls.append(page)
+            mock_resp.read.return_value = pages[page]
+        else:
+            mock_resp.read.return_value = detail_html
+        return mock_resp
+
+    harvester = TedHarvester(delay_seconds=0.0)
+    with patch("urllib.request.urlopen", side_effect=mock_urlopen):
+        saved = harvester.harvest(out_dir=tmp_path, max_pages=10)
+
+    assert len(saved) == 3
+    assert search_calls == [1, 2]
+    assert 3 not in search_calls
+
+
+def test_ted_harvester_empty_page_terminates(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(_ted_harvester_module, "PAGE_SIZE", 50)
+
+    def mock_urlopen(req, timeout=30):
+        mock_resp = MagicMock()
+        mock_resp.__enter__.return_value = mock_resp
+        mock_resp.getcode.return_value = 200
+        mock_resp.status = 200
+        mock_resp.read.return_value = _ted_search_response([])
+        return mock_resp
+
+    harvester = TedHarvester(delay_seconds=0.0)
+    with patch("urllib.request.urlopen", side_effect=mock_urlopen):
+        saved = harvester.harvest(out_dir=tmp_path, max_pages=10)
+
+    assert saved == []
+
+
+def test_ted_harvester_collision_raises_fatal_error(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(_ted_harvester_module, "PAGE_SIZE", 50)
+    out_dir = tmp_path / "raw"
+    ted_dir = out_dir / "ted"
+    ted_dir.mkdir(parents=True, exist_ok=True)
+    (ted_dir / "1-2026.html").write_bytes(b"Original pre-existing content")
+
+    def mock_urlopen(req, timeout=30):
+        url = req.get_full_url() if hasattr(req, "get_full_url") else str(req)
+        mock_resp = MagicMock()
+        mock_resp.__enter__.return_value = mock_resp
+        mock_resp.getcode.return_value = 200
+        mock_resp.status = 200
+        if "api.ted.europa.eu" in url:
+            mock_resp.read.return_value = _ted_search_response(["1-2026"])
+        else:
+            mock_resp.read.return_value = b"Conflicting new content"
+        return mock_resp
+
+    harvester = TedHarvester(delay_seconds=0.0)
+    with patch("urllib.request.urlopen", side_effect=mock_urlopen), pytest.raises(PayloadCollisionError):
+        harvester.harvest(out_dir=out_dir, max_pages=1)
+
+
+def test_acquire_cli_runner_ted(tmp_path: Path):
+    out_dir = tmp_path / "raw"
+
+    with patch.object(TedHarvester, "harvest") as mock_harvest:
+        mock_harvest.return_value = [out_dir / "ted" / "1-2026.html"]
+
+        exit_code = acquire_main(
+            [
+                "--out-dir",
+                str(out_dir),
+                "--sources",
+                "ted",
                 "--delay",
                 "0.0",
             ]
