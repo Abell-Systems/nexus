@@ -1,15 +1,20 @@
 # Phase 2 Construct Expansion Amendment: `Technology request` only → `Technology request` + `R&D request`
 
-**Status:** Proposed. This is a **methodological amendment record**, kept separate from
-`docs/adr/0031-corpus-expansion-contract.md` §2.2 by design, following the same pattern
-`docs/phase2-temporal-window-amendment.md` uses for the 2020–2025 → 2024–2025 window
-change. This document proposes a decision; it does not apply it.
+**Status:** Approved (2026-09-14). This is a **methodological amendment record**, kept
+separate from `docs/adr/0031-corpus-expansion-contract.md` §2.2 by design, following
+the same pattern `docs/phase2-temporal-window-amendment.md` uses for the 2020–2025 →
+2024–2025 window change. Approval authorizes the decision this document argues for
+(§3–§8); it does not, by itself, apply it.
 
-**Nothing in this amendment has been applied yet.** `corpus_expansion_policy_v2.json`,
-ADR 0031, `EenPodCandidateMapper`, and `EenPodOfficialHarvester` are unmodified as of
-this writing. Applying it (editing ADR 0031 §2.2, versioning a `v3` policy, extending
-the mapper/harvester, re-running acquisition) is a separate, explicit next step, listed
-in §9 below — not taken here.
+**Approved, but not yet implemented.** `corpus_expansion_policy_v2.json`, ADR 0031,
+`EenPodCandidateMapper`, and `EenPodOfficialHarvester` remain unmodified as of this
+writing — this is a deliberate separation of the methodological decision (this commit)
+from its implementation (a distinct, separate commit/PR). Applying it (editing ADR
+0031 §2.2, versioning a `v3` policy, extending the mapper/harvester, TDD, and
+re-running acquisition) is §9's explicit next step, not taken here. The success
+criterion in §8 — $N_{\mathrm{power}} \ge 60$ *after* every existing filter and the
+independence audit, never a raw or accepted count alone — governs that follow-on work
+and is not relaxed by this approval.
 
 ---
 
