@@ -84,9 +84,18 @@ class CandidatePoolBuilder:
     def _fetch_patents(self, publication_ids: set[str]) -> dict[str, PatentDocument]:
         # Inlined instead of reusing infrastructure.matching.duckdb_helpers
         # .resolve_patent_columns: application/ must not import infrastructure/
-        # (.importlinter application-isolation contract).
+        # (.importlinter application-isolation contract). Column resolution is
+        # replicated here (not just the query shape) -- snapshot-schema tables
+        # (e.g. data/snapshots/patents_es_snapshot.duckdb) carry publication_number
+        # instead of publication_id and have no doc_number/kind_code columns at all.
+        cols = {c[0] for c in self._con.execute(f"DESCRIBE {self._table_name}").fetchall()}
+        pub_col = "publication_id" if "publication_id" in cols else "publication_number"
+        country_col = "country_code" if "country_code" in cols else "'ES'"
+        doc_num_col = "doc_number" if "doc_number" in cols else "''"
+        kind_col = "kind_code" if "kind_code" in cols else "''"
         rows = self._con.execute(
-            f"SELECT publication_id, country_code, doc_number, kind_code, "
+            f"SELECT {pub_col} AS publication_id, {country_col} AS country_code, "
+            f"{doc_num_col} AS doc_number, {kind_col} AS kind_code, "
             f"title, abstract, publication_date FROM {self._table_name}"
         ).fetchall()
         result: dict[str, PatentDocument] = {}
