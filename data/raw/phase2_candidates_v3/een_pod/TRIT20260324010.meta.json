@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:16:56.703290+00:00",
+  "demand_id": "TRIT20260324010",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e78589fce8175638627893e6237e2773e96293f95e5a370fa99f7e4a60b0c191",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/innovative-start-aerospace-propulsion-sector-seeking-industrial-partners"
+}

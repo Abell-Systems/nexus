@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:16:25.707425+00:00",
+  "demand_id": "TRGR20260710001",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "0a2786c0b6bbfd1a3f26500fc550e80fe8e35e3df874cdf5d9ccbe4c7ef86b97",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/greek-sme-developing-patent-pending-dermocosmetic-delivery-system-seeks"
+}

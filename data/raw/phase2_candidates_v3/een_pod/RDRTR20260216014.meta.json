@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:20:43.889300+00:00",
+  "demand_id": "RDRTR20260216014",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ac766a97cf6bd4026fdee9472e9ea74c9eed7f1bad3ecb1c99635d1b8b1ee83d",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/turkish-university-applied-sciences-looking-partners-apply-horizon-cl6"
+}

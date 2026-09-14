@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:17:14.027045+00:00",
+  "demand_id": "TRIT20251104011",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1c5a86b559b6885cb03913c58dfeeefa59c6414a1d049c694d66c66ea6f38674",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/italian-neurologic-rehabilitation-hospital-seeks-research-partnerships-co"
+}

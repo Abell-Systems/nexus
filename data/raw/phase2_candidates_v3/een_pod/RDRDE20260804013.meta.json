@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:12.955639+00:00",
+  "demand_id": "RDRDE20260804013",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e08e9a921753c4568a39761914bcd106370a8145b30623cb0d00d960721429ea",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/german-research-institute-seeks-european-partners-eu-funded-project"
+}

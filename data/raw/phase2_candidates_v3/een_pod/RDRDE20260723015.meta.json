@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:47.802664+00:00",
+  "demand_id": "RDRDE20260723015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "931220c5069a7343d292518212d5447857e935769e72dc55cadeb3e0f48df8de",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/horizon-cl6-2026-01-circbio-07-international-non-eu-partner-sought-project"
+}

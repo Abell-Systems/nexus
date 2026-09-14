@@ -6,15 +6,10 @@ the same pattern `docs/phase2-temporal-window-amendment.md` uses for the 2020–
 2024–2025 window change. Approval authorizes the decision this document argues for
 (§3–§8); it does not, by itself, apply it.
 
-**Approved, but not yet implemented.** `corpus_expansion_policy_v2.json`, ADR 0031,
-`EenPodCandidateMapper`, and `EenPodOfficialHarvester` remain unmodified as of this
-writing — this is a deliberate separation of the methodological decision (this commit)
-from its implementation (a distinct, separate commit/PR). Applying it (editing ADR
-0031 §2.2, versioning a `v3` policy, extending the mapper/harvester, TDD, and
-re-running acquisition) is §9's explicit next step, not taken here. The success
-criterion in §8 — $N_{\mathrm{power}} \ge 60$ *after* every existing filter and the
-independence audit, never a raw or accepted count alone — governs that follow-on work
-and is not relaxed by this approval.
+**Implemented and re-acquired (2026-09-14).** ADR 0031 §2.2 amended,
+`corpus_expansion_policy_v3` versioned, `EenPodOfficialHarvester` extended to crawl
+both construct facets, `EenPodCandidateMapper` extended for the R&D request reference
+prefix, TDD added, acquisition re-run live. Full outcome: §10 below.
 
 ---
 
@@ -147,6 +142,13 @@ count. Concretely:
 
 ## 9. What this amendment explicitly does not do
 
+> **Executed — see §11 for the outcome.** The chain below was carried out as written,
+> with one correction found during execution: §9 item 3's "`DR`" reference prefix
+> (from #101c §7.2's single manually-read sample) turned out not to match any of the
+> 207 `R&D request` records actually harvested; the real prefix, confirmed on all of
+> them, is `RDR`. `DR` is kept as an accepted alternative in code in case #101c's
+> reading reflects a genuine second variant never encountered in this run — see §11.
+
 - **No opportunistic inclusion.** Records are not being added because they perform
   better in matching, produce more favorable metrics, or "look easier" — the case for
   `R&D request` rests entirely on §3–§5's construct-identity argument and #101c's
@@ -175,12 +177,63 @@ count. Concretely:
 - **No decision on a third source class.** That remains a distinct, separate option
   this document does not evaluate.
 
-## 10. Open item, not resolved here
+## 10. Open item flagged before execution
 
 All 47 `Technology request` records accepted in #101b-v2 have `organization_raw =
 UNKNOWN` — the official-portal mapper does not currently extract an organization
 identity field (the Lombardia mirror mapper path did). This is independent of the
-construct-expansion question and would block a meaningful #102 regardless of whether
-`R&D request` is authorized. Whoever implements §9's chain should treat this as a
-prerequisite to #102, not as something this amendment or a `v3` policy change
-resolves on its own.
+construct-expansion question and would need addressing before a meaningful #102,
+whether or not `R&D request` is authorized. §11 reports what was actually found once
+acquisition ran.
+
+## 11. Outcome (2026-09-14)
+
+Re-ran the acquisition pipeline (harvest → map → validate → audit) against
+`corpus_expansion_policy_v3`, both `een_pod` construct facets.
+
+**Correction found during harvest:** the official portal's actual `R&D request`
+reference prefix is **`RDR`** (3 letters), confirmed consistently on all 207 raw
+`R&D request` records harvested — not `DR` as #101c §7.2's single manually-read
+sample suggested. The initial harvest run (with only `DR` supported) crashed with a
+`PayloadCollisionError`: two distinct records, neither matching any known prefix,
+fell back to a URL-slug-derived synthetic id that happened to collide after
+truncation. Fixed by (1) adding `RDR` as the primary `R&D request` prefix (`DR` kept
+as a secondary alternative, unconfirmed but harmless), (2) anchoring the reference
+regex to a token boundary (`\b`) to stop a latent cross-match bug the `DR` addition
+exposed against unrelated `RD`-prefixed strings (caught by
+`test_een_pod_mapper_trusts_lead_field_over_unrelated_sidebar_reference`, whose
+fixture had to be corrected — it had accidentally become a coincidentally
+well-formed `RDR` reference), and (3) making the synthetic-id fallback
+collision-proof with a full-URL hash suffix instead of a bare truncated slug.
+
+| Stage | Count |
+| :--- | ---: |
+| Raw harvested | 315 (108 `Technology request` + 207 `R&D request`, both matching #101c's/#101b-v2's population exactly) |
+| Mapping errors | 0 |
+| **Accepted** | **76** (47 `Technology request` + 29 `R&D request`) |
+| Rejected | 239 (238 `OUT_OF_TEMPORAL_WINDOW`, 1 `CONTENT_TOO_SHORT`) |
+
+Accepted breakdown: 12 published in 2024, 64 in 2025; 70 `international_european` / 6
+`spain`. Audit (`experiments.phase2.audit` against `corpus_expansion_policy_v3`):
+**PASSED**. Sealed artifacts in `data/experiments/phase2_v3/`; raw payloads in
+`data/raw/phase2_candidates_v3/` (kept separate from `v2`'s raw dir).
+
+**Gate:** accepted count **76 ≥ 60** — unlike #101b-v2's 47, this does *not*
+short-circuit to "stop": §8 requires $N_{\mathrm{power}}$ measured *after*
+independence, and dedup can only shrink 76, so whether the real $N_{\mathrm{power}}$
+clears 60 is not yet decided. **Per the gate, #102 (independence audit) is the next
+step** — not yet run by this document.
+
+**§10's flagged gap, now confirmed as a genuine source characteristic, not a mapper
+bug:** the official portal's detail page structure exposes only `Company's Country`,
+never an organization/company name field, for any record inspected. Some records'
+free-text description *does* name the requesting organization explicitly (e.g. "Green
+Tribology Solutions (GTS) develops..."); others only say "The company..." / "A German
+SME..." with no recoverable name. This means organization identity, where resolvable
+at all, must come from close reading of free text — the same manual-annotation
+methodology already used for `sector_assignments_n24_v1.json` — not from a structured
+field a mapper fix could populate. This is #102's actual job, not a prerequisite
+blocking it; #102 should expect a non-trivial `UNKNOWN` share on genuine grounds (some
+organizations truly aren't named on the page), which — per ADR 0031 §2.4/§2.9 and
+`unknown_handling.counts_towards_independent_target = false` — do not count toward
+$N_{\mathrm{power}}$ regardless of how #102 is run.

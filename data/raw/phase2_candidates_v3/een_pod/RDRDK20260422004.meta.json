@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:19:57.868760+00:00",
+  "demand_id": "RDRDK20260422004",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "aac6c5042356a89883979bfb527299c405ac2df135a261d8748b720b729aaaa7",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/eurostars-danish-sme-seeks-partners-ai-based-sub-millimeter-weed-detection"
+}

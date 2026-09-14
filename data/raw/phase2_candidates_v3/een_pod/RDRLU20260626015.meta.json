@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:45.812248+00:00",
+  "demand_id": "RDRLU20260626015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "77f2bebffdda6799134cc46c30c1fc2fe9d063191dbcc4c4942a77d0e402e3a8",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/eic-pathfinder-challenge-clinical-partners-sought-collect-multimodal"
+}

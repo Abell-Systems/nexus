@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:25.580705+00:00",
+  "demand_id": "RDRME20260807024",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d6d5627330e5c56d3ed37ccf7ae2c883fef7d2e0aa5807aa65d0a90ad2bff0d9",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/montenegrin-licensed-scientific-research-organisation-seeking-partners"
+}

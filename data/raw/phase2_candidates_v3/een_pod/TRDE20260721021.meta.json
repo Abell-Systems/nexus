@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:16:14.681696+00:00",
+  "demand_id": "TRDE20260721021",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "cde7c6d76295257f5c5fea66f3f40403e4200155c262bdd072070dab8dfe10b1",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/cleaning-solutions-based-ozonated-water-sought-significantly-reduce"
+}

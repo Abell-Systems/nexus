@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:03.036506+00:00",
+  "demand_id": "RDRIE20260831011",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e5b464d22eb287adb62ad6b4378250ab4a9e95260d5e45d4396f9ca2f6c1790a",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/irish-sme-seeking-coordinator-and-consortium-partners-horizon-cl6-2026-01"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:22:00.294409+00:00",
+  "demand_id": "RDRDE20251103003",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "2e54d3d1588acf83aa323f62d4dcccddb69823f664b1c9e96cf0ff3e7d94c623",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/german-sme-offering-innovative-insurance-system-art-works-and-museums"
+}

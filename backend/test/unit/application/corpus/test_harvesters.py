@@ -684,12 +684,46 @@ def test_een_pod_official_determine_demand_id():
     )
     assert demand_id == "TRDE20251111001"
 
-    # Case 2: Fallback to URL slug when no POD reference is present
-    demand_id_fallback = harvester._determine_demand_id(
-        b"<html>No POD reference here</html>",
-        "https://een.ec.europa.eu/partnering-opportunities/some-fallback-slug",
+    # Case 2: Fallback to URL slug + hash when no POD reference is present
+    url = "https://een.ec.europa.eu/partnering-opportunities/some-fallback-slug"
+    demand_id_fallback = harvester._determine_demand_id(b"<html>No POD reference here</html>", url)
+    assert demand_id_fallback.startswith("EEN-OFFICIAL-some-fallback-slug-")
+    # Deterministic recurrence
+    assert harvester._determine_demand_id(b"<html>No POD reference here</html>", url) == demand_id_fallback
+
+
+def test_een_pod_official_determine_demand_id_rd_request_prefix():
+    """The official portal's confirmed R&D request prefix is "RDR" (3 letters,
+    verified on 33 live records during #101d re-acquisition -- see
+    docs/phase2-construct-expansion-amendment.md), distinct from the Lombardia
+    mirror's "RD"."""
+    harvester = EenPodOfficialHarvester()
+
+    demand_id = harvester._determine_demand_id(
+        b"<html><dl><dt>POD Reference</dt><dd>RDRDE20260804013</dd></dl></html>",
+        "https://een.ec.europa.eu/partnering-opportunities/arbitrary-slug",
     )
-    assert demand_id_fallback == "EEN-OFFICIAL-some-fallback-slug"
+    assert demand_id == "RDRDE20260804013"
+
+
+def test_een_pod_official_fallback_ids_never_collide_across_distinct_urls():
+    """Two distinct pages whose slugs happen to agree in their first 40 characters
+    must not be assigned the same synthetic demand_id (a real collision hit live
+    during #101d re-acquisition and correctly tripped PayloadCollisionError before
+    this fix)."""
+    harvester = EenPodOfficialHarvester()
+    shared_prefix = "partners-sought-horizon-project-cluster-x"
+    assert len(shared_prefix) > 40
+
+    id_a = harvester._determine_demand_id(
+        b"<html>No POD reference here</html>",
+        f"https://een.ec.europa.eu/partnering-opportunities/{shared_prefix}alpha",
+    )
+    id_b = harvester._determine_demand_id(
+        b"<html>No POD reference here</html>",
+        f"https://een.ec.europa.eu/partnering-opportunities/{shared_prefix}beta",
+    )
+    assert id_a != id_b
 
 
 def test_een_pod_official_harvester_crawls_both_authorized_construct_facets(tmp_path: Path):

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:41.887851+00:00",
+  "demand_id": "RDRFR20260727003",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "45317f832ee18cc6215b27a1ecc99d47ec003ef37b5dddb4472f067d35ca2038",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/horizon-cl4-2026-materials-french-technological-center-searching-brass"
+}

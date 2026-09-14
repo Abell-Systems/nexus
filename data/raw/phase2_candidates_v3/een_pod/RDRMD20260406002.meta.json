@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:20:13.795999+00:00",
+  "demand_id": "RDRMD20260406002",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c89d499f218bbf93b0cd3f9cb8f22248db5032e9fa6e792b040c540f20e9bfa5",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/academic-team-republic-moldova-seeking-european-partners-horizon-cl6-2026"
+}

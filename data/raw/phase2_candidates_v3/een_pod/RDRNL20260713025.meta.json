@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:58.825312+00:00",
+  "demand_id": "RDRNL20260713025",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c23fb43b5a102b76131e78e55edc1f88e24c35ff6aa557f5706deb9cbc74f498",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/dutch-womens-mental-health-ai-startup-seeking-consortium-partners"
+}

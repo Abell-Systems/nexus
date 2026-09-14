@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:24.966986+00:00",
+  "demand_id": "RDRTR20260807027",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "64e51d78005478c15ddcd4f1fbff54e9cf741df6f7a4c1e4729fec849a1f62f4",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/eurostars-consortium-seeking-clinical-and-regulatory-partners-compliance"
+}

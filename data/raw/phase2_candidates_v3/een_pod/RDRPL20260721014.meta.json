@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:52.830726+00:00",
+  "demand_id": "RDRPL20260721014",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ec939566c9fa22d04fb276010b0568f0f330209314bc1420367f109c92335529",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/human-centered-ai-interest-based-learning-sustainable-competencies-and"
+}

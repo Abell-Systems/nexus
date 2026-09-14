@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:22:05.303404+00:00",
+  "demand_id": "RDRRO20251022002",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e700399be0311b40534162069da7712195a640c568cba20acc5ac291a1a9822b",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/romanian-ngo-looking-institutional-and-organizational-partners-sustainable"
+}

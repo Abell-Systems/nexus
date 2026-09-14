@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:19:46.854787+00:00",
+  "demand_id": "RDRDE20260528024",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ff333de0c821d22b49517828d4f44f9ee18264e6ef19ab76c4245dd039b110d2",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/seeking-swedish-partner-expertise-electric-drives-regenerative-braking-or"
+}

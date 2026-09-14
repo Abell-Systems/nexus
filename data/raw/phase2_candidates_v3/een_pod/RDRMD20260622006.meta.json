@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:19:26.875391+00:00",
+  "demand_id": "RDRMD20260622006",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "63f3b561d7a684f88e691b6dc08ff2cc8919b67185faceec6b2cdaeed11fd711",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/moldovan-tertiary-hospital-amr-isolates-seeks-rd-partners-horizon-europe"
+}

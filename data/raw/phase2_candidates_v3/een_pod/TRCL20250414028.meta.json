@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:17:32.961818+00:00",
+  "demand_id": "TRCL20250414028",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "fac6ad529760e942f8f896e393efe977e760abcf31d8a9a937b5fd7de55288e1",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/chilean-sustainable-architecture-company-looking-innovative-technologies"
+}

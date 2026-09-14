@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:21:49.245497+00:00",
+  "demand_id": "RDRMT20251229003",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "0303ba653c7ffab2a3879acbf1e7e98f865eaa8c5a8cce96bf2ade09332f063d",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/maltese-sme-specialising-real-world-deployment-developed-quantum-safe"
+}

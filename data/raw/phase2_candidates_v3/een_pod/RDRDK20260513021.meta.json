@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:19:52.846476+00:00",
+  "demand_id": "RDRDK20260513021",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "213691ecef7af89c9c48c4339926deacd095525943ffc535ef53bc4a98400e90",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/danish-sme-seeks-laser-technology-partner-co-develop-compact-weed-control"
+}

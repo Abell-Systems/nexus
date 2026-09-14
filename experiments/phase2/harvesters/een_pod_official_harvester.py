@@ -9,6 +9,7 @@ source per `docs/phase2-temporal-window-amendment.md` and
 `docs/phase2-construct-expansion-amendment.md`.
 """
 
+import hashlib
 import logging
 import re
 import urllib.parse
@@ -28,9 +29,10 @@ AUTHORIZED_PROFILE_TYPE_IDS: tuple[int, ...] = (
 )
 
 _DETAIL_LINK_RE = re.compile(r"^/partnering-opportunities/[a-z0-9-]+$")
-# "DR" is the official portal's R&D request prefix, distinct from the Lombardia
-# mirror's "RD" seen in #101b (#101c SS7.2) -- both map to the same construct.
-_POD_REF_RE = re.compile(r"\b((?:TR|TO|BO|BR|RD|DR)[A-Z]{2}\d{8,}\d)\b")
+# "RDR" is the official portal's R&D request prefix, confirmed on 33 live records
+# during #101d re-acquisition -- distinct from the Lombardia mirror's "RD" (#101b).
+# "DR" is kept for #101c SS7.2's single manually-read sample.
+_POD_REF_RE = re.compile(r"\b((?:TR|TO|BO|BR|RDR|RD|DR)[A-Z]{2}\d{8,}\d)\b")
 
 
 class EenPodOfficialHarvester(BaseHarvester):
@@ -188,8 +190,13 @@ class EenPodOfficialHarvester(BaseHarvester):
         if m_pod:
             return m_pod.group(1)
 
+        # No recognized POD reference prefix found -- fall back to a URL-derived id.
+        # Includes a full-URL hash suffix (not just a truncated slug) so two distinct
+        # pages whose slugs happen to agree on their first 40 characters cannot
+        # collide into the same synthetic demand_id.
         slug = url.rstrip("/").rsplit("/", 1)[-1]
-        return f"EEN-OFFICIAL-{slug[:40]}"
+        url_hash = hashlib.sha256(url.encode("utf-8")).hexdigest()[:10]
+        return f"EEN-OFFICIAL-{slug[:40]}-{url_hash}"
 
     def _extract_proposal_links(self, html_bytes: bytes) -> list[str]:
         """Extract partnering-opportunities detail links from a listing page."""

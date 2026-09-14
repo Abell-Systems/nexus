@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:21:23.454448+00:00",
+  "demand_id": "RDRNL20260130010",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "401bcfc82299bdfc1eaea6c2716842cdd75137cbecbf042cc46102c76fe03482",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/consortium-seeking-ukrainian-partner-grid-renewable-energy-storage-data"
+}

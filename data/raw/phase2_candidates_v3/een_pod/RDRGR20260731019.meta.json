@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:33.247554+00:00",
+  "demand_id": "RDRGR20260731019",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c88eb8e7fbf91f8549b4664cde0999bf0cb1a1fed28985a337ba0e59637dce5b",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/eurostars-call-11-greek-innovative-sme-seeks-media-rights-technology-and"
+}

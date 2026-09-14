@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:17:37.061362+00:00",
+  "demand_id": "TRSE20250219008",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a45c10ed4a04710c45709b0a1d54e12821fe94a1dc4c7e2633b228d1d040e4b6",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/no-code-medical-imaging-platform-seeking-rd-partners-collaborative"
+}

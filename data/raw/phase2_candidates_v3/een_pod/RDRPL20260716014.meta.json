@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:57.833681+00:00",
+  "demand_id": "RDRPL20260716014",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f1142b7e3142f84ea686cb665caee8f17c0173c31dbe8d3f644798861ea075d7",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/polnoris-applied-research-and-innovation-programme-polish-research"
+}

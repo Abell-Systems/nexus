@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:20:26.844400+00:00",
+  "demand_id": "RDRLU20260311014",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f53b2c5156dbd7dd2477b5a5b0a3a251b7aecb07e3825cdbac7857aa5620695c",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/leading-luxembourgish-rto-looking-opportunities-join-consortium-relation"
+}

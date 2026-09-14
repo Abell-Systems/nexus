@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:20:04.840803+00:00",
+  "demand_id": "RDRNL20260127015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "097200a6797562211a51eeb22e9f8e8830d615bdf5d0fc1f4de68a57ea325afe",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/eliar-looking-rd-partners-within-horizon-europe-project-develop-analytics"
+}

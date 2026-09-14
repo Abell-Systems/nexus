@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:20:40.008328+00:00",
+  "demand_id": "RDRNL20260220002",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a9a88cbed2eadc7f3dceb7827e9073a5d2db90c79d9628162c60aed663cb3149",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/dutch-company-looking-sme-experienced-medicalclinic-area-develop-together"
+}

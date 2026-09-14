@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:19:42.977802+00:00",
+  "demand_id": "RDRTR20260605004",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "899d1b5c6c333e900695b26f23eff78174e2faf99b686ed1a348a5080c178778",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/turkish-led-consortium-seeks-partners-ai-supported-deep-sea-biodiversity"
+}

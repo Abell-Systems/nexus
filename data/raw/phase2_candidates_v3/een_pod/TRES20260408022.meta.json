@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:16:47.706661+00:00",
+  "demand_id": "TRES20260408022",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7f1a993f1efb042db89161d7ce958f21ff78ecb6c13fde6979eae53beb10052d",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/spanish-startup-renewable-energy-analytics-platform-investment-assessment"
+}

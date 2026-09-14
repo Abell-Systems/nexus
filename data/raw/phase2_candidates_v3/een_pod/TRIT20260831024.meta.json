@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:15:59.667688+00:00",
+  "demand_id": "TRIT20260831024",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "50c8429eccea4f4040cbd211718c91b8bd7bfa2f74598c2aeceef45823753f66",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/technological-solutions-urban-growth-night-light-analysis-sought-nereus"
+}

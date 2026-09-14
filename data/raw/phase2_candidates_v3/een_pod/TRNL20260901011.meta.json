@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:15:56.799165+00:00",
+  "demand_id": "TRNL20260901011",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "291fa00c2ed4c0b0b9cafc8f678385510302aa095c3899fc6112e7f2a62135b3",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/innovative-monitoring-solutions-and-sensor-technologies-sought-prevent"
+}
