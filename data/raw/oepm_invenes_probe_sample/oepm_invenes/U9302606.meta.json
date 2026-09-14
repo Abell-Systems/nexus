@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T14:50:56.450309+00:00",
+  "demand_id": "U9302606",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "3e5a50099b436b1bb483c8377b97895f07f411f18d597d4239910822fe137470",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=U9302606"
+}

@@ -1,0 +1,128 @@
+[
+  {
+    "disposition": "excluded_missing_text",
+    "kind_code": "A1",
+    "publication_id": "ES0191788A1",
+    "query": "sistema de refrigeracion por absorcion",
+    "referencia": "P0191788"
+  },
+  {
+    "disposition": "excluded_missing_text",
+    "kind_code": "A1",
+    "publication_id": "ES8704582A1",
+    "query": "sistema de refrigeracion por absorcion",
+    "referencia": "P0552363"
+  },
+  {
+    "disposition": "excluded_missing_text",
+    "kind_code": "A1",
+    "publication_id": "ES0401163A1",
+    "query": "sistema de refrigeracion por absorcion",
+    "referencia": "P0401163"
+  },
+  {
+    "disposition": "excluded_missing_text",
+    "kind_code": "U",
+    "publication_id": "ES1030436U",
+    "query": "sistema de refrigeracion por absorcion",
+    "referencia": "U9500720"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "T3",
+    "publication_id": "ES2311659T3",
+    "query": "dispositivo de monitorizacion de constantes vitales",
+    "referencia": "E03015537"
+  },
+  {
+    "disposition": "included",
+    "kind_code": "A1",
+    "publication_id": "ES2397768A1",
+    "query": "dispositivo de monitorizacion de constantes vitales",
+    "referencia": "P201230951"
+  },
+  {
+    "disposition": "included",
+    "kind_code": "A1",
+    "publication_id": "ES2444712A1",
+    "query": "dispositivo de monitorizacion de constantes vitales",
+    "referencia": "P201231201"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "T3",
+    "publication_id": "ES2539934T3",
+    "query": "dispositivo de monitorizacion de constantes vitales",
+    "referencia": "E06124382"
+  },
+  {
+    "disposition": "included",
+    "kind_code": "A1",
+    "publication_id": "ES2398554A1",
+    "query": "metodo de reciclaje de baterias de litio",
+    "referencia": "P201100237"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "T3",
+    "publication_id": "ES2975858T3",
+    "query": "metodo de reciclaje de baterias de litio",
+    "referencia": "E20153991"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "T3",
+    "publication_id": "ES2982505T3",
+    "query": "metodo de reciclaje de baterias de litio",
+    "referencia": "E20202581"
+  },
+  {
+    "disposition": "excluded_missing_text",
+    "kind_code": "U",
+    "publication_id": "ES1320156U",
+    "query": "metodo de reciclaje de baterias de litio",
+    "referencia": "U202530397"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "A6",
+    "publication_id": "ES2025460A6",
+    "query": "estructura modular de vivienda prefabricada",
+    "referencia": "P9002089"
+  },
+  {
+    "disposition": "included",
+    "kind_code": "A1",
+    "publication_id": "ES2281289A1",
+    "query": "estructura modular de vivienda prefabricada",
+    "referencia": "P200600531"
+  },
+  {
+    "disposition": "excluded_missing_text",
+    "kind_code": "A1",
+    "publication_id": "ES8407143A1",
+    "query": "estructura modular de vivienda prefabricada",
+    "referencia": "P0526310"
+  },
+  {
+    "disposition": "excluded_missing_text",
+    "kind_code": "U",
+    "publication_id": "ES1025886U",
+    "query": "estructura modular de vivienda prefabricada",
+    "referencia": "U9302606"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "T3",
+    "publication_id": "ES2335418T3",
+    "query": "sistema de purificacion de aire mediante fotocatalisis",
+    "referencia": "E05016942"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "T3",
+    "publication_id": "ES2043249T3",
+    "query": "sistema de purificacion de aire mediante fotocatalisis",
+    "referencia": "E90201172"
+  }
+]
