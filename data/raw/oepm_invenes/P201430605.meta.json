@@ -1,0 +1,10 @@
+{
+  "acquisition_timestamp": "2026-09-14T14:00:23.351044+00:00",
+  "demand_id": "P201430605",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "note": "previously fetched this session, staged here for pipeline input",
+  "raw_payload_sha256": "a9ded7f4f11550813d7fbf642354246cf2b5dcbfcfd935090cf4568e57cc63aa",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201430605"
+}

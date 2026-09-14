@@ -1,0 +1,218 @@
+{
+  "dataset_metadata": {
+    "dataset_id": "OEPM-INVENES-CORPUS-2026-V1",
+    "dataset_title": "Oficina Española de Patentes y Marcas (OEPM) -- INVENES public search, ADR 0035",
+    "official_catalog_url": "https://consultas2.oepm.es/InvenesWeb/faces/busquedaInternet.jsp"
+  },
+  "publications": [
+    {
+      "abstract": "Sistema inalámbrico y método de lectura remota de contadores. Sistema inalámbrico de lectura remota de contadores, que comprende: al menos un dispositivo de almacenamiento (100), conectado a un contador o integrado en un contador, que comprende medios (2) para almacenar datos relativos al consumo; al menos un dispositivo concentrador (200), y un dispositivo central (400). El dispositivo de almacenamiento (100) comprende medios (1, 5, 6) para enviar los datos relativos al consumo al dispositivo concentrador a través de una red de banda estrecha (500), que opera en una banda de frecuencia de uso libre. El dispositivo concentrador comprende medios para reenviar dichos datos al dispositivo central (400) a través de una red de banda ancha (600), que opera en una banda de frecuencia de uso libre.",
+      "application_number": "P200800795",
+      "assignees": [],
+      "classifications_cpc": [
+        "G01D4/002",
+        "G01D4/004",
+        "Y02B90/20",
+        "Y04S20/30"
+      ],
+      "classifications_ipc": [
+        "G01D4/00"
+      ],
+      "country_code": "ES",
+      "doc_number": "2326252",
+      "filing_date": "2008-03-18",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P200800795",
+      "inventors": [
+        "LUIS SANCHEZ,FERNANDO",
+        "TOBEA ANDREU,JOAN"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2009-10-05",
+      "publication_id": "ES2326252A1",
+      "title": "SISTEMA INALAMBRICO Y METODO DE LECTURA REMOTA DE CONTADORES"
+    },
+    {
+      "abstract": "Equipo electrónico de control y supervisión para unidades condensadoras de frío, que comprende, dentro de una caja (2) protectora, una circuitería (1) electrónica gestionada por un micro-controlador (5) programable, contando con una primera entrada (E1) (digital) para señal de encendido (9); una segunda entrada (E2) (analógica) conectada a sonda de presión (12) intercalada en la tubería de alta; una tercera entrada (E3) a sonda de temperatura (10) ambiente; una cuarta entrada (E4) a una segunda sonda de temperatura (19) del gas de aspiración; una primera salida (S1) a relé (24) para control del compresor (16); una segunda salida (S2) a triac para control de los ventiladores (13); una tercera salida auxiliar (S3), para funciones opcionales; dos elementos de señalización local de alarmas, por LED tricolor (8) y zumbador (4); y un conector RJ45 (6) que combina puerto serie RS232 y conexión ICSP para configuración y envío de alarmas remotas.",
+      "application_number": "P201132156",
+      "assignees": [
+        "POUSADA MIRANDA, Eduardo"
+      ],
+      "classifications_cpc": [
+        "G05B11/32",
+        "F25B49/005",
+        "Y02B30/70"
+      ],
+      "classifications_ipc": [
+        "G05B11/32",
+        "F25B49/00"
+      ],
+      "country_code": "ES",
+      "doc_number": "2411281",
+      "filing_date": "2011-12-30",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201132156",
+      "inventors": [
+        "POUSADA MIRANDA, Eduardo"
+      ],
+      "kind_code": "A2",
+      "publication_date": "2013-07-05",
+      "publication_id": "ES2411281A2",
+      "title": "EQUIPO ELECTRONICO DE CONTROL Y SUPERVISION PARA UNIDADES CONDENSADORAS DE FRIO"
+    },
+    {
+      "abstract": "Sistema y método de control y supervisión vía una red telemática de datos. El sistema es un sistema micro-controlado (1) y supervisa y controla una serie de dispositivos (8) tales como electrodomésticos, equipos de imagen y sonido, o maquinaria industrial. El sistema consta de sensores (3) para la recogida de datos (2) de los dispositivos (8) a controlar y actuadores (3') para enviar instrucciones (2') a dichos dispositivos (8). Los datos e instrucciones son gestionados y almacenados por una centralita (4). La centralita tiene un script (412), conectado a una base de datos (100) de datos (2) e instrucciones (2'), y está conectada a través de internet a un servidor web (300) y éste a un dispositivo exterior de administración (5), tipo tablet, smartphone u ordenador, del sistema (1) a través de una aplicación web (400).",
+      "application_number": "P201430830",
+      "assignees": [
+        "HICOM TECHNOLOGY BUSINESS SL"
+      ],
+      "classifications_cpc": [
+        "H04L67/12"
+      ],
+      "classifications_ipc": [
+        "H04L29/08"
+      ],
+      "country_code": "ES",
+      "doc_number": "2552604",
+      "filing_date": "2014-05-30",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201430830",
+      "inventors": [
+        "QUINTAS FERNANDEZ, Antonio"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2015-11-30",
+      "publication_id": "ES2552604A1",
+      "title": "SISTEMA Y MÉTODO DE CONTROL DE SUPERVISIÓN VIA UNA RED TELEMÁTICA DE DATOS."
+    },
+    {
+      "abstract": "Método y sistema de mantenimiento predictivo de edificios y estructuras, que prevé la instalación de una serie de sensores (S1, S2, S3, ..., Sn) colocados en lugares estratégicos del edificio o de la estructura a controlar, en la cual o bien cada uno de los sensores está conectado mediante cableado a un nodo (NS) que está dotado de una antena de transmisión inalámbrica con un nodo central de comunicación (NC); o bien cada sensor (S1, S2) dispone de medios propios de comunicación inalámbrica y directamente transmite los datos recogidos a dicho nodo central de comunicaciones (NC); presentando cada nodo central una antena de salida que comunica los datos recibidos a un servidor (Serv) existente en un centro de datos (CD), al cual se conectan varios terminales de usuario (T1, T2, T3, ..., Tn) para controlar y gestionar su edificio, que incluye una herramienta informática de predicción (HP), que en función de parámetros físicos y químicos que se miden en los sensores estima el comportamiento y deterioro de la estructura o edificio en el futuro, mediante algoritmos (Alg) que correlacionan los parámetros físico-químicos con los procesos patológicos que se pueden dar en función del tiempo.",
+      "application_number": "P201630316",
+      "assignees": [
+        "AUSCULTIA, S.L."
+      ],
+      "classifications_cpc": [
+        "A45C13/02",
+        "G06Q50/08",
+        "A45C13/103",
+        "A45C5/14",
+        "A45C7/0054",
+        "A45C2005/035"
+      ],
+      "classifications_ipc": [
+        "G06Q50/08"
+      ],
+      "country_code": "ES",
+      "doc_number": "2600452",
+      "filing_date": "2016-03-17",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201630316",
+      "inventors": [
+        "PEREZ DIAZ, José Antonio",
+        "CABALLERO PEREZ-ALOE, Mª Paz",
+        "MORENO CANSADO, Alberto"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2017-02-09",
+      "publication_id": "ES2600452A1",
+      "title": "Método y sistema de mantenimiento predictivo de edificios y estructuras."
+    },
+    {
+      "abstract": "Procedimiento, sistema de control, nodo de transductores y producto de programa informático para hacer, por parte de un nodo de transductores y/o por parte de un sistema de control, que unos o más transductores comprendidos en el nodo sean accesibles a una red de transductores cuando el nodo está conectado a la red de transductores. La presente invención se refiere a procedimientos para hacer accesible uno o más transductores de forma automática a una red de transductores, a través de nodos de transductores inteligentes que comprenden al menos uno de los citados transductores; la invención también se refiere a la red de transductores que comprende un sistema de control y al menos un nodo de transductores, configurados para ejecutar los citados procedimientos; de acuerdo con la invención también se definen unos productos de programa informático para llevar a cabo dichos procedimientos.",
+      "application_number": "P201630580",
+      "assignees": [
+        "UNIVERSIDADE DA CORUÑA"
+      ],
+      "classifications_cpc": [
+        "H04W48/16",
+        "H04W84/18",
+        "H04L67/125"
+      ],
+      "classifications_ipc": [
+        "H04W84/18",
+        "H04L29/08",
+        "H04W48/16"
+      ],
+      "country_code": "ES",
+      "doc_number": "2641296",
+      "filing_date": "2016-05-04",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201630580",
+      "inventors": [
+        "SUÁREZ ALBELA, Manuel José",
+        "FERNÁNDEZ CARAMÉS, Tiago Manuel",
+        "FRAGA LAMAS, Paula"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2017-11-08",
+      "publication_id": "ES2641296A1",
+      "title": "PROCEDIMIENTO, SISTEMA DE CONTROL, NODO DE TRANSDUCTORES, Y PRODUCTO DE PROGRAMA INFORMÁTICO PARA HACER, QUE UNOS O MÁS TRANSDUCTORES COMRENDIDOS EN EL NODO SEAN ACCESIBLES A UNA RED DE TRANSDUCTORES A TRAVÉS DE NODOS DE TRANSDUCTORES INTELIGENTES"
+    },
+    {
+      "abstract": "Método para votación electrónica segura con sistema de auditoría inmutable, permite conducir electrónicamente, con total seguridad, votaciones y consultas a través de una red de comunicaciones. El método emplea unos procesos (210) y protocolos (202, 204, 206, 208, 212, 214) criptográficos interrelacionados, especialmente diseñados para dotar de seguridad a la emisión de los votos, al recuento de los votos, y a la verificación de los resultados de la votación o consulta. Dichos procesos y protocolos criptográficos conforman conjuntamente un esquema criptográfico de votación capaz de asegurar los requisitos de seguridad específicos de una votación electrónica en la cual los votantes emiten sus votos remotamente. El método incorpora una capa de auditoría basada en el uso de mecanismos inmutables que protegen los registros de todas las acciones realizadas en la votación, como las realizadas por los administradores del sistema de los servidores de votación, para asegurar una total transparencia del proceso.",
+      "application_number": "P201830321",
+      "assignees": [
+        "SCYTL SECURE ELECTRONIC VOTING, SA"
+      ],
+      "classifications_cpc": [
+        "H04L9/32",
+        "G06F21/64",
+        "G07C13/00"
+      ],
+      "classifications_ipc": [
+        "G06F21/64",
+        "G07C13/00",
+        "H04L9/32"
+      ],
+      "country_code": "ES",
+      "doc_number": "2726003",
+      "filing_date": "2018-03-29",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201830321",
+      "inventors": [
+        "PUIGGALÍ ALLEPUZ, Jordi"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2019-10-01",
+      "publication_id": "ES2726003A1",
+      "title": "Método para votación electrónica segura con sistema de auditoría inmutable y programas informáticos del mismo"
+    },
+    {
+      "abstract": "INSTALACION DE CAPTACION Y TRATAMIENTO DE LAS LECTURAS DE LOS CONTADORES DE REDES DE DISTRIBUCION DE FLUIDOS. PARTIENDO DE UNA INSTALACION CON CONTADORES DE CONSUMO DE FLUIDO CON UN CAPTADOR, CONECTADOS PERMANENTEMENTE CON CONCENTRADORES PRIMARIOS A LOS QUE TRANSMITEN IMPULSOS DE LECTURA, SE HACE QUE DICHA INSTALACION COMPRENDA ADEMAS CONCENTRADORES SECUNDARIOS Y CONCENTRADORES TERCIARIOS, QUE CADA CONCENTRADOR PRIMARIO ESTE CONECTADO PERMANENTEMENTE CON UNO DE LOS CONCENTRADORES SECUNDARIOS Y TENGA MEDIOS PARA TRANSMITIRLE IMPULSOS DE LECTURA Y PARA RECIBIR IMPULSOS DE CONTROL PROCEDENTES DE DICHO CONCENTRADOR SECUNDARIO, Y QUE CADA CONCENTRADOR SECUNDARIO ESTE CONECTADO CON EL CONCENTRADOR TERCIARIO O CON UNO DE LOS CONCENTRADORES TERCIARIOS Y TENGA MEDIOS PARA TRANSMITIRLE IMPULSOS Y PARA RECIBIR IMPULSOS DE CONTROL PROCEDENTES DE DICHO CONCENTRADOR TERCIARIO. LA INVENCION SE APLICA A REDES DE FLUIDOS PARA CENTRALIZAR SU CONTROL.",
+      "application_number": "P9101245",
+      "assignees": [],
+      "classifications_cpc": [],
+      "classifications_ipc": [
+        "G01F15/06",
+        "G06F17/40",
+        "H04Q9/02"
+      ],
+      "country_code": "ES",
+      "doc_number": "2037587",
+      "filing_date": "1991-05-23",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P9101245",
+      "inventors": [
+        "GARRIGA MIRALLES, MANUEL"
+      ],
+      "kind_code": "A2",
+      "publication_date": "1993-06-16",
+      "publication_id": "ES2037587A2",
+      "title": "INSTALACION DE CAPTACION Y TRATAMIENTO DE LAS LECTURAS DE LOS CONTADORES DE REDES DE DISTRIBUCION DE FLUIDOS."
+    },
+    {
+      "abstract": "ELECTROSONDA PARA MEDIR EL CONTENIDO DE HUMEDAD DEL SUELO Y LA COMPACTACION DEL MISMO, METODO DE MEDIDA CORRESPONDIENTE Y UTILIZACION DE DICHA ELECTROSONDA. SE PROPORCIONA UNA SONDA PARA MEDIR POR MEDIO DE UN GEORESISTIMETRO LA RESISTIVIDAD ELECTRICA DEL SUELO EN SENTIDO VERTICAL. LA SONDA PREVISTA EN FORMA DE PICA TIENE PAREJAS DE ELECTRODOS EMISORES (5A-5A) Y RECEPTORES (5B-5B) MONTADOS AL REDEDOR DE UN TUBO (2) PARA GENERAR UNA SEÑAL ELECTRICA DE EXCITACION Y RECIBIR UNA SEÑAL ELECTRICA DE RETORNO QUE ES FUNCION DEL GRADO DE HUMEDAD DEL SUELO Y DE LA COMPACTACION DEL MISMO. LA ELECTROSONDA, ADEMAS DE SERVIR PARA REALIZAR PLANIMETRIAS DE LOS GRADOS DE HUMEDAD DEL SUELO Y DE SU COMPACTACION POR LAS ACCIONES DE LABOREO SEL MISMO, PUEDE UTILIZARSE PARA GENERAR UNA SEÑAL DE CONTROL, PARA GOBIERNO AUTOMATICO DE UNA INSTALACION DE RIEGO.",
+      "application_number": "P9600407",
+      "assignees": [],
+      "classifications_cpc": [],
+      "classifications_ipc": [
+        "G01N27/12",
+        "G01N33/24"
+      ],
+      "country_code": "ES",
+      "doc_number": "2116215",
+      "filing_date": "1996-02-22",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P9600407",
+      "inventors": [
+        "ZUÑIGA ESCOBAR, ORLANDO"
+      ],
+      "kind_code": "A1",
+      "publication_date": "1998-07-01",
+      "publication_id": "ES2116215A1",
+      "title": "ELECTROSONDA PARA MEDIR EL CONTENIDO DE HUMEDAD DEL SUELO Y LA COMPACTACION DEL MISMO, METODO DE MEDIDA CORRESPONDIENTE Y UTILIZACION DE DICHA ELECTROSONDA."
+    }
+  ]
+}

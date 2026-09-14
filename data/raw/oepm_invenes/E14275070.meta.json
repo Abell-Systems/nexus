@@ -1,0 +1,10 @@
+{
+  "acquisition_timestamp": "2026-09-14T14:00:23.352616+00:00",
+  "demand_id": "E14275070",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "note": "previously fetched this session, staged here for pipeline input",
+  "raw_payload_sha256": "533fc7cd87352adb01958e6ebb263e080a3a2586966052927387422e8b42517a",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=E14275070"
+}

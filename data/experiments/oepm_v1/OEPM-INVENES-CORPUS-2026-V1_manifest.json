@@ -1,0 +1,29 @@
+{
+  "dataset_id": "OEPM-INVENES-CORPUS-2026-V1",
+  "schema_version": "1.0.0",
+  "source_batches": [
+    {
+      "batch_id": "oepm_invenes_v1_batch",
+      "source_id": "oepm_invenes_corpus",
+      "retrieval_timestamp": "2026-09-14T14:01:34.730846Z",
+      "payload_sha256": "0aedfbc5ad27da7bc7bef5fb780b0866ab561edd2158bf284dc5ccddd6b30bde"
+    }
+  ],
+  "record_count": 8,
+  "parts": [
+    {
+      "part_name": "observations/part_0000.parquet",
+      "row_count": 59,
+      "file_sha256": "23d1f8f1dac4bde76e2e51765318000c7f6271b34475f236e48c95d9f15f2802"
+    },
+    {
+      "part_name": "patents/part_0000.parquet",
+      "row_count": 8,
+      "file_sha256": "2002407583c7211ee4de0ea8507fc045e6c79c34f38053cccc573933e6e4b15d"
+    }
+  ],
+  "dataset_content_sha256": "038e5ccf08f411bfb360ae05d6880f7812bf299a81a689b299f74216c7b252ad",
+  "manifest_sha256": "09499455a7ca2f6ccf3ac1b36f58e6ca84aacda210f0e9eebe7f29f52cec9d61",
+  "created_at": "2026-09-14T14:01:34.730846Z",
+  "transformation_version": "1.0.0"
+}

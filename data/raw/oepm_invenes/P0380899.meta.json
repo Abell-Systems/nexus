@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T13:55:20.088269+00:00",
+  "demand_id": "P0380899",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6dfc8f1246619f53cb647a6690bb55929e52db4b8dc6659b370c4caa3f2bf6ac",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P0380899"
+}

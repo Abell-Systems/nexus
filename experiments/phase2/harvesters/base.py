@@ -42,13 +42,15 @@ class BaseHarvester:
                 time.sleep(self.delay_seconds - elapsed)
         self._last_request_time = time.time()
 
-    def fetch_url(self, url: str) -> tuple[bytes, int]:
+    def fetch_url(self, url: str, extra_headers: dict[str, str] | None = None) -> tuple[bytes, int]:
         """Fetch content from URL using standard urllib with custom user-agent and timeout."""
         self._pace()
         headers = {
             "User-Agent": self.user_agent,
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         }
+        if extra_headers:
+            headers.update(extra_headers)
         req = urllib.request.Request(url, headers=headers)
         with urllib.request.urlopen(req, timeout=self.timeout_seconds) as resp:
             payload = resp.read()

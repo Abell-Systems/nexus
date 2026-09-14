@@ -1,0 +1,226 @@
+[
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2715275T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E12152341"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2823724T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E13178884"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2769790T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E13182860"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2699731T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E14153728"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2896359T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E15191653"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2704274T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E16157581"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2876197T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E18191904"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2870007T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E18213242"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0247493A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0247493"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0319897A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0319897"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0357922A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0357922"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0361390A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0361390"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0380899A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0380899"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0381934A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0381934"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0388674A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0388674"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0390307A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0390307"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0403218A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0403218"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0425629A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0425629"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0426380A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0426380"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0440183A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0440183"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0445787A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0445787"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0474376A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0474376"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES8301031A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0507161"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES8801529A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0539601"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES8609436A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0540743"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES2250006A1",
+    "reason": "missing_critical_text",
+    "referencia": "P200402351"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES2587449A1",
+    "reason": "missing_critical_text",
+    "referencia": "P201530552"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "U",
+    "publication_id": "ES0170520U",
+    "reason": "missing_critical_text",
+    "referencia": "U0170520"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "U",
+    "publication_id": "ES1056326U",
+    "reason": "missing_critical_text",
+    "referencia": "U200302832"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "U",
+    "publication_id": "ES1080879U",
+    "reason": "missing_critical_text",
+    "referencia": "U201330385"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "U",
+    "publication_id": "ES1169408U",
+    "reason": "missing_critical_text",
+    "referencia": "U201631167"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "U",
+    "publication_id": "ES1027187U",
+    "reason": "missing_critical_text",
+    "referencia": "U9400490"
+  }
+]
