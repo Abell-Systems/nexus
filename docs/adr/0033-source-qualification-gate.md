@@ -1,11 +1,14 @@
 # ADR 0033: Source Qualification Gate for Phase-2 Demand Corpus Expansion
 
-**Status:** Proposed
+**Status:** Proposed — spike complete (§6), TED provisionally admissible, formal
+admission not yet taken.
 **Date:** 2026-09-14
 **Scope:** Defines a documentary qualification gate for candidate primary sources under
-ADR 0031 §2.2's `ADMISSIBLE_SOURCE_CANDIDATE` process, and applies it to the first
-round of candidates investigated after #102's closure. Authorizes nothing beyond
-recording this evaluation — no source is admitted, and no acquisition runs from it.
+ADR 0031 §2.2's `ADMISSIBLE_SOURCE_CANDIDATE` process, applies it to the first round of
+candidates investigated after #102's closure, and records a targeted spike (§6) on the
+one live lead (TED Innovation Partnership notices). Authorizes nothing beyond
+recording this evaluation — no source is admitted, no policy is versioned, and no
+acquisition code or run happens here.
 
 ---
 
@@ -175,10 +178,116 @@ any of the others matter. Noted for completeness, not pursued further here.
   reserves for a "no qualified source" outcome.** That discussion has not been opened;
   a live lead (TED) still exists.
 
-## 5. Next step, not taken here
+## 5. Next step (executed — see §6)
 
-A dedicated spike on TED's Pre-Commercial Procurement / Innovation Partnership notice
-population specifically (not general procurement) — sizing the construct-eligible
-volume, sampling notices for `has_articulated_technical_problem`-style fit, and
-checking for public-buyer concentration — following #101c's browser-spike precedent,
-before any decision to acquire from it.
+A dedicated spike on TED's Innovation Partnership notice population specifically (not
+general procurement) — sizing the construct-eligible volume, sampling notices for
+`has_articulated_technical_problem`-style fit, and checking for public-buyer
+concentration — following #101c's browser-spike precedent, before any decision to
+acquire from it.
+
+## 6. TED Innovation Partnership Spike Findings (2026-09-14)
+
+Executed with a real browser against `ted.europa.eu`'s advanced search
+(`Type of procedure = Innovation partnership`, notice type restricted to `Competition`
+— the original call-for-tenders notice, i.e. the actual solicitation, as opposed to
+`Result`/`Planning`/`Contract modification` notices which report on or precede one).
+No scraper/harvester code was written; searches and notice pages were fetched directly
+via a real browser session.
+
+### 6.1 Construct fit — confirmed present, but population is heterogeneous
+
+Sampled two notices directly:
+
+- **`452177-2026` (AENA, S.M.E., S.A., Spain, €66,000,000, 9-year IT-services
+  contract):** weak construct fit. Title and description are identical
+  ("MODERNIZACIÓN DEL ECOSISTEMA OPERACIONAL AENA") — no substantive technical-problem
+  narrative in the notice text itself; the actual technical content, if any, lives in
+  attached procurement-document PDFs, outside the notice's own structured text. Reads
+  as a large-scale IT modernization competition, not an open technical-problem
+  solicitation.
+- **`462609-2026` (Suomen metsäkeskus / Finnish Forest Centre, Finland):** strong
+  construct fit. The notice's own `Description` field states (translated): *"The aim
+  of the procurement is to find an innovation partner with whom to develop a system
+  ('Monitoring Tool') for data-based forest biodiversity monitoring... combining
+  multi-source data, including AI-assisted approaches..."* — a genuinely articulated
+  technical problem (biodiversity-monitoring via multi-source data fusion) seeking an
+  external partner to co-develop a novel solution, structurally very close to
+  `Technology request`/`R&D request`.
+
+**Conclusion:** the Innovation Partnership procedure type is not construct-uniform —
+some notices are large procurement competitions with no substantive problem narrative
+in-notice, others are exactly the kind of open technical-problem solicitation this
+study's construct requires. This is not disqualifying (EEN/POD's raw population was
+never construct-uniform either — that is what the eligibility filter is for), but it
+means the realized acceptance rate is unknown until a real sample is run through
+`has_articulated_technical_problem`-equivalent criteria, and some notices' technical
+content may only exist in attached PDF procurement documents the current pipeline
+(HTML-only, per ADR 0032 §3's provider-agnostic core) does not parse.
+
+### 6.2 Identity — pass, structurally mandatory
+
+Every notice carries a mandatory, structured `1.1. Buyer / Official name` field
+(`AENA, S.M.E., S.A.`; `Suomen metsäkeskus`) — a legal requirement of the EU
+procurement directives, not a discretionary field a poster might omit. This is the
+axis EEN/POD failed on (§3.1); TED passes it unconditionally by construction.
+
+### 6.3 Date — pass, with one execution wrinkle to handle later
+
+Every notice carries a mandatory `OJ S <issue>/<year> <dd/mm/yyyy>` publication line,
+structurally distinct from the deadline field (`Deadline for receipt of requests to
+participate`). **Wrinkle, not a disqualifier:** `452177-2026` is itself a "Change
+notice" that says "This notice changes the previous version `435752-2026`" — TED
+notices can be amended, and an amendment's own publication date is not the original
+solicitation's `t_demand`. A future acquisition design must resolve `t_demand` to the
+*first* Competition notice in a procedure's version chain, not whichever version is
+harvested — a concrete, solvable requirement, not a structural blocker like InnoGet's
+(no date field exists at all) or EEN/POD's (no identity field exists at all).
+
+### 6.4 Historical depth — pass, far exceeds any source investigated so far
+
+671 total `Competition`-type Innovation Partnership notices (all countries, all time)
+span **2016–2026** (a full decade — the procedure type was introduced by the 2014 EU
+procurement directives), confirmed by paging to the oldest results. This is
+categorically deeper than InnoGet (no verifiable depth at all), the Lombardia mirror
+(#101b: mostly current/live), or the official EEN/POD portal (#101c/#101d: ~2 years).
+
+### 6.5 Population — 671 raw before eligibility filtering, diverse geography
+
+671 `Competition`-type notices, spanning at least Spain, Finland, Germany, France,
+Netherlands, Denmark, UK, Poland, Austria, Czechia, Malta, Italy, Luxembourg,
+Belgium (observed across two sampled pages). Whether this clears $N \ge 60$ after
+eligibility filtering depends entirely on §6.1's unresolved acceptance-rate question —
+plausible given EEN/POD's own filtered rates ran 24–43%, but not confirmed.
+
+### 6.6 Independence / duplication risk — plausible, not resolved
+
+Buyer names are diverse across the two sampled pages (no repeats observed in ~30
+notices spanning 10+ countries), a positive sign against gross concentration. Not
+resolved: whether the *same* recurring public bodies (a national rail operator, a
+water utility, a transport ministry) issue multiple Innovation Partnership notices
+across the decade — plausible given many are large infrastructure/utility operators
+government bodies tend to be repeat procurers. ADR 0029's existing rule handles this
+correctly if it happens (one `INDEPENDENT` representative, the rest
+`PSEUDOREPLICATE`) — this is a question of how much of the 671 collapses under that
+rule, not a new methodological problem.
+
+### 6.7 Verdict
+
+**TED Innovation Partnership `Competition` notices are provisionally admissible** —
+they clear identity and date, the two axes that sank EEN/POD and InnoGet respectively,
+and clear historical depth and raw volume by a wide margin. Construct fit is real but
+not uniform, and the true post-filter, post-independence yield is unknown until a
+real acquisition-and-audit cycle is run, exactly like every other source in this
+study (InnoGet, EEN/POD) needed. Two concrete execution requirements are already
+known before that cycle begins: (1) resolve `t_demand` to a notice's first version in
+an amendment chain, and (2) build eligibility criteria that can reject
+generic-procurement notices like `452177-2026` while accepting genuine
+technical-problem notices like `462609-2026` — likely the same
+`has_articulated_technical_problem`/`min_word_count` criteria already in
+`corpus_expansion_policy_v3`, applied to the notice `Description` field, need
+verifying against a larger sample first.
+
+**This is a GO to open source qualification formally (a new ADR 0031 §2.2 admission,
+`corpus_expansion_policy_v4`, a new harvester/mapper) as the next PR — not taken in
+this document.**
