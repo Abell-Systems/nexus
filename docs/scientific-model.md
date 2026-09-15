@@ -110,12 +110,15 @@ EVIDENCE      — #104 pool-coverage CLOSED (gold set frozen, BM25-only:
                 (docs/phase2-ted-cpc-channel-diagnostic-results.md).
                 BM25-only stands as the accurate, final #104 pool result.
                 No recall claim made. CPV->NACE->IPC->CPC concordance
-                FEASIBILITY track opened: real CPV codes extracted/audited
-                for all 30 Dev demands (30/30 coverage, 89 distinct codes,
-                coarse tail incl. the modal code -- docs/phase2-ted-dev-cpv-extraction-audit.md).
-                No concordance table acquired/chosen yet (Schmoch 2003 vs.
-                Dorner & Harhoff 2018 undecided). Dense retrieval / ADR
-                0036 still deferred, not decided against
+                CLOSED: SCOPE-FAILED/DEFERRED -- the only official EU
+                CPV<->NACE table (Reg. 2195/2002 Annex III) covers only
+                NACE Section F (Construction), a hard 30% ceiling (9/30
+                Dev demands) before NACE->IPC is even reached
+                (docs/phase2-cpv-cpc-concordance-feasibility-closure.md).
+                Neither Schmoch 2003 nor Dorner & Harhoff 2018 acquired.
+                Sequence closed: BM25 -> CPC diagnostic -> CPV scope-gate.
+                Dense retrieval recommended as next experiment (not yet
+                started); ADR 0036 remains after that
 EVALUATION    — protocol frozen, waiting on EVIDENCE
 CLAIM         — none yet; nothing above should be read as a result
 ```
