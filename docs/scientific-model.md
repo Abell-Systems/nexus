@@ -76,7 +76,8 @@ INPUT:     65 independent demands + eligible patent corpus.
 METHOD:    Candidate generation + ranking + blind evaluation.
 OUTPUT:    Retrieval/ranking metrics.
 VALIDITY:  Temporality + independence + family-awareness + eligible denominators.
-STATUS:    BLOCKED — patent corpus not yet qualified at scale (see ADR 0035).
+STATUS:    BLOCKED — patent corpus not yet qualified at scale (see the OEPM
+           production-scale patent corpus contract, `feat/pr101b-corpus-expansion-acquisition`).
 ```
 
 ## 4. The admission rule
@@ -94,7 +95,8 @@ note, tracked in `[[project_nexus_oepm_corpus_state]]` (agent memory) and this f
 ## 5. Current position in the chain (2026-09-15)
 
 ```text
-DEMAND        — sourced (TED/CORDIS), independence/eligibility audited (ADR 0029/0030)
+DEMAND        — sourced (TED/CORDIS), independence/eligibility audited
+                (pending merge from `feat/pr101b-corpus-expansion-acquisition`)
 TECHNOLOGY    — OEPM corpus §11.3 ingestion PASS; scale (N≥60) NOT YET DETERMINED
 EVIDENCE      — blocked upstream of TECHNOLOGY: #104 dual annotation cannot start
                 until corpus qualification resolves
