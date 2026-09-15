@@ -100,10 +100,10 @@ DEMAND        — sourced (TED/CORDIS), independence/eligibility audited
 TECHNOLOGY    — OEPM corpus §11.3 ingestion PASS; scale QUALIFIED (63/60
                 included, real ADR 0035 SS3/SS9 classification, frozen
                 2026-09-15, sha256 in data/raw/oepm_invenes_corpus_v1.sha256)
-EVIDENCE      — #104 in progress: at-scale annotation batch generated (19/30
-                Dev demands, 108 pairs, 11 zero-pool demands disclosed --
-                docs/phase2-ted-annotation-at-scale-batch-generation.md);
-                awaiting independent human dual annotation before IAA/κ
+EVIDENCE      — #104 gold set FROZEN (108 judgments, 96 exact agreement +
+                12 adjudicated, κ=0.597/0.916 weighted --
+                docs/phase2-ted-annotation-gold-set-freeze.md). Next: evaluate
+                BM25+CPC candidate-pool recall/coverage against this gold set
 EVALUATION    — protocol frozen, waiting on EVIDENCE
 CLAIM         — none yet; nothing above should be read as a result
 ```
