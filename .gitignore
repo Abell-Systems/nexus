@@ -51,6 +51,10 @@ data/annotations/*
 !data/annotations/judgments-A.json.sha256
 !data/annotations/ted_dry_run_annotation_batch.json
 !data/annotations/ted_dry_run_annotation_batch.sha256
+!data/annotations/ted_at_scale_annotation_batch.json
+!data/annotations/ted_at_scale_annotation_batch.sha256
+!data/annotations/ted_at_scale_annotation_template.csv
+!data/annotations/ted_at_scale_annotation_valentin.csv
 !data/experiments/power_analysis_wilcoxon.json
 !data/experiments/pilot_evaluation_report.json
 !data/experiments/dataset_identity_audit.json

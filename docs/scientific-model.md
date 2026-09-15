@@ -100,8 +100,10 @@ DEMAND        — sourced (TED/CORDIS), independence/eligibility audited
 TECHNOLOGY    — OEPM corpus §11.3 ingestion PASS; scale QUALIFIED (63/60
                 included, real ADR 0035 SS3/SS9 classification, frozen
                 2026-09-15, sha256 in data/raw/oepm_invenes_corpus_v1.sha256)
-EVIDENCE      — unblocked: #104 dual annotation may resume (not yet started
-                in this session)
+EVIDENCE      — #104 in progress: at-scale annotation batch generated (19/30
+                Dev demands, 108 pairs, 11 zero-pool demands disclosed --
+                docs/phase2-ted-annotation-at-scale-batch-generation.md);
+                awaiting independent human dual annotation before IAA/κ
 EVALUATION    — protocol frozen, waiting on EVIDENCE
 CLAIM         — none yet; nothing above should be read as a result
 ```
