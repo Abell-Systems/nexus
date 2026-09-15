@@ -1,0 +1,155 @@
+{
+  "n_pairs": 108,
+  "valentin_distribution": {
+    "0": 88,
+    "1": 8,
+    "2": 5,
+    "3": 7
+  },
+  "lydia_distribution": {
+    "0": 95,
+    "1": 3,
+    "2": 4,
+    "3": 6
+  },
+  "confusion_matrix": {
+    "rows_are": "valentin",
+    "cols_are": "lydia",
+    "labels": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "matrix": [
+      [
+        88,
+        0,
+        0,
+        0
+      ],
+      [
+        7,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        3,
+        2,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        6
+      ]
+    ]
+  },
+  "exact_agreement_count": 96,
+  "exact_agreement_rate": 0.8889,
+  "within_one_agreement_rate": 1.0,
+  "cohens_kappa_unweighted": 0.5973,
+  "cohens_kappa_quadratic_weighted": 0.9161,
+  "n_disagreements": 12,
+  "disagreements": [
+    {
+      "demand_id": "140590-2024",
+      "publication_id": "ES2319487A1",
+      "title": "SISTEMA DE CONSTRUCCION MODULAR",
+      "valentin_judgment": 3,
+      "lydia_judgment": 2,
+      "abs_diff": 1
+    },
+    {
+      "demand_id": "140590-2024",
+      "publication_id": "ES2411281A2",
+      "title": "EQUIPO ELECTRONICO DE CONTROL Y SUPERVISION PARA UNIDADES CONDENSADORAS DE FRIO",
+      "valentin_judgment": 1,
+      "lydia_judgment": 0,
+      "abs_diff": 1
+    },
+    {
+      "demand_id": "140590-2024",
+      "publication_id": "ES2610181A1",
+      "title": "Dispositivo de detección de actividad/inactividad fisiológica basado en fibra óptica",
+      "valentin_judgment": 1,
+      "lydia_judgment": 0,
+      "abs_diff": 1
+    },
+    {
+      "demand_id": "268550-2024",
+      "publication_id": "ES2902101A1",
+      "title": "BRAZALETE DE MUÑECA PARA LA MONITORIZACIÓN DE PARÁMETROS BIOQUÍMICOS HUMANOS, FÍSICOS HUMANOS Y MEDIO AMBIENTALES EN TIEMPO REAL EN COMBINACIÓN CON UN SISTEMA DE MÓDULOS DE COMUNICACIÓN, ALMACENAMIENTO E INTELIGENCIA ARTIFICIAL (IA)",
+      "valentin_judgment": 2,
+      "lydia_judgment": 1,
+      "abs_diff": 1
+    },
+    {
+      "demand_id": "315512-2025",
+      "publication_id": "ES2065820A2",
+      "title": "SISTEMA MODULAR DE CONSTRUCCION DE PARAMENTOS Y SIMILARES.",
+      "valentin_judgment": 1,
+      "lydia_judgment": 0,
+      "abs_diff": 1
+    },
+    {
+      "demand_id": "315512-2025",
+      "publication_id": "ES2552604A1",
+      "title": "SISTEMA Y MÉTODO DE CONTROL DE SUPERVISIÓN VIA UNA RED TELEMÁTICA DE DATOS.",
+      "valentin_judgment": 1,
+      "lydia_judgment": 0,
+      "abs_diff": 1
+    },
+    {
+      "demand_id": "566290-2025",
+      "publication_id": "ES2694438A1",
+      "title": "Sistema de video-identificación a distancia de personas físicas y procedimiento de video-identificación a distancia mediante el mismo",
+      "valentin_judgment": 1,
+      "lydia_judgment": 0,
+      "abs_diff": 1
+    },
+    {
+      "demand_id": "814207-2025",
+      "publication_id": "ES2319487A1",
+      "title": "SISTEMA DE CONSTRUCCION MODULAR",
+      "valentin_judgment": 2,
+      "lydia_judgment": 1,
+      "abs_diff": 1
+    },
+    {
+      "demand_id": "814207-2025",
+      "publication_id": "ES2340132A1",
+      "title": "SISTEMA DE CIMENTACION AUTONIVELANTE PARA EDIFICACIONES TRANSPORTABLES",
+      "valentin_judgment": 1,
+      "lydia_judgment": 2,
+      "abs_diff": 1
+    },
+    {
+      "demand_id": "814207-2025",
+      "publication_id": "ES2452726A1",
+      "title": "Sistema de edificación modular, prefabricada y desmontable",
+      "valentin_judgment": 1,
+      "lydia_judgment": 0,
+      "abs_diff": 1
+    },
+    {
+      "demand_id": "814207-2025",
+      "publication_id": "ES2545931A1",
+      "title": "Composición anticorrosiva aditiva para productos descongelantes y anticongelantes, producto que lo comprende y método de preparación de los mismos",
+      "valentin_judgment": 1,
+      "lydia_judgment": 0,
+      "abs_diff": 1
+    },
+    {
+      "demand_id": "89204-2025",
+      "publication_id": "ES2552604A1",
+      "title": "SISTEMA Y MÉTODO DE CONTROL DE SUPERVISIÓN VIA UNA RED TELEMÁTICA DE DATOS.",
+      "valentin_judgment": 2,
+      "lydia_judgment": 1,
+      "abs_diff": 1
+    }
+  ]
+}

@@ -55,6 +55,7 @@ data/annotations/*
 !data/annotations/ted_at_scale_annotation_batch.sha256
 !data/annotations/ted_at_scale_annotation_template.csv
 !data/annotations/ted_at_scale_annotation_valentin.csv
+!data/annotations/ted_at_scale_iaa_report.json
 !data/experiments/power_analysis_wilcoxon.json
 !data/experiments/pilot_evaluation_report.json
 !data/experiments/dataset_identity_audit.json
