@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T10:14:01.560851+00:00",
+  "demand_id": "E00309035",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "88267b9e366ca481c1eef867b33c8123efbe78ef028ff296df6b6a112c3a8963",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=E00309035"
+}

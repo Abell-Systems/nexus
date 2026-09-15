@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T10:14:33.092622+00:00",
+  "demand_id": "P202030602",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "63f3cec634d41acbe5bdafced87f059b08914974d78101e4aef5914f93962518",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P202030602"
+}
