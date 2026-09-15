@@ -57,6 +57,31 @@ REFERENCIAS: tuple[str, ...] = (
     "U0170520", "U200302832", "U201330385", "U201631167", "U9400490",
 )
 
+# Scaled acquisition, session 1 (docs/phase2-invenes-scaled-acquisition.md).
+# Mechanical continuation of the population-adequacy probe's 10 queries
+# (docs/phase2-invenes-population-adequacy-probe-preregistration.md): each
+# query's *next* unused non-PCT referencias, in INVENES's own result order
+# (positions 5-8, or further into page 2 where a query's page 1 ran short),
+# read from the live search UI on 2026-09-15. No new query design, no
+# curation -- this batch's purpose (qualifying the corpus to N>=60) is kept
+# distinct from the probe's own purpose (testing yield), per the existing
+# workstream-isolation rule; it only reuses the query strategy the probe
+# validated as SCENARIO_A_SIGNAL.
+SESSION_1_REFERENCIAS: tuple[str, ...] = (
+    "P0510444", "P0522840", "P0437308", "P0336549",  # sistema de refrigeracion por absorcion
+    "P201600627", "P201600626", "E13161632", "P202030337",  # dispositivo de monitorizacion de constantes vitales
+    "E22195067", "U202530259", "E21168148", "E19187407",  # metodo de reciclaje de baterias de litio
+    "E93400913", "P200300459", "P200902064", "P200603078",  # estructura modular de vivienda prefabricada
+    "U201730784", "E20160990", "P202230020", "E92121367",  # sistema de purificacion de aire mediante fotocatalisis
+    "E15195725", "E12182148", "E93402560", "E87400489",  # algoritmo de deteccion de fraude en transacciones
+    "P200200420", "P201200352", "P201531105", "P201530431",  # revestimiento anticorrosivo para estructuras metalicas
+    "E13158984", "E13158995", "P201730461", "P200401883",  # sistema de riego automatizado por goteo
+    "P202030202", "U202000367", "E18214549", "U202130811",  # dispositivo de asistencia para movilidad reducida
+    "E17167536", "E20214203", "E22382482", "P202330826",  # metodo de fabricacion aditiva de piezas metalicas
+)
+
+REFERENCIAS = REFERENCIAS + SESSION_1_REFERENCIAS
+
 # T3 (EP-ES) is out of "domestic" scope by default -- ADR 0035 SS3, mirroring
 # the same NORMATIVE_KIND_CODES-minus-T3 default already applied to
 # OepmXmlNormalizer (commit c913e7a).

@@ -1,0 +1,32 @@
+{
+  "purpose": "Session ledger for docs/phase2-invenes-scaled-acquisition.md -- cumulative running total is what the stopping rule (N>=60 included) reads.",
+  "stopping_rule": "included_count >= 60 after real ADR 0035 SS3/SS9 classification (experiments/oepm/build_oepm_corpus.py:classify_records + IngestionPipeline), docs/phase2-invenes-scaled-acquisition.md SS4",
+  "sessions": [
+    {
+      "session": 0,
+      "label": "ADR 0035 SS11.3 original smoke-test batch (not a scaled-acquisition session; baseline)",
+      "date": "2026-09-14",
+      "commit": "eb1ca7b",
+      "queries": 3,
+      "attempted": 40,
+      "included_this_session": 8,
+      "cumulative_included": 8
+    },
+    {
+      "session": 1,
+      "label": "Scaled acquisition session 1 -- next unused referencias, same 10 probe queries",
+      "date": "2026-09-15",
+      "commit": null,
+      "queries": 10,
+      "attempted": 40,
+      "included_this_session": 11,
+      "cumulative_attempted": 80,
+      "cumulative_included": 19,
+      "rate_limited": false,
+      "notes": "Clean run, no harvest errors, no rate limit. Included-this-session (11/40 = 27.5%) matches the repeated probe's own yield almost exactly, corroborating SCENARIO_A_SIGNAL."
+    }
+  ],
+  "target": 60,
+  "current_cumulative_included": 19,
+  "status": "IN PROGRESS -- 19/60, query set not yet exhausted (all 10 queries have further unharvested pages beyond session 1's positions 5-8)"
+}

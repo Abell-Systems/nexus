@@ -1,0 +1,8 @@
+{
+  "content_type": "application/json",
+  "dataset_id": "OEPM-INVENES-CORPUS-2026-V1",
+  "official_catalog_url": "https://consultas2.oepm.es/InvenesWeb/faces/busquedaInternet.jsp",
+  "source_authority": "Oficina Espa\u00f1ola de Patentes y Marcas (OEPM) -- INVENES public search, ADR 0035",
+  "source_file": "/home/valentin/code/active/nexus/data/raw/oepm_invenes_corpus_v1.json",
+  "source_type": "filesystem_raw"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T09:10:29.450669+00:00",
+  "demand_id": "P200902064",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "af178698be6b39f696d4b4ae923cd485b8d2607052de0c994bb5bf52d20b3ede",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P200902064"
+}

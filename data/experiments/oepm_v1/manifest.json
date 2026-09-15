@@ -5,11 +5,11 @@
     {
       "batch_id": "oepm_invenes_v1_batch",
       "source_id": "oepm_invenes_corpus",
-      "retrieval_timestamp": "2026-09-14T14:01:34.730846Z",
-      "payload_sha256": "0aedfbc5ad27da7bc7bef5fb780b0866ab561edd2158bf284dc5ccddd6b30bde"
+      "retrieval_timestamp": "2026-09-15T09:14:57.618112Z",
+      "payload_sha256": "1814283a230a481bc8f7ba05191f85c5a2bc09e1ae1a1b4e701f4dfa7e805cca"
     }
   ],
-  "record_count": 8,
+  "record_count": 19,
   "parts": [
     {
       "part_name": "observations/part_0000.parquet",
@@ -17,13 +17,23 @@
       "file_sha256": "23d1f8f1dac4bde76e2e51765318000c7f6271b34475f236e48c95d9f15f2802"
     },
     {
+      "part_name": "observations/part_0001.parquet",
+      "row_count": 141,
+      "file_sha256": "ca6f2da12cc84a1da98868744bcb02cc1c6f177b56f4426d30df532cec73cee9"
+    },
+    {
       "part_name": "patents/part_0000.parquet",
       "row_count": 8,
       "file_sha256": "2002407583c7211ee4de0ea8507fc045e6c79c34f38053cccc573933e6e4b15d"
+    },
+    {
+      "part_name": "patents/part_0001.parquet",
+      "row_count": 19,
+      "file_sha256": "80351a82ee0c9ba756dfc957b154dc6c3d104810954b7359dfd340868f1d3c9e"
     }
   ],
-  "dataset_content_sha256": "038e5ccf08f411bfb360ae05d6880f7812bf299a81a689b299f74216c7b252ad",
-  "manifest_sha256": "09499455a7ca2f6ccf3ac1b36f58e6ca84aacda210f0e9eebe7f29f52cec9d61",
-  "created_at": "2026-09-14T14:01:34.730846Z",
+  "dataset_content_sha256": "a3f5daa1d8dabed65ed893abde063b61e23522da2fd60f0809bafc944c712a88",
+  "manifest_sha256": "780fc5237002345ad0d0b5adb45035ac6413d952a4814df9385f9db2fbb6cab7",
+  "created_at": "2026-09-15T09:14:57.618112Z",
   "transformation_version": "1.0.0"
 }

@@ -11,7 +11,7 @@
       "start_date": "2016-01-01",
       "end_date": "2024-12-31"
     },
-    "canonical_sha256": "038e5ccf08f411bfb360ae05d6880f7812bf299a81a689b299f74216c7b252ad",
+    "canonical_sha256": "a3f5daa1d8dabed65ed893abde063b61e23522da2fd60f0809bafc944c712a88",
     "counts": {
       "raw_payload_count": 1,
       "normalized_record_count": 0,
@@ -25,20 +25,22 @@
     "kind_code_distribution": {},
     "files": {
       "observations/part_0000.parquet": "23d1f8f1dac4bde76e2e51765318000c7f6271b34475f236e48c95d9f15f2802",
-      "patents/part_0000.parquet": "2002407583c7211ee4de0ea8507fc045e6c79c34f38053cccc573933e6e4b15d"
+      "observations/part_0001.parquet": "ca6f2da12cc84a1da98868744bcb02cc1c6f177b56f4426d30df532cec73cee9",
+      "patents/part_0000.parquet": "2002407583c7211ee4de0ea8507fc045e6c79c34f38053cccc573933e6e4b15d",
+      "patents/part_0001.parquet": "80351a82ee0c9ba756dfc957b154dc6c3d104810954b7359dfd340868f1d3c9e"
     }
   },
-  "content_identity_sha256": "782454d6433ed48e1f6fe7b8f7ffcf89e89491cd89258c0f4b15cf22f5b089ad",
+  "content_identity_sha256": "e3789533623c88f52aa78f0c9f828fa74078caba43d222ab15af6b3f461726f7",
   "execution_provenance": {
-    "created_at": "2026-09-14T14:01:35.181691Z",
-    "acquisition_started_at": "2026-09-14T14:01:34.730796Z",
-    "acquisition_finished_at": "2026-09-14T14:01:35.181691Z",
+    "created_at": "2026-09-15T09:14:58.059996Z",
+    "acquisition_started_at": "2026-09-15T09:14:57.618036Z",
+    "acquisition_finished_at": "2026-09-15T09:14:58.059996Z",
     "environment": {
-      "git_commit": "c913e7a8a19bf08c90bd6a56601abb53b0293e36",
+      "git_commit": "999928f309737eb8d098316439ff7d9bcf22ac72",
       "normalizer_version": "1.0.0",
       "python_version": "3.12.3",
       "platform": "linux"
     }
   },
-  "manifest_sha256": "8b10abf1afe2d9e96d17d6bbd336f0857662d72285bc885662aaf54c1135d055"
+  "manifest_sha256": "adc151998aea6b34ec5dad49e965b3715c24314bbd6699ab50cf68b0f0a6a705"
 }
