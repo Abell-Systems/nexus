@@ -4,6 +4,7 @@ __pycache__/
 *.egg-info/
 .venv/
 venv/
+.venv-embedding-generation/
 .pytest_cache/
 .coverage
 .coverage.*

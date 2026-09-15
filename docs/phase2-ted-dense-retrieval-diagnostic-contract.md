@@ -30,8 +30,7 @@ VALIDITY:  ADR 0014's own explicit split already applies here: model choice
            Dev set or 63-patent corpus -- whether it performs well is what
            this diagnostic (and any later evaluation) exists to find out,
            not something assumed by picking the model.
-STATUS:    PRE-REGISTERED. Execution (embedding generation + retrieval run)
-           is the next, separate step -- not started by this contract.
+STATUS:    ENVIRONMENT VERIFIED, EMBEDDINGS NOT YET GENERATED. See SS7.
 ```
 
 ## 1. Representation, and why it's a priori appropriate for Dev's languages
@@ -143,6 +142,38 @@ to this diagnostic. None are re-opened, re-scored, or re-interpreted by
 running dense retrieval — this is a new, independent measurement of a
 different retrieval capability, not an attempt to improve or explain any
 prior #104 result.
+
+## 7. Execution checkpoints (appended as they happen, contract body above unchanged)
+
+**Checkpoint 1 — model accessibility (2026-09-15):** Verified directly
+against the Hugging Face API (`GET /api/models/sentence-transformers/paraphrase-multilingual-mpnet-base-v2/revision/4328cf26390c98c5e3c738b4460a05b95f4911f5`,
+HTTP 200) — exact pinned revision resolves, `sha` in the response matches
+ADR 0014 §2 byte-for-byte. Model's own language tags include all 10
+languages observed in Dev (cs, da, de, en, es, fi, fr, nl, pl, sv). PyTorch
+CPU wheel index (`download.pytorch.org/whl/cpu`) reachable. No BLOCKED
+condition, no discrepancy with ADR 0014's freeze.
+
+**Checkpoint 2 — isolated environment (2026-09-15):** Created
+`.venv-embedding-generation/` (repo root, gitignored, separate from
+`backend/.venv` — the `embedding-generation-stack-isolation` Import Linter
+contract forbids `domain`/`application`/`infrastructure` from importing
+`torch`/`transformers`/`sentence_transformers`, so this stays a fully
+separate interpreter, not merely a separate import path). Installed
+`requirements/evaluation-generation.txt` **exactly as pinned, no
+substitutions**. Verified installed versions match declared pins
+byte-for-byte:
+
+```text
+torch                2.5.1+cpu   (pinned: 2.5.1+cpu)    MATCH
+transformers          4.47.1      (pinned: 4.47.1)        MATCH
+sentence-transformers 3.4.1       (pinned: 3.4.1)         MATCH
+pydantic              2.13.4      (pinned: 2.13.4)        MATCH
+```
+
+No BLOCKED condition — installation succeeded cleanly on the first
+attempt, no dependency conflict requiring a version substitution.
+**Embeddings not yet generated** — this checkpoint is explicitly scoped to
+environment creation + installation + verification only, per instruction.
 
 ## 6. Non-goals
 
