@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T09:29:07.859346+00:00",
+  "demand_id": "U201431364",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "050f5021c1d6917d5472a30472f2454d6f9b208f086a19f9e8abff8a25d4065a",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=U201431364"
+}

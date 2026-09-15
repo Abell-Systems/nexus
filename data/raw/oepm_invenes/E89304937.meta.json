@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T09:27:10.389225+00:00",
+  "demand_id": "E89304937",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "689e2a69a8731c3ad635366d2b04d76cad19ee985831628640ec184ba2c977a6",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=E89304937"
+}

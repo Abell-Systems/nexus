@@ -1,14 +1,14 @@
 {
   "canonical_dir": "/home/valentin/code/active/nexus/data/snapshots/oepm_invenes_corpus_v1",
-  "canonical_sha256": "a3f5daa1d8dabed65ed893abde063b61e23522da2fd60f0809bafc944c712a88",
+  "canonical_sha256": "5ab23c00540382d88a8ad012ddeecba0c4545658fa50158353e771457509ea1c",
   "dataset_id": "OEPM-INVENES-CORPUS-2026-V1",
-  "excluded_count": 61,
+  "excluded_count": 93,
   "exclusion_reasons": {
-    "missing_critical_text": 36,
-    "unsupported_kind_code": 25
+    "missing_critical_text": 53,
+    "unsupported_kind_code": 40
   },
-  "included_count": 19,
-  "ingested_records": 19,
+  "included_count": 27,
+  "ingested_records": 27,
   "manifest_dir": "/home/valentin/code/active/nexus/data/experiments/oepm_v1",
-  "referencias_attempted": 80
+  "referencias_attempted": 120
 }

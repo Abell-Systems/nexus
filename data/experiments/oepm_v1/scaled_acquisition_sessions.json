@@ -16,7 +16,7 @@
       "session": 1,
       "label": "Scaled acquisition session 1 -- next unused referencias, same 10 probe queries",
       "date": "2026-09-15",
-      "commit": null,
+      "commit": "7a78ea2",
       "queries": 10,
       "attempted": 40,
       "included_this_session": 11,
@@ -24,9 +24,22 @@
       "cumulative_included": 19,
       "rate_limited": false,
       "notes": "Clean run, no harvest errors, no rate limit. Included-this-session (11/40 = 27.5%) matches the repeated probe's own yield almost exactly, corroborating SCENARIO_A_SIGNAL."
+    },
+    {
+      "session": 2,
+      "label": "Scaled acquisition session 2 -- next unused referencias (positions 9-12+), same 10 probe queries",
+      "date": "2026-09-15",
+      "commit": null,
+      "queries": 10,
+      "attempted": 40,
+      "included_this_session": 8,
+      "cumulative_attempted": 120,
+      "cumulative_included": 27,
+      "rate_limited": false,
+      "notes": "Clean run, no harvest errors, no rate limit. 8/40 = 20% this session, slightly below session 1's 27.5% but still above the probe's own >=20% SCENARIO_A threshold. One referencia (U202130811) recurred across two queries' result sets and was deduplicated (skipped on its second occurrence) before harvesting -- disclosed, not silently dropped."
     }
   ],
   "target": 60,
-  "current_cumulative_included": 19,
-  "status": "IN PROGRESS -- 19/60, query set not yet exhausted (all 10 queries have further unharvested pages beyond session 1's positions 5-8)"
+  "current_cumulative_included": 27,
+  "status": "IN PROGRESS -- 27/60, query set not yet exhausted (all 10 queries still have further unharvested pages beyond session 2's positions)"
 }

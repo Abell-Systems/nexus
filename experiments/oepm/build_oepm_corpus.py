@@ -82,6 +82,27 @@ SESSION_1_REFERENCIAS: tuple[str, ...] = (
 
 REFERENCIAS = REFERENCIAS + SESSION_1_REFERENCIAS
 
+# Scaled acquisition, session 2. Same mechanical rule as session 1: each
+# query's next unused non-PCT referencias (positions 9-12, paging further
+# where a query ran short), read live on 2026-09-15, deduplicated against
+# every referencia already in REFERENCIAS (a handful of these 10 queries'
+# result sets overlap -- e.g. U202130811 recurred and was skipped here since
+# session 1 already used it via a different query).
+SESSION_2_REFERENCIAS: tuple[str, ...] = (
+    "P0287857", "P0249335", "P0264027", "P0248684",  # sistema de refrigeracion por absorcion
+    "U202032572", "P202230830", "P200402387", "E08100922",  # dispositivo de monitorizacion de constantes vitales
+    "E20211167", "E20206690", "E23217198", "P202031224",  # metodo de reciclaje de baterias de litio
+    "P200700383", "P201000554", "P201000537", "P9500597",  # estructura modular de vivienda prefabricada
+    "P201100554", "U201230434", "P201530572", "U201630647",  # sistema de purificacion de aire mediante fotocatalisis
+    "E90300209", "E04023180", "E99303410", "E11192137",  # algoritmo de deteccion de fraude en transacciones
+    "E13163753", "E17201687", "E88305292", "E89304937",  # revestimiento anticorrosivo para estructuras metalicas
+    "P201231090", "U201600456", "E11010161", "E17174628",  # sistema de riego automatizado por goteo
+    "U202000365", "U202130218", "U202131094", "U202130217",  # dispositivo de asistencia para movilidad reducida
+    "P202430515", "E10154811", "U201431364", "P201600082",  # metodo de fabricacion aditiva de piezas metalicas
+)
+
+REFERENCIAS = REFERENCIAS + SESSION_2_REFERENCIAS
+
 # T3 (EP-ES) is out of "domestic" scope by default -- ADR 0035 SS3, mirroring
 # the same NORMATIVE_KIND_CODES-minus-T3 default already applied to
 # OepmXmlNormalizer (commit c913e7a).
