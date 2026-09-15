@@ -866,5 +866,215 @@
     "publication_id": "ES2927918A1",
     "reason": "missing_critical_text",
     "referencia": "P202130420"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES2372948A1",
+    "reason": "missing_critical_text",
+    "referencia": "P201101276"
+  },
+  {
+    "detail": "Kind code 'A3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "A3",
+    "publication_id": "ES0100055A3",
+    "reason": "unsupported_kind_code",
+    "referencia": "P0100055"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0398173A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0398173"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2210426T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E97113064"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2358066T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E09156843"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES3001782A1",
+    "reason": "missing_critical_text",
+    "referencia": "P202430236"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES3053671T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E23183478"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES3040065A1",
+    "reason": "missing_critical_text",
+    "referencia": "P202430332"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES3042425T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E22162875"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "U",
+    "publication_id": "ES1066925U",
+    "reason": "missing_critical_text",
+    "referencia": "U200702268"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES8400168A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0510528"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "U",
+    "publication_id": "ES1026441U",
+    "reason": "missing_critical_text",
+    "referencia": "U9303198"
+  },
+  {
+    "detail": "Kind code 'A6' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "A6",
+    "publication_id": "ES2025432A6",
+    "reason": "unsupported_kind_code",
+    "referencia": "P9001895"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES3026743T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E22163315"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2081944T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E90311626"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES3041906T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E18194545"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2221636T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E01201901"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2917187T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E17000090"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0403392A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0403392"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0340714A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0340714"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0254386A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0254386"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "A1",
+    "publication_id": "ES0307516A1",
+    "reason": "missing_critical_text",
+    "referencia": "P0307516"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2447832T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E11170005"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "U",
+    "publication_id": "ES1178709U",
+    "reason": "missing_critical_text",
+    "referencia": "U201730213"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2725634T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E15180301"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2286201T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E02102814"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2869281T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E18198466"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2197402T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E98116932"
+  },
+  {
+    "detail": "title=present, abstract=MISSING (ADR 0035 SS9)",
+    "kind_code": "U",
+    "publication_id": "ES1296307U",
+    "reason": "missing_critical_text",
+    "referencia": "U202231717"
+  },
+  {
+    "detail": "Kind code 'T3' outside domestic scope (ADR 0035 SS3): ['A1', 'A2', 'B1', 'B2', 'U']",
+    "kind_code": "T3",
+    "publication_id": "ES2966467T3",
+    "reason": "unsupported_kind_code",
+    "referencia": "E18171300"
   }
 ]

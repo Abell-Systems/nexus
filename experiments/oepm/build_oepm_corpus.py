@@ -122,6 +122,29 @@ SESSION_3_REFERENCIAS: tuple[str, ...] = (
 
 REFERENCIAS = REFERENCIAS + SESSION_3_REFERENCIAS
 
+# Scaled acquisition, session 4. Same mechanical rule as sessions 1-3: each
+# query's next unused non-PCT referencias (positions 17-20, paging further
+# where a query ran short -- several queries now need 3-4 pages), read live
+# on 2026-09-15, deduplicated against every referencia already in
+# REFERENCIAS. Note: E10155220 and E13178928 initially looked "new" for
+# query 9 during this session's sourcing but were already in REFERENCIAS
+# from session 3 (same query) -- caught before extending this tuple, two
+# further page-4 items substituted instead.
+SESSION_4_REFERENCIAS: tuple[str, ...] = (
+    "P201101276", "P200501685", "P0100055", "P0398173",  # sistema de refrigeracion por absorcion
+    "E97113064", "E09156843", "P201330340", "P201630839",  # dispositivo de monitorizacion de constantes vitales
+    "P202430236", "E23183478", "P202430332", "E22162875",  # metodo de reciclaje de baterias de litio
+    "U200702268", "P0510528", "U9303198", "P9001895",  # estructura modular de vivienda prefabricada
+    "E22163315", "P202430137", "E90311626", "P200200925",  # sistema de purificacion de aire mediante fotocatalisis
+    "E18194545", "E01201901", "P201730651", "E17000090",  # algoritmo de deteccion de fraude en transacciones
+    "P0403392", "P0340714", "P0254386", "P0307516",  # revestimiento anticorrosivo para estructuras metalicas
+    "E11170005", "U201730213", "E15180301", "P202130229",  # sistema de riego automatizado por goteo
+    "E02102814", "E18198466", "E98116932", "P201131435",  # dispositivo de asistencia para movilidad reducida
+    "U202231717", "P202130869", "E18171300", "P202431070",  # metodo de fabricacion aditiva de piezas metalicas
+)
+
+REFERENCIAS = REFERENCIAS + SESSION_4_REFERENCIAS
+
 # T3 (EP-ES) is out of "domestic" scope by default -- ADR 0035 SS3, mirroring
 # the same NORMATIVE_KIND_CODES-minus-T3 default already applied to
 # OepmXmlNormalizer (commit c913e7a).

@@ -42,7 +42,7 @@
       "session": 3,
       "label": "Scaled acquisition session 3 -- next unused referencias (positions 13-16+), same 10 probe queries",
       "date": "2026-09-15",
-      "commit": null,
+      "commit": "d3c5d40",
       "queries": 10,
       "attempted": 40,
       "included_this_session": 9,
@@ -50,9 +50,22 @@
       "cumulative_included": 36,
       "rate_limited": false,
       "notes": "Clean run, no harvest errors, no rate limit. 9/40 = 22.5% this session -- consistent with the 20-27.5% band observed across sessions 1-2, no drift. Several queries required paging 3-5 pages deep (e.g. query 3 'metodo de reciclaje de baterias de litio' is PCT-heavy and needed page 5) to find 4 new non-PCT referencias -- population is getting sparser per page but not yet exhausted for any query."
+    },
+    {
+      "session": 4,
+      "label": "Scaled acquisition session 4 -- next unused referencias (positions 17-20+), same 10 probe queries",
+      "date": "2026-09-15",
+      "commit": null,
+      "queries": 10,
+      "attempted": 40,
+      "included_this_session": 10,
+      "cumulative_attempted": 200,
+      "cumulative_included": 46,
+      "rate_limited": false,
+      "notes": "Clean run, no harvest errors, no rate limit. 10/40 = 25% this session, in-band with sessions 1-3 (20-27.5%), no drift despite deeper paging. One intermediate sourcing error caught before harvesting: two referencias for query 9 (E10155220, E13178928) initially looked new but were already in REFERENCIAS from session 3 (same query, page 2) -- substituted with the next two unused page-4 items before extending the script. A single transient 504 hit the search UI itself (not a detail-page fetch) on the first query-1 re-search attempt; retried cleanly on the next navigation, not counted as a harvest error since no referencia fetch failed."
     }
   ],
   "target": 60,
-  "current_cumulative_included": 36,
-  "status": "IN PROGRESS -- 36/60, query set not yet exhausted (all 10 queries still have further unharvested pages beyond session 3's positions)"
+  "current_cumulative_included": 46,
+  "status": "IN PROGRESS -- 46/60, query set not yet exhausted (all 10 queries still have further unharvested pages beyond session 4's positions, though several now require 3-5 pages per session to find 4 new non-PCT items)"
 }
