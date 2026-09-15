@@ -27,6 +27,17 @@ STATUS:    BATCH GENERATED. Awaiting independent human annotation (not done by
            this session) before IAA/κ, adjudication, and gold-set freeze.
 ```
 
+**CORRECTION (found in `docs/phase2-ted-pool-coverage-diagnostic.md` §1,
+after IAA/adjudication/gold-set/coverage-metrics were already complete):**
+the "BM25+CPC" retrieval this doc describes was, in execution, **BM25-only**
+-- `DuckDbCPCRetriever` was never given a populated `MatchingPolicyConfig`,
+so it contributed zero candidates across all 30 Dev demands (verified: 0/30
+demands produce non-empty auto-CPC symbols without an injected taxonomy).
+The 108-pair batch and everything downstream (IAA, gold set, coverage
+results) is unaffected as *data* -- BM25 genuinely produced these 108
+pairs -- but every "BM25+CPC" / "BM25/CPC" label in this document should be
+read as "BM25-only."
+
 ## 1. Retriever/corpus bridge
 
 The dry-run's own limitation note said scaling required "ingesting a

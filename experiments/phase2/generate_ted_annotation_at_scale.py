@@ -8,10 +8,18 @@ deliberately hand-picked 8-demand subset. The dry-run's own limitation note --
 "scaling beyond this dry-run requires ingesting a production-scale OEPM corpus
 first (not done here)" -- is what this script resolves.
 
-Retrievers: BM25 + CPC only, same as the dry-run and for the same reason (Dense/
-semantic retriever needs a live TextEmbedder from an isolated dependency stack,
-ADR 0014). limit_per_method=20, matching the dry-run's own setting so results are
-comparable.
+Retrievers: BM25 + CPC configured, same as the dry-run and for the same reason
+(Dense/semantic retriever needs a live TextEmbedder from an isolated dependency
+stack, ADR 0014). limit_per_method=20, matching the dry-run's own setting so
+results are comparable.
+
+CORRECTION (found post-hoc, docs/phase2-ted-pool-coverage-diagnostic.md SS1):
+DuckDbCPCRetriever below is never given a populated MatchingPolicyConfig, so
+extract_demand_cpc_auto always returns zero symbols and the CPC retriever
+contributes zero candidates -- this script's actual output is BM25-only, not
+BM25+CPC. Left uncorrected here (the generated batch/gold-set/results already
+depend on this exact code's output); fixing it means constructing a real CPC
+taxonomy policy and re-running as an explicit follow-up, not a silent patch.
 
 Disclosed finding, not routed around: with only 63 patents in the frozen corpus,
 11 of the 30 Dev demands produce an empty eligible candidate pool (no BM25 or CPC

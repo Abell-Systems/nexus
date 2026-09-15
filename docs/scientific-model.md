@@ -102,9 +102,12 @@ TECHNOLOGY    — OEPM corpus §11.3 ingestion PASS; scale QUALIFIED (63/60
                 2026-09-15, sha256 in data/raw/oepm_invenes_corpus_v1.sha256)
 EVIDENCE      — #104 pool-coverage metrics CLOSED (gold set frozen; demand
                 coverage 9/30 at gold>=1, pool relevance yield 14/108 --
-                docs/phase2-ted-pool-coverage-results.md). No recall claim
-                made (docs/phase2-ted-pool-coverage-estimand-contract.md);
-                next open question is whether/how to pursue it
+                docs/phase2-ted-pool-coverage-results.md). CORRECTION: the
+                pool was BM25-only, not BM25+CPC -- CPC retriever never had
+                a populated taxonomy policy, contributed 0/108 candidates
+                (docs/phase2-ted-pool-coverage-diagnostic.md). No recall
+                claim made; open questions: build a real CPC policy and
+                re-run, and/or pursue dense retrieval -- neither decided yet
 EVALUATION    — protocol frozen, waiting on EVIDENCE
 CLAIM         — none yet; nothing above should be read as a result
 ```

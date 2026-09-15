@@ -16,6 +16,13 @@ VALIDITY:  Computed only after the estimand contract was committed
 STATUS:    CLOSED.
 ```
 
+**CORRECTION (`docs/phase2-ted-pool-coverage-diagnostic.md` §1):** every
+"BM25+CPC" reference below should be read as **BM25-only** --
+`DuckDbCPCRetriever` never received a populated taxonomy policy and
+contributed zero candidates across all 30 Dev demands. The numbers
+themselves are unaffected; the retrieval-strategy label they were computed
+under is corrected here.
+
 ## Results
 
 ### 1. Demand-level pool coverage rate (denominator = 30, full Dev split)

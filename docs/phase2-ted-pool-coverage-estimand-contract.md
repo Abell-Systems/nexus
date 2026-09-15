@@ -15,6 +15,13 @@ VALIDITY:  Written before metric code exists, so the definitions are not
 STATUS:    PRE-REGISTERED. Execution is the next, separate step.
 ```
 
+**CORRECTION (`docs/phase2-ted-pool-coverage-diagnostic.md` §1, found after
+this contract's own execution was complete):** "BM25+CPC" below should be
+read as **BM25-only** -- the CPC retriever never received a populated
+taxonomy policy and contributed zero candidates to the pool. The estimand
+definitions themselves (§2) are retrieval-strategy-agnostic and remain
+valid as written; only the label is corrected.
+
 ## 1. Why this is needed
 
 The gold set was built **only over the 108 pairs the BM25+CPC pool actually
