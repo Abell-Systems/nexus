@@ -68,7 +68,7 @@
       "session": 5,
       "label": "Scaled acquisition session 5 -- next unused referencias (positions 21-24+), same 10 probe queries",
       "date": "2026-09-15",
-      "commit": null,
+      "commit": "5866ac2",
       "queries": 10,
       "attempted": 40,
       "included_this_session": 6,
