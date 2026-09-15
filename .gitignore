@@ -63,6 +63,11 @@ data/annotations/*
 !data/annotations/ted_at_scale_pool_coverage_metrics.json
 !data/annotations/ted_at_scale_cpc_channel_diagnostic.json
 !data/annotations/ted_at_scale_annotation_lydia.csv
+!data/annotations/ted_dense_blindspot_annotation_batch.json
+!data/annotations/ted_dense_blindspot_annotation_batch.sha256
+!data/annotations/ted_dense_blindspot_annotation_template.csv
+!data/annotations/ted_dense_blindspot_annotation_valentin.csv
+!data/annotations/ted_dense_blindspot_annotation_lydia.csv
 !data/experiments/power_analysis_wilcoxon.json
 !data/experiments/pilot_evaluation_report.json
 !data/experiments/dataset_identity_audit.json
