@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T10:27:13.672035+00:00",
+  "demand_id": "P9002089",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "fce59f7df639e3920f870d1b1e82a7f2c2ef7b97302a154157f7ff44c894c0d5",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P9002089"
+}

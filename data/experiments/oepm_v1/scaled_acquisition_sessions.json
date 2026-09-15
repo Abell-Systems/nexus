@@ -76,9 +76,22 @@
       "cumulative_included": 52,
       "rate_limited": false,
       "notes": "Clean run, no harvest errors, no rate limit. 6/40 = 15% this session -- the first session below the 20-27.5% band held across sessions 1-4. No query redesign, no criteria change, no curation in response to this drop, per protocol. Query 3 ('metodo de reciclaje de baterias de litio') needed page 8 to find 4 new non-PCT items, deepest paging yet, consistent with the thinning-density trend flagged since session 3. Did not cross the N=60 stopping threshold (52/60, 8 remaining)."
+    },
+    {
+      "session": 6,
+      "label": "Scaled acquisition session 6 -- next unused referencias, same 10 probe queries -- CROSSES N=60, ACQUISITION CLOSED",
+      "date": "2026-09-15",
+      "commit": null,
+      "queries": 10,
+      "attempted": 40,
+      "included_this_session": 11,
+      "cumulative_attempted": 280,
+      "cumulative_included": 63,
+      "rate_limited": false,
+      "notes": "Clean run, no harvest errors, no rate limit. 11/40 = 27.5% this session -- back in the 20-27.5% band, session 5's 15% dip did not persist. All 10 queries resolved entirely from result page 1 (no paging needed at all), a sharp contrast to session 5 where several queries needed up to 8 pages. Cross-checking page-1 contents against referencias already harvested in prior sessions shows INVENES's own result ordering has shifted between sessions (previously-used items no longer sit where they were read from) -- the population is not shrinking, the live search index is reordering day to day. Sourcing rule unchanged: next unused non-PCT item in the query's current live order, deduplicated against every referencia already in REFERENCIAS (verified: 0 overlap in 40 new items). Cumulative: 280 attempted, 63 included -- CROSSES the N>=60 stopping rule (docs/phase2-invenes-scaled-acquisition.md SS4). Acquisition closed as of this session per the pre-registered rule; the full session was run to completion (all 40 already sourced/fixed before classification per SS2) rather than truncated mid-session, matching the protocol's own session-atomicity design -- classification was applied to the complete accumulated set, not a partial one."
     }
   ],
   "target": 60,
-  "current_cumulative_included": 52,
-  "status": "IN PROGRESS -- 52/60, query set not yet exhausted, 8 remaining. Session 5 yield dropped to 15% (first sub-20% session), attributed to deeper paging / thinning per-query density, not a protocol or classification change."
+  "current_cumulative_included": 63,
+  "status": "CLOSED -- N=60 crossed in session 6 (63/60 included, 280 attempted, cumulative yield 22.5%). Acquisition stopped per the pre-registered stopping rule (docs/phase2-invenes-scaled-acquisition.md SS4). No further scaled-acquisition sessions to run. Next: corpus audit (independence/duplicates/families) before final freeze declaration."
 }

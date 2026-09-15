@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T10:25:37.314543+00:00",
+  "demand_id": "P0146575",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "86e372e6e09099b78e843077a1158e7e2ed6ce4683007d0e35e74a477f7b72ed",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P0146575"
+}

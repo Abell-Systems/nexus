@@ -164,6 +164,35 @@ SESSION_5_REFERENCIAS: tuple[str, ...] = (
 
 REFERENCIAS = REFERENCIAS + SESSION_5_REFERENCIAS
 
+# Scaled acquisition, session 6. Same mechanical rule as sessions 1-5: each
+# query's next unused non-PCT referencias, read live on 2026-09-15,
+# deduplicated against every referencia already in REFERENCIAS. Notable: all
+# 10 queries resolved entirely from result page 1 this session -- a sharp
+# contrast to session 5, where several queries (query 3 especially) needed
+# deep paging (up to page 8). Cross-checking query 1 and query 3's page-1
+# contents against prior sessions' harvested referencias shows the INVENES
+# result ordering itself has shifted between sessions (items used in earlier
+# sessions no longer sit at the positions they were read from), rather than
+# the query's underlying population growing or shrinking -- i.e. INVENES's
+# search result order is not stable/append-only across days. This does not
+# change the sourcing rule (still: next unused non-PCT item in the search's
+# current live order, deduplicated against everything already harvested);
+# it is disclosed here as an observation, not acted on.
+SESSION_6_REFERENCIAS: tuple[str, ...] = (
+    "P0191788", "P0552363", "P0401163", "P0146575",  # sistema de refrigeracion por absorcion
+    "E03015537", "P201230951", "P201231201", "E06124382",  # dispositivo de monitorizacion de constantes vitales
+    "P201100237", "E20153991", "E20202581", "U202530397",  # metodo de reciclaje de baterias de litio
+    "P9002089", "P200600531", "P0526310", "U9302606",  # estructura modular de vivienda prefabricada
+    "E05016942", "E90201172", "P200931134", "P201500772",  # sistema de purificacion de aire mediante fotocatalisis
+    "E99303407", "E99303404", "E94201452", "E96118760",  # algoritmo de deteccion de fraude en transacciones
+    "U9401743", "P0481547", "E89101632", "P0522864",  # revestimiento anticorrosivo para estructuras metalicas
+    "P200401444", "U9302107", "P200700618", "E88106685",  # sistema de riego automatizado por goteo
+    "U200502811", "P201200383", "P201331371", "P201831035",  # dispositivo de asistencia para movilidad reducida
+    "E10153412", "P201430439", "E11000350", "P202130841",  # metodo de fabricacion aditiva de piezas metalicas
+)
+
+REFERENCIAS = REFERENCIAS + SESSION_6_REFERENCIAS
+
 # T3 (EP-ES) is out of "domestic" scope by default -- ADR 0035 SS3, mirroring
 # the same NORMATIVE_KIND_CODES-minus-T3 default already applied to
 # OepmXmlNormalizer (commit c913e7a).
