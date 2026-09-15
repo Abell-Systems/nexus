@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T09:40:15.061050+00:00",
+  "demand_id": "E22170280",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1b964ee7a066b92eeaa86bae7ec86f5fe27c96a4b5ccae5e8c8107e9728e7e45",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=E22170280"
+}

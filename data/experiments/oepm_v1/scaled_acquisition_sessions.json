@@ -29,7 +29,7 @@
       "session": 2,
       "label": "Scaled acquisition session 2 -- next unused referencias (positions 9-12+), same 10 probe queries",
       "date": "2026-09-15",
-      "commit": null,
+      "commit": "04fcb61",
       "queries": 10,
       "attempted": 40,
       "included_this_session": 8,
@@ -37,9 +37,22 @@
       "cumulative_included": 27,
       "rate_limited": false,
       "notes": "Clean run, no harvest errors, no rate limit. 8/40 = 20% this session, slightly below session 1's 27.5% but still above the probe's own >=20% SCENARIO_A threshold. One referencia (U202130811) recurred across two queries' result sets and was deduplicated (skipped on its second occurrence) before harvesting -- disclosed, not silently dropped."
+    },
+    {
+      "session": 3,
+      "label": "Scaled acquisition session 3 -- next unused referencias (positions 13-16+), same 10 probe queries",
+      "date": "2026-09-15",
+      "commit": null,
+      "queries": 10,
+      "attempted": 40,
+      "included_this_session": 9,
+      "cumulative_attempted": 160,
+      "cumulative_included": 36,
+      "rate_limited": false,
+      "notes": "Clean run, no harvest errors, no rate limit. 9/40 = 22.5% this session -- consistent with the 20-27.5% band observed across sessions 1-2, no drift. Several queries required paging 3-5 pages deep (e.g. query 3 'metodo de reciclaje de baterias de litio' is PCT-heavy and needed page 5) to find 4 new non-PCT referencias -- population is getting sparser per page but not yet exhausted for any query."
     }
   ],
   "target": 60,
-  "current_cumulative_included": 27,
-  "status": "IN PROGRESS -- 27/60, query set not yet exhausted (all 10 queries still have further unharvested pages beyond session 2's positions)"
+  "current_cumulative_included": 36,
+  "status": "IN PROGRESS -- 36/60, query set not yet exhausted (all 10 queries still have further unharvested pages beyond session 3's positions)"
 }

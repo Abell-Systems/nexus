@@ -11,7 +11,7 @@
       "start_date": "2016-01-01",
       "end_date": "2024-12-31"
     },
-    "canonical_sha256": "5ab23c00540382d88a8ad012ddeecba0c4545658fa50158353e771457509ea1c",
+    "canonical_sha256": "87905c9dd963e1a08c553004caeccb6d9d7d60a72a5e41179530fb0afe28ee63",
     "counts": {
       "raw_payload_count": 1,
       "normalized_record_count": 0,
@@ -27,22 +27,24 @@
       "observations/part_0000.parquet": "23d1f8f1dac4bde76e2e51765318000c7f6271b34475f236e48c95d9f15f2802",
       "observations/part_0001.parquet": "ca6f2da12cc84a1da98868744bcb02cc1c6f177b56f4426d30df532cec73cee9",
       "observations/part_0002.parquet": "8005249329f0455996fb365cadde2f2cab1d1f080a23344b720c7647ec25ef46",
+      "observations/part_0003.parquet": "ca1d5742381a87dba7f34bd8a3b38382130e799167a7fe87631ef1e4c084e496",
       "patents/part_0000.parquet": "2002407583c7211ee4de0ea8507fc045e6c79c34f38053cccc573933e6e4b15d",
       "patents/part_0001.parquet": "80351a82ee0c9ba756dfc957b154dc6c3d104810954b7359dfd340868f1d3c9e",
-      "patents/part_0002.parquet": "674fd419a32362191c6a314d82d5946b04c6ccb604d2a6acc9ba0dfb7221f7e9"
+      "patents/part_0002.parquet": "674fd419a32362191c6a314d82d5946b04c6ccb604d2a6acc9ba0dfb7221f7e9",
+      "patents/part_0003.parquet": "6487f21b4201b0f0bfc225f597f74015adac8952aa28a9e29a88b6f5ee8afa98"
     }
   },
-  "content_identity_sha256": "5f4e42a6d5c1d9ddbc25a7b0690f4902e0aaf4db45d296ad8217fd3f39aed86c",
+  "content_identity_sha256": "4b88c66840561d17d96851ab9e655205281b566abb03f4017bb368b07f8dc6f1",
   "execution_provenance": {
-    "created_at": "2026-09-15T09:29:18.733202Z",
-    "acquisition_started_at": "2026-09-15T09:29:18.542186Z",
-    "acquisition_finished_at": "2026-09-15T09:29:18.733202Z",
+    "created_at": "2026-09-15T09:45:37.383089Z",
+    "acquisition_started_at": "2026-09-15T09:45:37.191630Z",
+    "acquisition_finished_at": "2026-09-15T09:45:37.383089Z",
     "environment": {
-      "git_commit": "7a78ea2a1d1c1174b8a103c54bec2ea9286b32a9",
+      "git_commit": "04fcb61fefa3f1d1d5346d6e8eb534ebd3851027",
       "normalizer_version": "1.0.0",
       "python_version": "3.12.3",
       "platform": "linux"
     }
   },
-  "manifest_sha256": "2c4f4f643c05aa863c6794a25d452c1cf6082e57bf0742c0bcb8704e8b8b6ccb"
+  "manifest_sha256": "4cadcb5ee24f8798df2b644adb406553fe08e1477cc1eedef87c7472d1fa7b99"
 }

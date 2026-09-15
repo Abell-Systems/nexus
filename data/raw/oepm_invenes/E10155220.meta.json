@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T09:44:43.481915+00:00",
+  "demand_id": "E10155220",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b884c98c480c98f8fb06753e61d8f77638f306c972dd685e8bcb1f1997b58e7c",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=E10155220"
+}

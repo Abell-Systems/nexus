@@ -103,6 +103,25 @@ SESSION_2_REFERENCIAS: tuple[str, ...] = (
 
 REFERENCIAS = REFERENCIAS + SESSION_2_REFERENCIAS
 
+# Scaled acquisition, session 3. Same mechanical rule as sessions 1-2: each
+# query's next unused non-PCT referencias (positions 13-16, paging further
+# where a query ran short), read live on 2026-09-15, deduplicated against
+# every referencia already in REFERENCIAS.
+SESSION_3_REFERENCIAS: tuple[str, ...] = (
+    "P0144002", "U0108144", "P0209904", "P8803214",  # sistema de refrigeracion por absorcion
+    "U202431452", "E17020594", "E20175192", "E22197472",  # dispositivo de monitorizacion de constantes vitales
+    "E13168344", "E22170280", "E23154740", "P9701296",  # metodo de reciclaje de baterias de litio
+    "P201231521", "P201331795", "U202300213", "U202430532",  # estructura modular de vivienda prefabricada
+    "P201731136", "P201800191", "P202031138", "P202030245",  # sistema de purificacion de aire mediante fotocatalisis
+    "E12182149", "E16205920", "E19187610", "E21164178",  # algoritmo de deteccion de fraude en transacciones
+    "E98108660", "E87870065", "E11151581", "E17193059",  # revestimiento anticorrosivo para estructuras metalicas
+    "E23167350", "E19174959", "P200401761", "P9900264",  # sistema de riego automatizado por goteo
+    "E19204405", "P202230618", "E10155220", "E13178928",  # dispositivo de asistencia para movilidad reducida
+    "P201830381", "E13000633", "P202031187", "P202130420",  # metodo de fabricacion aditiva de piezas metalicas
+)
+
+REFERENCIAS = REFERENCIAS + SESSION_3_REFERENCIAS
+
 # T3 (EP-ES) is out of "domestic" scope by default -- ADR 0035 SS3, mirroring
 # the same NORMATIVE_KIND_CODES-minus-T3 default already applied to
 # OepmXmlNormalizer (commit c913e7a).
