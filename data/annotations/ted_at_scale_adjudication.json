@@ -1,0 +1,19 @@
+{
+  "purpose": "Adjudication of the 12 disagreements from data/annotations/ted_at_scale_iaa_report.json, same 0-3 contract as docs/annotation/ted_at_scale_annotation_instructions.md -- criterion not recalibrated to accommodate any individual case.",
+  "adjudicated_by": "Valentin + Lydia (joint review), tie-break reasoning drafted by Claude Sonnet 5 and confirmed by Valentin",
+  "decisions": [
+    {"demand_id": "140590-2024", "publication_id": "ES2319487A1", "valentin": 3, "lydia": 2, "adjudicated": 2, "reason": "Addresses a real component (modular wall construction) of the demand, not the whole mixed-use programme (housing+parking+offices+retail)."},
+    {"demand_id": "140590-2024", "publication_id": "ES2411281A2", "valentin": 1, "lydia": 0, "adjudicated": 0, "reason": "No technical connection to building construction."},
+    {"demand_id": "140590-2024", "publication_id": "ES2610181A1", "valentin": 1, "lydia": 0, "adjudicated": 0, "reason": "No technical connection to building construction."},
+    {"demand_id": "268550-2024", "publication_id": "ES2902101A1", "valentin": 2, "lydia": 1, "adjudicated": 1, "reason": "Same general area (medical tech + AI) but different mechanism -- wearable vitals monitoring vs. robotic surgical intervention."},
+    {"demand_id": "315512-2025", "publication_id": "ES2065820A2", "valentin": 1, "lydia": 0, "adjudicated": 2, "reason": "Modular wall-panel system is a real, reusable construction component for prefabricated modular units -- diverges upward from both original scores, confirmed by Valentin after review."},
+    {"demand_id": "315512-2025", "publication_id": "ES2552604A1", "valentin": 1, "lydia": 0, "adjudicated": 0, "reason": "Generic IoT device-supervision system, not specific to modular building construction."},
+    {"demand_id": "566290-2025", "publication_id": "ES2694438A1", "valentin": 1, "lydia": 0, "adjudicated": 0, "reason": "Different mechanism -- remote identity verification vs. neonatal screening registry/results management."},
+    {"demand_id": "814207-2025", "publication_id": "ES2319487A1", "valentin": 2, "lydia": 1, "adjudicated": 1, "reason": "Lexical false cognate: patent's 'modular' is building construction, demand's 'modular' is deployable machine technology for track-sludge removal -- same neighborhood, different mechanism."},
+    {"demand_id": "814207-2025", "publication_id": "ES2340132A1", "valentin": 1, "lydia": 2, "adjudicated": 2, "reason": "Mechanical leveling-jack actuator mechanism is closer to 'modular machinery' than a building system is."},
+    {"demand_id": "814207-2025", "publication_id": "ES2452726A1", "valentin": 1, "lydia": 0, "adjudicated": 0, "reason": "Same 'modular' false cognate as ES2319487A1 above -- architecture, not machinery."},
+    {"demand_id": "814207-2025", "publication_id": "ES2545931A1", "valentin": 1, "lydia": 0, "adjudicated": 0, "reason": "No mechanism overlap between a deicing/anti-corrosion chemical additive and sludge-removal machinery."},
+    {"demand_id": "89204-2025", "publication_id": "ES2552604A1", "valentin": 2, "lydia": 1, "adjudicated": 1, "reason": "Thin thread to fleet telemetry, but not the SaaS management system itself."}
+  ],
+  "contract_ambiguity_noted": "The word 'modular' recurred as a partial false cognate across several disagreements (cases 8, 10 vs. case 1, 5): the same lexical term describes building-block modularity in the patents and deployable-equipment modularity in some demands (814207-2025). This is noted as an annotation-guide observation, not acted on by changing the guide or re-scoring the 96 non-disputed pairs."
+}
