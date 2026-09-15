@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T08:46:35.124268+00:00",
+  "demand_id": "U9302107",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "73891c298c707fc1122b59e9f18ba28ed321f5f8ab6de31d922875ebf1484ea8",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=U9302107"
+}

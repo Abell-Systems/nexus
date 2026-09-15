@@ -124,5 +124,159 @@
     "publication_id": "ES2043249T3",
     "query": "sistema de purificacion de aire mediante fotocatalisis",
     "referencia": "E90201172"
+  },
+  {
+    "disposition": "included",
+    "kind_code": "A1",
+    "publication_id": "ES2371621A1",
+    "query": "sistema de purificacion de aire mediante fotocatalisis",
+    "referencia": "P200931134"
+  },
+  {
+    "disposition": "excluded_missing_text",
+    "kind_code": "A1",
+    "publication_id": "ES2610658A1",
+    "query": "sistema de purificacion de aire mediante fotocatalisis",
+    "referencia": "P201500772"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "T3",
+    "publication_id": "ES2315001T3",
+    "query": "algoritmo de deteccion de fraude en transacciones",
+    "referencia": "E99303407"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "T3",
+    "publication_id": "ES2313768T3",
+    "query": "algoritmo de deteccion de fraude en transacciones",
+    "referencia": "E99303404"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "T3",
+    "publication_id": "ES2108365T3",
+    "query": "algoritmo de deteccion de fraude en transacciones",
+    "referencia": "E94201452"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "T3",
+    "publication_id": "ES2286822T3",
+    "query": "algoritmo de deteccion de fraude en transacciones",
+    "referencia": "E96118760"
+  },
+  {
+    "disposition": "excluded_missing_text",
+    "kind_code": "U",
+    "publication_id": "ES1028567U",
+    "query": "revestimiento anticorrosivo para estructuras metalicas",
+    "referencia": "U9401743"
+  },
+  {
+    "disposition": "excluded_missing_text",
+    "kind_code": "A1",
+    "publication_id": "ES8203230A1",
+    "query": "revestimiento anticorrosivo para estructuras metalicas",
+    "referencia": "P0481547"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "T3",
+    "publication_id": "ES2054888T3",
+    "query": "revestimiento anticorrosivo para estructuras metalicas",
+    "referencia": "E89101632"
+  },
+  {
+    "disposition": "excluded_missing_text",
+    "kind_code": "A1",
+    "publication_id": "ES8503712A1",
+    "query": "revestimiento anticorrosivo para estructuras metalicas",
+    "referencia": "P0522864"
+  },
+  {
+    "disposition": "included",
+    "kind_code": "A1",
+    "publication_id": "ES2253985A1",
+    "query": "sistema de riego automatizado por goteo",
+    "referencia": "P200401444"
+  },
+  {
+    "disposition": "excluded_missing_text",
+    "kind_code": "U",
+    "publication_id": "ES1026486U",
+    "query": "sistema de riego automatizado por goteo",
+    "referencia": "U9302107"
+  },
+  {
+    "disposition": "excluded_missing_text",
+    "kind_code": "A1",
+    "publication_id": "ES2319842A1",
+    "query": "sistema de riego automatizado por goteo",
+    "referencia": "P200700618"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "T3",
+    "publication_id": "ES2042633T3",
+    "query": "sistema de riego automatizado por goteo",
+    "referencia": "E88106685"
+  },
+  {
+    "disposition": "excluded_missing_text",
+    "kind_code": "U",
+    "publication_id": "ES1061865U",
+    "query": "dispositivo de asistencia para movilidad reducida",
+    "referencia": "U200502811"
+  },
+  {
+    "disposition": "included",
+    "kind_code": "A2",
+    "publication_id": "ES2424917A2",
+    "query": "dispositivo de asistencia para movilidad reducida",
+    "referencia": "P201200383"
+  },
+  {
+    "disposition": "included",
+    "kind_code": "A1",
+    "publication_id": "ES2532132A1",
+    "query": "dispositivo de asistencia para movilidad reducida",
+    "referencia": "P201331371"
+  },
+  {
+    "disposition": "included",
+    "kind_code": "A1",
+    "publication_id": "ES2698701A1",
+    "query": "dispositivo de asistencia para movilidad reducida",
+    "referencia": "P201831035"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "T3",
+    "publication_id": "ES2386762T3",
+    "query": "metodo de fabricacion aditiva de piezas metalicas",
+    "referencia": "E10153412"
+  },
+  {
+    "disposition": "included",
+    "kind_code": "A1",
+    "publication_id": "ES2467641A1",
+    "query": "metodo de fabricacion aditiva de piezas metalicas",
+    "referencia": "P201430439"
+  },
+  {
+    "disposition": "excluded_kind_code",
+    "kind_code": "T3",
+    "publication_id": "ES2566658T3",
+    "query": "metodo de fabricacion aditiva de piezas metalicas",
+    "referencia": "E11000350"
+  },
+  {
+    "disposition": "included",
+    "kind_code": "A1",
+    "publication_id": "ES2935742A1",
+    "query": "metodo de fabricacion aditiva de piezas metalicas",
+    "referencia": "P202130841"
   }
 ]
