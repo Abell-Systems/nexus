@@ -1,0 +1,3200 @@
+{
+  "bm25_comparison_structure": {
+    "bm25_empty_pool_demands": 11,
+    "bm25_nonempty_pool_demands": 19,
+    "note": "BM25's own 9/30 gold>=1 coverage is not recomputed here -- see docs/phase2-ted-pool-coverage-results.md. This block only restates BM25's pool-emptiness structure for side-by-side comparison."
+  },
+  "embedding_artifact_path": "data/experiments/phase2_v4/ted_at_scale_dense_embeddings_v1.json",
+  "embedding_artifact_sha256": "a9b66d5bfc0970513afad43b815f3a5f63dba20aa9273813c904a851606ae5be",
+  "estimand_contract": "docs/phase2-ted-dense-retrieval-diagnostic-contract.md",
+  "limit_per_method": 20,
+  "min_threshold": 0.0,
+  "n_demands_empty_pool": 0,
+  "n_demands_nonempty_pool": 30,
+  "n_dense_exclusive_new_unscored": 553,
+  "n_dev_demands": 30,
+  "n_shared_with_bm25_gold_scored": 47,
+  "n_total_dense_pairs": 600,
+  "per_demand": {
+    "104441-2025": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.69637
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2570810A1",
+          "score": 0.696122
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2726003A1",
+          "score": 0.692205
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2326252A1",
+          "score": 0.689494
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.674852
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2444712A1",
+          "score": 0.664558
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.663199
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.66068
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2394994A1",
+          "score": 0.659901
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.657483
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2552604A1",
+          "score": 0.656795
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2902101A1",
+          "score": 0.654611
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.654502
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.650221
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.650035
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2411281A2",
+          "score": 0.649438
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.648542
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2756998A1",
+          "score": 0.64795
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.646776
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.646759
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "122428-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2199673A1",
+          "score": 0.715419
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.691149
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2756998A1",
+          "score": 0.686527
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2493340A1",
+          "score": 0.685647
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.683802
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.67638
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2552604A1",
+          "score": 0.674147
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.67125
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2397768A1",
+          "score": 0.669329
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2394994A1",
+          "score": 0.666798
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.663201
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2647619A2",
+          "score": 0.662958
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.658657
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2246100A1",
+          "score": 0.658013
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.65492
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2411281A2",
+          "score": 0.653592
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2935558A1",
+          "score": 0.653368
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.649661
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.646933
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2326252A1",
+          "score": 0.645089
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": true
+    },
+    "137639-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.728458
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.719807
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2698701A1",
+          "score": 0.703966
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.698928
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.694598
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.693115
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.692901
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.689212
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.686053
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.68512
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.684342
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.681191
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2935742A1",
+          "score": 0.680578
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2307355A1",
+          "score": 0.679972
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.674922
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2257162A1",
+          "score": 0.674037
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2493340A1",
+          "score": 0.67315
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2914350A1",
+          "score": 0.66607
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2253985A1",
+          "score": 0.662897
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2902101A1",
+          "score": 0.655845
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "140590-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2281289A1",
+          "score": 0.707224
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.698594
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2303457A1",
+          "score": 0.695785
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.675933
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2336528A1",
+          "score": 0.674017
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2372073A1",
+          "score": 0.673953
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2246100A1",
+          "score": 0.673136
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.670208
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2319487A1",
+          "score": 0.665757
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2537651A1",
+          "score": 0.655342
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2452726A1",
+          "score": 0.646489
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.643383
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.642567
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2340132A1",
+          "score": 0.640308
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.63985
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2216668A1",
+          "score": 0.631781
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2365371A1",
+          "score": 0.627911
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2199673A1",
+          "score": 0.623973
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2257162A1",
+          "score": 0.623037
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.617405
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "146289-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.650523
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.633966
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.630569
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.628285
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.625484
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2372073A1",
+          "score": 0.624645
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2303457A1",
+          "score": 0.622569
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.619972
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.61182
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.606835
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.605816
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2307355A1",
+          "score": 0.602647
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2914350A1",
+          "score": 0.602116
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2394994A1",
+          "score": 0.599269
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2452726A1",
+          "score": 0.596033
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2698701A1",
+          "score": 0.594745
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.591547
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2246100A1",
+          "score": 0.590376
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2319487A1",
+          "score": 0.588243
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.587506
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": true
+    },
+    "158024-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.756227
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2902101A1",
+          "score": 0.748488
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.746254
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2493340A1",
+          "score": 0.696372
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2251310A1",
+          "score": 0.695487
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2444712A1",
+          "score": 0.693597
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.691079
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2394994A1",
+          "score": 0.690448
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2570810A1",
+          "score": 0.690367
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.688242
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.687686
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2397768A1",
+          "score": 0.684904
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.682471
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2935558A1",
+          "score": 0.681629
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.677427
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2756998A1",
+          "score": 0.676653
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.674291
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.668268
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.663775
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.658959
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": true
+    },
+    "200095-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.713069
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.706509
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.701055
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.691408
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.684059
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.679434
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.679223
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.678996
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2914350A1",
+          "score": 0.665247
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2372073A1",
+          "score": 0.664074
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2902101A1",
+          "score": 0.660079
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.659769
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.653286
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.652322
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2452726A1",
+          "score": 0.652122
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2698701A1",
+          "score": 0.65085
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2156707A1",
+          "score": 0.646596
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2444712A1",
+          "score": 0.643642
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2394994A1",
+          "score": 0.640771
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2257162A1",
+          "score": 0.636655
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "221305-2025": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.710651
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.699681
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.695015
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.682592
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.679049
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.678355
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.676869
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.672939
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2394994A1",
+          "score": 0.671321
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2726003A1",
+          "score": 0.667276
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2902101A1",
+          "score": 0.667184
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.661872
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.661846
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2570810A1",
+          "score": 0.661726
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2370895A1",
+          "score": 0.659481
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.653837
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.653018
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2156707A1",
+          "score": 0.650549
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2326252A1",
+          "score": 0.649875
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2935742A1",
+          "score": 0.648148
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": true
+    },
+    "22543-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2444712A1",
+          "score": 0.765377
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2398554A1",
+          "score": 0.753667
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2411281A2",
+          "score": 0.748905
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.74161
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.734222
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.730879
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2326252A1",
+          "score": 0.730221
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2394994A1",
+          "score": 0.722118
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.721447
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2570810A1",
+          "score": 0.720208
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.715873
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2552604A1",
+          "score": 0.715866
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2537651A1",
+          "score": 0.713854
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2698701A1",
+          "score": 0.702643
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2372073A1",
+          "score": 0.702361
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2303457A1",
+          "score": 0.696616
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2319487A1",
+          "score": 0.692189
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.685826
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2156707A1",
+          "score": 0.685512
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2452726A1",
+          "score": 0.681519
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "264820-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.686738
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2532132A1",
+          "score": 0.671523
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.670518
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2902101A1",
+          "score": 0.669051
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.666656
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2326252A1",
+          "score": 0.664858
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.659678
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.659231
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.659144
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.655894
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2394994A1",
+          "score": 0.644174
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2444712A1",
+          "score": 0.64325
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2467641A1",
+          "score": 0.641305
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.640547
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2372073A1",
+          "score": 0.639431
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.63754
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.637365
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2570810A1",
+          "score": 0.635424
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2552604A1",
+          "score": 0.634683
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2698701A1",
+          "score": 0.633654
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "268550-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.797246
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2493340A1",
+          "score": 0.773444
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2251310A1",
+          "score": 0.72923
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2370895A1",
+          "score": 0.718245
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.681952
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2902101A1",
+          "score": 0.674911
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2647619A2",
+          "score": 0.662212
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2684102A1",
+          "score": 0.661528
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2935558A1",
+          "score": 0.655878
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2397768A1",
+          "score": 0.64856
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2694438A1",
+          "score": 0.644328
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2394994A1",
+          "score": 0.643558
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2246100A1",
+          "score": 0.643265
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2467641A1",
+          "score": 0.636594
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2726003A1",
+          "score": 0.635629
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2912698A1",
+          "score": 0.633304
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2928677A1",
+          "score": 0.631405
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2936558A1",
+          "score": 0.630351
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.622918
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2756998A1",
+          "score": 0.622646
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "273005-2025": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.755331
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.744434
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2372073A1",
+          "score": 0.720308
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.720081
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.704033
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2303457A1",
+          "score": 0.69213
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.689976
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2444712A1",
+          "score": 0.688375
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.683251
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.681729
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.680767
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2452726A1",
+          "score": 0.678187
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2493340A1",
+          "score": 0.674547
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.672563
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2698701A1",
+          "score": 0.67255
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.671405
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2570810A1",
+          "score": 0.671373
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2319487A1",
+          "score": 0.67058
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2467641A1",
+          "score": 0.669957
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2326252A1",
+          "score": 0.667294
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": true
+    },
+    "277089-2025": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.739812
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2340132A1",
+          "score": 0.737594
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2253985A1",
+          "score": 0.734603
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2647619A2",
+          "score": 0.726882
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.719013
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2065820A2",
+          "score": 0.718937
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2444712A1",
+          "score": 0.717197
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2216668A1",
+          "score": 0.717105
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.715791
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.715519
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.708515
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2698701A1",
+          "score": 0.704985
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.700844
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2756998A1",
+          "score": 0.699759
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2394994A1",
+          "score": 0.699614
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.695373
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.691246
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2370895A1",
+          "score": 0.690902
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2902101A1",
+          "score": 0.68708
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2452726A1",
+          "score": 0.685271
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "315512-2025": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.781267
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2372073A1",
+          "score": 0.759477
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2246100A1",
+          "score": 0.750671
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2303457A1",
+          "score": 0.727764
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.721341
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2319487A1",
+          "score": 0.719271
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2452726A1",
+          "score": 0.708328
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2281289A1",
+          "score": 0.703878
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2065820A2",
+          "score": 0.703853
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2340132A1",
+          "score": 0.703054
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.701375
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.700803
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2336528A1",
+          "score": 0.693321
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.681948
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.680399
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.678248
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.668724
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.667814
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2199673A1",
+          "score": 0.660322
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.659814
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "368294-2025": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.774109
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.742698
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2257162A1",
+          "score": 0.731429
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2307355A1",
+          "score": 0.722018
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2246100A1",
+          "score": 0.717689
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2365371A1",
+          "score": 0.715204
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.699376
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.695281
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2199673A1",
+          "score": 0.685242
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.684198
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2493340A1",
+          "score": 0.681663
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.672689
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.669425
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2156707A1",
+          "score": 0.66894
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2372073A1",
+          "score": 0.662207
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2253985A1",
+          "score": 0.659767
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2914350A1",
+          "score": 0.651304
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2281289A1",
+          "score": 0.646147
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2303457A1",
+          "score": 0.645634
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.6435
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "380300-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.788892
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.774075
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.75893
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2156707A1",
+          "score": 0.749397
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.74613
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.742783
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.738443
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.732558
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2452726A1",
+          "score": 0.73242
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.73227
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.731956
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2257162A1",
+          "score": 0.731696
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2698701A1",
+          "score": 0.731174
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.727501
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2246100A1",
+          "score": 0.727051
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2307355A1",
+          "score": 0.724195
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.716389
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2326252A1",
+          "score": 0.715886
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.713739
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2372073A1",
+          "score": 0.713298
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "410719-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2156707A1",
+          "score": 0.734337
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.689886
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.67667
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2307355A1",
+          "score": 0.672078
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.670929
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2365371A1",
+          "score": 0.670672
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2246100A1",
+          "score": 0.66866
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2914350A1",
+          "score": 0.667368
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2756998A1",
+          "score": 0.667319
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.666446
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.664964
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.663885
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.662311
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2742923A1",
+          "score": 0.66057
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.657459
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2371621A1",
+          "score": 0.651821
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.649438
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2257162A1",
+          "score": 0.64747
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.643678
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2394994A1",
+          "score": 0.641272
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": true
+    },
+    "42938-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.710915
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.705207
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2452726A1",
+          "score": 0.696913
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.696016
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.690608
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.687324
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2372073A1",
+          "score": 0.667377
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2281289A1",
+          "score": 0.666019
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2303457A1",
+          "score": 0.663202
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.658741
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2246100A1",
+          "score": 0.657674
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2914350A1",
+          "score": 0.657426
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2326252A1",
+          "score": 0.656646
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2935742A1",
+          "score": 0.654433
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2444712A1",
+          "score": 0.653486
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.651752
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2340132A1",
+          "score": 0.651703
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2319487A1",
+          "score": 0.649883
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.64684
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2216668A1",
+          "score": 0.644992
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "454027-2024": {
+      "candidates": [
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2914350A1",
+          "score": 0.759228
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2728084A1",
+          "score": 0.723639
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2307355A1",
+          "score": 0.722134
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2156707A1",
+          "score": 0.690543
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.688264
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.679536
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2398554A1",
+          "score": 0.673347
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2928677A1",
+          "score": 0.668963
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2374467A1",
+          "score": 0.666703
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.666608
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2365371A1",
+          "score": 0.665656
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2246100A1",
+          "score": 0.656821
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2253985A1",
+          "score": 0.656714
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2257162A1",
+          "score": 0.654133
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2199673A1",
+          "score": 0.651987
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.651577
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2372073A1",
+          "score": 0.649374
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2537651A1",
+          "score": 0.649295
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.648996
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2371621A1",
+          "score": 0.646847
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "498443-2025": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.736961
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.732216
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2698701A1",
+          "score": 0.729255
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2444712A1",
+          "score": 0.725449
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2493340A1",
+          "score": 0.718113
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.716726
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.712933
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.708073
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.707824
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2756998A1",
+          "score": 0.704511
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.699831
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.693998
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2411281A2",
+          "score": 0.688893
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.688427
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2394994A1",
+          "score": 0.688235
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.687289
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2398554A1",
+          "score": 0.683924
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2372073A1",
+          "score": 0.683187
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2397768A1",
+          "score": 0.681558
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2156707A1",
+          "score": 0.679586
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "566290-2025": {
+      "candidates": [
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2902101A1",
+          "score": 0.77986
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.752648
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2493340A1",
+          "score": 0.733909
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.724288
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2251310A1",
+          "score": 0.716469
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.711351
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2397768A1",
+          "score": 0.703546
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.702982
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2935558A1",
+          "score": 0.692202
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.68198
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.681242
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2444712A1",
+          "score": 0.677143
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.676845
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2726003A1",
+          "score": 0.67603
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.675964
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2246100A1",
+          "score": 0.670428
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.670261
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2552604A1",
+          "score": 0.660772
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2756998A1",
+          "score": 0.657895
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2694438A1",
+          "score": 0.655401
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "584867-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.69986
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2326252A1",
+          "score": 0.677678
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2394994A1",
+          "score": 0.67688
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.675329
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.665238
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2914350A1",
+          "score": 0.665003
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.663308
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.655546
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.654847
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.648871
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.644898
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2935742A1",
+          "score": 0.644605
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.644535
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2370895A1",
+          "score": 0.643834
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2444712A1",
+          "score": 0.641947
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2552604A1",
+          "score": 0.64068
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.637506
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2570810A1",
+          "score": 0.636758
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.635017
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2545931A1",
+          "score": 0.629401
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "588217-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2914350A1",
+          "score": 0.674642
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2156707A1",
+          "score": 0.665171
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2935742A1",
+          "score": 0.654398
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2684102A1",
+          "score": 0.650156
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.646278
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2307355A1",
+          "score": 0.642377
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2856935A1",
+          "score": 0.638294
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.636092
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2742923A1",
+          "score": 0.635366
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2756998A1",
+          "score": 0.629999
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2698701A1",
+          "score": 0.629891
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.624299
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2545931A1",
+          "score": 0.62326
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.621181
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2912698A1",
+          "score": 0.617867
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2365371A1",
+          "score": 0.614186
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.614093
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.612352
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2444712A1",
+          "score": 0.612294
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.609287
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": true
+    },
+    "642378-2025": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2246100A1",
+          "score": 0.725073
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.720393
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.703519
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2307355A1",
+          "score": 0.702715
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2257162A1",
+          "score": 0.693386
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2698701A1",
+          "score": 0.68771
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2372073A1",
+          "score": 0.685454
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.678578
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2253985A1",
+          "score": 0.677355
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.668992
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.665889
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.664552
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2365371A1",
+          "score": 0.660985
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.658666
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2452726A1",
+          "score": 0.654917
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.653392
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2303457A1",
+          "score": 0.652566
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.649874
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.649222
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2199673A1",
+          "score": 0.648854
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": true
+    },
+    "654218-2024": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.774578
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2303457A1",
+          "score": 0.742642
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.735048
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2452726A1",
+          "score": 0.729224
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.721541
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2372073A1",
+          "score": 0.715259
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.709297
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2319487A1",
+          "score": 0.703021
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.700536
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2281289A1",
+          "score": 0.699507
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.691907
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2246100A1",
+          "score": 0.687107
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2336528A1",
+          "score": 0.685798
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2340132A1",
+          "score": 0.680949
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.6745
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2257162A1",
+          "score": 0.672419
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.667979
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.665622
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.664159
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2698701A1",
+          "score": 0.663693
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": true
+    },
+    "696940-2025": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2902101A1",
+          "score": 0.763312
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.741493
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2493340A1",
+          "score": 0.727729
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2251310A1",
+          "score": 0.720044
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2935558A1",
+          "score": 0.702852
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2756998A1",
+          "score": 0.6963
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.693773
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2694438A1",
+          "score": 0.693559
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2397768A1",
+          "score": 0.692214
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.6903
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2394994A1",
+          "score": 0.687308
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2726003A1",
+          "score": 0.686307
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.680315
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2444712A1",
+          "score": 0.676862
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.676092
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.675763
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2326252A1",
+          "score": 0.675703
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.668008
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.657131
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2552604A1",
+          "score": 0.656056
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "794374-2025": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.717179
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.689088
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.681208
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.674671
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2372073A1",
+          "score": 0.670803
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.67067
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2303457A1",
+          "score": 0.670539
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.670184
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2246100A1",
+          "score": 0.664488
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.657902
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2452726A1",
+          "score": 0.657611
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2307355A1",
+          "score": 0.650711
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.644033
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2319487A1",
+          "score": 0.641146
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2257162A1",
+          "score": 0.637995
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2698701A1",
+          "score": 0.629104
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.62504
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2935742A1",
+          "score": 0.624407
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.621915
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2156707A1",
+          "score": 0.619369
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": true
+    },
+    "814207-2025": {
+      "candidates": [
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2065820A2",
+          "score": 0.772059
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2424917A2",
+          "score": 0.762622
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2438447A1",
+          "score": 0.761053
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.750511
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2923946A1",
+          "score": 0.750429
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2537651A1",
+          "score": 0.747954
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2134683A1",
+          "score": 0.746078
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.740129
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2935742A1",
+          "score": 0.739174
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2253985A1",
+          "score": 0.735695
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2246100A1",
+          "score": 0.734194
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2698701A1",
+          "score": 0.731402
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.729648
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2372073A1",
+          "score": 0.729007
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.725893
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2914350A1",
+          "score": 0.722007
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2156707A1",
+          "score": 0.720842
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2307355A1",
+          "score": 0.719542
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2452726A1",
+          "score": 0.717606
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2912698A1",
+          "score": 0.714547
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    },
+    "820594-2025": {
+      "candidates": [
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.752841
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.743775
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.740053
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2808969A1",
+          "score": 0.733141
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.73252
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2902101A1",
+          "score": 0.728859
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2928677A1",
+          "score": 0.721649
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2532132A1",
+          "score": 0.719966
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2394994A1",
+          "score": 0.716792
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2116215A1",
+          "score": 0.714714
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2326252A1",
+          "score": 0.712664
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.71013
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.709627
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2552604A1",
+          "score": 0.707701
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2444712A1",
+          "score": 0.701655
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.698654
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2641296A1",
+          "score": 0.694619
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2570810A1",
+          "score": 0.692977
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2340132A1",
+          "score": 0.683216
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2370895A1",
+          "score": 0.682803
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": true
+    },
+    "89204-2025": {
+      "candidates": [
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2394994A1",
+          "score": 0.755812
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2928677A1",
+          "score": 0.740545
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2065820A2",
+          "score": 0.732936
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2600452A1",
+          "score": 0.702454
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2570810A1",
+          "score": 0.700584
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2552604A1",
+          "score": 0.690202
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2537651A1",
+          "score": 0.687374
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2424917A2",
+          "score": 0.685004
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2372073A1",
+          "score": 0.68481
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2156707A1",
+          "score": 0.684766
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2641296A1",
+          "score": 0.672988
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2532132A1",
+          "score": 0.672694
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2444712A1",
+          "score": 0.66243
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2134683A1",
+          "score": 0.661845
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2340132A1",
+          "score": 0.658252
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2756998A1",
+          "score": 0.658087
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2037587A2",
+          "score": 0.654261
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2253985A1",
+          "score": 0.653672
+        },
+        {
+          "provenance": "shared_with_bm25_gold_scored",
+          "publication_id": "ES2808969A1",
+          "score": 0.652616
+        },
+        {
+          "provenance": "dense_exclusive_new_unscored",
+          "publication_id": "ES2374467A1",
+          "score": 0.6478
+        }
+      ],
+      "pool_size": 20,
+      "was_bm25_zero_pool": false
+    }
+  }
+}
