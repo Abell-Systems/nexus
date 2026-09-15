@@ -175,6 +175,30 @@ attempt, no dependency conflict requiring a version substitution.
 **Embeddings not yet generated** — this checkpoint is explicitly scoped to
 environment creation + installation + verification only, per instruction.
 
+**Checkpoint 3 — frozen embedding artifact (2026-09-15):** Wrote two new,
+deliberately separate scripts rather than extending
+`scripts/generate_m1_embeddings.py` (ADR 0014's own generator, bound to
+the sealed pilot benchmark) — `experiments/phase2/extract_dense_source_texts.py`
+(runs in the main backend venv, which already has `duckdb`; extracts plain
+`(id, text)` pairs for the 30 Dev demands + 63-patent corpus, no new
+dependency added to either venv) and
+`experiments/phase2/generate_dense_embeddings.py` (runs in
+`.venv-embedding-generation`; reuses ADR 0014's exact `encode()` call
+shape, model loading, and determinism-check pattern, inspected directly
+from `generate_m1_embeddings.py` before writing, not re-derived from
+memory). `FrozenEmbeddingArtifact` (the ADR 0014 domain model) was not
+reused as-is — its `verify_source_dataset` is tied to a single
+`ValidatedDataset`, and this experiment has two source corpora (demand +
+patent), so a parallel, equivalent-discipline schema was used instead.
+
+Ran both scripts; produced
+`data/experiments/phase2_v4/ted_at_scale_dense_embeddings_v1.json`
+(+`.sha256`). Verified: 768-dim (matches ADR 0014 §8), L2-normalized
+(sample vector norm 0.99999999...), 30 demand + 63 patent vectors, library
+versions recorded match checkpoint 2's pins exactly, determinism check
+passed (bit-identical re-encode). **Retrieval NOT run** — explicitly out
+of scope for this step, per instruction.
+
 ## 6. Non-goals
 
 - Does not invent gold judgments for dense-exclusive new candidates.
