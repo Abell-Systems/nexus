@@ -81,7 +81,7 @@
       "session": 6,
       "label": "Scaled acquisition session 6 -- next unused referencias, same 10 probe queries -- CROSSES N=60, ACQUISITION CLOSED",
       "date": "2026-09-15",
-      "commit": null,
+      "commit": "89ebf13",
       "queries": 10,
       "attempted": 40,
       "included_this_session": 11,
