@@ -109,8 +109,13 @@ EVIDENCE      — #104 pool-coverage CLOSED (gold set frozen, BM25-only:
                 prose, not language coverage or taxonomy quality
                 (docs/phase2-ted-cpc-channel-diagnostic-results.md).
                 BM25-only stands as the accurate, final #104 pool result.
-                No recall claim made. Open: dense retrieval / ADR 0036,
-                or a CPV-to-CPC concordance redesign -- neither decided
+                No recall claim made. CPV->NACE->IPC->CPC concordance
+                FEASIBILITY track opened: real CPV codes extracted/audited
+                for all 30 Dev demands (30/30 coverage, 89 distinct codes,
+                coarse tail incl. the modal code -- docs/phase2-ted-dev-cpv-extraction-audit.md).
+                No concordance table acquired/chosen yet (Schmoch 2003 vs.
+                Dorner & Harhoff 2018 undecided). Dense retrieval / ADR
+                0036 still deferred, not decided against
 EVALUATION    — protocol frozen, waiting on EVIDENCE
 CLAIM         — none yet; nothing above should be read as a result
 ```
