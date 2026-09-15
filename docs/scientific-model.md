@@ -100,14 +100,17 @@ DEMAND        — sourced (TED/CORDIS), independence/eligibility audited
 TECHNOLOGY    — OEPM corpus §11.3 ingestion PASS; scale QUALIFIED (63/60
                 included, real ADR 0035 SS3/SS9 classification, frozen
                 2026-09-15, sha256 in data/raw/oepm_invenes_corpus_v1.sha256)
-EVIDENCE      — #104 pool-coverage metrics CLOSED (gold set frozen; demand
-                coverage 9/30 at gold>=1, pool relevance yield 14/108 --
-                docs/phase2-ted-pool-coverage-results.md). CORRECTION: the
-                pool was BM25-only, not BM25+CPC -- CPC retriever never had
-                a populated taxonomy policy, contributed 0/108 candidates
-                (docs/phase2-ted-pool-coverage-diagnostic.md). No recall
-                claim made; open questions: build a real CPC policy and
-                re-run, and/or pursue dense retrieval -- neither decided yet
+EVIDENCE      — #104 pool-coverage CLOSED (gold set frozen, BM25-only:
+                demand coverage 9/30, pool relevance yield 14/108 --
+                docs/phase2-ted-pool-coverage-results.md). CPC channel
+                diagnostic CLOSED: a real, corpus-grounded, positive-
+                control-verified CPC taxonomy activates on 0/30 Dev demands
+                -- root cause is exact-phrase matching against procurement
+                prose, not language coverage or taxonomy quality
+                (docs/phase2-ted-cpc-channel-diagnostic-results.md).
+                BM25-only stands as the accurate, final #104 pool result.
+                No recall claim made. Open: dense retrieval / ADR 0036,
+                or a CPV-to-CPC concordance redesign -- neither decided
 EVALUATION    — protocol frozen, waiting on EVIDENCE
 CLAIM         — none yet; nothing above should be read as a result
 ```
