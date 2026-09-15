@@ -117,13 +117,16 @@ EVIDENCE      — #104 pool-coverage CLOSED (gold set frozen, BM25-only:
                 (docs/phase2-cpv-cpc-concordance-feasibility-closure.md).
                 Neither Schmoch 2003 nor Dorner & Harhoff 2018 acquired.
                 Sequence closed: BM25 -> CPC diagnostic -> CPV scope-gate.
-                Dense retrieval diagnostic PRE-REGISTERED (contract only,
-                no code/embedding-stack activation --
-                docs/phase2-ted-dense-retrieval-diagnostic-contract.md):
-                reuses ADR 0014's already-pinned model/config verbatim,
-                fixes limit_per_method=20/min_threshold=0.0 before any run,
-                same non-recall discipline as BM25/CPC. Execution not
-                started. ADR 0036 remains after that
+                Dense retrieval diagnostic contract
+                (docs/phase2-ted-dense-retrieval-diagnostic-contract.md):
+                model verified accessible, isolated env verified clean
+                (torch/transformers/sentence-transformers match ADR 0014
+                pins exactly), frozen embedding artifact GENERATED (30
+                demand + 63 patent vectors, 768-dim, L2-normalized,
+                deterministic -- ted_at_scale_dense_embeddings_v1.json).
+                Retrieval NOT run yet. limit_per_method=20/min_threshold=0.0
+                fixed in advance; same non-recall discipline as BM25/CPC.
+                ADR 0036 remains after that
 EVALUATION    — protocol frozen, waiting on EVIDENCE
 CLAIM         — none yet; nothing above should be read as a result
 ```
