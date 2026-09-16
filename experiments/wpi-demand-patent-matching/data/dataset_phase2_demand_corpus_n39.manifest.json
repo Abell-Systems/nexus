@@ -9,5 +9,9 @@
   "demand_count": 39,
   "patent_count": 0,
   "annotation_count": 0,
+  "demand_id_prefix_counts": {
+    "INNOGET-": 37,
+    "LOMBARDIA-": 2
+  },
   "content_sha256": "9a83b01a295c4c61ea305a6596754ec5cc9005809593d0b4c305d7aa485e0fd9"
 }

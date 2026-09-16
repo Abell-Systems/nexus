@@ -39,7 +39,6 @@ backend/*judge_results.json
 data/*
 !data/snapshots/
 !data/raw/
-!data/evaluation/
 !data/experiments/
 !data/annotations/
 data/experiments/*

@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from domain.models.annotation import AnnotationJudgment
+from domain.models.annotation import AnnotationJudgment, ConstructEligibilityRubric, RubricValue
 from domain.models.evaluation import RelevanceGrade
 
 
@@ -42,3 +42,25 @@ class AnnotationJudgmentTest:
             grade=RelevanceGrade.GRADE_0,
         )
         assert judgment.notes == ""
+
+
+class ConstructEligibilityRubricTest:
+    def test_should_construct_with_valid_rubric_values(self):
+        rubric = ConstructEligibilityRubric(
+            technical_problem_present=RubricValue.YES,
+            technology_solution_requested=RubricValue.YES,
+            technical_specification_present=RubricValue.YES,
+            exclusion_criterion_1=RubricValue.NO,
+        )
+        assert rubric.technical_problem_present == RubricValue.YES
+        assert rubric.exclusion_criterion_1 == RubricValue.NO
+
+    def test_should_be_frozen(self):
+        rubric = ConstructEligibilityRubric(
+            technical_problem_present=RubricValue.YES,
+            technology_solution_requested=RubricValue.YES,
+            technical_specification_present=RubricValue.YES,
+            exclusion_criterion_1=RubricValue.NO,
+        )
+        with pytest.raises(ValidationError):
+            rubric.exclusion_criterion_1 = RubricValue.YES

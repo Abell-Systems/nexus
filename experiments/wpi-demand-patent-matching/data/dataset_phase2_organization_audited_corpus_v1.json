@@ -1,0 +1,314 @@
+{
+  "dataset_id": "nexus-phase2-organization-audited-corpus-v1",
+  "schema_version": "1.0.0",
+  "dataset_version": "1.0.0",
+  "description": "Nexus Phase 2 organization-audited demand corpus: deterministic projection of dataset_phase2_eligible_corpus_n24_v1.json onto the status in {INDEPENDENT, UNKNOWN} entries of phase2_demand_independence_audit_n24_v1.json (ADR 0029). Excludes the 6 detected organizational pseudoreplicates while retaining 12 verified independent demands and 6 demands with unverified/unknown organization identity (None or Anonymous Organization placeholder). See docs/phase2-demand-independence-audit-protocol.md.",
+  "demands": [
+    {
+      "demand_id": "INNOGET-1605",
+      "title": "Seeking lightweight innovators for open innovation challenge from 6 leading automotive OEMs",
+      "description": "Do you have a specific idea or concept (material or manufacturing) on how to design lighter vehicles? Does your technology show potential to reduce the GWP impact in a life-cycle perspective? And is it affordable?\nWin the opportunity to co-develop your innovations with six leading automotive OEMs: Daimler, Opel, Toyota, Volvo, Volkswagen, CRF- the Research Centre of FCA. The winning technologies will be applied to existing vehicle parts and presented at a dedicated side event of the Aachen Body Engineering Days 2018!",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/1605/seeking-lightweight-innovators-for-open-innovation-challenge-from-6-leading-automotive-oems",
+        "extraction_timestamp": "2026-09-07T15:59:43.773584Z",
+        "raw_payload_sha256": "57f2e812c90f9e971e8d142d9b5f6de39ed94662b0b5033f38abf171c4dd69dd",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-1607",
+      "title": "Seeking innovative material and manufacturing technologies to enable cost-efficient lightweighting in high-volume automotive applications",
+      "description": "The ALLIANCE partners are giving the opportunity to large and small companies, research centres, universities, and even individuals with innovative lightweighting technologies, to submit their ideas, co-develop them with the OEMs, suppliers, and knowledge partners of ALLIANCE, and shape the vehicles of tomorrow.\n\nDo you have a specific idea or concept (material or manufacturing) on how to achieve lightweighting in vehicles? Does your technology show potential to reduce the GWP impact in a life-cycle perspective? Is it affordable? Can it be implemented in high-volume vehicle production?\n\nWin the opportunity to co-develop your innovations with six leading automotive OEMs (Daimler, Opel, Toyota, Volvo, Volkswagen, CRF - the Research Centre of FCA) and four suppliers (ThyssenKrupp, Novelis, Batz, Benteler). The winning technologies will be implemented on existing vehicle parts and presented at a dedicated side event of the Aachen Body Engineering Days 2018!\n\nThe ALLIANCE project is co-funded by the European Commission’s H2020 programme.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/1607/seeking-innovative-material-and-manufacturing-technologies-to-enable-cost-efficient-lightweighting-in-high-volume-automotive-appli",
+        "extraction_timestamp": "2026-09-07T15:59:45.421942Z",
+        "raw_payload_sha256": "beb741df927f7057f65027b6fd3d7b11905f424bf7c600e0f6d2efdddef5c3bf",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-1625",
+      "title": "Seeking for a method to remove sodium and trapped water from residual fuel oil",
+      "description": "We are looking for residues from renewable sources to formulate cleaner fuel oils. However, incorporating these bio-based residues is often challenging and some properties must be improved to meet the strict comercial specifications of the final fuel oil.\nConcretely, we are looking for a method to remove contaminants from a bio-based residue (fuel oil), so it could be incorporated in a fossil fuel oil blending . Contaminants to be removed are metals (alkaline and alkaline-earth, mainly sodium and calcium) and trapped water.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/1625/seeking-for-a-method-to-remove-sodium-and-trapped-water-from-residual-fuel-oil",
+        "extraction_timestamp": "2026-09-07T15:59:46.138402Z",
+        "raw_payload_sha256": "7951e9a54789147ecdfd8ad91510d6512f2b66f24d7e50aaefcf8d1004c6286b",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-1689",
+      "title": "Seeking for how to improve long-steel products",
+      "description": "Celsa Group is among top 4 long-steel producers. The steel industry is one of the oldest industries and quite conservative. Our main products are rebars and beams have been the same for quite a while, and we are looking for how can we improve them. It can be an improvement of the material itself, to make it more light for example, or any special coating the will generate added value.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/1689/seeking-for-how-to-improve-long-steel-products",
+        "extraction_timestamp": "2026-09-07T15:59:47.327928Z",
+        "raw_payload_sha256": "1ba9d71615836c16ab994273602d29040fb29d797633aaf1bab25fc0b9ac1481",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-1726",
+      "title": "Seeking a method for controlling the implantation of yeasts during alcoholic fermentation",
+      "description": "We are interested in knowing if during the alcoholic fermentation yeasts that are fermenting are the same ones that have been inoculated. The molecular method we use is long, we need 2 days to obtain the yeast colony, 1 day to get enough biomass and finally,  1 day to obtain de mitocondrial DNA and do the electrophoresis to know the result.\n\nWe would like to go faster in obtaining the yeast and the biomass needed to get the result, especially.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/1726/seeking-a-method-for-controlling-the-implantation-of-yeasts-during-alcoholic-fermentation",
+        "extraction_timestamp": "2026-09-07T15:59:48.767571Z",
+        "raw_payload_sha256": "227178a8d8ae34e90835d79f0b4b8b64efa48912200ba2a3cb40615ca8c16567",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-1870",
+      "title": "Seeking innovative proposals in the arc welding processes",
+      "description": "The arc welding industry is increasingly being challenged to find innovative new solutions to\nremain competitive. Increased regulation (eg Health, Safety and the Environment) together\nwith an ongoing reduction in skilled welders leads to requirements for innovative products and\nmechanized and automated solutions, offering improved quality and productivity taking into\naccount the impact on the environment.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/1870/seeking-innovative-proposals-in-the-arc-welding-processes",
+        "extraction_timestamp": "2026-09-07T15:59:49.959897Z",
+        "raw_payload_sha256": "741ca54f33fefa963a1df142f9ddc3e9b132877423381f3a472b079bd5c1434c",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-1932",
+      "title": "Seeking for solutions to make LCD displays or similar withstand temperatures above 85ºC working properly",
+      "description": "Some of our products are outdoors and can be in very hot environments if in the direct\nsunlight. We have the need for various displays such as LCD units. These typically do not\nhave temperature ratings above 80-85 degrees C.\nWe need to find alternate display technologies for high temp (up to 95ºC) displays for\npossible use on our products.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/1932/seeking-for-solutions-to-make-lcd-displays-or-similar-withstand-temperatures-above-85-c-working-properly",
+        "extraction_timestamp": "2026-09-07T15:59:51.388790Z",
+        "raw_payload_sha256": "59aafb2621c9481ae6b29d07ca3e6e88794b05d5852e24f2b1241f65be82b81b",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-1935",
+      "title": "Seeking for new available technologies for water quality measurement.",
+      "description": "We look for solutions or technologies that minimize the problems of current water quality sensors. We are interested in single and/or multiparameter sensors. We are especially interested in solutions based on semiconductor sensing and miniaturization technologies, but open to any other kind of technologies or solutions.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/1935/seeking-for-new-available-technologies-for-water-quality-measurement",
+        "extraction_timestamp": "2026-09-07T15:59:52.309759Z",
+        "raw_payload_sha256": "fd004280e0eb135b204d7b3459d8fb61facbe3ec055aca2905cf8932706a1dbf",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-1965",
+      "title": "Seeking barcode product packaging recognition",
+      "description": "We are seeking a solution able to recognise the product packaging type after scanning the product barcode through a mobile app. It should have access to the a products database in Spain and EU-27 countries.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/1965/seeking-barcode-product-packaging-recognition",
+        "extraction_timestamp": "2026-09-07T15:59:53.711979Z",
+        "raw_payload_sha256": "72a1ab8f9bbf28d6620550990d388ce05483ae8707cf508cf2b670cfcefd1976",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-1972",
+      "title": "Seeking anti oxidant extract or blend from micro algae with anti aging properties",
+      "description": "Develop an Anti oxidant solution from Micro Algae specie or species with an antioxidant action for cosmetics – Personal Care applications (benefits to be assess as per outcomes). Antioxidant actions on human skin. The antioxidant solution to be at more or less 0,5% dosage in application – stable in time (12 months minimum)",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/1972/seeking-anti-oxidant-extract-or-blend-from-micro-algae-with-anti-aging-properties",
+        "extraction_timestamp": "2026-09-07T15:59:55.127980Z",
+        "raw_payload_sha256": "cef9bc8c79115ea3aa38868ec7f5e6ab9c1f1d5d9cb357bd68605bb67d39bf02",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-2006",
+      "title": "Seeking a botanic extract for urinary health",
+      "description": "An European fast-growing and solid company is seeking an innovative botanic extracts with functional effects on the urinary functions in both genres. The successful offer will include 1) an innovative product with the highest level of evidence 2) ready to be used and marketed immediately 3) able to be included in food supplements, OTC or Pharma finished products. The extract would contain antimicrobial, antihyperplasia, urolithic, antiespamodic, pain-relieving or any other property related to the urinary wellness.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/2006/seeking-a-botanic-extract-for-urinary-health",
+        "extraction_timestamp": "2026-09-07T15:59:56.072019Z",
+        "raw_payload_sha256": "721e7093fa3f951778603c23917d99d549201f9730d37e019cb0b839972603ba",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-2173",
+      "title": "Seeking for a partner in the building sector",
+      "description": "A proposal development with the valorization of waste products of the mining industry. After further development and functionalisation, these by-products would be applied in the construction sector. Within the project there will be an upgrade of the TRL from 3 to 5.\n\nThe project would be submitted in the next ERAMIN call at the end of the month (March 30th 2023).\n\nIn this sense, we are looking for a partner interested in carrying out some experimental development including building a demonstrator.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/2173/seeking-for-a-partner-in-the-building-sector",
+        "extraction_timestamp": "2026-09-07T15:59:59.968360Z",
+        "raw_payload_sha256": "1041a8fa5057d28eaca5156982db3901ffa85059153a599763650d7418ef2b00",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-2258",
+      "title": "Seeking:  How can we reduce costs and increase efficiency when obtaining renewable hydrogen",
+      "description": "All4Zero , technological innovation hub is looking for technological solutions to develop advanced electrolytic processes in addition to options to facilitate secure hydrogen transport and storage.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/2258/seeking-how-can-we-reduce-costs-and-increase-efficiency-when-obtaining-renewable-hydrogen",
+        "extraction_timestamp": "2026-09-07T16:00:02.228903Z",
+        "raw_payload_sha256": "00f996ffacdff421f786106d6a1dba6a1fcc30760d1c9a4cb0fd64dd415bd993",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-2301",
+      "title": "Seeking AI Assistants: Automating and Streamlining Engineering Processes (Call for EU University students ONLY)",
+      "description": "We seek to develop custom AI assistants using RAG (Retrieval-Augmented Generation) technology to streamline engineering workflows in the automotive sector. Specifically we are hoping to address implementation of industry standards (e.g., Automotive SPICE, ISO 26262), FMEA and risk assessments and other similar topics.\n\nSubmission Requirements (University Students application ONLY). 3,000 Euros funding support to student teams selected\n\nThis is an exclusive call for university students within the European Union to participate in an exciting opportunity to co-create an innovative solution in collaboration with a leading company under the INDUSAC EU-funded project. Supported by Innoget, this initiative aims to foster collaboration between academia and industry, empowering students to contribute their knowledge and creativity to tackle real-world challenges.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/2301/seeking-ai-assistants-automating-and-streamlining-engineering-processes-call-for-eu-university-students-only",
+        "extraction_timestamp": "2026-09-07T16:00:12.587043Z",
+        "raw_payload_sha256": "4a936e268f882f8d101f79db3f50c60a5de88127420f0a48d06c4f82d0af81da",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-2401",
+      "title": "Upcycling agri-food waste through upscaling industrial applicability and business case modelling (UPC BarcelonaTech, Spain)",
+      "description": "SMAR3TS project partner - UPC BarcelonaTech and its R2EM research and innovation team at Barcelona Research Center in Multiscale Science and Engineering (CCEM Barcelona) are working on tackling the problem of agri-food waste, as well as refining, separation and purification technologies in the labs.\n\nThe goal of R2EM team is to advance development of technologies towards technological and societal readiness and scalability. The Innovate3X (I3X) challenge (described here as a call to innovate solutions for resilience, restoration, and regeneration) invites research and innovation talent to contribute to the development of industrial pilots through secondments.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/2401/upcycling-agri-food-waste-through-upscaling-industrial-applicability-and-business-case-modelling-upc-barcelonatech-spain",
+        "extraction_timestamp": "2026-09-07T16:00:14.478336Z",
+        "raw_payload_sha256": "b3fc7142dbd8a3cce03701dc3ccbe4d56646987c164490fe0a9d7704e3568272",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "INNOGET-2491",
+      "title": "Seeking Solutions that Address the Root Cause of Gingivitis by Actively Restoring Oral Microbiome Balance",
+      "description": "Lacer is seeking to identify and develop innovative solutions that address the root cause of gingivitis by actively restoring oral microbiome balance (eubiosis), moving beyond traditional 'kill bacteria' strategies.\nTo be considered successful, proposals must demonstrate:\n\n- A proven ability to shift the oral microbiome composition from a dysbiotic to a eubiotic state.\n- A targeted reduction of key pathogenic species associated with gingivitis.\n- The simultaneous increase or preservation of beneficial commensal bacteria to deliver more sustainable clinical outcomes.\n\nWhile current gingivitis treatments primarily rely on broad bacterial reduction (antiseptics) or symptom control (anti-inflammatories), emerging science indicates that long-term oral health depends on precise microbiome modulation. Lacer aims to establish leadership in microbiome-based oral care by integrating this science into next-generation products, enabling new differentiated claims such as reversing early-stage gingivitis by targeting underlying imbalances.\nLacer is open to a range of collaborative business relationships, including:\n\n- R&D contracts\n- Licensing agreements\n- Joint development partnerships (Open to companies, startups, and universities).",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "innoget",
+        "source_uri": "https://www.innoget.com/technology-calls/2491/seeking-solutions-that-address-the-root-cause-of-gingivitis-by-actively-restoring-oral-microbiome-balance",
+        "extraction_timestamp": "2026-09-07T16:00:33.855946Z",
+        "raw_payload_sha256": "1825b6a126e7b851f8d141974e49a53b6a31537e5288669a833782d391d01ed8",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "LOMBARDIA-860",
+      "title": "Manutenzione giunti di ponti",
+      "description": "Una società spagnola cerca tecnologie di manutenzione per giunti di dilatazione elastomerici e appoggi in neoprene di ponti stradali. Le soluzioni dovrebbero prolungare la vita utile, ridurre i costi e limitare l'interruzione del traffico. Si valutano tecnologie da altri settori per collaborazione R&S o accordi tecnici. Interesse per sostenibilità e facilità d’uso.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "ES",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": "TRES20250806011",
+      "provenance": {
+        "source_authority": "openinnovation-lombardia",
+        "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/860/manutenzione-giunti-di-ponti",
+        "extraction_timestamp": "2026-09-07T16:00:37.915834Z",
+        "raw_payload_sha256": "bc23a1f86145e21f596977591a24f7866ef28d17298eff42efd359d922032d74",
+        "modality": "observed"
+      }
+    },
+    {
+      "demand_id": "LOMBARDIA-947",
+      "title": "Soluzioni per monitorare e mitigare polveri PM10 in miniere",
+      "description": "Società spagnola cerca tecnologie per monitoraggio e mitigazione polveri PM10 in miniera a cielo aperto collegata a miniera sotterranea. Richieste soluzioni autonome, basse in acqua, resistenti a condizioni estreme e con analisi realtime. Piloti previsti in Cile.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "ES",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": "TRES20251031029",
+      "provenance": {
+        "source_authority": "openinnovation-lombardia",
+        "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/947/soluzioni-per-monitorare-e-mitigare-polveri-pm10-in-miniere",
+        "extraction_timestamp": "2026-09-07T16:00:39.556551Z",
+        "raw_payload_sha256": "20886205e2379473a951da5badf57df7ea91fd65084f93868bccbc5ffc200815",
+        "modality": "observed"
+      }
+    }
+  ]
+}

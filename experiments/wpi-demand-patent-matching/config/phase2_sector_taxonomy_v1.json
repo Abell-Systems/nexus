@@ -1,0 +1,39 @@
+{
+  "taxonomy_id": "phase2_sector_taxonomy_v1",
+  "taxonomy_version": "v1",
+  "closed": true,
+  "amendment_path": "docs/phase2-sector-taxonomy-amendment.md",
+  "amendment_sha256": "dcb44eddb252b9e05249c5ccb5ce77ad5a6368c6f66a77f72ce4db47c362fc4d",
+  "sectors": [
+    {
+      "code": "CONSUMER_CHEMISTRY",
+      "label": "Consumer Chemistry",
+      "traceable_to": "protocol §4.1"
+    },
+    {
+      "code": "SANITARY_MATERIALS",
+      "label": "Sanitary / Materials",
+      "traceable_to": "protocol §4.1"
+    },
+    {
+      "code": "INDUSTRIAL_MACHINERY_IOT",
+      "label": "Industrial Machinery / IoT",
+      "traceable_to": "protocol §4.1 (\"Industrial IoT\") / RQ4 (\"industrial machinery/IoT\")"
+    },
+    {
+      "code": "ENERGY_STORAGE",
+      "label": "Energy / Renewable Energy Storage",
+      "traceable_to": "protocol §4.1 (\"Energy\") / RQ4 (\"renewable energy storage\")"
+    },
+    {
+      "code": "METALLURGY",
+      "label": "Metallurgy",
+      "traceable_to": "protocol §4.1 / RQ4"
+    },
+    {
+      "code": "BIOTECHNOLOGY",
+      "label": "Biotechnology",
+      "traceable_to": "protocol §4.1"
+    }
+  ]
+}

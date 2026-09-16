@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "policy_version": "corpus_expansion_policy_v1",
+  "description": "Binding acquisition and sampling frame policy for Phase-2 demand corpus expansion towards N>=60 independent observations.",
+  "target_sample_size": {
+    "target_independent_demands": 60,
+    "power_analysis_reference": "data/experiments/power_analysis_wilcoxon.json"
+  },
+  "sources": [
+    {
+      "source_id": "innoget",
+      "display_name": "InnoGet Open Innovation Network",
+      "permitted_constructs": [
+        "Technology call"
+      ],
+      "public_access_mode": "unauthenticated_public_http"
+    },
+    {
+      "source_id": "een_pod",
+      "display_name": "Enterprise Europe Network Partnering Opportunities Database",
+      "permitted_constructs": [
+        "Technology request"
+      ],
+      "public_access_mode": "unauthenticated_public_http"
+    }
+  ],
+  "temporal_window": {
+    "min_publication_date": "2020-01-01",
+    "max_publication_date": "2025-12-31",
+    "date_interpretation": "public_publication_date"
+  },
+  "geographic_strata": [
+    {
+      "stratum_id": "spain",
+      "description": "Domestic Spanish demand stratum (continuity with Phase 1)"
+    },
+    {
+      "stratum_id": "international_european",
+      "description": "Complementary European/International demand stratum"
+    }
+  ],
+  "content_requirements": {
+    "min_word_count": 25,
+    "require_technical_problem": true,
+    "allow_explicit_confidentiality_redaction": false
+  },
+  "concentration_monitoring": {
+    "sector_warning_threshold": 0.35,
+    "max_independent_per_organization": 1
+  },
+  "unknown_handling": {
+    "unknown_organization_split_policy": "dev_only",
+    "counts_towards_independent_target": false
+  }
+}

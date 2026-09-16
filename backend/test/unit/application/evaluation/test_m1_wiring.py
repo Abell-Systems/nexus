@@ -43,9 +43,9 @@ from domain.models.matching import (
 )
 
 _REPO_ROOT = Path(__file__).resolve().parents[5]
-REAL_ARTIFACT_PATH = _REPO_ROOT / "data" / "evaluation" / "embeddings_pilot_benchmark.json"
-REAL_DATASET_PATH = _REPO_ROOT / "data" / "evaluation" / "dataset_pilot_benchmark.json"
-REAL_MANIFEST_PATH = _REPO_ROOT / "data" / "evaluation" / "dataset_pilot_benchmark.manifest.json"
+REAL_ARTIFACT_PATH = _REPO_ROOT / "experiments" / "shared" / "embeddings_pilot_benchmark.json"
+REAL_DATASET_PATH = _REPO_ROOT / "experiments" / "shared" / "dataset_pilot_benchmark.json"
+REAL_MANIFEST_PATH = _REPO_ROOT / "experiments" / "shared" / "dataset_pilot_benchmark.manifest.json"
 
 # L2-normalized by construction (norm == 1.0 exactly).
 _VEC_X = [1.0, 0.0, 0.0, 0.0]
