@@ -103,6 +103,38 @@ def _extract_paired_vectors(
     return baseline_values, treatment_values, excluded_demand_ids
 
 
+def _validate_paired_run_identity(
+    baseline_run: EvaluationRunReport, treatment_run: EvaluationRunReport, hypothesis_id: str
+) -> None:
+    """ADR 0018 Enforcement #6 / ADR 0027 Enforcement #6 / ADR 0028: two runs built
+    under different pool-construction or denominator semantics are not a like-for-like
+    ranking comparison. Pairing them would silently attribute a pool-composition or
+    denominator-definition difference to the ranking engine under test, contaminating
+    the very hypothesis test this harness exists to run honestly.
+    """
+    if baseline_run.context.temporal_pool_mode != treatment_run.context.temporal_pool_mode:
+        raise ValueError(
+            f"Hypothesis '{hypothesis_id}': baseline and treatment runs use different "
+            f"temporal_pool_mode ('{baseline_run.context.temporal_pool_mode}' vs "
+            f"'{treatment_run.context.temporal_pool_mode}') -- not a like-for-like "
+            "comparison (ADR 0018 Enforcement #6)."
+        )
+    if baseline_run.context.family_policy != treatment_run.context.family_policy:
+        raise ValueError(
+            f"Hypothesis '{hypothesis_id}': baseline and treatment runs use different "
+            f"family_policy ('{baseline_run.context.family_policy}' vs "
+            f"'{treatment_run.context.family_policy}') -- not a like-for-like "
+            "comparison (ADR 0027 Enforcement #6)."
+        )
+    if baseline_run.denominator_semantics != treatment_run.denominator_semantics:
+        raise ValueError(
+            f"Hypothesis '{hypothesis_id}': baseline and treatment runs use different "
+            f"denominator_semantics ('{baseline_run.denominator_semantics}' vs "
+            f"'{treatment_run.denominator_semantics}') -- comparing runs computed under "
+            "different Recall/nDCG denominator definitions is scientifically invalid (ADR 0028)."
+        )
+
+
 def evaluate_study_protocol(
     runs: dict[str, EvaluationRunReport],
     protocol: StudyProtocol,
@@ -143,6 +175,7 @@ def evaluate_study_protocol(
     for hypothesis in protocol.hypotheses:
         baseline_run = runs[hypothesis.baseline]
         treatment_run = runs[hypothesis.treatment]
+        _validate_paired_run_identity(baseline_run, treatment_run, hypothesis.id)
 
         baseline_vec, treatment_vec, excluded_ids = _extract_paired_vectors(
             baseline_run, treatment_run, hypothesis

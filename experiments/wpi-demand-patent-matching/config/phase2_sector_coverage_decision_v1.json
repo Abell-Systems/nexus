@@ -1,0 +1,19 @@
+{
+  "decision_id": "phase2_sector_coverage_decision_v1",
+  "option": "B",
+  "decision_doc_path": "docs/phase2-sector-coverage-decision.md",
+  "decision_doc_sha256": "03f0a8881ae31f391f5b377b10ddf7721b0c7969f5883adb865130dee2e90860",
+  "no_sector_coverage_demand_ids": [
+    "INNOGET-1605",
+    "INNOGET-1607",
+    "INNOGET-1625",
+    "INNOGET-1932",
+    "INNOGET-1965",
+    "INNOGET-2173",
+    "INNOGET-2301",
+    "INNOGET-2401",
+    "INNOGET-2405",
+    "INNOGET-2417",
+    "LOMBARDIA-860"
+  ]
+}

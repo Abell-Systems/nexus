@@ -1,0 +1,30 @@
+{
+  "demand_count": 13,
+  "no_sector_coverage_count": 11,
+  "no_sector_coverage_demand_ids": [
+    "INNOGET-1605",
+    "INNOGET-1607",
+    "INNOGET-1625",
+    "INNOGET-1932",
+    "INNOGET-1965",
+    "INNOGET-2173",
+    "INNOGET-2301",
+    "INNOGET-2401",
+    "INNOGET-2405",
+    "INNOGET-2417",
+    "LOMBARDIA-860"
+  ],
+  "content_sha256": "634ada0a3be36bc46c4b603c18efc21625cfb1609feee10f4df3d00ecef22916",
+  "per_sector_counts": {
+    "METALLURGY": 3,
+    "BIOTECHNOLOGY": 4,
+    "INDUSTRIAL_MACHINERY_IOT": 3,
+    "ENERGY_STORAGE": 1,
+    "SANITARY_MATERIALS": 2
+  },
+  "derived_from": {
+    "eligible_corpus_sha256": "445ffd3c9b56fce751da746596100cb753c3a712e5ea838b18ffd0413366df02",
+    "taxonomy_config_sha256": "f5eab052e81ed11055f90eab98899a96e10e988a2270d30377e9523fde45d425",
+    "coverage_decision_sha256": "d97b6bf88670ce77efe6d662c3865203c7ac981a3379ae7ff8f96a459cc9e1ff"
+  }
+}

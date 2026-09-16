@@ -246,7 +246,7 @@ def test_sealed_dataset_temporal_violation_pairs_remain_unedited():
     temporal violations (docs/dataset-identity-audit.md §2.4). ADR 0018
     decides what the harness does with these pairs at pool-construction time;
     it must never edit, re-annotate, or remove them from the sealed dataset."""
-    dataset_path = _get_repo_root() / "data" / "evaluation" / "dataset_pilot_benchmark.json"
+    dataset_path = _get_repo_root() / "experiments" / "shared" / "dataset_pilot_benchmark.json"
     data = json.loads(dataset_path.read_text(encoding="utf-8"))
 
     grades_by_pair = {(a["demand_id"], a["publication_id"]): a["grade"] for a in data["annotations"]}

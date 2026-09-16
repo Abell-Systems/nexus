@@ -150,14 +150,14 @@ def _build_comparative_provenance(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run the first M0 vs M1 pilot comparison (PR-E)")
-    parser.add_argument("--dataset", type=Path, default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.json")
-    parser.add_argument("--checksum", type=Path, default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.sha256")
-    parser.add_argument("--manifest", type=Path, default=repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.manifest.json")
+    parser.add_argument("--dataset", type=Path, default=repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.json")
+    parser.add_argument("--checksum", type=Path, default=repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.sha256")
+    parser.add_argument("--manifest", type=Path, default=repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.manifest.json")
     parser.add_argument("--policy", type=Path, default=repo_root / "config" / "policies" / "matching" / "default_matching_policy.json")
     parser.add_argument("--model-config", type=Path, dest="model_config", default=repo_root / "config" / "evaluations" / "model_configurations_m0_m6.json")
-    parser.add_argument("--embeddings", type=Path, default=repo_root / "data" / "evaluation" / "embeddings_pilot_benchmark.json")
+    parser.add_argument("--embeddings", type=Path, default=repo_root / "experiments" / "shared" / "embeddings_pilot_benchmark.json")
     parser.add_argument("--protocol", type=Path, default=repo_root / "config" / "evaluations" / "comparisons_m0_vs_m1_pilot.json")
-    parser.add_argument("--output-dir", type=Path, dest="output_dir", default=repo_root / "data" / "experiments")
+    parser.add_argument("--output-dir", type=Path, dest="output_dir", default=repo_root / "data" / "experiments" / "latest")
     parser.add_argument("--environment", type=str, default="local_benchmark")
     parser.add_argument("--engine-commit", type=str, dest="engine_commit", default=None)
     parser.add_argument(
@@ -175,6 +175,21 @@ def main() -> int:
             "this flag. A live run must declare a contract-valid combination: 'strict' "
             "works with the current default policy as-is; 'unconstrained' requires a "
             "policy with require_temporal_validity=false or this script fails fast."
+        ),
+    )
+    parser.add_argument(
+        "--family-policy",
+        type=str,
+        choices=["allow", "collapse", "exclude_related"],
+        required=True,
+        dest="family_policy",
+        help=(
+            "ADR 0027: mandatory, no default (same explicit-injection principle as "
+            "--temporal-pool-mode) -- the patent-family policy must always be a "
+            "conscious choice. 'allow': no family-based pool changes. 'collapse'/"
+            "'exclude_related' require every patent in the dataset to carry a "
+            "family_id (ADR 0027 §1: never inferred here) or the run fails fast "
+            "with FAMILY_METADATA_UNAVAILABLE."
         ),
     )
     args = parser.parse_args()
@@ -222,6 +237,7 @@ def main() -> int:
         execution_timestamp=datetime.now(UTC),
         environment=args.environment,
         temporal_pool_mode=args.temporal_pool_mode,
+        family_policy=args.family_policy,
     )
     print(f"Execution Context:  Engine commit {commit_hash[:7]} at {context.execution_timestamp.isoformat()}")
 

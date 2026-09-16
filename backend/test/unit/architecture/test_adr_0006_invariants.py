@@ -73,9 +73,9 @@ def test_fixtures_are_not_imported_in_evaluation_code():
 def test_tamper_rejection_on_canonical_benchmark_file(tmp_path):
     """ADR 0006 §4 & §8: 1-byte alteration of raw bytes causes an immediate integrity failure."""
     repo_root = Path(__file__).resolve().parents[4]
-    real_dataset = repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.json"
-    real_checksum = repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.sha256"
-    real_manifest = repo_root / "data" / "evaluation" / "dataset_pilot_benchmark.manifest.json"
+    real_dataset = repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.json"
+    real_checksum = repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.sha256"
+    real_manifest = repo_root / "experiments" / "shared" / "dataset_pilot_benchmark.manifest.json"
 
     # Copy files to tmp_path
     tampered_dataset = tmp_path / "dataset_pilot_benchmark.json"

@@ -11,7 +11,7 @@ from domain.models.patent import PatentDocument
 from infrastructure.matching.eligibility import DefaultPatentEligibilityPolicy
 
 # ADR 0018 pilot benchmark fixture. Declared verbatim: computed via
-# sha256sum data/evaluation/dataset_pilot_benchmark.json (verified against the
+# sha256sum experiments/shared/dataset_pilot_benchmark.json (verified against the
 # real file, not guessed).
 EXPECTED_PILOT_BENCHMARK_SHA256 = "bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453"
 

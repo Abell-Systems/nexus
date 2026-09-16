@@ -1,0 +1,33 @@
+{
+  "dev_count": 5,
+  "test_count": 8,
+  "per_stratum_counts": {
+    "METALLURGY": {
+      "dev": 1,
+      "test": 2
+    },
+    "BIOTECHNOLOGY": {
+      "dev": 2,
+      "test": 2
+    },
+    "INDUSTRIAL_MACHINERY_IOT": {
+      "dev": 1,
+      "test": 2
+    },
+    "ENERGY_STORAGE": {
+      "dev": 0,
+      "test": 1
+    },
+    "SANITARY_MATERIALS": {
+      "dev": 1,
+      "test": 1
+    }
+  },
+  "dev_fraction": 0.4,
+  "seed": 42,
+  "content_sha256": "8c8f2756646f5910d83648952521233a8c68fd8db9afc9c78214c07ac1135a7e",
+  "derived_from": {
+    "assignments_sha256": "634ada0a3be36bc46c4b603c18efc21625cfb1609feee10f4df3d00ecef22916",
+    "config_sha256": "61ea7577354531fea1218c9288f4645abe67d97a3a09c9dce4cc37a393b9cf0c"
+  }
+}

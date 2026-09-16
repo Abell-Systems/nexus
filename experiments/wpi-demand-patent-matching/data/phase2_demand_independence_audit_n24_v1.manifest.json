@@ -1,0 +1,26 @@
+{
+  "audit_id": "phase2_demand_independence_audit_n24_v1",
+  "total": 24,
+  "verified_independent_count": 12,
+  "unknown_independence_count": 6,
+  "operational_audited_corpus_count": 18,
+  "pseudoreplicate_count": 6,
+  "content_sha256": "085447a2feada007f6c4a732a0fa7b9688b9e720db005c3b90b64a54a56fa814",
+  "devtest_split_leakage_status": "CONTAMINATED",
+  "contaminated_split_demand_count": 5,
+  "straddling_groups_count": 2,
+  "group_sizes": {
+    "Bax & Company": 1,
+    "ALLIANCE project": 1,
+    "Celsa Group": 1,
+    "Familia Torres": 1,
+    "Fundingbox": 1,
+    "Blue Room Innovation": 1,
+    "Alberto from Pharmactive Biotech Products": 1,
+    "Indira from Bax&Co": 1,
+    "Repsol": 1,
+    "INDUSAC": 1,
+    "SMAR3TS": 5,
+    "Lacer, S.A": 3
+  }
+}

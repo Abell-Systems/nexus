@@ -22,7 +22,7 @@ RQ4 independently names overlapping example domains:
 
 Both are open-ended ("etc.", "e.g."). Neither closes a finite category set. No other
 protocol section, ADR, or repository artifact defines one either — confirmed directly
-against the frozen N=39 corpus (`data/evaluation/dataset_phase2_demand_corpus_n39.json`
+against the frozen N=39 corpus (`experiments/wpi-demand-patent-matching/data/dataset_phase2_demand_corpus_n39.json`
 carries no `sector` field, and `target_cpc_prefixes` is empty for all 39 records, so
 there is no fallback CPC-derived signal). The only concrete application of these
 category names anywhere in the repository is `docs/data_provenance.md` §2, describing
