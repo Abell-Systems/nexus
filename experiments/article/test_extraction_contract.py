@@ -14,8 +14,11 @@ from validate_extraction_contract import (  # noqa: E402
     NOT_APPLICABLE,
     PASS,
     evaluate_count_reconciliation,
+    evaluate_future_run,
     evaluate_pagination_completeness,
     evaluate_pagination_mode,
+    evaluate_raw_source_archive,
+    evaluate_row_provenance,
 )
 
 
@@ -107,6 +110,86 @@ def test_pagination_mode_pass():
 def test_pagination_mode_fail():
     finding = evaluate_pagination_mode("multi_session_resumable")
     assert finding.verdict == FAIL
+
+
+def _sample_pages():
+    return [
+        {"page_number": 0, "raw_response_path": "raw/page_0.json", "content_sha256": "abc123"},
+        {"page_number": 1, "raw_response_path": "raw/page_1.json", "content_sha256": "def456"},
+    ]
+
+
+def _sample_rows(run_id="run-1"):
+    return [
+        {"publication_id": "US-1-A1", "extraction_run_id": run_id, "page_number": 0, "row_index": 0},
+        {"publication_id": "US-2-A1", "extraction_run_id": run_id, "page_number": 1, "row_index": 1},
+    ]
+
+
+def test_raw_source_archive_pass_structural():
+    finding = evaluate_raw_source_archive(_sample_pages())
+    assert finding.verdict == PASS
+
+
+def test_raw_source_archive_fail_missing_field():
+    pages = [{"page_number": 0, "raw_response_path": None, "content_sha256": None}]
+    finding = evaluate_raw_source_archive(pages)
+    assert finding.verdict == FAIL
+
+
+def test_raw_source_archive_fail_no_pages():
+    finding = evaluate_raw_source_archive([])
+    assert finding.verdict == FAIL
+
+
+def test_raw_source_archive_fail_hash_mismatch():
+    finding = evaluate_raw_source_archive(_sample_pages(), computed_hashes={0: "abc123", 1: "WRONG"})
+    assert finding.verdict == FAIL
+    assert "page(s): [1]" in finding.detail
+
+
+def test_raw_source_archive_pass_hash_match():
+    finding = evaluate_raw_source_archive(_sample_pages(), computed_hashes={0: "abc123", 1: "def456"})
+    assert finding.verdict == PASS
+
+
+def test_row_provenance_pass():
+    finding = evaluate_row_provenance(_sample_rows(), _sample_pages(), extraction_run_id="run-1")
+    assert finding.verdict == PASS
+
+
+def test_row_provenance_fail_wrong_run_id():
+    finding = evaluate_row_provenance(_sample_rows(run_id="other-run"), _sample_pages(), extraction_run_id="run-1")
+    assert finding.verdict == FAIL
+
+
+def test_row_provenance_fail_dangling_page_pointer():
+    rows = [{"publication_id": "US-1-A1", "extraction_run_id": "run-1", "page_number": 99, "row_index": 0}]
+    finding = evaluate_row_provenance(rows, _sample_pages(), extraction_run_id="run-1")
+    assert finding.verdict == FAIL
+
+
+def test_evaluate_future_run_all_pass():
+    run = {
+        "extraction_run_id": "run-1",
+        "compound": "Test_compound",
+        "capped": False,
+        "extraction_cap": None,
+        "total_hits_reported": 2,
+        "page_size": 1,
+        "pagination_mode": "sequential_single_run",
+        "pages": _sample_pages(),
+        "rows": _sample_rows(),
+    }
+    findings = evaluate_future_run(run, computed_hashes={0: "abc123", 1: "def456"})
+    invariants = {f.invariant: f.verdict for f in findings}
+    assert invariants == {
+        "raw_source_archive": PASS,
+        "count_reconciliation": PASS,
+        "pagination_completeness": PASS,
+        "pagination_mode": PASS,
+        "row_provenance": PASS,
+    }
 
 
 def main() -> int:
