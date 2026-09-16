@@ -174,3 +174,59 @@ def evaluate_future_run(
         evaluate_pagination_mode(run["pagination_mode"]),
         evaluate_row_provenance(rows, pages, run["extraction_run_id"]),
     ]
+
+
+def evaluate_query_documented_legacy(compound_display_name: str, readme_text: str) -> Finding:
+    """Real (not rubber-stamped) check: the compound's display name must actually appear in the
+    README prose for this to count as documented -- not assumed true for every compound."""
+    if compound_display_name in readme_text:
+        return Finding(
+            "query_documented_human_readable", PASS,
+            f"README mentions compound {compound_display_name!r}",
+        )
+    return Finding(
+        "query_documented_human_readable", FAIL,
+        f"README does not mention compound {compound_display_name!r}",
+    )
+
+
+def evaluate_legacy_compound(
+    compound_display_name: str,
+    rows: list[dict],
+    capped: bool,
+    total_hits_reported: int,
+    readme_text: str,
+) -> list[Finding]:
+    """Retroactive, read-only audit of one v0.1 compound CSV against the v1 contract.
+
+    v0.1 never recorded a raw archive, page-level trace, session log, or a separately declared
+    extraction_cap -- those invariants report LEGACY_UNVERIFIABLE, not FAIL, and are never
+    backfilled. count_reconciliation IS checkable from the CSV's own columns (publication_id,
+    capped, total_hits_reported) and is the one invariant that would have caught the historical
+    Brentuximab under-count immediately.
+    """
+    rows_extracted = len(rows)
+    unique_ids = len({r["publication_id"] for r in rows})
+    extraction_cap = rows_extracted if capped else None
+
+    count_finding = evaluate_count_reconciliation(
+        rows_extracted, unique_ids, total_hits_reported, capped, extraction_cap,
+    )
+    if capped and count_finding.verdict == PASS:
+        count_finding = Finding(
+            "count_reconciliation", PASS,
+            count_finding.detail + " (extraction_cap inferred as rows saved -- v0.1 does not "
+            "record a separately declared cap)",
+        )
+
+    return [
+        Finding("raw_source_archive", LEGACY_UNVERIFIABLE, "no raw API archive captured for this pass"),
+        count_finding,
+        Finding("pagination_completeness", LEGACY_UNVERIFIABLE, "no page-level trace recorded for this pass"),
+        Finding("pagination_mode", LEGACY_UNVERIFIABLE, "no session log recorded for this pass"),
+        evaluate_query_documented_legacy(compound_display_name, readme_text),
+        Finding(
+            "query_documented_machine_readable", LEGACY_UNVERIFIABLE,
+            "no machine-readable request metadata (endpoint/params) captured for this pass",
+        ),
+    ]

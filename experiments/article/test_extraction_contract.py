@@ -11,12 +11,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parent / "checks"))
 
 from validate_extraction_contract import (  # noqa: E402
     FAIL,
+    LEGACY_UNVERIFIABLE,
     NOT_APPLICABLE,
     PASS,
     evaluate_count_reconciliation,
     evaluate_future_run,
+    evaluate_legacy_compound,
     evaluate_pagination_completeness,
     evaluate_pagination_mode,
+    evaluate_query_documented_legacy,
     evaluate_raw_source_archive,
     evaluate_row_provenance,
 )
@@ -190,6 +193,45 @@ def test_evaluate_future_run_all_pass():
         "pagination_mode": PASS,
         "row_provenance": PASS,
     }
+
+
+def test_query_documented_legacy_pass():
+    readme = "## Per-compound counts\n\n| 01 | Brentuximab vedotin | 2,613 |"
+    finding = evaluate_query_documented_legacy("Brentuximab vedotin", readme)
+    assert finding.verdict == PASS
+
+
+def test_query_documented_legacy_fail():
+    readme = "## Per-compound counts\n\n| 01 | Trabectedin | 1,890 |"
+    finding = evaluate_query_documented_legacy("Brentuximab vedotin", readme)
+    assert finding.verdict == FAIL
+
+
+def test_evaluate_legacy_compound_brentuximab_shaped():
+    rows = [{"publication_id": f"US-{i}-A1"} for i in range(2613)]
+    readme = "Brentuximab vedotin appears here"
+    findings = evaluate_legacy_compound(
+        "Brentuximab vedotin", rows, capped=False, total_hits_reported=2613, readme_text=readme,
+    )
+    by_invariant = {f.invariant: f.verdict for f in findings}
+    assert by_invariant["count_reconciliation"] == PASS
+    assert by_invariant["raw_source_archive"] == LEGACY_UNVERIFIABLE
+    assert by_invariant["pagination_completeness"] == LEGACY_UNVERIFIABLE
+    assert by_invariant["pagination_mode"] == LEGACY_UNVERIFIABLE
+    assert by_invariant["query_documented_human_readable"] == PASS
+    assert by_invariant["query_documented_machine_readable"] == LEGACY_UNVERIFIABLE
+
+
+def test_evaluate_legacy_compound_capped_cytarabine_shaped():
+    rows = [{"publication_id": f"US-{i}-A1"} for i in range(1000)]
+    readme = "Cytarabine cap: only the first 1,000 results"
+    findings = evaluate_legacy_compound(
+        "Cytarabine", rows, capped=True, total_hits_reported=19075, readme_text=readme,
+    )
+    by_invariant = {f.invariant: f.verdict for f in findings}
+    assert by_invariant["count_reconciliation"] == PASS
+    count_finding = next(f for f in findings if f.invariant == "count_reconciliation")
+    assert "inferred" in count_finding.detail
 
 
 def main() -> int:
