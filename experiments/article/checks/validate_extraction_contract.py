@@ -5,6 +5,7 @@ No file I/O, no network calls -- that lives in the CLI scripts (check_extraction
 audit_minesoft_origin_v0_1.py) that call into this module.
 """
 
+import math
 from collections import namedtuple
 
 CONTRACT_VERSION = "extraction_contract_v1"
@@ -57,4 +58,38 @@ def evaluate_count_reconciliation(
         "count_reconciliation", FAIL,
         f"rows_extracted={rows_extracted}, unique={unique_ids} do not both equal expected={expected} "
         f"(cap_binding={cap_binding})",
+    )
+
+
+def evaluate_pagination_completeness(
+    pages_extracted: int,
+    total_hits_reported: int,
+    page_size: int,
+    capped: bool,
+) -> Finding:
+    """Capped runs are not required to exhaust every page -- they stop at the cap by design."""
+    if capped:
+        return Finding(
+            "pagination_completeness", NOT_APPLICABLE,
+            "capped runs are not required to exhaust all pages",
+        )
+    expected_pages = math.ceil(total_hits_reported / page_size) if total_hits_reported else 0
+    if pages_extracted == expected_pages:
+        return Finding(
+            "pagination_completeness", PASS,
+            f"pages_extracted={pages_extracted}, expected={expected_pages}",
+        )
+    return Finding(
+        "pagination_completeness", FAIL,
+        f"pages_extracted={pages_extracted} != expected={expected_pages}",
+    )
+
+
+def evaluate_pagination_mode(pagination_mode: str) -> Finding:
+    """The contract requires one continuous session per compound -- no pause/resume/restart."""
+    if pagination_mode == "sequential_single_run":
+        return Finding("pagination_mode", PASS, "pagination_mode == 'sequential_single_run'")
+    return Finding(
+        "pagination_mode", FAIL,
+        f"pagination_mode={pagination_mode!r} != required 'sequential_single_run'",
     )

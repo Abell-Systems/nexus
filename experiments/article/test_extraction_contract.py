@@ -11,8 +11,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent / "checks"))
 
 from validate_extraction_contract import (  # noqa: E402
     FAIL,
+    NOT_APPLICABLE,
     PASS,
     evaluate_count_reconciliation,
+    evaluate_pagination_completeness,
+    evaluate_pagination_mode,
 )
 
 
@@ -72,6 +75,38 @@ def test_count_reconciliation_capped_requires_declared_cap():
     )
     assert finding.verdict == FAIL
     assert "not declared" in finding.detail
+
+
+def test_pagination_completeness_uncapped_pass():
+    # 2613 hits at page_size=50 -> ceil(2613/50) = 53 pages.
+    finding = evaluate_pagination_completeness(
+        pages_extracted=53, total_hits_reported=2613, page_size=50, capped=False,
+    )
+    assert finding.verdict == PASS
+
+
+def test_pagination_completeness_uncapped_fail():
+    finding = evaluate_pagination_completeness(
+        pages_extracted=52, total_hits_reported=2613, page_size=50, capped=False,
+    )
+    assert finding.verdict == FAIL
+
+
+def test_pagination_completeness_capped_not_applicable():
+    finding = evaluate_pagination_completeness(
+        pages_extracted=20, total_hits_reported=19075, page_size=50, capped=True,
+    )
+    assert finding.verdict == NOT_APPLICABLE
+
+
+def test_pagination_mode_pass():
+    finding = evaluate_pagination_mode("sequential_single_run")
+    assert finding.verdict == PASS
+
+
+def test_pagination_mode_fail():
+    finding = evaluate_pagination_mode("multi_session_resumable")
+    assert finding.verdict == FAIL
 
 
 def main() -> int:
