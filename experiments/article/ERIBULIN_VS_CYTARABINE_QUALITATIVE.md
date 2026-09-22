@@ -88,13 +88,14 @@ mechanism as Cytarabine's Incidentals — eribulin named as one of ~15–20
 items in an unrelated invention's background chemotherapy-agent list (e.g.
 three sibling "kinase modulation compounds" families reusing the identical
 ~20-item list, an anti-LAG3-antibody patent, a TIM-3-binding antibody
-patent). This confirms the *mechanism* that produces Incidental Mentions is
-the same for both compounds — what differs is how often each compound's
+patent). This indicates that the same Incidental-Mention mechanism is
+observed in both samples — what differs is how often each compound's
 screened universe lands in that bucket versus the others.
 
 ## 3. What this does and doesn't support
 
-**Supports a real structural difference, not just noise:** Cytarabine's
+**Supports a clear structural difference in the observed classified
+samples:** Cytarabine's
 relevant families are overwhelmingly *combination-partner* mentions inside
 other inventors' patents (Combination Therapy 67.5% vs. Eribulin's 25.0%;
 44% Indirectly Relevant vs. 0%), consistent with its role as a decades-old,
