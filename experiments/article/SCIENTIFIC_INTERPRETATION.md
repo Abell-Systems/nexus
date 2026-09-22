@@ -3,8 +3,9 @@
 Source: `screening_table_consolidated.csv` (tag `paper-data-milestone-2026-09-22`,
 merged into `main` at `00eec15`). No new data acquired for this analysis — it
 recomputes the same 872-family classification along a different axis (rate,
-not count), adds confidence intervals, and a formal significance test for the
-one contrast large enough to support it.
+not count), adds confidence intervals, and an exploratory post-hoc
+significance test for one contrast identified after inspecting the rate
+distribution (see §2 — this is not a pre-specified, confirmatory comparison).
 
 **Non-independence note.** Some patent families match more than one
 compound's search (4 of the 872 unique families), so the 952 per-compound
@@ -51,25 +52,37 @@ insufficient to support a comparative claim against Cytarabine** — not
 evidence that the true rate is either higher or lower than Cytarabine's,
 just too little data to say either way.
 
-**Eribulin mesylate vs. Cytarabine is the one contrast large enough to test
-formally**, rather than relying on the visual heuristic of non-overlapping
-confidence intervals (which is not itself a significance test). Fisher's
-exact test on the 2×2 table (Eribulin: 8/18 relevant; Cytarabine: 123/690
-relevant) gives:
+**Eribulin–Cytarabine was selected for an exploratory post-hoc comparison**
+because the observed rate difference was substantial and Eribulin had a
+larger screened universe than the other higher-rate compounds — not because
+of a pre-specified threshold or a comparison planned before looking at the
+rate distribution. Because this contrast was identified *from* the observed
+data rather than specified a priori, and because it was one candidate among
+several possible comparisons against Cytarabine (Enfortumab vedotin,
+Plitidepsin, Omega-3 acid ethyl esters, Polatuzumab vedotin, Trabectedin,
+Brentuximab vedotin, Ziconotide, Vidarabine), the test below is treated as
+**exploratory, not confirmatory hypothesis testing** — no correction for
+multiple comparisons has been applied, and none is claimed to be needed for
+what this section presents.
 
-- Odds ratio 3.69, **p = 0.0093** (two-sided)
-- Risk difference: +26.6 percentage points, 95% CI [3.5, 49.8]
-- Risk ratio: 2.49, 95% CI [1.45, 4.28]
+Rather than relying on the visual heuristic of non-overlapping confidence
+intervals (which is not itself a significance test), Fisher's exact test was
+run on the 2×2 table (Eribulin: 8/18 relevant; Cytarabine: 123/690 relevant):
 
-This supports treating Eribulin's higher rate as a genuine difference rather
-than sampling variation — but the confidence intervals on the effect size are
-themselves wide (risk difference as low as 3.5 points, risk ratio as low as
-1.45), reflecting that n=18 is still a small sample. This is a **rate
-difference worth qualitative investigation** into what distinguishes
-Eribulin's 8 relevant families from Cytarabine's 123 (e.g. whether Eribulin's
-more specific compound name yields fewer Incidental-Mention Markush-list
-hits than a 60-year-old generic name like "cytarabine" is a hypothesis to
-test against the evidence, not a conclusion this analysis establishes).
+- Odds ratio 3.69, **p = 0.0093** (two-sided, exploratory)
+- Risk difference: +26.6 percentage points, 95% Wald CI [3.5, 49.8]
+- Risk ratio: 2.49, 95% CI [1.45, 4.28] (log-risk-ratio approximation)
+
+The result provides evidence of a substantial *observed* rate difference and
+motivates qualitative follow-up, but its post-hoc selection means it should
+not be interpreted as confirmatory significance. The effect-size intervals
+are themselves wide (risk difference as low as 3.5 points, risk ratio as low
+as 1.45), reflecting that n=18 is still a small sample. This motivates
+**qualitative investigation** into what distinguishes Eribulin's 8 relevant
+families from Cytarabine's 123 (e.g. whether Eribulin's more specific
+compound name yields fewer Incidental-Mention Markush-list hits than a
+60-year-old generic name like "cytarabine" is a hypothesis to test against
+the evidence, not a conclusion this analysis establishes).
 Reproducible in `figures/eribulin_vs_cytarabine_test.txt`.
 
 ## 3. Cytarabine's own rate is not anomalously low relative to the rest of the corpus
@@ -125,8 +138,9 @@ specifically.)
 
 **Supports:** stating both the absolute count and the rate whenever
 Cytarabine's dominance is discussed (already done in the Figure 4 prose per
-the manuscript integration), and reporting Eribulin mesylate's higher rate —
-now backed by a formal test, not just non-overlapping intervals — as worth a
+the manuscript integration), and reporting Eribulin mesylate's higher
+observed rate — backed by an exploratory Fisher's exact test rather than
+just non-overlapping intervals, but not a confirmatory finding — as worth a
 follow-up qualitative note.
 
 **Does not support:** re-ranking compounds by rate as if it were a more

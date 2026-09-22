@@ -1,10 +1,14 @@
 """Reproducible relevance-rate analysis: recomputes the frozen classification
 (screening_table_consolidated.csv, tag paper-data-milestone-2026-09-22) by
-rate instead of absolute count, with Wilson 95% confidence intervals, plus a
-formal two-proportion test (Fisher's exact) for the one rate contrast large
-enough to test: Eribulin mesylate vs. Cytarabine. Produces
-figure10_relevance_rate_by_compound.png, relevance_rate_by_compound.csv, and
-eribulin_vs_cytarabine_test.txt. No new data is read or acquired.
+rate instead of absolute count, with Wilson 95% confidence intervals, plus an
+EXPLORATORY POST-HOC two-proportion test (Fisher's exact) for Eribulin
+mesylate vs. Cytarabine -- this contrast was selected after inspecting the
+observed rate distribution (Eribulin had the largest screened universe among
+the higher-rate compounds), not specified a priori, so the p-value below is
+not confirmatory and no multiple-comparison correction has been applied.
+Produces figure10_relevance_rate_by_compound.png,
+relevance_rate_by_compound.csv, and eribulin_vs_cytarabine_test.txt. No new
+data is read or acquired.
 """
 import csv, math
 from collections import Counter
@@ -65,8 +69,11 @@ def main():
         data.append((c, n, k, rate, lo, hi))
     data.sort(key=lambda x: -x[3])
 
-    # Formal two-proportion comparison for the one contrast with a
-    # non-negligible screened universe on both sides: Eribulin vs. Cytarabine.
+    # EXPLORATORY POST-HOC two-proportion comparison: Eribulin vs. Cytarabine.
+    # This pair was selected after inspecting the observed rate distribution
+    # (Eribulin had the largest screened universe among the higher-rate
+    # compounds), not specified a priori -- treat the p-value as exploratory,
+    # not confirmatory, and note no multiple-comparison correction is applied.
     # CI non-overlap is only a heuristic, not a test -- Fisher's exact test
     # (appropriate for a 2x2 table with a small cell count) is used instead.
     erib_k, erib_n = screened['Eribulin_mesylate']['Directly Relevant'] + screened['Eribulin_mesylate']['Indirectly Relevant'], sum(screened['Eribulin_mesylate'].values())
@@ -82,11 +89,15 @@ def main():
     rr_lo, rr_hi = math.exp(math.log(risk_ratio) - 1.96 * se_log_rr), math.exp(math.log(risk_ratio) + 1.96 * se_log_rr)
     test_report = (
         f"Eribulin mesylate vs. Cytarabine, two-proportion comparison\n"
+        f"EXPLORATORY / POST-HOC: this contrast was selected after inspecting the\n"
+        f"observed rate distribution, not specified a priori. No correction for\n"
+        f"multiple comparisons has been applied. Treat p as exploratory evidence\n"
+        f"of an observed difference, not confirmatory significance.\n"
         f"Eribulin: {erib_k}/{erib_n} = {p1*100:.1f}%\n"
         f"Cytarabine: {cyt_k}/{cyt_n} = {p2*100:.1f}%\n"
-        f"Fisher's exact test (two-sided): odds ratio = {odds_ratio:.2f}, p = {p_value:.4f}\n"
+        f"Fisher's exact test (two-sided, exploratory): odds ratio = {odds_ratio:.2f}, p = {p_value:.4f}\n"
         f"Risk difference: {risk_diff*100:.1f} percentage points, 95% Wald CI [{rd_lo:.1f}, {rd_hi:.1f}]\n"
-        f"Risk ratio: {risk_ratio:.2f}, 95% CI [{rr_lo:.2f}, {rr_hi:.2f}]\n"
+        f"Risk ratio: {risk_ratio:.2f}, 95% CI [{rr_lo:.2f}, {rr_hi:.2f}] (log-risk-ratio approximation)\n"
     )
     with open('eribulin_vs_cytarabine_test.txt', 'w') as f:
         f.write(test_report)
