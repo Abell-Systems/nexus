@@ -1,14 +1,17 @@
 """Reproducible relevance-rate analysis: recomputes the frozen classification
 (screening_table_consolidated.csv, tag paper-data-milestone-2026-09-22) by
-rate instead of absolute count, with Wilson 95% confidence intervals.
-Produces figure10_relevance_rate_by_compound.png and
-relevance_rate_by_compound.csv. No new data is read or acquired.
+rate instead of absolute count, with Wilson 95% confidence intervals, plus a
+formal two-proportion test (Fisher's exact) for the one rate contrast large
+enough to test: Eribulin mesylate vs. Cytarabine. Produces
+figure10_relevance_rate_by_compound.png, relevance_rate_by_compound.csv, and
+eribulin_vs_cytarabine_test.txt. No new data is read or acquired.
 """
 import csv, math
 from collections import Counter
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from scipy.stats import fisher_exact
 
 plt.rcParams.update({
     'font.family': 'DejaVu Sans', 'axes.edgecolor': '#c3c2b7', 'axes.labelcolor': '#52514e',
@@ -62,6 +65,33 @@ def main():
         data.append((c, n, k, rate, lo, hi))
     data.sort(key=lambda x: -x[3])
 
+    # Formal two-proportion comparison for the one contrast with a
+    # non-negligible screened universe on both sides: Eribulin vs. Cytarabine.
+    # CI non-overlap is only a heuristic, not a test -- Fisher's exact test
+    # (appropriate for a 2x2 table with a small cell count) is used instead.
+    erib_k, erib_n = screened['Eribulin_mesylate']['Directly Relevant'] + screened['Eribulin_mesylate']['Indirectly Relevant'], sum(screened['Eribulin_mesylate'].values())
+    cyt_k, cyt_n = screened['Cytarabine']['Directly Relevant'] + screened['Cytarabine']['Indirectly Relevant'], sum(screened['Cytarabine'].values())
+    table = [[erib_k, erib_n - erib_k], [cyt_k, cyt_n - cyt_k]]
+    odds_ratio, p_value = fisher_exact(table, alternative='two-sided')
+    p1, p2 = erib_k / erib_n, cyt_k / cyt_n
+    risk_diff = p1 - p2
+    se_rd = math.sqrt(p1 * (1 - p1) / erib_n + p2 * (1 - p2) / cyt_n)
+    rd_lo, rd_hi = (risk_diff - 1.96 * se_rd) * 100, (risk_diff + 1.96 * se_rd) * 100
+    risk_ratio = p1 / p2
+    se_log_rr = math.sqrt((1 - p1) / (p1 * erib_n) + (1 - p2) / (p2 * cyt_n))
+    rr_lo, rr_hi = math.exp(math.log(risk_ratio) - 1.96 * se_log_rr), math.exp(math.log(risk_ratio) + 1.96 * se_log_rr)
+    test_report = (
+        f"Eribulin mesylate vs. Cytarabine, two-proportion comparison\n"
+        f"Eribulin: {erib_k}/{erib_n} = {p1*100:.1f}%\n"
+        f"Cytarabine: {cyt_k}/{cyt_n} = {p2*100:.1f}%\n"
+        f"Fisher's exact test (two-sided): odds ratio = {odds_ratio:.2f}, p = {p_value:.4f}\n"
+        f"Risk difference: {risk_diff*100:.1f} percentage points, 95% Wald CI [{rd_lo:.1f}, {rd_hi:.1f}]\n"
+        f"Risk ratio: {risk_ratio:.2f}, 95% CI [{rr_lo:.2f}, {rr_hi:.2f}]\n"
+    )
+    with open('eribulin_vs_cytarabine_test.txt', 'w') as f:
+        f.write(test_report)
+    print(test_report)
+
     with open('relevance_rate_by_compound.csv', 'w', newline='') as f:
         w = csv.writer(f)
         w.writerow(['Compound', 'Screened', 'Relevant', 'Rate_pct', 'Wilson_CI_low_pct', 'Wilson_CI_high_pct'])
@@ -88,9 +118,9 @@ def main():
     ax.spines[['top', 'right']].set_visible(False)
 
     handles = [plt.Rectangle((0, 0), 1, 1, color=BLUE), plt.Rectangle((0, 0), 1, 1, color=ORANGE)]
-    ax.legend(handles, ['n ≥ 30 (precise estimate)', 'n < 30 (imprecise — insufficient to support a comparative rate claim)'],
+    ax.legend(handles, ['n ≥ 30', 'n < 30 — see the interval width, not this threshold, for precision'],
               loc='lower right', frameon=False, fontsize=8.5)
-    ax.set_title('Relevance rate per compound is not the same question as\nabsolute relevant-family count — most high-rate compounds have n too small for a comparative claim',
+    ax.set_title('Relevance rate per compound is not the same question as\nabsolute relevant-family count — interval width, not rate alone, shows what is comparable',
                  fontsize=10.5, color=TEXT_PRIMARY, loc='left')
     fig.tight_layout()
     fig.savefig('figure10_relevance_rate_by_compound.png', bbox_inches='tight')

@@ -3,7 +3,17 @@
 Source: `screening_table_consolidated.csv` (tag `paper-data-milestone-2026-09-22`,
 merged into `main` at `00eec15`). No new data acquired for this analysis — it
 recomputes the same 872-family classification along a different axis (rate,
-not count) and adds confidence intervals.
+not count), adds confidence intervals, and a formal significance test for the
+one contrast large enough to support it.
+
+**Non-independence note.** Some patent families match more than one
+compound's search (4 of the 872 unique families), so the 952 per-compound
+rows this analysis is built from — and any pooled or per-compound count
+derived from them — are **not mutually exclusive, independent observations**.
+This is fine for descriptive per-compound rates and for the one specific
+two-proportion test below (Eribulin and Cytarabine's screened sets do not
+overlap with each other), but any future test that pools across compounds or
+treats the 952 rows as an i.i.d. sample would need to account for this.
 
 ## 1. The headline "Cytarabine leads" is an absolute-count artifact, not
    necessarily a relevance-propensity finding
@@ -26,33 +36,41 @@ not count) and adds confidence intervals.
 By absolute count, Cytarabine dominates (123 of 161 compound-family
 observations, 76%). By **rate** — the fraction of each compound's screened
 Spain-relevant universe that turned out substantively relevant — Cytarabine
-ranks **6th of 12**, behind five compounds with much smaller search
-universes. See `figures/figure10_relevance_rate_by_compound.png`.
+ranks **6th of 12**, behind five compounds with smaller screened universes.
+See `figures/figure10_relevance_rate_by_compound.png`.
 
-## 2. But most of those higher rates are not statistically trustworthy
+## 2. Four of those five higher rates are too imprecise to compare; one — Eribulin — is formally tested
 
 Confidence intervals were computed with the Wilson score interval (appropriate
-for small-sample proportions, unlike the normal approximation). Five
-compounds — Enfortumab vedotin (n=6), Plitidepsin (n=4), Omega-3 acid ethyl
-esters (n=4), and Polatuzumab vedotin (n=9) — have intervals 45–60 percentage
-points wide. A single re-classified family in Plitidepsin's or Omega-3 acid
-ethyl esters' screened set (n=4) would swing the rate by 25 points. **Their
-rate estimates are imprecise and insufficient to support a comparative claim
-against Cytarabine** — not evidence that the true rate is either higher or
-lower, just too little data to say.
+for small-sample proportions). Four compounds — Enfortumab vedotin (n=6),
+Plitidepsin (n=4), Omega-3 acid ethyl esters (n=4), and Polatuzumab vedotin
+(n=9) — have intervals 45–60 percentage points wide. A single re-classified
+family in Plitidepsin's or Omega-3 acid ethyl esters' screened set (n=4)
+would swing the rate by 25 points. **Their rate estimates are imprecise and
+insufficient to support a comparative claim against Cytarabine** — not
+evidence that the true rate is either higher or lower than Cytarabine's,
+just too little data to say either way.
 
-**Eribulin mesylate is the one exception worth taking seriously.** Although
-its own CI [24.6%, 66.3%] is still fairly wide (n=18), it does not overlap
-Cytarabine's [15.2%, 20.9%] at all — the separation between the two
-intervals is large enough that this looks like a genuine rate difference,
-not an artifact of the four smaller-n compounds' imprecision. This is the
-strongest rate-based finding in the dataset and supports a qualitative
-follow-up investigation into what distinguishes Eribulin's 8 relevant
-families from Cytarabine's 123 — not a causal explanation the current data
-can establish on its own (e.g. whether Eribulin's more specific compound
-name structurally yields fewer Incidental-Mention Markush-list hits than a
-60-year-old generic name like "cytarabine" is a hypothesis to test against
-the evidence, not a conclusion drawn here).
+**Eribulin mesylate vs. Cytarabine is the one contrast large enough to test
+formally**, rather than relying on the visual heuristic of non-overlapping
+confidence intervals (which is not itself a significance test). Fisher's
+exact test on the 2×2 table (Eribulin: 8/18 relevant; Cytarabine: 123/690
+relevant) gives:
+
+- Odds ratio 3.69, **p = 0.0093** (two-sided)
+- Risk difference: +26.6 percentage points, 95% CI [3.5, 49.8]
+- Risk ratio: 2.49, 95% CI [1.45, 4.28]
+
+This supports treating Eribulin's higher rate as a genuine difference rather
+than sampling variation — but the confidence intervals on the effect size are
+themselves wide (risk difference as low as 3.5 points, risk ratio as low as
+1.45), reflecting that n=18 is still a small sample. This is a **rate
+difference worth qualitative investigation** into what distinguishes
+Eribulin's 8 relevant families from Cytarabine's 123 (e.g. whether Eribulin's
+more specific compound name yields fewer Incidental-Mention Markush-list
+hits than a 60-year-old generic name like "cytarabine" is a hypothesis to
+test against the evidence, not a conclusion this analysis establishes).
+Reproducible in `figures/eribulin_vs_cytarabine_test.txt`.
 
 ## 3. Cytarabine's own rate is not anomalously low relative to the rest of the corpus
 
@@ -66,17 +84,19 @@ corpus-wide relevance signal? Checked directly:
 - Cytarabine's own rate: **17.8%**
 
 Cytarabine's rate is actually *slightly above*, not below, the rest of the
-corpus's pooled rate. So the dominant narrative should not be that
-Cytarabine's huge numbers make its rate estimate unreliable or diluted —
-the opposite is true: its rate estimate is the most statistically precise
-one in the dataset (tightest CI, by far the largest n)
-and it sits squarely in the middle of the distribution, not as an outlier.
-What *is* true is that Cytarabine's absolute count (123) so dominates the
-161 compound-family total that any unweighted, per-compound summary
-statistic (e.g. "average relevance rate across compounds" = 25.5%, pulled up
-by the noisy small-n compounds) would misrepresent what the corpus actually
-shows. The median per-compound rate (14.6%) is a better summary and sits
-close to both Cytarabine's rate and the ex-Cytarabine pooled rate.
+corpus's pooled rate (both descriptive figures — see the non-independence
+note above on treating these as inferential comparisons). Its rate estimate
+is the most statistically precise one in the dataset (tightest CI, by far
+the largest n), not a diluted one. What *is* true is that Cytarabine's
+absolute count (123) so dominates the 161 compound-family total that an
+unweighted, per-compound average would overweight the small-n compounds
+(e.g. an unweighted mean of the 12 per-compound rates is 25.5%, pulled up by
+the noisy small-n compounds). The median per-compound rate is 14.6%,
+providing a complementary unweighted summary of the per-compound
+distribution — descriptively close to both Cytarabine's rate and the
+ex-Cytarabine pooled rate, though which summary (pooled, median, or
+unweighted mean) is the right one to report depends on the specific question
+being asked (total-volume signal vs. typical-compound signal).
 
 ## 4. Classification composition (denominator context for "157 relevant families")
 
@@ -86,27 +106,34 @@ Of the 872 unique Spain-relevant families found across all 12 compounds:
 - 712 Incidental Mention (81.7%)
 - 3 Uncertain (0.3%)
 
-The 81.7% Incidental Mention rate is itself a finding: for a generic,
-60-year-old chemotherapy name like Cytarabine appearing in patent claims
-mostly as one item in long Markush-style drug lists, this is expected and
-matches the pre-registered concern from the original jurisdiction-pull
-README (which predicted ~78% Incidental based on the earlier, smaller
-23-family sample — the full-scale result, 81.7% for Cytarabine specifically
-and 81.7% corpus-wide, essentially confirms that prediction rather than
-overturning it).
+This corpus-wide 81.7% (712/872, all 12 compounds combined) is consistent
+with the ~78% expectation reported in the earlier jurisdiction-pull analysis
+(`minesoft_global_2000_2025_family_jurisdictions/README.md`). That earlier
+figure was itself an already-observed rate from a smaller, all-compound
+23-family `cc=ES` sample (18/23 Incidental, dominated by Brentuximab
+vedotin's 17 families, not Cytarabine-specific) — an exploratory
+expectation carried forward from an earlier, smaller pull, not a
+prospectively pre-specified prediction. "Consistent with" is the accurate
+characterization; the two figures answer the same corpus-wide question on
+different sample sizes, not a prediction-vs-confirmation pair. (Cytarabine's
+own Incidental rate in the new data, 565/690 = 81.9%, is close to the
+corpus-wide 81.7% by coincidence of scale — Cytarabine is 79% of the
+872-family universe — not because the old 78% figure was about Cytarabine
+specifically.)
 
 ## 5. What this means for the paper, and what it doesn't
 
 **Supports:** stating both the absolute count and the rate whenever
 Cytarabine's dominance is discussed (already done in the Figure 4 prose per
-the manuscript integration), and flagging Eribulin mesylate's higher,
-statistically distinguishable rate as worth a follow-up qualitative note.
+the manuscript integration), and reporting Eribulin mesylate's higher rate —
+now backed by a formal test, not just non-overlapping intervals — as worth a
+follow-up qualitative note.
 
 **Does not support:** re-ranking compounds by rate as if it were a more
-"correct" measure than absolute count — for 5 of the 6 compounds with rates
-above Cytarabine's, the sample size makes the rate estimate too unreliable
-to rank confidently. Rate and count answer different questions (propensity
-vs. volume) and the paper should present both, not pick one as authoritative.
+"correct" measure than absolute count — for 4 of the 5 compounds with rates
+above Cytarabine's, the sample size makes the rate estimate too imprecise to
+compare. Rate and count answer different questions (propensity vs. volume)
+and the paper should present both, not pick one as authoritative.
 
 **Does not, by itself,** justify a new data pull. This analysis is entirely
 a recomputation of the already-frozen 872-family classification; it doesn't
@@ -118,6 +145,11 @@ incomplete search).
 ## Artifacts produced
 
 - `figures/figure10_relevance_rate_by_compound.png` — rate per compound with
-  95% Wilson CI, n annotated, n<30 vs n>=30 flagged by color (dataviz skill:
-  validated palette, secondary encoding via visible n-labels since color
-  alone should never carry the "reliable vs. not" distinction).
+  95% Wilson CI, n annotated. Color flags n≥30 vs n<30 as a labeling
+  convention, not a statistical claim of precision — the interval width
+  itself is what shows precision.
+- `figures/relevance_rate_by_compound.csv` — the underlying rate/CI table.
+- `figures/eribulin_vs_cytarabine_test.txt` — the formal two-proportion test
+  output (Fisher's exact, risk difference, risk ratio).
+- `figures/build_relevance_rate_analysis.py` — reproduces all three above
+  from `screening_table_consolidated.csv`.

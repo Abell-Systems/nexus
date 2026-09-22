@@ -1,0 +1,6 @@
+Eribulin mesylate vs. Cytarabine, two-proportion comparison
+Eribulin: 8/18 = 44.4%
+Cytarabine: 123/690 = 17.8%
+Fisher's exact test (two-sided): odds ratio = 3.69, p = 0.0093
+Risk difference: 26.6 percentage points, 95% Wald CI [3.5, 49.8]
+Risk ratio: 2.49, 95% CI [1.45, 4.28]
