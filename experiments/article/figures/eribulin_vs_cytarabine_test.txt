@@ -1,0 +1,10 @@
+Eribulin mesylate vs. Cytarabine, two-proportion comparison
+EXPLORATORY / POST-HOC: this contrast was selected after inspecting the
+observed rate distribution, not specified a priori. No correction for
+multiple comparisons has been applied. Treat p as exploratory evidence
+of an observed difference, not confirmatory significance.
+Eribulin: 8/18 = 44.4%
+Cytarabine: 123/690 = 17.8%
+Fisher's exact test (two-sided, exploratory): odds ratio = 3.69, p = 0.0093
+Risk difference: 26.6 percentage points, 95% Wald CI [3.5, 49.8]
+Risk ratio: 2.49, 95% CI [1.45, 4.28] (log-risk-ratio approximation)
