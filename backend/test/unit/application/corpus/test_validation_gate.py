@@ -25,12 +25,18 @@ def test_gate_fails_on_low_recall():
     assert result.recall_technical_problem == 0.5
 
 
-def test_gate_b_fails_on_boundary_false_positive_even_with_perfect_aggregate_stats():
-    reference = {"a": C.TECHNICAL_PROBLEM, "b": C.GENERIC_PROCUREMENT}
-    llm = {"a": C.TECHNICAL_PROBLEM, "b": C.TECHNICAL_PROBLEM}
-    result = evaluate_validation_gate(reference, llm, boundary_ids=frozenset({"b"}))
+def test_gate_a_passes_while_gate_b_independently_fails_on_boundary_case():
+    reference = {
+        "tp1": C.TECHNICAL_PROBLEM, "tp2": C.TECHNICAL_PROBLEM,
+        **{f"gp{i}": C.GENERIC_PROCUREMENT for i in range(10)},
+    }
+    llm = dict(reference)
+    llm["gp0"] = C.TECHNICAL_PROBLEM  # the one boundary misclassification
+    result = evaluate_validation_gate(reference, llm, boundary_ids=frozenset({"gp0"}))
+    assert result.recall_technical_problem == 1.0
+    assert result.specificity_generic_procurement == 0.9  # 9/10, meets the 0.90 threshold -> Gate A passes
+    assert result.boundary_false_positives == ("gp0",)  # Gate B fails independently
     assert result.passed is False
-    assert result.boundary_false_positives == ("b",)
 
 
 def test_non_boundary_false_positive_hurts_specificity_but_not_boundary_gate():
