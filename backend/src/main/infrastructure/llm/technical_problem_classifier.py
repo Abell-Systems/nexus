@@ -10,9 +10,9 @@ _CLASS_DEFINITIONS_PROMPT = """Classify the following public tender description 
 
 TECHNICAL_PROBLEM: the description articulates a specific technical, scientific, or engineering challenge, need, or capability gap that a solution is being sought for -- it describes what is technically difficult or unsolved.
 
-GENERIC_PROCUREMENT: the description specifies a scope of work, deliverable, standard/certification to follow, quantity, or administrative/contractual term, without articulating an underlying technical problem -- it reads as "what to buy/deliver," not "what technical difficulty needs solving."
+GENERIC_PROCUREMENT: the description specifies a scope of work, deliverable, standard/certification to follow, quantity, or administrative/contractual term, without articulating an underlying technical problem -- it reads as "what to buy/deliver," not "what technical difficulty needs solving." (This is the AENA failure mode.)
 
-EMPTY_INSUFFICIENT: the description is empty, near-empty, or so minimal/boilerplate that no meaningful judgment can be made either way.
+EMPTY_INSUFFICIENT: the description is empty, near-empty, or so minimal/boilerplate that no meaningful judgment can be made either way. Distinct from GENERIC_PROCUREMENT, which has real content, just not a technical problem.
 
 Respond ONLY in valid JSON matching: {"classification": "TECHNICAL_PROBLEM" | "GENERIC_PROCUREMENT" | "EMPTY_INSUFFICIENT"}"""
 

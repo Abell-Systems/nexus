@@ -6,7 +6,10 @@ import pytest
 from domain.models.corpus_expansion import TechnicalProblemClassification
 from domain.protocols.corpus import TechnicalProblemClassifierProtocol
 from infrastructure.llm.client_protocol import LlmChatResponse
-from infrastructure.llm.technical_problem_classifier import LlmTechnicalProblemClassifier
+from infrastructure.llm.technical_problem_classifier import (
+    _CLASS_DEFINITIONS_PROMPT,
+    LlmTechnicalProblemClassifier,
+)
 
 
 def _mock_client(content: str) -> MagicMock:
@@ -53,3 +56,8 @@ def test_classifier_conforms_to_protocol():
     client = _mock_client(json.dumps({"classification": "TECHNICAL_PROBLEM"}))
     classifier = LlmTechnicalProblemClassifier(client)
     assert isinstance(classifier, TechnicalProblemClassifierProtocol)
+
+
+def test_class_definitions_prompt_includes_frozen_spec_clauses():
+    assert "AENA failure mode" in _CLASS_DEFINITIONS_PROMPT
+    assert "Distinct from GENERIC_PROCUREMENT" in _CLASS_DEFINITIONS_PROMPT
