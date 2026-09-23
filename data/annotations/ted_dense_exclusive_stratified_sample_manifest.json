@@ -1,0 +1,386 @@
+{
+  "dataset_id": "nexus-phase2-ted-dense-exclusive-stratified-sample-v1",
+  "decision_rule": {
+    "achieved_power": 0.8013,
+    "actual_alpha": 0.0415,
+    "alpha_one_sided": 0.05,
+    "critical_c": 14,
+    "n": 66,
+    "p0": 0.12962962962962962,
+    "p1": 0.25,
+    "target_power": 0.8
+  },
+  "n_stratum_a": 26,
+  "n_stratum_b": 40,
+  "n_total": 66,
+  "purpose": "DUAL_ANNOTATION_POOL -- #104 dense-exclusive stratified sample, docs/superpowers/specs/2026-09-23-dense-exclusive-stratified-sample-design.md",
+  "sampling_seed": 104,
+  "selected": [
+    {
+      "demand_id": "104441-2025",
+      "publication_id": "ES2037587A2",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "104441-2025",
+      "publication_id": "ES2424917A2",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "104441-2025",
+      "publication_id": "ES2444712A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "122428-2024",
+      "publication_id": "ES2552604A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "122428-2024",
+      "publication_id": "ES2493340A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "122428-2024",
+      "publication_id": "ES2037587A2",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "137639-2024",
+      "publication_id": "ES2253985A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "137639-2024",
+      "publication_id": "ES2037587A2",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "137639-2024",
+      "publication_id": "ES2257162A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "140590-2024",
+      "publication_id": "ES2199673A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "140590-2024",
+      "publication_id": "ES2600452A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "146289-2024",
+      "publication_id": "ES2303457A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "146289-2024",
+      "publication_id": "ES2246100A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "146289-2024",
+      "publication_id": "ES2134683A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "158024-2024",
+      "publication_id": "ES2532132A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "158024-2024",
+      "publication_id": "ES2537651A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "158024-2024",
+      "publication_id": "ES2065820A2",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "200095-2024",
+      "publication_id": "ES2374467A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "200095-2024",
+      "publication_id": "ES2914350A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "221305-2025",
+      "publication_id": "ES2424917A2",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "221305-2025",
+      "publication_id": "ES2570810A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "221305-2025",
+      "publication_id": "ES2532132A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "22543-2024",
+      "publication_id": "ES2319487A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "22543-2024",
+      "publication_id": "ES2398554A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "264820-2024",
+      "publication_id": "ES2641296A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "264820-2024",
+      "publication_id": "ES2065820A2",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "268550-2024",
+      "publication_id": "ES2912698A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "268550-2024",
+      "publication_id": "ES2936558A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "273005-2025",
+      "publication_id": "ES2698701A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "273005-2025",
+      "publication_id": "ES2374467A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "277089-2025",
+      "publication_id": "ES2444712A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "277089-2025",
+      "publication_id": "ES2370895A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "315512-2025",
+      "publication_id": "ES2923946A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "315512-2025",
+      "publication_id": "ES2116215A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "368294-2025",
+      "publication_id": "ES2156707A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "368294-2025",
+      "publication_id": "ES2065820A2",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "380300-2024",
+      "publication_id": "ES2928677A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "380300-2024",
+      "publication_id": "ES2134683A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "410719-2024",
+      "publication_id": "ES2246100A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "410719-2024",
+      "publication_id": "ES2365371A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "42938-2024",
+      "publication_id": "ES2914350A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "42938-2024",
+      "publication_id": "ES2452726A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "454027-2024",
+      "publication_id": "ES2253985A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "454027-2024",
+      "publication_id": "ES2065820A2",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "498443-2025",
+      "publication_id": "ES2424917A2",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "498443-2025",
+      "publication_id": "ES2698701A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "566290-2025",
+      "publication_id": "ES2424917A2",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "566290-2025",
+      "publication_id": "ES2756998A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "584867-2024",
+      "publication_id": "ES2134683A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "584867-2024",
+      "publication_id": "ES2065820A2",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "588217-2024",
+      "publication_id": "ES2756998A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "588217-2024",
+      "publication_id": "ES2912698A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "642378-2025",
+      "publication_id": "ES2452726A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "642378-2025",
+      "publication_id": "ES2199673A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "654218-2024",
+      "publication_id": "ES2319487A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "654218-2024",
+      "publication_id": "ES2257162A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "696940-2025",
+      "publication_id": "ES2394994A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "696940-2025",
+      "publication_id": "ES2902101A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "794374-2025",
+      "publication_id": "ES2257162A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "794374-2025",
+      "publication_id": "ES2116215A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "814207-2025",
+      "publication_id": "ES2808969A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "814207-2025",
+      "publication_id": "ES2438447A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "820594-2025",
+      "publication_id": "ES2065820A2",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "820594-2025",
+      "publication_id": "ES2326252A1",
+      "stratum": "A"
+    },
+    {
+      "demand_id": "89204-2025",
+      "publication_id": "ES2600452A1",
+      "stratum": "B"
+    },
+    {
+      "demand_id": "89204-2025",
+      "publication_id": "ES2134683A1",
+      "stratum": "B"
+    }
+  ],
+  "source_dense_retrieval_results_path": "data/experiments/phase2_v4/ted_at_scale_dense_retrieval_results.json",
+  "source_dense_retrieval_results_sha256": "f9ddde0756830f07f88020efa562471ef3bedbe3b9785891e2bde0da1c469d60",
+  "stratum_a_allocation": {
+    "122428-2024": 3,
+    "146289-2024": 3,
+    "158024-2024": 3,
+    "221305-2025": 3,
+    "273005-2025": 2,
+    "410719-2024": 2,
+    "588217-2024": 2,
+    "642378-2025": 2,
+    "654218-2024": 2,
+    "794374-2025": 2,
+    "820594-2025": 2
+  },
+  "stratum_b_allocation": {
+    "104441-2025": 3,
+    "137639-2024": 3,
+    "140590-2024": 2,
+    "200095-2024": 2,
+    "22543-2024": 2,
+    "264820-2024": 2,
+    "268550-2024": 2,
+    "277089-2025": 2,
+    "315512-2025": 2,
+    "368294-2025": 2,
+    "380300-2024": 2,
+    "42938-2024": 2,
+    "454027-2024": 2,
+    "498443-2025": 2,
+    "566290-2025": 2,
+    "584867-2024": 2,
+    "696940-2025": 2,
+    "814207-2025": 2,
+    "89204-2025": 2
+  }
+}

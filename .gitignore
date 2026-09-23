@@ -67,6 +67,8 @@ data/annotations/*
 !data/annotations/ted_dense_blindspot_annotation_batch.sha256
 !data/annotations/ted_dense_blindspot_annotation_template.csv
 !data/annotations/ted_dense_blindspot_annotation_valentin.csv
+!data/annotations/ted_dense_exclusive_stratified_sample_manifest.json
+!data/annotations/ted_dense_exclusive_stratified_sample_manifest.sha256
 !data/annotations/ted_dense_blindspot_annotation_lydia.csv
 !data/experiments/power_analysis_wilcoxon.json
 !data/experiments/pilot_evaluation_report.json
