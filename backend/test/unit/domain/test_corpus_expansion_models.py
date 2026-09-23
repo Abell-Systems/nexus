@@ -300,3 +300,21 @@ def test_candidate_record_derived_publication_date() -> None:
 
 def test_unverifiable_publication_date_in_rejection_reasons() -> None:
     assert "UNVERIFIABLE_PUBLICATION_DATE" in CandidateRejectionReason.__members__
+
+
+def test_technical_problem_classification_has_exactly_three_values():
+    from domain.models.corpus_expansion import TechnicalProblemClassification
+
+    assert set(TechnicalProblemClassification) == {
+        TechnicalProblemClassification.TECHNICAL_PROBLEM,
+        TechnicalProblemClassification.GENERIC_PROCUREMENT,
+        TechnicalProblemClassification.EMPTY_INSUFFICIENT,
+    }
+
+
+def test_technical_problem_classification_string_values():
+    from domain.models.corpus_expansion import TechnicalProblemClassification
+
+    assert TechnicalProblemClassification.TECHNICAL_PROBLEM == "technical_problem"
+    assert TechnicalProblemClassification.GENERIC_PROCUREMENT == "generic_procurement"
+    assert TechnicalProblemClassification.EMPTY_INSUFFICIENT == "empty_insufficient"
