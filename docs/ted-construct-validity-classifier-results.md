@@ -17,8 +17,9 @@ Plan: docs/superpowers/plans/2026-09-23-ted-construct-validity-classifier.md
    sample manifest against the live 114-candidate population.
 6. `export_ted_construct_validity_labeling_csv.py` -- exported three blank CSVs
    (template/valentin/lydia), 30 rows each.
-7. `run_ted_construct_validity_llm_classification.py` -- ran (or attempted to run,
-   see below) the LLM classifier against the same 30.
+7. `run_ted_construct_validity_llm_classification.py` -- attempted to run (see
+   'Current state' below) -- blocked on missing `GROQ_API_KEY` credentials in
+   this environment, no LLM classifications were produced.
 8. `evaluate_ted_construct_validity_gate.py` -- built and confirmed to correctly
    BLOCK against incomplete human labels (the current state).
 
@@ -26,7 +27,10 @@ Plan: docs/superpowers/plans/2026-09-23-ted-construct-validity-classifier.md
 
 No human labeling has occurred yet. `data/annotations/ted_construct_validity_labeling_valentin.csv`
 and `_lydia.csv` are blank templates. The gate-check script (`evaluate_ted_construct_validity_gate.py`)
-correctly refuses to run against them.
+correctly refuses to run against them. `data/annotations/ted_construct_validity_llm_classification.json`
+also does not exist yet -- Task 7's LLM run was blocked by a missing `GROQ_API_KEY` credential
+in this environment (script committed and ready at
+`experiments/phase2/run_ted_construct_validity_llm_classification.py`, not yet executed).
 
 ## Next step (not done here)
 
