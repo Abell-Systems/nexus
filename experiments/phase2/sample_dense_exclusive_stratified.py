@@ -51,6 +51,7 @@ DECISION_RULE = {
     "critical_c": 14,
     "actual_alpha": 0.0415,
     "achieved_power": 0.8013,
+    "caveat": "actual_alpha/achieved_power are design-stage operating characteristics under an independence approximation across pairs -- see design spec SS11 for clustering/repetition caveats",
 }
 
 

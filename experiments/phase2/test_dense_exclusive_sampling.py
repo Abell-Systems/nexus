@@ -1,4 +1,9 @@
+import sys
+from pathlib import Path
+
 import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from dense_exclusive_sampling import largest_remainder_allocation, select_stratified_sample
 

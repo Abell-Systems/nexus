@@ -174,8 +174,11 @@ Same discipline as the frozen 108-pair gold set and the (parked) 220-pair
 batch: blind export (candidate identity visible, source method hidden),
 independent dual annotation (Valentín + Lydia), 0–3 relevance scale,
 disagreements adjudicated under the same contract used for the gold set. Kept
-as its own sealed artifact — disjoint by construction from both the 108-pair
-gold set and the parked 220-pair batch (per
+as its own sealed artifact — disjoint by construction from the 108-pair gold
+set (0 overlap, verified). It overlaps the parked 220-pair batch on Stratum A
+by construction (26/66 pairs — Stratum A's population IS that batch's 220
+pairs); this is harmless because the parked batch carries no labels (blank
+CSVs only, never annotated), so no annotation contamination results (per
 [[feedback_methodological_rigor]] Rule 3).
 
 ## 11. Disclosed limitations
@@ -186,14 +189,18 @@ gold set and the parked 220-pair batch (per
   test result, rather than treating 0.1296 as fixed truth.
 - **Clustering within demands.** Pairs are nested within demands (up to 3
   pairs drawn from the same demand — see §6), the same structure the existing
-  108-pair gold set already has. The exact binomial test in §4 assumes
+  108-pair gold set already has. The same publication can also repeat across
+  different demands: the 66 pairs cover only 37 distinct publications (found
+  during the run), with one publication (ES2065820A2) appearing in 6 different
+  demands and two others in 4 each. The exact binomial test in §4 assumes
   independent Bernoulli trials across all 66 pairs. Because that assumption
-  is not strictly met, **the reported α=0.0415 and power=0.8013 are
-  design-stage operating characteristics under the independence
-  approximation, not guaranteed realized Type-I error or power under the
-  true clustered population.** This is a known simplification consistent
-  with existing project precedent (the gold set itself), not a new one
-  introduced here, and is disclosed rather than hidden behind the p0-CI
+  is not strictly met — by both within-demand clustering and this
+  across-demand publication repetition — **the reported α=0.0415 and
+  power=0.8013 are design-stage operating characteristics under the
+  independence approximation, not guaranteed realized Type-I error or power
+  under the true clustered population.** This is a known simplification
+  consistent with existing project precedent (the gold set itself), not a new
+  one introduced here, and is disclosed rather than hidden behind the p0-CI
   caveat above.
 
 ## 12. What happens next (not part of this design)

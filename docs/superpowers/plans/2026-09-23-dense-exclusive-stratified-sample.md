@@ -24,7 +24,7 @@ Copied verbatim from the spec — every task's code must match these exactly, no
 - Decision-rule parameters (echoed into output for provenance, not recomputed): p0=14/108≈0.1296, p1=0.25, alpha=0.05 (one-sided), target power=0.80, n=66, critical_c=14, actual_alpha=0.0415, achieved_power=0.8013.
 - Per-demand allocation tables (Stratum A and Stratum B) are exactly the tables in spec §6 — reproduced below, hardcoded as the expected result in tests and as a cross-check in the manifest script.
 - `180c5f7`'s parked 220-pair batch is never read or referenced by any script in this plan.
-- This sample must be a **separate, disjoint artifact** from the 108-pair gold set and the parked 220-pair batch — different filenames, no merging.
+- This sample must be a **separate artifact, disjoint from the 108-pair gold set** (0 overlap) — different filenames, no merging. It overlaps the parked 220-pair batch by construction on Stratum A (26/66 pairs, since Stratum A's population IS that batch's 220 pairs), which is harmless because that batch carries no labels.
 
 **Stratum A allocation (n_A=26):**
 
@@ -650,7 +650,9 @@ git commit -m "feat(matching): generate #104 dense-exclusive stratified sample b
 Blind-exports the 66 (demand, patent) pairs selected by the manifest via
 the existing build_annotation_batch -- same deterministic seeded shuffle
 and evidence-field discipline as the 108-pair gold set. Sealed as its own
-artifact, disjoint from the gold set and the parked 220-pair batch.
+artifact, disjoint from the gold set (0 overlap); overlaps the parked
+220-pair batch by construction on Stratum A (26/66 pairs), harmless since
+that batch carries no labels.
 
 Co-Authored-By: Lydia Bares <lydiabares@gmail.com>
 Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
@@ -804,8 +806,11 @@ Spec: docs/superpowers/specs/2026-09-23-dense-exclusive-stratified-sample-design
 - 66 pairs selected: 26 from Stratum A (BM25-zero-pool), 40 from Stratum B.
 - Re-run from the manifest step onward is byte-for-byte identical (verified).
 - No annotation has occurred yet -- `judgment` columns are blank in all three CSVs.
-- This artifact is disjoint from the 108-pair gold set and from `180c5f7`'s
-  parked 220-pair batch (which itself has no filled-in labels).
+- This artifact is disjoint from the 108-pair gold set (0 overlap, verified).
+  It overlaps `180c5f7`'s parked 220-pair batch by construction on Stratum A
+  (26/66 pairs -- Stratum A's population IS that batch's 220 pairs), which is
+  harmless because that batch carries no labels (blank CSVs only, never
+  annotated).
 
 ## Next step (not done here)
 

@@ -19,8 +19,11 @@ Spec: docs/superpowers/specs/2026-09-23-dense-exclusive-stratified-sample-design
 - 66 pairs selected: 26 from Stratum A (BM25-zero-pool), 40 from Stratum B.
 - Re-run from the manifest step onward is byte-for-byte identical (verified).
 - No annotation has occurred yet -- `judgment` columns are blank in all three CSVs.
-- This artifact is disjoint from the 108-pair gold set and from `180c5f7`'s
-  parked 220-pair batch (which itself has no filled-in labels).
+- This artifact is disjoint from the 108-pair gold set (0 overlap, verified).
+  It overlaps `180c5f7`'s parked 220-pair batch by construction on Stratum A
+  (26/66 pairs -- Stratum A's population IS that batch's 220 pairs), which is
+  harmless because that batch carries no labels (blank CSVs only, never
+  annotated).
 
 ## Next step (not done here)
 

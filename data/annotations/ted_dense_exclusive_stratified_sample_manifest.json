@@ -4,6 +4,7 @@
     "achieved_power": 0.8013,
     "actual_alpha": 0.0415,
     "alpha_one_sided": 0.05,
+    "caveat": "actual_alpha/achieved_power are design-stage operating characteristics under an independence approximation across pairs -- see design spec SS11 for clustering/repetition caveats",
     "critical_c": 14,
     "n": 66,
     "p0": 0.12962962962962962,
