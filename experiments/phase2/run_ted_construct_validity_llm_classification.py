@@ -20,12 +20,24 @@ if str(SRC_ROOT) not in sys.path:
 from infrastructure.llm.groq_client import GroqClient  # noqa: E402
 from infrastructure.llm.technical_problem_classifier import LlmTechnicalProblemClassifier  # noqa: E402
 
+# Pinned per spec SS7 ("fixed model/version pinned in the implementation plan").
+# Matches the current GROQ_MODEL default in ProviderConfig.from_env -- pinning
+# here changes reproducibility, not behavior.
+PINNED_MODEL = "llama-3.3-70b-versatile"
+
 
 def generate(manifest_path: Path, mapped_path: Path, out_path: Path) -> dict[str, Any]:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    mapped_by_id = {c["demand_id"]: c for c in json.loads(mapped_path.read_text(encoding="utf-8"))}
+    mapped_path_bytes = mapped_path.read_bytes()
+    actual_mapped_sha256 = hashlib.sha256(mapped_path_bytes).hexdigest()
+    if actual_mapped_sha256 != manifest["source_mapped_candidates_sha256"]:
+        raise ValueError(
+            "candidates_mapped.json has changed since the control sample was built "
+            f"(expected sha256 {manifest['source_mapped_candidates_sha256']}, got {actual_mapped_sha256})"
+        )
+    mapped_by_id = {c["demand_id"]: c for c in json.loads(mapped_path_bytes)}
 
-    classifier = LlmTechnicalProblemClassifier(GroqClient())
+    classifier = LlmTechnicalProblemClassifier(GroqClient(model=PINNED_MODEL))
 
     results: dict[str, str] = {}
     for demand_id in manifest["all_ids"]:
@@ -42,6 +54,7 @@ def generate(manifest_path: Path, mapped_path: Path, out_path: Path) -> dict[str
         "source_manifest_path": str(manifest_path.relative_to(REPO_ROOT)),
         "source_manifest_sha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
         "classifier": "LlmTechnicalProblemClassifier",
+        "model": PINNED_MODEL,
         "temperature": 0.0,
         "classifications": results,
     }

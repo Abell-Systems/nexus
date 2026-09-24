@@ -50,8 +50,15 @@ def evaluate_validation_gate(
     gate_a = recall >= recall_threshold and specificity >= specificity_threshold
     gate_b = len(boundary_false_positives) == 0
 
+    empty_class_warnings = []
+    if not tp_ids:
+        empty_class_warnings.append("recall computed over 0 TECHNICAL_PROBLEM reference cases -- not a meaningful measurement")
+    if not gp_ids:
+        empty_class_warnings.append("specificity computed over 0 GENERIC_PROCUREMENT reference cases -- not a meaningful measurement")
+    empty_class_caveat = f" (WARNING: {'; '.join(empty_class_warnings)})" if empty_class_warnings else ""
+
     if gate_a and gate_b:
-        reason = "Both gates passed: classifier approved for full-population classification."
+        reason = "Both gates passed: classifier approved for full-population classification." + empty_class_caveat
     elif not gate_b:
         reason = (
             f"Gate B (boundary safety) failed: {len(boundary_false_positives)} "

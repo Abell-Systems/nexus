@@ -53,9 +53,11 @@ def evaluate(
     adjudication_path: Path,
     out_path: Path,
 ) -> dict[str, Any]:
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest_bytes = manifest_path.read_bytes()
+    manifest = json.loads(manifest_bytes)
     boundary_ids = frozenset(manifest["boundary_ids"])
     all_ids = set(manifest["all_ids"])
+    actual_manifest_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
 
     valentin_raw = _read_labels(valentin_csv)
     lydia_raw = _read_labels(lydia_csv)
@@ -86,6 +88,11 @@ def evaluate(
             reference[d] = valentin[d]
 
     llm_data = json.loads(llm_path.read_text(encoding="utf-8"))
+    if llm_data["source_manifest_sha256"] != actual_manifest_sha256:
+        raise ValueError(
+            "LLM classification file was run against a different manifest than the one being evaluated "
+            f"(expected sha256 {actual_manifest_sha256}, LLM file recorded {llm_data['source_manifest_sha256']})"
+        )
     llm_labels = {d: _to_classification(v, d, "llm") for d, v in llm_data["classifications"].items()}
     if set(llm_labels) != all_ids:
         raise ValueError("LLM classification file must cover exactly the control sample's demand_ids")

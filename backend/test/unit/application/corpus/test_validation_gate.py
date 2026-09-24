@@ -48,6 +48,15 @@ def test_non_boundary_false_positive_hurts_specificity_but_not_boundary_gate():
     assert result.passed is False
 
 
+def test_gate_pass_carries_warning_when_generic_procurement_reference_class_is_empty():
+    reference = {"a": C.TECHNICAL_PROBLEM, "b": C.TECHNICAL_PROBLEM}
+    llm = dict(reference)
+    result = evaluate_validation_gate(reference, llm, boundary_ids=frozenset())
+    assert result.passed is True
+    assert result.specificity_generic_procurement == 1.0
+    assert "0 GENERIC_PROCUREMENT reference cases" in result.reason
+
+
 def test_evaluate_validation_gate_raises_on_mismatched_keys():
     reference = {"a": C.TECHNICAL_PROBLEM}
     llm = {"b": C.TECHNICAL_PROBLEM}
