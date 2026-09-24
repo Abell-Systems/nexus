@@ -8,9 +8,13 @@ only description_text)."""
 
 import hashlib
 import json
+import re
 import sys
+import time
 from pathlib import Path
 from typing import Any
+
+import httpx
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SRC_ROOT = REPO_ROOT / "backend" / "src" / "main"
@@ -20,10 +24,36 @@ if str(SRC_ROOT) not in sys.path:
 from infrastructure.llm.groq_client import GroqClient  # noqa: E402
 from infrastructure.llm.technical_problem_classifier import LlmTechnicalProblemClassifier  # noqa: E402
 
+_MAX_RETRIES = 8
+
+
+def _retry_seconds(exc: httpx.HTTPStatusError) -> float:
+    """Groq's 429 body carries the wait in its message ('try again in 4.216s');
+    the response has no Retry-After header, so parse the message text."""
+    match = re.search(r"try again in ([\d.]+)s", exc.response.text)
+    return float(match.group(1)) + 0.5 if match else 5.0
+
+
+def _classify_with_retry(classifier: LlmTechnicalProblemClassifier, description: str) -> str:
+    for attempt in range(_MAX_RETRIES):
+        try:
+            return classifier.classify(description).value
+        except httpx.HTTPStatusError as exc:
+            if exc.response.status_code != 429 or attempt == _MAX_RETRIES - 1:
+                raise
+            wait = _retry_seconds(exc)
+            print(f"  rate limited, waiting {wait:.1f}s (attempt {attempt + 1}/{_MAX_RETRIES})")
+            time.sleep(wait)
+    raise AssertionError("unreachable")  # pragma: no cover
+
 # Pinned per spec SS7 ("fixed model/version pinned in the implementation plan").
-# Matches the current GROQ_MODEL default in ProviderConfig.from_env -- pinning
-# here changes reproducibility, not behavior.
-PINNED_MODEL = "llama-3.3-70b-versatile"
+# Originally pinned to llama-3.3-70b-versatile (matching the then-current GROQ_MODEL
+# default); retired from Groq's catalog by the time this ran for real (2026-09-24,
+# /v1/models confirmed it gone -- 404 model_not_found). Re-pinned to
+# openai/gpt-oss-120b, the closest available model in size/generality; verified
+# manually against the classifier's exact JSON-object/temperature=0 protocol before
+# use. See docs/ted-construct-validity-classifier-results.md for the ruling.
+PINNED_MODEL = "openai/gpt-oss-120b"
 
 
 def generate(manifest_path: Path, mapped_path: Path, out_path: Path) -> dict[str, Any]:
@@ -42,7 +72,8 @@ def generate(manifest_path: Path, mapped_path: Path, out_path: Path) -> dict[str
     results: dict[str, str] = {}
     for demand_id in manifest["all_ids"]:
         description = mapped_by_id[demand_id]["description_text"]
-        results[demand_id] = classifier.classify(description).value
+        results[demand_id] = _classify_with_retry(classifier, description)
+        print(f"  {demand_id} -> {results[demand_id]}")
 
     if set(results) != set(manifest["all_ids"]):
         raise ValueError("LLM classification did not cover exactly the control sample's ids")
