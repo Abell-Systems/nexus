@@ -17,7 +17,7 @@
     "retrieved": "2026-09-25",
     "note_on_related_but_distinct_artifact": "technological_complexity (4 levels, Schmoch et al. 2003, NACE 1.1<->IPC concordance, operationalized by Lydia Bares in her PhD thesis Anexo III) is a SEPARATE, still-unacquired register. It must never be merged into this file or into technology_sector -- see docs/phase2-wipo-ipc-technology-concordance-freeze.md SS4.",
     "freeze_doc_path": "docs/phase2-wipo-ipc-technology-concordance-freeze.md",
-    "freeze_doc_sha256": "6a1dbe1405ce96d11d32d9d13628483b820de1fde057ec45e2a70d763c6fb6c4"
+    "freeze_doc_sha256": "81c745e7af314aa7638986893ecf29704180cfad0d7fffe44f84a439947a0f55"
   },
   "sectors": [
     { "code": "I", "label": "Electrical engineering", "field_numbers": [1, 2, 3, 4, 5, 6, 7, 8] },

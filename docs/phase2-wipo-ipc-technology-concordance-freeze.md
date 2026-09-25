@@ -1,7 +1,9 @@
 # WIPO IPC8 Technology Concordance — Freeze
 
 ```text
-QUESTION:  Can Nexus enrich the OEPM/INVENES corpus (ADR 0035) with a
+QUESTION:  Can Nexus enrich the OEPM/INVENES production-scale patent
+           corpus (docs/adr/0035-oepm-production-scale-patent-corpus-contract.md,
+           pending merge via PR #112) with a
            patent-side technology_sector field, using an established,
            citable classification rather than an ad hoc taxonomy?
 INPUT:     Ulrich Schmoch (2008), "Concept of a Technology Classification
@@ -35,7 +37,8 @@ Nexus already flags this exact gap in two places:
 Lydia's own PhD thesis (Anexo III, "Metodología para la clasificación de
 las patentes por sectores tecnológicos y complejidad") already
 operationalized this concordance against the same source database
-(INVENES/OEPM) Nexus's ADR 0035 corpus is drawn from. This is not a new
+(INVENES/OEPM) Nexus's PR #112 corpus (`docs/adr/0035-oepm-production-scale-patent-corpus-contract.md`,
+pending merge) is drawn from. This is not a new
 register invented for Nexus — it recovers an external, reproducible
 classification already used in Lydia's research, applied to the same
 corpus authority.
@@ -73,7 +76,8 @@ register or in any downstream config.
 ## 3. What this freeze does NOT do (deliberately, not yet)
 
 - Does not apply `technology_sector` to any patent in the OEPM/INVENES
-  corpus (ADR 0035). This document and its register are pure data
+  corpus (`docs/adr/0035-oepm-production-scale-patent-corpus-contract.md`,
+  pending merge via PR #112). This document and its register are pure data
   provenance; corpus enrichment is a separate, later step.
 - Does not touch retrieval, scoring, matching, or the demand-side
   6-category `phase2_sector_taxonomy_v1` (`docs/phase2-sector-taxonomy-amendment.md`)
