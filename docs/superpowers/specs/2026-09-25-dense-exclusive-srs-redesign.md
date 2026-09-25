@@ -38,11 +38,6 @@ they become stale the moment a real draw under this redesign happens
 (SS9 below), and are not otherwise touched by this redesign's
 implementation, which runs against synthetic fixtures only.
 
-No draw has happened against the 2026-09-23 design. No annotation exists.
-This redesign replaces the allocation/selection mechanism before either
-occurs — the problem was caught while still fully reversible, per
-[[feedback_methodological_rigor]] Rule 4.
-
 ## 2. Decision: pure simple random sampling (SRS), no stratified allocation
 
 Two approaches were considered:
