@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:55.055283+00:00",
+  "demand_id": "INNOGET-2197",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ec73ae3d0641e899e8fa902c16009e3d6bbbf2a20344eab375bbfe45ea974bf8",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2197/seeking-low-temperature-encapsulation-technology-systems-for-encapsulation-of-flavours-aromas"
+}

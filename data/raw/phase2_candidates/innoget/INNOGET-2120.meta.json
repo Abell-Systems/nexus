@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:17.382927+00:00",
+  "demand_id": "INNOGET-2120",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "06f6a12552f858395ab4738a95860e5b96d1b264568d3817dc9103bd467b71ab",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2120/seeking-perfume-technologies-for-packaging"
+}

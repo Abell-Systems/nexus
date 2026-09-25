@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:02.967024+00:00",
+  "demand_id": "INNOGET-2335",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "988a4512e538f25e72e2b52e4b58c7a880446c62c88ea68cbb3bcf08cf6b9ecf",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2335/seeking-pressure-sensitive-adhesive-for-female-hygiene-pads"
+}

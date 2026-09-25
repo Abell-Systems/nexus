@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:30.431221+00:00",
+  "demand_id": "INNOGET-2250",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4bfcc967645fd570979723b92742eb7c2eefc10512430a4acc14068b9252902a",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2250/seeking-existing-market-solutions-targeted-towards-crawling-insects"
+}

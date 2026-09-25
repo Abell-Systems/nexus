@@ -1,0 +1,485 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+
+
+
+
+
+
+
+
+  <html>
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+      <meta http-equiv="Content-Type" content="text/html; charset=windows-1252"/>
+      <meta name="WT.cg_n" content="Invenes" />
+      <meta name="WT.cg_s" content="InvenesWeb"/> 
+	  <title>Invenes</title>
+      <link rel="shortcut icon" href="favicon.ico"/>
+      <link rel="stylesheet" type="text/css" href="css/styleInternet.css" media="screen"/>
+      <link rel="stylesheet" type="text/css" href="css/estilos.css" media="screen"/>
+	  <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+      <script type="text/javascript" src="js/bootstrap.min.js"></script>
+	  <!-- JS y CSS movilidad comienzo -->
+	  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+	  <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+	  <link rel="stylesheet" type="text/css" href="css/stylecss3.css" />
+	  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600' rel='stylesheet' type='text/css'>
+	  <link href='https://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
+	  <!-- JS y CSS movilidad -->
+      <script type="text/javascript" src="js/util.js"></script>
+      <script type="text/javascript" src="js/crearObjectExplicito.js"></script>
+      <!-- Matomo confirmacion-->
+	<script type="text/javascript">
+	  var _paq = window._paq || [];
+	  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+	  _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+	 /* alert (' document.domain : \n' +"*." +document.domain);*/
+	  _paq.push(["setCookieDomain", "*." + document.domain]);
+	  _paq.push(['trackPageView']);
+	  _paq.push(['enableLinkTracking']);
+	  _paq.push(['setDownloadClasses', "download"]);
+	  // enable the use of navigator.sendBeacon()
+	  _paq.push(['alwaysUseSendBeacon']);
+	  (function() {
+		//INV-761
+		var dominio = 'consultas2.oepm.es';
+	    var u, id;
+	
+	    if (document.domain == dominio) {
+	      u  = 'https://matomo.oepm.es/';
+	      id = '17';
+	    } else {
+	      u  = 'https://pruebamatomo.oepm.es/';
+	      id = '12';
+	    }
+	    _paq.push(['setTrackerUrl', u+'matomo.php']);
+	    _paq.push(['setSiteId', id]);
+	    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+	    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+	  })();
+	</script>
+	<!-- End Matomo Code -->
+    </head>
+	<body class="template-1 ">
+	
+<form id="form1" name="form1" method="post" action="/InvenesWeb/faces/visualizadorTabs.jsp;jsessionid=mscVTrsyPfV3W1Inwra-uax3.srvvarsovia1" enctype="application/x-www-form-urlencoded">
+<input type="hidden" name="form1" value="form1" />
+
+		<div id="cont" style="margin: 0;">
+			<div id="sombra" style="height: auto;">
+				<div id="text" data-height="137px">
+					<div id="top2">
+						   
+
+
+
+
+
+
+
+
+
+            <h1 id="cabecera">
+                <A 
+                href="http://www.minetur.gob.es"><IMG 
+                alt="Ministerio de Industria" 
+                style="border:0"
+                src="https://www.oepm.es/export/sites/oepm/comun/imagenes/Integrado_MICT.jpg"> 
+                </A>
+                <A 
+                href="http://www.oepm.es"><IMG 
+                alt="Página principal de la Oficina Española de Patentes y Marcas" 
+                style="border:0"
+                src="https://www.oepm.es/export/sites/oepm/comun/imagenes/OEPM.jpg"> 
+                </A>
+            </h1>
+                
+                
+                
+                
+					</div>
+					<div id="H2">
+						<div id="b01" style="float: left">
+							<span id="form1:outputText103">Visualizador</span>
+						</div>
+						<div id="it01" style="float: right">
+							
+
+
+
+<div style="float: right">
+	<span id="form1:i7" style="font-size: 0.5em; color: rgb(255, 255, 255); font-weight: normal; letter-spacing: 0px; position: absolute; 
+    right: 10px; top: -25px;"> - PRODUCCION V3.10.0</span>
+</div>
+						</div>
+					</div>
+					<div id="container-languages">
+						<a href="#" onclick="abrirAyuda('ayuda.jsp?pos=_Toc321738294');">
+							<span class="fa fa-question-circle-o"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+         </div> 
+         
+         <div>
+         
+	       <div id="exTab1">
+			<div class="sub-navigation">
+				<div class="col-xs-2 col-sm-1 col-md-1 col-lg-1">
+					
+				</div>
+				<div class="col-xs-8 col-sm-10 col-md-10 col-lg-10">
+					<div class="secundary">	
+						
+<script type="text/javascript" src="/InvenesWeb/faces/javax.faces.resource/jsf.js?ln=javax.faces"></script>
+<a id="form1:commandLink5" href="#" title="Primero" onclick="mojarra.jsfcljs(document.getElementById('form1'),{'form1:commandLink5':'form1:commandLink5'},'');return false" class="dynamic1">
+							<i class="fa fa-angle-double-left fa" aria-hidden="true"></i>
+						</a><a id="form1:commandLink6" href="#" title="Anterior" onclick="mojarra.jsfcljs(document.getElementById('form1'),{'form1:commandLink6':'form1:commandLink6'},'');return false" class="dynamic1">
+							<i class="fa fa-angle-left fa" aria-hidden="true"></i>
+						</a><span id="form1:refActualUsuarioInternet" class="dynamic1">P201630839</span><a id="form1:commandLink7" href="#" title="Siguiente" onclick="mojarra.jsfcljs(document.getElementById('form1'),{'form1:commandLink7':'form1:commandLink7'},'');return false" class="dynamic1">
+							<i class="fa fa-angle-right fa" aria-hidden="true"></i>
+						</a><a id="form1:commandLink8" href="#" title="Ultimo" onclick="mojarra.jsfcljs(document.getElementById('form1'),{'form1:commandLink8':'form1:commandLink8'},'');return false" class="dynamic1">
+							<i class="fa fa-angle-double-right fa" aria-hidden="true"></i>
+						</a>
+						
+						
+						
+						
+						
+						
+						
+						
+				  	</div>
+				</div>
+				<div class="col-xs-2 col-sm-1 col-md-1 col-lg-1">
+					
+				</div>
+		    </div>
+		    <div class="main-menu-details navbar navbar-default navbar-static-top">
+				<div class="navbar-header">
+					<button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<span class="navbar-brand visible-xs-block"></span>
+				</div>
+				<div class="navbar-collapse toRightSide collapse" id="navbar" aria-expanded="false">
+					<ul class="nav navbar-nav">
+						
+							<li class="active"><a href="#tab0" data-toggle="tab">Datos Bibliográficos</a></li>
+						
+						
+							<li><a href="#tab1" data-toggle="tab">Descripción</a></li>
+						
+						
+							<li><a href="#tab2" data-toggle="tab">Reivindicaciones</a></li>
+						
+						
+							<li><a href="#tab3" data-toggle="tab">IET</a></li>
+						
+						
+							<li><a href="#tab4" data-toggle="tab">Opinión Escrita</a></li>
+						
+						<li class="" style="">
+							<a href="#tab6" data-toggle="tab">Figuras
+						</a>
+						</li>
+						
+							<li class=""><a href="#tab7" data-toggle="tab">PDF</a></li>
+						
+					</ul>
+				</div>
+			</div>
+          <div class="tab-content col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
+          <!--INICIO PESTAÑA DE DATOS-->
+          
+            <div class="tab-pane active" id="tab0" style="background-color: #eee;">
+              <div style="height: 100.0%; width: 100%">
+                <label id="form1:datosBibliograficos"><div>   <table width="100%" style="font-size:11pt;list-style-type: square;">      <tr>         <td valign="top" width="70%"><br><span style="color:#424242;text-transform:uppercase;font-size:12pt;font-family:Arial;"><b>Dispositivo de contención física.<br></b></span><br><table style="font-size:11pt;list-style-type: square">               <tr>                  <td valign="top"><span style="color: #424242;font-size:11pt;white-space: nowrap ;font-family:Arial;"><b>          Número de publicación: 													</b></span></td>                  <td><span style="color: #1F1F1F;font-size:11pt;white-space: nowrap ;text-transform:uppercase;font-family:Arial;"><a href="https://consultas2.oepm.es/pdf/ES/0000/000/02/64/76/ES-2647619_A2.pdf" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;" TITLE="Ver documento PDF">ES2647619</a>&nbsp;A2&nbsp;(22.12.2017)</span></td>               </tr>            </table>            <table style="font-size:11pt;list-style-type: square">               <tr>                  <td valign="top"><span style="color:#424242;font-size:11pt;white-space: nowrap ;font-family:Arial;"><b>          También publicado como: 													</b></span></td>                  <td><span style="color: #1F1F1F;font-size:11pt;white-space: nowrap ;text-transform:uppercase;font-family:Arial;"><a href="https://consultas2.oepm.es/pdf/ES/0000/000/02/64/76/ES-2647619_R1.pdf" target="_blank" style="color:navy;  font-size:11pt;text-transform:uppercase;" TITLE="Ver documento PDF">ES2647619</a>&nbsp;R1&nbsp;(12.03.2018)</span><BR><span style="color: #1F1F1F;font-size:11pt;white-space: nowrap ;text-transform:uppercase;font-family:Arial;"><a href="https://consultas2.oepm.es/pdf/ES/0000/000/02/64/76/ES-2647619_B2.pdf" target="_blank" style="color:navy;  font-size:11pt;text-transform:uppercase;" TITLE="Ver documento PDF">ES2647619</a>&nbsp;B2&nbsp;(24.09.2018)</span><BR></td>               </tr>            </table>            <table style="font-size:11pt;list-style-type: square">               <tr>                  <td valign="top"><span style="color:#424242;font-size:11pt;white-space: nowrap ;font-family:Arial;"><b>          Número de Solicitud: 													</b></span></td>                  <td width="300"><span style="color: #1F1F1F;font-size:11pt;white-space: nowrap ;text-transform:uppercase;font-family:Arial;valign='center'"><a href="http://ceo.oepm.es/detalleExpediente?numExp=P201630839" target="_blank" style="color:navy;font-size:11pt;text-transform:uppercase;" TITLE="Consulta de Expedientes OEPM"><img src="https://consultas2.oepm.es/InvenesWeb/iconos/justicia.gif" align="left" valign="top" border="0" alt="Consulta de Expedientes OEPM (C.E.O.)"></a>                  &nbsp;P201630839          &nbsp;(21.06.2016)</span><br></td>               </tr>            </table>            <table style="font-size:11pt;list-style-type: square">               <tr>                  <td valign="top"><span style="color:#424242;font-size:11pt;white-space: nowrap ;font-family:Arial;"><b>          Solicitante: 													</b></span></td>                  <td><span style="color: #1F1F1F;font-size:11pt;font-family:Arial;">HERMANAS HOSPITALARIAS DEL SAGRADO CORAZÓN DE JESÚS-BENITO MENNI COMPLEJO ASISTENCIAL EN SALUD MENTAL (33.3%)      (ES)												<br>C/ Dr. Antoni Pujadas, 38 08830 SANT BOI DE LLOBREGAT Barcelona ESPAÑA</span><span style="color: #1F1F1F;font-size:11pt;font-family:Arial;"></span><span style="color: #1F1F1F;font-size:11pt;font-family:Arial;"></span></td>               </tr>            </table>            <table style="font-size:11pt;list-style-type: square">               <tr>                  <td valign="top"><span style="color:#424242;font-size:11pt;white-space: nowrap ;font-family:Arial;"><b>          Otro/s solicitante/s: 													</b></span></td>                  <td><span style="color: #1F1F1F;font-size:11pt;white-space: nowrap ;font-family:Arial;">PULIDO MORENO, Gabriel (33.3%)          (ES)													<br>GALLEGO SEGURA, Gerard (33.3%)          (ES)													<br></span></td>               </tr>            </table>            <table style="font-size:11pt;list-style-type: square">               <tr>                  <td valign="top"><span style="color:#424242;font-size:11pt;white-space: nowrap ;font-family:Arial;"><b>          Inventor/es: 													</b></span></td>                  <td><span style="color: #1F1F1F;font-size:11pt;white-space: nowrap ;font-family:Arial;">PULIDO MORENO, Gabriel (ES);													<br>GALLEGO SEGURA, Gerard (ES);													<br></span></td>               </tr>            </table>            <table style="font-size:11pt;list-style-type: square">               <tr>                  <td valign="top"><span style="color:#424242;font-size:11pt;white-space: nowrap ;font-family:Arial;"> <table>    <tr>       <td><b><acronym style="color:#424242;font-size:11pt;white-space: nowrap ;font-family:Arial;" title="Clasificación Internacional de Patentes ">CIP:</acronym></b></td>    </tr> </table></span></td>                  <td>                     <table> <tr>    <td><a href="https://pubcip.oepm.es/?notion=scheme&symbol=A41D0001040000&menulang=es&lang=es&viewmode=f&fipcpc=no&showdeleted=yes&indexes=no&headings=yes&notes=yes&direction=o2n&initial=A&cwid=none&tree=no&searchmode=smart" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;"><b><i>A41D1/04</i></b></a>&nbsp;<i>(2006.01)</i></td>    <td></td>    <td></td>    <td></td> </tr>                     </table>                  </td>               </tr>            </table>            <table style="font-size:11pt;list-style-type: square">               <tr>                  <td valign="top"><span style="color:#424242;font-size:11pt;white-space: nowrap ;font-family:Arial;"> <table>    <tr>       <td><b><acronym style="color:#424242;font-size:11pt;white-space: nowrap ;font-family:Arial;" title="Clasificación Cooperativa de Patentes ">CPC:</acronym></b></td>    </tr> </table></span></td>                  <td>                     <table> <tr>    <td><a href="http://worldwide.espacenet.com/classification?locale=es_LP#!/CPC=A41D1/04" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;"><b>A41D1/04</b>&nbsp;				</a> 					(ES)			    </td>    <td></td>    <td><a href="http://worldwide.espacenet.com/classification?locale=es_LP#!/CPC=A43C15/08" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;"><b>A43C15/08</b>&nbsp;					</a>					(EP)				    </td>    <td></td>    <td><a href="http://worldwide.espacenet.com/classification?locale=es_LP#!/CPC=A43B1/0054" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;"><b>A43B1/0054</b>&nbsp;					</a>					(EP)				    </td>    <td></td> </tr> <tr>    <td><a href="http://worldwide.espacenet.com/classification?locale=es_LP#!/CPC=A43C15/063" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;"><b>A43C15/063</b>&nbsp;				</a> 					(EP)			    </td>    <td></td>    <td><a href="http://worldwide.espacenet.com/classification?locale=es_LP#!/CPC=A43C15/066" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;"><b>A43C15/066</b>&nbsp;					</a>					(EP)				    </td>    <td></td>    <td><a href="http://worldwide.espacenet.com/classification?locale=es_LP#!/CPC=A43C15/068" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;"><b>A43C15/068</b>&nbsp;					</a>					(EP)				    </td>    <td></td> </tr> <tr>    <td><a href="http://worldwide.espacenet.com/classification?locale=es_LP#!/CPC=A61F5/3769" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;"><b>A61F5/3769</b>&nbsp;				</a> 					(ES)			    </td>    <td></td>    <td><a href="http://worldwide.espacenet.com/classification?locale=es_LP#!/CPC=A41D13/1245" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;"><b>A41D13/1245</b>&nbsp;					</a>					(ES)				    </td>    <td></td>    <td></td> </tr>                     </table>                  </td>               </tr>            </table>            <table style="font-size:11pt;list-style-type: square">               <tr>                  <td valign="top"><span style="color:#424242;font-size:11pt;white-space:nowrap;font-family:Arial;"><b>          Documentos citados: 													</b></span></td>                  <td><span style="color:#1F1F1F;font-size:11pt;white-space:nowrap;text-transform:uppercase;font-family:Arial;">          (A)&nbsp;												</span><span style="color:#1F1F1F;font-size:11pt;white-space:nowrap;text-transform:uppercase;font-family:Arial;"><a href="https://worldwide.espacenet.com/patent/search/publication/CN204579970U" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;" TITLE="Ver documento en Espacenet">CN204579970</a>&nbsp;U</span><br><span style="color:#1F1F1F;font-size:11pt;white-space:nowrap;text-transform:uppercase;font-family:Arial;">          (A)&nbsp;												</span><span style="color:#1F1F1F;font-size:11pt;white-space:nowrap;text-transform:uppercase;font-family:Arial;"><a href="https://worldwide.espacenet.com/patent/search/publication/US4571000A" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;" TITLE="Ver documento en Espacenet">US4571000</a>&nbsp;A</span><br><span style="color:#1F1F1F;font-size:11pt;white-space:nowrap;text-transform:uppercase;font-family:Arial;">          (A)&nbsp;												</span><span style="color:#1F1F1F;font-size:11pt;white-space:nowrap;text-transform:uppercase;font-family:Arial;"><a href="https://worldwide.espacenet.com/patent/search/publication/US4840189A" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;" TITLE="Ver documento en Espacenet">US4840189</a>&nbsp;A</span><br><span style="color:#1F1F1F;font-size:11pt;white-space:nowrap;text-transform:uppercase;font-family:Arial;">          (A)&nbsp;												</span><span style="color:#1F1F1F;font-size:11pt;white-space:nowrap;text-transform:uppercase;font-family:Arial;"><a href="https://worldwide.espacenet.com/patent/search/publication/US4947869A" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;" TITLE="Ver documento en Espacenet">US4947869</a>&nbsp;A</span><br><span style="color:#1F1F1F;font-size:11pt;white-space:nowrap;text-transform:uppercase;font-family:Arial;">          (A)&nbsp;												</span><span style="color:#1F1F1F;font-size:11pt;white-space:nowrap;text-transform:uppercase;font-family:Arial;"><a href="https://worldwide.espacenet.com/patent/search/publication/US4744354A" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;" TITLE="Ver documento en Espacenet">US4744354</a>&nbsp;A</span><br><span style="color:#1F1F1F;font-size:11pt;white-space:nowrap;text-transform:uppercase;font-family:Arial;">          (A)&nbsp;												</span><span style="color:#1F1F1F;font-size:11pt;white-space:nowrap;text-transform:uppercase;font-family:Arial;"><a href="https://worldwide.espacenet.com/patent/search/publication/US5161545A" target="_blank" style="color:navy; font-size:11pt;text-transform:uppercase;" TITLE="Ver documento en Espacenet">US5161545</a>&nbsp;A</span><br></td>               </tr>            </table>            <table style="font-size:11pt;list-style-type: square">               <tr>                  <td valign="top"><span style="color:#424242;font-size:11pt;white-space: nowrap ;font-family:Arial;"><b>                  Resumen: 															</b></span></td>                  <td valign="top"><span style="color: #1F1F1F;font-size:11pt;font-family:Arial;"><img src="https://consultas2.oepm.es/imas/Resumen/000/00P/201/630/P201630839.jpg" align="right" valign="top" alt=" ">Dispositivo de contención física, aplicable en la limitación de movilidad de pacientes en cuadros de agitación, desorganización, o riesgo de caídas; que comprende un chaleco (1) abierto lateralmente, constituido por una pieza anterior (11) y una pieza posterior (12), unidas por la zona superior y que presentan lateralmente por debajo de las aberturas de los brazos unos cierres laterales para su unión en una posición de cierre del chaleco; unas cintas superiores (2) de sujeción, que presentan un primer extremo (21) fijado al chaleco y un segundo extremo (22) provisto de unos medios de cierre (7) para su sujeción a una cama o estructura fija; unas cintas de sujeción abdominal (3) provistas de unos medios de cierre (7) fijadas a los extremos laterales de la pieza posterior (12) del chaleco; unas cintas antivuelco (4) fijadas a los laterales del chaleco (1) y provistas de unos medios de cierre (7) para su fijación a una cama o estructura de soporte y; dos lazadas laterales (5) de fijación de la contención de manos del paciente al chaleco (1), dispuestas en la zona inferior del chaleco.<br></span></td>               </tr>            </table><br><span style="color: #1F1F1F;font-size:9pt;font-family:Arial;">                     INVENES no es un registro, sino una base de datos de divulgación técnica. En caso               de requerir  información actualizada sobre la situación legal del expediente o relativa a sus datos bibliográficos, debe consultar               la base de datos 											<a href="http://ceo.oepm.es/detalleExpediente?numExp=P201630839" target="_blank" TITLE="Consulta de Expedientes OEPM">                  "CEO"</a>,															                     accesible desde la página web de la OEPM, o pinchando en el icono <img src="https://consultas2.oepm.es/InvenesWeb/iconos/justicia.gif" valign="top" border="0" alt="Consulta de Expedientes OEPM"><br></span><br><br></td>      </tr>   </table></div></label>
+              </div>
+            </div>
+           
+           <!--FIN PESTAÑA DE DATOS-->
+           
+           <!--INICIO PESTAÑA DE DESCRIPCION--> 
+           
+            <div class="tab-pane" id="tab1" style="background-color: #eee;">
+              <center><span class="keyword">Descripciones disponibles del expediente</span></center>
+              <div style="height: 100.0%; width: 100%">
+                <label id="form1:mensajeDisclimerDescripcion"></label><label id="form1:textoReferencia" style="width:100%"><div class="tabber" id="tabdesc">
+     <div class="tabbertab" >
+                    <h3>+ ES-2647619_B2</h3><div width="100%" >     <P>propicia la utilization de los brazos como elementos de apoyo, potenciadores de los movimientos del tronco mencionados anteriormente.</P>  <P>El solicitante de la presente invention desconoce la existencia en el mercado de dispositivos de contention flsica que permitan resolver los inconvenientes mencionados, y que presenten las caracterlsticas de esta invencion.</P>  <P>Description de la invencion</P>  <P>El dispositivo de contencion flsica objeto de esta invencion presenta unas particulares constructivas orientadas a resolver la problematica expuesta anteriormente.</P>  <P>Para ello, y de acuerdo con la invencion, este dispositivo comprende: - un chaleco abierto lateralmente constituido por una pieza anterior y una pieza posterior ambas de tejido ignlfugo y resistente unidas por la zona superior de los hombros y que presentan lateralmente por debajo de las aberturas de los brazos unos cierre es laterales para su union en una position de cierre del chaleco; - unas cintas superiores de sujecion que presentan un primer extremo fijado al chaleco y que sobresalen por la zona superior del mismo, y un segundo extremo provisto de unos medios de cierre para su sujecion a una cama o estructura fija; unas cintas de sujecion abdominal que estan provistas de unos medios de cierre y fijadas a los extremos laterales de la pieza posterior del chaleco; - unas cintas antivuelco fijadas a los laterales del chaleco y provistas de unos medios de cierre para su fijacion a una cama o estructura de soporte y; dos lazadas laterales, de fijacion de la contencion de manos del paciente al chaleco, dispuestas en la zona inferior del chaleco.</P>  <P>La utilizacion de un chaleco como elemento principal simplifica notablemente la colocation del dispositivo de contencion a un paciente en estado de agitation y la vinculacion de las diferentes cintas de sujecion al mismo.</P>  <P>Ademas, con este dispositivo de contencion los brazos del paciente no quedan abiertos en cruz sino que quedan dispuestos en una posicion menos agresiva, 3</P>  <P>concretamente extendidos a los laterales del cuerpo, y retenidos en dicha posicion por las lazadas laterales de fijacion de la contention de manos</P>  <P>Otra de las caracterlsticas relevantes de la invention consiste en que las cintas superiores disponen en una zona proxima a su segundo extremo de unos medios reguladores de longitud que permiten alargar dichas cintas superiores a medida que se vaya calmando el paciente, lo que contribuye a reducir la duration del cuadro de agitation.</P>  <P>Otra de las caracterlsticas de la invencion consiste en la incorporation en el chaleco de unos sensores de constantes vitales, integrados en el tejido, para la monitorizacion del paciente y que permiten controlar algunas de las constantes (por ejemplo: la frecuencia cardiaca, la saturation de oxlgeno, temperatura, o la tension arterial...) que pueden variar significativamente durante un cuadro de agitacion y requerir una medication inmediata.</P>  <P>Para facilitar la administration de medicamentos al paciente, el chaleco comprende al menos una abertura de administracion de medicacion subcutanea, provista de una solapa de cierre, y definida en una zona del chaleco correspondiente a la zona lateral abdominal. Esta caracterlstica impide que el chaleco constituya un estorbo o impedimento para la administracion de medicacion durante el tiempo que el paciente esta sometido a contencion flsica.</P>  <P>Estas y otras caracterlsticas recogidas en las reivindicaciones de la invencion, se comprenderan con mayor facilidad a la vista del ejemplo de realization mostrado en las figuras adjuntas</P>  <P>Descripcion de las figuras.</P>  <P>Para complementar la descripcion que se esta realizando y con objeto de facilitar la comprension de las caracterlsticas de la invencion, se acompana a la presente memoria descriptiva un juego de dibujos en los que, con caracter ilustrativo y no limitativo, se ha representado lo siguiente:</P>  <P>- La figura 1 muestra un ejemplo de realization del dispositivo de contention de la invention, en la que se ha representado el chaleco en una position abierta, con la pieza anterior abatida hacia arriba, quedando visible la cara interior de las piezas anterior y posterior.</P>  <P>- Las figura 2 y 3 muestran sendas vistas, anterior y posterior, del dispositivo de contention segun la invention con el chaleco en position cerrada.</P>  <P>Realization preferida de la invention.</P>  <P>Como se puede observar en las figuras adjuntas este dispositivo de contention flsica comprende un chaleco (1) al que se encuentran fijadas unas cintas superiores (2) de sujecion, unas cintas de sujecion abdominal (3) , unas cintas antivuelco (4) y una lazadas laterales (5).</P>  <P>El chaleco (1) es abierto lateralmente, y esta constituido por una pieza anterior (11) y una pieza posterior (12) de tejido ignifugo y resistente; que estan unidas por la zona superior, tal como se muestra en la figura 1, y presentan lateralmente por debajo de las aberturas de los brazos unos cierres laterales (13) para su union en una position de cierre del chaleco.</P>  <P>Dichos cierres laterales estan ocultos por el propio tejido del chaleco, con el fin de evitar lesiones, y comprende unos cierres de contacto que permiten el cierre rapido del chaleco y, de forma opcional o adicional, unas cremalleras u otro tipo de cierre resistente.</P>  <P>Las cintas superiores (2) de sujecion sobresalen por la zona superior del chaleco y presentan: un primer extremo (21) fijado al chaleco, y un segundo extremo (22) provisto de unos medios de cierre (7) para su sujecion a una cama o estructura fija.</P>  <P>Los primeros extremos (11) de las cintas superiores (1) se encuentran integrados en el chaleco (1) y cruzados sobre la zona del pecho, para reforzar dicha zona y realizar una adecuada contencion pecto-abdominal del paciente.</P>  <P>Dichas cintas superiores (1) disponen, en una zona proxima a su segundo extremo, de unos medios reguladores de la longitud que comprenden un enrollador (23) provisto un freno de inercia y/o de bloqueo manual.</P>  <P>Las cintas de sujecion abdominal (3) estan fijadas a los extremos laterales de la pieza posterior (12) del chaleco y provistas de unos medios de cierre (7) para su ajuste al cuerpo del paciente.</P>  <P>Las cintas antivuelco (4) estan fijadas a los laterales del chaleco (1) y tambien estan provistas de unos medios de cierre (7) para su fijacion a una cama o estructura de soporte.</P>  <P>Las lazadas laterales (1) de fijacion de la contention de manos del paciente al chaleco (1) estan dispuestas en la zona inferior del chaleco, de modo de los brazos del paciente queden extendidos verticalmente a los laterales opuestos del cuerpo.</P>  <P>Como se observa en la figura 3 el chaleco (1) comprende unos sensores (6) de constantes vitales, integrados en el tejido, para la monitorizacion del paciente. En esta realization concreta los sensores (6) estan situados en la pieza posterior (12) del chaleco, aunque no se descartan otras posibles ubicaciones de los mismos en el chaleco.</P>  <P>Como se puede observar en las figuras 2 y 3, el chaleco (1) comprende dos aberturas (14) de administration de medication subcutanea, definida en unas zonas del chaleco correspondientes a la zona lateral abdominal. Estas aberturas (14) estan provistas de unas solapas de cierre (15) visibles en la figura 2</P>  <P>En las figuras 2 y 3 se han representado esquematicamente unos posibles medios de cierre (7) de las diferentes cintas, constituidos por unos botones magneticos existentes en mercado, utilizados habitualmente en elementos de retention, y que comprenden un vastago (71) que se introduce en dos orificios de la cinta en cuestion y se fija en la position de montaje mediante una pieza de retencion (72) a modo de tapon; no obstante estos medios de retencion podrlan ser de cualquier otro tipo conocido, ya que ello no afecta a la esencia de la invention.</P>  <P>Una vez descrita suficientemente la naturaleza de la invencion, asl como un ejemplo de realization preferente, se hace constar a los efectos oportunos que los materiales, forma, tamano y disposition de los elementos descritos podran ser 5 modificados, siempre y cuando ello no suponga una alteration de las caracterlsticas esenciales de la invencion que se reivindican a continuation.</P>  <P>1. Dispositivo de contention flsica, aplicable en la limitation de movilidad de pacientes en cuadros de agitation, desorganizacion, o riesgo de caldas; caracterizado porque comprende:</P>  <P>- un chaleco (1) abierto lateralmente, constituido por una pieza anterior (11) y una pieza posterior (12) de tejido ignifugo y resistente, unidas por la zona superior y que presentan lateralmente por debajo de las aberturas de los brazos unos cierres laterales para su union en una position de cierre del chaleco;</P>  <P>- unas cintas superiores (2) de sujecion, que presentan un primer extremo (21) fijado al chaleco y sobresalen por la zona superior del mismo, y un segundo extremo (22) provisto de unos medios de cierre (7) para su sujecion a una cama o estructura fija.</P>  <P>- unas cintas de sujecion abdominal (3) provistas de unos medios de cierre (7) fijadas a los extremos laterales de la pieza posterior (12) del chaleco;</P>  <P>- unas cintas antivuelco (4) fijadas a los laterales del chaleco (1) y provistas de unos medios de cierre (7) para su fijacion a una cama o estructura de soporte y;</P>  <P>- dos lazadas laterales (5) de fijacion de la contention de manos del paciente al chaleco (1) , dispuestas en la zona inferior del chaleco.</P>  <P>2. Dispositivo de contention flsica, segun la revindication 1, caracterizado porque los primeros extremos (11) de las cintas superiores (1) se encuentran integrados en el chaleco (1) y cruzados sobre la zona del pecho.</P>  <P>3. Dispositivo de contention flsica, segun la revindication 1, caracterizado</P>  <P>porque las cintas superiores (1) disponen en una zona proxima a su segundo</P>    </description><BR>     </div>                  </div>
+     <div class="tabbertab" >
+                    <h3>+ ES-2647619_A2</h3><div width="100%" >   <P>Dispositivo de contención física.</P>  <P>Objeto de la invención.</P>  <P>El objeto de la invención es un dispositivo de contención física, más concretamente de contención pecto-abdominal, aplicable dentro del campo sanitario para limitar la movilidad de pacientes en cuadros de agitación, y en aquellos en los que precise limitar la movilidad (riesgo de caídas, cuadros desorganizados.</P>  <P>Estado de la técnica.</P>  <P>Actualmente son conocidos algunos dispositivos para la contención física de pacientes con problemas psiquiátricos, que se utilizan de esporádicamente para limitar la movilidad de paciente durante cuadros de agitación, desorganización, o riesgo de caídas, con la finalidad evitar lesiones del propio paciente, y terceros</P>  <P>Los dispositivos utilizados actualmente consisten básicamente en unas cintas provistas de unos medios de cierre, generalmente magnéticos o de contacto, para la sujeción de los pies, las manos y el pecho de forma individual. Estos medios de contención física presentan diversos inconvenientes entre los que cabe mencionar la dificultad de colocación en el paciente en un momento de agitación, debido en parte a la necesidad de colocar cada uno de dichos elementos de forma independiente, así como la incomodidad de uso para el paciente, e incluso la posibilidad de ahogamiento con las contenciones de sujeción del pecho.</P>  <P>Durante la utilización de estas cintas de retención, el paciente permanece extendido sobre una cama con los brazos y las piernas abiertas en cruz, lo que no impide que pueda realizar movimientos bruscos con el tronco, tanto de tracción pectoral- abdominal, y como de giro parcial.</P>  <P>Un inconveniente adicional de esta retención, es que la posición en cruz de los brazos y piernas, además de resultar desagradable, antiestética e incómoda,</P>  <P>propicia la utilización de los brazos como elementos de apoyo, potenciadores de los movimientos del tronco mencionados anteriormente.</P>  <P>El solicitante de la presente invención desconoce la existencia en el mercado de dispositivos de contención física que permitan resolver los inconvenientes mencionados, y que presenten las características de esta invención.</P>  <P>Descripción de la invención</P>  <P>El dispositivo de contención física objeto de esta invención presenta unas particulares constructivas orientadas a resolver la problemática expuesta anteriormente.</P>  <P>Para ello, y de acuerdo con la invención, este dispositivo comprende: - un chaleco abierto lateralmente constituido por una pieza anterior y una pieza posterior ambas de tejido ignífugo y resistente unidas por la zona superior de los hombros y que presentan lateralmente por debajo de las aberturas de los brazos unos cierre es laterales para su unión en una posición de cierre del chaleco; - unas cintas superiores de sujeción que presentan un primer extremo fijado al chaleco y que sobresalen por la zona superior del mismo, y un segundo extremo provisto de unos medios de cierre para su sujeción a una cama o estructura fija; unas cintas de sujeción abdominal que están provistas de unos medios de cierre y fijadas a los extremos laterales de la pieza posterior del chaleco; - unas cintas antivuelco fijadas a los laterales del chaleco y provistas de unos medios de cierre para su fijación a una cama o estructura de soporte y; dos lazadas laterales, de fijación de la contención de manos del paciente al chaleco, dispuestas en la zona inferior del chaleco.</P>  <P>La utilización de un chaleco como elemento principal simplifica notablemente la colocación del dispositivo de contención a un paciente en estado de agitación y la vinculación de las diferentes cintas de sujeción al mismo.</P>  <P>Además, con este dispositivo de contención los brazos del paciente no quedan abiertos en cruz sino que quedan dispuestos en una posición menos agresiva,</P>  <P>concretamente extendidos a los laterales del cuerpo, y retenidos en dicha posición por las lazadas laterales de fijación de la contención de manos</P>  <P>Otra de las características relevantes de la invención consiste en que las cintas superiores disponen en una zona próxima a su segundo extremo de unos medios reguladores de longitud que permiten alargar dichas cintas superiores a medida que se vaya calmando el paciente, lo que contribuye a reducir la duración del cuadro de agitación.</P>  <P>Otra de las características de la invención consiste en la incorporación en el chaleco de unos sensores de constantes vitales, integrados en el tejido, para la monitorización del paciente y que permiten controlar algunas de las constantes (por ejemplo: la frecuencia cardiaca, la saturación de oxígeno, temperatura, o la tensión arterial...) que pueden variar significativamente durante un cuadro de agitación y requerir una medicación inmediata.</P>  <P>Para facilitar la administración de medicamentos al paciente, el chaleco comprende al menos una abertura de administración de medicación subcutánea, provista de una solapa de cierre, y definida en una zona del chaleco correspondiente a la zona lateral abdominal. Esta característica impide que el chaleco constituya un estorbo o impedimento para la administración de medicación durante el tiempo que el paciente está sometido a contención física.</P>  <P>Estas y otras características recogidas en las reivindicaciones de la invención, se comprenderán con mayor facilidad a la vista del ejemplo de realización mostrado en las figuras adjuntas</P>  <P>Descripción de las figuras.</P>  <P>Para complementar la descripción que se está realizando y con objeto de facilitar la comprensión de las características de la invención, se acompaña a la presente memoria descriptiva un juego de dibujos en los que, con carácter ilustrativo y no limitativo, se ha representado lo siguiente:</P>  <P>- La figura 1 muestra un ejemplo de realización del dispositivo de contención de la invención, en la que se ha representado el chaleco en una posición abierta, con la pieza anterior abatida hacia arriba, quedando visible la cara interior de las piezas anterior y posterior.</P>  <P>- Las figura 2 y 3 muestran sendas vistas, anterior y posterior, del dispositivo de contención según la invención con el chaleco en posición cerrada.</P>  <P>Realización preferida de la invención.</P>  <P>Como se puede observar en las figuras adjuntas este dispositivo de contención física comprende un chaleco (1) al que se encuentran fijadas unas cintas superiores (2) de sujeción, unas cintas de sujeción abdominal (3), unas cintas antivuelco (4) y una lazadas laterales (5).</P>  <P>El chaleco (1) es abierto lateralmente, y está constituido por una pieza anterior (11) y una pieza posterior (12) de tejido ignifugo y resistente; que están unidas por la zona superior, tal como se muestra en la figura 1, y presentan lateralmente por debajo de las aberturas de los brazos unos cierres laterales (13) para su unión en una posición de cierre del chaleco.</P>  <P>Dichos cierres laterales están ocultos por el propio tejido del chaleco, con el fin de evitar lesiones, y comprende unos cierres de contacto que permiten el cierre rápido del chaleco y, de forma opcional o adicional, unas cremalleras u otro tipo de cierre resistente.</P>  <P>Las cintas superiores (2) de sujeción sobresalen por la zona superior del chaleco y presentan: un primer extremo (21) fijado al chaleco, y un segundo extremo (22) provisto de unos medios de cierre (7) para su sujeción a una cama o estructura fija.</P>  <P>Los primeros extremos (11) de las cintas superiores (1) se encuentran integrados en el chaleco (1) y cruzados sobre la zona del pecho, para reforzar dicha zona y realizar una adecuada contención pecto-abdominal del paciente.</P>  <P>Dichas cintas superiores (1) disponen, en una zona próxima a su segundo extremo, de unos medios reguladores de la longitud que comprenden un enrollador (23) provisto un freno de inercia y/o de bloqueo manual.</P>  <P>Las cintas de sujeción abdominal (3) están fijadas a los extremos laterales de la pieza posterior (12) del chaleco y provistas de unos medios de cierre (7) para su ajuste al cuerpo del paciente.</P>  <P>Las cintas antivuelco (4) están fijadas a los laterales del chaleco (1) y también están provistas de unos medios de cierre (7) para su fijación a una cama o estructura de soporte.</P>  <P>Las lazadas laterales (1) de fijación de la contención de manos del paciente al chaleco (1) están dispuestas en la zona inferior del chaleco, de modo de los brazos del paciente queden extendidos verticalmente a los laterales opuestos del cuerpo.</P>  <P>Como se observa en la figura 3 el chaleco (1) comprende unos sensores (6) de constantes vitales, integrados en el tejido, para la monitorización del paciente. En esta realización concreta los sensores (6) están situados en la pieza posterior (12) del chaleco, aunque no se descartan otras posibles ubicaciones de los mismos en el chaleco.</P>  <P>Como se puede observar en las figuras 2 y 3, el chaleco (1) comprende dos aberturas (14) de administración de medicación subcutánea, definida en unas zonas del chaleco correspondientes a la zona lateral abdominal. Estas aberturas (14) están provistas de unas solapas de cierre (15) visibles en la figura 2</P>  <P>En las figuras 2 y 3 se han representado esquemáticamente unos posibles medios de cierre (7) de las diferentes cintas, constituidos por unos botones magnéticos existentes en mercado, utilizados habitualmente en elementos de retención, y que comprenden un vástago (71) que se introduce en dos orificios de la cinta en cuestión y se fija en la posición de montaje mediante una pieza de retención (72) a modo de tapón; no obstante estos medios de retención podrían ser de cualquier otro tipo conocido, ya que ello no afecta a la esencia de la invención.</P>  <P>Una vez descrita suficientemente la naturaleza de la invención, así como un ejemplo de realización preferente, se hace constar a los efectos oportunos que los materiales, forma, tamaño y disposición de los elementos descritos podrán ser 5 modificados, siempre y cuando ello no suponga una alteración de las características esenciales de la invención que se reivindican a continuación.</P>  </description><BR>     </div>                  </div>
+     </div></label>
+                
+              </div>
+            </div>
+            
+            <!--FIN PESTAÑA DE DESCRIPCION-->   
+            
+            <!--INICIO PESTAÑA DE REIVINDICACIONES-->  
+            
+            <div class="tab-pane" id="tab2">
+              <center><span class="keyword">Reivindicaciones disponibles del expediente</span></center>
+              <div style="height: 100.0%; width: 100%">
+                <label id="form1:mensajeDisclimerReivindicaciones"></label><label id="form1:textoReivindicaciones" style="width:100%"><div class="tabber" id="tabreiv">
+     <div class="tabbertab" >
+                    <h3>+ ES-2647619_B2</h3><div width="100%" >     <P>ES 2 647 619 A2</P>  <P>extremo unos medios reguladores de la longitud, que comprenden un enrollador (23) provisto un freno de inercia y/o de bloqueo manual.</P>  <P>4. Dispositivo de contencion flsica, segun la reivindicacion 1, caracterizado 5 porque el chaleco (1) comprende unos sensores (6) de constantes vitales, integrados en el tejido, para la monitorizacion del paciente.</P>  <P>5. Dispositivo de contencion flsica, segun la reivindicacion 1, caracterizado porque el chaleco (1) comprende al menos una abertura (14) de administration de</P>  <P>medication subcutanea, provista de una solapa de cierre (15) , y definida en una zona del chaleco correspondiente a la zona lateral abdominal.</P>  <P>u</P>  <P>l `By</P>  <P>** (Ver fórmula) **</P>  <P>ZV 619 LV9 Z S3</P>      </claims><BR>     </div>                  </div>
+     <div class="tabbertab" >
+                    <h3>+ ES-2647619_A2</h3><div width="100%" >   <P>1. Dispositivo de contención física, aplicable en la limitación de movilidad de pacientes en cuadros de agitación, desorganización, o riesgo de caídas; caracterizado porque comprende:</P>  <P>- un chaleco (1) abierto lateralmente, constituido por una pieza anterior (11) y una pieza posterior (12) de tejido ignifugo y resistente, unidas por la zona superior y que presentan lateralmente por debajo de las aberturas de los brazos unos cierres laterales para su unión en una posición de cierre del chaleco;</P>  <P>- unas cintas superiores (2) de sujeción, que presentan un primer extremo (21) fijado al chaleco y sobresalen por la zona superior del mismo, y un segundo extremo (22) provisto de unos medios de cierre (7) para su sujeción a una cama o estructura fija.</P>  <P>- unas cintas de sujeción abdominal (3) provistas de unos medios de cierre (7) fijadas a los extremos laterales de la pieza posterior (12) del chaleco;</P>  <P>- unas cintas antivuelco (4) fijadas a los laterales del chaleco (1) y provistas de unos medios de cierre (7) para su fijación a una cama o estructura de soporte y;</P>  <P>- dos lazadas laterales (5) de fijación de la contención de manos del paciente al chaleco (1), dispuestas en la zona inferior del chaleco.</P>  <P>2. Dispositivo de contención física, según la reivindicación 1, caracterizado porque los primeros extremos (11) de las cintas superiores (1) se encuentran integrados en el chaleco (1) y cruzados sobre la zona del pecho.</P>  <P>3. Dispositivo de contención física, según la reivindicación 1, caracterizado</P>  <P>porque las cintas superiores (1) disponen en una zona próxima a su segundo</P>  <P>extremo unos medios reguladores de la longitud, que comprenden un enrollador (23) provisto un freno de inercia y/o de bloqueo manual.</P>  <P>4. Dispositivo de contención física, según la reivindicación 1, caracterizado 5 porque el chaleco (1) comprende unos sensores (6) de constantes vitales,</P>  <P>integrados en el tejido, para la monitorización del paciente.</P>  <P>5. Dispositivo de contención física, según la reivindicación 1, caracterizado porque el chaleco (1) comprende al menos una abertura (14) de administración de</P>  <P>10 medicación subcutánea, provista de una solapa de cierre (15), y definida en una zona del chaleco correspondiente a la zona lateral abdominal.</P>  </claims><BR>     </div>                  </div>
+     </div></label>
+                
+              </div>
+            </div>
+            
+            <!--FIN PESTAÑA DE REIVINDICACIONES--> 
+            
+            <!--INICIO PESTAÑA DE IET-->  
+            
+            <div class="tab-pane" id="tab3">
+              <center><span class="keyword">IETs disponibles del expediente</span></center>
+              <div style="height: 100.0%; width: 100%">
+                <label id="form1:textoIet"><div class="tabber" id="tabiet">
+     <div class="tabbertab" >
+                    <h3>+ ES-2647619_B2</h3><div width="100%" >   <b>Clasificación: </b> <br/> <b><i>A61F5/37 </i></b> (2006.01) <br/> <b><i>A41D13/12 </i></b> (2006.01) <br/> <b><i>A41D1/04 </i></b> (2006.01) <br/> <br/> <b>El presente informe ha sido realizado para las siguientes reivindicaciones: </b>TODAS <br/> <b>Fecha de realización del informe:</b> 01.03.2018 <br/> <b>Examinador: </b>M. J. García Bueno  <br/>  <table align="center"> <tr><td><b>Categoría</b></td><td align="center"><b>Documentos citados</b></td><td align="center"><b>Reivindicaciones afectadas</b></td></tr> <tr><td align="center" valign="top">A </td><td>CN 204579970 U  (YANG M.) 26/08/2015, (Resumen y figura 1) Base de datos WPI/2017 Clarivate Analytics [en línea] [Recuperado el 26.02.2018] Recuperado de EPOQUE. Nº de acceso: 2015-76818W </td><td align="center" valign="top">1-5 </td></tr> <tr><td align="center" valign="top">A </td><td>US 4571000 A (HOLDER OCIE S) 18/02/1986, Columna 2, líneas 3-28 y 64-68, columna 3, líneas 1-46 Y figuras 2-6 </td><td align="center" valign="top">1-5 </td></tr> <tr><td align="center" valign="top">A </td><td>US 4840189  A  (WACHTEL ROBERTA S.) 20/06/1989, Columna 1, líneas 27-62, columna 2, líneas 17-23 y 33-51, reivindicaciones 1 y 3 y figura 1 </td><td align="center" valign="top">1-5 </td></tr> <tr><td align="center" valign="top">A </td><td>US 4947869 A (GRANT OLIVER J.) 14/08/1990, Columna 1, líneas 35-52, columna 2, líneas 30-37 y 51-63, Reivindicaciones 1 y 6 y figuras 1 y 2. </td><td align="center" valign="top">1-5 </td></tr> <tr><td align="center" valign="top">A </td><td>US 4744354 A (DAVID TRIUNFOL ) 17/05/1988, Columna 1, líneas 33-49, columna 2, líneas10-32 y 49-56, Reivindicación 1 y figuras 1 y 2. </td><td align="center" valign="top">1-5 </td></tr> <tr><td align="center" valign="top">A </td><td>US 5161545  A  (MCCARTHY ANDREW D.) 11/11/1992, Todo el documento. </td><td align="center" valign="top">1-5 </td></tr> </table>  <br/>  <table align="center"> <tr><td><b>Categoría de los documentos citados</b></td> <td></td><td></td></tr> <tr><td>X: de particular relevancia</td> <td></td><td>O: referido a divulgación no escrita</td></tr> <tr><td>Y: de particular relevancia combinado con otro/s de la misma categoría</td><td></td><td>P: publicado entre la fecha de prioridad y la de presentación de la solicitud</td></tr> <tr><td>A: refleja el estado de la técnica</td> <td></td><td>E: documento anterior, pero publicado después de la fecha de presentación de la solicitud</td></tr> </table>  <br/>  <p>CLASIFICACIÓN OBJETO DE LA SOLICITUD</p>   <p>Documentación mínima buscada  (sistema de clasificación seguido de los símbolos de clasificación)</p>   <p>A41D, A61F </p>  <p>Bases de datos electrónicas consultadas durante la búsqueda (nombre de la base de datos y, si es posible, términos de búsqueda utilizados) </p>  <p>INVENES, EPODOC, WPI, USPTO PATENT DATABASE, JPO PATENT DATABASE, GOOGLE PATENTS </p> </iet><BR>     </div>                  </div>
+     <div class="tabbertab" >
+                    <h3>+ ES-2647619_R1</h3><div width="100%" >   <b>Clasificación: </b> <br/> <b><i>A61F5/37 </i></b> (2006.01) <br/> <b><i>A41D13/12 </i></b> (2006.01) <br/> <b><i>A41D1/04 </i></b> (2006.01) <br/> <br/> <b>El presente informe ha sido realizado para las siguientes reivindicaciones: </b>TODAS <br/> <b>Fecha de realización del informe:</b> 01.03.2018 <br/> <b>Examinador: </b>M. J. García Bueno  <br/>  <table align="center"> <tr><td><b>Categoría</b></td><td align="center"><b>Documentos citados</b></td><td align="center"><b>Reivindicaciones afectadas</b></td></tr> <tr><td align="center" valign="top">A </td><td>CN 204579970 U  (YANG M.) 26/08/2015, (Resumen y figura 1) Base de datos WPI/2017 Clarivate Analytics [en línea] [Recuperado el 26.02.2018] Recuperado de EPOQUE. Nº de acceso: 2015-76818W </td><td align="center" valign="top">1-5 </td></tr> <tr><td align="center" valign="top">A </td><td>US 4571000 A (HOLDER OCIE S) 18/02/1986, Columna 2, líneas 3-28 y 64-68, columna 3, líneas 1-46 Y figuras 2-6 </td><td align="center" valign="top">1-5 </td></tr> <tr><td align="center" valign="top">A </td><td>US 4840189  A  (WACHTEL ROBERTA S.) 20/06/1989, Columna 1, líneas 27-62, columna 2, líneas 17-23 y 33-51, reivindicaciones 1 y 3 y figura 1 </td><td align="center" valign="top">1-5 </td></tr> <tr><td align="center" valign="top">A </td><td>US 4947869 A (GRANT OLIVER J.) 14/08/1990, Columna 1, líneas 35-52, columna 2, líneas 30-37 y 51-63, Reivindicaciones 1 y 6 y figuras 1 y 2. </td><td align="center" valign="top">1-5 </td></tr> <tr><td align="center" valign="top">A </td><td>US 4744354 A (DAVID TRIUNFOL ) 17/05/1988, Columna 1, líneas 33-49, columna 2, líneas10-32 y 49-56, Reivindicación 1 y figuras 1 y 2. </td><td align="center" valign="top">1-5 </td></tr> <tr><td align="center" valign="top">A </td><td>US 5161545  A  (MCCARTHY ANDREW D.) 11/11/1992, Todo el documento. </td><td align="center" valign="top">1-5 </td></tr> </table>  <br/>  <table align="center"> <tr><td><b>Categoría de los documentos citados</b></td> <td></td><td></td></tr> <tr><td>X: de particular relevancia</td> <td></td><td>O: referido a divulgación no escrita</td></tr> <tr><td>Y: de particular relevancia combinado con otro/s de la misma categoría</td><td></td><td>P: publicado entre la fecha de prioridad y la de presentación de la solicitud</td></tr> <tr><td>A: refleja el estado de la técnica</td> <td></td><td>E: documento anterior, pero publicado después de la fecha de presentación de la solicitud</td></tr> </table>  <br/>  <p>CLASIFICACIÓN OBJETO DE LA SOLICITUD</p>   <p>Documentación mínima buscada  (sistema de clasificación seguido de los símbolos de clasificación)</p>   <p>A41D, A61F </p>  <p>Bases de datos electrónicas consultadas durante la búsqueda (nombre de la base de datos y, si es posible, términos de búsqueda utilizados) </p>  <p>INVENES, EPODOC, WPI, USPTO PATENT DATABASE, JPO PATENT DATABASE, GOOGLE PATENTS </p> </iet><BR>     </div>                  </div>
+     </div></label>
+              </div>
+            </div>
+            
+            <!--FIN PESTAÑA DE IET--> 
+            
+            <!--INICIO PESTAÑA DE OPINION ESCRITA-->  
+            
+            <div class="tab-pane" id="tab4">
+              <center><span class="keyword">Opiniones escritas disponibles del expediente</span></center>
+              <div style="height: 100.0%; width:100%">
+                <label id="form1:textoOpinion"><div class="tabber" id="tabopi">
+     <div class="tabbertab" >
+                    <h3>+ ES-2647619_B2</h3><div width="100%" >   <p>Fecha de Realización de la Opinión Escrita: 01.03.2018 </p>  <table align="center"> <tr><td><b>Declaración</b></td><td></td><td></td><td></td></tr> <tr><td><b>Novedad  (Art. 6.1 LP 11/1986) </b></td><td>Reivindicaciones</td> <td>1-5</td><td><b>SÍ</b></td></tr> <tr><td></td><td>Reivindicaciones</td><td></td><td><b>NO</b></td></tr> <tr><td><b>Actividad inventiva  (Art. 8.1 LP 11/1986) </b></td><td>Reivindicaciones</td><td>1-5</td><td><b>SÍ</b></td></tr> <tr><td></td><td>Reivindicaciones</td><td></td><td><b>NO</b></td></tr> </table> <br/><br/> <p>Se considera que la solicitud cumple con el requisito de aplicación industrial. Este requisito fue evaluado durante la fase de examen formal y técnico de la solicitud  (Artículo 31.2 Ley 11/1986) . </p>  <p><b>Base de la Opinión.-</b></p>  <p>La presente opinión se ha realizado sobre la base de la solicitud de patente tal y como se publica. </p>  <p><b>1. Documentos considerados.-</b></p>  <p>A continuación se relacionan los documentos pertenecientes al estado de la técnica tomados en consideración para la realización de esta opinión. </p>  <table align="center"> <tr><th>Documento </th><th>Número Publicación o Identificación </th><th>Fecha Publicación </th></tr> <tr><td align="center" valign="top"> D01  </td><td>CN 204579970 U   (YANG M.)  </td><td align="center" valign="top">26.08.2015 </td></tr> <tr><td align="center" valign="top"> D02  </td><td>US 4571000  A   (HOLDER OCIE S)  </td><td align="center" valign="top">18.02.1986 </td></tr> <tr><td align="center" valign="top"> D03  </td><td>US 4840189   A  (WACHTEL ROBERTA S.)  </td><td align="center" valign="top">20.06.1989 </td></tr> <tr><td align="center" valign="top"> D04  </td><td>US 4947869   A  (GRANT OLIVER J. )  </td><td align="center" valign="top">14.08.1990 </td></tr> <tr><td align="center" valign="top"> D05  </td><td>US 4744354  A   (DAVID TRIUNFOL )  </td><td align="center" valign="top">17.05.1988 </td></tr> <tr><td align="center" valign="top">D06 </td><td>US 5161545   A  (MCCARTHY ANDREW D.)  </td><td align="center" valign="top">11.11.1992 </td></tr> </table>  <p><b>2. Declaración motivada según los artículos 29.6 y 29.7 del Reglamento de ejecución de la Ley 11/1986,  de 20 de marzo,  de Patentes sobre la novedad y la actividad inventiva; citas y explicaciones en apoyo de esta declaración </b></p>  <p>La presente solicitud de invención consiste en un dispositivo de contención física en pacientes con cuadros de agitación o riesgo de caídas que comprende un chaleco con cintas de sujeción en la zona superior y abdominal,  cintas antivuelco y lazadas laterales de fijación de la contención de manos  (reivindicaciones 1-5) . </p>  <p>El documento  D01  se considera el documento más próximo del estado de la técnica y divulga un chaleco abierto lateralmente que comprende una pieza anterior y una pieza posterior unidas por la zona superior y que presentan lateralmente por debajo de las aberturas de los brazos unos cierres laterales para su unión en una posición de cierre del chaleco. El chaleco comprende unas cintas o correas de sujeción en la zona abdominal y antivuelco provistas de medios de cierre para su fijación a una cama o estructura de soporte. Las cintas de sujeción superiores se encuentran integradas en el chaleco y cruzadas sobre la zona del pecho  (ver resumen y figura 1) . </p>  <p>El documento  D02  divulga un chaleco abierto lateralmente que comprende una pieza anterior y una pieza posterior unidas por la zona superior y que presentan lateralmente por debajo de las aberturas de los brazos unos cierres laterales para su unión en una posición de cierre del chaleco,  y unas cintas o correas de sujeción en la zona abdominal y antivuelco provistas de medios de cierre para su fijación a una cama o estructura de soporte  (ver columna 2,  líneas 3-28 y 64-68,  columna 3,  líneas 1-46 y figuras 2-6) . </p>  <p>El documento  D03  divulga un chaleco de contención física que comprende una pieza anterior y otra posterior unidas por la zona superior y dos correas que se extienden desde los lados,  las cuales pueden tener medios de cierre  (ver columna 1,  líneas 27-62,  columna 2,  líneas 17-23 y 33-51,  reivindicaciones 1 y 3 y figura 1) . </p>  <p>El documento  D04  divulga un chaleco que comprende una pieza superior y una pieza posterior unidas por la zona superior del mismo y unas correas de sujeción  (ver columna 1,  líneas 35-52,  columna 2,  líneas 30-37 y 51-63,  reivindicaciones 1 y 6 y figuras 1 y 2) . </p>  <p>El documento  D05  divulga un sistema de sujeción del cuerpo para un paciente que comprende un chaleco con una pieza anterior y otra posterior unidas por la zona superior. </p>  <p>El documento D06 divulga una prenda de contención física que comprende cintas de sujeción en la zona superior y en la zona abdominal  (ver todo el documento) . </p>  <p>1.-NOVEDAD  (Art. 6.1 LP)  Y ACTIVIDAD INVENTIVA  (Art. 8.1 LP)  </p>  <p>Ninguno de los documentos citados divulga que el chaleco de contención física comprenda lazadas laterales de fijación de contención de los brazos de forma que el paciente no tenga los brazos dispuestos en cruz y su posición en un cuadro de agitación sea más confortable y segura. Por tanto,  se considera que los documentos  D01 -D06 son documentos que forman parte de estado de la técnica. </p>  <p>Por lo tanto,  las reivindicaciones 1-5 se consideran nuevas y con actividad inventiva según los artículos 6.1 y 8.1 LP. </p>  <p>2.-PATENTABILIDAD  (Art. 4.1 LP)  </p>  <p>Las reivindicaciones 1-5 cumplen con los requisitos de patentabilidad en el sentido del artículo 4.1 LP. </p> </opin><BR></div>                  </div>
+     <div class="tabbertab" >
+                    <h3>+ ES-2647619_R1</h3><div width="100%" >   <p>Fecha de Realización de la Opinión Escrita: 01.03.2018 </p>  <table align="center"> <tr><td><b>Declaración</b></td><td></td><td></td><td></td></tr> <tr><td><b>Novedad  (Art. 6.1 LP 11/1986) </b></td><td>Reivindicaciones</td> <td>1-5</td><td><b>SÍ</b></td></tr> <tr><td></td><td>Reivindicaciones</td><td></td><td><b>NO</b></td></tr> <tr><td><b>Actividad inventiva  (Art. 8.1 LP 11/1986) </b></td><td>Reivindicaciones</td><td>1-5</td><td><b>SÍ</b></td></tr> <tr><td></td><td>Reivindicaciones</td><td></td><td><b>NO</b></td></tr> </table> <br/><br/> <p>Se considera que la solicitud cumple con el requisito de aplicación industrial. Este requisito fue evaluado durante la fase de examen formal y técnico de la solicitud  (Artículo 31.2 Ley 11/1986) . </p>  <p><b>Base de la Opinión.-</b></p>  <p>La presente opinión se ha realizado sobre la base de la solicitud de patente tal y como se publica. </p>  <p><b>1. Documentos considerados.-</b></p>  <p>A continuación se relacionan los documentos pertenecientes al estado de la técnica tomados en consideración para la realización de esta opinión. </p>  <table align="center"> <tr><th>Documento </th><th>Número Publicación o Identificación </th><th>Fecha Publicación </th></tr> <tr><td align="center" valign="top"> D01  </td><td>CN 204579970 U   (YANG M.)  </td><td align="center" valign="top">26.08.2015 </td></tr> <tr><td align="center" valign="top"> D02  </td><td>US 4571000  A   (HOLDER OCIE S)  </td><td align="center" valign="top">18.02.1986 </td></tr> <tr><td align="center" valign="top"> D03  </td><td>US 4840189   A  (WACHTEL ROBERTA S.)  </td><td align="center" valign="top">20.06.1989 </td></tr> <tr><td align="center" valign="top"> D04  </td><td>US 4947869   A  (GRANT OLIVER J. )  </td><td align="center" valign="top">14.08.1990 </td></tr> <tr><td align="center" valign="top"> D05  </td><td>US 4744354  A   (DAVID TRIUNFOL )  </td><td align="center" valign="top">17.05.1988 </td></tr> <tr><td align="center" valign="top">D06 </td><td>US 5161545   A  (MCCARTHY ANDREW D.)  </td><td align="center" valign="top">11.11.1992 </td></tr> </table>  <p><b>2. Declaración motivada según los artículos 29.6 y 29.7 del Reglamento de ejecución de la Ley 11/1986,  de 20 de marzo,  de Patentes sobre la novedad y la actividad inventiva; citas y explicaciones en apoyo de esta declaración </b></p>  <p>La presente solicitud de invención consiste en un dispositivo de contención física en pacientes con cuadros de agitación o riesgo de caídas que comprende un chaleco con cintas de sujeción en la zona superior y abdominal,  cintas antivuelco y lazadas laterales de fijación de la contención de manos  (reivindicaciones 1-5) . </p>  <p>El documento  D01  se considera el documento más próximo del estado de la técnica y divulga un chaleco abierto lateralmente que comprende una pieza anterior y una pieza posterior unidas por la zona superior y que presentan lateralmente por debajo de las aberturas de los brazos unos cierres laterales para su unión en una posición de cierre del chaleco. El chaleco comprende unas cintas o correas de sujeción en la zona abdominal y antivuelco provistas de medios de cierre para su fijación a una cama o estructura de soporte. Las cintas de sujeción superiores se encuentran integradas en el chaleco y cruzadas sobre la zona del pecho  (ver resumen y figura 1) . </p>  <p>El documento  D02  divulga un chaleco abierto lateralmente que comprende una pieza anterior y una pieza posterior unidas por la zona superior y que presentan lateralmente por debajo de las aberturas de los brazos unos cierres laterales para su unión en una posición de cierre del chaleco,  y unas cintas o correas de sujeción en la zona abdominal y antivuelco provistas de medios de cierre para su fijación a una cama o estructura de soporte  (ver columna 2,  líneas 3-28 y 64-68,  columna 3,  líneas 1-46 y figuras 2-6) . </p>  <p>El documento  D03  divulga un chaleco de contención física que comprende una pieza anterior y otra posterior unidas por la zona superior y dos correas que se extienden desde los lados,  las cuales pueden tener medios de cierre  (ver columna 1,  líneas 27-62,  columna 2,  líneas 17-23 y 33-51,  reivindicaciones 1 y 3 y figura 1) . </p>  <p>El documento  D04  divulga un chaleco que comprende una pieza superior y una pieza posterior unidas por la zona superior del mismo y unas correas de sujeción  (ver columna 1,  líneas 35-52,  columna 2,  líneas 30-37 y 51-63,  reivindicaciones 1 y 6 y figuras 1 y 2) . </p>  <p>El documento  D05  divulga un sistema de sujeción del cuerpo para un paciente que comprende un chaleco con una pieza anterior y otra posterior unidas por la zona superior. </p>  <p>El documento D06 divulga una prenda de contención física que comprende cintas de sujeción en la zona superior y en la zona abdominal  (ver todo el documento) . </p>  <p>1.-NOVEDAD  (Art. 6.1 LP)  Y ACTIVIDAD INVENTIVA  (Art. 8.1 LP)  </p>  <p>Ninguno de los documentos citados divulga que el chaleco de contención física comprenda lazadas laterales de fijación de contención de los brazos de forma que el paciente no tenga los brazos dispuestos en cruz y su posición en un cuadro de agitación sea más confortable y segura. Por tanto,  se considera que los documentos  D01 -D06 son documentos que forman parte de estado de la técnica. </p>  <p>Por lo tanto,  las reivindicaciones 1-5 se consideran nuevas y con actividad inventiva según los artículos 6.1 y 8.1 LP. </p>  <p>2.-PATENTABILIDAD  (Art. 4.1 LP)  </p>  <p>Las reivindicaciones 1-5 cumplen con los requisitos de patentabilidad en el sentido del artículo 4.1 LP. </p> </opin><BR>     </div>                  </div>
+     </div></label>
+              </div>
+            </div>
+            
+            <!--FIN PESTAÑA DE OPINION ESCRITA--> 
+
+            <!--INICIO PESTAÑA DE IMAGENES-->   
+            
+	         <div class="tab-pane " id="tab6" style="">
+					<div id="contenedorIMG" style="height: auto; width: 100%;"></div>
+	              	<input id="form1:tipoObject" type="hidden" name="form1:tipoObject" value="application/pdf" /><input id="form1:origenObject" type="hidden" name="form1:origenObject" value="https://consultas2.oepm.es/imas/patentes/2016/P201630839.pdf#view=Fit" />
+	              	
+	              	<a id="linkDescargaImagen" href="#" target="_blank" title="Descargar Figura">
+	              		<span>Descargar Figura</span>
+	              		<i class="fa fa-download" aria-hidden="true"></i>
+	              	</a>
+	          </div>
+        
+            <!--FIN PESTAÑA DE IMAGENES-->   
+             
+            <!--INICIO PESTAÑA DE PDF-->  
+            
+            <div class="tab-pane " id="tab7">
+                <label id="form1:mensajeInterpat"><center><b>Los datos bibliográficos publicados en los siguientes folletos corresponden a los disponibles en las bases de datos registrales en el momento de publicación de los mismos. La información actualizada se encuentra disponible en las bases de datos de <a href="https://ceo.oepm.es/" target="_blank">consulta de datos registrados</a> y puede accederse a la misma a través del número de solicitud o del número de publicación. Les rogamos consulten los datos actualizados.</b></center></label><label id="form1:outputLabel1" style="width:100%"><div class="tabber" id="tabpdf"><div class="tabbertab"><h3>+ ES-2647619_B2</h3><div id="contenedorPDF1" style="height: auto; width: 100%;"><a id="linkDescarga1" href="https://consultas2.oepm.es/pdf/ES/0000/000/02/64/76/ES-2647619_B2.pdf" target="_blank" title="Descargar PDF"><span id="form1:visualizadorTabs_descargarPDF1">Descargar PDF</span><i class="fa fa-download" aria-hidden="true"></i></a></div></div><div class="tabbertab"><h3>+ ES-2647619_R1</h3><div id="contenedorPDF2" style="height: auto; width: 100%;"><a id="linkDescarga2" href="https://consultas2.oepm.es/pdf/ES/0000/000/02/64/76/ES-2647619_R1.pdf" target="_blank" title="Descargar PDF"><span id="form1:visualizadorTabs_descargarPDF2">Descargar PDF</span><i class="fa fa-download" aria-hidden="true"></i></a></div></div><div class="tabbertab"><h3>+ ES-2647619_A2</h3><div id="contenedorPDF3" style="height: auto; width: 100%;"><a id="linkDescarga3" href="https://consultas2.oepm.es/pdf/ES/0000/000/02/64/76/ES-2647619_A2.pdf" target="_blank" title="Descargar PDF"><span id="form1:visualizadorTabs_descargarPDF3">Descargar PDF</span><i class="fa fa-download" aria-hidden="true"></i></a></div></div></div></label>
+                
+            </div>
+            
+             <!--FIN PESTAÑA DE PDF-->
+              </div>         
+          </div>
+        </div>
+        
+        <div class="sub-navigation" style="margin: 25px 0 15px">
+        	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        		<div class="secundary">	
+					<a id="form1:commandLink5Bis" href="#" title="Primero" onclick="mojarra.jsfcljs(document.getElementById('form1'),{'form1:commandLink5Bis':'form1:commandLink5Bis'},'');return false">
+						<i class="fa fa-angle-double-left fa" aria-hidden="true"></i>
+					</a><a id="form1:commandLink6Bis" href="#" title="Anterior" onclick="mojarra.jsfcljs(document.getElementById('form1'),{'form1:commandLink6Bis':'form1:commandLink6Bis'},'');return false">
+						<i class="fa fa-angle-left fa" aria-hidden="true"></i>
+					</a><span id="form1:refActualUsuarioInternetBis" style="font: bold 12px Verdana, sans-serif;">P201630839</span><a id="form1:commandLink7Bis" href="#" title="Siguiente" onclick="mojarra.jsfcljs(document.getElementById('form1'),{'form1:commandLink7Bis':'form1:commandLink7Bis'},'');return false">
+						<i class="fa fa-angle-right fa" aria-hidden="true"></i>
+					</a><a id="form1:commandLink8Bis" href="#" title="Ultimo" onclick="mojarra.jsfcljs(document.getElementById('form1'),{'form1:commandLink8Bis':'form1:commandLink8Bis'},'');return false">
+						<i class="fa fa-angle-double-right fa" aria-hidden="true"></i>
+					</a>
+		                     
+					
+		                    
+					
+					
+					
+		                     
+					
+				</div>
+			</div>
+		</div>
+
+		<div class="irAlPrincipio">
+			<a href="#cont">
+				<i class="fa fa-arrow-up" aria-hidden="true"></i>
+			</a>
+		</div>
+       
+        <input id="form1:inputHidden1" type="hidden" name="form1:inputHidden1" value="https://consultas2.oepm.es/pdf/ES/0000/000/02/64/76/ES-2647619_B2.pdf" /><input id="form1:inputHidden2" type="hidden" name="form1:inputHidden2" value="https://consultas2.oepm.es/pdf/ES/0000/000/02/64/76/ES-2647619_R1.pdf" /><input id="form1:inputHidden3" type="hidden" name="form1:inputHidden3" value="https://consultas2.oepm.es/pdf/ES/0000/000/02/64/76/ES-2647619_A2.pdf" /><input id="form1:inputHidden4" type="hidden" name="form1:inputHidden4" /><input id="form1:inputHidden5" type="hidden" name="form1:inputHidden5" /><input id="form1:inputHidden6" type="hidden" name="form1:inputHidden6" /><input id="form1:inputHidden7" type="hidden" name="form1:inputHidden7" /><input id="form1:inputHidden8" type="hidden" name="form1:inputHidden8" /><input id="form1:inputHidden9" type="hidden" name="form1:inputHidden9" /><input id="form1:inputHidden10" type="hidden" name="form1:inputHidden10" /><input id="form1:actual" type="hidden" name="form1:actual" value="0" /><input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="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" autocomplete="off" />
+</form>
+      
+      <div id="pie">
+    		<div class="navbar navbar-footer">
+				<div class="container">
+					<footer role="contentinfo">
+						<div class="row">
+							<div class="col-xs-12 col-sm-5 col-md-6 col-lg-6">
+								<p>
+									<a href="http://oepm.es/es/contacto.html" title="Contactar" target="_blank">Contactar</a>
+								</p>
+							</div>
+							<div class="col-xs-12 col-sm-7 col-md-6 col-lg-6 toRightSide social">
+								<h2 style="margin-left: 3em;">Síguenos en: </h2>
+								<a href="http://www.madrimasd.org/blogs/patentesymarcas" title="blog oepm" target="_blank">
+									<svg version="1.1" class="blogger" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 430.117 430.118" style="enable-background:new 0 0 430.117 430.118;" xml:space="preserve">
+										<g><path id="Blogger" d="M292.938,430.118c74.995,0,135.91-61.092,136.335-135.672l0.844-109.816l-1.269-5.974l-3.604-7.516 l-6.091-4.711c-7.915-6.21-48.015,0.42-58.81-9.388c-7.663-6.996-8.858-19.637-11.173-36.77 c-4.308-33.18-7.028-34.912-12.228-46.162C318.07,34.166,266.84,4.149,231.646,0h-95.332C61.316,0,0,61.181,0,135.908v158.538 c0,74.58,61.316,135.672,136.313,135.672H292.938z M138.05,111.032h75.581c14.431,0,26.117,11.714,26.117,25.951 c0,14.179-11.687,25.989-26.117,25.989H138.05c-14.433,0-26.096-11.815-26.096-25.989 C111.954,122.747,123.617,111.032,138.05,111.032z M111.954,292.439c0-14.234,11.663-25.86,26.096-25.86h153.577 c14.337,0,25.977,11.626,25.977,25.86c0,14.043-11.64,25.855-25.977,25.855H138.05 C123.617,318.294,111.954,306.482,111.954,292.439z"/></g>
+									</svg>
+								</a>
+								<a href="https://www.youtube.com/user/CanalOEPM" title="you tube" target="_blank">
+									<span class="fa fa-youtube"></span>
+								</a>
+								<a href="http://es.scribd.com/CuentaOEPM" title="scribd" target="_blank">
+									<span class="fa fa-scribd"></span>
+								</a>
+								<a href="http://www.oepm.es/es/rss/index.html" title="rss" target="_blank">
+									<span class="fa fa-rss"></span>
+								</a>
+								<a href="https://www.facebook.com/oepm.es" title="facebook" target="_blank">
+									<span class="fa fa-facebook"></span>
+								</a>
+								<a href="https://twitter.com/oepm_es" title="twiter" target="_blank">
+									<span class="fa fa-twitter"></span>
+								</a>
+								<a href="http://www.oepm.es/es/sobre_oepm/fototeca/" title="Fototeca" target="_blank">
+									<span class="fa fa-camera"></span>
+								</a>
+							</div>
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<p class="center">© 2016 Oficina Española de Patentes y Marcas</p>
+							</div>
+						</div>
+					</footer>
+				</div>
+			</div>
+		</div>
+		<script>
+			function setFooter(){
+				$('body').height(''); 
+				$('#pie').css('top', ''); 
+				var bh = $('body').height(); 
+				var wh = $(window).height();
+				var ph = $('.navbar-footer').height();
+				var tp = $('.navbar-footer').offset().top;
+				var ntp = wh-tp-ph-4;
+				if(bh < wh){
+				  	$('body').height(wh);
+				  	$('#pie').css({top: ntp+"px"});
+				}
+			}
+			setFooter();
+			
+			$(window).resize(function(){
+				setTimeout(function(){ setFooter(); }, 600);
+			});
+			
+			// En la vista móvil, muestra el título de la pestaña seleccionada
+			$('#navbar ul.navbar-nav li a').on('click', function() {
+				$('span.navbar-brand').html($(this).html());
+			});
+			
+			// Crea el efecto "pestañas" para los subapartados de cada contenido.
+			// Se utiliza un evento delegado puesto que el contenido es dinámico y se carga después del DOM.
+			$('div.tab-content').on({
+			    click: function() {
+			    	var h3 = $(this);
+			    	h3.next('div').slideToggle(function() {
+			    		if ($(this).is(':visible')) {
+				    		h3.html(h3.html().replace("+ ", "- "));
+				    	}
+				    	else {
+				    		h3.html(h3.html().replace("- ", "+ "));
+				    	}
+			    	});
+			    }
+			}, '.tab-pane.active div.tabbertab > h3');
+			
+			// Muestra/oculta el botón para hacer scroll top
+			$(document).on("scroll", function() {
+				if ($(this).scrollTop() > 60) {
+					$('.irAlPrincipio').css("display", "block");
+				}
+				else {
+					$('.irAlPrincipio').css("display", "none");
+				}
+			});
+			
+			function descargarTIFFoPDF2(data, campo) {
+				var div = $('#'+campo);
+				if (div.length > 0) {
+					div.prepend('<iframe width="100%" height="500px" class="hidden-xs" src="' + data + '"><a href="' + data+ '" ></a><' + '/iframe>');
+				}
+			}
+			
+			$(function() {
+				var imagen = document.getElementById('form1:origenObject');
+				if (null != imagen) {
+					descargarTIFFoPDF2(imagen.value, 'contenedorIMG');
+					$('#linkDescargaImagen').attr('href', imagen.value);
+				}
+				
+				for (var i = 1; i < 9; i++) {
+					var url = document.getElementById('form1:inputHidden'+i).value;
+					descargarTIFFoPDF2(url+'#pagemode=none', 'contenedorPDF'+i);
+				}
+				
+				$('span.navbar-brand').html($('#navbar ul.navbar-nav li.active a').html());
+			});
+		</script>
+	   	<script type="text/javascript" src="js/scripts-2016.js"></script>
+	   	
+<!-- START OF SmartSource Data Collector TAG -->
+<!-- Copyright (c) 1996-2009 WebTrends Inc.  All rights reserved. -->
+<!-- Version: 8.6.2 -->
+<!-- Tag Builder Version: 3.0  -->
+<!-- Created: 10/13/2009 2:08:18 PM -->
+<script type="text/javascript">
+var WebJsHost = (("https:" == document.location.protocol) ? "https://" : "http://");
+document.write(unescape("%3Cscript src='" + WebJsHost + "www.oepm.es/webtrends.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<!-- Warning: The two script blocks below must remain inline. Moving them to an external -->
+<!-- JavaScript include file can cause serious problems with cross-domain tracking.      -->
+<script type="text/javascript">
+//<![CDATA[
+var _tag=new WebTrends();
+_tag.dcsGetId();
+//]]>>
+</script>
+<script type="text/javascript">
+//<![CDATA[
+// Add custom parameters here.
+//_tag.DCSext.param_name=param_value;
+_tag.dcsCollect();
+//]]>>
+</script>
+<noscript>
+<div><img alt="DCSIMG" id="DCSIMG" width="1" height="1" src="https://huella.oepm.es/dcsof5ees100004vu3t5hzq5r_8d9y/njs.gif?dcsuri=/nojavascript&amp;WT.js=No&amp;WT.tv=8.6.2"/></div>
+</noscript>
+<!-- END OF SmartSource Data Collector TAG -->
+                
+    </body>
+  </html>
+

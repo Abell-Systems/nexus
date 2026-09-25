@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:30.828155+00:00",
+  "demand_id": "INNOGET-1985",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "03a70fd19a1264cd3bb84da0fbe46f84a5b3849fe440980c8fb5b666cb46b9b0",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1985/seeking-product-development-and-prototypes-for-mouth-delivery-devices"
+}

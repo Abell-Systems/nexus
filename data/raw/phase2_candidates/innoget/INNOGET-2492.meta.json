@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:14:44.053976+00:00",
+  "demand_id": "INNOGET-2492",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "2c6f1b6396990e679cb87dc89cdf3db31c44194d328aef9f25bd38225b929a2b",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2492/seeking-novel-active-ingredients-and-bio-technologies-targeting-new-mechanisms-for-androgenetic-alopecia-aga"
+}

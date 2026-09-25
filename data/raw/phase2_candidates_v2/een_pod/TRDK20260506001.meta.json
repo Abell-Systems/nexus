@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:35:45.245195+00:00",
+  "demand_id": "TRDK20260506001",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "77c9b328a639a014b0ed9451a746cb09622b8739e6f7a2fa349d77ce2f33832b",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/single-item-identification-reusable-food-containers-using-surface-based"
+}

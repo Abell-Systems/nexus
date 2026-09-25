@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:57.046985+00:00",
+  "demand_id": "INNOGET-1911",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "35e842f326be9fe26f9badfb13d5ab6567881a9210d38f82df61f5a0ce5ccdb7",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1911/seeking-novel-proposals-to-facilitate-optimisation-and-consolidation-of-shipments-to-enhance-cargo-flow"
+}

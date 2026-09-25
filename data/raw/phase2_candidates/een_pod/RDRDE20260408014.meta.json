@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:17.900194+00:00",
+  "demand_id": "RDRDE20260408014",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6da92f063ffc742febdefc0148387e26453337b3be92b65b64fade892925dd61",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1063/universit-tedesca-cerca-partner-per-meccanica-della-frattura-in-horizo"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:20:22.954292+00:00",
+  "demand_id": "RDRGR20260319001",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "daf1464fc8ff5246d08207c0ef0b676b0556af732616aefb12e66f8142369598",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/greek-research-center-seeking-industrial-partners-biogas-cement-and-acetic"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T11:33:57.784016+00:00",
+  "demand_id": "118262-2021",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a6841c1566f0ab735b2493caf3e998fd9f5b921c25ad83448a282537a44d72b1",
+  "source_id": "ted",
+  "source_uri": "https://ted.europa.eu/en/notice/118262-2021/html"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:58:38.187342+00:00",
+  "demand_id": "BOCY20260723003",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1f75b0944934e24af785f8eb3c37e3de578ffdad83a4d54089a67535a1ac761a",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1338/distributore-cipriota-cerca-partner-per-soluzioni-avanzate-di-cybersec"
+}

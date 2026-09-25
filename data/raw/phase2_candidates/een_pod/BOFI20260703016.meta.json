@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:38.395993+00:00",
+  "demand_id": "BOFI20260703016",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "2bbfbfce6b1f9aece5b2d2ece0fb5e9b48954e957552f7651e72bfd39d477306",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/2215/soluzione-finlandese-per-gestione-sicura-di-tablet-condivisi-e-contenu"
+}

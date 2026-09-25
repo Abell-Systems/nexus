@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T13:56:43.712879+00:00",
+  "demand_id": "P0445787",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7e7724dd96e769fb04b1e068221271130fbedf68b663758621c59bfb9dee4bb6",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P0445787"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:54.143655+00:00",
+  "demand_id": "INNOGET-1828",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e9c343975166abb0b688d25c4e6cd0f55dc9da2aad76365e1658954c377d5a44",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1828/seeking-partners-consortium-we-want-to-access-european-funds-for-a-pilot-station-in-romania-with-the-invento"
+}

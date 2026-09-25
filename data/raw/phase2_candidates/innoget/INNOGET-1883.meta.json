@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:26.494471+00:00",
+  "demand_id": "INNOGET-1883",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "21a3706aa02b414a97e4927118d39c0798bc2cf4eb27b8ec8de502bc1a0f4568",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1883/seeking-proposals-to-bring-stakeholders-onto-a-single-platform-to-offer-sponsored-resources-and-incentivise-their-communities-for"
+}

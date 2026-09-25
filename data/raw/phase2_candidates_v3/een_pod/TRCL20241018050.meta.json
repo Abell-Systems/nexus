@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:17:46.981162+00:00",
+  "demand_id": "TRCL20241018050",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "86035b9fa97fc5b8c73986dd990c7edede41fe4f1c96f5fc9fffca8b2ec71ead",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/chilean-company-specailized-plants-looking-technology-europe-introduce"
+}

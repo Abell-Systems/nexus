@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:52:33.167614+00:00",
+  "demand_id": "INNOGET-1677",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "99fa234a9805819c5f229696548391a31d1b7adad93e5d3f2f76a7454f77be9d",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1677/seeking-6th-global-nanotechnology-congress-and-expo"
+}

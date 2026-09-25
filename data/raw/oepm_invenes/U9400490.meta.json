@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T14:01:34.711417+00:00",
+  "demand_id": "U9400490",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "720e98a6d5d27a1e2189042df0fb395decf5564b85f82fb3356e6b8980b63226",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=U9400490"
+}

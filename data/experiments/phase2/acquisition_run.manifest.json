@@ -1,0 +1,45 @@
+{
+  "artifact_hashes": {
+    "candidates_accepted.json": "4e6107773d8ec236e5f2137c494df2c10e549c0607f3dbb5c8d32dbee54c25e3",
+    "candidates_mapped.json": "61c26c84dd39a476ef3d88653995c4882317ae49b2edc8254f58a4e4ffc33118",
+    "candidates_raw.manifest.json": "ac67d8e6cc599dbc0c430ab34f8eea491e5ffceb93fb0b0b93ae85d6e698979e",
+    "candidates_rejected.json": "305c80d35e895fdc3f89f6f165c09abc4b568e3940b5e2ab073f116ecc7618b3"
+  },
+  "counts": {
+    "total_accepted": 10,
+    "total_mapped": 824,
+    "total_mapping_errors": 0,
+    "total_raw": 824,
+    "total_rejected": 814
+  },
+  "execution_timestamp": "2026-09-11T14:31:30.561865+00:00",
+  "manifest_version": "1.0.0",
+  "pipeline_version": "phase2_offline_validator_v1",
+  "policy_sha256": "86da1db3591c45aea85622f86363812db73af170141edffe4c302d43581af74d",
+  "policy_version": "corpus_expansion_policy_v1",
+  "rejection_breakdown": {
+    "CONTENT_TOO_SHORT": 6,
+    "INCOMPATIBLE_CONSTRUCT": 362,
+    "NO_TECHNICAL_PROBLEM": 422,
+    "OUT_OF_TEMPORAL_WINDOW": 208,
+    "UNVERIFIABLE_PUBLICATION_DATE": 483
+  },
+  "source_breakdown": {
+    "een_pod": {
+      "accepted": 10,
+      "mapped": 400,
+      "raw": 400,
+      "rejected": 390
+    },
+    "innoget": {
+      "accepted": 0,
+      "mapped": 424,
+      "raw": 424,
+      "rejected": 424
+    }
+  },
+  "stratum_breakdown": {
+    "international_european": 8,
+    "spain": 2
+  }
+}

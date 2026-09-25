@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:03:56.235360+00:00",
+  "demand_id": "BONL20251105017",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "344ef5fc8a23c5107c15288b08a1102e0f52e51669d5ba46b92aeb370218873b",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/923/sistemi-di-navigazione-autonoma-per-vie-dacqua-interne"
+}

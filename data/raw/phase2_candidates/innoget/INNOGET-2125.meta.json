@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:24.877813+00:00",
+  "demand_id": "INNOGET-2125",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d6784f1578e3a3823e955889b75f9bf9423aeb2c6fc9a883d9a5d67ce8032138",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2125/seeking-solutions-to-control-the-passage-of-gases-and-liquids-in-a-device"
+}

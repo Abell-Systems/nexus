@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:29.312038+00:00",
+  "demand_id": "INNOGET-2090",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ae9c2aaf06e65e5dab974c46d28e8cee44d4964cbe90b3c8b9d463bf07a58df0",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2090/seeking-novel-protein-solutions-for-beverages"
+}

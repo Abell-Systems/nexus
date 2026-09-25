@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:44.219158+00:00",
+  "demand_id": "INNOGET-2082",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d40bc867640e8958d444c98dfb39af279d124b3f808cc1547234c139b2ff3593",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2082/seeking-innovative-technologies-for-energy-storage-in-harsh-environments"
+}

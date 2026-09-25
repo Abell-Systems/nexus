@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:17:52.038585+00:00",
+  "demand_id": "TRCH20240919005",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a99ef053a620d6f248889a891fd164ccc7e61de6e56863140631be074a2b291f",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/seeking-eco-responsible-sourcing-metals-and-crystals-jewellery-and-luxury"
+}

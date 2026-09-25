@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:32.226887+00:00",
+  "demand_id": "INNOGET-1870",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8b9e78faf4fcfd6dd23851096a410be335576987028f88856591b9176e78893f",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1870/seeking-innovative-proposals-in-the-arc-welding-processes"
+}

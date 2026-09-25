@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:08.715854+00:00",
+  "demand_id": "INNOGET-2306",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d876cda3fad0343c7fc46c1a0e1a2eebcdf978ec65b7dc6275219b7639fcfd5b",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2306/seeking-product-designers-of-heaters-with-multiple-zone-temperature-control"
+}

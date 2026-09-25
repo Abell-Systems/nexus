@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:04.708890+00:00",
+  "demand_id": "INNOGET-1707",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "fb3e80bcde39651b92f90e9491f06b751f4b0e32fba683ed438cf4e170a6a255",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1707/seeking-calcium-powder-to-enrich-milk-drinks-that-will-stay-in-homogeneous-dispersion-during-shelf-life-without-adding-stabilizers"
+}

@@ -37,7 +37,7 @@ def test_oepm_xml_normalizer_processes_all_dispositions(sample_payload: RawPaylo
 
     # Fixture contains 7 distinct elements:
     # 1. B2 patent (Included)
-    # 2. T3 patent with claims fallback (Included)
+    # 2. T3 patent with claims fallback (Excluded: EP-ES out of scope, ADR 0035 SS3)
     # 3. U utility model with inverted tags (Included)
     # 4. T1 patent (Excluded: unsupported kind code)
     # 5. B1 patent (Excluded: year 2012 out of scope)
@@ -49,8 +49,8 @@ def test_oepm_xml_normalizer_processes_all_dispositions(sample_payload: RawPaylo
     excluded = [r for r in results if r.disposition == RecordDisposition.EXCLUDED]
     quarantined = [r for r in results if r.disposition == RecordDisposition.QUARANTINED]
 
-    assert len(included) == 3
-    assert len(excluded) == 2
+    assert len(included) == 2
+    assert len(excluded) == 3
     assert len(quarantined) == 2
 
 
@@ -83,7 +83,11 @@ def test_included_record_case_1_standard_national_b2(sample_payload: RawPayload)
 
 
 def test_included_record_case_2_t3_claims_fallback(sample_payload: RawPayload) -> None:
-    normalizer = OepmXmlNormalizer()
+    # T3 (EP-ES) is excluded by default (ADR 0035 SS3) -- opt in explicitly here to
+    # exercise the claims-fallback text resolution logic itself, kept for that path.
+    from application.ingestion.normalizers.oepm_xml_normalizer import NORMATIVE_KIND_CODES
+
+    normalizer = OepmXmlNormalizer(allowed_kind_codes=NORMATIVE_KIND_CODES | {"T3"})
     results = list(normalizer.normalize_results(sample_payload))
     t3_res = next(r for r in results if r.document and r.document.kind_code == "T3")
 
@@ -130,6 +134,11 @@ def test_excluded_records_traceability(sample_payload: RawPayload) -> None:
     assert year_rec.reason == ExclusionReason.OUT_OF_SCOPE_TEMPORAL_WINDOW
     assert "2012" in year_rec.detail
 
+    # Excluded 3: T3 (EP-ES validation) -- out of "domestic" scope by default, ADR 0035 SS3
+    t3_rec = next(r.excluded for r in excluded if r.excluded and r.excluded.kind_code == "T3")
+    assert t3_rec.reason == ExclusionReason.UNSUPPORTED_KIND_CODE
+    assert t3_rec.publication_id == "ES2715482T3"
+
 
 def test_quarantined_records_traceability(sample_payload: RawPayload) -> None:
     normalizer = OepmXmlNormalizer()
@@ -169,14 +178,20 @@ def test_backward_compatibility_normalize_stream(sample_payload: RawPayload) -> 
     normalizer = OepmXmlNormalizer()
     stream_output = list(normalizer.normalize_stream(sample_payload))
 
-    # normalize_stream yields only INCLUDED records
-    assert len(stream_output) == 3
+    # normalize_stream yields only INCLUDED records (T3/EP-ES excluded by default, ADR 0035 SS3)
+    assert len(stream_output) == 2
     for doc, obs in stream_output:
-        assert doc.kind_code in {"B2", "T3", "U"}
+        assert doc.kind_code in {"B2", "U"}
         assert len(obs) > 0
 
 
 def test_t3_explicit_fallback_hierarchy() -> None:
+    # T3 (EP-ES) is excluded by default (ADR 0035 SS3); opt in explicitly to
+    # exercise the fallback-hierarchy text resolution logic itself.
+    from application.ingestion.normalizers.oepm_xml_normalizer import NORMATIVE_KIND_CODES
+
+    t3_normalizer = OepmXmlNormalizer(allowed_kind_codes=NORMATIVE_KIND_CODES | {"T3"})
+
     # 1. Abstract present -> Abstract chosen
     xml_with_both = b"""<Tomo2 xmlns="https://sede.oepm.gob.es/bopiweb/xsd/Tomo2.xsd">
       <SolicitudesPatentesEuropeasEfectosEspanha>
@@ -196,8 +211,7 @@ def test_t3_explicit_fallback_hierarchy() -> None:
         metadata={},
         retrieval_timestamp=datetime.now(UTC),
     )
-    normalizer = OepmXmlNormalizer()
-    res = list(normalizer.normalize_results(payload))[0]
+    res = list(t3_normalizer.normalize_results(payload))[0]
     assert res.document is not None
     assert res.document.abstract == "Texto de resumen primario oficial."
 
@@ -219,7 +233,7 @@ def test_t3_explicit_fallback_hierarchy() -> None:
         metadata={},
         retrieval_timestamp=datetime.now(UTC),
     )
-    res2 = list(normalizer.normalize_results(payload2))[0]
+    res2 = list(t3_normalizer.normalize_results(payload2))[0]
     assert res2.document is not None
     assert res2.document.abstract == "Texto de reivindicaciones como fallback."
 

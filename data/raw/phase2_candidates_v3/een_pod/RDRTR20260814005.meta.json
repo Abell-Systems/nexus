@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:15.959375+00:00",
+  "demand_id": "RDRTR20260814005",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "df4e894be5b17e5326ef82b099a9f72397e327893cc2eb9db82016d38e336b41",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/ai-powered-song-generation-and-audio-intelligence-partners-sought-eureka"
+}

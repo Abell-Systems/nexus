@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:19:33.859034+00:00",
+  "demand_id": "RDRGR20260616016",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "3b6bb040a6f65d2b64e458e0d92b9708fcd7b2cffd7f185f5e29e5652d0073af",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/greek-university-seeks-danube-region-partners-develop-vocational-skills"
+}

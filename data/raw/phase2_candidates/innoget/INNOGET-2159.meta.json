@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:12.144971+00:00",
+  "demand_id": "INNOGET-2159",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "319d07cbc207f3ecf6fa751e18f26ce525ddc374f6c3c46bc11bb6a1014e0b10",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2159/seeking-recipe-of-fruit-jelly-without-added-sugar"
+}

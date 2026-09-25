@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:51.315852+00:00",
+  "demand_id": "INNOGET-2063",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d077de0be80d9ee68255689c9b598a359fea8138a51416330194f2ed675966b3",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2063/seeking-sustainable-adhesive-bonding-technologies-for-feminine-absorbing-hygiene-products"
+}

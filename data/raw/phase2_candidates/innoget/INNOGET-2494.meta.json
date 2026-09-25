@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:14:46.195131+00:00",
+  "demand_id": "INNOGET-2494",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8b3d2295cf8e4d7359a64821611acbe8df975bb78c6f694efc79aa7d2a484ff5",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2494/seeking-safe-and-stable-at-home-teeth-whitening-technologies-with-low-or-zero-peroxide-release"
+}

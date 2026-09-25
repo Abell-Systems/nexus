@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T09:25:55.998059+00:00",
+  "demand_id": "E90300209",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1a2ed415177a353b1133b1adc9f683f9a43904cecfd8d26ef3f98c0dab0eb283",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=E90300209"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:35:28.982929+00:00",
+  "demand_id": "TRAT20260619006",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "0cb5b78f41420edd9f954811bd6a6caee41e07522071f7894423bb4e10ba658b",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/austrian-construction-company-seeks-circular-and-demountable-connection"
+}

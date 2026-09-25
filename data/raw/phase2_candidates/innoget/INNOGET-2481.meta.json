@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:14:51.228114+00:00",
+  "demand_id": "INNOGET-2481",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ead5864bb86ecf407c252677c9a6a0d9e0b0209ece47103c7773c57570b90337",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2481/seeking-an-automated-ai-powered-consumer-insights-platform-to-establish-a-high-velocity-concept-to-prototype-testing-pipeline-for"
+}

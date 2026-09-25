@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T11:29:01.174814+00:00",
+  "demand_id": "375259-2017",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b377b12281fcd6bf2ba5a8bb008158fda2aa1369bc8e67b160ea58ca40e617fa",
+  "source_id": "ted",
+  "source_uri": "https://ted.europa.eu/en/notice/375259-2017/html"
+}

@@ -1,0 +1,217 @@
+{
+  "dataset_id": "nexus-phase2-ted-annotation-dry-run-v1",
+  "demand_cpv": {
+    "137639-2024": "45232420",
+    "22543-2024": "38551000",
+    "268550-2024": "33100000",
+    "454027-2024": "73000000",
+    "566290-2025": "72000000",
+    "588217-2024": "73000000",
+    "820594-2025": "73100000",
+    "89204-2025": "72212445"
+  },
+  "demands": [
+    {
+      "demand_description": "El objeto del presente contrato es la provisión de un servicio tecnológico para la gestión de servicios de automovilismo (vehículos con conductor) del Organismo Autónomo Parque Móvil del Estado (en adelante, PMEOA), implementado a través de una solución en la nube bajo la modalidad de Software como Servicio (SaaS)",
+      "demand_id": "89204-2025",
+      "demand_title": "Contratación por asociación para la innovación de un servicio de gestión de servicios de automovilismo en modalidad SAAS",
+      "entries": [
+        {
+          "evidence": {
+            "abstract": "Circuito integrado y metodología de cálculo de degradación electroquímica para paquetes de baterías de tracción en autobuses eléctricos y almacenamiento estacionario.",
+            "classifications_cpc": [],
+            "publication_date": null,
+            "publication_id": "ES-2876540-B1",
+            "shared_terms": [],
+            "title": "Sistema de gestión electrónica de baterías (BMS) con balanceo activo inductivo y estimación de estado de salud (SOH) por impedanciometría"
+          },
+          "publication_id": "ES-2876540-B1"
+        },
+        {
+          "evidence": {
+            "abstract": "Capa interfacial electrolítica polimérica compuesta por poli(fluoruro de vinilideno-co-hexafluoropropileno) y nanopartículas cerámicas de LLZO para celdas electroquímicas de alta densidad energética.",
+            "classifications_cpc": [],
+            "publication_date": null,
+            "publication_id": "ES-2789123-B2",
+            "shared_terms": [],
+            "title": "Membrana polimérica híbrida ionoconductora con sales de bis(fluorosulfonil)imida para baterías de estado sólido flexibles"
+          },
+          "publication_id": "ES-2789123-B2"
+        },
+        {
+          "evidence": {
+            "abstract": "Sistema de gestión para plantas industriales que orquesta paradas programadas y modulación de hornos de inducción en función del precio horario del mercado eléctrico mayorista.",
+            "classifications_cpc": [],
+            "publication_date": null,
+            "publication_id": "ES-2918450-A1",
+            "shared_terms": [],
+            "title": "Plataforma distribuida de control de demanda energética en factorías mediante contratos inteligentes y balance de cargas"
+          },
+          "publication_id": "ES-2918450-A1"
+        }
+      ],
+      "seed": 42
+    },
+    {
+      "demand_description": "El objeto del contrato, en caso de lograrse los objetivos definidos para las fases previas de investigación y negociación es el suministro de un sistema de producción de gas sintético dados los sistemas de baterías y electrolizador existentes en la Fundación que aseguran la disposición de hidrógeno verde y CO2 capturado disponiéndose del entorno adecuado para llevar a cabo proyectos de investigación, desarrollo e innovación.",
+      "demand_id": "454027-2024",
+      "demand_title": "Investigación y desarrollo y suministro de planta piloto para el desarrollo de nueva generación de reactores de gas natural sintético a partir de H2 verde y CO2 capturado, para el Centro de Desarrollo de Tecnologías de Cubillos del Sil (León) de la Fundación Ciudad de la Energía-CIUDEN F.S.P., en el marco del PRTR, financiado por la Unión Europea, Next Generation EU.",
+      "entries": [
+        {
+          "evidence": {
+            "abstract": "Hardware y algoritmo embebido para identificación y desagregación de consumos de motores individuales a partir de la firma armónica transitoria en el cuadro general de distribución.",
+            "classifications_cpc": [],
+            "publication_date": null,
+            "publication_id": "ES-2765431-B2",
+            "shared_terms": [],
+            "title": "Dispositivo de monitorización no intrusiva de cargas eléctricas industriales (NILM) con desagregación armónica de alta frecuencia"
+          },
+          "publication_id": "ES-2765431-B2"
+        },
+        {
+          "evidence": {
+            "abstract": "Ruta sintética heterogénea empleando catalizadores bifuncionales de rutenio soportado en sílice mesoporosa para la síntesis verde de monómeros de PEF biodegradables.",
+            "classifications_cpc": [],
+            "publication_date": null,
+            "publication_id": "ES-2856789-A1",
+            "shared_terms": [],
+            "title": "Proceso catalítico de valorización de residuos de biomasa lignocelulósica para obtención de ácido 2,5-furandicarboxílico (FDCA)"
+          },
+          "publication_id": "ES-2856789-A1"
+        },
+        {
+          "evidence": {
+            "abstract": "Circuito integrado y metodología de cálculo de degradación electroquímica para paquetes de baterías de tracción en autobuses eléctricos y almacenamiento estacionario.",
+            "classifications_cpc": [],
+            "publication_date": null,
+            "publication_id": "ES-2876540-B1",
+            "shared_terms": [],
+            "title": "Sistema de gestión electrónica de baterías (BMS) con balanceo activo inductivo y estimación de estado de salud (SOH) por impedanciometría"
+          },
+          "publication_id": "ES-2876540-B1"
+        },
+        {
+          "evidence": {
+            "abstract": "Capa interfacial electrolítica polimérica compuesta por poli(fluoruro de vinilideno-co-hexafluoropropileno) y nanopartículas cerámicas de LLZO para celdas electroquímicas de alta densidad energética.",
+            "classifications_cpc": [],
+            "publication_date": null,
+            "publication_id": "ES-2789123-B2",
+            "shared_terms": [],
+            "title": "Membrana polimérica híbrida ionoconductora con sales de bis(fluorosulfonil)imida para baterías de estado sólido flexibles"
+          },
+          "publication_id": "ES-2789123-B2"
+        },
+        {
+          "evidence": {
+            "abstract": "Sistema de gestión para plantas industriales que orquesta paradas programadas y modulación de hornos de inducción en función del precio horario del mercado eléctrico mayorista.",
+            "classifications_cpc": [],
+            "publication_date": null,
+            "publication_id": "ES-2918450-A1",
+            "shared_terms": [],
+            "title": "Plataforma distribuida de control de demanda energética en factorías mediante contratos inteligentes y balance de cargas"
+          },
+          "publication_id": "ES-2918450-A1"
+        },
+        {
+          "evidence": {
+            "abstract": "Dispositivo sanitario de cocina que incorpora sensor ultrasónico de caudal, módulo de filtración electroquímica para reutilización de aguas grises en lavavajillas y control IoT de consumo hídrico.",
+            "classifications_cpc": [],
+            "publication_date": null,
+            "publication_id": "ES-2684913-B1",
+            "shared_terms": [],
+            "title": "Fregadero modular con sistema integrado de recirculación, filtración por etapas y desinfección de aguas grises"
+          },
+          "publication_id": "ES-2684913-B1"
+        },
+        {
+          "evidence": {
+            "abstract": "Arquitectura IoT industrial con red de sensores edge computing para monitorización en tiempo real de potencia activa/reactiva y modelos predictivos de eficiencia energética en maquinaria rotativa.",
+            "classifications_cpc": [],
+            "publication_date": null,
+            "publication_id": "ES-2895412-B1",
+            "shared_terms": [],
+            "title": "Sistema ciberfísico para optimización del consumo eléctrico en líneas de manufactura continua mediante gemelo digital y machine learning"
+          },
+          "publication_id": "ES-2895412-B1"
+        }
+      ],
+      "seed": 42
+    },
+    {
+      "demand_description": "Die minimal invasiven Operationen reduzieren die perioperative Komplikationsrate in der Chirurgie. Patienten profitieren dabei von geringerem Blutverlust während des Eingriffs, weniger postoperativen Wundinfektionen, früherer postoperativer Darmtätigkeit mit schnellerem Kostaufbau und weniger Schmerzen. Dies reduziert die postoperative Zeit auf der Intensivstation und die Verweildauer im Krankenhaus, was zur Kostenreduktion im Gesundheitswesen beiträgt. Besonders bei Krebsoperationen müssen auch bei minimal invasiven Operationen definierte Standards eingehalten werden, welche die Prognose des Patienten beeinflussen. Die Qualität der Krebsoperation gilt bei einigen Tumorerkrankungen als prognostisch richtungsweisend. Für viele Tumore wurde bereits die Gleichwertigkeit der minimal invasiven Operationen im Vergleich zum offenen Vorgehen im Hinblick auf das Langzeitüberleben und die Tumorrezidivraten gezeigt. Damit wäre in vielen Fällen die qualitative adäquate minimal invasive Operation das ideale Vorgehen für die betroffenen Patienten, welche dann alle Vorteile der minimal invasiven Chirurgie genießen können ohne einen prognostischen Nachteil im Vergleich zum offenen Vorgehen zu erleiden. Benötigt werden zukünftig echte Operationsroboter, die in der Lage sind Operationen teilweise oder komplett autonom durchzuführen. Dann wären minimal-invasive Operationen ubiquitär anwendbar und alle Patienten könnten davon profitieren. Notwendig dafür wäre eine intraoperative Echtzeit (real time) Bildgebung, welche als Auge den Roboter durch das Gewebe, an kritischen Strukturen vorbei unter Berücksichtigung des Tumors navigiert. Ausgestattet mit Feedback und artifizieller Intelligenz könnte ein solcher Operationsroboter ähnlich wieder Chirurg beim offenen Operieren die Qualität der Organe analysieren und tumortragendes Gewebe identifizieren, um dann den Eingriff entsprechend zu adjustieren. Eine entsprechende (autonomen) KI-gestützten Medizinroboterplattform für die minimal invasive Chirurgie und Interventionen soll im Rahmen dieses Projekts stufenweise entwickelt werden.",
+      "demand_id": "268550-2024",
+      "demand_title": "(autonome) KI-gestützte Medizinroboterplattform für die minimal invasive Chirurgie und Interventionen",
+      "entries": [
+        {
+          "evidence": {
+            "abstract": "Arquitectura IoT industrial con red de sensores edge computing para monitorización en tiempo real de potencia activa/reactiva y modelos predictivos de eficiencia energética en maquinaria rotativa.",
+            "classifications_cpc": [],
+            "publication_date": null,
+            "publication_id": "ES-2895412-B1",
+            "shared_terms": [],
+            "title": "Sistema ciberfísico para optimización del consumo eléctrico en líneas de manufactura continua mediante gemelo digital y machine learning"
+          },
+          "publication_id": "ES-2895412-B1"
+        }
+      ],
+      "seed": 42
+    },
+    {
+      "demand_description": "WDD wenst twee innovatiepartners te contracteren voor twee pilots om vervolgens de innovatie die het meest voldoet aan de gestelde doelen, full scale toe te passen met de betreffende innovatiepartner op RWZI Tilburg in bouwteamverband. WDD is hierbij op zoek naar (samenwerkingsverbanden van) ondernemers die kennis van en ervaring hebben met nabehandeling van effluent voor de verwijdering van medicijnresten en nutriënten, maar ook kennis en ervaring hebben met het (door-)ontwikkelen van innovaties. Het gaat hierbij met name om technologieleveranciers en ingenieursbureaus/adviseurs die via deze aanbesteding zullen worden gecontracteerd voor de twee pilots, waarvan één innovatiepartner de full scale opdracht zal mogen uitvoeren. De aannemer benodigd voor de realisatie van de full scale toepassing zal later via een Europese aanbesteding ingekocht worden en samen met de innovatiepartner en WDD een bouwteam gaan vormen. De voorliggende aanbestedingsprocedure bestaat uit twee fasen. In de Geen",
+      "demand_id": "137639-2024",
+      "demand_title": "Innovatiepartnerschap RWZI Tilburg 4e trap",
+      "entries": [],
+      "seed": 42
+    },
+    {
+      "demand_description": "Die gegenständliche Innovationspartnerschaft zielt darauf ab, einen oder mehrere geeignete Partner für die Entwicklung einer cyanid-freien bzw. giftfreien Technologie auf Basis ionischer Flüssigkeiten zur elektrogalvanischen Vergoldung von Metallgegenständen zu finden.",
+      "demand_id": "588217-2024",
+      "demand_title": "Innovationspartnerschaft Cyanid-freies Vergolden",
+      "entries": [],
+      "seed": 42
+    },
+    {
+      "demand_description": "Przedmiotem zamówienia jest zaprojektowanie, produkcja i dostawa bezpośrednich 1 i 3 fazowych liczników zdalnego odczytu energii elektrycznej z modułami: 2G/LTE/CAT-M1/NB2/ e-SIM i W-Mbus (HAN) w ramach Partnerstwa Innowacyjnego, w celu opomiarowania wszystkich odbiorców końcowych (nie mniej niż 3 mln) przyłączonych do sieci dystrybucyjnej niskiego napięcia ENEA Operator Sp. z o.o. Wraz z dostawą liczników i modułów Wykonawca jest zobowiązany dostarczyć oprogramowanie narzędziowe pozwalające na dokonanie parametryzacji i odczytu liczników i modułów. Przedmiot zamówienia obejmuje także dostarczenie wraz z pierwszą dostawą liczników wraz z modułami oraz w ramach wynagrodzenia przysługującego Wykonawcy, najnowszej wersji oprogramowania narzędziowego do parametryzacji i odczytu liczników i modułów dla stanowisk komputerowych i urządzeń mobilnych jak również przeprowadzenie w języku polskim zajęć szkoleniowych z zasady budowy, funkcjonowania i obsługi liczników oraz oprogramowania narzędziowego.",
+      "demand_id": "22543-2024",
+      "demand_title": "Zaprojektowanie, produkcja i dostawa bezpośrednich 1 i 3 fazowych liczników zdalnego odczytu energii elektrycznej z modułami: 2G/LTE/CAT-M1/NB2/ e-SIM i W-Mbus (HAN)",
+      "entries": [],
+      "seed": 42
+    },
+    {
+      "demand_description": "Deze opdracht betreft het ontwikkelen en draaiend houden van een gemeenschappelijk ePlatform voor de Vlaamse neonatale screening naar aangeboren aandoeningen. Deze opdracht kadert in de terreinwerking voor het opsporen van aangeboren aandoeningen door de Vlaamse Overheid waarvoor UZ Gent en UZ Leuven zich gemeenschappelijk kandidaat hebben gesteld in 2024. De terreinwerking werd toegewezen aan UZ Gent en UZ Leuven voor de periode 2026-2030. Dit ePlatform moet dan ook als een gemeenschappelijk project gezien worden van beide ziekenhuizen, maar met als doel een duurzaam IT register op te zetten dat losstaat van onder andere de keuze van screeningscentra zodat de continuïteit van de gegevensverwerking ten alle tijde gewaarborgd wordt. Tevens laat deze keuze toe de weg van digitalisatie in te slaan voor het pre-analytische en post-analytische luik en de communicatie met de verschillende actoren in de Vlaamse neonatale screening. Er wordt een onafhankelijke platform beoogd, dat na ontwikkeling ook door toekomstige partners van de Vlaamse Overheid moet kunnen worden gebruikt. Het innovatief karakter zit hem in het feit dat deze oplossing onafhankelijk moet zijn van de keuze van het screeningscentrum en de gebruikte toestellen. Ook moet deze toepassing moduleerbaar zijn aan de (toekomstige) noden van de screeningscentra en de Vlaamse Overheid. Omdat de aangeleverde data ook GDPR gevoelige patiëntendata bevat, moet de oplossing rekening houden met de aangeleverde richtlijnen door de juridische dienst en DPO van beide universitaire ziekenhuizen. Op heden is er geen oplossing beschikbaar op de markt die in die specifieke behoeften kan voorzien. Het ePlatform zal uit verschillende modules bestaan, die in fases zullen ontwikkeld dienen te worden, te starten met module 1. De verdere modules moeten wel perfect ingepast worden in de workflow zoals geïmplementeerd in module 1: Module 1 (basisoplossing): ePlatform bedoeld ter ondersteuning van de terreinwerking voor het Vlaams bevolkingsonderzoek naar aangeboren aandoeningen bij pasgeborenen op een gedroogde bloedspot. Hiertoe moet de aangeboden oplossing minimum voorzien in: - Een centraal Vlaams register voor een geschat aantal van 70.000 a 80.000 hielprikkaartjes/jaar moet worden gefaciliteerd; - Voor elk kaartje moeten er patiëntengegevens, metadata en resultaten van een 20 tal (uitbreidbaar) analyses met soms meerdere resultaten per analyse centraal bewaard worden. Deze data zal elektronisch doorgestuurd moeten worden vanuit de 2 betrokken LIS systemen, op een manier die standaard ondersteund wordt door de 2 labo’s (vb FHIR, HL7, CSV, …) - Contacten van de medewerkers van de 2 verantwoordelijke centra met externe partners worden in de applicatie ingebracht (nl ouders, vroedvrouwen, pediater,…) - Toegang op voldoende beveiligde wijze cfr. de Belgische standaarden via een website, in eerste instantie voor beperkt aantal medewerkers van de 2 verantwoordelijke centra. - Opzoeken, opvragen en editeren van alle gegevens van ingebrachte kaartjes - Na afloop van het contract en in geval van niet verlenging beheersovereenkomst met de Vlaamse Overheid voorziet de aanbieder dat de applicatie op eenvoudige wijze overdraagbaar is aan het opvolgend consortium. Dit zijn minimumeisen. Module 2 (vereiste optie): Online raadpleeg/registratiesysteem voor alle betrokken materniteiten en vroedvrouwen. Hiertoe moet de aangeboden oplossing minimum voorzien in: - Beveiligd inloggen van de zorgverlener volgens de Belgische standaarden (vb via itsme of multifactor autorisatie), waarbij de toegang beperkt wordt tot de aan hun gelinkte neonaten - Aanmelden moeder en kind door de zorgverlener - Registreren informatie omtrent de afname en gelinkte zorgverlener, gekoppeld aan de barcode van het kaartje. Het lezen van de barcode gebeurt preferentieel via scanning. - De applicatie moet een elektronische ordercommunicatie ondersteunen van de geregistreerde data naar de labo’s, bij voorkeur via een flow gelijkaardig aan de eForm uitwisseling zoals ten tijde van COVID. Timing: met de ontwikkeling van module 2 wordt gestart na aankoop van module 1 Module 3 (toegestane optie): Link rijksregisternummer baby en patiënt-identificatie ziekenhuis. - Ondersteunen van mogelijkheden tot automatische uploads uit ADT systemen zoals bv Oazis of software van deelnemende materniteiten (60 tal max) waarbij op basis van kaart-ID of patiënt-identificatie het rijksregisternummer van het kind naderhand kan aangevuld worden wanneer dit beschikbaar komt in de materniteit na registratie van de pasgeborene (bv via csv, FHIR of andere). Timing: met de ontwikkeling van module 3 wordt gestart na aankoop van module 1 Module 4 (toegestane optie): Automatische opvolging afwijkende resultaten - Opvolgactie triggeren bij afwijkende resultaten - Mogelijkheid om na een contact met een zorgverstrekker een officieel bericht te versturen via de eHealthbox vanuit de website van het register Timing: met de ontwikkeling van module 4 wordt gestart na aankoop van module 1 Module 5 (toegestane optie): Uitbouw van een kwaliteitssysteem - Bijhouden van draaiboeken, sjablonen voor brieven, … (plus beheersysteem) - Monitoren KPI systeem - Mogelijkheid tot registratie van non-conformiteiten gelinkt aan KPI’s plus relevante informatie voor de terreinwerking. Non-conformiteiten gelinkt aan het analytisch luik zullen geregistreerd worden via de labo-eigen software Timing: met de ontwikkeling van module 5 wordt gestart na aankoop van module 1 Verdere gedetailleerde informatie zal te vinden zijn in het bestek, dat de geselecteerde kandidaten zullen toegestuurd krijgen",
+      "demand_id": "566290-2025",
+      "demand_title": "Het ontwikkelen van een software platform voor het beheer van de registratie en de resultaten van de neonatale screening",
+      "entries": [],
+      "seed": 42
+    },
+    {
+      "demand_description": "Předmětem veřejné zakázky v aplikovaném výzkumu a inovacích je získání návrhů způsobů řešení a vlastního řešení projektu, a to formou řízení o inovačním partnerství na služby v aplikovaném výzkumu nebo inovacích. Projekt má atributy aplikovaného výzkumu nebo inovace. Předmět řešení je věcně vymezen jako Projektový rámec v Příloze č. 1 ZD. Účelem této veřejné zakázky je v rámci níže uvedených fází najít nejvhodnější řešení, a to skrze uzavření smlouvy o poskytnutí podpory dle ZPVV, na základě které budou nanejvýše 3 účastníci zpracovávat řešení/návrh projektu. S každým účastníkem bude uzavřena smlouva samostatná. Následně bude v příslušné fázi inovačního partnerství snížen počet účastníků na jednoho účastníka, se kterým bude uzavřena smlouva o poskytnutí podpory, jejímž předmětem bude vytvoření řešení, které vyplynulo z předchozích fází inovačního partnerství.",
+      "demand_id": "820594-2025",
+      "demand_title": "Systém využívající AI pro bezkontaktní měření a automatizaci výběru vhodné velikosti výstrojních součástek příslušníků Policie ČR",
+      "entries": [],
+      "seed": 42
+    }
+  ],
+  "patent_corpus": "16-patent pilot benchmark (data/snapshots/patents_es_snapshot.duckdb) -- NOT a production-scale OEPM corpus, disclosed limitation",
+  "pool_sizes": {
+    "137639-2024": 0,
+    "22543-2024": 0,
+    "268550-2024": 1,
+    "454027-2024": 7,
+    "566290-2025": 0,
+    "588217-2024": 0,
+    "820594-2025": 0,
+    "89204-2025": 3
+  },
+  "purpose": "PROTOCOL_VALIDATION_ONLY -- not an efficacy pool, not a statistical sample (PR-E precedent)",
+  "retrievers_excluded": [
+    "dense_semantic (no live embedder available in this environment, ADR 0014 isolation)"
+  ],
+  "retrievers_used": [
+    "bm25",
+    "cpc"
+  ],
+  "seed": 42,
+  "source_corpus_dataset_id": "nexus-phase2-ted-independent-corpus-v1",
+  "source_corpus_sha256": "ee0b106cb1edece2195d595bba22d94f71a37ba06ffe4fe2b353b55cc52dd3b1"
+}

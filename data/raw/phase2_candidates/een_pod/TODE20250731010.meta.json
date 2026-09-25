@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:05:05.504407+00:00",
+  "demand_id": "TODE20250731010",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4e4acece11c581291b4b973ed2022109ea5c6b72e9af2d134c8ff3f01baef0c4",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/871/nanomateriali-per-produzione-di-idrogeno-verde"
+}

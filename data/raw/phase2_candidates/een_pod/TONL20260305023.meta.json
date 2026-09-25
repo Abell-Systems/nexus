@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:48.997303+00:00",
+  "demand_id": "TONL20260305023",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "817f99f0c46a23ce33ce0657c6a38b31259f4dbbcd5f583e94c7ba956344612d",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1041/azienda-olandese-di-cybersecurity-con-20-anni-di-esperienza-cerca-part"
+}

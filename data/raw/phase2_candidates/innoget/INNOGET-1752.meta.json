@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:43.331337+00:00",
+  "demand_id": "INNOGET-1752",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "551df17f822721ea75ff59556c84a0af99d6262b5da240d33d02c298fad47bc1",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1752/seeking-chemical-technologies-to-improving-the-sorting-separation-and-recycling-of-composite-and-multi-layer-materials"
+}

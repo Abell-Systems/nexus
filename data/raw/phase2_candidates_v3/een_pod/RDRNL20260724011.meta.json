@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:42.832395+00:00",
+  "demand_id": "RDRNL20260724011",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ea0d4c7084904f7548065f6621afe6d1b1a2edc54ec1e65ece9c01c91fb309a4",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/dutch-university-seeks-marine-ecology-and-blue-economy-partners"
+}

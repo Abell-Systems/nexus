@@ -1,0 +1,339 @@
+{
+  "annotated_demand_count": 19,
+  "demand_level_pool_coverage_rate": {
+    "threshold_gold_gte_1": {
+      "coverage_rate": 0.3,
+      "n_covered": 9,
+      "n_total_dev_demands": 30
+    },
+    "threshold_gold_gte_2": {
+      "coverage_rate": 0.2667,
+      "n_covered": 8,
+      "n_total_dev_demands": 30
+    }
+  },
+  "dev_demand_count": 30,
+  "estimand_contract": "docs/phase2-ted-pool-coverage-estimand-contract.md",
+  "per_demand_relevance_distribution": {
+    "104441-2025": {
+      "distribution": {
+        "0": 2,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": 0,
+      "n_pool": 2
+    },
+    "122428-2024": {
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": null,
+      "n_pool": 0
+    },
+    "137639-2024": {
+      "distribution": {
+        "0": 1,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": 0,
+      "n_pool": 1
+    },
+    "140590-2024": {
+      "distribution": {
+        "0": 9,
+        "1": 0,
+        "2": 1,
+        "3": 1
+      },
+      "max_gold_judgment": 3,
+      "n_pool": 11
+    },
+    "146289-2024": {
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": null,
+      "n_pool": 0
+    },
+    "158024-2024": {
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": null,
+      "n_pool": 0
+    },
+    "200095-2024": {
+      "distribution": {
+        "0": 2,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": 0,
+      "n_pool": 2
+    },
+    "221305-2025": {
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": null,
+      "n_pool": 0
+    },
+    "22543-2024": {
+      "distribution": {
+        "0": 1,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": 0,
+      "n_pool": 1
+    },
+    "264820-2024": {
+      "distribution": {
+        "0": 4,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": 0,
+      "n_pool": 4
+    },
+    "268550-2024": {
+      "distribution": {
+        "0": 1,
+        "1": 1,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": 1,
+      "n_pool": 2
+    },
+    "273005-2025": {
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": null,
+      "n_pool": 0
+    },
+    "277089-2025": {
+      "distribution": {
+        "0": 6,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": 0,
+      "n_pool": 6
+    },
+    "315512-2025": {
+      "distribution": {
+        "0": 6,
+        "1": 0,
+        "2": 1,
+        "3": 0
+      },
+      "max_gold_judgment": 2,
+      "n_pool": 7
+    },
+    "368294-2025": {
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 1
+      },
+      "max_gold_judgment": 3,
+      "n_pool": 1
+    },
+    "380300-2024": {
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2": 1,
+        "3": 0
+      },
+      "max_gold_judgment": 2,
+      "n_pool": 1
+    },
+    "410719-2024": {
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": null,
+      "n_pool": 0
+    },
+    "42938-2024": {
+      "distribution": {
+        "0": 2,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": 0,
+      "n_pool": 2
+    },
+    "454027-2024": {
+      "distribution": {
+        "0": 19,
+        "1": 0,
+        "2": 0,
+        "3": 1
+      },
+      "max_gold_judgment": 3,
+      "n_pool": 20
+    },
+    "498443-2025": {
+      "distribution": {
+        "0": 3,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": 0,
+      "n_pool": 3
+    },
+    "566290-2025": {
+      "distribution": {
+        "0": 8,
+        "1": 0,
+        "2": 1,
+        "3": 0
+      },
+      "max_gold_judgment": 2,
+      "n_pool": 9
+    },
+    "584867-2024": {
+      "distribution": {
+        "0": 1,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": 0,
+      "n_pool": 1
+    },
+    "588217-2024": {
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": null,
+      "n_pool": 0
+    },
+    "642378-2025": {
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": null,
+      "n_pool": 0
+    },
+    "654218-2024": {
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": null,
+      "n_pool": 0
+    },
+    "696940-2025": {
+      "distribution": {
+        "0": 2,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": 0,
+      "n_pool": 2
+    },
+    "794374-2025": {
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": null,
+      "n_pool": 0
+    },
+    "814207-2025": {
+      "distribution": {
+        "0": 11,
+        "1": 1,
+        "2": 1,
+        "3": 0
+      },
+      "max_gold_judgment": 2,
+      "n_pool": 13
+    },
+    "820594-2025": {
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "max_gold_judgment": null,
+      "n_pool": 0
+    },
+    "89204-2025": {
+      "distribution": {
+        "0": 16,
+        "1": 1,
+        "2": 0,
+        "3": 3
+      },
+      "max_gold_judgment": 3,
+      "n_pool": 20
+    }
+  },
+  "pool_relevance_yield": {
+    "threshold_gold_gte_1": {
+      "n_relevant_pairs": 14,
+      "n_total_pool_pairs": 108,
+      "pool_relevance_yield": 0.1296
+    },
+    "threshold_gold_gte_2": {
+      "n_relevant_pairs": 11,
+      "n_total_pool_pairs": 108,
+      "pool_relevance_yield": 0.1019
+    }
+  },
+  "pooled_relevance_distribution": {
+    "0": 94,
+    "1": 3,
+    "2": 5,
+    "3": 6
+  },
+  "recall_note": "No 'recall' metric is reported. The gold set covers only the 108 retrieved pairs; there is no independent judgment of patents outside the pool, so relevant-total (the recall denominator) is unknown. See docs/phase2-ted-pool-coverage-estimand-contract.md SS3.",
+  "zero_pool_demand_count": 11
+}

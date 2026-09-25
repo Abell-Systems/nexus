@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:03:29.111980+00:00",
+  "demand_id": "TRNL20251104009",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "55e4a2f70896f33fd6a5c5757c4049c89f75daf2b2988f5689b6a9040d4755db",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/944/co-sviluppo-europeo-per-dimostratori-neuromorfici-avanzati"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:21:59.520988+00:00",
+  "demand_id": "RDRIT20251107006",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "871230c9a9b61dd0fcd92ea415a6c29fa3fb5ef2a0eb0b5a0ed2609e3ce7ffd0",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/italian-coordinator-seeks-experts-ocean-related-law-and-permitting-life"
+}

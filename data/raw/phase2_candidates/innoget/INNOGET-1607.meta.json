@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:41.925780+00:00",
+  "demand_id": "INNOGET-1607",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "31face518aa290dff5414b937373fc5bf611007f01415dd879f50d6c9d40125a",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1607/seeking-innovative-material-and-manufacturing-technologies-to-enable-cost-efficient-lightweighting-in-high-volume-automotive-appli"
+}

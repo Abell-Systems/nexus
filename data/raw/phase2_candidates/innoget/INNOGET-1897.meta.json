@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:05.331482+00:00",
+  "demand_id": "INNOGET-1897",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c5d3af91e75cd0b89d62aa52c68e9be6875a9979ee8a7d2406710a5aa1718de2",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1897/seeking-novel-proposals-for-automated-inspection-of-shipping-containers-at-container-depots"
+}

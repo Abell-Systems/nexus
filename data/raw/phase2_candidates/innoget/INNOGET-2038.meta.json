@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:03.338520+00:00",
+  "demand_id": "INNOGET-2038",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "780da76f9611777b024c1ed626a8c38c101c586f365edf6d338f256280d61ee1",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2038/seeking-for-logistics-solutions-for-russian-railways"
+}

@@ -39,14 +39,48 @@ To ensure scientific integrity, **PR #101a establishes a pre-specified, binding 
 * **Demand Origin $\neq$ Patent Corpus:** The patent evaluation universe remains grounded in the domestic technology base (OEPM gazette publications). Expanding demand diversity does not alter the patent corpus or dilute the domestic prior-art evaluation context.
 
 ### 2.2 Authorized Primary Sources & Source Qualification Gate
-* **Permitted Primary Sources:**
+* **Permitted Primary Sources (pre-registered):**
   1. **InnoGet (`source_id = "innoget"`):** Permitted construct `Technology call`. Public HTTP access without authentication.
   2. **Enterprise Europe Network / POD (`source_id = "een_pod"`):** Permitted construct `Technology request`. Public HTTP access without authentication (central portal or regional mirrors such as Lombardia). Substantive technical problem description $\ge 25$ words.
 * **New Source Gate (`ADMISSIBLE_SOURCE_CANDIDATE`):** No additional platform, intermediary, or registry may contribute observations to the corpus without completing an independent, peer-reviewed source qualification protocol auditing public access, persistence, identity resolution, publication date verifiable evidence, and construct fidelity.
 
+> **Amendment (2026-09-14):** #101b-v2 (acquisition under the amended §2.3 window,
+> `een_pod` / `Technology request` only) closed with `N_power ≤ 47 < 60` — the entire
+> raw population of the one authorized `een_pod` construct is 108 records, a hard
+> ceiling independently confirmed by #101c's pagination walk and #101b-v2's actual
+> harvest. Full finding: `docs/phase2-temporal-window-amendment.md` §7.
+>
+> Per `docs/phase2-construct-expansion-amendment.md` (approved 2026-09-14), **the
+> canonical operational contract authorizes `R&D request` as a second permitted
+> `een_pod` construct**, alongside `Technology request`. Both instantiate the same
+> operationalized construct this study measures (a publicly-solicited technology
+> demand with an articulated technical problem, per `has_articulated_technical_problem`
+> / `technical_problem_evidence_text`), evidenced by #101b's own finding that both
+> constructs' `Abstract` sections articulate technical problems (verified against a
+> `Business offer` negative control). `Business offer`, `Business request`, and
+> `Technology offer` remain unauthorized. `InnoGet`'s `Technology call` remains
+> pre-registered and unaffected by this amendment.
+
 ### 2.3 Temporal Window & Hierarchical Date Evidence
-* **Permitted Window:** `2020-01-01` to `2025-12-31` inclusive.
+* **Permitted Window (pre-registered):** `2020-01-01` to `2025-12-31` inclusive. This is
+  the original pre-registered window and is left unmodified here as the historical
+  record; it is frozen, alongside this figure, in `corpus_expansion_policy_v1.json`.
 * **Exclusion of 2026:** Solicitations published in 2026 are excluded to decouple benchmark construction from unresolved, actively evolving industrial contexts.
+
+> **Amendment (2026-09-14):** Milestone #101b (live-source acquisition under the
+> pre-registered window) and #101c (historical-source feasibility) established that
+> `2020-01-01` is not operationally sustainable under the currently authorized sources:
+> InnoGet carries no reproducible publication-date evidence at any point in its
+> history, and EEN/POD's authorized `Technology request` construct does not populate
+> earlier than ~2024-09. Full finding: `docs/phase2-temporal-window-amendment.md`.
+>
+> **The canonical operational contract for Phase-2 corpus expansion going forward is
+> the narrowed window `2024-01-01` to `2025-12-31` inclusive**, carried in the new
+> policy artifact `corpus_expansion_policy_v2.json` (`corpus_expansion_policy_v1.json`
+> and its `2020-01-01` window remain immutable as the pre-registered historical
+> artifact; `v1` is not edited in place). Every other criterion in this ADR — §2.2
+> sources/constructs, §2.4 independence, §2.5 exclusion taxonomy, §2.6 word-count
+> normalization, §2.7 outcome-independence — is carried forward unmodified into `v2`.
 * **Canonical $t_{\mathrm{demand}}$:** Must represent the verifiable **public publication date** of the demand. Crawl dates, scrape dates, access dates, cache timestamps, or syndicate republishing dates are strictly prohibited.
 * **Date Evidence Provenance:** Source adapters must explicitly provide `publication_date_evidence_field` and `publication_date_evidence_text` documenting the exact source artifact verifying $t_{\mathrm{demand}}$.
 * **Indeterminate Dates:** Missing, ambiguous, or unverifiable publication dates trigger immediate candidate rejection (`OUT_OF_TEMPORAL_WINDOW`).

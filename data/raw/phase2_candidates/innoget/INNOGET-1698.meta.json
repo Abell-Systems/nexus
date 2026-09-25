@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:12.967836+00:00",
+  "demand_id": "INNOGET-1698",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "369283cc6e60c6a238acec4889a70c12f0958415031d2434b6e20f9d2c1ca4ee",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1698/seeking-for-a-surface-decontamination-process"
+}

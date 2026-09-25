@@ -61,8 +61,8 @@ def test_validator_and_enhanced_manifest_end_to_end_acceptance(tmp_path: Path) -
     assert manifest.dataset_id == "OEPM-ES-CORPUS-2016-2024-TEST"
     assert manifest.counts.raw_payload_count == 1
     assert manifest.counts.normalized_record_count == 8  # 7 original + 1 duplicate
-    assert manifest.counts.included_record_count == 3
-    assert manifest.counts.excluded_record_count == 2
+    assert manifest.counts.included_record_count == 2  # T3/EP-ES excluded by default, ADR 0035 SS3
+    assert manifest.counts.excluded_record_count == 3  # T3/EP-ES excluded by default, ADR 0035 SS3
     assert manifest.counts.quarantined_record_count == 2
     assert manifest.counts.duplicate_count == 1
 
@@ -71,5 +71,6 @@ def test_validator_and_enhanced_manifest_end_to_end_acceptance(tmp_path: Path) -
     assert c.included_record_count + c.excluded_record_count + c.quarantined_record_count + c.duplicate_count == c.normalized_record_count
 
     # Check kind code distribution strictly contains included codes
-    assert manifest.kind_code_distribution == {"B2": 1, "T3": 1, "U": 1}
+    # T3 (EP-ES) excluded by default, ADR 0035 SS3
+    assert manifest.kind_code_distribution == {"B2": 1, "U": 1}
     assert len(manifest.manifest_sha256) == 64

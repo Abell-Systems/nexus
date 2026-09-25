@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:02:37.218275+00:00",
+  "demand_id": "BOSK20251119021STEP",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "57306f9bfcfddb33eb05b22922a0f7e50e5a23316d82a8cc20016e7a9b897ada",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1002/ricarica-smart-per-e-bike"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:22:10.893529+00:00",
+  "demand_id": "RDRSE20250923006",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "2f752f9a3e3d16a1b4f1899583d3b0d5372e6733f262e84f033792f2f8827085",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/swedish-sme-forefront-weather-prognoses-optimization-cold-climate-looking"
+}

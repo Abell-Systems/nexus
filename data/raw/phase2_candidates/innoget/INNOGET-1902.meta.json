@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:59.329034+00:00",
+  "demand_id": "INNOGET-1902",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c81de8ed3b67de04d1071cf20e1b7bf8f7b74a5611fcb54183710b7ed246d022",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1902/seeking-proposals-to-disrupt-global-trade-financing-via-blockchain"
+}

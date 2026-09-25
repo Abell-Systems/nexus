@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:20:42.976534+00:00",
+  "demand_id": "RDRES20260210024",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c3075be30a9297fe001102453091feff5a5c83aa51dafbdb0e672bade123f55f",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/step-seal-awarded-spanish-sme-provides-early-stage-operational-requirement"
+}

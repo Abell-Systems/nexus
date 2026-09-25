@@ -1,0 +1,1045 @@
+{
+  "dataset_metadata": {
+    "dataset_id": "OEPM-INVENES-CORPUS-2026-V1",
+    "dataset_title": "Oficina Española de Patentes y Marcas (OEPM) -- INVENES public search, ADR 0035",
+    "official_catalog_url": "https://consultas2.oepm.es/InvenesWeb/faces/busquedaInternet.jsp"
+  },
+  "publications": [
+    {
+      "abstract": "Sistema inalámbrico y método de lectura remota de contadores. Sistema inalámbrico de lectura remota de contadores, que comprende: al menos un dispositivo de almacenamiento (100), conectado a un contador o integrado en un contador, que comprende medios (2) para almacenar datos relativos al consumo; al menos un dispositivo concentrador (200), y un dispositivo central (400). El dispositivo de almacenamiento (100) comprende medios (1, 5, 6) para enviar los datos relativos al consumo al dispositivo concentrador a través de una red de banda estrecha (500), que opera en una banda de frecuencia de uso libre. El dispositivo concentrador comprende medios para reenviar dichos datos al dispositivo central (400) a través de una red de banda ancha (600), que opera en una banda de frecuencia de uso libre.",
+      "application_number": "P200800795",
+      "assignees": [],
+      "classifications_cpc": [
+        "G01D4/002",
+        "G01D4/004",
+        "Y02B90/20",
+        "Y04S20/30"
+      ],
+      "classifications_ipc": [
+        "G01D4/00"
+      ],
+      "country_code": "ES",
+      "doc_number": "2326252",
+      "filing_date": "2008-03-18",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P200800795",
+      "inventors": [
+        "LUIS SANCHEZ,FERNANDO",
+        "TOBEA ANDREU,JOAN"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2009-10-05",
+      "publication_id": "ES2326252A1",
+      "title": "SISTEMA INALAMBRICO Y METODO DE LECTURA REMOTA DE CONTADORES"
+    },
+    {
+      "abstract": "Equipo electrónico de control y supervisión para unidades condensadoras de frío, que comprende, dentro de una caja (2) protectora, una circuitería (1) electrónica gestionada por un micro-controlador (5) programable, contando con una primera entrada (E1) (digital) para señal de encendido (9); una segunda entrada (E2) (analógica) conectada a sonda de presión (12) intercalada en la tubería de alta; una tercera entrada (E3) a sonda de temperatura (10) ambiente; una cuarta entrada (E4) a una segunda sonda de temperatura (19) del gas de aspiración; una primera salida (S1) a relé (24) para control del compresor (16); una segunda salida (S2) a triac para control de los ventiladores (13); una tercera salida auxiliar (S3), para funciones opcionales; dos elementos de señalización local de alarmas, por LED tricolor (8) y zumbador (4); y un conector RJ45 (6) que combina puerto serie RS232 y conexión ICSP para configuración y envío de alarmas remotas.",
+      "application_number": "P201132156",
+      "assignees": [
+        "POUSADA MIRANDA, Eduardo"
+      ],
+      "classifications_cpc": [
+        "G05B11/32",
+        "F25B49/005",
+        "Y02B30/70"
+      ],
+      "classifications_ipc": [
+        "G05B11/32",
+        "F25B49/00"
+      ],
+      "country_code": "ES",
+      "doc_number": "2411281",
+      "filing_date": "2011-12-30",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201132156",
+      "inventors": [
+        "POUSADA MIRANDA, Eduardo"
+      ],
+      "kind_code": "A2",
+      "publication_date": "2013-07-05",
+      "publication_id": "ES2411281A2",
+      "title": "EQUIPO ELECTRONICO DE CONTROL Y SUPERVISION PARA UNIDADES CONDENSADORAS DE FRIO"
+    },
+    {
+      "abstract": "Sistema y método de control y supervisión vía una red telemática de datos. El sistema es un sistema micro-controlado (1) y supervisa y controla una serie de dispositivos (8) tales como electrodomésticos, equipos de imagen y sonido, o maquinaria industrial. El sistema consta de sensores (3) para la recogida de datos (2) de los dispositivos (8) a controlar y actuadores (3') para enviar instrucciones (2') a dichos dispositivos (8). Los datos e instrucciones son gestionados y almacenados por una centralita (4). La centralita tiene un script (412), conectado a una base de datos (100) de datos (2) e instrucciones (2'), y está conectada a través de internet a un servidor web (300) y éste a un dispositivo exterior de administración (5), tipo tablet, smartphone u ordenador, del sistema (1) a través de una aplicación web (400).",
+      "application_number": "P201430830",
+      "assignees": [
+        "HICOM TECHNOLOGY BUSINESS SL"
+      ],
+      "classifications_cpc": [
+        "H04L67/12"
+      ],
+      "classifications_ipc": [
+        "H04L29/08"
+      ],
+      "country_code": "ES",
+      "doc_number": "2552604",
+      "filing_date": "2014-05-30",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201430830",
+      "inventors": [
+        "QUINTAS FERNANDEZ, Antonio"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2015-11-30",
+      "publication_id": "ES2552604A1",
+      "title": "SISTEMA Y MÉTODO DE CONTROL DE SUPERVISIÓN VIA UNA RED TELEMÁTICA DE DATOS."
+    },
+    {
+      "abstract": "Método y sistema de mantenimiento predictivo de edificios y estructuras, que prevé la instalación de una serie de sensores (S1, S2, S3, ..., Sn) colocados en lugares estratégicos del edificio o de la estructura a controlar, en la cual o bien cada uno de los sensores está conectado mediante cableado a un nodo (NS) que está dotado de una antena de transmisión inalámbrica con un nodo central de comunicación (NC); o bien cada sensor (S1, S2) dispone de medios propios de comunicación inalámbrica y directamente transmite los datos recogidos a dicho nodo central de comunicaciones (NC); presentando cada nodo central una antena de salida que comunica los datos recibidos a un servidor (Serv) existente en un centro de datos (CD), al cual se conectan varios terminales de usuario (T1, T2, T3, ..., Tn) para controlar y gestionar su edificio, que incluye una herramienta informática de predicción (HP), que en función de parámetros físicos y químicos que se miden en los sensores estima el comportamiento y deterioro de la estructura o edificio en el futuro, mediante algoritmos (Alg) que correlacionan los parámetros físico-químicos con los procesos patológicos que se pueden dar en función del tiempo.",
+      "application_number": "P201630316",
+      "assignees": [
+        "AUSCULTIA, S.L."
+      ],
+      "classifications_cpc": [
+        "A45C13/02",
+        "G06Q50/08",
+        "A45C13/103",
+        "A45C5/14",
+        "A45C7/0054",
+        "A45C2005/035"
+      ],
+      "classifications_ipc": [
+        "G06Q50/08"
+      ],
+      "country_code": "ES",
+      "doc_number": "2600452",
+      "filing_date": "2016-03-17",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201630316",
+      "inventors": [
+        "PEREZ DIAZ, José Antonio",
+        "CABALLERO PEREZ-ALOE, Mª Paz",
+        "MORENO CANSADO, Alberto"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2017-02-09",
+      "publication_id": "ES2600452A1",
+      "title": "Método y sistema de mantenimiento predictivo de edificios y estructuras."
+    },
+    {
+      "abstract": "Procedimiento, sistema de control, nodo de transductores y producto de programa informático para hacer, por parte de un nodo de transductores y/o por parte de un sistema de control, que unos o más transductores comprendidos en el nodo sean accesibles a una red de transductores cuando el nodo está conectado a la red de transductores. La presente invención se refiere a procedimientos para hacer accesible uno o más transductores de forma automática a una red de transductores, a través de nodos de transductores inteligentes que comprenden al menos uno de los citados transductores; la invención también se refiere a la red de transductores que comprende un sistema de control y al menos un nodo de transductores, configurados para ejecutar los citados procedimientos; de acuerdo con la invención también se definen unos productos de programa informático para llevar a cabo dichos procedimientos.",
+      "application_number": "P201630580",
+      "assignees": [
+        "UNIVERSIDADE DA CORUÑA"
+      ],
+      "classifications_cpc": [
+        "H04W48/16",
+        "H04W84/18",
+        "H04L67/125"
+      ],
+      "classifications_ipc": [
+        "H04W84/18",
+        "H04L29/08",
+        "H04W48/16"
+      ],
+      "country_code": "ES",
+      "doc_number": "2641296",
+      "filing_date": "2016-05-04",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201630580",
+      "inventors": [
+        "SUÁREZ ALBELA, Manuel José",
+        "FERNÁNDEZ CARAMÉS, Tiago Manuel",
+        "FRAGA LAMAS, Paula"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2017-11-08",
+      "publication_id": "ES2641296A1",
+      "title": "PROCEDIMIENTO, SISTEMA DE CONTROL, NODO DE TRANSDUCTORES, Y PRODUCTO DE PROGRAMA INFORMÁTICO PARA HACER, QUE UNOS O MÁS TRANSDUCTORES COMRENDIDOS EN EL NODO SEAN ACCESIBLES A UNA RED DE TRANSDUCTORES A TRAVÉS DE NODOS DE TRANSDUCTORES INTELIGENTES"
+    },
+    {
+      "abstract": "Método para votación electrónica segura con sistema de auditoría inmutable, permite conducir electrónicamente, con total seguridad, votaciones y consultas a través de una red de comunicaciones. El método emplea unos procesos (210) y protocolos (202, 204, 206, 208, 212, 214) criptográficos interrelacionados, especialmente diseñados para dotar de seguridad a la emisión de los votos, al recuento de los votos, y a la verificación de los resultados de la votación o consulta. Dichos procesos y protocolos criptográficos conforman conjuntamente un esquema criptográfico de votación capaz de asegurar los requisitos de seguridad específicos de una votación electrónica en la cual los votantes emiten sus votos remotamente. El método incorpora una capa de auditoría basada en el uso de mecanismos inmutables que protegen los registros de todas las acciones realizadas en la votación, como las realizadas por los administradores del sistema de los servidores de votación, para asegurar una total transparencia del proceso.",
+      "application_number": "P201830321",
+      "assignees": [
+        "SCYTL SECURE ELECTRONIC VOTING, SA"
+      ],
+      "classifications_cpc": [
+        "H04L9/32",
+        "G06F21/64",
+        "G07C13/00"
+      ],
+      "classifications_ipc": [
+        "G06F21/64",
+        "G07C13/00",
+        "H04L9/32"
+      ],
+      "country_code": "ES",
+      "doc_number": "2726003",
+      "filing_date": "2018-03-29",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201830321",
+      "inventors": [
+        "PUIGGALÍ ALLEPUZ, Jordi"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2019-10-01",
+      "publication_id": "ES2726003A1",
+      "title": "Método para votación electrónica segura con sistema de auditoría inmutable y programas informáticos del mismo"
+    },
+    {
+      "abstract": "INSTALACION DE CAPTACION Y TRATAMIENTO DE LAS LECTURAS DE LOS CONTADORES DE REDES DE DISTRIBUCION DE FLUIDOS. PARTIENDO DE UNA INSTALACION CON CONTADORES DE CONSUMO DE FLUIDO CON UN CAPTADOR, CONECTADOS PERMANENTEMENTE CON CONCENTRADORES PRIMARIOS A LOS QUE TRANSMITEN IMPULSOS DE LECTURA, SE HACE QUE DICHA INSTALACION COMPRENDA ADEMAS CONCENTRADORES SECUNDARIOS Y CONCENTRADORES TERCIARIOS, QUE CADA CONCENTRADOR PRIMARIO ESTE CONECTADO PERMANENTEMENTE CON UNO DE LOS CONCENTRADORES SECUNDARIOS Y TENGA MEDIOS PARA TRANSMITIRLE IMPULSOS DE LECTURA Y PARA RECIBIR IMPULSOS DE CONTROL PROCEDENTES DE DICHO CONCENTRADOR SECUNDARIO, Y QUE CADA CONCENTRADOR SECUNDARIO ESTE CONECTADO CON EL CONCENTRADOR TERCIARIO O CON UNO DE LOS CONCENTRADORES TERCIARIOS Y TENGA MEDIOS PARA TRANSMITIRLE IMPULSOS Y PARA RECIBIR IMPULSOS DE CONTROL PROCEDENTES DE DICHO CONCENTRADOR TERCIARIO. LA INVENCION SE APLICA A REDES DE FLUIDOS PARA CENTRALIZAR SU CONTROL.",
+      "application_number": "P9101245",
+      "assignees": [],
+      "classifications_cpc": [],
+      "classifications_ipc": [
+        "G01F15/06",
+        "G06F17/40",
+        "H04Q9/02"
+      ],
+      "country_code": "ES",
+      "doc_number": "2037587",
+      "filing_date": "1991-05-23",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P9101245",
+      "inventors": [
+        "GARRIGA MIRALLES, MANUEL"
+      ],
+      "kind_code": "A2",
+      "publication_date": "1993-06-16",
+      "publication_id": "ES2037587A2",
+      "title": "INSTALACION DE CAPTACION Y TRATAMIENTO DE LAS LECTURAS DE LOS CONTADORES DE REDES DE DISTRIBUCION DE FLUIDOS."
+    },
+    {
+      "abstract": "ELECTROSONDA PARA MEDIR EL CONTENIDO DE HUMEDAD DEL SUELO Y LA COMPACTACION DEL MISMO, METODO DE MEDIDA CORRESPONDIENTE Y UTILIZACION DE DICHA ELECTROSONDA. SE PROPORCIONA UNA SONDA PARA MEDIR POR MEDIO DE UN GEORESISTIMETRO LA RESISTIVIDAD ELECTRICA DEL SUELO EN SENTIDO VERTICAL. LA SONDA PREVISTA EN FORMA DE PICA TIENE PAREJAS DE ELECTRODOS EMISORES (5A-5A) Y RECEPTORES (5B-5B) MONTADOS AL REDEDOR DE UN TUBO (2) PARA GENERAR UNA SEÑAL ELECTRICA DE EXCITACION Y RECIBIR UNA SEÑAL ELECTRICA DE RETORNO QUE ES FUNCION DEL GRADO DE HUMEDAD DEL SUELO Y DE LA COMPACTACION DEL MISMO. LA ELECTROSONDA, ADEMAS DE SERVIR PARA REALIZAR PLANIMETRIAS DE LOS GRADOS DE HUMEDAD DEL SUELO Y DE SU COMPACTACION POR LAS ACCIONES DE LABOREO SEL MISMO, PUEDE UTILIZARSE PARA GENERAR UNA SEÑAL DE CONTROL, PARA GOBIERNO AUTOMATICO DE UNA INSTALACION DE RIEGO.",
+      "application_number": "P9600407",
+      "assignees": [],
+      "classifications_cpc": [],
+      "classifications_ipc": [
+        "G01N27/12",
+        "G01N33/24"
+      ],
+      "country_code": "ES",
+      "doc_number": "2116215",
+      "filing_date": "1996-02-22",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P9600407",
+      "inventors": [
+        "ZUÑIGA ESCOBAR, ORLANDO"
+      ],
+      "kind_code": "A1",
+      "publication_date": "1998-07-01",
+      "publication_id": "ES2116215A1",
+      "title": "ELECTROSONDA PARA MEDIR EL CONTENIDO DE HUMEDAD DEL SUELO Y LA COMPACTACION DEL MISMO, METODO DE MEDIDA CORRESPONDIENTE Y UTILIZACION DE DICHA ELECTROSONDA."
+    },
+    {
+      "abstract": "Dispositivo de detección de actividad/inactividad fisiológica configurado para permitir la detección de los estados de actividad o inactividad fisiológica de personas, de forma no intrusiva y sin contacto directo, basado en la detección de movimientos y vibraciones utilizando la medida de los cambios en el patrón Speckle producido en una fibra óptica multi-modo (14, 24, 34, 44) cuando se conduce por su interior luz coherente, que comprende: al menos una fibra óptica multi-modo (14, 24, 34, 44) como elemento de transducción, unida a una fuente de luz coherente (12, 42) y a un detector óptico (11, 41); un bloque de procesado (13, 43) conectado al detector óptico (11, 41), configurado para implementar el método de procesado necesario para emitir una decisión; elementos de conexionado (15, 45, 55) configurados para conectar/desconectar la fibra óptica multi-modo (14, 24, 34, 44) a/del detector óptico (11, 41) y a/de la fuente de luz coherente (12, 42). Un método de procesado configurado para detectar los estados de actividad o inactividad fisiológica de personas, utilizando el dispositivo definido.",
+      "application_number": "P201600626",
+      "assignees": [
+        "UNIVERSIDAD DE CANTABRIA"
+      ],
+      "classifications_cpc": [
+        "A61B5/024"
+      ],
+      "classifications_ipc": [
+        "A61B5/024"
+      ],
+      "country_code": "ES",
+      "doc_number": "2610181",
+      "filing_date": "2016-07-22",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201600626",
+      "inventors": [
+        "RODRIGUEZ COBO, Luis",
+        "LOMER BARBOZA, Mauro M.",
+        "LÓPEZ HIGUERA, José Miguel",
+        "RODRIGUEZ CUEVAS, Alberto"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2017-04-26",
+      "publication_id": "ES2610181A1",
+      "title": "Dispositivo de detección de actividad/inactividad fisiológica basado en fibra óptica"
+    },
+    {
+      "abstract": "Sistema de perfusión de fármacos en lazo cerrado con control sinérgico. El objetivo de la invención es realizar un sistema de cálculo automático de perfusión de fármacos aplicable a un paciente para, por ejemplo, inducir un estado anestésico satisfactorio en una intervención quirúrgica. El sistema de cálculo automático estaría condicionado por unos valores objetivo de monitores fisiológicos para evaluar el estado del paciente. La perfusión automática consigue aumentar la seguridad del paciente reduciendo la morbididad y mortalidad postintervención y reducir la continua toma de decisiones del especialista. La invención es un sistema electrónico donde se implementa un controlador MIMO-PID que calcula las perfusiones de varios fármacos en base a un error de control definido por desviaciones del estado del paciente, analizado por varios monitores. Las perfusiones automáticas de fármacos están condicionadas por sistemas de seguridad frente a eventos de infra/sobre-infusión y están complementadas con sistemas de corrección y de prealimentación.",
+      "application_number": "P202030337",
+      "assignees": [
+        "Universidad Politécnica de Madrid"
+      ],
+      "classifications_cpc": [
+        "A61B5/00",
+        "G16H20/17",
+        "G16H40/60",
+        "A61B5/1106",
+        "A61B5/4821",
+        "A61B5/4839",
+        "A61M5/1408",
+        "A61M5/1723",
+        "A61M5/16827",
+        "A61M2205/50",
+        "A61M2005/14208"
+      ],
+      "classifications_ipc": [
+        "A61B5/00",
+        "A61M5/172",
+        "G16H20/17"
+      ],
+      "country_code": "ES",
+      "doc_number": "2808969",
+      "filing_date": "2020-04-23",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P202030337",
+      "inventors": [
+        "RODRÍGUEZ HERRERO, Agustín",
+        "PIMENTEL NARANJO, Víctor",
+        "HERNANDO PÉREZ, Mª Elena",
+        "CALVO VECINO, José María",
+        "ABAD GURUMETA, Alfredo"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2021-03-02",
+      "publication_id": "ES2808969A1",
+      "title": "SISTEMA DE PERFUSIÓN DE FÁRMACOS EN LAZO CERRADO CON CONTROL SINÉRGICO"
+    },
+    {
+      "abstract": "Habitación modular prefabricada, particularmente un cuarto de aseo o de baño. Habitación modular prefabricada para la construcción, particularmente un cuarto de baño o de aseo, adaptada para ser instalada en edificios en construcción, provista de los aparatos sanitarios y de las instalaciones necesarias para suministrar y distribuir el agua sanitaria a dichos aparatos sanitarios, así como para evacuar las aguas grises y los residuos que provienen de dichos aparatos sanitarios, provista además de conexiones exteriores a la red de suministro eléctrico de la instalación, constituida por elementos construidos separadamente y unidos entre sí de forma sólida y estanca, constituyendo las paredes, el techo y el piso; adaptada para ser transportada y asentada sobre un forjado de la obra sin sufrir deformaciones; provista de unos elementos de regulación de la altura del piso respecto del forjado sobre el que se asienta; y estando dotado el piso de la habitación modular de un colector único para la evacuación exterior de las aguas grises y los residuos de los aparatos sanitarios instalados en la habitación modular.",
+      "application_number": "P200300459",
+      "assignees": [],
+      "classifications_cpc": [
+        "A47K4/00",
+        "E03C1/01",
+        "E04B1/34869"
+      ],
+      "classifications_ipc": [
+        "E04B1/348",
+        "A47K4/00",
+        "E03C1/01"
+      ],
+      "country_code": "ES",
+      "doc_number": "2246100",
+      "filing_date": "2003-02-26",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P200300459",
+      "inventors": [
+        "APARICIO IZQUIERDO,TOMAS"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2006-02-01",
+      "publication_id": "ES2246100A1",
+      "title": "HABITACION MODULAR PREFABRICADA, PARTICULARMENTE UN CUARTO DE ASEO O DE BAÑO."
+    },
+    {
+      "abstract": "Sistema de cimentación autonivelante para edificaciones transportables, que estando especialmente concebido para viviendas o inmuebles modulares móviles, se caracteriza por tener un conjunto de gatos mecánicos (hidraúlicos, neumáticos o eléctricos) (1) dispuestos estratégicamente en la vertical de algunos soportes estructurales de la edificación modular (15) (15'') (15''''), cuyo forjado interior puede ser tradicional o estar constituido por semirremolques transformados (11) (11'') (11''''), capaces de acoplarse lateralmente entre sí y poder adquirir distintos niveles hasta atornillaras horizontalmente entre sí, mediante el alargamiento (o acortamiento) de los vástagos (6) (6'') de los gatos (1), que además lograrán mantener en todo momento el nivel preestablecido de la edificación, cualquiera que sea la altura de la placa de apoyo de cimentación (13) escogida o el asentamiento que pudiera adquirir dicho apoyo a lo largo del tiempo, y todo ello gracias a una regulación manual o automatizada con la domótica.",
+      "application_number": "P200902064",
+      "assignees": [],
+      "classifications_cpc": [
+        "B60P3/32",
+        "B60P3/36",
+        "B60S9/14",
+        "B60S9/21",
+        "E04B1/35",
+        "E04B1/36",
+        "E04H1/12",
+        "B62D63/08",
+        "E04B1/343",
+        "E04B1/34352"
+      ],
+      "classifications_ipc": [
+        "B60S9/14",
+        "B60P3/32",
+        "B60S9/21",
+        "B62D63/08",
+        "E04B1/343",
+        "E04B1/35",
+        "E04B1/36",
+        "E04H1/12"
+      ],
+      "country_code": "ES",
+      "doc_number": "2340132",
+      "filing_date": "2009-10-29",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P200902064",
+      "inventors": [
+        "LOMBANA ECHEVERRY, EDGAR",
+        "ADELL ARGILES, JOSEP MARIA"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2010-05-28",
+      "publication_id": "ES2340132A1",
+      "title": "SISTEMA DE CIMENTACION AUTONIVELANTE PARA EDIFICACIONES TRANSPORTABLES"
+    },
+    {
+      "abstract": "Sistema constructivo que tiene un módulo de vivienda, módulo de cubierta, módulo de terraza, módulo de fachada, edificación y útil de elevación para constituir una edificación a partir de los módulos. El módulo de vivienda (3) tiene una solera (31), un techo (34T) y pilares entre la solera (31) y el techo (34T). Los pilares tienen embebida una pieza polivalente (32) que sirve para apilar un módulo sobre otro. El módulo de cubierta corona la edificación, mientras que el módulo de terraza (359) y el módulo de fachada (310) pueden ser colocados en zonas periféricas de la edificación. El útil de elevación sirve para transportar y colocar el módulo de vivienda (3) en la ubicación deseada para completar una edificación.",
+      "application_number": "P200603078",
+      "assignees": [],
+      "classifications_cpc": [
+        "B66C1/666",
+        "E04B1/343",
+        "E04B1/348",
+        "E04G21/142",
+        "E04B1/34823"
+      ],
+      "classifications_ipc": [
+        "E04B1/348",
+        "E04B1/343"
+      ],
+      "country_code": "ES",
+      "doc_number": "2303457",
+      "filing_date": "2006-12-01",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P200603078",
+      "inventors": [
+        "FERNANDEZ FERNANDEZ,JOSE JAVIER"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2008-08-01",
+      "publication_id": "ES2303457A1",
+      "title": "SISTEMA CONSTRUCTIVO."
+    },
+    {
+      "abstract": "Dispositivo de forjado con formación de bóvedas laminares. El forjado está realizado con perfiles (2, 4, 5) de acero, madera o cualquier material resistente a la tracción, con formación de bóvedas laminares, o planchas (1) curvadas, de luz y flechas variables, encajadas entre los nervios (2) previamente dispuestos según el replanteo de la obra, para hormigonar \"in situ\" constituyendo vigas mixtas de alta capacidad a la flexión y de alta calidad estética. La bóveda que completa los forjados es de una única pieza y los bordes de las planchas de acero (1) o similar incluyen puntos de soldadura de seguridad por encima de los nervios o vigas (2), no siendo visibles por el interior del forjado. El material de las bóvedas también puede ser plástico o incluso madera, fijándose en este caso los bordes con grapas u otro tipo de anclajes.",
+      "application_number": "P200200420",
+      "assignees": [],
+      "classifications_cpc": [],
+      "classifications_ipc": [
+        "E04B5/02",
+        "E04B5/23",
+        "E04B5/29"
+      ],
+      "country_code": "ES",
+      "doc_number": "2216668",
+      "filing_date": "2002-02-21",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P200200420",
+      "inventors": [
+        "ORTEGA CAMARA,RAMON"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2004-10-16",
+      "publication_id": "ES2216668A1",
+      "title": "DISPOSITIVO DE FORJADO CON FORMACION DE BOVEDAS LAMINARES."
+    },
+    {
+      "abstract": "Panel de construcción aislante de fácil adherencia y alta resistencia mecánica, constituidos por un núcleo aislante de poliestireno extruido reforzado en ambas caras por sendas capas de un mortero cementoso de fácil adherencia con una red de fibra de vidrio incorporada, con la posibilidad de llevar insertadas una serie de varillas pultrusionadas de material a base de fibra mineral, o barras metálicas, que le atraviesan longitudinalmente por debajo de ambos lados de las caras de refuerzo exterior, paralelamente a éstas. Permite crear sistemas de acondicionamiento y acabado de suelos, muros y cubiertas, especialmente las de placas de fibrocemento o metálicas, sin necesidad ahora de tener que ser restituidas, y también, en su variante de panel armado, sistemas estructurales de cubiertas ligeras.",
+      "application_number": "P201200352",
+      "assignees": [
+        "TEAIS, S.A."
+      ],
+      "classifications_cpc": [
+        "E04B7/22",
+        "E04C2/288",
+        "E04F15/182",
+        "E04D13/1618",
+        "E04D13/1643",
+        "E04D13/1681",
+        "E04F15/18"
+      ],
+      "classifications_ipc": [
+        "E04C2/288",
+        "E04B7/22",
+        "E04F13/18",
+        "E04F15/18"
+      ],
+      "country_code": "ES",
+      "doc_number": "2432823",
+      "filing_date": "2012-04-03",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201200352",
+      "inventors": [
+        "ANTELO PENSADO, Ernesto"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2013-12-05",
+      "publication_id": "ES2432823A1",
+      "title": "Panel de construcción aislante de fácil adherencia y alta resistencia mecánica, y su aplicación en obras nuevas y de rehabilitación"
+    },
+    {
+      "abstract": "Composición anticorrosiva aditiva para productos descongelantes y anticongelantes, producto que lo comprende y método de preparación de los mismos. Se describe una composición anticorrosiva aditiva para productos que eliminan y/o reducen el hielo y/o la nieve en una superficie u objeto o previenen su formación y/o acumulación sobre los mismos, caracterizado porque comprende al menos: hidratos de carbono, en un porcentaje comprendido entre 5% y 22% en peso del total de composición; Nitrógeno en forma de catión amonio, en un porcentaje comprendido entre 1% y 2% en peso del total de composición; y agua en cantidad suficiente para completar la formulación además de proteínas y sales minerales. La fuente de hidratos de carbono es preferiblemente melaza industrial procedente de la industria azucarera. Se define también el producto anticongelante y descongelante aditivado con la composición anterior, que comprende sales de ión cloruro en una cantidad comprendida entre 20%-23%, la composición aditiva en una cantidad entre 10%-44% y agua, así como el uso de dicha composición para aditivar estas composiciones.",
+      "application_number": "P201531105",
+      "assignees": [
+        "CONSTRUCCIONES Y OBRAS LLORENTE, S.A."
+      ],
+      "classifications_cpc": [
+        "C09K3/18"
+      ],
+      "classifications_ipc": [
+        "C09K3/18"
+      ],
+      "country_code": "ES",
+      "doc_number": "2545931",
+      "filing_date": "2015-07-27",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201531105",
+      "inventors": [
+        "GARCÍA SERRADA, Carlos",
+        "VARA PAZOS, Eduardo"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2015-09-16",
+      "publication_id": "ES2545931A1",
+      "title": "Composición anticorrosiva aditiva para productos descongelantes y anticongelantes, producto que lo comprende y método de preparación de los mismos"
+    },
+    {
+      "abstract": "Procedimiento de extracción de aceite de oliva que permite obtener un aceite con un elevado contenido en antioxidantes, evitando las pérdidas que se producen durante los procedimientos de extracción convencionales actuales, manteniendo a su vez unos parámetros organolépticos similares a los aceites de oliva virgen extra (AOVES) resultantes de dichos procedimientos de extracción convencionales. El procedimiento se diferencia del convencional principalmente en que se suprimen las fases de molienda mecánica de las aceitunas y batido de la pasta obtenida, que son aquellas en las que se producen los principales riesgos de pérdida de antioxidantes propios de la aceituna. El aceite obtenido mediante este procedimiento tiene una acidez máxima de 0.2gr/100gr, frente al máximo legal de 0.8 gr/100gr, y un elevado contenido en antioxidantes, con un mínimo de 7000 mg/kg, de los cuales 800 mg corresponden a la suma de biofenoles y tocoferoles y 6200 a escualeno.",
+      "application_number": "P201730461",
+      "assignees": [
+        "OLEUM PLUS, S.L."
+      ],
+      "classifications_cpc": [
+        "A23D7/00",
+        "A23D7/02",
+        "C11B1/00",
+        "C11B1/04",
+        "C11B1/10",
+        "A23B20/30"
+      ],
+      "classifications_ipc": [
+        "C11B1/00",
+        "A23D7/02",
+        "C11B1/10"
+      ],
+      "country_code": "ES",
+      "doc_number": "2684102",
+      "filing_date": "2017-03-29",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201730461",
+      "inventors": [
+        "FALCÓ Y FERNÁNDEZ DE CÓRDOBA, Carlos",
+        "MUGELLI, Marco"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2018-10-01",
+      "publication_id": "ES2684102A1",
+      "title": "PROCEDIMIENTO DE EXTRACCIÓN ANTIOXIDATIVA DE ACEITE DE OLIVA CON ALTO CONTENIDO EN ANTIOXIDANTES"
+    },
+    {
+      "abstract": "Sistema de riego en viviendas por condensación mediante efecto Peltier. Se aprovecha el agua que se produce por la condensación de la propia humedad del aire, al pasar por una superficie fría. Esta superficie fría se consigue mediante un módulo eléctrico de efecto Peltier (4). El aire ambiente es forzado, mediante un ventilador (3), a pasar a través de las aletas de un intercambiador y que al enfriarse, cede su carga de agua. Esta agua cae a un depósito (6) situado en la parte inferior del aparato a través de un plano inclinado (8), cuyos componentes sujeta el chasis (2). Este aparato se coloca en un punto elevado de la vivienda y por diferencia de alturas, el agua se distribuye por unos conductos hasta llegar a los goteros que riegan las plantas. Es un sistema automático y está especialmente indicado para regar las plantas en períodos de ausencia.",
+      "application_number": "P200401883",
+      "assignees": [],
+      "classifications_cpc": [
+        "A01G25/00",
+        "A01G27/00",
+        "F25B21/02"
+      ],
+      "classifications_ipc": [
+        "F25B21/02",
+        "A01G25/00",
+        "A01G27/00"
+      ],
+      "country_code": "ES",
+      "doc_number": "2257162",
+      "filing_date": "2004-07-26",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P200401883",
+      "inventors": [
+        "LLOVERAS MACIA,JOAQUIM",
+        "ADELL TORRES, RICARD",
+        "CAMPAMENTO CANDELAS, ALEJANDRO",
+        "FUHRMANN VERDAGUER, ERIK",
+        "GALLEGO RUIZ, GERMAN",
+        "LARA ROJAS, SHADI"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2006-07-16",
+      "publication_id": "ES2257162A1",
+      "title": "SISTEMA DE RIEGO EN VIVIENDAS POR CONDENSACION MEDIANTE EFECTO PELTIER."
+    },
+    {
+      "abstract": "Es un dispositivo de señalización de peligro destinado a la seguridad vial, con dos columnas luminosas cilíndricas abatibles que enmarcan un triángulo de señalización de peligro autodesplegable, todo ello alojado en un espacio específico habilitado al efecto que permite su ocultación plegado en la misma carrocería de un vehículo. Activándose de forma automática en caso de accidente o por decisión voluntaria del usuario. Tras su uso posibilita el rearme de manera sencilla para siguientes usos.",
+      "application_number": "P202030202",
+      "assignees": [
+        "MARTÍN GARCÍA, Francisco Javier"
+      ],
+      "classifications_cpc": [
+        "B60Q1/52"
+      ],
+      "classifications_ipc": [
+        "B60Q1/52",
+        "G09F13/16"
+      ],
+      "country_code": "ES",
+      "doc_number": "2756998",
+      "filing_date": "2020-03-10",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P202030202",
+      "inventors": [
+        "MARTÍN GARCÍA, Francisco Javier"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2020-04-27",
+      "publication_id": "ES2756998A1",
+      "title": "DISPOSITIVO LUMINOSO DE EMERGENCIAS ESCAMOTEABLE"
+    },
+    {
+      "abstract": "Dispositivo de monitorización de la respiración para monitorizar la respiración de un usuario, que comprende un elemento sensor de deformación configurado para producir una señal eléctrica ante las deformaciones producidas en el tejido (o material textil) de una mascarilla por la respiración del usuario. El dispositivo de monitorización está configurado para transmitir dicha señal eléctrica a un centro de monitorización remoto.",
+      "application_number": "P202230830",
+      "assignees": [
+        "Universidad Politécnica de Madrid"
+      ],
+      "classifications_cpc": [
+        "A61B5/08",
+        "A41D13/11",
+        "C08J5/005"
+      ],
+      "classifications_ipc": [
+        "A41D13/11",
+        "A61B5/08",
+        "A61B5/087",
+        "C08J5/00"
+      ],
+      "country_code": "ES",
+      "doc_number": "2935558",
+      "filing_date": "2022-09-27",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P202230830",
+      "inventors": [
+        "SÁNCHEZ DEL RÍO SÁEZ, José",
+        "WANG, De-yi",
+        "PATRIZI GARCÍA, David",
+        "XIANG, Ao",
+        "UREÑA FERNANDEZ, Alejandro",
+        "DEL BOSQUE GARCÍA, Antonio",
+        "SÁNCHEZ MARTÍNEZ, María",
+        "FERNÁNDEZ SÁNCHEZ-ROMATE, Xoan Xosé"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2023-03-07",
+      "publication_id": "ES2935558A1",
+      "title": "Dispositivo de monitorización de la respiración"
+    },
+    {
+      "abstract": "Dispositivo para la monitorización continua y simultánea de parámetros fisiológicos de un paciente, particularmente parámetros cardiológico. Dispositivo para la monitorización continua y simultánea de múltiples parámetros fisiológicos de un paciente, especialmente para un paciente intervenido en un quirófano, un paciente en una sala de reanimación post-operatoria o en observación médica, que comprende múltiples sensores (1) conectados a un transmisor de señales de radiofrecuencia (2), que a su vez está en comunicación con un receptor (3). Al menos dos de los sensores están dispuestos adyacentes y conectados entre sí mediante un único cable (4), estando un extremo del cable conectado al transmisor de señales de radiofrecuencia.",
+      "application_number": "P200402387",
+      "assignees": [],
+      "classifications_cpc": [
+        "A61B5/28",
+        "A61B5/282",
+        "A61B5/0006",
+        "A61B2560/0468"
+      ],
+      "classifications_ipc": [
+        "A61B5/0408"
+      ],
+      "country_code": "ES",
+      "doc_number": "2251310",
+      "filing_date": "2004-10-07",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P200402387",
+      "inventors": [
+        "MULA GALERA,PILAR",
+        "VIDAL FORTUNY, JORDI"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2006-04-16",
+      "publication_id": "ES2251310A1",
+      "title": "DISPOSITIVO PARA LA MONITORIZACION CONTINUA Y SUMULTANEA DE PARAMETROS FISIOLOGICOS DE UN PACIENTE, PARTICULARMENTE PARAMETROS CARDIOLOGICOS."
+    },
+    {
+      "abstract": "La presente solicitud se refiere a un aparato y proceso para producir carbonato de dimetilo, en particular un sistema (aparato o proceso) para la síntesis de DMC sin la necesidad de usar un agente deshidratante. Más particularmente, la mezcla de alimentación para el proceso puede seleccionarse de las siguientes opciones: a) monóxido de carbono, metanol y gas no convertido del proceso, b) gas de síntesis sin CO 2 y gas no convertido del proceso, c) gas de síntesis con CO 2 y gas de síntesis agregado proveniente de gas no convertido purificado del proceso. El proceso usa un agrupamiento de catalizadores que comprende una combinación específica de diferentes grupos de catalizadores heterogéneos en donde cada grupo tiene una función diferente. Además, la invención se refiere a un aparato que comprende una combinación específica de catalizadores heterogéneos para aplicar diferentes vías para producir carbonato de dimetilo según cada opción de mezcla de alimentación de manera continua.",
+      "application_number": "P202031224",
+      "assignees": [
+        "Blueplasma Power, S.L."
+      ],
+      "classifications_cpc": [
+        "C07C68/04",
+        "C07C29/1518"
+      ],
+      "classifications_ipc": [
+        "C07C68/04",
+        "C07C29/151"
+      ],
+      "country_code": "ES",
+      "doc_number": "2914350",
+      "filing_date": "2020-12-09",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P202031224",
+      "inventors": [
+        "ARAYA BRENES, Mario"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2022-06-09",
+      "publication_id": "ES2914350A1",
+      "title": "DISPOSITIVO Y PROCESO PARA PRODUCIR CARBONATO DE DIMETILO"
+    },
+    {
+      "abstract": "La invención hace referencia a un proceso constructivo de viviendas o edificaciones modulares con paneles prefabricados de hormigón reforzados con fibra de vidrio aplicables para cerramiento externo o paredes de fachada y paredes de chapa tipo sándwich para cerramiento interno o paredes interiores. Estos combinan con estructuras metálicas para formar los cerramientos. Presenta la particularidad de contar con un sistema de anclaje de los paneles entre sí, a la losa de cimentación y a la cubierta. Todo el montaje del sistema se puede realizar en taller, planta de producción o instalación industrial ya que se realiza en seco con un montaje entre uniones mediante tornillería. La vivienda se puede montar dividida en diferentes partes y posteriormente elevarla y trasportarla.",
+      "application_number": "P201000554",
+      "assignees": [],
+      "classifications_cpc": [
+        "E04B1/34321"
+      ],
+      "classifications_ipc": [
+        "E04B1/35",
+        "E04B1/24",
+        "E04H1/02",
+        "E04B1/343"
+      ],
+      "country_code": "ES",
+      "doc_number": "2374467",
+      "filing_date": "2010-04-30",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201000554",
+      "inventors": [
+        "TORTOLA BONO, JOSÉ FERNANDO",
+        "BREY NOVAS, NILO"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2012-02-17",
+      "publication_id": "ES2374467A1",
+      "title": "PROCESO CONSTRUCTIVO DE VIVIENDAS O EDIFICACIONES MODULARES CON PANELES PREFABRICADOS."
+    },
+    {
+      "abstract": "Sistema de construcción modular flexible, en el cual se utilizan módulos (4), cada uno de los cuales comprende tres zonas funcionales paralelas, una de las cuales es una zona de pasillo (1), otra una zona de servicios (2) y la tercera una zona de espacio privado (3), formándose con dichos módulos (4) viviendas (5) consecutivas, de forma que la zona de servicios (2) determina un espacio hueco, en el cual se disponen repetidamente, en correspondencia con cada módulo (4), elementos de las instalaciones de servicios, los cuales se establecen en conexión con respectivas acometidas generales de suministro de los servicios a la construcción.",
+      "application_number": "P201000537",
+      "assignees": [],
+      "classifications_cpc": [
+        "E04H1/04",
+        "E04B1/348",
+        "E04H1/005",
+        "E04B1/34815"
+      ],
+      "classifications_ipc": [
+        "E04H1/04",
+        "E04B1/348"
+      ],
+      "country_code": "ES",
+      "doc_number": "2372073",
+      "filing_date": "2010-04-27",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201000537",
+      "inventors": [
+        "OSÉS NAVAZ, JOSÉ JAVIER"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2012-01-13",
+      "publication_id": "ES2372073A1",
+      "title": "SISTEMA DE CONSTRUCCIÓN MODULAR FLEXIBLE."
+    },
+    {
+      "abstract": "Sistemas, fijaciones, paneles y estructura perfeccionadas, para viviendas prefabricadas, tipo \"Igloo''. Se trata de una construcción modular e industrializadas de viviendas prefabricadas, tipo Igloo. Mediante la utilización de los sistemas y paneles descritos en el título de la invención. La esencia es hacer factible la construcción de la vivienda, en cualquier lugar, por cualquier persona, -manumontándola- (es decir: sin necesidad de medios mecánicos como grúas, etc.) de una vivienda prefabricada compuesta por paneles perfeccionados, que incorporan: cerramiento, estructura y aislamiento en cada Unidad de panel, y que éstos pueden estar formados por triángulos u otros polígonos, inscritos en semiesferas, parábolas o cualquier cuerpo de revolución similar. Además de las figuras mostradas en los dibujos, existen un gran número de alternativas o variantes, que salvo por la participación de diferentes polígonos elementales en la formación de la semiesfera, es resto de características y filosofíade construcción, son las mismas.",
+      "application_number": "P9500597",
+      "assignees": [],
+      "classifications_cpc": [],
+      "classifications_ipc": [
+        "E04B1/32",
+        "E04H1/02"
+      ],
+      "country_code": "ES",
+      "doc_number": "2134683",
+      "filing_date": "1995-03-25",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P9500597",
+      "inventors": [
+        "SUAREZ FERNANDEZ,JOSE BERNARDO"
+      ],
+      "kind_code": "A1",
+      "publication_date": "1999-10-01",
+      "publication_id": "ES2134683A1",
+      "title": "SISTEMAS, FIJACIONES, PANELES Y ESTRUCTURA PERFECCIONADAS, PARA VIVIENDAS PREFABRICADAS, TIPO \"IGLOO\"."
+    },
+    {
+      "abstract": "Un fotorreactor para tratamiento de aguas contaminadas que comprende un depósito (15) que a su vez comprende: un volumen de agua contaminada (14); un conducto de entrada (18) y otro de salida (19); al menos un elemento difusor de aire (16) situado en el fondo del depósito (15); al menos un módulo (112, 212) situado en el interior del depósito (15), que comprende unas estructuras (13, 23, 33, 43) que a su vez soportan a una pluralidad de elementos radiantes de luz (11, 21, 31, 41) en contacto con dicho volumen de agua contaminada (14), donde dichos elementos radiantes de luz (11, 21, 31, 41) están recubiertos de un catalizador configurado para activarse al impactar con el mismo la radiación luminosa radiada por dichos elementos radiantes de luz (11, 21, 31, 41). Los elementos radiantes de luz (11, 21, 31, 41) están dispuestos en planos paralelos horizontales con respecto a la línea de agua, y dicho al menos un elemento difusor de aire (16) está configurado para introducir burbujas de aire en dirección perpendicular a dichos planos horizontales, de forma que dichas burbujas de aire deben hacer un recorrido laberíntico al pasar entre los elementos radiantes de luz (11, 21, 31, 41), generando así turbulencia en dicho volumen de agua contaminada (14) y favoreciendo el contacto entre contaminante y catalizador.",
+      "application_number": "P201100554",
+      "assignees": [],
+      "classifications_cpc": [
+        "B01J19/12",
+        "C02F1/325",
+        "C02F1/725",
+        "C02F1/74",
+        "C02F2305/10",
+        "C02F2201/322",
+        "C02F2301/024",
+        "C02F2201/3227"
+      ],
+      "classifications_ipc": [
+        "B01J19/12",
+        "C02F1/32"
+      ],
+      "country_code": "ES",
+      "doc_number": "2365371",
+      "filing_date": "2011-05-16",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201100554",
+      "inventors": [
+        "TEJERO MONZÓN, JUAN IGNACIO",
+        "CASTRILLO MELGUIZO, MARÍA",
+        "RODRÍGUEZ HERNÁNDEZ, LETICIA",
+        "BENGURIA URIBE, PABLO"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2011-09-30",
+      "publication_id": "ES2365371A1",
+      "title": "FOTORREACTOR PARA TRATAMIENTO DE AGUAS CONTAMINADAS."
+    },
+    {
+      "abstract": "Los sistemas de riego para cultivos de plantas que exigen un elevado volumen de agua especialmente campos de golf, presentan una fuerte oposición por parte de los municipios en los que se pretende instalar, cuando en los mismos el agua no es abundante, para ello la invención comprende un sistema de recuperación del agua de riego que se decanta después de pasar por unas capas de tierra, filtrado y drenaje a una zanja situada a un nivel inferior a la capa de drenaje, la capa de tierra recibe agua, abono y nutrientes y a la vez que se oxigena todo ello mediante los conductos adecuados, provistos de los orificios adecuados gobernando el sistema una central eléctrica.",
+      "application_number": "P201231090",
+      "assignees": [
+        "BAP INGENIERIA Y DISEÑO DE PRODUCTO, S.L."
+      ],
+      "classifications_cpc": [
+        "A01F25/16",
+        "A01G25/02",
+        "A01G25/06",
+        "E01C13/083"
+      ],
+      "classifications_ipc": [
+        "A01G25/02",
+        "A01G25/06",
+        "A01G25/16",
+        "E01C13/08"
+      ],
+      "country_code": "ES",
+      "doc_number": "2438447",
+      "filing_date": "2012-07-12",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201231090",
+      "inventors": [
+        "GONZÁLEZ BARROSO, Vicente José"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2014-01-16",
+      "publication_id": "ES2438447A1",
+      "title": "Sistema de recuperación del agua de riego"
+    },
+    {
+      "abstract": "La presente invención se refiere a un sistema de edificación modular, prefabricada y desmontable, mediante el cual se realizan construcciones con formas curvas basadas en media esfera (forma de cúpula) y medio cilindro circular recto (forma de bóveda de cañón). No requiere mano de obra especializada ni medios mecánicos para su montaje, siendo un ejemplo de autoconstrucción. Se pueden conseguir multitud de configuraciones y por tanto de edificaciones y usos, por ejemplo: vivienda, refugio, cabaña, cobertizo, almacén, casa de campo o playa, oficina, guardería, centro de reuniones, suite de hotel o camping, etc.",
+      "application_number": "P201231521",
+      "assignees": [
+        "XILACURVE S.L."
+      ],
+      "classifications_cpc": [
+        "E04B1/32"
+      ],
+      "classifications_ipc": [
+        "E04B1/32",
+        "E04B7/08"
+      ],
+      "country_code": "ES",
+      "doc_number": "2452726",
+      "filing_date": "2012-10-01",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201231521",
+      "inventors": [
+        "CAMPOS CALEJO, Juan José",
+        "CEJUDO BALLESTEROS, Javier"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2014-04-02",
+      "publication_id": "ES2452726A1",
+      "title": "Sistema de edificación modular, prefabricada y desmontable"
+    },
+    {
+      "abstract": "La invención prevé la distribución de los distintos espacios del hospital de acuerdo con una serie de módulos de idéntica anchura que se disponen paralelamente entre dos pasillos, un pasillo de circulación técnica (PT) y un pasillo de circulación pública (PP), de modo que entre dichos dos pasillos se establecen los comentados módulos (M1-M2-M3) para zonas técnicas, mixtas y públicas, definiéndose tres zonas perfectamente diferenciadas y cuyo flujo de usuarios se ve optimizado. Los módulos se dividen longitudinalmente en sub-módulos con unas dimensiones preestablecidas de manera que las estancias destinadas a implantarse en su seno son proporcionales a dichas medidas, permitiendo múltiples distribuciones ajustándose a dichas medidas. Para ampliar el hospital solo es preciso alargar los comentados pasillos y añadir los módulos que sean necesarios, siendo fácilmente redistribuibles los módulos ya existentes si es necesario debido a su naturaleza modular.",
+      "application_number": "P201331795",
+      "assignees": [
+        "MAKIBER, S.A."
+      ],
+      "classifications_cpc": [
+        "E04H3/08",
+        "E04H1/005"
+      ],
+      "classifications_ipc": [
+        "E04H3/08",
+        "E04H1/00"
+      ],
+      "country_code": "ES",
+      "doc_number": "2537651",
+      "filing_date": "2013-12-09",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201331795",
+      "inventors": [
+        "MARTÍNEZ GONZÁLEZ, Patricio",
+        "TORRUELLA CASTEL, Maximia",
+        "SAN PABLO DE DIEGO, César",
+        "SÁNCHEZ JIMÉNEZ, Fernando"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2015-06-10",
+      "publication_id": "ES2537651A1",
+      "title": "Sistema modular estandarizado para la construcción de centros sanitarios u hospitalarios"
+    },
+    {
+      "abstract": "Es un equipo de purificación de aire autónomo de protección colectiva con una maya específica y única de dióxido de titanio (TiO 2 ) y lámpara de luz ultravioleta de baja intensidad (UVb) no generadora de ozono, como medio de eliminación de compuestos orgánicos volátiles y agentes biológicos que proporciona una desinfección de la zona donde está instalado, eliminando cualquier patógeno o compuestos orgánico volátil al 99,9%, incluso las partículas inferiores a 0,3 micrones sin necesidad de filtros. Para conseguir esto, la malla de dióxido de titanio formado por nano celdas interacciona con la luz que emite las lámparas de luz ultravioleta generando una reacción catalítica entre la luz UV y el dióxido de titanio (4) produce radicales de hidróxilo e iones super-óxido que \"oxidan\" la masa celular de los organismos existentes en el aire, alérgenos y contaminantes orgánicos, eliminándolos como agentes nocivos para la salud y quedando como residuo inocuo para la salud, vapor de agua (H 2 O) y dióxido de carbono (CO 2 ). De esta forma se evita que el personal esté en una área contaminada, garantizando un aire libre de impurezas sin emitir ningún agente nocivo para salud como residuo resultante.",
+      "application_number": "P201800191",
+      "assignees": [
+        "FERNANDEZ SEGUNDO, Pablo"
+      ],
+      "classifications_cpc": [
+        "F24F3/16",
+        "B01D53/86",
+        "Y02A50/20"
+      ],
+      "classifications_ipc": [
+        "B01D53/86",
+        "F24F3/16"
+      ],
+      "country_code": "ES",
+      "doc_number": "2742923",
+      "filing_date": "2018-08-16",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201800191",
+      "inventors": [
+        "FERNANDEZ SEGUNDO, Pablo"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2020-02-17",
+      "publication_id": "ES2742923A1",
+      "title": "Equipo de fotocatálisis para la eliminación de compuestos orgánicos volátiles y agentes biológicos"
+    },
+    {
+      "abstract": "Fotocatalizadores de rutenio (II) y síntesis fotocatalítica de iminas. Se describe fotocatalizadores de rutenio (II) de fórmula (M + ) n X n- , en el que X n- es un anión y M + es un complejo catiónico de fórmula (Ia):{IMAGEN} que comprenden un ligando 8-anilsulfonamidoquinolina, así como su procedimiento de obtención. También se describe el uso de dichos fotocatalizadores de rutenio(II) en la síntesis de iminas mediante fotooxidación de aminas en presencia de oxígeno y mediante la utilización de luz visible.",
+      "application_number": "P202030245",
+      "assignees": [
+        "Universidad de Burgos"
+      ],
+      "classifications_cpc": [
+        "B01J23/70",
+        "C07C251/04",
+        "C07C251/16",
+        "C07D215/40",
+        "C07F15/0053"
+      ],
+      "classifications_ipc": [
+        "C07D215/40",
+        "B01J23/70",
+        "C07C251/04",
+        "C07C251/16",
+        "C07F15/00"
+      ],
+      "country_code": "ES",
+      "doc_number": "2856935",
+      "filing_date": "2020-03-25",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P202030245",
+      "inventors": [
+        "ESPINO ORDÓÑEZ, Gustavo",
+        "CARBAYO MARTÍN, Arancha",
+        "VAQUERO GUTIÉRREZ, Mónica",
+        "YAGÜE IZQUIERDO, Cristina",
+        "ECHEVARRÍA POZA, Igor",
+        "HIDALGO ZORRILLA, Jairo",
+        "JALÓN SOTÉS, Félix Ángel",
+        "MANZANO MANRIQUE, Blanca Rosa"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2021-09-28",
+      "publication_id": "ES2856935A1",
+      "title": "FOTOCATALIZADORES DE RUTENIO(II) Y SÍNTESIS FOTOCATALÍTICA DE IMINAS"
+    },
+    {
+      "abstract": "Tomates partenocárpicos y procedimiento para su producción. Los tomates (Lycopersicon esculentum Mill.) partenocárpicos carecen de semillas, son de menor tamaño que los silvestres y, en estado maduro, muestran un color rojo más intenso que los tomates silvestres. Dichos tomates se obtienen cultivando una planta de tomate transgénica productora de dichos tomates partenocárpicos obtenida mediante un procedimiento que comprende (a) introducir en una célula o tejido de una planta de tomate una construcción de DNA que comprende (i) el promotor del gen END1 de guisante o un fragmento funcional del mismo y (ii) un gen citotóxico, operativamente unido a dicho promotor o fragmento del mismo; y (b) regenerar dicha célula o tejido de planta de tomate transformado de la etapa (a) para producir una planta de tomate transgénica productora de tomates partenocárpicos. De aplicación en alimentación e industrias agroalimentarias.",
+      "application_number": "P200401761",
+      "assignees": [],
+      "classifications_cpc": [
+        "A01H5/00",
+        "C12N5/10",
+        "C12N15/82",
+        "C12N15/8287"
+      ],
+      "classifications_ipc": [
+        "C12N15/82",
+        "A01H5/00",
+        "C12N5/10"
+      ],
+      "country_code": "ES",
+      "doc_number": "2265232",
+      "filing_date": "2004-07-17",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P200401761",
+      "inventors": [
+        "ROQUE MESA,EDELIN MARTA",
+        "ELLUL, PHILLIPE",
+        "GOMEZ JIMENEZ, MARIA DOLORES",
+        "MADUEO ALBI,FRANCISCO",
+        "BELTRAN PORTER, JOSE PIO",
+        "CAÑAS CLEMENTE, LUIS ANTONIO"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2007-02-01",
+      "publication_id": "ES2265232A1",
+      "title": "TOMATES PARTENOCARPICOS Y PROCEDIMIENTO PARA SU PRODUCCION."
+    },
+    {
+      "abstract": "Dispositivo autónomo de producción de agua con energía solar. Consiste en un equipo capaz de producir agua a partir del aire atmosférico, de cuya humedad natural se extraerá el agua, por el principio del punto de rocío, de una forma completamente autónoma, es decir sin aporte de ningún tipo de materia prima ni de energía, tomandose esta del sol, y que de forma automática puede regularse tanto en su funcionamiento como en el suministro del agua producida. Consta de un módulo solar (1) que proporciona energía para el funcionamiento del módulo frigorífico (2) que enfría unos paneles donde el aire ambiente condensa la humedad natural, siendo forzado a pasar por el Módulo Convector (4). El agua condensada se recoge, trata y almacena en el módulo hidráulico (3). Un Módulo de Control (5) contiene un autómata programable que gobierna el proceso, así como la instrumentación. Usos: Riego por goteo y otros.",
+      "application_number": "P9900264",
+      "assignees": [],
+      "classifications_cpc": [],
+      "classifications_ipc": [
+        "E03B3/28"
+      ],
+      "country_code": "ES",
+      "doc_number": "2156707",
+      "filing_date": "1999-02-09",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P9900264",
+      "inventors": [
+        "RAYON MARTIN,CARLOS"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2001-07-01",
+      "publication_id": "ES2156707A1",
+      "title": "DISPOSITIVO AUTONOMO DE PRODUCCION DE AGUA CON ENERGIA SOLAR."
+    },
+    {
+      "abstract": "Sistema de conducción, con modo asistido (170) y autónomo (180), adaptado a un modelo tridimensional geoposicionado de parametrización de los elementos del trazado (60) de cualquier infraestructura lineal, que transmite instrucciones al vehículo (110) en cada punto del recorrido escogido en tiempo real, particularizado a cada vehículo en función sus características (80), desde un dispositivo (40) instalado en el mismo desde el cual se gobiernan los distintos sistemas integrantes de la invención, en función de su geoposición real traspuesta al modelo (70), en condiciones de seguridad, confort y máxima eficiencia energética mediante la gestión del ahorro energético, calculando los momentos del recorrido en los cuales no es necesario el accionamiento del sistema de propulsión, aprovechando las energías que intervienen en el movimiento del vehículo y las fuerzas resultantes, para ahorrar energía y/o generarla en motores recargables, todo adaptado a los principios del trazado",
+      "application_number": "P202230618",
+      "assignees": [
+        "DE LA IGLESIA NIETO, Javier"
+      ],
+      "classifications_cpc": [
+        "G05D1/021",
+        "G08G1/167",
+        "G01S13/931",
+        "G05D1/0212",
+        "B60K31/00"
+      ],
+      "classifications_ipc": [
+        "G05D1/02",
+        "G01S13/931",
+        "G08G1/16",
+        "B60K31/00"
+      ],
+      "country_code": "ES",
+      "doc_number": "2928677",
+      "filing_date": "2022-07-06",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P202230618",
+      "inventors": [
+        "DE LA IGLESIA NIETO, Javier"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2022-11-21",
+      "publication_id": "ES2928677A1",
+      "title": "Sistema de conduccion ecoeficiente adaptado a la modelización tridimensional geoposicionada de la parametrización del trazado de cualquier infraestructura lineal particularizado al vehiculo"
+    },
+    {
+      "abstract": "Soporte de sartén, cocina de gas, y método para producir un soporte de sartén. Un soporte de sartén (5, 6) según la invención para una cocina de gas (1) comprende una estructura de soporte (7) para una sartén (13, 14) con una superficie de soporte (8) para la sartén (13, 14), una cámara (9) para un gas, en particular, para una mezcla de combustión inflamable (20), estando la cámara (9) dispuesta en el interior de la estructura de soporte (7). Las aberturas de salida de gas (15, 29, 30) están previstas en la estructura de soporte (7) y están en conexión de fluidos con la cámara (9). La cámara (9) tiene una geometría circunferencial cuando se observa desde arriba.",
+      "application_number": "P201830381",
+      "assignees": [
+        "BSH Electrodomésticos España, S.A."
+      ],
+      "classifications_cpc": [
+        "F24C3/00",
+        "F23D14/06",
+        "F24C15/10",
+        "F24C3/082",
+        "F24C3/085",
+        "F24C15/107",
+        "F23D2900/14062",
+        "F23D2900/14063"
+      ],
+      "classifications_ipc": [
+        "F23D14/06",
+        "F24C3/08"
+      ],
+      "country_code": "ES",
+      "doc_number": "2728084",
+      "filing_date": "2018-04-18",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201830381",
+      "inventors": [
+        "ACOSTA HERRERO, Luis",
+        "ANGELE, Boris",
+        "BECKE, Christoph",
+        "EHRENSBERGER, Julia",
+        "GUTIERREZ HUMARA, Melca",
+        "HOISL, Christian",
+        "LOPEZ ORTIZ, Alberto",
+        "PALACIOS VALDUEZA, Luis Antonio",
+        "PLACER MARURI, Emilio"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2019-10-22",
+      "publication_id": "ES2728084A1",
+      "title": "SOPORTE DE SARTÉN, COCINA DE GAS, Y MÉTODO PARA PRODUCIR UN SOPORTE DE SARTÉN"
+    },
+    {
+      "abstract": "Prótesis dental La presente invención se dirige a una prótesis dental que comprende una estructura multifásica. La estructura multifásica incluye una primera zona compuesta por una aleación de base Co y una segunda zona de composición química diferente. De esta forma se consigue una estructura multifásica con diferentes propiedades mecánicas, electroquímicas y/o biológicas entre dichas primera y segunda zonas de la estructura multifásica. La primera zona tiene forma de una o varias piezas dentales y la segunda zona está configurada como una base de apoyo para actuar como contacto con uno o varios implantes dentales. La segunda zona de la estructura multifásica posee al menos un 1% en peso de Cu.",
+      "application_number": "P202031187",
+      "assignees": [
+        "GÓMEZ BAÑO, Félix"
+      ],
+      "classifications_cpc": [
+        "A61L27/00",
+        "B33Y80/00",
+        "A61C13/0018"
+      ],
+      "classifications_ipc": [
+        "B33Y80/00",
+        "A61C13/00",
+        "A61L27/00"
+      ],
+      "country_code": "ES",
+      "doc_number": "2912698",
+      "filing_date": "2020-11-26",
+      "invenes_url": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P202031187",
+      "inventors": [
+        "GÓMEZ BAÑO, Félix",
+        "BARRO GUIZÁN, Óscar",
+        "ARIAS GONZÁLEZ, Felipe",
+        "LUSQUIÑOS RODRÍGUEZ, Fernando",
+        "POU SARACHO, Juan María"
+      ],
+      "kind_code": "A1",
+      "publication_date": "2022-05-26",
+      "publication_id": "ES2912698A1",
+      "title": "Prótesis dental"
+    }
+  ]
+}

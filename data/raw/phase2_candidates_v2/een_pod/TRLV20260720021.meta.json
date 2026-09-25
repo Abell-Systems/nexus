@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:35:20.048824+00:00",
+  "demand_id": "TRLV20260720021",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "37d6f2618dc8fe0f5289202a91b6d577ec68c4a13d6455d0cc9fd169c1ee2220",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/hydrogen-based-marine-propulsion-manufacturer-eu-member-state-sought"
+}

@@ -1,0 +1,78 @@
+{
+  "decision": "SCENARIO_A_SIGNAL (yield 27.5% >= 20% threshold)",
+  "decision_rule_reference": "docs/phase2-invenes-population-adequacy-probe-preregistration.md SS4",
+  "deviation_from_preregistration": "'See first latest publications' toggle proved unreliable to script (intermittent 504s); dropped before observing any classification outcome. Sampling rule (first 4 non-PCT per query, as returned) otherwise unchanged.",
+  "purpose": "Pre-registered population adequacy probe -- docs/phase2-invenes-population-adequacy-probe-preregistration.md",
+  "queries": {
+    "algoritmo de deteccion de fraude en transacciones": {
+      "attempted": 4,
+      "harvested": 4,
+      "included": 0,
+      "invenes_reported_total_results": 120
+    },
+    "dispositivo de asistencia para movilidad reducida": {
+      "attempted": 4,
+      "harvested": 4,
+      "included": 3,
+      "invenes_reported_total_results": 464
+    },
+    "dispositivo de monitorizacion de constantes vitales": {
+      "attempted": 4,
+      "harvested": 4,
+      "included": 2,
+      "invenes_reported_total_results": 321
+    },
+    "estructura modular de vivienda prefabricada": {
+      "attempted": 4,
+      "harvested": 4,
+      "included": 1,
+      "invenes_reported_total_results": 94
+    },
+    "metodo de fabricacion aditiva de piezas metalicas": {
+      "attempted": 4,
+      "harvested": 4,
+      "included": 2,
+      "invenes_reported_total_results": 242
+    },
+    "metodo de reciclaje de baterias de litio": {
+      "attempted": 4,
+      "harvested": 4,
+      "included": 1,
+      "invenes_reported_total_results": 186
+    },
+    "revestimiento anticorrosivo para estructuras metalicas": {
+      "attempted": 4,
+      "harvested": 4,
+      "included": 0,
+      "invenes_reported_total_results": 99
+    },
+    "sistema de purificacion de aire mediante fotocatalisis": {
+      "attempted": 4,
+      "harvested": 4,
+      "included": 1,
+      "invenes_reported_total_results": 82
+    },
+    "sistema de refrigeracion por absorcion": {
+      "attempted": 4,
+      "harvested": 4,
+      "included": 0,
+      "invenes_reported_total_results": 9959
+    },
+    "sistema de riego automatizado por goteo": {
+      "attempted": 4,
+      "harvested": 4,
+      "included": 1,
+      "invenes_reported_total_results": 83
+    }
+  },
+  "totals": {
+    "attempted": 40,
+    "dispositions": {
+      "excluded_kind_code": 15,
+      "excluded_missing_text": 14,
+      "included": 11
+    },
+    "harvested": 40,
+    "yield_of_attempted": 0.275
+  }
+}

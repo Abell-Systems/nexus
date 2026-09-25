@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:04:00.452940+00:00",
+  "demand_id": "BOPL20251106009",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "fdf440b97fcccc0ff4e619d60586a15bdc50adea1f98a2444b97c641e730fbf8",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/921/produttore-polacco-di-creme-spalmabili-vegan-per-private-label"
+}

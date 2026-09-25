@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:03:18.282716+00:00",
+  "demand_id": "TOES20251030020",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ef7d808ce286858fcc7efaf154360dab007f555d16613cf6183a6ea0b72efc9f",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/952/trappole-ecologiche-intelligenti-e-sistema-ai-anti-parassiti"
+}

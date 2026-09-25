@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:14:52.746695+00:00",
+  "demand_id": "INNOGET-2452",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "0072bb8b81444d677ac0e2307b8eb2c95024db2d626a75478972b7cf723743c7",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2452/seeking-respiratory-solutions-and-technologies"
+}

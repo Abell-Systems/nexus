@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:03:27.806213+00:00",
+  "demand_id": "TRGB2025TRGB202511180271118027",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "840e44ad74dd9d598add2e3a3499c97bd51120cfafe8201bee386d2a56d6f0c1",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/945/pmi-uk-cerca-partner-per-estinguenti-ad-alta-efficienza-per-droni-anti"
+}

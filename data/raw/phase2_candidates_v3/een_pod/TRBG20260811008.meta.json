@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:16:09.684200+00:00",
+  "demand_id": "TRBG20260811008",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "cbbbd592abd870925022464efc6f2ec9c82af27897d06079ec2e283faf1e59ca",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/bulgarian-deep-tech-sme-seeks-partners-integration-and-validation"
+}

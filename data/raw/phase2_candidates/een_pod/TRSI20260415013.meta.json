@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:04.619489+00:00",
+  "demand_id": "TRSI20260415013",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "bd3696ba0c1963a2b6b076a71b757f1783b78f7785e4d161b8025a4443468b92",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1077/pmi-slovena-cerca-laboratori-per-test-di-schermatura-emf-su-custodie-p"
+}

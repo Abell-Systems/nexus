@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:05:23.468255+00:00",
+  "demand_id": "TRGB20250922008",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "cb0ced685f2d8e6acfef63a027300caffa9d9973656aaf03561bdf720cd0d52a",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/855/micro-fabbrica-per-moda-sostenibile"
+}

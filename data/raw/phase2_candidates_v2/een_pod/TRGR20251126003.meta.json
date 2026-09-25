@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:36:04.369409+00:00",
+  "demand_id": "TRGR20251126003",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4b04cd135f5e335943aff3256ee8ef55451d8a9999147ba714a4b737af8a560d",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/greek-maritime-company-looking-integrated-maritime-threat-detection-and"
+}

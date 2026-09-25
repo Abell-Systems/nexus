@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:02:09.735507+00:00",
+  "demand_id": "TOCH20260302021",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4ed6f89c61b1e210c5f0a04c4b5d862f51c6e0463c551112c60d9f4143212351",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1023/pmi-svizzera-esperta-in-lca-carbon-footprint-e-database-lca-cerca-coll"
+}

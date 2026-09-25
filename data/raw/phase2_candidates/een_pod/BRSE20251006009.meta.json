@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:04:49.600679+00:00",
+  "demand_id": "BRSE20251006009",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d1a1357fd154f9d9b06e9245de92c579beca58685e9d813e440eb88288dddf5d",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/884/cappelli-per-studenti-cercasi-produttori"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T10:28:49.647100+00:00",
+  "demand_id": "E99303404",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6b3160b6841f6739c5405dc5fc12b282c0b890c8dc27993273acf08eb7df488b",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=E99303404"
+}

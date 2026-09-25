@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T12:56:02.978998+00:00",
+  "demand_id": "P0247493",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a0a63d3a4f9f075c18263ff567e4ffe62e79dd2f3aaa348461beebc8ed8589be",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P0247493"
+}

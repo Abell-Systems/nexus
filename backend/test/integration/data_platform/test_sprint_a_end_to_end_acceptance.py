@@ -91,16 +91,19 @@ def test_sprint_a_full_end_to_end_ingestion_and_sealing(tmp_path: Path) -> None:
     assert len(obs_parts) >= 1
 
     patents_table = pq.read_table(patents_parts[0])
-    # Fixture contains 3 INCLUDED records: ES2849102B2, ES2715482T3, ES1087654U
-    assert patents_table.num_rows == 3
+    # Fixture contains 2 INCLUDED records by default: ES2849102B2, ES1087654U
+    # (ES2715482T3 is EP-ES and excluded by default -- ADR 0035 SS3; its claims-
+    # fallback parsing is covered separately by the opt-in unit test
+    # test_included_record_case_2_t3_claims_fallback)
+    assert patents_table.num_rows == 2
 
     p_ids = patents_table.column("publication_id").to_pylist()
-    assert sorted(p_ids) == ["ES1087654U", "ES2715482T3", "ES2849102B2"]
+    assert sorted(p_ids) == ["ES1087654U", "ES2849102B2"]
 
-    # Verify T3 claims fallback is sealed into Parquet
-    t3_idx = p_ids.index("ES2715482T3")
-    t3_abstract = patents_table.column("abstract").to_pylist()[t3_idx]
-    assert "Microcápsulas poliméricas biocompatibles" in t3_abstract
+    # Verify sealed abstract text round-trips through Parquet
+    b2_idx = p_ids.index("ES2849102B2")
+    b2_abstract = patents_table.column("abstract").to_pylist()[b2_idx]
+    assert "tensioactivos biodegradables" in b2_abstract
 
     # 6. Verify Enhanced Manifest
     assert summary.enhanced_manifest is not None
@@ -112,8 +115,8 @@ def test_sprint_a_full_end_to_end_ingestion_and_sealing(tmp_path: Path) -> None:
     assert persisted_manifest["content_identity"]["dataset_id"] == dataset_id
     assert persisted_manifest["content_identity"]["counts"]["raw_payload_count"] == 1
     assert persisted_manifest["content_identity"]["counts"]["normalized_record_count"] == 7
-    assert persisted_manifest["content_identity"]["counts"]["included_record_count"] == 3
-    assert persisted_manifest["content_identity"]["counts"]["excluded_record_count"] == 2
+    assert persisted_manifest["content_identity"]["counts"]["included_record_count"] == 2  # T3/EP-ES excluded by default, ADR 0035 SS3
+    assert persisted_manifest["content_identity"]["counts"]["excluded_record_count"] == 3  # T3/EP-ES excluded by default, ADR 0035 SS3
     assert persisted_manifest["content_identity"]["counts"]["quarantined_record_count"] == 2
     assert persisted_manifest["content_identity"]["counts"]["duplicate_count"] == 0
 

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:52:30.970103+00:00",
+  "demand_id": "INNOGET-1681",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e8c1ec77383f4eb89aeab8b25aea96d4c48601ede20ae06c6d1e5ffbd87e7ec8",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1681/seeking-cannabis-researchers-desiring-to-advance-scientific-findings"
+}

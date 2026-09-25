@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:58:23.740363+00:00",
+  "demand_id": "BORO20260721010",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4b3cc53bc3c01f1b299ff2a770ab1ad5041e14163277caf3dd5d32660916d30c",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1365/piattaforma-ai-on-premises-per-videoanalisi-e-sicurezza-integrata"
+}

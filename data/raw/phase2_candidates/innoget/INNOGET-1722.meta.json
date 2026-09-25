@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:17.921012+00:00",
+  "demand_id": "INNOGET-1722",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "142a864b1e47c8018238a703c944d62b43fd6e1e12a0569c345fd722a375d2e0",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1722/seeking-a-fast-thawing-technology"
+}

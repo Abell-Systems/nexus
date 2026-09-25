@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:35:40.174551+00:00",
+  "demand_id": "TRES20260522011",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "3a631d563aed967316fbae9bd44ff2f77a4d4c43ee61fc4c5b60e43090626147",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/auditing-and-quality-certification-services-sought-plant-based-raw"
+}

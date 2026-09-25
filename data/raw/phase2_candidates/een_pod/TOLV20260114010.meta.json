@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:03:05.569145+00:00",
+  "demand_id": "TOLV20260114010",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b90a328858f9294af195c396cf542d770edbc813322c1f3a78bcbabfc5734943",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/963/machine-vision-per-sorting-orientamento-ad-alta-velocit"
+}

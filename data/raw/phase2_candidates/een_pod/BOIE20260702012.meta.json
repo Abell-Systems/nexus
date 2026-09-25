@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:59.706507+00:00",
+  "demand_id": "BOIE20260702012",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a1a9095b8227814afbb4817012c8f5e0f721b5ab20fe3db5d6236489e7526c9b",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1423/azienda-irlandese-cerca-partner-per-formazione-salute-e-sicurezza-nel"
+}

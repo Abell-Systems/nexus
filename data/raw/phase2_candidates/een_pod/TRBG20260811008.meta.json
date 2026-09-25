@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:26.746045+00:00",
+  "demand_id": "TRBG20260811008",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c4eb57745ebd09aac69ad2f0622c060fb609a6d4bc5d862ea76ded4551368c34",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1792/pmi-bulgara-cerca-partner-per-integrazione-e-validazione-di-tecnologia"
+}

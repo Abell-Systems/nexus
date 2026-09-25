@@ -1,0 +1,530 @@
+{
+  "$schema": "https://nexus.abell.ai/schemas/matching-policy-v1.json",
+  "concept_to_cpc_taxonomy": {
+    "activity detection": [
+      "A61B5/024"
+    ],
+    "additive manufacturing": [
+      "B23K9/042",
+      "B33Y10/00"
+    ],
+    "air condensation": [
+      "B01D5/00",
+      "E03B3/28",
+      "Y02A20/00",
+      "Y02A20/152"
+    ],
+    "air purification": [
+      "F24F3/16",
+      "B01D53/86",
+      "Y02A50/20",
+      "A61L2/10",
+      "A61L9/20",
+      "F24F8/22"
+    ],
+    "anticorrosive composition": [
+      "C09K3/18"
+    ],
+    "antioxidant extraction": [
+      "A23D7/00",
+      "A23D7/02",
+      "C11B1/00"
+    ],
+    "architectural wall": [
+      "E04B2/70",
+      "E04C2/46",
+      "E04C2/284",
+      "E04F13/08"
+    ],
+    "assisted driving": [
+      "G05G1/02",
+      "G05G1/52",
+      "B60L2200/34"
+    ],
+    "autonomous driving": [
+      "G05D1/021",
+      "G08G1/167",
+      "G01S13/931",
+      "B60K31/00"
+    ],
+    "biocompatible prosthesis": [
+      "A61F2/38",
+      "A61F2/389",
+      "A61F2/3859",
+      "A61L27/00",
+      "B33Y80/00",
+      "A61C13/0018"
+    ],
+    "body dryer": [
+      "F26B3/04",
+      "A45D20/14",
+      "A47K10/48"
+    ],
+    "cardiac monitoring": [
+      "A61B5/28",
+      "A61B5/282",
+      "A61B5/0006",
+      "A61B2560/0468"
+    ],
+    "closed loop control": [
+      "A61B5/00",
+      "G16H20/17",
+      "G16H40/60",
+      "A61M5/1408"
+    ],
+    "condensing unit": [
+      "G05B11/32",
+      "F25B49/005",
+      "Y02B30/70"
+    ],
+    "construction system": [
+      "B66C1/666",
+      "E04B1/343",
+      "E04B1/348",
+      "E04G21/142",
+      "E04B1/34823",
+      "E04H1/04",
+      "E04H1/005",
+      "E04B1/34815"
+    ],
+    "deicing product": [
+      "C09K3/18"
+    ],
+    "demountable building": [
+      "E04B1/32"
+    ],
+    "dental prosthesis": [
+      "A61L27/00",
+      "B33Y80/00",
+      "A61C13/0018"
+    ],
+    "device supervision": [
+      "H04L67/12"
+    ],
+    "digital printing": [
+      "B41C1/14",
+      "B41J1/00",
+      "B41J2/01"
+    ],
+    "dimethyl carbonate": [
+      "C07C68/04",
+      "C07C29/1518"
+    ],
+    "drinking water generator": [
+      "B01D5/00",
+      "E03B3/28",
+      "Y02A20/00",
+      "Y02A20/152"
+    ],
+    "drug infusion": [
+      "A61B5/00",
+      "G16H20/17",
+      "G16H40/60",
+      "A61M5/1408"
+    ],
+    "eco-efficient driving": [
+      "G05D1/021",
+      "G08G1/167",
+      "G01S13/931",
+      "B60K31/00"
+    ],
+    "electric vehicle": [
+      "C01B3/08",
+      "B60L50/50",
+      "Y02E60/36"
+    ],
+    "electronic voting": [
+      "H04L9/32",
+      "G06F21/64",
+      "G07C13/00"
+    ],
+    "emergency light device": [
+      "B60Q1/52"
+    ],
+    "garden irrigation": [
+      "E02F5/102",
+      "A01G25/00",
+      "A01G27/00",
+      "F25B21/02"
+    ],
+    "gas stove": [
+      "F24C3/00",
+      "F23D14/06",
+      "F24C15/10"
+    ],
+    "gestural interaction": [
+      "A61B5/103"
+    ],
+    "hybrid coating": [
+      "A61L27/28",
+      "A61L27/00"
+    ],
+    "implantable element": [
+      "A61L27/28",
+      "A61L27/00"
+    ],
+    "insulating panel": [
+      "E04B7/22",
+      "E04C2/288",
+      "E04F15/182"
+    ],
+    "irrigation system": [
+      "A01G25/00",
+      "A01G27/00",
+      "F25B21/02",
+      "A01F25/16",
+      "A01G25/02",
+      "A01G25/06",
+      "E01C13/083"
+    ],
+    "irrigation water recovery": [
+      "A01F25/16",
+      "A01G25/02",
+      "A01G25/06",
+      "E01C13/083"
+    ],
+    "knee prosthesis": [
+      "A61F2/38",
+      "A61F2/389",
+      "A61F2/3859"
+    ],
+    "medical training simulator": [
+      "A61M1/34",
+      "G09B9/00",
+      "A61M1/36"
+    ],
+    "metal additive manufacturing": [
+      "B23K9/042",
+      "B33Y10/00"
+    ],
+    "modular bathroom unit": [
+      "A47K4/00",
+      "E03C1/01",
+      "E04B1/34869"
+    ],
+    "modular construction": [
+      "E04B1/34823",
+      "E04H1/04",
+      "E04B1/348",
+      "E04H1/005",
+      "E04B1/34815",
+      "E04B1/34321",
+      "E04B1/32"
+    ],
+    "modular hospital": [
+      "E04H3/08",
+      "E04H1/005"
+    ],
+    "multimedia terminal": [
+      "A61B5/05",
+      "A61B5/742",
+      "A61B5/743",
+      "G16H40/63"
+    ],
+    "olive oil extraction": [
+      "A23D7/00",
+      "A23D7/02",
+      "C11B1/00"
+    ],
+    "optical fiber detection": [
+      "A61B5/024"
+    ],
+    "pan support": [
+      "F24C3/00",
+      "F23D14/06",
+      "F24C15/10"
+    ],
+    "peltier effect": [
+      "A01G25/00",
+      "A01G27/00",
+      "F25B21/02"
+    ],
+    "photocatalysis": [
+      "B01J19/12",
+      "B01J19/32",
+      "B01J21/14",
+      "B01J35/39",
+      "B01D53/885",
+      "F24F3/16",
+      "B01D53/86",
+      "Y02A50/20",
+      "B01J23/70",
+      "C07C251/04",
+      "C07C251/16",
+      "A61L2/10",
+      "A61L9/20",
+      "F24F8/22"
+    ],
+    "photoreactor": [
+      "B01J19/12",
+      "C02F1/325",
+      "C02F1/725",
+      "C02F1/74",
+      "B01J19/32",
+      "B01J21/14",
+      "B01J35/39",
+      "B01D53/885"
+    ],
+    "physical restraint device": [
+      "A41D1/04",
+      "A61F5/3769",
+      "A41D13/1245"
+    ],
+    "physiological monitoring": [
+      "A61B5/28",
+      "A61B5/282",
+      "A61B5/0006",
+      "A61B2560/0468",
+      "A61B5/05",
+      "A61B5/742",
+      "A61B5/743",
+      "G16H40/63"
+    ],
+    "phytosanitary application": [
+      "A01M7/00",
+      "A01B73/06",
+      "A01C23/04"
+    ],
+    "pipe burying machine": [
+      "E02F5/102"
+    ],
+    "predictive maintenance": [
+      "G06Q50/08"
+    ],
+    "prefabricated bathroom": [
+      "A47K4/00",
+      "E03C1/01",
+      "E04B1/34869"
+    ],
+    "prefabricated house": [
+      "E04B1/04",
+      "E04B1/20",
+      "E04H1/02",
+      "E04B1/343",
+      "E04F11/02",
+      "E04B2/70",
+      "E04C2/46",
+      "E04C2/284",
+      "E04F13/08"
+    ],
+    "prefabricated panels": [
+      "E04B1/34321"
+    ],
+    "radio controlled vehicle": [
+      "C01B3/08",
+      "B60L50/50",
+      "Y02E60/36"
+    ],
+    "refrigeration control": [
+      "G05B11/32",
+      "F25B49/005",
+      "Y02B30/70"
+    ],
+    "reinforced concrete": [
+      "E04B1/04",
+      "E04B1/20",
+      "E04H1/02",
+      "E04B1/343",
+      "E04F11/02"
+    ],
+    "remote identity verification": [
+      "G06Q50/18",
+      "G06V30/40",
+      "G06V40/172"
+    ],
+    "remote meter reading": [
+      "G01D4/002",
+      "G01D4/004",
+      "Y02B90/20",
+      "Y04S20/30"
+    ],
+    "renal therapy": [
+      "A61M1/34",
+      "G09B9/00",
+      "A61M1/36"
+    ],
+    "respiration monitoring": [
+      "A61B5/08",
+      "A41D13/11",
+      "C08J5/005"
+    ],
+    "robotic exoskeleton": [
+      "A61F5/013",
+      "A61H1/0274",
+      "B25J9/0006"
+    ],
+    "ruthenium photocatalyst": [
+      "B01J23/70",
+      "C07C251/04",
+      "C07C251/16"
+    ],
+    "secure voting system": [
+      "H04L9/32",
+      "G06F21/64",
+      "G07C13/00"
+    ],
+    "self-leveling foundation": [
+      "B60P3/32",
+      "B60P3/36",
+      "B60S9/14",
+      "B60S9/21",
+      "E04B1/35",
+      "E04B1/36",
+      "E04H1/12",
+      "B62D63/08",
+      "E04B1/343",
+      "E04B1/34352"
+    ],
+    "sensor network": [
+      "H04W48/16",
+      "H04W84/18",
+      "H04L67/125"
+    ],
+    "smart tv telecare": [
+      "H04N5/445",
+      "H04N7/141",
+      "H04N7/173",
+      "H04N21/4223"
+    ],
+    "soil cardboard": [
+      "A01C1/04"
+    ],
+    "telecare assistance": [
+      "H04N5/445",
+      "H04N7/141",
+      "H04N7/173",
+      "H04N21/4223"
+    ],
+    "telematic network": [
+      "H04L67/12"
+    ],
+    "telemetric monitoring": [
+      "H04B5/77",
+      "H04Q9/00",
+      "H04W4/80",
+      "A61B5/0024",
+      "G01S13/758"
+    ],
+    "tomato production": [
+      "A01H5/00",
+      "C12N5/10",
+      "C12N15/82",
+      "C12N15/8287"
+    ],
+    "transducer node": [
+      "H04W48/16",
+      "H04W84/18",
+      "H04L67/125"
+    ],
+    "transportable building": [
+      "B60P3/32",
+      "B60P3/36",
+      "B60S9/14",
+      "B60S9/21",
+      "E04B1/35",
+      "E04B1/36",
+      "E04H1/12",
+      "B62D63/08",
+      "E04B1/343",
+      "E04B1/34352"
+    ],
+    "video identification": [
+      "G06Q50/18",
+      "G06V30/40",
+      "G06V40/172"
+    ],
+    "vital sign monitoring": [
+      "A61B5/28",
+      "A61B5/282",
+      "A61B5/0006",
+      "A61B2560/0468",
+      "A61B5/05",
+      "A61B5/742",
+      "A61B5/743",
+      "G16H40/63",
+      "G16H40/67",
+      "A61B5/0002",
+      "A61B5/0205",
+      "A61B5/14532",
+      "A61B5/024"
+    ],
+    "volatile organic compound": [
+      "F24F3/16",
+      "B01D53/86",
+      "Y02A50/20",
+      "A61L2/10",
+      "A61L9/20",
+      "F24F8/22"
+    ],
+    "water treatment": [
+      "B01J19/12",
+      "C02F1/325",
+      "C02F1/725",
+      "C02F1/74"
+    ],
+    "wearable device": [
+      "A61B5/103",
+      "G16H40/67",
+      "A61B5/0002",
+      "A61B5/0205",
+      "A61B5/14532",
+      "A61B5/024"
+    ],
+    "wearable exoskeleton": [
+      "A61F5/013",
+      "A61H1/0274",
+      "B25J9/0006"
+    ],
+    "wireless meter": [
+      "G01D4/002",
+      "G01D4/004",
+      "Y02B90/20",
+      "Y04S20/30"
+    ],
+    "wireless telemetry": [
+      "H04B5/77",
+      "H04Q9/00",
+      "H04W4/80",
+      "A61B5/0024",
+      "G01S13/758"
+    ],
+    "wrist band": [
+      "G16H40/67",
+      "A61B5/0002",
+      "A61B5/0205",
+      "A61B5/14532",
+      "A61B5/024"
+    ]
+  },
+  "confidence_thresholds": {
+    "moderate": 0.4,
+    "strong": 0.7,
+    "weak": 0.1
+  },
+  "cpc_concordance_levels": {
+    "main_group": 0.75,
+    "none": 0.0,
+    "section": 0.25,
+    "subclass": 0.5,
+    "subgroup": 1.0
+  },
+  "cpc_taxonomy_descriptions": {},
+  "description": "CPC concept taxonomy grounded strictly in the frozen OEPM-INVENES-CORPUS-2026-V1's own (title, classifications_cpc) pairs -- built for the #104 CPC channel-activation diagnostic (docs/phase2-ted-cpc-channel-diagnostic-contract.md). Not for production use; weights/thresholds/concordance-levels copied verbatim from config/policies/matching/default_matching_policy.json (not under test here).",
+  "operational_limits": {
+    "max_candidate_pool_size": 300,
+    "retrieval_limit": 100
+  },
+  "policy_id": "NEXUS-MATCHING-POLICY-TED-AT-SCALE-CPC-DIAGNOSTIC",
+  "policy_sha256": "4f7a2ef5a72fc7fd9760f385e497e5a6f33918aebdf4f616741f3fe5f1d089f8",
+  "policy_version": "1.0.0",
+  "sufficiency_rules": {
+    "min_active_signals": 1,
+    "min_signals_for_sufficient": 2,
+    "require_temporal_validity": true
+  },
+  "weights": {
+    "alpha": 0.35,
+    "beta": 0.45,
+    "gamma": 0.2
+  }
+}

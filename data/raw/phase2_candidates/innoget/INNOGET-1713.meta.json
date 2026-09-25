@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:05.782904+00:00",
+  "demand_id": "INNOGET-1713",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "26d47a23a90c45db4ddedac40ca13d2edc3b72c016050e66e6ab4e216ab0087f",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1713/seeking-smart-hospital-ward-management-tools-technology-and-processes"
+}

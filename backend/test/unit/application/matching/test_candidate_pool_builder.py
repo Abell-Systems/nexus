@@ -90,6 +90,31 @@ def memory_duckdb_two_patents():
     con.close()
 
 
+@pytest.fixture
+def memory_duckdb_snapshot_schema():
+    """Snapshot-schema table (data/snapshots/patents_es_snapshot.duckdb's real shape):
+    publication_number instead of publication_id, no doc_number/kind_code columns."""
+    con = duckdb.connect(":memory:")
+    con.execute(
+        """
+        CREATE TABLE patents (
+            publication_number VARCHAR PRIMARY KEY,
+            title VARCHAR,
+            abstract VARCHAR,
+            publication_date VARCHAR,
+            country_code VARCHAR
+        )
+        """
+    )
+    con.execute(
+        "INSERT INTO patents VALUES "
+        "('ES-4001-A1', 'Title A', 'Abstract A', '2021-01-01', 'ES'), "
+        "('ES-4002-A1', 'Title B', 'Abstract B', '2021-02-01', 'ES')"
+    )
+    yield con
+    con.close()
+
+
 class CandidatePoolBuilderTest:
     def test_should_union_candidates_across_retrievers_without_duplicating(self, memory_duckdb_two_patents):
         bm25 = _FakeRetriever(RetrievalMethod.LEXICAL, {"ES-3001": 0.9, "ES-3002": 0.5})
@@ -101,6 +126,22 @@ class CandidatePoolBuilderTest:
         )
         result = builder.build(DemandSignal(demand_id="D1", title="t", description="d"))
         assert {c.publication_id for c in result.pool.candidates} == {"ES-3001", "ES-3002"}
+
+    def test_should_resolve_patents_against_snapshot_schema_table(self, memory_duckdb_snapshot_schema):
+        """Regression: _fetch_patents must adapt to a snapshot-schema table
+        (publication_number, no doc_number/kind_code) exactly like
+        infrastructure.matching.duckdb_helpers.resolve_patent_columns does for the
+        retrievers -- it previously hardcoded the canonical-schema column names only,
+        raising a DuckDB BinderException against the real
+        data/snapshots/patents_es_snapshot.duckdb file."""
+        bm25 = _FakeRetriever(RetrievalMethod.LEXICAL, {"ES-4001-A1": 0.9, "ES-4002-A1": 0.5})
+        builder = CandidatePoolBuilder(
+            retrievers=[bm25],
+            eligibility_policy=_AllEligiblePolicy(),
+            connection=memory_duckdb_snapshot_schema,
+        )
+        result = builder.build(DemandSignal(demand_id="D1", title="t", description="d"))
+        assert {c.publication_id for c in result.pool.candidates} == {"ES-4001-A1", "ES-4002-A1"}
 
     def test_should_merge_retrieval_scores_from_multiple_methods_for_same_candidate(self, memory_duckdb_two_patents):
         bm25 = _FakeRetriever(RetrievalMethod.LEXICAL, {"ES-3001": 0.9})

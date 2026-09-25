@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:05:16.142016+00:00",
+  "demand_id": "TRES20250806011",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "5435af53378d5fd499ddd9c5b430fc7e103b7cb9f4bd00dd89f58fae3ceea997",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/860/manutenzione-giunti-di-ponti"
+}

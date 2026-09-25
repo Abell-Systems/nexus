@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T10:29:21.110228+00:00",
+  "demand_id": "U9401743",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4bec5eb6261dacae2cb1f4a48f7fadf4d12ba3362ca961ebbfd40cfa5fd05a22",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=U9401743"
+}

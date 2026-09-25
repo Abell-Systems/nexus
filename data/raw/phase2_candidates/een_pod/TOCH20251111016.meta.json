@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:04:10.777619+00:00",
+  "demand_id": "TOCH20251111016",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "705dae89fb82b9e43ff53748cafe9acb84d7273fd0d8c805d334e343217a1c2a",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/913/pannelli-geotermici-senza-perforazione-per-edifici-e-infrastrutture"
+}

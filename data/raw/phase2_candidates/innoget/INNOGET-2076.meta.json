@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:42.375457+00:00",
+  "demand_id": "INNOGET-2076",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "fba88bf55df8546a2f0a99bb9bdef526e53de09910fa60f4bbed069f7ee7dd3d",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2076/seeking-100-natural-materials-that-are-suitable-to-be-used-as-infill-for-artificial-turf-sports-fields"
+}

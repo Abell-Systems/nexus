@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:04:25.687743+00:00",
+  "demand_id": "BOPL20251023008",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "3d5751827403c019e07bcbcf6ccf60f03c92a188521e0c5f1282224274ed543e",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/902/componenti-in-multistrato-curvato-e-stampi-per-sedie-poltrone"
+}

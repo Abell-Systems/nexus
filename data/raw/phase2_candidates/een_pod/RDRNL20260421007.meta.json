@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:12.926112+00:00",
+  "demand_id": "RDRNL20260421007",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ae8614f12a60115b171a9e16802546041e0b5f3d9b6c4367b28239f7ca7bb9af",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1072/progetto-olandese-farm-of-the-future-cerca-pmi-europee-per-innovazioni"
+}

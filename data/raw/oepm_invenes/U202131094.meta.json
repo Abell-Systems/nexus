@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T09:28:25.425863+00:00",
+  "demand_id": "U202131094",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4513effd835648bfe271f822218d442efdbc1c1aaab988b55c929a74ac09eeb9",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=U202131094"
+}

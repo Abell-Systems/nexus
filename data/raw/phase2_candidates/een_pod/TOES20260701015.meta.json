@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:58:54.428857+00:00",
+  "demand_id": "TOES20260701015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a54e2736dd0050f16cc23d64d95a600f292849ff977988c778af8aa4c7e7244a",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1441/startup-spagnola-cerca-ospedali-per-testare-software-ai-di-digitalizza"
+}

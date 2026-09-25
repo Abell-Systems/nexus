@@ -1,0 +1,97 @@
+{
+  "purpose": "Session ledger for docs/phase2-invenes-scaled-acquisition.md -- cumulative running total is what the stopping rule (N>=60 included) reads.",
+  "stopping_rule": "included_count >= 60 after real ADR 0035 SS3/SS9 classification (experiments/oepm/build_oepm_corpus.py:classify_records + IngestionPipeline), docs/phase2-invenes-scaled-acquisition.md SS4",
+  "sessions": [
+    {
+      "session": 0,
+      "label": "ADR 0035 SS11.3 original smoke-test batch (not a scaled-acquisition session; baseline)",
+      "date": "2026-09-14",
+      "commit": "eb1ca7b",
+      "queries": 3,
+      "attempted": 40,
+      "included_this_session": 8,
+      "cumulative_included": 8
+    },
+    {
+      "session": 1,
+      "label": "Scaled acquisition session 1 -- next unused referencias, same 10 probe queries",
+      "date": "2026-09-15",
+      "commit": "7a78ea2",
+      "queries": 10,
+      "attempted": 40,
+      "included_this_session": 11,
+      "cumulative_attempted": 80,
+      "cumulative_included": 19,
+      "rate_limited": false,
+      "notes": "Clean run, no harvest errors, no rate limit. Included-this-session (11/40 = 27.5%) matches the repeated probe's own yield almost exactly, corroborating SCENARIO_A_SIGNAL."
+    },
+    {
+      "session": 2,
+      "label": "Scaled acquisition session 2 -- next unused referencias (positions 9-12+), same 10 probe queries",
+      "date": "2026-09-15",
+      "commit": "04fcb61",
+      "queries": 10,
+      "attempted": 40,
+      "included_this_session": 8,
+      "cumulative_attempted": 120,
+      "cumulative_included": 27,
+      "rate_limited": false,
+      "notes": "Clean run, no harvest errors, no rate limit. 8/40 = 20% this session, slightly below session 1's 27.5% but still above the probe's own >=20% SCENARIO_A threshold. One referencia (U202130811) recurred across two queries' result sets and was deduplicated (skipped on its second occurrence) before harvesting -- disclosed, not silently dropped."
+    },
+    {
+      "session": 3,
+      "label": "Scaled acquisition session 3 -- next unused referencias (positions 13-16+), same 10 probe queries",
+      "date": "2026-09-15",
+      "commit": "d3c5d40",
+      "queries": 10,
+      "attempted": 40,
+      "included_this_session": 9,
+      "cumulative_attempted": 160,
+      "cumulative_included": 36,
+      "rate_limited": false,
+      "notes": "Clean run, no harvest errors, no rate limit. 9/40 = 22.5% this session -- consistent with the 20-27.5% band observed across sessions 1-2, no drift. Several queries required paging 3-5 pages deep (e.g. query 3 'metodo de reciclaje de baterias de litio' is PCT-heavy and needed page 5) to find 4 new non-PCT referencias -- population is getting sparser per page but not yet exhausted for any query."
+    },
+    {
+      "session": 4,
+      "label": "Scaled acquisition session 4 -- next unused referencias (positions 17-20+), same 10 probe queries",
+      "date": "2026-09-15",
+      "commit": "4ea25c1",
+      "queries": 10,
+      "attempted": 40,
+      "included_this_session": 10,
+      "cumulative_attempted": 200,
+      "cumulative_included": 46,
+      "rate_limited": false,
+      "notes": "Clean run, no harvest errors, no rate limit. 10/40 = 25% this session, in-band with sessions 1-3 (20-27.5%), no drift despite deeper paging. One intermediate sourcing error caught before harvesting: two referencias for query 9 (E10155220, E13178928) initially looked new but were already in REFERENCIAS from session 3 (same query, page 2) -- substituted with the next two unused page-4 items before extending the script. A single transient 504 hit the search UI itself (not a detail-page fetch) on the first query-1 re-search attempt; retried cleanly on the next navigation, not counted as a harvest error since no referencia fetch failed."
+    },
+    {
+      "session": 5,
+      "label": "Scaled acquisition session 5 -- next unused referencias (positions 21-24+), same 10 probe queries",
+      "date": "2026-09-15",
+      "commit": "5866ac2",
+      "queries": 10,
+      "attempted": 40,
+      "included_this_session": 6,
+      "cumulative_attempted": 240,
+      "cumulative_included": 52,
+      "rate_limited": false,
+      "notes": "Clean run, no harvest errors, no rate limit. 6/40 = 15% this session -- the first session below the 20-27.5% band held across sessions 1-4. No query redesign, no criteria change, no curation in response to this drop, per protocol. Query 3 ('metodo de reciclaje de baterias de litio') needed page 8 to find 4 new non-PCT items, deepest paging yet, consistent with the thinning-density trend flagged since session 3. Did not cross the N=60 stopping threshold (52/60, 8 remaining)."
+    },
+    {
+      "session": 6,
+      "label": "Scaled acquisition session 6 -- next unused referencias, same 10 probe queries -- CROSSES N=60, ACQUISITION CLOSED",
+      "date": "2026-09-15",
+      "commit": "89ebf13",
+      "queries": 10,
+      "attempted": 40,
+      "included_this_session": 11,
+      "cumulative_attempted": 280,
+      "cumulative_included": 63,
+      "rate_limited": false,
+      "notes": "Clean run, no harvest errors, no rate limit. 11/40 = 27.5% this session -- back in the 20-27.5% band, session 5's 15% dip did not persist. All 10 queries resolved entirely from result page 1 (no paging needed at all), a sharp contrast to session 5 where several queries needed up to 8 pages. Cross-checking page-1 contents against referencias already harvested in prior sessions shows INVENES's own result ordering has shifted between sessions (previously-used items no longer sit where they were read from) -- the population is not shrinking, the live search index is reordering day to day. Sourcing rule unchanged: next unused non-PCT item in the query's current live order, deduplicated against every referencia already in REFERENCIAS (verified: 0 overlap in 40 new items). Cumulative: 280 attempted, 63 included -- CROSSES the N>=60 stopping rule (docs/phase2-invenes-scaled-acquisition.md SS4). Acquisition closed as of this session per the pre-registered rule; the full session was run to completion (all 40 already sourced/fixed before classification per SS2) rather than truncated mid-session, matching the protocol's own session-atomicity design -- classification was applied to the complete accumulated set, not a partial one."
+    }
+  ],
+  "target": 60,
+  "current_cumulative_included": 63,
+  "status": "CLOSED -- N=60 crossed in session 6 (63/60 included, 280 attempted, cumulative yield 22.5%). Acquisition stopped per the pre-registered stopping rule (docs/phase2-invenes-scaled-acquisition.md SS4). No further scaled-acquisition sessions to run. Next: corpus audit (independence/duplicates/families) before final freeze declaration."
+}

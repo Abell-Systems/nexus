@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:19:07.887101+00:00",
+  "demand_id": "RDRTR20260713023",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "aff850a058dc6bd63f2729121e43dcb6af899da1a1b13f95daa72c8a24cfb321",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/partner-search-eureka-disaster-resilience-call-2026-ai-assisted-hose-fed"
+}

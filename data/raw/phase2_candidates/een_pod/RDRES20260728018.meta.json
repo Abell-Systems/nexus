@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:56:39.645318+00:00",
+  "demand_id": "RDRES20260728018",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "935bd955cfd257d9f0c0b30e125ede36359e2531647a012a85df9079a887f159",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1968/consorzio-cerca-end-user-di-uav-per-materiali-compositi-a-bassa-firma"
+}

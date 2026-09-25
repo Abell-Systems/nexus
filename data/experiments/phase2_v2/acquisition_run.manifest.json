@@ -1,0 +1,35 @@
+{
+  "artifact_hashes": {
+    "candidates_accepted.json": "222b5f07bcbd887fb5ae1eef1fe774df14e88ea0b7ad2534244b2d6b54a992aa",
+    "candidates_mapped.json": "7fa883c53baa21b6892c3f63eef4f8682e5a4faa3e31eacd6db67db17d663865",
+    "candidates_raw.manifest.json": "94887dc2ac76494c48cb3f4b125d520dd363d1fa1f78d47f11ff24aa18d3206c",
+    "candidates_rejected.json": "a671d174ea3e0610c61781d4040650adb88d02508d42d870aaf9c06ad7e6bf57"
+  },
+  "counts": {
+    "total_accepted": 47,
+    "total_mapped": 108,
+    "total_mapping_errors": 0,
+    "total_raw": 108,
+    "total_rejected": 61
+  },
+  "execution_timestamp": "2026-09-14T09:37:06.682172+00:00",
+  "manifest_version": "1.0.0",
+  "pipeline_version": "phase2_offline_validator_v1",
+  "policy_sha256": "0bee32c970d17c83f1f69be98ba0564e36956edaf44078a5903222b73aa728f3",
+  "policy_version": "corpus_expansion_policy_v2",
+  "rejection_breakdown": {
+    "OUT_OF_TEMPORAL_WINDOW": 61
+  },
+  "source_breakdown": {
+    "een_pod": {
+      "accepted": 47,
+      "mapped": 108,
+      "raw": 108,
+      "rejected": 61
+    }
+  },
+  "stratum_breakdown": {
+    "international_european": 44,
+    "spain": 3
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:35:11.054005+00:00",
+  "demand_id": "TRFR20260728027",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d608308e0fabcbcf23a353f6383416e510ff332d2b30206352bd905b9e98f35b",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/french-circular-construction-innovator-transforming-reclaimed-roofing"
+}

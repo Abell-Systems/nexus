@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:19:49.816872+00:00",
+  "demand_id": "RDRES20260521021",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "402dc1033195840a16e48daecaac4a0ee38583461fe82fe89e625d810494bf98",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/edf-2026-ls-dis-ra-smero-project-defence-supply-logistics-resilience"
+}

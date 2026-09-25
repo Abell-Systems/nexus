@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:14:48.652749+00:00",
+  "demand_id": "INNOGET-2483",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1287ec2ce8c20be7e9985a90cc184746ce3f8f83e60e548b67c123007a6b585d",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2483/seeking-next-generation-equipment-and-processing-technologies-for-tempura-batter-coated-fish-products"
+}

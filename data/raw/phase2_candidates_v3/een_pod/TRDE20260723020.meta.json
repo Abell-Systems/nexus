@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:16:13.675712+00:00",
+  "demand_id": "TRDE20260723020",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ba1e5511cc5aad5fb03e283c0aaf9378b94d1d23ac1bf807dba6c266e0210c25",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/northern-german-company-machinery-maintenance-sector-seeking-digital"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:05.971593+00:00",
+  "demand_id": "INNOGET-1838",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b1dff66c3f5b370ad32b8f5d9981727896bb0ba754196efa39acf4700c5703e0",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1838/seeking-innovation-related-to-coronavirus-data-diagnostics-tests-telehealth-or-other-solutions"
+}

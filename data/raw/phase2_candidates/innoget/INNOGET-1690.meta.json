@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:16.476026+00:00",
+  "demand_id": "INNOGET-1690",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "68bfeda60c75770ab5c067b42aaa18e40d27d732dfedce556c72c663b1292f23",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1690/seeking-mahuannin-b-f-and-a-from-ephedra-radix-plant"
+}

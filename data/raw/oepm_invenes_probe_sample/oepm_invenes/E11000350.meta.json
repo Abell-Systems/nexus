@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T08:48:11.243886+00:00",
+  "demand_id": "E11000350",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "dd5c8761c1305745dff473d496eb3a6cac30ab8ebdf52e16988c60daedb07866",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=E11000350"
+}

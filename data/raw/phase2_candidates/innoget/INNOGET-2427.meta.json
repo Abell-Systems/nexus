@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:15.667212+00:00",
+  "demand_id": "INNOGET-2427",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "441047533d048b6f03dd1ea549e350faf294feb2651d893b6a9b387384b0a6fb",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2427/exploring-the-applicability-of-kempower-solutions-in-heavy-electric-traffic-market-analysis-for-scaling-kempower-finland"
+}

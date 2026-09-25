@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:47.740130+00:00",
+  "demand_id": "INNOGET-1741",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8da93ff96878fb5aa1f409b7919af5b33733686980cb2b54ef0df8bf20456edf",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1741/seeking-novel-material-for-cosmetic-formulation"
+}

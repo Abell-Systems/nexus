@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:05:24.672033+00:00",
+  "demand_id": "BRIE20250711011",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "62467f9a80168226014dfafa983f04e90d14d53d2ba41ba45ae7b076aeb78f92",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/854/materiali-innovativi-per-isolamento-trasformatori"
+}

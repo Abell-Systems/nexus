@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T09:44:11.396600+00:00",
+  "demand_id": "P9900264",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "579c029079cb5166e37295af0c876a117a1bf7db25468c9e75405aef5fe1c5dc",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P9900264"
+}

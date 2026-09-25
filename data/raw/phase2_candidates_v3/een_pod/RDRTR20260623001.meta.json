@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:19:25.848537+00:00",
+  "demand_id": "RDRTR20260623001",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f2a874970bf87630f448219b2fad141d3fc504377607309707ff72045df539ee",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/turkish-ai-software-sme-seeking-irasme-rd-partner-co-develop-privacy"
+}

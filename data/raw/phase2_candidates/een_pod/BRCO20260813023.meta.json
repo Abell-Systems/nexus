@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:52.939940+00:00",
+  "demand_id": "BRCO20260813023",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "94c4985ac64af3774e174d7230eb7223777c0b5f6b3fd23753e474bfee731634",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1731/azienda-colombiana-cerca-partner-per-logistica-integrata-e-soluzioni-d"
+}

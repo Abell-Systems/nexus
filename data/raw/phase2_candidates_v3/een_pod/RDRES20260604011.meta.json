@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:19:38.929219+00:00",
+  "demand_id": "RDRES20260604011",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "70ee6ef5589fa49234126fd055a5087251b49c247eeeaf4298e00270d53e271b",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/catalan-organisation-seeking-partners-erasmus-vet-proposal"
+}

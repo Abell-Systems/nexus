@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:40.912143+00:00",
+  "demand_id": "RDRTR20260727018",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4166969b7fd074f40f4195b7b0aad93a667b70cb08a26d719a2f3702b6162c46",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/eureka-project-rd-partner-sought-ai-powered-voice-customer-support"
+}

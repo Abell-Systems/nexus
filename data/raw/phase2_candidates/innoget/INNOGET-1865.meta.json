@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:40.672656+00:00",
+  "demand_id": "INNOGET-1865",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c382b22fda5d00c45cb418db37ee35b68d2d0ebc3f8cae66e5b8d7dec77d5011",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1865/seeking-innovators-partners-and-investors-across-europe-to-develop-innovative-solutions-for-coronavirus-related-challenges"
+}

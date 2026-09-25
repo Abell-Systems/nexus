@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:45.170201+00:00",
+  "demand_id": "INNOGET-2079",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "763efe42b3f3ebea0fa1c00946375791424b82e87a56d9bacb704e647588f8ca",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2079/seeking-sustainable-cost-effective-solutions-to-reduce-the-humidity-of-cooling-air-inside-greenhouses-in-qatar"
+}

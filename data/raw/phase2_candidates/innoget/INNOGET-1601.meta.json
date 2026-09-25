@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:50.874614+00:00",
+  "demand_id": "INNOGET-1601",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "26ae29a067943b71c14ca81f7c7662f87346297c0853e088a56b13866b82d72d",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1601/seeking-molecular-diagnosis-of-tuberculosis"
+}

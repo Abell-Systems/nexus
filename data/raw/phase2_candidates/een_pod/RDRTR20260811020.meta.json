@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:07.229216+00:00",
+  "demand_id": "RDRTR20260811020",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7ee7c083f15024b329a5440ff6bf9258a5e4e67cf1097e26b70f9b88d78a4ad2",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1785/startup-cerca-coordinatore-clinico-per-progetto-europeo-su-qualit-di-v"
+}

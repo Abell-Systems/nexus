@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:05.315954+00:00",
+  "demand_id": "INNOGET-2006",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "619ba75cba8f0e5c427e63bc270c4c376609364587af1f62343bc38192788bf6",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2006/seeking-a-botanic-extract-for-urinary-health"
+}

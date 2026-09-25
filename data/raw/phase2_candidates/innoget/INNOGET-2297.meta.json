@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:12.254703+00:00",
+  "demand_id": "INNOGET-2297",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "5371daecc8da3aec491167f21085b0982bf3bd4e7a3eaf178fa8ea9b361ba8b5",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2297/seeking-green-efficiency-designing-the-future-marketing-campaign-for-connect-iq-call-for-eu-university-students-only"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:59.794405+00:00",
+  "demand_id": "INNOGET-1678",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8844512261cd661e955fc2077bd425d5ccc7e6a3b6db999ab028bd5ee8278db6",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1678/seeking-to-allocate-new-possible-innovations-in-cosmetology-and-trichology"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:16.888640+00:00",
+  "demand_id": "INNOGET-1611",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "9e8b6086c7042de74762de8d5e14ad2e0c24fbe95f1d22f51a1f626ee9e326ae",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1611/seeking-8th-international-conference-on-medical-education-and-health-sciences"
+}

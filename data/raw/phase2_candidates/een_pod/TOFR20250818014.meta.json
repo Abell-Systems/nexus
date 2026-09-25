@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:02:13.441417+00:00",
+  "demand_id": "TOFR20250818014",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "afc407f8c985e1e156be318e4d82c4353f3382f22406df1198205f23aac3852b",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1020/azienda-francese-leader-in-sistemi-uv-per-pcb-e-incisione-metalli-cerc"
+}

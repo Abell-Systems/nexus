@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:35:57.488299+00:00",
+  "demand_id": "TRPL20260227004",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "55498acb9b3c9707a4b2f5f82bd2bf819fd66359ea136fd4bd44e472d32a0850",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/polish-sme-seeks-rd-partner-develop-directional-vibrational-freezing"
+}

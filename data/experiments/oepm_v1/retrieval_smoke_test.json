@@ -1,0 +1,43 @@
+{
+  "demands_attempted": 8,
+  "non_empty_pools": 4,
+  "patent_corpus": "/home/valentin/code/active/nexus/data/snapshots/oepm_invenes_corpus_v1/OEPM-INVENES-CORPUS-2026-V1/patents/part_0000.parquet",
+  "patent_corpus_size": 8,
+  "pool_members": {
+    "137639-2024": [
+      "ES2552604A1"
+    ],
+    "22543-2024": [],
+    "268550-2024": [],
+    "454027-2024": [
+      "ES2641296A1",
+      "ES2600452A1",
+      "ES2411281A2",
+      "ES2552604A1",
+      "ES2326252A1",
+      "ES2726003A1"
+    ],
+    "566290-2025": [
+      "ES2552604A1"
+    ],
+    "588217-2024": [],
+    "820594-2025": [],
+    "89204-2025": [
+      "ES2641296A1",
+      "ES2552604A1",
+      "ES2326252A1",
+      "ES2726003A1"
+    ]
+  },
+  "pool_sizes": {
+    "137639-2024": 1,
+    "22543-2024": 0,
+    "268550-2024": 0,
+    "454027-2024": 6,
+    "566290-2025": 1,
+    "588217-2024": 0,
+    "820594-2025": 0,
+    "89204-2025": 4
+  },
+  "purpose": "ADR 0035 SS11.3 step 5 retrieval smoke test -- empirical check, not a claim of usability"
+}

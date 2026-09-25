@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:47.015533+00:00",
+  "demand_id": "INNOGET-2206",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6005fd104e5cf3d508c0bd06af5c6c30541c56e469e4937e568fe9e89ef90199",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2206/seeking-technologies-for-manufacturing-sustainable-paraffins-and-olefins"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:31.793042+00:00",
+  "demand_id": "BRNL20250930008",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6a56630f97492dd8c9425ca6efc5526adc983b66f3892c75da3d843e664dfbb6",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1052/azienda-olandese-per-bioprocessi-industriali-cerca-partner-con-feedsto"
+}

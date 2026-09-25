@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:38.437384+00:00",
+  "demand_id": "INNOGET-2281",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d2191633e73d728281ebc43ad89a61b387fffeb3e846bef67bd3ec20c04810c9",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2281/seeking-natural-preservatives-for-beverage-applications"
+}

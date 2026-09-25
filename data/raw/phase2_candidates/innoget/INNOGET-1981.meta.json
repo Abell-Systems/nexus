@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:21.666556+00:00",
+  "demand_id": "INNOGET-1981",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7f7b2b8e5594887ad96ee3c7c0103b81ccc58cf18d60df444df6f1fcefc9d628",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1981/seeking-startups-for-start-innegev-pre-incubation-program-2021"
+}

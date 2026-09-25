@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:31.428610+00:00",
+  "demand_id": "INNOGET-2109",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "9dd6e956f09ff0454a108f1d67b8ae2031ad2228e323dd66dec0a85b59b3e788",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2109/seeking-biodegradable-spf-boosting-film-forming-ingredients-for-sunscreens"
+}

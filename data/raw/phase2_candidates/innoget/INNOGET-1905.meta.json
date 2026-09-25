@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:02.436944+00:00",
+  "demand_id": "INNOGET-1905",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "38852c03fafd9980ff57a0481ddddedd6a04ed7a579fbd2a5b9885a348007630",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1905/seeking-novel-proposals-to-translate-electronic-transfer-of-shipment-details-on-an-existing-pre-printed-bills-of-landing-bl-mani"
+}

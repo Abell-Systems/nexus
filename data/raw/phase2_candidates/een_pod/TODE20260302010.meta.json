@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:01:52.518539+00:00",
+  "demand_id": "TODE20260302010",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "135edad1c475022a21474b5969a7ff77a328f0380e8cbb9f14a69e55755384b8",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1038/pmi-tedesca-cerca-partner-per-sviluppo-di-sistemi-lidar-su-uuv-per-inf"
+}

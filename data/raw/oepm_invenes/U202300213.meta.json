@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T09:41:08.789145+00:00",
+  "demand_id": "U202300213",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d04875855640a719432facf43a04a44f5556a7fb255d2a3a72dc22f184fc6fc8",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=U202300213"
+}

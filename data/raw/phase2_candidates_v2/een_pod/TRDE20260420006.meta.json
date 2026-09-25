@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T09:35:49.681231+00:00",
+  "demand_id": "TRDE20260420006",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "30d689d1ddcb174a42d300c571e05abe677af6abe02eaf684933cbe2b47bcf34",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/german-sme-seeks-research-and-supplier-partnerships-electric-vehicle-ev"
+}

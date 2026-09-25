@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:43.323702+00:00",
+  "demand_id": "INNOGET-1830",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "992fab30a3456f31cdd39e4e668f6cca68e0c4cf65ad5031def14051b315624a",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1830/seeking-cattle-livestock-management-system-integrated-with-existing-infosystem"
+}

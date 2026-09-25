@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T09:24:40.101933+00:00",
+  "demand_id": "P201000554",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8f248d939c6810ee1c61f12e7f7b275b124dafcba4d90bc29ac396a18a47b724",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201000554"
+}

@@ -95,6 +95,15 @@ class TargetSampleSizeConfig(BaseModel):
 
 
 FROZEN_CORPUS_EXPANSION_POLICY_VERSION: str = "corpus_expansion_policy_v1"
+CORPUS_EXPANSION_POLICY_V2_VERSION: str = "corpus_expansion_policy_v2"
+CORPUS_EXPANSION_POLICY_V3_VERSION: str = "corpus_expansion_policy_v3"
+CORPUS_EXPANSION_POLICY_V4_VERSION: str = "corpus_expansion_policy_v4"
+KNOWN_CORPUS_EXPANSION_POLICY_VERSIONS: tuple[str, ...] = (
+    FROZEN_CORPUS_EXPANSION_POLICY_VERSION,
+    CORPUS_EXPANSION_POLICY_V2_VERSION,
+    CORPUS_EXPANSION_POLICY_V3_VERSION,
+    CORPUS_EXPANSION_POLICY_V4_VERSION,
+)
 
 
 class CorpusExpansionPolicy(BaseModel):
@@ -114,9 +123,9 @@ class CorpusExpansionPolicy(BaseModel):
 
     @field_validator("policy_version")
     @classmethod
-    def validate_policy_version_exact(cls, v: str) -> str:
-        if v != FROZEN_CORPUS_EXPANSION_POLICY_VERSION:
-            raise ValueError(f"policy_version must be strictly '{FROZEN_CORPUS_EXPANSION_POLICY_VERSION}', got '{v}'")
+    def validate_policy_version_known(cls, v: str) -> str:
+        if v not in KNOWN_CORPUS_EXPANSION_POLICY_VERSIONS:
+            raise ValueError(f"policy_version must be one of {KNOWN_CORPUS_EXPANSION_POLICY_VERSIONS}, got '{v}'")
         return v
 
 
@@ -138,6 +147,48 @@ def calculate_canonical_word_count(text: str) -> int:
     return len(tokens)
 
 
+class PublicationDateEvidenceType(StrEnum):
+    """Closed taxonomy of publication date evidence types."""
+
+    POD_REFERENCE = "pod_reference"
+    EXPLICIT_METADATA = "explicit_metadata"
+    HISTORICAL_FEED = "historical_feed"
+    UNVERIFIABLE = "unverifiable"
+
+
+class TechnicalProblemClassification(StrEnum):
+    """Three-way classification of whether description text articulates a genuine
+    technical problem, per docs/superpowers/specs/2026-09-23-ted-construct-validity-classifier-design.md
+    SS3."""
+
+    TECHNICAL_PROBLEM = "technical_problem"
+    GENERIC_PROCUREMENT = "generic_procurement"
+    EMPTY_INSUFFICIENT = "empty_insufficient"
+
+
+class PublicationDateEvidence(BaseModel):
+    """Structured temporal evidence for demand candidate publication date."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    publication_date: date | None = None
+    evidence_type: PublicationDateEvidenceType
+    evidence_field: str = Field(..., min_length=1)
+    evidence_value: str = Field(..., min_length=1)
+
+    @model_validator(mode="after")
+    def validate_date_coherence(self) -> "PublicationDateEvidence":
+        if self.evidence_type == PublicationDateEvidenceType.UNVERIFIABLE:
+            if self.publication_date is not None:
+                raise ValueError("publication_date must be None when evidence_type is UNVERIFIABLE")
+        else:
+            if self.publication_date is None:
+                raise ValueError(
+                    f"publication_date is required when evidence_type is {self.evidence_type.value}"
+                )
+        return self
+
+
 class DemandCandidateContractRecord(BaseModel):
     """Canonical representation of an acquired candidate prior to policy validation."""
 
@@ -146,9 +197,7 @@ class DemandCandidateContractRecord(BaseModel):
     demand_id: str = Field(..., min_length=1)
     source_id: str = Field(..., min_length=1)
     source_construct: str = Field(..., min_length=1)
-    publication_date: date
-    publication_date_evidence_field: str = Field(..., min_length=1)
-    publication_date_evidence_text: str = Field(..., min_length=1)
+    publication_date_evidence: PublicationDateEvidence
     geographic_stratum: str = Field(..., min_length=1)
     title: str = Field(..., min_length=1)
     description_text: str = Field(..., min_length=1)
@@ -159,6 +208,10 @@ class DemandCandidateContractRecord(BaseModel):
     has_articulated_technical_problem: bool
     technical_problem_evidence_text: str | None = None
 
+    @property
+    def publication_date(self) -> date | None:
+        return self.publication_date_evidence.publication_date
+
 
 class CandidateRejectionReason(StrEnum):
     """Pre-specified candidate exclusion reasons."""
@@ -166,6 +219,7 @@ class CandidateRejectionReason(StrEnum):
     UNAUTHORIZED_SOURCE = "UNAUTHORIZED_SOURCE"
     INCOMPATIBLE_CONSTRUCT = "INCOMPATIBLE_CONSTRUCT"
     OUT_OF_TEMPORAL_WINDOW = "OUT_OF_TEMPORAL_WINDOW"
+    UNVERIFIABLE_PUBLICATION_DATE = "UNVERIFIABLE_PUBLICATION_DATE"
     UNAUTHORIZED_GEOGRAPHIC_STRATUM = "UNAUTHORIZED_GEOGRAPHIC_STRATUM"
     CONTENT_TOO_SHORT = "CONTENT_TOO_SHORT"
     CONFIDENTIALITY_REDACTED = "CONFIDENTIALITY_REDACTED"

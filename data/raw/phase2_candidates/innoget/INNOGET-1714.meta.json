@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:56.582250+00:00",
+  "demand_id": "INNOGET-1714",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f60f5b940bc959044b6d793dd24937fc701279b0dcd69085395859d0cf0fe12b",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1714/seeking-for-researches-and-innovations-for-the-1st-international-conference-of-iranian-school-iranian-architecture"
+}

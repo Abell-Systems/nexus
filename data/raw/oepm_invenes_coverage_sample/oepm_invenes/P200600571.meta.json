@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T14:18:58.670957+00:00",
+  "demand_id": "P200600571",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b613e669839915a5abe0d05800cf366f7af9f1a44ae0b28d033c0409c5b181d7",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P200600571"
+}

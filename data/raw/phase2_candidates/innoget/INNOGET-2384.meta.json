@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:52:43.354820+00:00",
+  "demand_id": "INNOGET-2384",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f3ba98bf9df5e8d64d0b9a7049d2e768ff49523d21fd33a8e408640ac97fbaf9",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2384/seeking-can-glutathione-injections-brighten-dull-skin"
+}

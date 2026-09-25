@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:19.603081+00:00",
+  "demand_id": "INNOGET-2284",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f7b7314657984123c381536d3ccbc90feb0a862cda4bd282bfdc8e66d2ef638d",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2284/seeking-the-contech-call-promoted-by-mext"
+}

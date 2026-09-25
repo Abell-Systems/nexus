@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:19:23.854942+00:00",
+  "demand_id": "RDRTR20260625019",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "83b7a9d78e3a41fca93754a249d87ab3f34948abcfa070047131aa020048375b",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/hydrodynamic-cavitation-extraction-pomegranate-bioactives-partner-search"
+}

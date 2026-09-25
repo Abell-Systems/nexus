@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:04:04.926338+00:00",
+  "demand_id": "BODE20251111015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "79e89b15d896fbbd13a167febd2a097bb073dab4ec1d7c24b8011f5e903f7d6d",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/917/ortesi-mediche-dinamiche-3d-per-riabilitazione-funzionale"
+}

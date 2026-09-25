@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:39.590218+00:00",
+  "demand_id": "BOTW20260706001",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "9c9690d0d1b2714d99d2540dcce4af2e28a9a20c6b17154ae7ae74f2f8f445ac",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/2212/piattaforma-no-code-per-engagement-digitale-in-servizi-finanziari-e-re"
+}

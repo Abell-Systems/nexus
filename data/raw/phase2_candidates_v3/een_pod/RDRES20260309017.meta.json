@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:20:30.853581+00:00",
+  "demand_id": "RDRES20260309017",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7c9f83b17655e38c0e41d139d09032666dbf20a055899aca5228d26abc45ab5e",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/horizon-europe-expertise-primary-human-biological-validation-and-stromal"
+}

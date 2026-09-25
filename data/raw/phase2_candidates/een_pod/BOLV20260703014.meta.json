@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:34.475707+00:00",
+  "demand_id": "BOLV20260703014",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "5b7df55d296fd91f344b99aea33676244df089b1c1fb8bb9e2e585fd657e84c1",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/2217/produttore-lettone-di-arredi-di-lusso-su-misura-cerca-partner-b2b"
+}

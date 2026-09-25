@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:20:37.957240+00:00",
+  "demand_id": "RDRES20260219019",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "63672cec79448b8ec4748ef9f117932e9a42fbcd8b7e622537657a8fb14ea4eb",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/catalan-enterprise-currently-seeking-partners-forthcoming-proposal-under"
+}

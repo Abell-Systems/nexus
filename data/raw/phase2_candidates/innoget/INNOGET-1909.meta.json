@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:54.882026+00:00",
+  "demand_id": "INNOGET-1909",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "3d59c9d6960f7548ecb2cdb7de7ae663ca11303cf756e6ec78bf95cb0fe0ad0a",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1909/seeking-novel-proposals-to-develop-an-automated-system-that-accounts-for-real-time-inventory-tracking-of-cargo-containers"
+}

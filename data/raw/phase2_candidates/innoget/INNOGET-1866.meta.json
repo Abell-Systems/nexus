@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:38.673690+00:00",
+  "demand_id": "INNOGET-1866",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4fa3caed7f3ec8660c925307e6e1517b0e3379a8f9689dab99d89d6d359dd76f",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1866/seeking-innovative-proposals-in-the-ai-domain-to-boost-the-productivity-and-competitiveness-of-eu-industries"
+}

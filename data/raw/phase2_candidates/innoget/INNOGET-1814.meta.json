@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:18.357081+00:00",
+  "demand_id": "INNOGET-1814",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "32feccc3328a73aaf0ec8344adbfe7d2e1fcc54d321825f50245178f030ecf30",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1814/seeking-cleaning-agents-for-solar-panels"
+}

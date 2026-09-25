@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:00.881149+00:00",
+  "demand_id": "INNOGET-1753",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1f4fd29ac8891c6965765b0ed89ffb34228062fec9f471d91251976c6f1d14a6",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1753/seeking-market-for-white-turmerric-known-as-curcuma-aromatica-salisb"
+}

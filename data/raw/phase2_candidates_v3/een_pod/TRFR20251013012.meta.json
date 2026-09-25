@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:17:21.978057+00:00",
+  "demand_id": "TRFR20251013012",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "763bd14adea60e7d7279713a8a686a51c2c9b68275238dd735045ca9ec2cc6fd",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/end-users-manufacturers-service-companies-outsource-sterilisation-medical"
+}

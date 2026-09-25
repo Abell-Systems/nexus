@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:16:36.738561+00:00",
+  "demand_id": "TRDE20260512019",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "9194673e84e9269f567ae6281c5f154e27f25a155ecc64bb5b84851c3c995b9a",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/partners-sought-digital-teaching-hospital-and-smart-healthcare"
+}

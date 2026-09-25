@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:28.761684+00:00",
+  "demand_id": "RDRHR20260813013",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "290f21acacc7ae1153b6f000c9ccaf7e55506c2e7855be2f39b6be2686f26878",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1739/cantiere-croato-cerca-partner-tecnologici-per-propulsione-green-su-imb"
+}

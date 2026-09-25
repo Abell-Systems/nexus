@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T09:25:34.462352+00:00",
+  "demand_id": "P201530572",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "873cda9e2c1e9d57be525e17c74c268566557b56c1c14b26a16ceca23608bc47",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201530572"
+}

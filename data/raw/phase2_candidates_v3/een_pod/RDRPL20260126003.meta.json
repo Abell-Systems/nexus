@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:21:26.277056+00:00",
+  "demand_id": "RDRPL20260126003",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ae3e39c51d1b15f9b1532f2490ebfb2dc933b95ee150c50682b093d6d16aa8a0",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/polish-rd-institute-specialising-formulation-organic-coatings-and-paints"
+}

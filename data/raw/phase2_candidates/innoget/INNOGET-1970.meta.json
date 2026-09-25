@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:36.840192+00:00",
+  "demand_id": "INNOGET-1970",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "0c1df90e8766d70736407d86241f9a6b54292aba6c693416e3198d295a5e6951",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1970/seeking-breakthrough-ingredient-and-technology-start-ups-and-entrepreneurs-to-join-pepsico-s-greenhouse-accelerator-program"
+}

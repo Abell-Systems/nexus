@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:55.878854+00:00",
+  "demand_id": "INNOGET-1735",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d2c31b82879087cd204e5bd2073108081ec66d5c5c99ebf14d23d96db5738fce",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1735/seeking-additive-manufacturing-materials-for-cold-forming-dies"
+}

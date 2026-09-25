@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:02:51.521028+00:00",
+  "demand_id": "TOGB20251104010",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b6bf291d9887101b78e79ba309498673a0cc77e5b956d5a56ce1ae58e940e1ac",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/973/digital-product-passport-per-tessile-e-arredo"
+}

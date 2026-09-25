@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:56:52.425203+00:00",
+  "demand_id": "TRGR20260710001",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "434371274fe0cffa35a6b6609977db3d53a55043da02c0c7188b15009a59cfbb",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/2137/pmi-greca-cerca-laboratorio-per-test-in-vitro-su-sistema-dermocosmetic"
+}

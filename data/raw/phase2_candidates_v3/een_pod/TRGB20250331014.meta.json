@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:17:35.948448+00:00",
+  "demand_id": "TRGB20250331014",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "7855e4d26fd4cf9f6f23b3069dad28f7997e63f1f2fd7afce71ea27e7c01c202",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/london-based-biotechnology-rd-sme-seeking-datasets-related-gut-microbiome"
+}

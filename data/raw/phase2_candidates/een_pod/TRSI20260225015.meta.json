@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:02:22.399461+00:00",
+  "demand_id": "TRSI20260225015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "aeda82881ae305f7c5b78066908b79aa6d844f8e1306cf7e6b280479e886f912",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1014/azienda-slovena-cerca-partner-tecnologici-per-la-realizzazione-di-una"
+}

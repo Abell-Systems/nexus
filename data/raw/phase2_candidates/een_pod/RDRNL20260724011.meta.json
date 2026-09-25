@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:00:07.965210+00:00",
+  "demand_id": "RDRNL20260724011",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "70542e0d3ab9887fae8e2d9db7a01a6e69a09a9ce2d100afd96d006f9c534b52",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1123/universit-olandese-cerca-partner-per-modelli-ai-per-veicoli-subacquei"
+}

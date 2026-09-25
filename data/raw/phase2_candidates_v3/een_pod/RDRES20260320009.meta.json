@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:20:21.937370+00:00",
+  "demand_id": "RDRES20260320009",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6f8dd98edd5459e0ea9d0e841e850afb71f1bc975b8b3cc1d233fe561b3bce19",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/ai-powered-real-time-itinerary-platform-sustainable-walking-routes-seeking"
+}

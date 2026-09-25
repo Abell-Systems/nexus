@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:34.080885+00:00",
+  "demand_id": "INNOGET-2096",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "61f07d6dd5c5d66e34f867ad8cfe0fc5c51a2598987e949bee7c0e03796fd7a8",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2096/seeking-expertise-to-develop-a-model-to-understand-processing-of-plant-proteins-in-extrusion-for-snack-product-development"
+}

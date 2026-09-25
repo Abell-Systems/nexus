@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:59:38.300403+00:00",
+  "demand_id": "RDRHU20260703005",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "23b27062e055f45c36e0332fede1e1f886d686afa83b3acf32bdc8324932a5a3",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1413/pmi-ungherese-cerca-partner-per-robotica-chirurgica-spinale-endoscopic"
+}

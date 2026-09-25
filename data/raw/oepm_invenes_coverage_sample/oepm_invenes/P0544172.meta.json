@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T14:18:48.026241+00:00",
+  "demand_id": "P0544172",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ed8b4139a1ce79e4eb15cf5b5378ba05472f03f9094be0ac9a9d88250f32690c",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P0544172"
+}

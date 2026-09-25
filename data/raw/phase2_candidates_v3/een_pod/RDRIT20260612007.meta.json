@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:19:37.848822+00:00",
+  "demand_id": "RDRIT20260612007",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4e84cd13088ebf89c5512a0297747213c0e7b36b7659e619856367b5817fd8ec",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/italian-private-company-seeks-french-and-italian-partners-cross-border"
+}

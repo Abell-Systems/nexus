@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:00:50.858477+00:00",
+  "demand_id": "TODE20260508015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1b76707da222c1433993d38a10c407980e0f5ce1ea618a3c9c657e2b4a19e65b",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1089/scale-up-tedesca-offre-climate-butter-ingrediente-cosmetico-da-ferment"
+}

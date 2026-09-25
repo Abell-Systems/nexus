@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:42.817059+00:00",
+  "demand_id": "INNOGET-1603",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "3fad17c8f6cdeb1e8fbc76d1d5e946a63ba3e56fb142358b410a321ece18f8c2",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1603/seeking-service-providers-of-inhalation-toxicology-safety-assessments"
+}

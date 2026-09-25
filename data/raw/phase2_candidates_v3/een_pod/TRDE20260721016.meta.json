@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:16:16.705823+00:00",
+  "demand_id": "TRDE20260721016",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e16180f59cc659af52deddc078f3461f94222cd874c3cc3631b00415ef5d742d",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/innovative-solutions-sought-cold-preparation-sauces-and-other-foods"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:16.746833+00:00",
+  "demand_id": "INNOGET-2429",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b9172bd4e00dd2a340b0746c560c93ebc62a2844540c9240c2a72460c1238c9e",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2429/seeking-hair-analysis-tools-research-for-assessment-of-systemic-health"
+}

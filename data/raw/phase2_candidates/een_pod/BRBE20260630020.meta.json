@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:59:19.784497+00:00",
+  "demand_id": "BRBE20260630020",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "09a40ce8e252fca4c2a62ef5e1f71c99b4579d4560f8a987dc4da3197ff5de65",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1467/azienda-belga-cerca-produttore-di-polpa-di-pomodoro-per-piatti-pronti"
+}

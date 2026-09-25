@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T09:08:20.516779+00:00",
+  "demand_id": "P0437308",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e073e1318633aaee4567f0551458a04410c3aa578ba5a0fbdf4edc5ccc76aec2",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P0437308"
+}

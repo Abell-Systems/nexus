@@ -1,0 +1,202 @@
+[
+  {
+    "demand_id": "TRDE20251015017",
+    "description_text": "Abstract Azienda tedesca cerca partner o fornitori di tecnologia per agglomerare scarti plastici PEX contenenti alluminio derivanti dal riciclo. L\u2019obiettivo \u00e8 riutilizzarli come combustibile alternativo sostenibile rispetto a carbone o gas. Previsto accordo commerciale con assistenza tecnica.",
+    "geographic_stratum": "international_european",
+    "has_articulated_technical_problem": true,
+    "has_confidentiality_redaction": false,
+    "is_publicly_accessible": true,
+    "language_code": "en",
+    "organization_raw": null,
+    "publication_date_evidence": {
+      "evidence_field": "pod_reference",
+      "evidence_type": "pod_reference",
+      "evidence_value": "TRDE20251015017",
+      "publication_date": "2025-10-15"
+    },
+    "source_construct": "Technology request",
+    "source_id": "een_pod",
+    "technical_problem_evidence_text": "Abstract Azienda tedesca cerca partner o fornitori di tecnologia per agglomerare scarti plastici PEX contenenti alluminio derivanti dal riciclo. L\u2019obiettivo \u00e8 riutilizzarli come combustibile alternativo sostenibile rispetto a carbone o gas. Previsto accordo commerciale con assistenza tecnica.",
+    "title": "Soluzione energetica da PEX riciclato"
+  },
+  {
+    "demand_id": "TRES20250806011",
+    "description_text": "Abstract Una societ\u00e0 spagnola cerca tecnologie di manutenzione per giunti di dilatazione elastomerici e appoggi in neoprene di ponti stradali. Le soluzioni dovrebbero prolungare la vita utile, ridurre i costi e limitare l'interruzione del traffico. Si valutano tecnologie da altri settori per collaborazione R&S o accordi tecnici. Interesse per sostenibilit\u00e0 e facilit\u00e0 d\u2019uso.",
+    "geographic_stratum": "spain",
+    "has_articulated_technical_problem": true,
+    "has_confidentiality_redaction": false,
+    "is_publicly_accessible": true,
+    "language_code": "en",
+    "organization_raw": null,
+    "publication_date_evidence": {
+      "evidence_field": "pod_reference",
+      "evidence_type": "pod_reference",
+      "evidence_value": "TRES20250806011",
+      "publication_date": "2025-08-06"
+    },
+    "source_construct": "Technology request",
+    "source_id": "een_pod",
+    "technical_problem_evidence_text": "Abstract Una societ\u00e0 spagnola cerca tecnologie di manutenzione per giunti di dilatazione elastomerici e appoggi in neoprene di ponti stradali. Le soluzioni dovrebbero prolungare la vita utile, ridurre i costi e limitare l'interruzione del traffico. Si valutano tecnologie da altri settori per collaborazione R&S o accordi tecnici. Interesse per sostenibilit\u00e0 e facilit\u00e0 d\u2019uso.",
+    "title": "Manutenzione giunti di ponti"
+  },
+  {
+    "demand_id": "TRES20251031029",
+    "description_text": "Abstract Societ\u00e0 spagnola cerca tecnologie per monitoraggio e mitigazione polveri PM10 in miniera a cielo aperto collegata a miniera sotterranea. Richieste soluzioni autonome, basse in acqua, resistenti a condizioni estreme e con analisi realtime. Piloti previsti in Cile.",
+    "geographic_stratum": "spain",
+    "has_articulated_technical_problem": true,
+    "has_confidentiality_redaction": false,
+    "is_publicly_accessible": true,
+    "language_code": "en",
+    "organization_raw": null,
+    "publication_date_evidence": {
+      "evidence_field": "pod_reference",
+      "evidence_type": "pod_reference",
+      "evidence_value": "TRES20251031029",
+      "publication_date": "2025-10-31"
+    },
+    "source_construct": "Technology request",
+    "source_id": "een_pod",
+    "technical_problem_evidence_text": "Abstract Societ\u00e0 spagnola cerca tecnologie per monitoraggio e mitigazione polveri PM10 in miniera a cielo aperto collegata a miniera sotterranea. Richieste soluzioni autonome, basse in acqua, resistenti a condizioni estreme e con analisi realtime. Piloti previsti in Cile.",
+    "title": "Soluzioni per monitorare e mitigare polveri PM10 in miniere"
+  },
+  {
+    "demand_id": "TRFR20251013012",
+    "description_text": "Abstract Azienda francese sviluppa tecnologia di sterilizzazione a raggi X per dispositivi medici. Cerca aziende manifatturiere o terzisti che validino un impianto pilota. Il progetto prevede collaborazione in R&D o accordo commerciale con assistenza tecnica.",
+    "geographic_stratum": "international_european",
+    "has_articulated_technical_problem": true,
+    "has_confidentiality_redaction": false,
+    "is_publicly_accessible": true,
+    "language_code": "en",
+    "organization_raw": null,
+    "publication_date_evidence": {
+      "evidence_field": "pod_reference",
+      "evidence_type": "pod_reference",
+      "evidence_value": "TRFR20251013012",
+      "publication_date": "2025-10-13"
+    },
+    "source_construct": "Technology request",
+    "source_id": "een_pod",
+    "technical_problem_evidence_text": "Abstract Azienda francese sviluppa tecnologia di sterilizzazione a raggi X per dispositivi medici. Cerca aziende manifatturiere o terzisti che validino un impianto pilota. Il progetto prevede collaborazione in R&D o accordo commerciale con assistenza tecnica.",
+    "title": "Sterilizzazione X-ray per dispositivi medici"
+  },
+  {
+    "demand_id": "TRFR20251121008",
+    "description_text": "Abstract Impresa francese attiva nella produzione di t\u00e8, tisane e caff\u00e8 cerca con urgenza una linea completa per il confezionamento di bustine di t\u00e8 piramidali e/o tipo mousseline con busta esterna. La macchina deve gestire dosi da 1 a 10 g, velocit\u00e0 di 34-45 bustine al minuto e diversi formati di sacchetto interno ed esterno. Si prevede un accordo commerciale con assistenza tecnica con il costruttore della linea.",
+    "geographic_stratum": "international_european",
+    "has_articulated_technical_problem": true,
+    "has_confidentiality_redaction": false,
+    "is_publicly_accessible": true,
+    "language_code": "en",
+    "organization_raw": null,
+    "publication_date_evidence": {
+      "evidence_field": "pod_reference",
+      "evidence_type": "pod_reference",
+      "evidence_value": "TRFR20251121008",
+      "publication_date": "2025-11-21"
+    },
+    "source_construct": "Technology request",
+    "source_id": "een_pod",
+    "technical_problem_evidence_text": "Abstract Impresa francese attiva nella produzione di t\u00e8, tisane e caff\u00e8 cerca con urgenza una linea completa per il confezionamento di bustine di t\u00e8 piramidali e/o tipo mousseline con busta esterna. La macchina deve gestire dosi da 1 a 10 g, velocit\u00e0 di 34-45 bustine al minuto e diversi formati di sacchetto interno ed esterno. Si prevede un accordo commerciale con assistenza tecnica con il costruttore della linea.",
+    "title": "Azienda francese di t\u00e8 e caff\u00e8 cerca linea per bustine piramidali e imbustate"
+  },
+  {
+    "demand_id": "TRGB20250922008",
+    "description_text": "Abstract PMI britannica attiva nella moda sostenibile cerca partner per co-sviluppare un modello replicabile di micro-fabbrica per abbigliamento su richiesta e a zero rifiuti. L\u2019obiettivo \u00e8 integrare design digitale, stampa, taglio, e riciclo in un unico sistema agile.",
+    "geographic_stratum": "international_european",
+    "has_articulated_technical_problem": true,
+    "has_confidentiality_redaction": false,
+    "is_publicly_accessible": true,
+    "language_code": "en",
+    "organization_raw": null,
+    "publication_date_evidence": {
+      "evidence_field": "pod_reference",
+      "evidence_type": "pod_reference",
+      "evidence_value": "TRGB20250922008",
+      "publication_date": "2025-09-22"
+    },
+    "source_construct": "Technology request",
+    "source_id": "een_pod",
+    "technical_problem_evidence_text": "Abstract PMI britannica attiva nella moda sostenibile cerca partner per co-sviluppare un modello replicabile di micro-fabbrica per abbigliamento su richiesta e a zero rifiuti. L\u2019obiettivo \u00e8 integrare design digitale, stampa, taglio, e riciclo in un unico sistema agile.",
+    "title": "Micro-fabbrica per moda sostenibile"
+  },
+  {
+    "demand_id": "TRGB2025TRGB202511180271118027",
+    "description_text": "Abstract Una PMI britannica che sviluppa sistemi autonomi di lotta agli incendi boschivi con UAV VTOL cerca partner con competenze in ingegneria chimica per progettare mezzi estinguenti ad alta efficacia (schiume, additivi, ritardanti) ottimizzati per carichi utili ridotti. Il media deve essere adatto a rilascio preciso in esterno e penetrazione della vegetazione. Si valutano accordi di ricerca congiunta o investimento con universit\u00e0, centri R&S e industrie chimiche.",
+    "geographic_stratum": "international_european",
+    "has_articulated_technical_problem": true,
+    "has_confidentiality_redaction": false,
+    "is_publicly_accessible": true,
+    "language_code": "en",
+    "organization_raw": null,
+    "publication_date_evidence": {
+      "evidence_field": "pod_reference",
+      "evidence_type": "pod_reference",
+      "evidence_value": "TRGB202511180271118027",
+      "publication_date": "2025-11-18"
+    },
+    "source_construct": "Technology request",
+    "source_id": "een_pod",
+    "technical_problem_evidence_text": "Abstract Una PMI britannica che sviluppa sistemi autonomi di lotta agli incendi boschivi con UAV VTOL cerca partner con competenze in ingegneria chimica per progettare mezzi estinguenti ad alta efficacia (schiume, additivi, ritardanti) ottimizzati per carichi utili ridotti. Il media deve essere adatto a rilascio preciso in esterno e penetrazione della vegetazione. Si valutano accordi di ricerca congiunta o investimento con universit\u00e0, centri R&S e industrie chimiche.",
+    "title": "PMI UK cerca partner per estinguenti ad alta efficienza per droni antincendio"
+  },
+  {
+    "demand_id": "TRLT20251105001",
+    "description_text": "Abstract Azienda lituana specializzata in UAS, inclusi droni jet e FPV ad alta velocit\u00e0, cerca soluzioni di navigazione per ambienti GPS-denied. La tecnologia richiesta pu\u00f2 includere sensor fusion, visione artificiale, odometria, radar o Lidar e deve integrarsi con controlli di volo esistenti. Partner ideali: fornitori UAV, centri R&D e istituti universitari.",
+    "geographic_stratum": "international_european",
+    "has_articulated_technical_problem": true,
+    "has_confidentiality_redaction": false,
+    "is_publicly_accessible": true,
+    "language_code": "en",
+    "organization_raw": null,
+    "publication_date_evidence": {
+      "evidence_field": "pod_reference",
+      "evidence_type": "pod_reference",
+      "evidence_value": "TRLT20251105001",
+      "publication_date": "2025-11-05"
+    },
+    "source_construct": "Technology request",
+    "source_id": "een_pod",
+    "technical_problem_evidence_text": "Abstract Azienda lituana specializzata in UAS, inclusi droni jet e FPV ad alta velocit\u00e0, cerca soluzioni di navigazione per ambienti GPS-denied. La tecnologia richiesta pu\u00f2 includere sensor fusion, visione artificiale, odometria, radar o Lidar e deve integrarsi con controlli di volo esistenti. Partner ideali: fornitori UAV, centri R&D e istituti universitari.",
+    "title": "Navigazione per droni in ambienti senza GPS"
+  },
+  {
+    "demand_id": "TRLV20251024016",
+    "description_text": "Abstract Impresa lettone cerca tecnologia chimica per ottenere Si ad alta purezza (\u22656N ideale) in barre da scarti di pannelli FV. Obiettivo: da ~2N a 6\u20137N+ per riuso in semiconduttori/solare. Disponibili accordi commerciali, R&S e investimento; TRL5\u20116 richiesto",
+    "geographic_stratum": "international_european",
+    "has_articulated_technical_problem": true,
+    "has_confidentiality_redaction": false,
+    "is_publicly_accessible": true,
+    "language_code": "en",
+    "organization_raw": null,
+    "publication_date_evidence": {
+      "evidence_field": "pod_reference",
+      "evidence_type": "pod_reference",
+      "evidence_value": "TRLV20251024016",
+      "publication_date": "2025-10-24"
+    },
+    "source_construct": "Technology request",
+    "source_id": "een_pod",
+    "technical_problem_evidence_text": "Abstract Impresa lettone cerca tecnologia chimica per ottenere Si ad alta purezza (\u22656N ideale) in barre da scarti di pannelli FV. Obiettivo: da ~2N a 6\u20137N+ per riuso in semiconduttori/solare. Disponibili accordi commerciali, R&S e investimento; TRL5\u20116 richiesto",
+    "title": "Recupero chimico di silicio ad alta purezza da rifiuti fotovoltaici: richiesta tecnologia/partner"
+  },
+  {
+    "demand_id": "TRNL20251104009",
+    "description_text": "Abstract Centro di ricerca olandese specializzato in neuromorphic computing cerca partner europei per co-sviluppare dimostratori in edge AI, sensing intelligente, mobilit\u00e0 e salute. Approccio multidisciplinare: materiali, chip, algoritmi e applicazioni. Obiettivo: sistemi 10.000\u00d7 pi\u00f9 efficienti dei processori tradizionali. Richiesti partner tecnologici e end-user per validazione.",
+    "geographic_stratum": "international_european",
+    "has_articulated_technical_problem": true,
+    "has_confidentiality_redaction": false,
+    "is_publicly_accessible": true,
+    "language_code": "en",
+    "organization_raw": null,
+    "publication_date_evidence": {
+      "evidence_field": "pod_reference",
+      "evidence_type": "pod_reference",
+      "evidence_value": "TRNL20251104009",
+      "publication_date": "2025-11-04"
+    },
+    "source_construct": "Technology request",
+    "source_id": "een_pod",
+    "technical_problem_evidence_text": "Abstract Centro di ricerca olandese specializzato in neuromorphic computing cerca partner europei per co-sviluppare dimostratori in edge AI, sensing intelligente, mobilit\u00e0 e salute. Approccio multidisciplinare: materiali, chip, algoritmi e applicazioni. Obiettivo: sistemi 10.000\u00d7 pi\u00f9 efficienti dei processori tradizionali. Richiesti partner tecnologici e end-user per validazione.",
+    "title": "Co-sviluppo europeo per dimostratori neuromorfici avanzati"
+  }
+]

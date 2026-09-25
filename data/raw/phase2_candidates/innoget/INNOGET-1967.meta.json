@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:52.831357+00:00",
+  "demand_id": "INNOGET-1967",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "54280a29480b02702e4d04b1390d2ceb76a4ad204081ae6860d4a9d263ce8c18",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1967/seeking-participants-for-stem-cell-congress-2021"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:21:30.438119+00:00",
+  "demand_id": "RDRLT20260120010",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "206d4dacf32bc31fe4e9eafa771d6affb8fcd943fb31b92add390cbfeb64e445",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/lithuanian-sme-seeks-rd-partner-dosage-aware-ingredient-scoring-system"
+}

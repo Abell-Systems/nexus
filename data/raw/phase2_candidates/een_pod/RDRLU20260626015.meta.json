@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:59:48.309438+00:00",
+  "demand_id": "RDRLU20260626015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "aa99483dabf0da396d12ebe3388d71801f7fd245b4bc12e82dfa910fc8f5304c",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1475/partner-clinici-cercasi-per-raccolta-dati-su-invecchiamento-materno-e"
+}

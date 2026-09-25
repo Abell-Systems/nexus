@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:19:56.883506+00:00",
+  "demand_id": "RDRGR20260508016",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1bf7afd73c5223ad1ff544f87146fba08c7c8f7a60b58c9f10f8d672a8429938",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/greek-start-looking-partners-techengineering-sectors-develop-ai-powered"
+}

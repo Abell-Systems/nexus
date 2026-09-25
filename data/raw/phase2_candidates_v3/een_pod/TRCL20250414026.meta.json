@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:17:34.926144+00:00",
+  "demand_id": "TRCL20250414026",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "25c0e74aa61796a4ac52df733a4bb112be461932f635c1c9b45669c08a477f96",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/chilean-bioconstruction-company-searching-innovative-technologies-enhance"
+}

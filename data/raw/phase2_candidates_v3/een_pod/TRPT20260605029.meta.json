@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:16:34.712867+00:00",
+  "demand_id": "TRPT20260605029",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "86ad042af983a11d5e618627a023f3b3b88b90a79b1c3eee5a40069f352f4274",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/portuguese-health-innovation-organisation-seeks-legal-manufacturer-0"
+}

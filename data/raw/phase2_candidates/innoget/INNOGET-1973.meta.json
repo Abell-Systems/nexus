@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:33.590718+00:00",
+  "demand_id": "INNOGET-1973",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "6d03d952d4b612f10fd578aca39601601b80dbf80283dc4a71a9dda578ee954e",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1973/seeking-natural-antioxidants-coming-from-microalgae-to-replace-bht-in-cosmetics-and-in-personal-care-products"
+}

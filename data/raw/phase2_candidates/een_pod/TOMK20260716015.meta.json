@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:44.218880+00:00",
+  "demand_id": "TOMK20260716015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "3e6ecfceb06bd79ed82a13a87f83e7bca891dc88baea889e7ec23d84df879f9b",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1390/assistente-ai-multimodale-per-la-gestione-documentale-in-ambito-sanita"
+}

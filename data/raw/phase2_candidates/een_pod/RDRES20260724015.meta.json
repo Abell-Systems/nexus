@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:59:20.791494+00:00",
+  "demand_id": "RDRES20260724015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a3bd6d5456951847a578cc60b572a5037b1b1f35b3498e9251d219a98d6dc72e",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1318/consorzio-spagnolo-cerca-associazioni-pmi-per-progetto-life-su-governa"
+}

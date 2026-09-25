@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:27.365421+00:00",
+  "demand_id": "INNOGET-1792",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "34394d08eec7a1633217971055775e49d4d6544327a121326e66b4b4c00bcd22",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1792/seeking-whole-fruit-and-vegetable-shelf-life-extension-edible-coatings-formulation-expertise"
+}

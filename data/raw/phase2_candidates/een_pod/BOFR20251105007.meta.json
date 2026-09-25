@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:04:19.949499+00:00",
+  "demand_id": "BOFR20251105007",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "5904384267661f180d243ff46a22910c8c85b6f37543f48913a920d87542cd8d",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/905/produttore-francese-di-rhum-artigianale-cerca-partner"
+}

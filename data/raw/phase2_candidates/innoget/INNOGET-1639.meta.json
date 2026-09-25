@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:27.951492+00:00",
+  "demand_id": "INNOGET-1639",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "3122f92cd3e49f9c027d292b6ab25bc7db7d74622e06ae4697e9123022780225",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1639/seeking-technical-solution-for-air-permeable-drying-technology-blocking-liquid-and-vaporous-water-molecules"
+}

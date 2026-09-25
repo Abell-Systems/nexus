@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:34.286380+00:00",
+  "demand_id": "INNOGET-2405",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "9f93c507ff8253dfebb26bd3ba0fa202ea1eb9c38a5a44b3f4fcb71d39b3192b",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2405/development-of-multi-scale-approaches-for-testing-separation-removal-and-recovery-of-valuable-components-water-and-energy-thr"
+}

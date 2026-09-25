@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:22:05.855274+00:00",
+  "demand_id": "RDRTR20251021008",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8ed9bc09a8ff682aec8473d6a9dc93d250107e38030b1b40838ba1b702a539fa",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/turkish-company-developing-technology-oriented-indoor-vertical-farming"
+}

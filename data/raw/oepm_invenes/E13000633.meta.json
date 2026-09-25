@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T09:45:15.694017+00:00",
+  "demand_id": "E13000633",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c42dbcc7d213e116b618c421396d7544d3b4a9c5a95f3550634924406baa55af",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=E13000633"
+}

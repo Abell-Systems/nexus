@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:16:35.095000+00:00",
+  "demand_id": "INNOGET-2257",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d9bd1c2c71b5bd2948d3b406bfad9a7531cccde50e33f21b78039f2d31fdf066",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2257/seeking-revolutionizing-process-efficiency-and-effectiveness-through-digital-technologies-in-technologies-in-chemical-production-p"
+}

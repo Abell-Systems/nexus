@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:21:17.562136+00:00",
+  "demand_id": "RDRTR20260211027",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f54642605d32208a9a8acbd8d390e357a2c307449a7220b15df7f9524be148d4",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/university-turkiye-seeks-consortium-partners-specialize-gdpr-data"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:45.481227+00:00",
+  "demand_id": "BOUA20260706012",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "8bfbe4eb44f281a833f4ad0ce6710dc90a365c56be4cbae2278e9d080500a4c3",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1398/azienda-ucraina-cerca-partner-per-progettazione-edilizia-e-strutture"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:20.407553+00:00",
+  "demand_id": "RDRNL20260811017",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "301e7d2617a4e20b84412d038e4ca861abf4c1c3388b96244dcaecd4308b18c2",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1787/universit-olandese-cerca-consorzio-horizon-per-prevenzione-ncd-nei-gio"
+}

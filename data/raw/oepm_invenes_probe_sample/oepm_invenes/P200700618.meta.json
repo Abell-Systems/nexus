@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T08:46:46.048877+00:00",
+  "demand_id": "P200700618",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "14e2fce43c74a42e0e66e1bf2aa1ae43143f26a2d50dd720a4499076ddc0df78",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P200700618"
+}

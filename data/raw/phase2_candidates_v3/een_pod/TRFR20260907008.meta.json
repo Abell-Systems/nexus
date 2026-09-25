@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:15:55.721059+00:00",
+  "demand_id": "TRFR20260907008",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "dc93946d43ae1b1e19ceccf54667d6aad957ac7c77c128f6c37b64c54fee183d",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/french-underwater-imaging-sme-seeks-3d-reconstruction-software-partners"
+}

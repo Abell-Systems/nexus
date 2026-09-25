@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:30.238811+00:00",
+  "demand_id": "INNOGET-1803",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "11023a3a1a699649cb67712899a348dcaa2b11fd989dbc9be79b24651297dce8",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1803/seeking-technologies-products-and-services-to-provide-hair-derived-health-knowledge"
+}

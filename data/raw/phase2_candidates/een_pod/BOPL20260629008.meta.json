@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:59:47.353458+00:00",
+  "demand_id": "BOPL20260629008",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "be6c7c065e22b4e4af73427a6337b908ca7ebd6f42d58b593bc97a46d78e06d0",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1472/organizzazione-polacca-cerca-partner-per-cooperazione-nel-turismo-medi"
+}

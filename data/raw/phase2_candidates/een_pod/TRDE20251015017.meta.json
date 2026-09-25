@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:05:19.513292+00:00",
+  "demand_id": "TRDE20251015017",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "3a699d705ccc4a262a48f7a3d11d62b2c482cb394810ab81d3f818ec9989ca09",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/857/soluzione-energetica-da-pex-riciclato"
+}

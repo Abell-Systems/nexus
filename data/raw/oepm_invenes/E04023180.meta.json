@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T09:26:06.718072+00:00",
+  "demand_id": "E04023180",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "c8f237c0c0fbad6a969106cce2b9735fa09621eee12453c58a12a28ea695ded4",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=E04023180"
+}

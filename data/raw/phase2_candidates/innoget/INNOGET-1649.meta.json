@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:31.951720+00:00",
+  "demand_id": "INNOGET-1649",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b9f56aeab6ee3ee9f8c987fb82a6f8fef01421940404938a68111451166033c4",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1649/seeking-technologies-to-jellify-fluids-water-or-oil-without-using-polymeric-molecules-or-surfactant-systems"
+}

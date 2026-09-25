@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:27.521387+00:00",
+  "demand_id": "INNOGET-1754",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "40a669993764449feaa88931527bb4cc0257183ab057ff7618e6a6ca2ee4e210",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1754/seeking-technologies-relating-to-asphaltenes-agglomeration-in-crude-oil"
+}

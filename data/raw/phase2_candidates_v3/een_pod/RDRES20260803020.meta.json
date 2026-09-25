@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:31.158985+00:00",
+  "demand_id": "RDRES20260803020",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "5de6e6a4431428bd35119ed872ab464d2a436f2f72adae99a9780dae2058eb85",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/partners-sought-horizon-project-cluster-2-refine-creative-economy"
+}

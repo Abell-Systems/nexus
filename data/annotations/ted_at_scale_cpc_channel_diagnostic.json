@@ -1,0 +1,165 @@
+{
+  "activation_by_demand": {
+    "104441-2025": {
+      "activated": false,
+      "language_code": "de",
+      "symbols": []
+    },
+    "122428-2024": {
+      "activated": false,
+      "language_code": "fr",
+      "symbols": []
+    },
+    "137639-2024": {
+      "activated": false,
+      "language_code": "nl",
+      "symbols": []
+    },
+    "140590-2024": {
+      "activated": false,
+      "language_code": "fr",
+      "symbols": []
+    },
+    "146289-2024": {
+      "activated": false,
+      "language_code": "de",
+      "symbols": []
+    },
+    "158024-2024": {
+      "activated": false,
+      "language_code": "da",
+      "symbols": []
+    },
+    "200095-2024": {
+      "activated": false,
+      "language_code": "en",
+      "symbols": []
+    },
+    "221305-2025": {
+      "activated": false,
+      "language_code": "fi",
+      "symbols": []
+    },
+    "22543-2024": {
+      "activated": false,
+      "language_code": "pl",
+      "symbols": []
+    },
+    "264820-2024": {
+      "activated": false,
+      "language_code": "de",
+      "symbols": []
+    },
+    "268550-2024": {
+      "activated": false,
+      "language_code": "de",
+      "symbols": []
+    },
+    "273005-2025": {
+      "activated": false,
+      "language_code": "de",
+      "symbols": []
+    },
+    "277089-2025": {
+      "activated": false,
+      "language_code": "fr",
+      "symbols": []
+    },
+    "315512-2025": {
+      "activated": false,
+      "language_code": "fr",
+      "symbols": []
+    },
+    "368294-2025": {
+      "activated": false,
+      "language_code": "fr",
+      "symbols": []
+    },
+    "380300-2024": {
+      "activated": false,
+      "language_code": "sv",
+      "symbols": []
+    },
+    "410719-2024": {
+      "activated": false,
+      "language_code": "fr",
+      "symbols": []
+    },
+    "42938-2024": {
+      "activated": false,
+      "language_code": "en",
+      "symbols": []
+    },
+    "454027-2024": {
+      "activated": false,
+      "language_code": "es",
+      "symbols": []
+    },
+    "498443-2025": {
+      "activated": false,
+      "language_code": "fr",
+      "symbols": []
+    },
+    "566290-2025": {
+      "activated": false,
+      "language_code": "nl",
+      "symbols": []
+    },
+    "584867-2024": {
+      "activated": false,
+      "language_code": "de",
+      "symbols": []
+    },
+    "588217-2024": {
+      "activated": false,
+      "language_code": "de",
+      "symbols": []
+    },
+    "642378-2025": {
+      "activated": false,
+      "language_code": "de",
+      "symbols": []
+    },
+    "654218-2024": {
+      "activated": false,
+      "language_code": "de",
+      "symbols": []
+    },
+    "696940-2025": {
+      "activated": false,
+      "language_code": "nl",
+      "symbols": []
+    },
+    "794374-2025": {
+      "activated": false,
+      "language_code": "de",
+      "symbols": []
+    },
+    "814207-2025": {
+      "activated": false,
+      "language_code": "de",
+      "symbols": []
+    },
+    "820594-2025": {
+      "activated": false,
+      "language_code": "cs",
+      "symbols": []
+    },
+    "89204-2025": {
+      "activated": false,
+      "language_code": "es",
+      "symbols": []
+    }
+  },
+  "activation_rate": 0.0,
+  "cpc_exclusive_already_scored": [],
+  "cpc_exclusive_already_scored_count": 0,
+  "cpc_exclusive_new": [],
+  "cpc_exclusive_new_count": 0,
+  "estimand_contract": "docs/phase2-ted-cpc-channel-diagnostic-contract.md",
+  "n_activated_demands": 0,
+  "n_concept_entries": 85,
+  "n_dev_demands": 30,
+  "policy_path": "/home/valentin/code/active/nexus/config/policies/matching/ted_at_scale_cpc_taxonomy_v1.json",
+  "policy_sha256": "4f7a2ef5a72fc7fd9760f385e497e5a6f33918aebdf4f616741f3fe5f1d089f8"
+}

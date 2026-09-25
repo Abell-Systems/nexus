@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:14:49.874563+00:00",
+  "demand_id": "INNOGET-2438",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "0b408f4c832ce9b0929ac844485719d4dc6ffbb5d341cb31ccea02fddfaf360e",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2438/seeking-a-next-generation-material-for-safe-microwave-oven-and-air-fryer-cooking-from-frozen"
+}

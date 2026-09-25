@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:10.335564+00:00",
+  "demand_id": "INNOGET-2025",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4d2c5136f2c46887162bdf98ce3593744813f6151cd3d1d938a979c72e47ac4e",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2025/seeking-partners-to-support-the-development-and-or-manufacture-of-bio-sourced-oils-lubricants-and-fuels"
+}

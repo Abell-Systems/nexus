@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:00:10.174489+00:00",
+  "demand_id": "TOES20260706006",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "191c74e0b860f15d631d9aab820d8cc3f4d49299b71cc6a4e6a3128195babf10",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/1117/servizi-di-consulenza-ingegneristica-per-sviluppo-embedded-e-edge-ai-s"
+}

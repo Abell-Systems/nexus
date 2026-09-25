@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:16:23.688650+00:00",
+  "demand_id": "TRLT20260720004",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "4fcc6c18570cedd127872a7ada4a85cc3d7854a72b39b49ec84d4baad7e8610f",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/lithuanian-company-seeking-innovative-technologies-and-business-partners"
+}

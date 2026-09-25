@@ -5,6 +5,7 @@ from datetime import date
 from pathlib import Path
 
 import pytest
+from pydantic import ValidationError
 
 from application.corpus.expansion_policy_validator import (
     PolicyIntegrityError,
@@ -14,10 +15,15 @@ from application.corpus.expansion_policy_validator import (
 from domain.models.corpus_expansion import (
     CandidateRejectionReason,
     DemandCandidateContractRecord,
+    PublicationDateEvidence,
+    PublicationDateEvidenceType,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 POLICY_PATH = REPO_ROOT / "config" / "policies" / "data" / "corpus_expansion_policy_v1.json"
+POLICY_V2_PATH = REPO_ROOT / "config" / "policies" / "data" / "corpus_expansion_policy_v2.json"
+POLICY_V3_PATH = REPO_ROOT / "config" / "policies" / "data" / "corpus_expansion_policy_v3.json"
+POLICY_V4_PATH = REPO_ROOT / "config" / "policies" / "data" / "corpus_expansion_policy_v4.json"
 
 
 def test_load_corpus_expansion_policy_success() -> None:
@@ -59,14 +65,17 @@ def test_load_corpus_expansion_policy_empty_hash_raises(tmp_path: Path) -> None:
 
 
 def test_load_corpus_expansion_policy_version_mismatch_raises(tmp_path: Path) -> None:
-    # 1. Loading real v1 policy with mismatched expected_version
+    # Loading real v1 policy with an explicitly mismatched expected_version fails fast.
     with pytest.raises(
         PolicyIntegrityError,
         match="Policy version mismatch: expected 'corpus_expansion_policy_v2', got 'corpus_expansion_policy_v1'",
     ):
         load_corpus_expansion_policy(POLICY_PATH, expected_version="corpus_expansion_policy_v2")
 
-    # 2. Loading policy file containing v999 with valid hash sidecar
+
+def test_load_corpus_expansion_policy_unknown_version_raises_without_expected_version(tmp_path: Path) -> None:
+    # With no expected_version pin, an unrecognized policy_version is still rejected --
+    # by CorpusExpansionPolicy's own known-version whitelist, not a pinned mismatch.
     fake_json = tmp_path / "policy_v999.json"
     fake_hash = tmp_path / "policy_v999.sha256"
     content = b'{"policy_version": "corpus_expansion_policy_v999"}'
@@ -74,10 +83,7 @@ def test_load_corpus_expansion_policy_version_mismatch_raises(tmp_path: Path) ->
     actual_hash = hashlib.sha256(content).hexdigest()
     fake_hash.write_text(f"{actual_hash}  policy_v999.json\n", encoding="utf-8")
 
-    with pytest.raises(
-        PolicyIntegrityError,
-        match="Policy version mismatch: expected 'corpus_expansion_policy_v1', got 'corpus_expansion_policy_v999'",
-    ):
+    with pytest.raises(ValidationError, match="policy_version must be one of"):
         load_corpus_expansion_policy(fake_json, fake_hash)
 
 
@@ -87,9 +93,12 @@ def test_validate_demand_candidate_valid_passes() -> None:
         demand_id="INNOGET-3001",
         source_id="innoget",
         source_construct="Technology call",
-        publication_date=date(2023, 5, 14),
-        publication_date_evidence_field="posted_date",
-        publication_date_evidence_text="14 May 2023",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=date(2023, 5, 14),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value="14 May 2023",
+        ),
         geographic_stratum="spain",
         title="Industrial bio-based adhesive demand",
         description_text=(
@@ -115,9 +124,12 @@ def test_validate_demand_candidate_rejections_deterministic_exhaustive() -> None
         demand_id="UNKNOWN_PORTAL-01",
         source_id="unknown_portal",
         source_construct="Technology call",
-        publication_date=date(2019, 12, 31),
-        publication_date_evidence_field="date",
-        publication_date_evidence_text="2019-12-31",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=date(2019, 12, 31),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="date",
+            evidence_value="2019-12-31",
+        ),
         geographic_stratum="spain",
         title="Short demand",
         description_text="Short description with few words only.",
@@ -144,8 +156,6 @@ def test_validate_demand_candidate_date_boundaries() -> None:
         "demand_id": "INNOGET-DATE-TEST",
         "source_id": "innoget",
         "source_construct": "Technology call",
-        "publication_date_evidence_field": "posted_date",
-        "publication_date_evidence_text": "text",
         "geographic_stratum": "international_european",
         "title": "Date boundary test",
         "description_text": (
@@ -158,20 +168,32 @@ def test_validate_demand_candidate_date_boundaries() -> None:
         "has_articulated_technical_problem": True,
         "technical_problem_evidence_text": "strict energy consumption standards and minimal thermal distortion",
     }
+
+    def _make_candidate(d: date) -> DemandCandidateContractRecord:
+        return DemandCandidateContractRecord(
+            publication_date_evidence=PublicationDateEvidence(
+                publication_date=d,
+                evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+                evidence_field="posted_date",
+                evidence_value=str(d),
+            ),
+            **base_dict,
+        )
+
     # 2020-01-01 -> ACCEPT
-    c1 = DemandCandidateContractRecord(publication_date=date(2020, 1, 1), **base_dict)
+    c1 = _make_candidate(date(2020, 1, 1))
     assert validate_demand_candidate(c1, policy).status == "ACCEPT"
 
     # 2025-12-31 -> ACCEPT
-    c2 = DemandCandidateContractRecord(publication_date=date(2025, 12, 31), **base_dict)
+    c2 = _make_candidate(date(2025, 12, 31))
     assert validate_demand_candidate(c2, policy).status == "ACCEPT"
 
     # 2019-12-31 -> REJECT
-    c3 = DemandCandidateContractRecord(publication_date=date(2019, 12, 31), **base_dict)
+    c3 = _make_candidate(date(2019, 12, 31))
     assert validate_demand_candidate(c3, policy).status == "REJECT"
 
     # 2026-01-01 -> REJECT
-    c4 = DemandCandidateContractRecord(publication_date=date(2026, 1, 1), **base_dict)
+    c4 = _make_candidate(date(2026, 1, 1))
     assert validate_demand_candidate(c4, policy).status == "REJECT"
 
 
@@ -181,9 +203,12 @@ def test_validate_demand_candidate_word_count_boundaries() -> None:
         "demand_id": "INNOGET-WORD-TEST",
         "source_id": "innoget",
         "source_construct": "Technology call",
-        "publication_date": date(2023, 6, 1),
-        "publication_date_evidence_field": "posted_date",
-        "publication_date_evidence_text": "text",
+        "publication_date_evidence": PublicationDateEvidence(
+            publication_date=date(2023, 6, 1),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value="text",
+        ),
         "geographic_stratum": "spain",
         "title": "Word count boundary test",
         "language_code": "en",
@@ -213,9 +238,12 @@ def test_validate_demand_candidate_confidentiality_and_access() -> None:
         "demand_id": "INNOGET-CONF-TEST",
         "source_id": "innoget",
         "source_construct": "Technology call",
-        "publication_date": date(2022, 6, 1),
-        "publication_date_evidence_field": "posted_date",
-        "publication_date_evidence_text": "text",
+        "publication_date_evidence": PublicationDateEvidence(
+            publication_date=date(2022, 6, 1),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value="text",
+        ),
         "geographic_stratum": "spain",
         "title": "Access test",
         "description_text": (
@@ -251,9 +279,12 @@ def test_validate_demand_candidate_incompatible_construct_and_geographic_stratum
         "demand_id": "EEN-CONSTRUCT-TEST",
         "source_id": "een_pod",
         "source_construct": "Technology offer",  # Permitted is "Technology request"
-        "publication_date": date(2022, 6, 1),
-        "publication_date_evidence_field": "posted_date",
-        "publication_date_evidence_text": "text",
+        "publication_date_evidence": PublicationDateEvidence(
+            publication_date=date(2022, 6, 1),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value="text",
+        ),
         "geographic_stratum": "unauthorized_asia",  # Not in allowed strata
         "title": "Incompatible construct and stratum test",
         "description_text": (
@@ -281,9 +312,12 @@ def test_validate_demand_candidate_technical_problem_requirement() -> None:
         "demand_id": "INNOGET-TECH-PROB-TEST",
         "source_id": "innoget",
         "source_construct": "Technology call",
-        "publication_date": date(2023, 1, 15),
-        "publication_date_evidence_field": "posted_date",
-        "publication_date_evidence_text": "15 Jan 2023",
+        "publication_date_evidence": PublicationDateEvidence(
+            publication_date=date(2023, 1, 15),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value="15 Jan 2023",
+        ),
         "geographic_stratum": "spain",
         "title": "Technical problem requirement test",
         "description_text": (
@@ -339,9 +373,12 @@ def test_validate_demand_candidate_canonical_word_count_normalization() -> None:
         demand_id="INNOGET-HTML-SHORT",
         source_id="innoget",
         source_construct="Technology call",
-        publication_date=date(2023, 1, 15),
-        publication_date_evidence_field="posted_date",
-        publication_date_evidence_text="15 Jan 2023",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=date(2023, 1, 15),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value="15 Jan 2023",
+        ),
         geographic_stratum="spain",
         title="HTML short test",
         description_text=html_description,
@@ -354,3 +391,316 @@ def test_validate_demand_candidate_canonical_word_count_normalization() -> None:
     res_short = validate_demand_candidate(c_short, policy)
     assert res_short.status == "REJECT"
     assert CandidateRejectionReason.CONTENT_TOO_SHORT in res_short.rejection_reasons
+
+
+def test_should_reject_unverifiable_publication_date() -> None:
+    policy = load_corpus_expansion_policy(POLICY_PATH)
+    candidate = DemandCandidateContractRecord(
+        demand_id="INNOGET-UNVERIFIABLE-DATE",
+        source_id="innoget",
+        source_construct="Technology call",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=None,
+            evidence_type=PublicationDateEvidenceType.UNVERIFIABLE,
+            evidence_field="unverifiable",
+            evidence_value="no date metadata available",
+        ),
+        geographic_stratum="spain",
+        title="Valid title with unverifiable date",
+        description_text=(
+            "Seeking high strength bio adhesive for paper packaging with fast curing under thirty seconds "
+            "in automated corrugated board production lines without emitting harmful volatile compounds."
+        ),
+        language_code="en",
+        is_publicly_accessible=True,
+        has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="fast curing under thirty seconds in automated corrugated board production lines",
+    )
+    res = validate_demand_candidate(candidate, policy)
+    assert res.status == "REJECT"
+    assert res.rejection_reasons == (CandidateRejectionReason.UNVERIFIABLE_PUBLICATION_DATE,)
+    assert CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW not in res.rejection_reasons
+
+
+def test_should_reject_out_of_temporal_window_only_when_date_verified() -> None:
+    policy = load_corpus_expansion_policy(POLICY_PATH)
+    candidate = DemandCandidateContractRecord(
+        demand_id="INNOGET-OLD-DATE",
+        source_id="innoget",
+        source_construct="Technology call",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=date(2019, 12, 31),
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value="2019-12-31",
+        ),
+        geographic_stratum="spain",
+        title="Valid title with out-of-window date",
+        description_text=(
+            "Seeking high strength bio adhesive for paper packaging with fast curing under thirty seconds "
+            "in automated corrugated board production lines without emitting harmful volatile compounds."
+        ),
+        language_code="en",
+        is_publicly_accessible=True,
+        has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="fast curing under thirty seconds in automated corrugated board production lines",
+    )
+    res = validate_demand_candidate(candidate, policy)
+    assert res.status == "REJECT"
+    assert res.rejection_reasons == (CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW,)
+    assert CandidateRejectionReason.UNVERIFIABLE_PUBLICATION_DATE not in res.rejection_reasons
+
+
+def test_load_corpus_expansion_policy_v2_success_without_expected_version() -> None:
+    # No expected_version pin needed -- v2 is a known version, loadable by default,
+    # so pipeline scripts (validate.py, audit.py) work unmodified against --policy-path.
+    policy = load_corpus_expansion_policy(POLICY_V2_PATH)
+    assert policy.policy_version == "corpus_expansion_policy_v2"
+
+
+def test_load_corpus_expansion_policy_v2_success() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V2_PATH, expected_version="corpus_expansion_policy_v2")
+    assert policy.policy_version == "corpus_expansion_policy_v2"
+    assert policy.temporal_window.min_publication_date == date(2024, 1, 1)
+    assert policy.temporal_window.max_publication_date == date(2025, 12, 31)
+    # Every other criterion carried forward unmodified from v1
+    assert policy.target_sample_size.target_independent_demands == 60
+    assert len(policy.sources) == 2
+    assert policy.content_requirements.min_word_count == 25
+    assert policy.concentration_monitoring.sector_warning_threshold == 0.35
+    assert policy.unknown_handling.unknown_organization_split_policy == "dev_only"
+
+
+def _v2_candidate(publication_date: date) -> DemandCandidateContractRecord:
+    return DemandCandidateContractRecord(
+        demand_id="EEN_POD-TEMPORAL-AMENDMENT-TEST",
+        source_id="een_pod",
+        source_construct="Technology request",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=publication_date,
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value=str(publication_date),
+        ),
+        geographic_stratum="spain",
+        title="Amended temporal window boundary test",
+        description_text=(
+            "Seeking technical solution for high precision industrial manufacturing process with strict energy "
+            "consumption standards and minimal thermal distortion during high speed continuous operation cycles "
+            "for aerospace components."
+        ),
+        language_code="en",
+        is_publicly_accessible=True,
+        has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="strict energy consumption standards and minimal thermal distortion",
+    )
+
+
+def test_validate_demand_candidate_v2_accepts_2024_2025() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V2_PATH, expected_version="corpus_expansion_policy_v2")
+
+    assert validate_demand_candidate(_v2_candidate(date(2024, 1, 1)), policy).status == "ACCEPT"
+    assert validate_demand_candidate(_v2_candidate(date(2025, 12, 31)), policy).status == "ACCEPT"
+
+
+def test_validate_demand_candidate_v2_rejects_pre_2024() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V2_PATH, expected_version="corpus_expansion_policy_v2")
+
+    for rejected_date in (date(2020, 1, 1), date(2023, 12, 31)):
+        res = validate_demand_candidate(_v2_candidate(rejected_date), policy)
+        assert res.status == "REJECT"
+        assert res.rejection_reasons == (CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW,)
+
+
+def test_validate_demand_candidate_v2_rejects_2026_and_later() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V2_PATH, expected_version="corpus_expansion_policy_v2")
+
+    res = validate_demand_candidate(_v2_candidate(date(2026, 1, 1)), policy)
+    assert res.status == "REJECT"
+    assert res.rejection_reasons == (CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW,)
+
+
+def _rd_request_candidate(publication_date: date = date(2025, 3, 1)) -> DemandCandidateContractRecord:
+    return DemandCandidateContractRecord(
+        demand_id="EEN_POD-CONSTRUCT-AMENDMENT-TEST",
+        source_id="een_pod",
+        source_construct="R&D request",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=publication_date,
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="posted_date",
+            evidence_value=str(publication_date),
+        ),
+        geographic_stratum="spain",
+        title="Construct expansion boundary test",
+        description_text=(
+            "Seeking a research partner for a joint R&D collaboration on high precision industrial "
+            "manufacturing process with strict energy consumption standards and minimal thermal distortion "
+            "during high speed continuous operation cycles for aerospace components."
+        ),
+        language_code="en",
+        is_publicly_accessible=True,
+        has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="strict energy consumption standards and minimal thermal distortion",
+    )
+
+
+def test_load_corpus_expansion_policy_v3_success() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V3_PATH, expected_version="corpus_expansion_policy_v3")
+    assert policy.policy_version == "corpus_expansion_policy_v3"
+    een_pod = next(s for s in policy.sources if s.source_id == "een_pod")
+    assert een_pod.permitted_constructs == ("Technology request", "R&D request")
+    # Temporal window and every other criterion carried forward unmodified from v2
+    assert policy.temporal_window.min_publication_date == date(2024, 1, 1)
+    assert policy.temporal_window.max_publication_date == date(2025, 12, 31)
+    assert policy.content_requirements.min_word_count == 25
+
+
+def test_validate_demand_candidate_rd_request_rejected_under_v2() -> None:
+    """R&D request is not yet an authorized een_pod construct under v2 -- only v3
+    (docs/phase2-construct-expansion-amendment.md) authorizes it."""
+    policy = load_corpus_expansion_policy(POLICY_V2_PATH, expected_version="corpus_expansion_policy_v2")
+
+    res = validate_demand_candidate(_rd_request_candidate(), policy)
+    assert res.status == "REJECT"
+    assert res.rejection_reasons == (CandidateRejectionReason.INCOMPATIBLE_CONSTRUCT,)
+
+
+def test_validate_demand_candidate_rd_request_accepted_under_v3() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V3_PATH, expected_version="corpus_expansion_policy_v3")
+
+    res = validate_demand_candidate(_rd_request_candidate(), policy)
+    assert res.status == "ACCEPT"
+    assert res.rejection_reasons == ()
+
+    # Technology request remains authorized under v3 too
+    tr_candidate = _rd_request_candidate()
+    tr_candidate = tr_candidate.model_copy(update={"source_construct": "Technology request"})
+    assert validate_demand_candidate(tr_candidate, policy).status == "ACCEPT"
+
+    # Unrelated constructs (e.g. Business offer) remain rejected under v3
+    bo_candidate = _rd_request_candidate().model_copy(update={"source_construct": "Business offer"})
+    res_bo = validate_demand_candidate(bo_candidate, policy)
+    assert res_bo.status == "REJECT"
+    assert res_bo.rejection_reasons == (CandidateRejectionReason.INCOMPATIBLE_CONSTRUCT,)
+
+
+def _ted_candidate(
+    publication_date: date = date(2025, 3, 1),
+    organization_raw: str | None = "Suomen metsäkeskus",
+) -> DemandCandidateContractRecord:
+    return DemandCandidateContractRecord(
+        demand_id="462609-2026",
+        source_id="ted",
+        source_construct="Innovation partnership",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=publication_date,
+            evidence_type=PublicationDateEvidenceType.EXPLICIT_METADATA,
+            evidence_field="oj_s_publication_date",
+            evidence_value=f"OJ S 100/{publication_date.year} {publication_date.isoformat()}",
+        ),
+        geographic_stratum="international_european",
+        title="TED source admission boundary test",
+        description_text=(
+            "Seeking an innovation partner to co-develop a data-driven monitoring system "
+            "for industrial process biodiversity impact combining multi-source sensor data "
+            "with AI-assisted risk detection across production sites."
+        ),
+        language_code="fi",
+        organization_raw=organization_raw,
+        is_publicly_accessible=True,
+        has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="data-driven monitoring system for industrial process biodiversity impact",
+    )
+
+
+def test_load_corpus_expansion_policy_v4_success() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V4_PATH, expected_version="corpus_expansion_policy_v4")
+    assert policy.policy_version == "corpus_expansion_policy_v4"
+    assert len(policy.sources) == 3
+    ted = next(s for s in policy.sources if s.source_id == "ted")
+    assert ted.permitted_constructs == ("Innovation partnership",)
+    een_pod = next(s for s in policy.sources if s.source_id == "een_pod")
+    assert een_pod.permitted_constructs == ("Technology request", "R&D request")
+    # Temporal window and every other criterion carried forward unmodified from v3
+    assert policy.temporal_window.min_publication_date == date(2024, 1, 1)
+    assert policy.temporal_window.max_publication_date == date(2025, 12, 31)
+    assert policy.content_requirements.min_word_count == 25
+
+
+def test_validate_demand_candidate_ted_rejected_under_v3() -> None:
+    """TED is not an authorized source under v3 -- only v4
+    (docs/adr/0034-ted-source-admission-contract.md) admits it."""
+    policy = load_corpus_expansion_policy(POLICY_V3_PATH, expected_version="corpus_expansion_policy_v3")
+
+    res = validate_demand_candidate(_ted_candidate(), policy)
+    assert res.status == "REJECT"
+    assert res.rejection_reasons == (CandidateRejectionReason.UNAUTHORIZED_SOURCE,)
+
+
+def test_validate_demand_candidate_ted_accepted_under_v4() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V4_PATH, expected_version="corpus_expansion_policy_v4")
+
+    res = validate_demand_candidate(_ted_candidate(), policy)
+    assert res.status == "ACCEPT"
+    assert res.rejection_reasons == ()
+
+    # Prior sources/constructs remain authorized under v4 too
+    assert validate_demand_candidate(_rd_request_candidate(), policy).status == "ACCEPT"
+
+
+def test_validate_demand_candidate_ted_temporal_window_unchanged_under_v4() -> None:
+    policy = load_corpus_expansion_policy(POLICY_V4_PATH, expected_version="corpus_expansion_policy_v4")
+
+    res = validate_demand_candidate(_ted_candidate(publication_date=date(2023, 12, 31)), policy)
+    assert res.status == "REJECT"
+    assert res.rejection_reasons == (CandidateRejectionReason.OUT_OF_TEMPORAL_WINDOW,)
+
+
+def test_load_corpus_expansion_policy_v2_hash_mismatch_raises(tmp_path: Path) -> None:
+    tampered_json = tmp_path / "corpus_expansion_policy_v2.json"
+    tampered_json.write_text(
+        POLICY_V2_PATH.read_text(encoding="utf-8").replace("2024-01-01", "2023-01-01"),
+        encoding="utf-8",
+    )
+    # Reuse the real v2 sidecar unmodified -> hash no longer matches tampered content
+    real_hash_path = POLICY_V2_PATH.with_suffix(".sha256")
+    tampered_hash = tmp_path / "corpus_expansion_policy_v2.sha256"
+    tampered_hash.write_text(real_hash_path.read_text(encoding="utf-8"), encoding="utf-8")
+
+    with pytest.raises(PolicyIntegrityError, match="SHA-256 hash mismatch"):
+        load_corpus_expansion_policy(tampered_json, tampered_hash, expected_version="corpus_expansion_policy_v2")
+
+
+def test_should_combine_multiple_rejection_reasons_in_deterministic_order() -> None:
+    policy = load_corpus_expansion_policy(POLICY_PATH)
+    candidate = DemandCandidateContractRecord(
+        demand_id="INNOGET-MULTI-REJECT",
+        source_id="innoget",
+        source_construct="Technology call",
+        publication_date_evidence=PublicationDateEvidence(
+            publication_date=None,
+            evidence_type=PublicationDateEvidenceType.UNVERIFIABLE,
+            evidence_field="unverifiable",
+            evidence_value="no date metadata available",
+        ),
+        geographic_stratum="spain",
+        title="Short description with unverifiable date",
+        description_text="Too short.",
+        language_code="en",
+        is_publicly_accessible=True,
+        has_confidentiality_redaction=False,
+        has_articulated_technical_problem=True,
+        technical_problem_evidence_text="technical problem evidence present here",
+    )
+    res = validate_demand_candidate(candidate, policy)
+    assert res.status == "REJECT"
+    assert res.rejection_reasons == (
+        CandidateRejectionReason.CONTENT_TOO_SHORT,
+        CandidateRejectionReason.UNVERIFIABLE_PUBLICATION_DATE,
+    )

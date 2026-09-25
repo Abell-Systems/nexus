@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:02:49.217997+00:00",
+  "demand_id": "TOBG20260123005",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "29b74ac6de08ff2af20c6d93450a909431e3255f13575b1e883b062fb207a10f",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/975/robot-medico-contactless-per-monitoraggio-parametri-vitali"
+}

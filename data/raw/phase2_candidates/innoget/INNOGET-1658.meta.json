@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:14.322069+00:00",
+  "demand_id": "INNOGET-1658",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "20ae09f772604a363a7bd342cea66534a4f7e075fbc9bbec28f47ff30825bd4e",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1658/seeking-a-user-friendly-method-to-check-the-good-cutting-of-the-vegetables"
+}

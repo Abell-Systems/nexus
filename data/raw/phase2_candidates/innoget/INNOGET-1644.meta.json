@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:21:35.520981+00:00",
+  "demand_id": "INNOGET-1644",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d32190605d7d32068df57cba88e0cf0d2b913a7cf7493428e089664f8928b173",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1644/seeking-sensor-technology-for-surface-displacement-of-wall-of-tunnels-opportunity-for-collaboration"
+}

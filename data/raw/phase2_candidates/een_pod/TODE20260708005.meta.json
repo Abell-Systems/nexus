@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:16.979121+00:00",
+  "demand_id": "TODE20260708005",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "57c3e6a32db1a246b00bf18864394fe2c0b2ae2c06758315805b3a09355e73b3",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/2176/pmi-tedesca-offre-rivestimento-anti-fouling-per-scafi-senza-microplast"
+}

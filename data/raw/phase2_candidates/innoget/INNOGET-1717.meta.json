@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:22:09.457475+00:00",
+  "demand_id": "INNOGET-1717",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "ca9d2427fbf021a2f3d60779d7795d3088e83f482d83ca5bf7ba33aa50ece542",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1717/seeking-for-technologies-that"
+}

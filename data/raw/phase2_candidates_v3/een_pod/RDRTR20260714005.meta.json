@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:19:04.831742+00:00",
+  "demand_id": "RDRTR20260714005",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "75a50e4f6f509923e51f152303bc67ecfbf90d01648f89702e9111ff5afb384e",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/turkish-technology-company-seeks-industry-academic-research-partners"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:19.283554+00:00",
+  "demand_id": "INNOGET-1812",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "b2e0c8d6c98a55087ab2d19d3cc539c3d6e8880c13077aac01b6e265b7c4f951",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1812/seeking-scientific-support-with-expertise-in-organic-and-inorganic-chemistry"
+}

@@ -1,0 +1,3901 @@
+[
+  {
+    "demand_id": "100873-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/100873-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "101086-2025",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/101086-2025.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "10288-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/10288-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "103023-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/103023-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "103635-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/103635-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "105427-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/105427-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "105479-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/105479-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "105750-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/105750-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "105845-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/105845-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "107974-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/107974-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "108420-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/108420-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "110187-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/110187-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "110450-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/110450-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "111575-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/111575-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "112801-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/112801-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "116431-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/116431-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "117248-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/117248-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "117510-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/117510-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "118196-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/118196-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "118262-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/118262-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "119891-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/119891-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "123095-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/123095-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "123259-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/123259-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "124672-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/124672-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "126051-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/126051-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "130332-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/130332-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "13166-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/13166-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "133124-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/133124-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "134424-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/134424-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "135659-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/135659-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "135963-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/135963-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "136175-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/136175-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "137488-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/137488-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "137864-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/137864-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "138161-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/138161-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "139339-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/139339-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "139411-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/139411-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "140525-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/140525-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "140560-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/140560-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "140707-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/140707-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "140970-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/140970-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "144914-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/144914-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "146043-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/146043-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "146103-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/146103-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "146129-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/146129-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "146788-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/146788-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "146995-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/146995-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "147902-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/147902-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "149551-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/149551-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "149551-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/149551-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "151058-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/151058-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "151118-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/151118-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "151979-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/151979-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "153172-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/153172-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "153418-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/153418-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "153783-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/153783-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "155087-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/155087-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "15572-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/15572-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "156517-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/156517-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "15773-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/15773-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "159982-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/159982-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "161864-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/161864-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "162013-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/162013-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "162510-2025",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/162510-2025.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "162595-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/162595-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "16699-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/16699-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "167230-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/167230-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "169019-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/169019-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "169770-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/169770-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "170233-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/170233-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "170990-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/170990-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "171077-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/171077-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "17155-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/17155-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "17421-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/17421-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "175580-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/175580-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "177487-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/177487-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "177580-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/177580-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "178439-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/178439-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "180432-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/180432-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "181175-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/181175-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "182908-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/182908-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "183-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/183-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "184587-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/184587-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "1849-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/1849-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "187498-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/187498-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "187930-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/187930-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "187948-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/187948-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "189464-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/189464-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "190484-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/190484-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "191818-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/191818-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "192166-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/192166-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "192919-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/192919-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "200074-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/200074-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "203503-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/203503-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "206196-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/206196-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "207467-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/207467-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "20932-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/20932-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "209569-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/209569-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "210188-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/210188-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "211579-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/211579-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "214818-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/214818-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "216111-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/216111-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "216378-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/216378-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "216452-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/216452-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "217118-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/217118-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "21736-2024",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/21736-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "218413-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/218413-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "218673-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/218673-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "223791-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/223791-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "223979-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/223979-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "225031-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/225031-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "22521-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/22521-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "226401-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/226401-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "226844-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/226844-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "227900-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/227900-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "228604-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/228604-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "232693-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/232693-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "233372-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/233372-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "234537-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/234537-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "234773-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/234773-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "236582-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/236582-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "236613-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/236613-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "238867-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/238867-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "239195-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/239195-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "239826-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/239826-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "24057-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/24057-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "240904-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/240904-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "242251-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/242251-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "243206-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/243206-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "243278-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/243278-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "245207-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/245207-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "246192-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/246192-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "247297-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/247297-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "248408-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/248408-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "248448-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/248448-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "25093-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/25093-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "252001-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/252001-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "252248-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/252248-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "254752-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/254752-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "255409-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/255409-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "256039-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/256039-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "256727-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/256727-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "257381-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/257381-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "258178-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/258178-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "258285-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/258285-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "258943-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/258943-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "261922-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/261922-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "262927-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/262927-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "26334-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/26334-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "263479-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/263479-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "264885-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/264885-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "265331-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/265331-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "265678-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/265678-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "266596-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/266596-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "266812-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/266812-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "267056-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/267056-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "267338-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/267338-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "268142-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/268142-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "268255-2025",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/268255-2025.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "269235-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/269235-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "273411-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/273411-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "273672-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/273672-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "273771-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/273771-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "274275-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/274275-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "274477-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/274477-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "274487-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/274487-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "275799-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/275799-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "276681-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/276681-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "276711-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/276711-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "278322-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/278322-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "279075-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/279075-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "279409-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/279409-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "280126-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/280126-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "280230-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/280230-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "280252-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/280252-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "281822-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/281822-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "282458-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/282458-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "283263-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/283263-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "283905-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/283905-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "283942-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/283942-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "284089-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/284089-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "284115-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/284115-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "284116-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/284116-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "284392-2025",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/284392-2025.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "284451-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/284451-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "285882-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/285882-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "287216-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/287216-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "28733-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/28733-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "287825-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/287825-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "28814-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/28814-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "291034-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/291034-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "291730-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/291730-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "292801-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/292801-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "296044-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/296044-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "297993-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/297993-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "299372-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/299372-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "300088-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/300088-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "300106-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/300106-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "300530-2025",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/300530-2025.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "304004-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/304004-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "305028-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/305028-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "305918-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/305918-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "306506-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/306506-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "30834-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/30834-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "308455-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/308455-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "308650-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/308650-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "308795-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/308795-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "31139-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/31139-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "311732-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/311732-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "314282-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/314282-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "314709-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/314709-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "315084-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/315084-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "315289-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/315289-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "315460-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/315460-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "316383-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/316383-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "317609-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/317609-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "320088-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/320088-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "320113-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/320113-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "321257-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/321257-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "321743-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/321743-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "32301-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/32301-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "323085-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/323085-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "324308-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/324308-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "324756-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/324756-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "326485-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/326485-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "327071-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/327071-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "327733-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/327733-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "329119-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/329119-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "329738-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/329738-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "329877-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/329877-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "329896-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/329896-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "331664-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/331664-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "332623-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/332623-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "334282-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/334282-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "334299-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/334299-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "337332-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/337332-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "337722-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/337722-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "338248-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/338248-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "338250-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/338250-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "338497-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/338497-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "33866-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/33866-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "339112-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/339112-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "340769-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/340769-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "340891-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/340891-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "342672-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/342672-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "343046-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/343046-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "343261-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/343261-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "345186-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/345186-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "346740-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/346740-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "346979-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/346979-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "347787-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/347787-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "348015-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/348015-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "3491-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/3491-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "350629-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/350629-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "351811-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/351811-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "351876-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/351876-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "352001-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/352001-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "352408-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/352408-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "352417-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/352417-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "352452-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/352452-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "35362-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/35362-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "355555-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/355555-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "364833-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/364833-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "36799-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/36799-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "368516-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/368516-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "369261-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/369261-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "369919-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/369919-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "371932-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/371932-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "373179-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/373179-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "373279-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/373279-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "373353-2016",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/373353-2016.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "374204-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/374204-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "374778-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/374778-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "375259-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/375259-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "37944-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/37944-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "379701-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/379701-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "381714-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/381714-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "385067-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/385067-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "385778-2016",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/385778-2016.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "386885-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/386885-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "387634-2016",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/387634-2016.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "387696-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/387696-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "388468-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/388468-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "389492-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/389492-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "389511-2016",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/389511-2016.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "390562-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/390562-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "392675-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/392675-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "393797-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/393797-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "394890-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/394890-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "395728-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/395728-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "396673-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/396673-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "398817-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/398817-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "406714-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/406714-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "408195-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/408195-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "408782-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/408782-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "409454-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/409454-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "410088-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/410088-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "410220-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/410220-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "410305-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/410305-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "411152-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/411152-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412015-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412015-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412018-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412018-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412029-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412029-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412310-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412310-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412321-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412321-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412322-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412322-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412323-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412323-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412326-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412326-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412327-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412327-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412363-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412363-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412364-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412364-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412381-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412381-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412416-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412416-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412425-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412425-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412427-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412427-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412438-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412438-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "412466-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/412466-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "416629-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/416629-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "41705-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/41705-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "417850-2016",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/417850-2016.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "419603-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/419603-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "419605-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/419605-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "420003-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/420003-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "422659-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/422659-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "42511-2025",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/42511-2025.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "430265-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/430265-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "430908-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/430908-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "434113-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/434113-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "434288-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/434288-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "43485-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/43485-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "435752-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/435752-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "436187-2016",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/436187-2016.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "437606-2016",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/437606-2016.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "438957-2016",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/438957-2016.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "438978-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/438978-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "440955-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/440955-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "445038-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/445038-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "44570-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/44570-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "445932-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/445932-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "445967-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/445967-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "447634-2016",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/447634-2016.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "449082-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/449082-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "449086-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/449086-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "449132-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/449132-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "449968-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/449968-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "450629-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/450629-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "451371-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/451371-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "451594-2016",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/451594-2016.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "451855-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/451855-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "452026-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/452026-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "452177-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/452177-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "452388-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/452388-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "457003-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/457003-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "457323-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/457323-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "457931-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/457931-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "458306-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/458306-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "459455-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/459455-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "462785-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/462785-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "464981-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/464981-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "466557-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/466557-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "467291-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/467291-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "468931-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/468931-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "470282-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/470282-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "470420-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/470420-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "471778-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/471778-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "471829-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/471829-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "471925-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/471925-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "473109-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/473109-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "473128-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/473128-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "473129-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/473129-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "473130-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/473130-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "473132-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/473132-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "473378-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/473378-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "473526-2025",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/473526-2025.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "475237-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/475237-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "475685-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/475685-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "476558-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/476558-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "478775-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/478775-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "479286-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/479286-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "480229-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/480229-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "480305-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/480305-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "481401-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/481401-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "481699-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/481699-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "482112-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/482112-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "484945-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/484945-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "485472-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/485472-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "486291-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/486291-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "486376-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/486376-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "486771-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/486771-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "487141-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/487141-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "487446-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/487446-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "487730-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/487730-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "487731-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/487731-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "487740-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/487740-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "488745-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/488745-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "490526-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/490526-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "491705-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/491705-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "492056-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/492056-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "49255-2025",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/49255-2025.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "493021-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/493021-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "495091-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/495091-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "496050-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/496050-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "496385-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/496385-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "497534-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/497534-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "498956-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/498956-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "499866-2025",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/499866-2025.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "500423-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/500423-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "500534-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/500534-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "501297-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/501297-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "50232-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/50232-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "503071-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/503071-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "503072-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/503072-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "503852-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/503852-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "505837-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/505837-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "506339-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/506339-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "506811-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/506811-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "519661-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/519661-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "520340-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/520340-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "520352-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/520352-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "524196-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/524196-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "524597-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/524597-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "52602-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/52602-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "526411-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/526411-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "528152-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/528152-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "529594-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/529594-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "52963-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/52963-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "530425-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/530425-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "53103-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/53103-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "532554-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/532554-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "534215-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/534215-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "535966-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/535966-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "536297-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/536297-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "53671-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/53671-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "537-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/537-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "537336-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/537336-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "538105-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/538105-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "539450-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/539450-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "540837-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/540837-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "541248-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/541248-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "541823-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/541823-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "544666-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/544666-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "544861-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/544861-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "545997-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/545997-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "550639-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/550639-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "551668-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/551668-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "552222-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/552222-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "552964-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/552964-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "555383-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/555383-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "555761-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/555761-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "55772-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/55772-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "558154-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/558154-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "559830-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/559830-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "559831-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/559831-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "561026-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/561026-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "562131-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/562131-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "562249-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/562249-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "562370-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/562370-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "562931-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/562931-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "563588-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/563588-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "565305-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/565305-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "566847-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/566847-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "56693-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/56693-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "569091-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/569091-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "569954-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/569954-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "573492-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/573492-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "575366-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/575366-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "575874-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/575874-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "575901-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/575901-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "58330-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/58330-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "585283-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/585283-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "585443-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/585443-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "586728-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/586728-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "586899-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/586899-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "589370-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/589370-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "591695-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/591695-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "592138-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/592138-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "592889-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/592889-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "593638-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/593638-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "593691-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/593691-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "595450-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/595450-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "596081-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/596081-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "596640-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/596640-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "597785-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/597785-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "600795-2025",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/600795-2025.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "605296-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/605296-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "607397-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/607397-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "608635-2025",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/608635-2025.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "609056-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/609056-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "611478-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/611478-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "61164-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/61164-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "61299-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/61299-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "614376-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/614376-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "618603-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/618603-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "62424-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/62424-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "624576-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/624576-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "624876-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/624876-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "624998-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/624998-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "631128-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/631128-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "632094-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/632094-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "632428-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/632428-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "63324-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/63324-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "633583-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/633583-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "634974-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/634974-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "636489-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/636489-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "638061-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/638061-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "638608-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/638608-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "64123-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/64123-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "646075-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/646075-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "65283-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/65283-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "658140-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/658140-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "660891-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/660891-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "661504-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/661504-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "66915-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/66915-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "67000-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/67000-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "67031-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/67031-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "670624-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/670624-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "672327-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/672327-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "67496-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/67496-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "675096-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/675096-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "68439-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/68439-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "686819-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/686819-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "700727-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/700727-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "707981-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/707981-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "71053-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/71053-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "71170-2018",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/71170-2018.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "727550-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/727550-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "728101-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/728101-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "729194-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/729194-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "729484-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/729484-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "73765-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/73765-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "73878-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/73878-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "748621-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/748621-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "77761-2022",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/77761-2022.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "789473-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/789473-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "791458-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/791458-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "80677-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/80677-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "81812-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/81812-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "83155-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/83155-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "84261-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/84261-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "84321-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/84321-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "851552-2025",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/851552-2025.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "8591-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/8591-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "86695-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/86695-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "88274-2026",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/88274-2026.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "89170-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/89170-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "8965-2023",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/8965-2023.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "92455-2025",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/92455-2025.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "92615-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/92615-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "93581-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/93581-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "93609-2020",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/93609-2020.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "95267-2021",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/95267-2021.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "9578-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/9578-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "98009-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/98009-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "9819-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/9819-2017.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "98292-2024",
+    "error_message": "TED notice is a Change notice/Corrigendum; excluded per ADR 0034 SS3.3",
+    "error_type": "MappingError",
+    "file_path": "ted/98292-2024.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "99240-2019",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/99240-2019.html",
+    "source_id": "ted"
+  },
+  {
+    "demand_id": "99677-2017",
+    "error_message": "Title could not be extracted from TED payload",
+    "error_type": "MappingError",
+    "file_path": "ted/99677-2017.html",
+    "source_id": "ted"
+  }
+]

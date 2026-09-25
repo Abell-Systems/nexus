@@ -95,11 +95,41 @@ note, tracked in `[[project_nexus_oepm_corpus_state]]` (agent memory) and this f
 ## 5. Current position in the chain (2026-09-15)
 
 ```text
-DEMAND        — sourced (TED/CORDIS), independence/eligibility audited
+DEMAND        — sourced (TED only; the live phase2_v4 population is 100% TED,
+                CORDIS was never actually used), independence/eligibility audited
                 (pending merge from `feat/pr101b-corpus-expansion-acquisition`)
-TECHNOLOGY    — OEPM corpus §11.3 ingestion PASS; scale (N≥60) NOT YET DETERMINED
-EVIDENCE      — blocked upstream of TECHNOLOGY: #104 dual annotation cannot start
-                until corpus qualification resolves
+TECHNOLOGY    — OEPM corpus §11.3 ingestion PASS; scale QUALIFIED (63/60
+                included, real ADR 0035 SS3/SS9 classification, frozen
+                2026-09-15, sha256 in data/raw/oepm_invenes_corpus_v1.sha256)
+EVIDENCE      — #104 pool-coverage CLOSED (gold set frozen, BM25-only:
+                demand coverage 9/30, pool relevance yield 14/108 --
+                docs/phase2-ted-pool-coverage-results.md). CPC channel
+                diagnostic CLOSED: a real, corpus-grounded, positive-
+                control-verified CPC taxonomy activates on 0/30 Dev demands
+                -- root cause is exact-phrase matching against procurement
+                prose, not language coverage or taxonomy quality
+                (docs/phase2-ted-cpc-channel-diagnostic-results.md).
+                BM25-only stands as the accurate, final #104 pool result.
+                No recall claim made. CPV->NACE->IPC->CPC concordance
+                CLOSED: SCOPE-FAILED/DEFERRED -- the only official EU
+                CPV<->NACE table (Reg. 2195/2002 Annex III) covers only
+                NACE Section F (Construction), a hard 30% ceiling (9/30
+                Dev demands) before NACE->IPC is even reached
+                (docs/phase2-cpv-cpc-concordance-feasibility-closure.md).
+                Neither Schmoch 2003 nor Dorner & Harhoff 2018 acquired.
+                Sequence closed: BM25 -> CPC diagnostic -> CPV scope-gate.
+                Dense retrieval EXECUTED
+                (docs/phase2-ted-dense-retrieval-results.md):
+                limit_per_method=20/min_threshold=0.0 (contract's fixed
+                values), 30/30 demands get a non-empty pool -- but this is
+                near-mechanical given threshold=0.0, not a coverage result.
+                Of 600 dense pairs, only 47 overlap BM25's gold-scored 108;
+                553 are new/unscored. All 11 BM25-zero-pool demands now get
+                a full 20-candidate pool (220 pairs), zero gold-scored --
+                dense changes candidate-space structure on exactly BM25's
+                blind spot, not (yet) known relevance there. No annotation
+                performed, no dense coverage/yield/recall number computed.
+                ADR 0036 remains after that
 EVALUATION    — protocol frozen, waiting on EVIDENCE
 CLAIM         — none yet; nothing above should be read as a result
 ```

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:16:38.696748+00:00",
+  "demand_id": "TRAT20260526015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "d8f3901f33185955c1bee9882988c0988634c6ec1516505629be3aa92e34511c",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/austrian-sme-seeking-industrial-partners-field-aluminum-etching"
+}

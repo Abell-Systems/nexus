@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T10:28:59.807976+00:00",
+  "demand_id": "E94201452",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e2f4b539685b7b067750477fed2fef968416c3b7848f09fca5f135e7a40525fa",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=E94201452"
+}

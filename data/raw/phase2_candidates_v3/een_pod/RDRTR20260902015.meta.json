@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:01.960970+00:00",
+  "demand_id": "RDRTR20260902015",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f99d3c244d5db42c3fd072074db98e8a31168cd44c589a3c46641324865b8c98",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/turkish-sme-seeks-eurostars-project-partner-advanced-additive"
+}

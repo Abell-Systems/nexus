@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:32.551755+00:00",
+  "demand_id": "INNOGET-2403",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a8a657cbf070fc62a9931a0a016a7c6c80105088946d9b43b517d946b4c8b385",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2403/assessment-of-scalability-processes-for-industrial-decarbonization-upc-barcelonatech-spain"
+}

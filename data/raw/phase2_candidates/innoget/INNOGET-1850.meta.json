@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:49.793025+00:00",
+  "demand_id": "INNOGET-1850",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "a143da767ee2c7ef35c8c58342cfabfb13f2cf88a6def6c5ba819c0863b24adf",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1850/seeking-how-to-support-hospitals-with-shortage-of-staff-supplies-and-resources-to-beat-covid-19-by-mit"
+}

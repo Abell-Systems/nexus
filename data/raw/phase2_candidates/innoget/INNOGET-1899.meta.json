@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:19:03.319755+00:00",
+  "demand_id": "INNOGET-1899",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1e529a066e378bdf5252db98217ac8867986e24d58a852701042451f1ceecedd",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1899/seeking-novel-proposals-for-the-management-and-dynamic-allocation-of-resources-in-a-post-covid-19-work-setting"
+}

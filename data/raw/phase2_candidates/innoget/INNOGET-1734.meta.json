@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:20:52.188184+00:00",
+  "demand_id": "INNOGET-1734",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "bf3026f8d4564f9f49747e261ca2051053fb09467a9ec43ca9b09ae807088558",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1734/seeking-chelating-agents-for-ahss-advanced-high-strength-steels"
+}

@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:21:58.282711+00:00",
+  "demand_id": "RDRNL20251125008",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "e76c7254666c9bd11136c0f3d302d3a9850727d79f9dc7904683ae80ebef0487",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/seeking-european-partner-ai-based-vr-therapeutic-walking-platform"
+}

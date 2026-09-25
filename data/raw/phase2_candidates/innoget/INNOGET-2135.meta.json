@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:23.977277+00:00",
+  "demand_id": "INNOGET-2135",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "3c83f3823f5ce01b14e248c355bc1db00503b9d0311bdfed1cdf3682eaebb003",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2135/seeking-for-spanish-entrepreneurs-at-any-stage-to-participate-in-esg-2022-and-access-up-to-1-million-in-perk-and-services"
+}

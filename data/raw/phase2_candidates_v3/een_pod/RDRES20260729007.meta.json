@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:18:35.250383+00:00",
+  "demand_id": "RDRES20260729007",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "0a4beb5a777cd99534e030d57ebc6c5d9a71613425569151aeaa01710124c108",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/horizon-europe-rivcircular-call-topic-4-circular-economy-textile-industry"
+}

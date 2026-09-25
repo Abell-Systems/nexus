@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-14T10:17:04.751161+00:00",
+  "demand_id": "TRFR20251218029",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "82657c542438ca553c86745b3a84bfea8c4c4e7ddc80027fe94ac8cbdefebf5c",
+  "source_id": "een_pod",
+  "source_uri": "https://een.ec.europa.eu/partnering-opportunities/high-density-electroencephalogram-eeg-babies"
+}

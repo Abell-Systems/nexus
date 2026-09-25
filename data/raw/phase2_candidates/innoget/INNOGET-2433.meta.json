@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:15:10.215603+00:00",
+  "demand_id": "INNOGET-2433",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "f33564a7eef2c19c40aadb1a87d3a09c72a8e0b247e46d94786689d0ca60e0b6",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2433/seeking-market-ready-frozen-innovations-for-culinary-creativity-global-discovery-smart-kitchens"
+}

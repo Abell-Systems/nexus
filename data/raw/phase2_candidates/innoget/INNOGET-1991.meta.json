@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:18:26.707433+00:00",
+  "demand_id": "INNOGET-1991",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "167dd1565d05aaceeec40974d1eed05b268441c60c1ccf8d8d6271f12a42d490",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/1991/seeking-all-energy-storage-innovators"
+}

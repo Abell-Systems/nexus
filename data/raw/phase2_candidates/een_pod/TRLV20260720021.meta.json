@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:57:15.803666+00:00",
+  "demand_id": "TRLV20260720021",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "cc837a3f9e101b5810324da2970e33e7fbb6960bd0a4a41b8e55cad6f3166978",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/2017/organizzazione-lettone-cerca-produttore-ue-di-propulsione-marina-a-idr"
+}

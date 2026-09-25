@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T13:17:20.988867+00:00",
+  "demand_id": "INNOGET-2147",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "473f5e87e690208a45355624ecec461ebedd20955689b101e28c2923dd85c410",
+  "source_id": "innoget",
+  "source_uri": "https://www.innoget.com/technology-calls/2147/seeking-startups-entrepreneurs-for-the-reef-starter-innovation-challenge"
+}

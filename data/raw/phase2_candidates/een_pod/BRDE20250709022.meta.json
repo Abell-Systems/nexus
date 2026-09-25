@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-11T14:05:26.898740+00:00",
+  "demand_id": "BRDE20250709022",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1dc3b43f9646d2320c69d206fc889f7fb85e2c118a60dee6491c212f1109a0d7",
+  "source_id": "een_pod",
+  "source_uri": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/852/cercasi-fornitori-per-legno-massello-su-misura"
+}

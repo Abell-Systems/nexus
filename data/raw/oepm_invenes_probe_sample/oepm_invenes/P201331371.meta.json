@@ -1,0 +1,9 @@
+{
+  "acquisition_timestamp": "2026-09-15T08:47:28.734240+00:00",
+  "demand_id": "P201331371",
+  "harvester_version": "phase2_harvester_v1",
+  "http_status": 200,
+  "raw_payload_sha256": "1ea05e4faaa0bec1b5d9ef5936e8f6fc503ead43a5bc14eff7f7eb9d64b89c25",
+  "source_id": "oepm_invenes",
+  "source_uri": "https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201331371"
+}

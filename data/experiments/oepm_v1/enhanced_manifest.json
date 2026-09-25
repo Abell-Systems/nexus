@@ -1,0 +1,56 @@
+{
+  "$schema": "https://nexus.abell.ai/schemas/dataset-manifest-v2.json",
+  "content_identity": {
+    "dataset_id": "OEPM-INVENES-CORPUS-2026-V1",
+    "dataset_version": "1.0.0",
+    "source_authority": "Oficina Española de Patentes y Marcas (OEPM)",
+    "source_release_id": "OEPM-BOPI-BULK-2016-2024",
+    "source_uri": "https://datos.gob.es/es/catalogo/e05024401-patentes-solicitadas-y-concedidas-bopi",
+    "jurisdiction": "ES",
+    "temporal_window": {
+      "start_date": "2016-01-01",
+      "end_date": "2024-12-31"
+    },
+    "canonical_sha256": "c1b6801da6d3bb932712d4331c91c020610dcda1a50ea3d2e291d87b0e559dff",
+    "counts": {
+      "raw_payload_count": 1,
+      "normalized_record_count": 0,
+      "included_record_count": 0,
+      "quarantined_record_count": 0,
+      "excluded_record_count": 0,
+      "duplicate_count": 0
+    },
+    "exclusion_reasons": {},
+    "quarantine_reasons": {},
+    "kind_code_distribution": {},
+    "files": {
+      "observations/part_0000.parquet": "23d1f8f1dac4bde76e2e51765318000c7f6271b34475f236e48c95d9f15f2802",
+      "observations/part_0001.parquet": "ca6f2da12cc84a1da98868744bcb02cc1c6f177b56f4426d30df532cec73cee9",
+      "observations/part_0002.parquet": "8005249329f0455996fb365cadde2f2cab1d1f080a23344b720c7647ec25ef46",
+      "observations/part_0003.parquet": "ca1d5742381a87dba7f34bd8a3b38382130e799167a7fe87631ef1e4c084e496",
+      "observations/part_0004.parquet": "abf5b27fb46a025ba7d557440f8d60a93e609168f8105b82dcc2f17d46fe887c",
+      "observations/part_0005.parquet": "5368d9b1d5e0a8afd9227bff7dce98a79471a0154cedf8bb946341da318596e4",
+      "observations/part_0006.parquet": "4590e51b8f25f6e144c0eca36d02160da33e38c46bc96f37865c9984c931e85f",
+      "patents/part_0000.parquet": "2002407583c7211ee4de0ea8507fc045e6c79c34f38053cccc573933e6e4b15d",
+      "patents/part_0001.parquet": "80351a82ee0c9ba756dfc957b154dc6c3d104810954b7359dfd340868f1d3c9e",
+      "patents/part_0002.parquet": "674fd419a32362191c6a314d82d5946b04c6ccb604d2a6acc9ba0dfb7221f7e9",
+      "patents/part_0003.parquet": "6487f21b4201b0f0bfc225f597f74015adac8952aa28a9e29a88b6f5ee8afa98",
+      "patents/part_0004.parquet": "1d91d992f4b5ba4b150031cf5fa78b2e04e226297ab0bf6f636ea46ed2128460",
+      "patents/part_0005.parquet": "37a205216f39ec59d1aeade4818661569314b6eec3bb944305fdac02111cde67",
+      "patents/part_0006.parquet": "e5841b534ad3e380425ec1a3573ff0f1ab15847d0b6323b2e51ddfa4b09870ac"
+    }
+  },
+  "content_identity_sha256": "c799be1d7917be6ebd752bec5783de28646ca3c6ea55594cef948cc1252aa087",
+  "execution_provenance": {
+    "created_at": "2026-09-15T10:31:59.960230Z",
+    "acquisition_started_at": "2026-09-15T10:32:18.532794Z",
+    "acquisition_finished_at": "2026-09-15T10:31:59.960230Z",
+    "environment": {
+      "git_commit": "cad6eef184471ab8449eaf6ae9b8e8b154e5da4d",
+      "normalizer_version": "1.0.0",
+      "python_version": "3.12.3",
+      "platform": "linux"
+    }
+  },
+  "manifest_sha256": "bb3c3b76ae9c86b2dbbb49420e3ed4c946fd0a655660f199c15259a33294dfbd"
+}
