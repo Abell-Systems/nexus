@@ -23,6 +23,21 @@ not mention it. This is a distinct threat to the estimator's unbiasedness,
 separate from the already-disclosed clustering/publication-repetition
 caveats.
 
+**Correction (this section originally claimed no draw had happened — that
+was wrong, caught while writing the implementation plan):** a real draw
+under the buggy 2026-09-23 design *did* happen (`a1e3f0a`,
+`data/annotations/ted_dense_exclusive_stratified_sample_manifest.json`,
+66 real pairs against the real frozen source, sha256-verified). What is
+still true, verified directly: **no annotation occurred** — both
+`ted_dense_exclusive_stratified_annotation_{valentin,lydia}.csv` have all
+66 judgment cells blank. The problem was still caught while fully
+reversible, per [[feedback_methodological_rigor]] Rule 4 — reversible
+means "before any label exists," not "before any file exists." The old
+manifest and its blank CSVs are superseded, not deleted by this document;
+they become stale the moment a real draw under this redesign happens
+(SS9 below), and are not otherwise touched by this redesign's
+implementation, which runs against synthetic fixtures only.
+
 No draw has happened against the 2026-09-23 design. No annotation exists.
 This redesign replaces the allocation/selection mechanism before either
 occurs — the problem was caught while still fully reversible, per
