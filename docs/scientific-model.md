@@ -95,7 +95,8 @@ note, tracked in `[[project_nexus_oepm_corpus_state]]` (agent memory) and this f
 ## 5. Current position in the chain (2026-09-15)
 
 ```text
-DEMAND        — sourced (TED/CORDIS), independence/eligibility audited
+DEMAND        — sourced (TED only; the live phase2_v4 population is 100% TED,
+                CORDIS was never actually used), independence/eligibility audited
                 (pending merge from `feat/pr101b-corpus-expansion-acquisition`)
 TECHNOLOGY    — OEPM corpus §11.3 ingestion PASS; scale QUALIFIED (63/60
                 included, real ADR 0035 SS3/SS9 classification, frozen
