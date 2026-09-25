@@ -47,6 +47,30 @@ and `_lydia.csv` are still blank templates. The gate-check script
 (`evaluate_ted_construct_validity_gate.py`) correctly refuses to run against them --
 this is unchanged from the original stopping point and remains the actual blocker.
 
+## Non-authoritative Claude pilot pass (2026-09-24) -- disclosure, not a result
+
+On explicit request, Claude produced its own judgments for all 30 control-sample
+descriptions at `data/annotations/ted_construct_validity_labeling_claude_pilot_NOT_FOR_GATE.csv`
+(filename deliberate). **This is not human labeling and must never be treated as
+the reference in `evaluate_ted_construct_validity_gate.py`, cited in the paper as
+validation evidence, or otherwise substituted for Valentín and Lydia's blind
+labels.** Using it as the gate's reference would make the gate circular --
+`openai/gpt-oss-120b`'s output checked against another LLM's judgment, not
+against human ground truth, which is the entire point of this validation design.
+
+Its only legitimate use is as a sanity check of the CSV mechanics and class
+definitions before the real labeling happens. Run standalone (not through the
+committed gate script, and not written to `ted_construct_validity_gate_decision.json`):
+against the real LLM run, `passed=False`, Gate B failed with 2 boundary
+`GENERIC_PROCUREMENT -> TECHNICAL_PROBLEM` misclassifications (`339244-2026`,
+`418642-2024`) -- both of which Claude itself flagged as genuinely hard
+judgment calls while labeling, not clean cases. 8/30 disagreements overall
+(pilot: 25 generic_procurement/3 technical_problem/2 empty_insufficient vs.
+LLM: 21/6/3). This is one non-blind data point from a single annotator who is
+also an LLM, worth exactly what that is: evidence the class definitions
+produce real disagreement on genuinely ambiguous cases, not evidence about
+whether the classifier will pass or fail the real gate.
+
 ## Next step (not done here)
 
 1. Valentín and Lydia independently label the 30-row control-sample CSVs, blind to

@@ -75,6 +75,7 @@ data/annotations/*
 !data/annotations/ted_construct_validity_labeling_lydia.csv
 !data/annotations/ted_construct_validity_llm_classification.json
 !data/annotations/ted_construct_validity_llm_classification.sha256
+!data/annotations/ted_construct_validity_labeling_claude_pilot_NOT_FOR_GATE.csv
 !data/experiments/power_analysis_wilcoxon.json
 !data/experiments/pilot_evaluation_report.json
 !data/experiments/dataset_identity_audit.json
