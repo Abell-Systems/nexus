@@ -41,6 +41,7 @@ data/*
 !data/raw/
 !data/experiments/
 !data/annotations/
+!data/external/
 data/experiments/*
 data/annotations/*
 !data/annotations/pilot_strict_annotation_batch.json
