@@ -76,6 +76,15 @@ exhaustion under this strategy, not extended by inventing new queries
 mid-run — opening more queries at that point is a new decision, made after
 seeing the exhaustion, not before.
 
+**Disclosure:** the cumulative `included_count` this rule reads seeds at 8
+from `data/experiments/oepm_v1/scaled_acquisition_sessions.json`'s
+`session: 0` — the original ADR 0035 SS11.3 smoke-test batch, drawn from
+**3** TED-topic-aligned queries, not the 10 pre-registered ones this
+strategy uses. That baseline is labeled as such in the ledger, but it
+means the N=63 freeze (§6) is 55 included under this session design's own
+10-query strategy plus 8 from that earlier, differently-scoped batch, not
+63 under one uniform strategy.
+
 ## 5. Non-goals
 
 - Does not change the 10 queries, the ADR 0035 SS3/SS9 exclusion rules, or
