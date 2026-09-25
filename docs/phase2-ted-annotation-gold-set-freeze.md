@@ -21,6 +21,13 @@ VALIDITY:  Adjudication used the same annotation contract that produced the
 STATUS:    GOLD SET FROZEN.
 ```
 
+**CORRECTION (`docs/phase2-ted-pool-coverage-diagnostic.md` §1):** every
+"BM25+CPC" reference below (including the QUESTION block above and §3)
+should be read as **BM25-only** -- `DuckDbCPCRetriever` never received a
+populated taxonomy policy and contributed zero candidates across all 30
+Dev demands. The gold set itself is unaffected; the retrieval-strategy
+label it was framed under is corrected here.
+
 ## 1. Composition
 
 - **108 pairs total**: 96 exact agreement (Valentín == Lydia) + 12 adjudicated.
