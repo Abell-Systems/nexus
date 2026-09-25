@@ -93,3 +93,35 @@ currently unknown in either direction.
 - Does not merge dense and BM25 into a combined pool.
 - Does not modify BM25's 9/30, CPC's 0/30, or the CPV→NACE scope-gate.
 - Does not decide whether an incremental annotation round should happen.
+
+## 7. Sidecar hash bug found and fixed, artifact NOT regenerated (2026-09-25)
+
+Independent code review found that `experiments/phase2/generate_dense_embeddings.py`
+computed `artifact_sha256` (the field embedded *inside* the JSON payload,
+consumed by `FrozenEmbeddingArtifact.load_from_json`'s pop-and-rehash
+verification) correctly, but reused that same value for the separate
+`.sha256` **sidecar** file — whose job, by this repo's own convention
+(every other sidecar), is to be the hash of the file's exact bytes *as
+written to disk*, which include the injected `artifact_sha256` field
+itself. The two are legitimately different hashes of different byte
+strings; conflating them produced a sidecar that `sha256sum -c` reports as
+a mismatch against the real file, even though the artifact itself was
+never tampered with. Confirmed empirically: the committed sidecar records
+`a9b66d5b...`, the real file hashes to `2dc8fc61...`.
+
+**Fixed in the script** (computes and writes a fresh hash of the final,
+post-injection bytes for the sidecar) — verified correct via a standalone
+sanity check reproducing both the sidecar-vs-file and the domain model's
+internal pop-and-rehash invariant simultaneously.
+
+**The currently-frozen artifact
+(`data/experiments/phase2_v4/ted_at_scale_dense_embeddings_v1.json`) was
+NOT regenerated.** This diagnostic's own §1 QUESTION/STATUS block above
+stays CLOSED and untouched. Regenerating now would be redone again once
+the TED construct-validity gate resolves and the affected eligibility
+measurement is re-run (see `project_nexus_pr112_113_construct_validity_blocker`
+memory / `docs/ted-construct-validity-classifier-results.md`) — that
+re-run is expected to change which demands/patents are even eligible,
+making today's embeddings stale regardless of this sidecar fix. The
+mismatched sidecar remains a known, disclosed limitation of this frozen
+artifact until that regeneration happens for real.
