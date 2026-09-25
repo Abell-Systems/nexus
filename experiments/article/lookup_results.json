@@ -1,0 +1,1598 @@
+[
+ {
+  "input": "ES2049678",
+  "ucid": "ES-2049678-A6",
+  "simplefamily": "ES-2049678-A6",
+  "pd": "19940416",
+  "title": "NOVEL CYCLOBUTANE DERIVATIVE AND PROCESS FOR PRODUCING SAME"
+ },
+ {
+  "input": "ES2070635",
+  "ucid": "ES-2070635-T3",
+  "simplefamily": "AU-1377092-A",
+  "pd": "19950601",
+  "title": "TREATMENT PEPTIDES."
+ },
+ {
+  "input": "ES2072238",
+  "ucid": "ES-2072238-T3",
+  "simplefamily": "DE-69435232-D1",
+  "pd": "19970116",
+  "title": "DNA-POLYMERASES THAT HAVE A UNION SITE WITH MODIFIED NUCLEOTIDES FOR DNA SEQUENCING."
+ },
+ {
+  "input": "ES2074719",
+  "ucid": "ES-2074719-T3",
+  "simplefamily": "CA-2085345-A1",
+  "pd": "19950916",
+  "title": "PIRIMIDINE NUCLEOSIDE DERIVATIVES."
+ },
+ {
+  "input": "ES2108014",
+  "ucid": "ES-2108014-T3",
+  "simplefamily": "JP-2941942-B2",
+  "pd": "19971216",
+  "title": "ANTIVIRAL COMPOSITION OF 3'-AZIDO-2',3'-DIDEOXI-5-METHYLCITIDINE."
+ },
+ {
+  "input": "ES2173846",
+  "ucid": "ES-2173846-T3",
+  "simplefamily": "BR-0002936-A",
+  "pd": "20021101",
+  "title": "INDOL BICICLOCARBONIL COMPOUNDS AS ANTI-INFLAMMATORY / ANALGESIC AGENTS AND AS COX-2 INHIBITORS."
+ },
+ {
+  "input": "ES2214528",
+  "ucid": "ES-2214528-T3",
+  "simplefamily": "AR-002030-A1",
+  "pd": "20040916",
+  "title": "PHARMACEUTICAL COMPOSITION FOR TOPICAL APPLICATION CONTAINING ACICLOVIR AND HYDROCORTISONE."
+ },
+ {
+  "input": "ES2233367",
+  "ucid": "ES-2233367-T3",
+  "simplefamily": "NZ-521808-A",
+  "pd": "20050616",
+  "title": "HEMISINTETIC AND INTERMEDIARY METHOD OF THE SAME."
+ },
+ {
+  "input": "ES2234569",
+  "ucid": "ES-2234569-T3",
+  "simplefamily": "AU-2904700-A",
+  "pd": "20050701",
+  "title": "USE OF A PHARMACEUTICAL COMPOSITION IN THE PREPARATION OF A MEDICINAL PRODUCT FOR THE TREATMENT OF PATHOLOGICAL STATES OF THE EYE."
+ },
+ {
+  "input": "ES2248126",
+  "ucid": "ES-2248126-T3",
+  "simplefamily": "AU-2005203408-A1",
+  "pd": "20060316",
+  "title": "IMMUNOSTIMULATING NUCLEIC ACIDS."
+ },
+ {
+  "input": "ES2248319",
+  "ucid": "ES-2248319-T3",
+  "simplefamily": "NZ-521808-A",
+  "pd": "20060316",
+  "title": "SYNTHETIC PROCESS TO PRODUCE A COMPOSITE OF ECTEINASCIDINE TYPE."
+ },
+ {
+  "input": "ES2267810",
+  "ucid": "ES-2267810-T3",
+  "simplefamily": "AU-2001287160-B2",
+  "pd": "20070316",
+  "title": "TREATMENT OF HEPATITIS C WITH TIMOSINE AND PEGINTERFERON."
+ },
+ {
+  "input": "ES2288641",
+  "ucid": "ES-2288641-T3",
+  "simplefamily": "CN-1753663-A",
+  "pd": "20080116",
+  "title": "METHOD FOR TREATING PAINFUL DISORDERS OF THE BLADDER USING CALCIUM CHANNEL MODULATORS OF THE ALPHA2-DELTA SUBUNIT."
+ },
+ {
+  "input": "ES2290844",
+  "ucid": "ES-2290844-T3",
+  "simplefamily": "DE-602005001833-T2",
+  "pd": "20080216",
+  "title": "COMPOSITIONS THAT INCLUDE ECTEINASCIDINS AND A DISABLED."
+ },
+ {
+  "input": "ES2292341",
+  "ucid": "ES-2292341-B1",
+  "simplefamily": "ES-2292341-A1",
+  "pd": "20090316",
+  "title": "PROCEDURE FOR PURIFICATION OF EICOSAPENTAENOIC ACID (EPA)."
+ },
+ {
+  "input": "ES2303527",
+  "ucid": "ES-2303527-T3",
+  "simplefamily": "DE-60133270-T2",
+  "pd": "20080816",
+  "title": "GRINDING PROCEDURE."
+ },
+ {
+  "input": "ES2314470",
+  "ucid": "ES-2314470-T3",
+  "simplefamily": "DE-602004016376-D1",
+  "pd": "20090316",
+  "title": "COMBINATION OF ET-743 WITH A PROFARMACO OF 5-FLUOROURACILO FOR THE TREATMENT OF CANCER."
+ },
+ {
+  "input": "ES2326825",
+  "ucid": "ES-2326825-T3",
+  "simplefamily": "AU-2005298364-B2",
+  "pd": "20091020",
+  "title": "PEGILED LIPOSOMAL DOXORUBICINE IN COMBINATION WITH ECTEINASCIDINE 743."
+ },
+ {
+  "input": "ES2334774",
+  "ucid": "ES-2334774-T3",
+  "simplefamily": "EP-1443933-A2",
+  "pd": "20100316",
+  "title": "TREATMENT OF CHRONIC, RESISTANT OR INTOLERANT LEUKEMIA STI571, WHICH CONSISTS IN HOMOHARRIGTONINE ONLY OR COMBINED WITH OTHER AGENTS."
+ },
+ {
+  "input": "ES2342348",
+  "ucid": "ES-2342348-T3",
+  "simplefamily": "EP-2074120-A1",
+  "pd": "20100705",
+  "title": "TROPANO COMPOUNDS."
+ },
+ {
+  "input": "ES2342783",
+  "ucid": "ES-2342783-T3",
+  "simplefamily": "AU-2003295605-A1",
+  "pd": "20100714",
+  "title": "ARIL ACILTIOUREAS SUBSTITUTED AND RELATED COMPOUNDS, INHIBITORS OF VIRAL REPLICATION."
+ },
+ {
+  "input": "ES2347581",
+  "ucid": "ES-2347581-T3",
+  "simplefamily": "AR-050638-A1",
+  "pd": "20101102",
+  "title": "USE OF (R)-(HALOBENCILOXI) BENCILAMINE-PROPANAMIDS AS SELECTIVE MODULATORS OF THE SODIUM AND/OR CALCIUM CHANNEL."
+ },
+ {
+  "input": "ES2348247",
+  "ucid": "ES-2348247-T3",
+  "simplefamily": "CN-101068826-A",
+  "pd": "20101202",
+  "title": "POWERFUL OLIGONUCLEOTIDES OF LNA FOR THE INHIBITION OF HIF-1A."
+ },
+ {
+  "input": "ES2350618",
+  "ucid": "ES-2350618-T3",
+  "simplefamily": "EP-2079681-A1",
+  "pd": "20110125",
+  "title": "N-ALQUILCARBONIL-D-AMINOHYDROXIALCHYL ESTER COMPOUNDS AND THEIR USE."
+ },
+ {
+  "input": "ES2361585",
+  "ucid": "ES-2361585-T3",
+  "simplefamily": "AU-2007297054-A1",
+  "pd": "20110620",
+  "title": "COMPOSITIONS AND METHODS TO TREAT, CONTROL, REDUCE, IMPROVE OR PREVENT ALLERGY."
+ },
+ {
+  "input": "ES2365097",
+  "ucid": "ES-2365097-T3",
+  "simplefamily": "AR-047068-A1",
+  "pd": "20110922",
+  "title": "DERIVATIVES OF TETRAHYDROPIRANOQUINOLINA."
+ },
+ {
+  "input": "ES2367152",
+  "ucid": "ES-2367152-T3",
+  "simplefamily": "DE-102007025717-A1",
+  "pd": "20111028",
+  "title": "DERIVATIVES OF ARILETER PIRIDAZINONA."
+ },
+ {
+  "input": "ES2373117",
+  "ucid": "ES-2373117-T3",
+  "simplefamily": "AR-057214-A1",
+  "pd": "20120131",
+  "title": "PIRIDIAZINONE DERIVATIVES FOR TUMORS TREATMENT."
+ },
+ {
+  "input": "ES2381895",
+  "ucid": "ES-2381895-T3",
+  "simplefamily": "AU-2008213808-A1",
+  "pd": "20120601",
+  "title": "PI 3-kinase inhibitors and methods for use"
+ },
+ {
+  "input": "ES2391377",
+  "ucid": "ES-2391377-T3",
+  "simplefamily": "WO-2010020308-A1",
+  "pd": "20121123",
+  "title": "7-Azaindole derivatives"
+ },
+ {
+  "input": "ES2391790",
+  "ucid": "ES-2391790-T3",
+  "simplefamily": "AU-2007281682-A1",
+  "pd": "20121129",
+  "title": "Compositions and procedures that use anti-CS1 antibodies to treat multiple myeloma"
+ },
+ {
+  "input": "ES2391841",
+  "ucid": "ES-2391841-T3",
+  "simplefamily": "GB-0523041-D0",
+  "pd": "20121130",
+  "title": "antiproliferative combination comprising CYC-682 and a cytotoxic agent"
+ },
+ {
+  "input": "ES2392976",
+  "ucid": "ES-2392976-T3",
+  "simplefamily": "AR-057623-A1",
+  "pd": "20121217",
+  "title": "Materials and methods to treat viral influenza infections with a cysteamine compound"
+ },
+ {
+  "input": "ES2393762",
+  "ucid": "ES-2393762-T3",
+  "simplefamily": "AU-2007316587-A1",
+  "pd": "20121227",
+  "title": "Procedures and compositions for detecting receptor ligand mimetics"
+ },
+ {
+  "input": "ES2394616",
+  "ucid": "ES-2394616-T3",
+  "simplefamily": "GB-0206215-D0",
+  "pd": "20130204",
+  "title": "2,4-Diaminepyridinine derivatives"
+ },
+ {
+  "input": "ES2399168",
+  "ucid": "ES-2399168-T3",
+  "simplefamily": "EP-2174644-A1",
+  "pd": "20130326",
+  "title": "Cosmetic composition containing a dibenzoylmethane derivative and a dithiolane compound"
+ },
+ {
+  "input": "ES2408159",
+  "ucid": "ES-2408159-T3",
+  "simplefamily": "WO-2009151152-A1",
+  "pd": "20130618",
+  "title": "Oxycarbamoyl compounds and their use"
+ },
+ {
+  "input": "ES2411958",
+  "ucid": "ES-2411958-T3",
+  "simplefamily": "WO-2010139085-A1",
+  "pd": "20130709",
+  "title": "Method for producing an ester concentrate of eicosapentaenoic and docosahexaenoic acids"
+ },
+ {
+  "input": "ES2428009",
+  "ucid": "ES-2428009-T3",
+  "simplefamily": "US-20100184823-A1",
+  "pd": "20131105",
+  "title": "RRNAs to treat viral infections"
+ },
+ {
+  "input": "ES2432671",
+  "ucid": "ES-2432671-T3",
+  "simplefamily": "WO-2011000855-A1",
+  "pd": "20131204",
+  "title": "2-carboxamide cycloamine ureas useful as PI3K inhibitors"
+ },
+ {
+  "input": "ES2436566",
+  "ucid": "ES-2436566-T3",
+  "simplefamily": "WO-2010114181-A1",
+  "pd": "20140103",
+  "title": "Acrylamide compounds and their use"
+ },
+ {
+  "input": "ES2464281",
+  "ucid": "ES-2464281-T3",
+  "simplefamily": "AU-2005274852-A1",
+  "pd": "20140602",
+  "title": "FLT3 inhibitors for immunosuppression"
+ },
+ {
+  "input": "ES2484016",
+  "ucid": "ES-2484016-T3",
+  "simplefamily": "EP-2246349-A1",
+  "pd": "20140808",
+  "title": "Thioxanthene derivatives for the treatment of infectious diseases"
+ },
+ {
+  "input": "ES2537751",
+  "ucid": "ES-2537751-T3",
+  "simplefamily": "KR-20070104579-A",
+  "pd": "20150611",
+  "title": "Regimens for intra-articular viscosupplementation"
+ },
+ {
+  "input": "ES2544484",
+  "ucid": "ES-2544484-T3",
+  "simplefamily": "AR-066625-A1",
+  "pd": "20150831",
+  "title": "Phosphate modified oligonucleotide analogues with immunostimulatory activity"
+ },
+ {
+  "input": "ES2556937",
+  "ucid": "ES-2556937-T3",
+  "simplefamily": "AR-058720-A1",
+  "pd": "20160121",
+  "title": "2-Phenylethylamino derivatives as modulators of calcium and/or sodium channels"
+ },
+ {
+  "input": "ES2558780",
+  "ucid": "ES-2558780-T3",
+  "simplefamily": "US-20120255976-A1",
+  "pd": "20160208",
+  "title": "Imidazopyridazines as Akt kinase inhibitors"
+ },
+ {
+  "input": "ES2561906",
+  "ucid": "ES-2561906-B1",
+  "simplefamily": "WO-2016016506-A1",
+  "pd": "20161215",
+  "title": "TREATMENT OF GLIOMA OR GLIOBLASTOMA WITH PARVOVIRUS MVM"
+ },
+ {
+  "input": "ES2567051",
+  "ucid": "ES-2567051-T3",
+  "simplefamily": "AU-2007318132-A1",
+  "pd": "20160419",
+  "title": "Solid forms comprising 4-[9-(3S)-(tetrahydro-furan-3-yl)-8-(2,4,6-trifluoro-phenylamino)-9H-purin-2-ylamino]-trans-cyclohexan-1-ol"
+ },
+ {
+  "input": "ES2574136",
+  "ucid": "ES-2574136-T3",
+  "simplefamily": "WO-2010118761-A1",
+  "pd": "20160615",
+  "title": "Compositions rich in omega 3 fatty acids with a low phytanic acid content"
+ },
+ {
+  "input": "ES2589599",
+  "ucid": "ES-2589599-B1",
+  "simplefamily": "ES-2589599-A1",
+  "pd": "20170816",
+  "title": "New derivatives of (1H-Indol-3-Ilmethyl) Dimethylamine with blocking activity of voltage-dependent Ca2+ channels"
+ },
+ {
+  "input": "ES2591203",
+  "ucid": "ES-2591203-T3",
+  "simplefamily": "WO-2013087578-A1",
+  "pd": "20161125",
+  "title": "Benzothienyl-pyrrolotriazines disubstituted and their use as inhibitors of FGFR kinase"
+ },
+ {
+  "input": "ES2592860",
+  "ucid": "ES-2592860-T3",
+  "simplefamily": "WO-2013178320-A1",
+  "pd": "20161201",
+  "title": "Solid state forms of N-((S)-2,3-Dihydroxy-propyl)-3-(2-fluoro-4-iodo-phenylamino)-isonicotinamide"
+ },
+ {
+  "input": "ES2602140",
+  "ucid": "ES-2602140-T3",
+  "simplefamily": "WO-2013000651-A1",
+  "pd": "20170217",
+  "title": "Fluorinated arylalkylaminocarboxamide derivatives"
+ },
+ {
+  "input": "ES2602797",
+  "ucid": "ES-2602797-T3",
+  "simplefamily": "WO-2012173521-A2",
+  "pd": "20170222",
+  "title": "Inhibitors of protein kinases (variants), their use in the treatment of oncological diseases"
+ },
+ {
+  "input": "ES2611185",
+  "ucid": "ES-2611185-T3",
+  "simplefamily": "EP-2805732-A1",
+  "pd": "20170505",
+  "title": "Polymer-drug conjugates for the treatment of amyloidosis"
+ },
+ {
+  "input": "ES2614130",
+  "ucid": "ES-2614130-T3",
+  "simplefamily": "WO-2010038165-A1",
+  "pd": "20170529",
+  "title": "Imidazo[1,5]naphthyridine compounds, their pharmaceutical use and compositions"
+ },
+ {
+  "input": "ES2618520",
+  "ucid": "ES-2618520-T3",
+  "simplefamily": "US-20140066426-A1",
+  "pd": "20170621",
+  "title": "Fluoromethyl substituted pyrolocarboxamides"
+ },
+ {
+  "input": "ES2620119",
+  "ucid": "ES-2620119-T3",
+  "simplefamily": "WO-2014078637-A1",
+  "pd": "20170627",
+  "title": "Novel heterocyclic derivatives as modulators of kinase activity"
+ },
+ {
+  "input": "ES2625637",
+  "ucid": "ES-2625637-T3",
+  "simplefamily": "WO-2011098904-A1",
+  "pd": "20170720",
+  "title": "BIR IAP domain binding compounds"
+ },
+ {
+  "input": "ES2629170",
+  "ucid": "ES-2629170-T3",
+  "simplefamily": "WO-2011068667-A1",
+  "pd": "20170807",
+  "title": "Pyrazolopyrimidines and related heterocycles as CK2 inhibitors"
+ },
+ {
+  "input": "ES2631727",
+  "ucid": "ES-2631727-T3",
+  "simplefamily": "AU-2008216600-A1",
+  "pd": "20170904",
+  "title": "Antibodies against ErbB3 and their uses"
+ },
+ {
+  "input": "ES2633194",
+  "ucid": "ES-2633194-T3",
+  "simplefamily": "WO-2010062571-A1",
+  "pd": "20170919",
+  "title": "MTOR kinase inhibitors for oncological indications and diseases associated with the mTOR/PI3K/Akt pathway"
+ },
+ {
+  "input": "ES2633969",
+  "ucid": "ES-2633969-T3",
+  "simplefamily": "WO-2015014446-A1",
+  "pd": "20170926",
+  "title": "1,3-disubstituted cyclopentane derivatives"
+ },
+ {
+  "input": "ES2634328",
+  "ucid": "ES-2634328-T3",
+  "simplefamily": "RU-2338750-C2",
+  "pd": "20170927",
+  "title": "Immunostimulatory Nucleic Acids"
+ },
+ {
+  "input": "ES2636936",
+  "ucid": "ES-2636936-T3",
+  "simplefamily": "WO-2014135244-A1",
+  "pd": "20171010",
+  "title": "Triazolo[4,5-d]pyrimidine derivatives for the treatment of diseases such as cancer"
+ },
+ {
+  "input": "ES2645271",
+  "ucid": "ES-2645271-T3",
+  "simplefamily": "WO-2013113838-A1",
+  "pd": "20171204",
+  "title": "New therapeutic agents"
+ },
+ {
+  "input": "ES2655264",
+  "ucid": "ES-2655264-T3",
+  "simplefamily": "WO-2013110309-A1",
+  "pd": "20180219",
+  "title": "Triazolo[4,5-d]pyrimidine derivatives"
+ },
+ {
+  "input": "ES2655704",
+  "ucid": "ES-2655704-T3",
+  "simplefamily": "MX-2009013119-A",
+  "pd": "20180221",
+  "title": "Substituted 2-[2-(phenyl)ethylamino] alkanoamide derivatives and their use as modulators of calcium and/or sodium channels"
+ },
+ {
+  "input": "ES2658400",
+  "ucid": "ES-2658400-T3",
+  "simplefamily": "WO-2015014851-A1",
+  "pd": "20180309",
+  "title": "Hydroxyalkylated starch for the treatment of hematologic malignancies"
+ },
+ {
+  "input": "ES2661132",
+  "ucid": "ES-2661132-T3",
+  "simplefamily": "GB-201420267-D0",
+  "pd": "20180327",
+  "title": "Oncolytic adenoviruses armed with heterologous genes"
+ },
+ {
+  "input": "ES2661367",
+  "ucid": "ES-2661367-T3",
+  "simplefamily": "WO-2011112635-A1",
+  "pd": "20180328",
+  "title": "CDC7 kinase inhibitors and their uses"
+ },
+ {
+  "input": "ES2663377",
+  "ucid": "ES-2663377-T3",
+  "simplefamily": "EA-200801933-A1",
+  "pd": "20180412",
+  "title": "Methods for the treatment of inflammatory and autoimmune diseases with natalizumab"
+ },
+ {
+  "input": "ES2678696",
+  "ucid": "ES-2678696-T3",
+  "simplefamily": "US-20130287802-A1",
+  "pd": "20180816",
+  "title": "Targeted/immunomodulatory fusion proteins and methods of preparation thereof"
+ },
+ {
+  "input": "ES2683268",
+  "ucid": "ES-2683268-T3",
+  "simplefamily": "WO-2015013671-A1",
+  "pd": "20180925",
+  "title": "Multispecific antibodies, multispecific activatable antibodies and methods for using them"
+ },
+ {
+  "input": "ES2683377",
+  "ucid": "ES-2683377-T3",
+  "simplefamily": "WO-2013019681-A2",
+  "pd": "20180926",
+  "title": "Selective delivery molecules and methods of use"
+ },
+ {
+  "input": "ES2684360",
+  "ucid": "ES-2684360-T3",
+  "simplefamily": "US-20150126490-A1",
+  "pd": "20181002",
+  "title": "Aminoheteroaryl benzamides as kinase inhibitors"
+ },
+ {
+  "input": "ES2685703",
+  "ucid": "ES-2685703-T3",
+  "simplefamily": "US-20130177643-A1",
+  "pd": "20181010",
+  "title": "Compositions enriched in DPA of polyunsaturated omega-3 fatty acids in the form of free acid"
+ },
+ {
+  "input": "ES2687225",
+  "ucid": "ES-2687225-T3",
+  "simplefamily": "WO-2015104359-A2",
+  "pd": "20181024",
+  "title": "Purification method of antibody-drug conjugates bound to Cys"
+ },
+ {
+  "input": "ES2690390",
+  "ucid": "ES-2690390-T3",
+  "simplefamily": "US-20140142081-A1",
+  "pd": "20181120",
+  "title": "Compounds and their methods of use"
+ },
+ {
+  "input": "ES2692946",
+  "ucid": "ES-2692946-T3",
+  "simplefamily": "WO-2013189930-A1",
+  "pd": "20181205",
+  "title": "Procedure for depigmenting keratin materials using new compounds based on resorcinol"
+ },
+ {
+  "input": "ES2695169",
+  "ucid": "ES-2695169-T3",
+  "simplefamily": "US-20140274912-A1",
+  "pd": "20190102",
+  "title": "Cell culture methods"
+ },
+ {
+  "input": "ES2698625",
+  "ucid": "ES-2698625-T3",
+  "simplefamily": "WO-2013107405-A1",
+  "pd": "20190205",
+  "title": "Therapeutically active compounds and their methods of use"
+ },
+ {
+  "input": "ES2698960",
+  "ucid": "ES-2698960-T3",
+  "simplefamily": "WO-2014063778-A1",
+  "pd": "20190206",
+  "title": "2-aminopyridine compounds"
+ },
+ {
+  "input": "ES2701339",
+  "ucid": "ES-2701339-T3",
+  "simplefamily": "WO-2016000721-A2",
+  "pd": "20190221",
+  "title": "Identification of compounds that modify a cellular phenotype"
+ },
+ {
+  "input": "ES2702466",
+  "ucid": "ES-2702466-T3",
+  "simplefamily": "WO-2015024667-A1",
+  "pd": "20190301",
+  "title": "Procedure to increase the expression of proteins encoded by RNA"
+ },
+ {
+  "input": "ES2705157",
+  "ucid": "ES-2705157-T3",
+  "simplefamily": "GB-201520631-D0",
+  "pd": "20190322",
+  "title": "Compositions comprising bacterial strains"
+ },
+ {
+  "input": "ES2705529",
+  "ucid": "ES-2705529-T3",
+  "simplefamily": "CA-2712747-A1",
+  "pd": "20190325",
+  "title": "Combinatorial treatment of cancer"
+ },
+ {
+  "input": "ES2708211",
+  "ucid": "ES-2708211-T3",
+  "simplefamily": "WO-2015193339-A1",
+  "pd": "20190409",
+  "title": "3-amino-1,5,6,7-tetrahydro-4H-indol-4-ones"
+ },
+ {
+  "input": "ES2711498",
+  "ucid": "ES-2711498-T3",
+  "simplefamily": "WO-2015121454-A1",
+  "pd": "20190506",
+  "title": "Immunotherapy cells designed by genetic engineering to direct an antigen present in immune cells and pathological cells"
+ },
+ {
+  "input": "ES2711669",
+  "ucid": "ES-2711669-A1",
+  "simplefamily": "WO-2019086627-A1",
+  "pd": "20190506",
+  "title": "SYSTEMS FOR THE RELEASE OF POLYSIALIC ACID DRUGS AND METHODS"
+ },
+ {
+  "input": "ES2714863",
+  "ucid": "ES-2714863-T3",
+  "simplefamily": "US-20140302057-A1",
+  "pd": "20190530",
+  "title": "MARCKS inhibitor peptides for metastatic inhibition"
+ },
+ {
+  "input": "ES2714951",
+  "ucid": "ES-2714951-T3",
+  "simplefamily": "WO-2014100762-A1",
+  "pd": "20190530",
+  "title": "Hydrophilic and conjugated autoimmolating linkers thereof"
+ },
+ {
+  "input": "ES2715294",
+  "ucid": "ES-2715294-T3",
+  "simplefamily": "WO-2013057322-A1",
+  "pd": "20190603",
+  "title": "Compounds of (hetero)aryl cyclopropylamine as LSD1 inhibitors"
+ },
+ {
+  "input": "ES2720324",
+  "ucid": "ES-2720324-T3",
+  "simplefamily": "WO-2015144290-A1",
+  "pd": "20190719",
+  "title": "Pyridyl Piperidines"
+ },
+ {
+  "input": "ES2721031",
+  "ucid": "ES-2721031-T3",
+  "simplefamily": "US-20150361067-A1",
+  "pd": "20190726",
+  "title": "Dihydroisoquinolinone substituted compounds"
+ },
+ {
+  "input": "ES2721882",
+  "ucid": "ES-2721882-T3",
+  "simplefamily": "WO-2013093809-A1",
+  "pd": "20190806",
+  "title": "Constant regions of genetically engineered antibody for site-specific conjugation and procedures and uses thereof"
+ },
+ {
+  "input": "ES2725569",
+  "ucid": "ES-2725569-T3",
+  "simplefamily": "WO-2013119990-A2",
+  "pd": "20190924",
+  "title": "Diagnosis and treatment of cancers that express CD30"
+ },
+ {
+  "input": "ES2727686",
+  "ucid": "ES-2727686-T3",
+  "simplefamily": "WO-2014094041-A1",
+  "pd": "20191017",
+  "title": "Treatment of diseases that involve mucin"
+ },
+ {
+  "input": "ES2728290",
+  "ucid": "ES-2728290-T3",
+  "simplefamily": "GB-201201314-D0",
+  "pd": "20191023",
+  "title": "Combined therapeutic use of antibodies and endoglucosidases"
+ },
+ {
+  "input": "ES2728356",
+  "ucid": "ES-2728356-T3",
+  "simplefamily": "US-20160376287-A1",
+  "pd": "20191023",
+  "title": "Polycyclic amide derivatives as CDK9 inhibitors"
+ },
+ {
+  "input": "ES2730941",
+  "ucid": "ES-2730941-T3",
+  "simplefamily": "WO-2012054748-A2",
+  "pd": "20191113",
+  "title": "Synergistic effects between auristatin-based antibody-drug conjugate conjugates and PI3K-AKT-mTOR pathway inhibitors"
+ },
+ {
+  "input": "ES2732679",
+  "ucid": "ES-2732679-T3",
+  "simplefamily": "US-20140273057-A1",
+  "pd": "20191125",
+  "title": "Cell culture procedures"
+ },
+ {
+  "input": "ES2734081",
+  "ucid": "ES-2734081-T3",
+  "simplefamily": "WO-2016073871-A1",
+  "pd": "20191204",
+  "title": "Apilimod for use in the treatment of melanoma"
+ },
+ {
+  "input": "ES2744540",
+  "ucid": "ES-2744540-T3",
+  "simplefamily": "US-20160159906-A1",
+  "pd": "20200225",
+  "title": "Anti-CD79b antibodies and usage procedures"
+ },
+ {
+  "input": "ES2747920",
+  "ucid": "ES-2747920-T3",
+  "simplefamily": "WO-2014125041-A1",
+  "pd": "20200312",
+  "title": "Anti-NKP46 antibody for diagnosis of peripheral non-cutaneous T-cell lymphoma (PTCL)"
+ },
+ {
+  "input": "ES2753577",
+  "ucid": "ES-2753577-T3",
+  "simplefamily": "WO-2016096143-A1",
+  "pd": "20200413",
+  "title": "Crystalline form of 5-amino-2,3-dihydroftalazine-1,4-dione sodium salt, the pharmaceutical preparations containing it and method of production"
+ },
+ {
+  "input": "ES2762231",
+  "ucid": "ES-2762231-T3",
+  "simplefamily": "US-20140141025-A1",
+  "pd": "20200522",
+  "title": "Hydrazinyl-indole compounds and conjugates"
+ },
+ {
+  "input": "ES2763318",
+  "ucid": "ES-2763318-T3",
+  "simplefamily": "US-20160095942-A1",
+  "pd": "20200528",
+  "title": "Vehicle-antibody compositions and procedures for preparing and using the same"
+ },
+ {
+  "input": "ES2765710",
+  "ucid": "ES-2765710-T3",
+  "simplefamily": "WO-2015150526-A2",
+  "pd": "20200610",
+  "title": "CD33-specific chimeric antigen receptors for cancer immunotherapy"
+ },
+ {
+  "input": "ES2766324",
+  "ucid": "ES-2766324-T3",
+  "simplefamily": "WO-2015035212-A1",
+  "pd": "20200612",
+  "title": "Alpha-TEA salt forms: compositions and uses to treat diseases"
+ },
+ {
+  "input": "ES2766867",
+  "ucid": "ES-2766867-T3",
+  "simplefamily": "WO-2016203223-A1",
+  "pd": "20200615",
+  "title": "Compositions comprising bacterial strains"
+ },
+ {
+  "input": "ES2773710",
+  "ucid": "ES-2773710-T3",
+  "simplefamily": "WO-2014057687-A1",
+  "pd": "20200714",
+  "title": "Linkers for antibody-drug conjugates"
+ },
+ {
+  "input": "ES2775577",
+  "ucid": "ES-2775577-T3",
+  "simplefamily": "US-20150147314-A1",
+  "pd": "20200727",
+  "title": "Curcuphenol compound for use in cancer treatment"
+ },
+ {
+  "input": "ES2775579",
+  "ucid": "ES-2775579-T3",
+  "simplefamily": "US-20150099775-A1",
+  "pd": "20200727",
+  "title": "Compositions for the treatment of cancer"
+ },
+ {
+  "input": "ES2776880",
+  "ucid": "ES-2776880-T3",
+  "simplefamily": "US-9931458-B1",
+  "pd": "20200803",
+  "title": "Flexible bag with multiple chambers and methods of using the same"
+ },
+ {
+  "input": "ES2777305",
+  "ucid": "ES-2777305-T3",
+  "simplefamily": "WO-2016034666-A1",
+  "pd": "20200804",
+  "title": "Trophoblastic glycoprotein-specific chimeric antigen receptors (5T4, TPBG) for cancer immunotherapy"
+ },
+ {
+  "input": "ES2778045",
+  "ucid": "ES-2778045-T3",
+  "simplefamily": "GB-201309807-D0",
+  "pd": "20200807",
+  "title": "Drug-antibody conjugates"
+ },
+ {
+  "input": "ES2782248",
+  "ucid": "ES-2782248-T3",
+  "simplefamily": "WO-2014061277-A1",
+  "pd": "20200911",
+  "title": "Antibody-drug conjugate produced by binding through a linker having a hydrophilic structure"
+ },
+ {
+  "input": "ES2783376",
+  "ucid": "ES-2783376-T3",
+  "simplefamily": "WO-2015162563-A1",
+  "pd": "20200917",
+  "title": "Antibody-drug conjugates with high drug loading"
+ },
+ {
+  "input": "ES2785551",
+  "ucid": "ES-2785551-T3",
+  "simplefamily": "WO-2016001485-A1",
+  "pd": "20201007",
+  "title": "Saccharide derivative of a toxic payload and its conjugates with antibodies"
+ },
+ {
+  "input": "ES2787523",
+  "ucid": "ES-2787523-T3",
+  "simplefamily": "WO-2016203220-A1",
+  "pd": "20201016",
+  "title": "Compositions comprising bacterial strains"
+ },
+ {
+  "input": "ES2789898",
+  "ucid": "ES-2789898-B2",
+  "simplefamily": "WO-2020216984-A1",
+  "pd": "20211014",
+  "title": "COMPOSITION FOR THE TREATMENT OF SIDE EFFECTS OF RADIOTHERAPY AND/OR CHEMOTHERAPY"
+ },
+ {
+  "input": "ES2791624",
+  "ucid": "ES-2791624-T3",
+  "simplefamily": "GB-201312155-D0",
+  "pd": "20201105",
+  "title": "Methods to treat cancer"
+ },
+ {
+  "input": "ES2794088",
+  "ucid": "ES-2794088-T3",
+  "simplefamily": "WO-2015116753-A1",
+  "pd": "20201117",
+  "title": "Antibodies against the extracellular domain of MUC1-C (MUC1-C/ECD)"
+ },
+ {
+  "input": "ES2794557",
+  "ucid": "ES-2794557-T3",
+  "simplefamily": "WO-2017042210-A1",
+  "pd": "20201118",
+  "title": "Antibodies that have specificity for nectin-4 and uses thereof"
+ },
+ {
+  "input": "ES2796903",
+  "ucid": "ES-2796903-T3",
+  "simplefamily": "US-20160082120-A1",
+  "pd": "20201130",
+  "title": "Procedure for the use of anti-CD79b immunoconjugates"
+ },
+ {
+  "input": "ES2797628",
+  "ucid": "ES-2797628-T3",
+  "simplefamily": "US-20120237593-A1",
+  "pd": "20201203",
+  "title": "Guanylate cyclase C agonist formulations and methods of use"
+ },
+ {
+  "input": "ES2797754",
+  "ucid": "ES-2797754-T3",
+  "simplefamily": "WO-2016030791-A1",
+  "pd": "20201203",
+  "title": "Stability-modulating linkers for use with drug-antibody conjugates"
+ },
+ {
+  "input": "ES2802274",
+  "ucid": "ES-2802274-T3",
+  "simplefamily": "WO-2014179601-A2",
+  "pd": "20210118",
+  "title": "Sialylated glycoproteins"
+ },
+ {
+  "input": "ES2803560",
+  "ucid": "ES-2803560-T3",
+  "simplefamily": "WO-2015195697-A1",
+  "pd": "20210127",
+  "title": "Omega-hydroxylase-related fusion polypeptides with improved properties"
+ },
+ {
+  "input": "ES2806678",
+  "ucid": "ES-2806678-T3",
+  "simplefamily": "WO-2013120497-A1",
+  "pd": "20210218",
+  "title": "Nucleic acid comprising or encoding a histone stem-loop and a poly(A) sequence to increase the expression of an encoded therapeutic protein"
+ },
+ {
+  "input": "ES2807539",
+  "ucid": "ES-2807539-T3",
+  "simplefamily": "WO-2014078634-A1",
+  "pd": "20210223",
+  "title": "Imidazole-piperidinyl derivatives as modulators of kinase activity"
+ },
+ {
+  "input": "ES2808684",
+  "ucid": "ES-2808684-T3",
+  "simplefamily": "WO-2015075725-A1",
+  "pd": "20210301",
+  "title": "Compositions including anti-ceacam1 and anti-pd antibodies for cancer therapy"
+ },
+ {
+  "input": "ES2808781",
+  "ucid": "ES-2808781-T3",
+  "simplefamily": "WO-2016125169-A1",
+  "pd": "20210301",
+  "title": "Combinations of dual IRS/STAT3 modulators and anticancer agents for the treatment of cancer"
+ },
+ {
+  "input": "ES2811351",
+  "ucid": "ES-2811351-T3",
+  "simplefamily": "WO-2017201204-A1",
+  "pd": "20210311",
+  "title": "Anti-cMet Antibody Drug Conjugates and Methods for Their Use"
+ },
+ {
+  "input": "ES2812849",
+  "ucid": "ES-2812849-T3",
+  "simplefamily": "WO-2013126746-A2",
+  "pd": "20210318",
+  "title": "Anti-DLL3 antibodies and procedures for using them"
+ },
+ {
+  "input": "ES2813869",
+  "ucid": "ES-2813869-T3",
+  "simplefamily": "WO-2014074823-A1",
+  "pd": "20210325",
+  "title": "Methods for the treatment of eye disease in human subjects"
+ },
+ {
+  "input": "ES2819573",
+  "ucid": "ES-2819573-T3",
+  "simplefamily": "IN-2015DN11166-A",
+  "pd": "20210416",
+  "title": "Method for Producing Antibody-SN-38 Immunoconjugates with a CL2A Linker"
+ },
+ {
+  "input": "ES2821102",
+  "ucid": "ES-2821102-T3",
+  "simplefamily": "WO-2014085528-A1",
+  "pd": "20210423",
+  "title": "Azaquinazolinecarboxamide derivatives"
+ },
+ {
+  "input": "ES2822560",
+  "ucid": "ES-2822560-T3",
+  "simplefamily": "WO-2016034085-A1",
+  "pd": "20210504",
+  "title": "Anti-PD-L1 Conjugates to Treat Tumors"
+ },
+ {
+  "input": "ES2823239",
+  "ucid": "ES-2823239-T3",
+  "simplefamily": "WO-2013143555-A1",
+  "pd": "20210506",
+  "title": "RNA formulation for immunotherapy"
+ },
+ {
+  "input": "ES2837755",
+  "ucid": "ES-2837755-T3",
+  "simplefamily": "US-9914783-B1",
+  "pd": "20210701",
+  "title": "Anti-PD-1 antibodies"
+ },
+ {
+  "input": "ES2837927",
+  "ucid": "ES-2837927-T3",
+  "simplefamily": "US-20150110814-A1",
+  "pd": "20210701",
+  "title": "Combination therapies with PSMA ligand conjugates"
+ },
+ {
+  "input": "ES2839456",
+  "ucid": "ES-2839456-T3",
+  "simplefamily": "WO-2017021857-A1",
+  "pd": "20210705",
+  "title": "Protein 2 that contains the domain of motile sperm and cancer"
+ },
+ {
+  "input": "ES2841134",
+  "ucid": "ES-2841134-T3",
+  "simplefamily": "US-20150071920-A1",
+  "pd": "20210707",
+  "title": "Liquid protein formulations containing ionic liquids"
+ },
+ {
+  "input": "ES2841249",
+  "ucid": "ES-2841249-T3",
+  "simplefamily": "WO-2015162292-A1",
+  "pd": "20210707",
+  "title": "IGF-1R antibody and its use as a targeting vehicle for cancer treatment"
+ },
+ {
+  "input": "ES2842206",
+  "ucid": "ES-2842206-T3",
+  "simplefamily": "US-20140328854-A1",
+  "pd": "20210713",
+  "title": "Methods and compositions to enhance CD4+ regulatory T lymphocytes"
+ },
+ {
+  "input": "ES2842212",
+  "ucid": "ES-2842212-T3",
+  "simplefamily": "WO-2016120216-A1",
+  "pd": "20210713",
+  "title": "Anti-CLL1 Specific Single Chain Chimeric Antigen Receptors (scCAR) for Cancer Immunotherapy"
+ },
+ {
+  "input": "ES2845924",
+  "ucid": "ES-2845924-T3",
+  "simplefamily": "WO-2015057834-A1",
+  "pd": "20210728",
+  "title": "T-cell switches with peptide chimeric antigen receptors and their uses"
+ },
+ {
+  "input": "ES2856964",
+  "ucid": "ES-2856964-T3",
+  "simplefamily": "US-20170342082-A1",
+  "pd": "20210928",
+  "title": "[8-(Phenylsulfonyl)-3,8-diazabicyclo[3.2.1]oct-3-yl](1H-1,2,3-triazol-4-yl)methanones"
+ },
+ {
+  "input": "ES2861275",
+  "ucid": "ES-2861275-T3",
+  "simplefamily": "WO-2013181404-A2",
+  "pd": "20211006",
+  "title": "Compositions and methods for the expression and purification of peptides using a type III secretion system"
+ },
+ {
+  "input": "ES2861393",
+  "ucid": "ES-2861393-T3",
+  "simplefamily": "WO-2013163344-A1",
+  "pd": "20211006",
+  "title": "2,2-Difluoropropionamide derivatives of methyl bardoxolone, pharmaceutical compositions and polymorphs thereof"
+ },
+ {
+  "input": "ES2864150",
+  "ucid": "ES-2864150-T3",
+  "simplefamily": "WO-2017201204-A1",
+  "pd": "20211013",
+  "title": "Anti-cMet Antibody Drug Conjugates and Methods for Their Use"
+ },
+ {
+  "input": "ES2864700",
+  "ucid": "ES-2864700-T3",
+  "simplefamily": "US-20190300624-A1",
+  "pd": "20211014",
+  "title": "HER3 antigen-binding molecules"
+ },
+ {
+  "input": "ES2864842",
+  "ucid": "ES-2864842-T3",
+  "simplefamily": "WO-2017025897-A2",
+  "pd": "20211014",
+  "title": "Protected and unprotected antibody cysteines and their use in drug-antibody conjugation"
+ },
+ {
+  "input": "ES2866050",
+  "ucid": "ES-2866050-T3",
+  "simplefamily": "WO-2017009255-A1",
+  "pd": "20211019",
+  "title": "Compositions comprising antibody-drug duocarmycin conjugates"
+ },
+ {
+  "input": "ES2869549",
+  "ucid": "ES-2869549-T3",
+  "simplefamily": "US-20190300610-A1",
+  "pd": "20211025",
+  "title": "VISTA antigen-binding molecules"
+ },
+ {
+  "input": "ES2870097",
+  "ucid": "ES-2870097-T3",
+  "simplefamily": "WO-2016100196-A1",
+  "pd": "20211026",
+  "title": "Single molecular placement method on a substrate"
+ },
+ {
+  "input": "ES2870920",
+  "ucid": "ES-2870920-T3",
+  "simplefamily": "WO-2017223239-A1",
+  "pd": "20211028",
+  "title": "CXCR4 inhibitors and their uses"
+ },
+ {
+  "input": "ES2871815",
+  "ucid": "ES-2871815-T3",
+  "simplefamily": "WO-2014068139-A1",
+  "pd": "20211102",
+  "title": "New antigen-binding proteins and their use as a targeting product for the treatment of cancer"
+ },
+ {
+  "input": "ES2872534",
+  "ucid": "ES-2872534-T3",
+  "simplefamily": "WO-2016049470-A1",
+  "pd": "20211102",
+  "title": "Methods to reverse cachexia and prolong survival that include administering a GDF15 modulator and an anticancer agent"
+ },
+ {
+  "input": "ES2873895",
+  "ucid": "ES-2873895-T3",
+  "simplefamily": "WO-2017060431-A1",
+  "pd": "20211104",
+  "title": "Spiro[3H-indole-3,2-pyrrolidin]-2(1H)-one compounds and derivatives as inhibitors of MDM2-p53"
+ },
+ {
+  "input": "ES2876925",
+  "ucid": "ES-2876925-T3",
+  "simplefamily": "WO-2016016344-A1",
+  "pd": "20211115",
+  "title": "ROR1-specific chimeric antigen receptors (NTRKR1) for cancer immunotherapy"
+ },
+ {
+  "input": "ES2877474",
+  "ucid": "ES-2877474-T3",
+  "simplefamily": "WO-2017151684-A1",
+  "pd": "20211116",
+  "title": "Filamentous fungal biomaterials, methods of their production and methods of use"
+ },
+ {
+  "input": "ES2877606",
+  "ucid": "ES-2877606-T3",
+  "simplefamily": "WO-2015140268-A1",
+  "pd": "20211117",
+  "title": "Method for the manufacture of CD123-specific CAR T cells for cancer immunotherapy"
+ },
+ {
+  "input": "ES2879799",
+  "ucid": "ES-2879799-T3",
+  "simplefamily": "WO-2015074528-A1",
+  "pd": "20211123",
+  "title": "Anti-HER2 antibody and conjugate thereof"
+ },
+ {
+  "input": "ES2881771",
+  "ucid": "ES-2881771-T3",
+  "simplefamily": "WO-2017027422-A1",
+  "pd": "20211130",
+  "title": "Constructs that have a SIRP-alpha domain or variant thereof"
+ },
+ {
+  "input": "ES2883131",
+  "ucid": "ES-2883131-T3",
+  "simplefamily": "WO-2014191128-A1",
+  "pd": "20211207",
+  "title": "Methods for modifying T cells for immunotherapy using the RNA-guided CAS nuclease system"
+ },
+ {
+  "input": "ES2883417",
+  "ucid": "ES-2883417-T3",
+  "simplefamily": "WO-2017100125-A1",
+  "pd": "20211207",
+  "title": "Compositions for use in the treatment or amelioration of neuroinflammation, neurodegeneration, neuropathic pain and migraine"
+ },
+ {
+  "input": "ES2885245",
+  "ucid": "ES-2885245-T3",
+  "simplefamily": "US-20150247134-A1",
+  "pd": "20211213",
+  "title": "TATk-CDKL5 fusion proteins, compositions, formulations and use of these"
+ },
+ {
+  "input": "ES2886128",
+  "ucid": "ES-2886128-T3",
+  "simplefamily": "US-20130023721-A1",
+  "pd": "20211216",
+  "title": "Extracellular matrix coating structures and methods"
+ },
+ {
+  "input": "ES2886927",
+  "ucid": "ES-2886927-T3",
+  "simplefamily": "US-20140227180-A1",
+  "pd": "20211221",
+  "title": "Immunoconjugates of antibody-SN-38 with a CL2A linker"
+ },
+ {
+  "input": "ES2887208",
+  "ucid": "ES-2887208-T3",
+  "simplefamily": "WO-2013173391-A1",
+  "pd": "20211222",
+  "title": "Drug conjugates and their uses"
+ },
+ {
+  "input": "ES2887349",
+  "ucid": "ES-2887349-T3",
+  "simplefamily": "WO-2017088734-A1",
+  "pd": "20211222",
+  "title": "Anti-ErbB2 antibody-drug conjugate and composition thereof, preparation method therefor, and application thereof"
+ },
+ {
+  "input": "ES2887903",
+  "ucid": "ES-2887903-T3",
+  "simplefamily": "WO-2020002370-A1",
+  "pd": "20211228",
+  "title": "Compositions comprising bacterial strains"
+ },
+ {
+  "input": "ES2896055",
+  "ucid": "ES-2896055-T3",
+  "simplefamily": "WO-2017009712-A1",
+  "pd": "20220223",
+  "title": "HIDE1 compositions and methods"
+ },
+ {
+  "input": "ES2896058",
+  "ucid": "ES-2896058-T3",
+  "simplefamily": "WO-2016097319-A1",
+  "pd": "20220223",
+  "title": "Methods for detecting CpG methylation and for cancer diagnosis"
+ },
+ {
+  "input": "ES2896475",
+  "ucid": "ES-2896475-T3",
+  "simplefamily": "WO-2017050889-A1",
+  "pd": "20220224",
+  "title": "Recombinant immunoglobulin heavy chains comprising a sortase conjugation loop and conjugates thereof"
+ },
+ {
+  "input": "ES2897706",
+  "ucid": "ES-2897706-T3",
+  "simplefamily": "WO-2016147031-A2",
+  "pd": "20220302",
+  "title": "Novel hydrophilic linkers and ligand-drug conjugates thereof"
+ },
+ {
+  "input": "ES2898867",
+  "ucid": "ES-2898867-T3",
+  "simplefamily": "WO-2017167350-A1",
+  "pd": "20220309",
+  "title": "Multispecific antibodies for use in the treatment of a neoplasm of the urinary tract"
+ },
+ {
+  "input": "ES2899621",
+  "ucid": "ES-2899621-T3",
+  "simplefamily": "WO-2012030664-A1",
+  "pd": "20220314",
+  "title": "Cationic dry powders comprising magnesium salt"
+ },
+ {
+  "input": "ES2901506",
+  "ucid": "ES-2901506-T3",
+  "simplefamily": "US-20170051356-A1",
+  "pd": "20220322",
+  "title": "Methods for treating cancer patients with farnesyltransferase inhibitors"
+ },
+ {
+  "input": "ES2901509",
+  "ucid": "ES-2901509-T3",
+  "simplefamily": "WO-2016065980-A1",
+  "pd": "20220322",
+  "title": "Isoindoline derivative, intermediate compound, preparation methods, pharmaceutical composition and use thereof"
+ },
+ {
+  "input": "ES2903390",
+  "ucid": "ES-2903390-T3",
+  "simplefamily": "US-20130190249-A1",
+  "pd": "20220401",
+  "title": "Methods for preparing new IDH1 inhibitors"
+ },
+ {
+  "input": "ES2905556",
+  "ucid": "ES-2905556-T3",
+  "simplefamily": "US-20170128404-A1",
+  "pd": "20220411",
+  "title": "Mucositis treatment method"
+ },
+ {
+  "input": "ES2905848",
+  "ucid": "ES-2905848-T3",
+  "simplefamily": "US-20150126523-A1",
+  "pd": "20220412",
+  "title": "Antiparasitic and pesticide isoxazoline compounds"
+ },
+ {
+  "input": "ES2907651",
+  "ucid": "ES-2907651-T3",
+  "simplefamily": "WO-2017031034-A2",
+  "pd": "20220425",
+  "title": "Covalent linkers in antibody-drug conjugates and methods for making and using the same"
+ },
+ {
+  "input": "ES2908400",
+  "ucid": "ES-2908400-T3",
+  "simplefamily": "WO-2017101987-A1",
+  "pd": "20220429",
+  "title": "Omega-hydroxylase-related fusion polypeptide variants with improved properties"
+ },
+ {
+  "input": "ES2908638",
+  "ucid": "ES-2908638-T3",
+  "simplefamily": "WO-2018114786-A1",
+  "pd": "20220503",
+  "title": "Aromatic Carboxylic Acid Amides as Bradykinin B1 Receptor Antagonists"
+ },
+ {
+  "input": "ES2908826",
+  "ucid": "ES-2908826-T3",
+  "simplefamily": "WO-2019180000-A1",
+  "pd": "20220504",
+  "title": "Enterococcus flagellin compositions for use in therapy"
+ },
+ {
+  "input": "ES2908876",
+  "ucid": "ES-2908876-T3",
+  "simplefamily": "WO-2013004842-A2",
+  "pd": "20220504",
+  "title": "Antibody variants and their uses"
+ },
+ {
+  "input": "ES2909746",
+  "ucid": "ES-2909746-T3",
+  "simplefamily": "WO-2014092804-A1",
+  "pd": "20220510",
+  "title": "SN-38 and Antibody Immunoconjugate Dosages for Improved Efficacy and Decreased Toxicity"
+ },
+ {
+  "input": "ES2909903",
+  "ucid": "ES-2909903-T3",
+  "simplefamily": "AU-2008216083-A1",
+  "pd": "20220510",
+  "title": "Fixed ratios of drugs for the treatment of hematopoietic cancer and proliferative disorders"
+ },
+ {
+  "input": "ES2913205",
+  "ucid": "ES-2913205-T3",
+  "simplefamily": "WO-2015175375-A1",
+  "pd": "20220601",
+  "title": "Conditionally active biological proteins"
+ },
+ {
+  "input": "ES2914377",
+  "ucid": "ES-2914377-T3",
+  "simplefamily": "WO-2019081343-A1",
+  "pd": "20220610",
+  "title": "Novel pyrazolo-pyrrolo-pyrimidine-dione derivatives as P2X3 inhibitor"
+ },
+ {
+  "input": "ES2916217",
+  "ucid": "ES-2916217-T3",
+  "simplefamily": "WO-2018127919-A1",
+  "pd": "20220629",
+  "title": "A SIRP1 ALPHA-41BBL fusion protein and methods of using the same"
+ },
+ {
+  "input": "ES2916601",
+  "ucid": "ES-2916601-T3",
+  "simplefamily": "WO-2019215345-A1",
+  "pd": "20220704",
+  "title": "Compositions comprising bacterial strains"
+ },
+ {
+  "input": "ES2916873",
+  "ucid": "ES-2916873-T3",
+  "simplefamily": "WO-2015103987-A1",
+  "pd": "20220706",
+  "title": "Compounds and compositions for immunotherapy"
+ },
+ {
+  "input": "ES2917629",
+  "ucid": "ES-2917629-T3",
+  "simplefamily": "US-20190226030-A1",
+  "pd": "20220711",
+  "title": "Methods for screening for colon cancer and monitoring treatment"
+ },
+ {
+  "input": "ES2918329",
+  "ucid": "ES-2918329-T3",
+  "simplefamily": "EP-3542799-A1",
+  "pd": "20220715",
+  "title": "Novel centrally active ghrelin agonist and medical uses thereof"
+ },
+ {
+  "input": "ES2921137",
+  "ucid": "ES-2921137-T3",
+  "simplefamily": "WO-2020144313-A1",
+  "pd": "20220818",
+  "title": "Carbon source-regulated protein production in a recombinant host cell"
+ },
+ {
+  "input": "ES2921875",
+  "ucid": "ES-2921875-T3",
+  "simplefamily": "WO-2016024228-A1",
+  "pd": "20220901",
+  "title": "Therapeutic combinations of a BTK inhibitor, a PD-1 inhibitor and/or a PD-L1 inhibitor"
+ },
+ {
+  "input": "ES2923415",
+  "ucid": "ES-2923415-T3",
+  "simplefamily": "WO-2019029663-A1",
+  "pd": "20220927",
+  "title": "1H-pyrazolo[4,3-H]quinazoline compound that serves as a protein kinase inhibitor"
+ },
+ {
+  "input": "ES2923853",
+  "ucid": "ES-2923853-T3",
+  "simplefamily": "GB-201419108-D0",
+  "pd": "20221003",
+  "title": "Materials and methods related to linkers for use in protein-drug conjugates"
+ },
+ {
+  "input": "ES2925471",
+  "ucid": "ES-2925471-T3",
+  "simplefamily": "WO-2016024233-A1",
+  "pd": "20221018",
+  "title": "Tryptophan dioxygenase inhibitors (IDO1 and TDO) and their uses in therapy"
+ },
+ {
+  "input": "ES2926136",
+  "ucid": "ES-2926136-T3",
+  "simplefamily": "WO-2018071454-A1",
+  "pd": "20221024",
+  "title": "Substituted Pyrazol[1,5-a]pyridine Compounds as Inhibitors of RET Kinase"
+ },
+ {
+  "input": "ES2927228",
+  "ucid": "ES-2927228-T3",
+  "simplefamily": "WO-2018156609-A1",
+  "pd": "20221103",
+  "title": "Methods of treating cancer with farnesyl transferase inhibitors"
+ },
+ {
+  "input": "ES2927529",
+  "ucid": "ES-2927529-T3",
+  "simplefamily": "WO-2017188374-A1",
+  "pd": "20221108",
+  "title": "condensed heterocyclic compound"
+ },
+ {
+  "input": "ES2928475",
+  "ucid": "ES-2928475-T3",
+  "simplefamily": "WO-2018053209-A1",
+  "pd": "20221118",
+  "title": "High purity RNA compositions and methods for their preparation"
+ },
+ {
+  "input": "ES2928654",
+  "ucid": "ES-2928654-T3",
+  "simplefamily": "WO-2018053232-A1",
+  "pd": "20221121",
+  "title": "Combination therapy with liposomal antisense oligonucleotides"
+ },
+ {
+  "input": "ES2931533",
+  "ucid": "ES-2931533-T3",
+  "simplefamily": "JP-6366873-B1",
+  "pd": "20221230",
+  "title": "Macrocyclic compound and uses thereof"
+ },
+ {
+  "input": "ES2933174",
+  "ucid": "ES-2933174-T3",
+  "simplefamily": "WO-2017147269-A1",
+  "pd": "20230202",
+  "title": "Exogenous gene expression in therapeutic adenovirus for minimal impact on viral kinetics"
+ },
+ {
+  "input": "ES2934986",
+  "ucid": "ES-2934986-T3",
+  "simplefamily": "WO-2020152067-A1",
+  "pd": "20230228",
+  "title": "heterocyclic derivatives"
+ },
+ {
+  "input": "ES2935062",
+  "ucid": "ES-2935062-T3",
+  "simplefamily": "WO-2016048938-A1",
+  "pd": "20230301",
+  "title": "Bispecific monovalent diabodies that are capable of binding CD19 and CD3 and uses thereof"
+ },
+ {
+  "input": "ES2936810",
+  "ucid": "ES-2936810-T3",
+  "simplefamily": "WO-2015173756-A2",
+  "pd": "20230322",
+  "title": "Bispecific antibodies with engineered CH1-CL interfaces"
+ },
+ {
+  "input": "ES2937797",
+  "ucid": "ES-2937797-T3",
+  "simplefamily": "WO-2018195027-A1",
+  "pd": "20230331",
+  "title": "Method for determining the toxicity of an immunomodulatory drug for use in humans"
+ },
+ {
+  "input": "ES2938328",
+  "ucid": "ES-2938328-T3",
+  "simplefamily": "ES-2938328-T3",
+  "pd": "20230410",
+  "title": "Extrudable and extruded compositions for the delivery of bioactive agents, method of manufacturing the same and methods of using the same"
+ },
+ {
+  "input": "ES2938417",
+  "ucid": "ES-2938417-T3",
+  "simplefamily": "WO-2020117080-A1",
+  "pd": "20230410",
+  "title": "Sulfonated polystyrene derivative for use in the treatment and/or prophylaxis of cat influenza"
+ },
+ {
+  "input": "ES2939494",
+  "ucid": "ES-2939494-T3",
+  "simplefamily": "WO-2020084115-A1",
+  "pd": "20230424",
+  "title": "Antibody-drug conjugates comprising ecteinascidin derivatives"
+ },
+ {
+  "input": "ES2940119",
+  "ucid": "ES-2940119-T3",
+  "simplefamily": "WO-2020127960-A1",
+  "pd": "20230503",
+  "title": "Disubstituted alkyne derivatives"
+ },
+ {
+  "input": "ES2941968",
+  "ucid": "ES-2941968-T3",
+  "simplefamily": "WO-2017059397-A1",
+  "pd": "20230529",
+  "title": "Antibody labeling"
+ },
+ {
+  "input": "ES2944573",
+  "ucid": "ES-2944573-T3",
+  "simplefamily": "US-20180037570-A1",
+  "pd": "20230622",
+  "title": "TLR7/8 antagonists and uses thereof"
+ },
+ {
+  "input": "ES2946073",
+  "ucid": "ES-2946073-T3",
+  "simplefamily": "WO-2017133745-A1",
+  "pd": "20230712",
+  "title": "Antibody-drug conjugates targeting uPARAP"
+ },
+ {
+  "input": "ES2946109",
+  "ucid": "ES-2946109-T3",
+  "simplefamily": "WO-2013170006-A2",
+  "pd": "20230712",
+  "title": "Oils with anti-inflammatory activity containing natural specialized pro-resolving mediators and their precursors"
+ },
+ {
+  "input": "ES2947662",
+  "ucid": "ES-2947662-T3",
+  "simplefamily": "WO-2019121686-A1",
+  "pd": "20230816",
+  "title": "Oral administration of active pharmacological substances"
+ },
+ {
+  "input": "ES2948287",
+  "ucid": "ES-2948287-T3",
+  "simplefamily": "WO-2019040550-A1",
+  "pd": "20230907",
+  "title": "Condensed Heterocyclic Derivatives as Bcl-2 Inhibitors for the Treatment of Neoplastic Diseases"
+ },
+ {
+  "input": "ES2847162",
+  "ucid": "ES-2847162-T3",
+  "simplefamily": "WO-2018146010-A1",
+  "pd": "20210802",
+  "title": "2-Heteroaryl-3-oxo-2,3-dihydropyridazine-4-carboxamides for treating cancer"
+ }
+]

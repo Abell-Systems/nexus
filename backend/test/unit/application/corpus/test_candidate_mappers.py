@@ -217,7 +217,13 @@ def test_een_pod_mapper_unverifiable_date_invalid_pattern() -> None:
     assert evidence.evidence_value == "TRIT-SPECIAL-REF-NO-DATE"
 
 
-def test_een_pod_mapper_missing_reference() -> None:
+def test_een_pod_mapper_missing_reference_without_explicit_construct_fails_closed() -> None:
+    """No POD reference at all means the construct prefix can't be read, so
+    source_construct can't be determined from the page. Previously this
+    silently defaulted to "Technology request" (a real, policy-permitted
+    construct) -- an unattributable record passing authorization it never
+    earned. Must fail closed instead, unless metadata supplies source_construct
+    explicitly (see the next test)."""
     html_without_ref = b"""
     <html>
     <head><title>Some Proposal Without Reference</title></head>
@@ -228,9 +234,30 @@ def test_een_pod_mapper_missing_reference() -> None:
     </html>
     """
     metadata = {"demand_id": "EEN-DEMAND-001"}
+
+    with pytest.raises(MappingError, match="source_construct"):
+        EenPodCandidateMapper.map_payload(html_without_ref, metadata=metadata)
+
+
+def test_een_pod_mapper_missing_reference_with_explicit_construct_succeeds() -> None:
+    """The same missing-reference page succeeds when metadata supplies
+    source_construct explicitly -- the fail-closed fix only rejects when
+    construct is genuinely undeterminable from any source, not whenever the
+    reference-based extraction path fails."""
+    html_without_ref = b"""
+    <html>
+    <head><title>Some Proposal Without Reference</title></head>
+    <body>
+        <h1>Some Proposal Without Reference</h1>
+        <div class="summary"><p>A description of a general proposal without reference code.</p></div>
+    </body>
+    </html>
+    """
+    metadata = {"demand_id": "EEN-DEMAND-001", "source_construct": "Technology request"}
     candidate = EenPodCandidateMapper.map_payload(html_without_ref, metadata=metadata)
 
     assert candidate.demand_id == "EEN-DEMAND-001"
+    assert candidate.source_construct == "Technology request"
     assert candidate.publication_date is None
     assert candidate.publication_date_evidence.evidence_type == PublicationDateEvidenceType.UNVERIFIABLE
     assert candidate.publication_date_evidence.evidence_field == "pod_reference"
@@ -381,6 +408,29 @@ def test_een_pod_mapper_official_portal_definition_list_layout() -> None:
     assert "thermal cycling" in (candidate.technical_problem_evidence_text or "")
 
 
+def test_een_pod_mapper_undetermined_origin_country_fails_closed_geographic_stratum() -> None:
+    """When no origin country can be determined at all (no metadata
+    origin_country, no reference to parse a country_code from), the stratum
+    must be the genuinely-unknown "unknown" value, not silently coerced into
+    the authorized "international_european" -- "unknown" is not in any
+    policy's geographic_strata, so it correctly rejects downstream via
+    UNAUTHORIZED_GEOGRAPHIC_STRATUM instead of being silently authorized."""
+    html_without_ref = b"""
+    <html>
+    <head><title>Some Proposal Without Reference</title></head>
+    <body>
+        <h1>Some Proposal Without Reference</h1>
+        <div class="summary"><p>A description of a general proposal without reference code.</p></div>
+    </body>
+    </html>
+    """
+    metadata = {"demand_id": "EEN-DEMAND-001", "source_construct": "Technology request"}
+
+    candidate = EenPodCandidateMapper.map_payload(html_without_ref, metadata=metadata)
+
+    assert candidate.geographic_stratum == "unknown"
+
+
 def test_een_pod_mapper_official_portal_dr_prefix_resolves_to_rd_request() -> None:
     """The official een.ec.europa.eu portal uses a "DR" reference prefix for R&D
     request (e.g. DRTR20240925006, #101c SS7.2), distinct from the Lombardia mirror's
@@ -504,6 +554,34 @@ def test_innoget_mapper_no_date_and_no_deadline() -> None:
     assert evidence.evidence_type == PublicationDateEvidenceType.UNVERIFIABLE
     assert evidence.evidence_field == "no_date_field_observed"
     assert evidence.evidence_value == "no_date_field_observed"
+
+
+def test_innoget_mapper_undetermined_country_fails_closed_geographic_stratum() -> None:
+    """No country extracted at all must produce the genuinely-unknown
+    "unknown" stratum, not the authorized "international_european" default --
+    "unknown" is not in any policy's geographic_strata, so it correctly
+    rejects downstream via UNAUTHORIZED_GEOGRAPHIC_STRATUM."""
+    html_no_country = b"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>General Challenge Call</title>
+        <meta property="og:title" content="General Challenge Call" />
+        <meta property="og:url" content="https://www.innoget.com/technology-calls/9999/general" />
+    </head>
+    <body>
+        <h2>Desired outcome</h2>
+        <p>A solution for general algorithmic challenge.</p>
+        <h2>Details of the Innovation Need</h2>
+        <div class="post-section-container">
+            <p>Complex optimization problem requiring mathematical modeling.</p>
+        </div>
+    </body>
+    </html>
+    """
+    candidate = InnogetCandidateMapper.map_payload(html_no_country, metadata={})
+
+    assert candidate.geographic_stratum == "unknown"
 
 
 def test_innoget_mapper_malformed_payload_raises_error() -> None:

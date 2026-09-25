@@ -75,6 +75,14 @@ data/annotations/*
 !data/annotations/ted_dense_exclusive_stratified_annotation_valentin.csv
 !data/annotations/ted_dense_exclusive_stratified_annotation_lydia.csv
 !data/annotations/ted_dense_blindspot_annotation_lydia.csv
+!data/annotations/ted_construct_validity_control_sample_manifest.json
+!data/annotations/ted_construct_validity_control_sample_manifest.sha256
+!data/annotations/ted_construct_validity_labeling_template.csv
+!data/annotations/ted_construct_validity_labeling_valentin.csv
+!data/annotations/ted_construct_validity_labeling_lydia.csv
+!data/annotations/ted_construct_validity_llm_classification.json
+!data/annotations/ted_construct_validity_llm_classification.sha256
+!data/annotations/ted_construct_validity_labeling_claude_pilot_NOT_FOR_GATE.csv
 !data/experiments/power_analysis_wilcoxon.json
 !data/experiments/pilot_evaluation_report.json
 !data/experiments/dataset_identity_audit.json
@@ -102,3 +110,13 @@ data/annotations/*
 .vscode/
 .idea/
 .repowise/
+
+# CEIMAR article: raw Minesoft API dumps (large, third-party licensed data)
+experiments/article/minesoft_raw/
+*:Zone.Identifier
+
+# Playwright MCP snapshot dumps
+.playwright-mcp/
+
+# Isolated venv for dense-embedding generation (ADR 0014 stack isolation)
+.venv-embedding-generation/

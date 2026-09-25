@@ -30,9 +30,9 @@ STATUS:    CLOSED. Adjudication of the 12 disagreements is the next step,
 - **Within-one agreement: 108/108 (100%)** -- no disagreement exceeds 1 point
   on the 0-3 scale; there is no case where one annotator said 0 and the other
   said 2 or 3, or vice versa.
-- **Cohen's κ (unweighted): 0.597** -- substantial agreement (Landis & Koch
-  bands: 0.41-0.60 moderate, 0.61-0.80 substantial; this sits right at the
-  moderate/substantial boundary).
+- **Cohen's κ (unweighted): 0.597** -- moderate agreement (Landis & Koch
+  bands: 0.41-0.60 moderate, 0.61-0.80 substantial; 0.597 falls inside the
+  moderate band, 0.003 short of the 0.60 substantial threshold).
 - **Cohen's κ (quadratic-weighted): 0.916** -- almost perfect, reflecting
   that every disagreement is adjacent on the ordinal scale, not a category
   reversal.

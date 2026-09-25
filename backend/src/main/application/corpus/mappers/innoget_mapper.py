@@ -89,7 +89,13 @@ class InnogetCandidateMapper:
         org_name, country_name = cls._extract_org_and_country(soup, meta)
 
         # 7. Geographic stratum
-        if country_name and country_name.strip().lower() in _SPANISH_INDICATORS:
+        if not country_name or not country_name.strip():
+            # Fail closed: no country extracted at all is undetermined, not a
+            # known non-Spain one. "unknown" is not in any policy's
+            # geographic_strata, so this rejects via UNAUTHORIZED_GEOGRAPHIC_STRATUM
+            # rather than silently being authorized as "international_european".
+            geographic_stratum = "unknown"
+        elif country_name.strip().lower() in _SPANISH_INDICATORS:
             geographic_stratum = "spain"
         else:
             geographic_stratum = "international_european"

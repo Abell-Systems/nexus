@@ -156,6 +156,16 @@ class PublicationDateEvidenceType(StrEnum):
     UNVERIFIABLE = "unverifiable"
 
 
+class TechnicalProblemClassification(StrEnum):
+    """Three-way classification of whether description text articulates a genuine
+    technical problem, per docs/superpowers/specs/2026-09-23-ted-construct-validity-classifier-design.md
+    SS3."""
+
+    TECHNICAL_PROBLEM = "technical_problem"
+    GENERIC_PROCUREMENT = "generic_procurement"
+    EMPTY_INSUFFICIENT = "empty_insufficient"
+
+
 class PublicationDateEvidence(BaseModel):
     """Structured temporal evidence for demand candidate publication date."""
 

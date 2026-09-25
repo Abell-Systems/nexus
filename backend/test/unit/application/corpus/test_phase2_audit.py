@@ -17,6 +17,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parents[5]
 SRC_ROOT = REPO_ROOT / "backend" / "src" / "main"
 
@@ -167,6 +169,34 @@ def test_audit_passes_on_valid_dataset(tmp_path: Path):
     assert result.stratum_distribution.get("international_european") == 1
     assert result.rejection_breakdown.get("UNVERIFIABLE_PUBLICATION_DATE") == 1
     assert result.rejection_breakdown.get("CONTENT_TOO_SHORT") == 1
+
+
+def test_audit_rejects_policy_file_whose_name_does_not_match_its_declared_version(tmp_path: Path):
+    """run_phase2_audit must pin expected_version to the resolved policy file's
+    own name (see audit.py's load_corpus_expansion_policy call) -- previously
+    (9519e98) this was silently unpinned, so a genuine, correctly-hashed policy
+    file loaded under the WRONG filename (e.g. content is v1 but the file is
+    named ..._v2.json) would pass unnoticed instead of failing fast."""
+    experiments_dir, raw_dir = _create_valid_audit_environment(tmp_path)
+
+    real_v1_path = POLICY_PATH
+    real_v1_hash_path = POLICY_PATH.with_suffix(".sha256")
+    mislabeled_policy_path = tmp_path / "corpus_expansion_policy_v2.json"
+    mislabeled_policy_path.write_bytes(real_v1_path.read_bytes())
+    mislabeled_policy_path.with_suffix(".sha256").write_text(
+        f"{hashlib.sha256(real_v1_path.read_bytes()).hexdigest()}  corpus_expansion_policy_v2.json\n",
+        encoding="utf-8",
+    )
+    assert real_v1_hash_path.is_file()  # sanity: source sidecar exists, unused directly here
+
+    from application.corpus.expansion_policy_validator import PolicyIntegrityError
+
+    with pytest.raises(PolicyIntegrityError, match="version mismatch"):
+        run_phase2_audit(
+            experiments_dir=experiments_dir,
+            raw_dir=raw_dir,
+            policy_path=mislabeled_policy_path,
+        )
 
 
 def test_audit_fails_on_corrupt_sha256_sidecar(tmp_path: Path):

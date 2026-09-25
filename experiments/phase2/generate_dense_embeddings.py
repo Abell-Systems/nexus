@@ -125,13 +125,25 @@ def generate(
         "patent_embeddings": patent_embeddings,
     }
 
+    # artifact_sha256 is self-referential by design (FrozenEmbeddingArtifact.load_from_json
+    # pops it before re-hashing to verify -- same pattern as ModelConfigurationManifest),
+    # so it must be the hash of the payload WITHOUT itself, computed here before injection.
     canonical_bytes = json.dumps(payload, sort_keys=True, indent=2).encode("utf-8")
     artifact_sha256 = hashlib.sha256(canonical_bytes).hexdigest()
     payload["artifact_sha256"] = artifact_sha256
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
-    out_path.with_suffix(".sha256").write_text(f"{artifact_sha256}  {out_path.name}\n", encoding="utf-8")
+    # The sidecar's job (same convention as every other .sha256 sidecar in this repo)
+    # is to be the hash of the file's exact bytes as written to disk -- which include
+    # the just-injected artifact_sha256 field, so it must be a fresh hash of the final
+    # written bytes, not a reuse of the pre-injection artifact_sha256 value (those two
+    # are legitimately different hashes of different byte strings, not the same number
+    # written twice; conflating them produced a sidecar that `sha256sum -c` reports as
+    # a mismatch against the real file, even though the artifact itself is untampered).
+    file_bytes = json.dumps(payload, indent=2, sort_keys=True).encode("utf-8")
+    out_path.write_bytes(file_bytes)
+    sidecar_sha256 = hashlib.sha256(file_bytes).hexdigest()
+    out_path.with_suffix(".sha256").write_text(f"{sidecar_sha256}  {out_path.name}\n", encoding="utf-8")
 
     print(f"Wrote frozen artifact: {out_path}")
     print(f"  {len(demand_embeddings)} demands, {len(patent_embeddings)} patents")

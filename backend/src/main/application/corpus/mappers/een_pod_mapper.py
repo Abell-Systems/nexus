@@ -68,7 +68,17 @@ class EenPodCandidateMapper:
             "DR": "R&D request",
             "RDR": "R&D request",
         }
-        source_construct = meta.get("source_construct") or construct_map.get(construct_prefix, "Technology request")
+        source_construct = meta.get("source_construct")
+        if not source_construct:
+            if construct_prefix not in construct_map:
+                # Fail closed: an unrecognized (or missing) construct prefix must
+                # not silently become "Technology request" -- that's a real,
+                # policy-permitted construct, and defaulting into it would let an
+                # unattributable record pass authorization it never earned.
+                raise MappingError(
+                    f"Could not determine source_construct: unrecognized construct prefix {construct_prefix!r}"
+                )
+            source_construct = construct_map[construct_prefix]
 
         # 2. Demand ID
         demand_id = meta.get("demand_id")
@@ -104,11 +114,16 @@ class EenPodCandidateMapper:
 
         # 6. Geographic stratum
         orig_country = meta.get("origin_country") or country_code
-        geographic_stratum = (
-            "spain"
-            if orig_country and orig_country.strip().upper() in ("ES", "SPAIN", "ESPAÑA", "ESPANA")
-            else "international_european"
-        )
+        if not orig_country or not orig_country.strip():
+            # Fail closed: no origin country determined at all is undetermined,
+            # not a known non-Spain one. "unknown" is not in any policy's
+            # geographic_strata, so this rejects via UNAUTHORIZED_GEOGRAPHIC_STRATUM
+            # rather than silently being authorized as "international_european".
+            geographic_stratum = "unknown"
+        elif orig_country.strip().upper() in ("ES", "SPAIN", "ESPAÑA", "ESPANA"):
+            geographic_stratum = "spain"
+        else:
+            geographic_stratum = "international_european"
 
         # 7. Language code
         lang = meta.get("language_code")
