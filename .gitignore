@@ -103,3 +103,13 @@ data/annotations/*
 .vscode/
 .idea/
 .repowise/
+
+# CEIMAR article: raw Minesoft API dumps (large, third-party licensed data)
+experiments/article/minesoft_raw/
+*:Zone.Identifier
+
+# Playwright MCP snapshot dumps
+.playwright-mcp/
+
+# Isolated venv for dense-embedding generation (ADR 0014 stack isolation)
+.venv-embedding-generation/

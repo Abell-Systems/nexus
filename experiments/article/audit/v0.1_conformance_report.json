@@ -1,0 +1,446 @@
+{
+  "contract_version": "extraction_contract_v1",
+  "audited_at": "2026-09-16T14:23:21.473607+00:00",
+  "dataset": "minesoft_origin_2000_2025 v0.1 (frozen c7bf50e)",
+  "note": "Read-only retroactive baseline. LEGACY_UNVERIFIABLE findings are never backfilled -- this report documents what the v0.1 artifact can and cannot demonstrate against a contract it predates, not a certification of full conformance.",
+  "compounds": {
+    "Brentuximab vedotin": {
+      "csv_file": "01_Brentuximab_vedotin_ids.csv",
+      "compound": "Brentuximab vedotin",
+      "findings": [
+        {
+          "invariant": "raw_source_archive",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no raw API archive captured for this pass"
+        },
+        {
+          "invariant": "count_reconciliation",
+          "verdict": "PASS",
+          "detail": "rows_extracted=2613, total_hits_reported=2613, unique=2613"
+        },
+        {
+          "invariant": "pagination_completeness",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no page-level trace recorded for this pass"
+        },
+        {
+          "invariant": "pagination_mode",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no session log recorded for this pass"
+        },
+        {
+          "invariant": "query_documented_human_readable",
+          "verdict": "PASS",
+          "detail": "README mentions compound 'Brentuximab vedotin'"
+        },
+        {
+          "invariant": "query_documented_machine_readable",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no machine-readable request metadata (endpoint/params) captured for this pass"
+        }
+      ]
+    },
+    "Cytarabine": {
+      "csv_file": "02_Cytarabine_ids.csv",
+      "compound": "Cytarabine",
+      "findings": [
+        {
+          "invariant": "raw_source_archive",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no raw API archive captured for this pass"
+        },
+        {
+          "invariant": "count_reconciliation",
+          "verdict": "PASS",
+          "detail": "rows_extracted=1000, expected=1000, cap_binding=True (extraction_cap inferred as rows saved -- v0.1 does not record a separately declared cap)"
+        },
+        {
+          "invariant": "pagination_completeness",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no page-level trace recorded for this pass"
+        },
+        {
+          "invariant": "pagination_mode",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no session log recorded for this pass"
+        },
+        {
+          "invariant": "query_documented_human_readable",
+          "verdict": "PASS",
+          "detail": "README mentions compound 'Cytarabine'"
+        },
+        {
+          "invariant": "query_documented_machine_readable",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no machine-readable request metadata (endpoint/params) captured for this pass"
+        }
+      ]
+    },
+    "Trabectedin": {
+      "csv_file": "03_Trabectedin_ids.csv",
+      "compound": "Trabectedin",
+      "findings": [
+        {
+          "invariant": "raw_source_archive",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no raw API archive captured for this pass"
+        },
+        {
+          "invariant": "count_reconciliation",
+          "verdict": "PASS",
+          "detail": "rows_extracted=1890, total_hits_reported=1890, unique=1890"
+        },
+        {
+          "invariant": "pagination_completeness",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no page-level trace recorded for this pass"
+        },
+        {
+          "invariant": "pagination_mode",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no session log recorded for this pass"
+        },
+        {
+          "invariant": "query_documented_human_readable",
+          "verdict": "PASS",
+          "detail": "README mentions compound 'Trabectedin'"
+        },
+        {
+          "invariant": "query_documented_machine_readable",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no machine-readable request metadata (endpoint/params) captured for this pass"
+        }
+      ]
+    },
+    "Vidarabine": {
+      "csv_file": "04_Vidarabine_ids.csv",
+      "compound": "Vidarabine",
+      "findings": [
+        {
+          "invariant": "raw_source_archive",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no raw API archive captured for this pass"
+        },
+        {
+          "invariant": "count_reconciliation",
+          "verdict": "PASS",
+          "detail": "rows_extracted=2067, total_hits_reported=2067, unique=2067"
+        },
+        {
+          "invariant": "pagination_completeness",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no page-level trace recorded for this pass"
+        },
+        {
+          "invariant": "pagination_mode",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no session log recorded for this pass"
+        },
+        {
+          "invariant": "query_documented_human_readable",
+          "verdict": "PASS",
+          "detail": "README mentions compound 'Vidarabine'"
+        },
+        {
+          "invariant": "query_documented_machine_readable",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no machine-readable request metadata (endpoint/params) captured for this pass"
+        }
+      ]
+    },
+    "Ziconotide": {
+      "csv_file": "05_Ziconotide_ids.csv",
+      "compound": "Ziconotide",
+      "findings": [
+        {
+          "invariant": "raw_source_archive",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no raw API archive captured for this pass"
+        },
+        {
+          "invariant": "count_reconciliation",
+          "verdict": "PASS",
+          "detail": "rows_extracted=519, total_hits_reported=519, unique=519"
+        },
+        {
+          "invariant": "pagination_completeness",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no page-level trace recorded for this pass"
+        },
+        {
+          "invariant": "pagination_mode",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no session log recorded for this pass"
+        },
+        {
+          "invariant": "query_documented_human_readable",
+          "verdict": "PASS",
+          "detail": "README mentions compound 'Ziconotide'"
+        },
+        {
+          "invariant": "query_documented_machine_readable",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no machine-readable request metadata (endpoint/params) captured for this pass"
+        }
+      ]
+    },
+    "Plitidepsin": {
+      "csv_file": "06_Plitidepsin_ids.csv",
+      "compound": "Plitidepsin",
+      "findings": [
+        {
+          "invariant": "raw_source_archive",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no raw API archive captured for this pass"
+        },
+        {
+          "invariant": "count_reconciliation",
+          "verdict": "PASS",
+          "detail": "rows_extracted=168, total_hits_reported=168, unique=168"
+        },
+        {
+          "invariant": "pagination_completeness",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no page-level trace recorded for this pass"
+        },
+        {
+          "invariant": "pagination_mode",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no session log recorded for this pass"
+        },
+        {
+          "invariant": "query_documented_human_readable",
+          "verdict": "PASS",
+          "detail": "README mentions compound 'Plitidepsin'"
+        },
+        {
+          "invariant": "query_documented_machine_readable",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no machine-readable request metadata (endpoint/params) captured for this pass"
+        }
+      ]
+    },
+    "Omega3 acid ethyl esters": {
+      "csv_file": "07_Omega3_acid_ethyl_esters_ids.csv",
+      "compound": "Omega3 acid ethyl esters",
+      "findings": [
+        {
+          "invariant": "raw_source_archive",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no raw API archive captured for this pass"
+        },
+        {
+          "invariant": "count_reconciliation",
+          "verdict": "PASS",
+          "detail": "rows_extracted=81, total_hits_reported=81, unique=81"
+        },
+        {
+          "invariant": "pagination_completeness",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no page-level trace recorded for this pass"
+        },
+        {
+          "invariant": "pagination_mode",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no session log recorded for this pass"
+        },
+        {
+          "invariant": "query_documented_human_readable",
+          "verdict": "FAIL",
+          "detail": "README does not mention compound 'Omega3 acid ethyl esters'"
+        },
+        {
+          "invariant": "query_documented_machine_readable",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no machine-readable request metadata (endpoint/params) captured for this pass"
+        }
+      ]
+    },
+    "Polatuzumab vedotin": {
+      "csv_file": "08_Polatuzumab_vedotin_ids.csv",
+      "compound": "Polatuzumab vedotin",
+      "findings": [
+        {
+          "invariant": "raw_source_archive",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no raw API archive captured for this pass"
+        },
+        {
+          "invariant": "count_reconciliation",
+          "verdict": "PASS",
+          "detail": "rows_extracted=723, total_hits_reported=723, unique=723"
+        },
+        {
+          "invariant": "pagination_completeness",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no page-level trace recorded for this pass"
+        },
+        {
+          "invariant": "pagination_mode",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no session log recorded for this pass"
+        },
+        {
+          "invariant": "query_documented_human_readable",
+          "verdict": "PASS",
+          "detail": "README mentions compound 'Polatuzumab vedotin'"
+        },
+        {
+          "invariant": "query_documented_machine_readable",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no machine-readable request metadata (endpoint/params) captured for this pass"
+        }
+      ]
+    },
+    "Omega3 carboxylic acid": {
+      "csv_file": "09_Omega3_carboxylic_acid_ids.csv",
+      "compound": "Omega3 carboxylic acid",
+      "findings": [
+        {
+          "invariant": "raw_source_archive",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no raw API archive captured for this pass"
+        },
+        {
+          "invariant": "count_reconciliation",
+          "verdict": "PASS",
+          "detail": "rows_extracted=13, total_hits_reported=13, unique=13"
+        },
+        {
+          "invariant": "pagination_completeness",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no page-level trace recorded for this pass"
+        },
+        {
+          "invariant": "pagination_mode",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no session log recorded for this pass"
+        },
+        {
+          "invariant": "query_documented_human_readable",
+          "verdict": "FAIL",
+          "detail": "README does not mention compound 'Omega3 carboxylic acid'"
+        },
+        {
+          "invariant": "query_documented_machine_readable",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no machine-readable request metadata (endpoint/params) captured for this pass"
+        }
+      ]
+    },
+    "Enfortumab vedotin": {
+      "csv_file": "10_Enfortumab_vedotin_ids.csv",
+      "compound": "Enfortumab vedotin",
+      "findings": [
+        {
+          "invariant": "raw_source_archive",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no raw API archive captured for this pass"
+        },
+        {
+          "invariant": "count_reconciliation",
+          "verdict": "PASS",
+          "detail": "rows_extracted=501, total_hits_reported=501, unique=501"
+        },
+        {
+          "invariant": "pagination_completeness",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no page-level trace recorded for this pass"
+        },
+        {
+          "invariant": "pagination_mode",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no session log recorded for this pass"
+        },
+        {
+          "invariant": "query_documented_human_readable",
+          "verdict": "PASS",
+          "detail": "README mentions compound 'Enfortumab vedotin'"
+        },
+        {
+          "invariant": "query_documented_machine_readable",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no machine-readable request metadata (endpoint/params) captured for this pass"
+        }
+      ]
+    },
+    "Eribulin mesylate": {
+      "csv_file": "11_Eribulin_mesylate_ids.csv",
+      "compound": "Eribulin mesylate",
+      "findings": [
+        {
+          "invariant": "raw_source_archive",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no raw API archive captured for this pass"
+        },
+        {
+          "invariant": "count_reconciliation",
+          "verdict": "PASS",
+          "detail": "rows_extracted=776, total_hits_reported=776, unique=776"
+        },
+        {
+          "invariant": "pagination_completeness",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no page-level trace recorded for this pass"
+        },
+        {
+          "invariant": "pagination_mode",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no session log recorded for this pass"
+        },
+        {
+          "invariant": "query_documented_human_readable",
+          "verdict": "PASS",
+          "detail": "README mentions compound 'Eribulin mesylate'"
+        },
+        {
+          "invariant": "query_documented_machine_readable",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no machine-readable request metadata (endpoint/params) captured for this pass"
+        }
+      ]
+    },
+    "Lurbinectedin": {
+      "csv_file": "12_Lurbinectedin_ids.csv",
+      "compound": "Lurbinectedin",
+      "findings": [
+        {
+          "invariant": "raw_source_archive",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no raw API archive captured for this pass"
+        },
+        {
+          "invariant": "count_reconciliation",
+          "verdict": "PASS",
+          "detail": "rows_extracted=270, total_hits_reported=270, unique=270"
+        },
+        {
+          "invariant": "pagination_completeness",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no page-level trace recorded for this pass"
+        },
+        {
+          "invariant": "pagination_mode",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no session log recorded for this pass"
+        },
+        {
+          "invariant": "query_documented_human_readable",
+          "verdict": "PASS",
+          "detail": "README mentions compound 'Lurbinectedin'"
+        },
+        {
+          "invariant": "query_documented_machine_readable",
+          "verdict": "LEGACY_UNVERIFIABLE",
+          "detail": "no machine-readable request metadata (endpoint/params) captured for this pass"
+        }
+      ]
+    }
+  },
+  "summary": {
+    "PASS": 22,
+    "FAIL": 2,
+    "NOT_APPLICABLE": 0,
+    "LEGACY_UNVERIFIABLE": 48
+  }
+}

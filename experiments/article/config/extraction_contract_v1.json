@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "contract_version": "extraction_contract_v1",
+  "description": "Binding acquisition contract for Minesoft Origin extractions supporting the CEIMAR marine-policy article dataset. Governs future extraction runs; does not retroactively modify minesoft_origin_2000_2025 v0.1.",
+  "layers": {
+    "source": {
+      "description": "Immutable, byte-for-byte Minesoft API responses, one artifact per page/call.",
+      "required_fields": [
+        "raw_response_path",
+        "content_sha256",
+        "endpoint",
+        "query",
+        "fl",
+        "rows",
+        "start",
+        "compound_id",
+        "extraction_run_id",
+        "timestamp"
+      ]
+    },
+    "extraction": {
+      "description": "Deterministic, unfiltered (compound, publication_id) records derived from the source layer.",
+      "dataset_unit": "compound_publication_id_pair",
+      "uniqueness_scope": "per_compound",
+      "required_fields": [
+        "publication_id",
+        "score",
+        "compound",
+        "capped",
+        "total_hits_reported",
+        "extraction_cap",
+        "extraction_run_id",
+        "page_number",
+        "row_index"
+      ]
+    }
+  },
+  "pagination": {
+    "required_mode": "sequential_single_run",
+    "provider_index_stability": "unverified"
+  }
+}
