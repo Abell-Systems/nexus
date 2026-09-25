@@ -78,7 +78,14 @@ class TedCandidateMapper:
         date_evidence = cls._extract_date_evidence(html_text)
 
         country_code = cls._extract_buyer_country(html_text)
-        geographic_stratum = "spain" if country_code == "ES" else "international_european"
+        if country_code is None:
+            # Fail closed: no buyer NUTS code found at all is an undetermined
+            # stratum, not a known non-Spain one. "unknown" is not in any policy's
+            # geographic_strata, so this rejects via UNAUTHORIZED_GEOGRAPHIC_STRATUM
+            # rather than silently being authorized as "international_european".
+            geographic_stratum = "unknown"
+        else:
+            geographic_stratum = "spain" if country_code == "ES" else "international_european"
 
         language_code = cls._extract_language_code(html_text)
 

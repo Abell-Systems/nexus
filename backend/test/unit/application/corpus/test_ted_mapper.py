@@ -97,6 +97,18 @@ def test_ted_mapper_spain_buyer_maps_to_spain_stratum() -> None:
     assert candidate.language_code == "es"
 
 
+def test_ted_mapper_undetermined_buyer_country_fails_closed_geographic_stratum() -> None:
+    """No buyer NUTS code found at all must produce the genuinely-unknown
+    "unknown" stratum, not the authorized "international_european" default --
+    "unknown" is not in any policy's geographic_strata, so it correctly
+    rejects downstream via UNAUTHORIZED_GEOGRAPHIC_STRATUM."""
+    html = _ted_notice_html(nuts_code="")
+
+    candidate = TedCandidateMapper.map_payload(html, metadata={"demand_id": "462609-2026"})
+
+    assert candidate.geographic_stratum == "unknown"
+
+
 def test_ted_mapper_excludes_change_notice() -> None:
     html = _ted_notice_html(notice_type_line="Contract or concession notice – standard regime - Change notice")
 
