@@ -180,12 +180,37 @@ class EenPodOfficialHarvester(BaseHarvester):
             page += 1
 
     def _determine_demand_id(self, html_bytes: bytes, url: str) -> str:
-        """Determine demand_id from the embedded POD reference, falling back to a URL slug hash."""
+        """Determine demand_id from the embedded POD reference, falling back to a URL slug hash.
+
+        Ports the fix from `EenPodHarvester._determine_demand_id` (commit b0b2c12,
+        never applied here -- this harvester actually produced the live v2/v3
+        data): the page's own authoritative "POD Reference" dt/dd pair is trusted
+        verbatim first, before any unscoped full-page search. An unscoped
+        `_POD_REF_RE.search(html_text)` as the *primary* strategy can pick up an
+        unrelated reference belonging to a different proposal elsewhere on the
+        page (e.g. a related-proposals list) -- the exact false-collision bug
+        b0b2c12 fixed for the Lombardia mirror.
+        """
         try:
             html_text = html_bytes.decode("utf-8")
         except UnicodeDecodeError:
             html_text = html_bytes.decode("latin-1", errors="replace")
 
+        soup = BeautifulSoup(html_text, "html.parser")
+        dt = soup.find("dt", string=re.compile(r"POD\s+Reference", re.I))
+        if dt:
+            dd = dt.find_next_sibling("dd")
+            if dd:
+                ref_text = dd.get_text(strip=True)
+                m_lead = _POD_REF_RE.search(ref_text)
+                if m_lead:
+                    return m_lead.group(1)
+                sanitized = re.sub(r"[^A-Za-z0-9]", "", ref_text)
+                if sanitized:
+                    return sanitized
+
+        # No scoped "POD Reference" dt/dd pair found -- fall back to an unscoped
+        # full-page search (still better than nothing, but not the first resort).
         m_pod = _POD_REF_RE.search(html_text)
         if m_pod:
             return m_pod.group(1)

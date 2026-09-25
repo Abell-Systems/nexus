@@ -708,6 +708,37 @@ def test_een_pod_official_determine_demand_id_rd_request_prefix():
     assert demand_id == "RDRDE20260804013"
 
 
+def test_een_pod_official_determine_demand_id_trusts_scoped_reference_over_unrelated_sidebar():
+    """Port of test_een_pod_determine_demand_id_trusts_lead_field_even_if_unrecognized_shape
+    for the official portal (commit b0b2c12 fixed this for EenPodHarvester but was
+    never applied to EenPodOfficialHarvester, the harvester that actually produced
+    the live v2/v3 data). The page's own "POD Reference" dt/dd pair must be trusted
+    verbatim, never replaced by an unrelated reference found elsewhere on the page
+    (e.g. a related-proposals list) -- the exact false-collision bug b0b2c12 fixed."""
+    harvester = EenPodOfficialHarvester()
+
+    html = b"""
+    <html><body>
+        <dl>
+            <dt>POD Reference</dt>
+            <dd>RDR-DE-2026-0728-021</dd>
+        </dl>
+        <div class="related-proposals">
+            <a href="/partnering-opportunities/other">
+                Unrelated proposal BOFR20260702022
+            </a>
+        </div>
+    </body></html>
+    """
+
+    demand_id = harvester._determine_demand_id(html, "https://een.ec.europa.eu/partnering-opportunities/arbitrary-slug")
+    # Dashes break the contiguous-digit POD reference shape, so this doesn't match
+    # _POD_REF_RE -- the dt/dd value is still trusted verbatim (sanitized), and must
+    # NOT fall through to the unscoped full-page search that would find the
+    # unrelated sidebar reference "BOFR20260702022" instead.
+    assert demand_id == "RDRDE20260728021"
+
+
 def test_een_pod_official_fallback_ids_never_collide_across_distinct_urls():
     """Two distinct pages whose slugs happen to agree in their first 40 characters
     must not be assigned the same synthetic demand_id (a real collision hit live
