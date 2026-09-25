@@ -213,7 +213,13 @@ def run_offline_validation(
     if not h_path.is_file():
         raise FileNotFoundError(f"Corpus expansion policy hash sidecar not found: {h_path}")
 
-    policy = load_corpus_expansion_policy(policy_path=p_path, hash_path=h_path)
+    # expected_version is derived from the resolved policy file's own name
+    # (e.g. corpus_expansion_policy_v1.json -> corpus_expansion_policy_v1), not
+    # left unpinned. This was silently loosened to accept-any in 9519e98 when
+    # v2 was introduced; deriving from the filename restores fail-closed
+    # behavior for every version without hardcoding a single frozen constant
+    # that would break whichever version isn't it.
+    policy = load_corpus_expansion_policy(policy_path=p_path, hash_path=h_path, expected_version=p_path.stem)
     policy_hash = h_path.read_text(encoding="utf-8").strip().split()[0]
 
     # 2. Discover raw payloads

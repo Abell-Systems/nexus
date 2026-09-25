@@ -226,7 +226,15 @@ def run_phase2_audit(
     if not h_path.is_file():
         raise FileNotFoundError(f"Corpus expansion policy hash sidecar not found: {h_path}")
 
-    policy: CorpusExpansionPolicy = load_corpus_expansion_policy(policy_path=p_path, hash_path=h_path)
+    # expected_version is derived from the resolved policy file's own name
+    # (e.g. corpus_expansion_policy_v1.json -> corpus_expansion_policy_v1), not
+    # left unpinned. This was silently loosened to accept-any in 9519e98 when
+    # v2 was introduced; deriving from the filename restores fail-closed
+    # behavior for every version without hardcoding a single frozen constant
+    # that would break whichever version isn't it.
+    policy: CorpusExpansionPolicy = load_corpus_expansion_policy(
+        policy_path=p_path, hash_path=h_path, expected_version=p_path.stem
+    )
     min_date = policy.temporal_window.min_publication_date
     max_date = policy.temporal_window.max_publication_date
     min_word_count = policy.content_requirements.min_word_count
