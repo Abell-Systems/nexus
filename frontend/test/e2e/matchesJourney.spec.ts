@@ -5,7 +5,7 @@ import { expect, test } from "@playwright/test";
 test.skip(!existsSync(fileURLToPath(new URL("../../../data/snapshots/operational_corpus_v1", import.meta.url))), "frozen artifacts are not in this checkout");
 
 test("shouldShowFiveAssetsAndFollowTheirSourceWhenADemoDemandIsChosen", async ({ page }) => {
-  await page.goto("/matches");
+  await page.goto("/");
   await page.getByRole("button", { name: /new available technologies for water quality measurement/ }).click();
 
   await expect(page.getByRole("link", { name: "Ver demanda original" })).toBeVisible();

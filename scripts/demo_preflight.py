@@ -4,6 +4,7 @@ import json
 import os
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -16,6 +17,7 @@ from infrastructure.operational.selection import parse_selection  # noqa: E402
 
 DEFAULT_DIR = ROOT / "data" / "snapshots" / "operational_corpus_v1"
 SCORE_KEYS = {"score", "scores", "retrieval_scores", "similarity", "band", "relevance_band", "distance"}
+CLOSED_ROUTES = (("POST", "/run"), ("POST", "/api/analyze"), ("GET", "/docs"), ("GET", "/openapi.json"), ("GET", "/list-apps"))
 SELECTION = ROOT / "backend" / "src" / "main" / "infrastructure" / "operational" / "demo_selection_v1.json"
 
 
@@ -40,7 +42,7 @@ def expected_identity(directory: Path) -> dict[str, str]:
     }
 
 
-def check(get_json, directory: Path = DEFAULT_DIR) -> list[str]:
+def check(get_json, directory: Path = DEFAULT_DIR, status_of=None) -> list[str]:
     """Returns the problems found; empty means the server is ready to demo."""
     identity = expected_identity(directory)
     selection = parse_selection(json.loads(SELECTION.read_text(encoding="utf-8")))
@@ -59,6 +61,9 @@ def check(get_json, directory: Path = DEFAULT_DIR) -> list[str]:
         served = {k: body["meta"].get(k) for k in identity}
         if served != identity:
             problems.append(f"{demand_id}: server reports another build {served}, artifacts on disk say {identity}")
+    for method, path in CLOSED_ROUTES if status_of else ():
+        if status_of(method, path) not in (404, 405):
+            problems.append(f"{method} {path} is reachable; only the product routes may be exposed")
     return problems
 
 
@@ -69,8 +74,16 @@ def main() -> int:
         with urllib.request.urlopen(base + path, timeout=30) as response:
             return json.load(response)
 
+    def status_of(method: str, path: str) -> int:
+        request = urllib.request.Request(base + path, method=method, data=b"{}" if method == "POST" else None)
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                return response.status
+        except urllib.error.HTTPError as err:
+            return err.code
+
     started = time.perf_counter()
-    problems = check(get_json, Path(os.getenv("NEXUS_OPERATIONAL_DIR", str(DEFAULT_DIR))))
+    problems = check(get_json, Path(os.getenv("NEXUS_OPERATIONAL_DIR", str(DEFAULT_DIR))), status_of)
     for problem in problems:
         print(f"FAIL {problem}")
     print(f"{'NOT READY' if problems else 'READY'} ({time.perf_counter() - started:.1f}s for all journeys)")

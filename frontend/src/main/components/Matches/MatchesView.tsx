@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { AssetResult, DemandExamplesResponse, MatchesResponse } from "../../domain/operational";
 import * as defaultApi from "../../infrastructure/operationalClient";
 import { ApiError } from "../../infrastructure/operationalClient";
@@ -67,36 +67,47 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
   const latestRequest = useRef(0);
   const selectedPanel = useRef<HTMLElement | null>(null);
 
-  useEffect(() => {
-    api.getDemandExamples().then(setExamples).catch(() => setError("No se pudieron cargar las demandas de ejemplo."));
-  }, [api]);
-
   // The demand list is long: bring the chosen demand and its results into view. Again when results arrive,
   // because the page is too short to scroll that far until they do.
   useEffect(() => {
     selectedPanel.current?.scrollIntoView?.({ block: "start" });
   }, [selected, result]);
 
-  const choose = (demandId: string) => {
-    const request = ++latestRequest.current;
-    setSelected(demandId);
-    setResult(null);
-    setError(null);
-    setLoading(true);
+  const choose = useCallback(
+    (demandId: string) => {
+      const request = ++latestRequest.current;
+      setSelected(demandId);
+      window.history.replaceState(null, "", `${window.location.pathname}?demanda=${encodeURIComponent(demandId)}`);
+      setResult(null);
+      setError(null);
+      setLoading(true);
+      api
+        .getMatches(demandId)
+        .then((response) => {
+          if (request === latestRequest.current) setResult(response);
+        })
+        .catch((err) => {
+          if (request === latestRequest.current) {
+            setError(err instanceof ApiError && err.code !== "UNKNOWN_ERROR" ? err.message : "No se pudieron cargar los resultados.");
+          }
+        })
+        .finally(() => {
+          if (request === latestRequest.current) setLoading(false);
+        });
+    },
+    [api],
+  );
+
+  useEffect(() => {
     api
-      .getMatches(demandId)
+      .getDemandExamples()
       .then((response) => {
-        if (request === latestRequest.current) setResult(response);
+        setExamples(response);
+        const requested = new URLSearchParams(window.location.search).get("demanda");
+        if (requested && response.demands.some((d) => d.demand_id === requested)) choose(requested);
       })
-      .catch((err) => {
-        if (request === latestRequest.current) {
-          setError(err instanceof ApiError && err.code !== "UNKNOWN_ERROR" ? err.message : "No se pudieron cargar los resultados.");
-        }
-      })
-      .finally(() => {
-        if (request === latestRequest.current) setLoading(false);
-      });
-  };
+      .catch(() => setError("No se pudieron cargar las demandas de ejemplo."));
+  }, [api, choose]);
 
   const selectedDemand = examples?.demands.find((d) => d.demand_id === selected);
 

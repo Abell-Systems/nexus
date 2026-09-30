@@ -30,6 +30,7 @@ from infrastructure.api_dependencies import (
     app,
 )
 from infrastructure.operational.mount import mount_operational_mvp
+from infrastructure.route_policy import restrict_to_product_routes
 
 _background_tasks: set[asyncio.Task] = set()
 _DOMAIN_SLUG_DESC = "Domain slug"
@@ -234,6 +235,9 @@ async def serve_frontend(full_path: str):
         if index_file.is_relative_to(resolved_dist) and index_file.is_file():
             return FileResponse(str(index_file))
     raise HTTPException(status_code=404, detail="Frontend route not found.")
+
+
+restrict_to_product_routes(app, legacy_enabled=os.getenv("NEXUS_LEGACY_API_ENABLED") == "1")
 
 
 if __name__ == "__main__":
