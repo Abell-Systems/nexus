@@ -101,7 +101,7 @@ Import Linter and `check_architecture.py` must pass unchanged; the runtime impor
 
 Always visible, fixed text:
 1. "Ordenado por similitud de recuperación. No garantiza que el activo resuelva la demanda."
-2. "Datos: Google Patents Public Data. Licencia en verificación; uso interno."
+2. "Datos: «Google Patents Public Data», de IFI CLAIMS Patent Services y Google, con licencia Creative Commons Attribution 4.0 International." (Updated 2026-09-30 after the licence was verified from the dataset's own BigQuery metadata and the google/patents-public-data table documentation; this is the attribution CC BY 4.0 requires.)
 3. "Cobertura: patentes y modelos de utilidad ES de solicitantes españoles. Las solicitudes EP con solicitante español aún no se incluyen."
 4. "Calidad del ranking en evaluación (probe preregistrado)." This sentence is a single constant. It changes only when the result document `docs/operational-dense-probe-result.md` exists, and it then states the outcome as written there, not a paraphrase.
 
@@ -120,7 +120,7 @@ Per asset the panel is titled "Datos del activo": abstract, the asset's own CPC 
 ## 9. Claims this MVP may and may not make
 
 May: "works on real ingested demands over a corpus of 54,997 Spanish industrial-property assets; every result links to its public source; ranking comes from a frozen, versioned multilingual embedding model".
-May not, until their gates close: any statement about ranking quality (the probe decides); commercial use or redistribution of the data (licence unverified); "unexploited" assets; any price, demand or market-size figure; "sellable product" in the sense of a customer-ready service. The accurate framing for financing conversations is "validated-prototype MVP on real data, quality evaluation in progress".
+May not, until their gates close: any statement about ranking quality (the probe decides); commercial use of the data beyond the CC BY 4.0 terms (attribution kept on screen; not legal advice, to be confirmed by counsel before charging); "unexploited" assets; any price, demand or market-size figure; "sellable product" in the sense of a customer-ready service. The accurate framing for financing conversations is "validated-prototype MVP on real data, quality evaluation in progress".
 
 ## 10. Risks
 

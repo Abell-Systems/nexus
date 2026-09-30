@@ -5,7 +5,10 @@ exists, and then it states the outcome as written there.
 """
 
 NOTICE_RANKING = "Ordenado por similitud de recuperación. No garantiza que el activo resuelva la demanda."
-NOTICE_DATA = "Datos: Google Patents Public Data. Licencia en verificación; uso interno."
+NOTICE_DATA = (
+    "Datos: «Google Patents Public Data», de IFI CLAIMS Patent Services y Google, "
+    "con licencia Creative Commons Attribution 4.0 International."
+)
 NOTICE_COVERAGE = (
     "Cobertura: patentes y modelos de utilidad ES de solicitantes españoles. "
     "Las solicitudes EP con solicitante español aún no se incluyen."
