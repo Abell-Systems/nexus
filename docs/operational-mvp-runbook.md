@@ -48,6 +48,18 @@ It exits non-zero unless the listed demands equal `demo_selection_v1.json`, the 
 
 The MVP routes also send `X-Content-Type-Options`, `X-Frame-Options: DENY` and `Referrer-Policy: no-referrer`, and cap `demand_id` at 64 characters.
 
+## Pre-release gate
+
+Besides CI (which has no frozen artifacts), run these against the real artifacts on this machine:
+
+```bash
+python -m pytest backend/test/integration/operational -q                      # HTTP -> use case -> real artifacts (skipped without them)
+NEXUS_E2E_BASE_URL=http://127.0.0.1:8080 npx vitest run test/e2e              # in frontend/, against a live backend: real UI code over real HTTP
+python scripts/demo_preflight.py
+```
+
+The E2E journey drives the real component and client over real HTTP in jsdom; it is not a browser run.
+
 ## Measured (2026-09-30, this machine)
 
 | | |
