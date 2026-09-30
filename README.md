@@ -23,7 +23,7 @@
 ## 1. What it does today
 
 - You pick one of 21 example demands ingested from Innoget (the demand text and a link to the original are shown).
-- Nexus ranks **54,997 Spanish patents and utility models** (Spanish applicant, one per family, from Google Patents Public Data) against it and shows the top five of the 44,195 eligible assets.
+- Nexus ranks the **44,195 Spanish patents and utility models** (19,930 patents and 24,274 utility models, filed in Spain, one per family, from Google Patents Public Data) that have a title and an abstract, and shows the top five. The frozen corpus holds 54,997 assets of Spanish applicants; the other 10,793 are EP records, excluded for now.
 - Matching is **cross-lingual**: a frozen multilingual embedding model (`paraphrase-multilingual-mpnet-base-v2`, pinned revision) compares English demands with Spanish patent text. About 0.2 s per query.
 - The only ordering signal shown is the rank. There is no score and no quality band.
 - Every result links to its public source (Google Patents, Espacenet). A chosen demand has its own URL (`/?demanda=INNOGET-1935`).
