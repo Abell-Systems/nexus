@@ -36,6 +36,18 @@ cd frontend && VITE_API_BASE_URL=http://127.0.0.1:8080 npm run dev     # then op
 
 When enabled, startup verifies every hash: corpus against its manifest, both embedding indexes against theirs, index ids against corpus order, the indexes against the corpus and demand file they were built from, same model and dimension in both indexes, and demand texts against the snapshot's texts hash. Any mismatch aborts startup; the service never falls back to BM25 or to a live model.
 
+## Before a demo
+
+Kill any server already on the port first: a server left running from an older build answers happily with old notices and all 39 demands (this happened while preparing the demo). Then start the backend and run:
+
+```bash
+python scripts/demo_preflight.py [http://127.0.0.1:8080]
+```
+
+It exits non-zero unless the listed demands equal `demo_selection_v1.json`, the four notices equal the current build, and each demo journey returns five assets with no score in the response. Startup already warms the first query (a cold first query took about 2 s), and answers are memoised per demand and limit, because the artifacts are frozen and verified.
+
+The MVP routes also send `X-Content-Type-Options`, `X-Frame-Options: DENY` and `Referrer-Policy: no-referrer`, and cap `demand_id` at 64 characters.
+
 ## Measured (2026-09-30, this machine)
 
 | | |

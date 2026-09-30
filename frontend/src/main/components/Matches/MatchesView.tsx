@@ -20,7 +20,7 @@ function Notices({ notices }: { readonly notices: readonly string[] }) {
   );
 }
 
-function AssetCard({ asset }: { readonly asset: AssetResult }) {
+function AssetCard({ asset, defaultOpen }: { readonly asset: AssetResult; readonly defaultOpen: boolean }) {
   return (
     <article className={styles.card}>
       <header className={styles.cardHeader}>
@@ -34,8 +34,9 @@ function AssetCard({ asset }: { readonly asset: AssetResult }) {
         {asset.publication_date ? ` · ${asset.publication_date}` : ""}
       </p>
       <p className={styles.holder}>Titular: {asset.assignees.length > 0 ? asset.assignees.join(", ") : "No disponible"}</p>
-      <details className={styles.details}>
+      <details className={styles.details} open={defaultOpen}>
         <summary>Datos del activo</summary>
+        {asset.abstract_language === "en" && <p className={styles.note}>Resumen en inglés</p>}
         <p>{asset.abstract}</p>
         {asset.inventors.length > 0 && <p>Inventores: {asset.inventors.join(", ")}</p>}
         {asset.cpc_codes.length > 0 && <p>CPC del activo: {asset.cpc_codes.join(", ")}</p>}
@@ -61,10 +62,17 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const latestRequest = useRef(0);
+  const selectedPanel = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     api.getDemandExamples().then(setExamples).catch(() => setError("No se pudieron cargar las demandas de ejemplo."));
   }, [api]);
+
+  // The demand list is long: bring the chosen demand and its results into view. Again when results arrive,
+  // because the page is too short to scroll that far until they do.
+  useEffect(() => {
+    selectedPanel.current?.scrollIntoView?.({ block: "start" });
+  }, [selected, result]);
 
   const choose = (demandId: string) => {
     const request = ++latestRequest.current;
@@ -84,6 +92,8 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
         if (request === latestRequest.current) setLoading(false);
       });
   };
+
+  const selectedDemand = examples?.demands.find((d) => d.demand_id === selected);
 
   return (
     <div className={styles.view}>
@@ -108,13 +118,30 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
         ))}
       </section>
 
-      {loading && <p className={styles.status}>Buscando activos…</p>}
+      {selectedDemand && (
+        <section aria-label="Demanda seleccionada" ref={selectedPanel} className={styles.selectedDemand}>
+          <h2 className={styles.selectedTitle}>{selectedDemand.title}</h2>
+          <p className={styles.selectedText}>{selectedDemand.description}</p>
+          {selectedDemand.source_url && (
+            <p className={styles.source}>
+              <a href={selectedDemand.source_url} target="_blank" rel="noreferrer">
+                Ver demanda original
+              </a>
+            </p>
+          )}
+        </section>
+      )}
+
+      {loading && <p role="status" className={styles.status}>Buscando activos…</p>}
       {error && <p role="alert" className={styles.error}>{error}</p>}
       {result && result.assets.length === 0 && <p className={styles.status}>No hay activos elegibles para esta demanda.</p>}
       {result && result.assets.length > 0 && (
         <section aria-label="Resultados" className={styles.results}>
-          {result.assets.map((asset) => (
-            <AssetCard key={asset.publication_id} asset={asset} />
+          <p className={styles.status}>
+            Mostrando {result.assets.length} de {result.meta.eligible_count.toLocaleString("es-ES")} activos elegibles
+          </p>
+          {result.assets.map((asset, index) => (
+            <AssetCard key={asset.publication_id} asset={asset} defaultOpen={index === 0} />
           ))}
         </section>
       )}
