@@ -1,6 +1,6 @@
 # Nexus Project Status
 
-> **Overall Status:** `[PASS]` | **Commit:** `1cecb8b286aac91a55357dae2274e05f0560743b` | **Evaluated At:** `2026-09-09T08:38:20.799950+00:00`
+> **Overall Status:** `[PASS]` | **Commit:** `a427ca5419d7eb588028a75c6c25851bb32ff1ef` | **Evaluated At:** `2026-09-30T14:05:27.461362+00:00`
 
 ![Status](https://img.shields.io/badge/Project_Status-PASS-brightgreen)
 
@@ -13,11 +13,11 @@ Nexus Project Status evaluates to PASS. All required dimensions verified and pas
 
 | Dimension | Level | Status | Evidence Available | Evidence Source | Message / Metric |
 | :--- | :---: | :---: | :---: | :--- | :--- |
-| **backend_testing** | `required` | **`PASS`** | ✓ | `pytest-results.xml` | Backend test suites completed successfully: 497 passed, 0 skipped in 497 tests |
-| **backend_coverage** | `required` | **`PASS`** | ✓ | `coverage.xml` | Line coverage is 80.24% (threshold: 80.0%) |
+| **backend_testing** | `required` | **`PASS`** | ✓ | `test-results/e2e.xml, test-results/integration.xml, test-results/providers.xml, test-results/unit.xml` | Backend test suites completed successfully: 995 passed, 0 skipped in 995 tests |
+| **backend_coverage** | `required` | **`PASS`** | ✓ | `coverage.xml` | Line coverage is 95.53% (threshold: 80.0%) |
 | **python_quality** | `required` | **`PASS`** | ✓ | `ruff & mypy CLI` | Python static quality status: PASS |
-| **frontend_testing** | `required` | **`PASS`** | ✓ | `frontend/coverage/junit.xml` | Frontend Vitest test suite completed successfully: 40 passed in 40 tests |
-| **frontend_coverage** | `required` | **`PASS`** | ✓ | `frontend/coverage/lcov.info` | Frontend line coverage is 90.88% (target: 80.0%) |
+| **frontend_testing** | `required` | **`PASS`** | ✓ | `frontend/coverage/junit.xml` | Frontend Vitest test suite completed successfully: 55 passed in 56 tests |
+| **frontend_coverage** | `required` | **`PASS`** | ✓ | `frontend/coverage/lcov.info` | Frontend line coverage is 91.19% (target: 80.0%) |
 | **frontend_quality** | `required` | **`PASS`** | ✓ | `npm run typecheck & npm run lint` | Frontend quality status: PASS |
 | **architecture** | `required` | **`PASS`** | ✓ | `scripts/check_architecture.py` | Architecture check passed |
 | **documentation** | `required` | **`PASS`** | ✓ | `scripts/check_docs_correctness.py` | Documentation correctness passed |
@@ -29,20 +29,23 @@ Nexus Project Status evaluates to PASS. All required dimensions verified and pas
 ## Detailed Checks
 
 ### `backend_testing` (`PASS`)
-- `[PASS]` **report_pytest-results** — pytest-results.xml: 497/497 passed (0 failed, 0 errors, 0 skipped)
+- `[PASS]` **report_e2e** — test-results/e2e.xml: 11/11 passed (0 failed, 0 errors, 0 skipped)
+- `[PASS]` **report_integration** — test-results/integration.xml: 56/56 passed (0 failed, 0 errors, 0 skipped)
+- `[PASS]` **report_providers** — test-results/providers.xml: 46/46 passed (0 failed, 0 errors, 0 skipped)
+- `[PASS]` **report_unit** — test-results/unit.xml: 882/882 passed (0 failed, 0 errors, 0 skipped)
 
 ### `backend_coverage` (`PASS`)
-- `[PASS]` **line_coverage_threshold** — Line coverage is 80.24% (threshold: 80.0%)
+- `[PASS]` **line_coverage_threshold** — Line coverage is 95.53% (threshold: 80.0%)
 
 ### `python_quality` (`PASS`)
 - `[PASS]` **ruff_check** — 0 lint errors
 - `[PASS]` **mypy_typecheck** — 0 type errors
 
 ### `frontend_testing` (`PASS`)
-- `[PASS]` **vitest_execution** — 40/40 tests passed (0 failures)
+- `[PASS]` **vitest_execution** — 55/56 tests passed (0 failures)
 
 ### `frontend_coverage` (`PASS`)
-- `[PASS]` **frontend_line_coverage** — 259/285 lines covered
+- `[PASS]` **frontend_line_coverage** — 300/329 lines covered
 
 ### `frontend_quality` (`PASS`)
 - `[PASS]` **tsc_typecheck** — 0 type errors
@@ -52,7 +55,7 @@ Nexus Project Status evaluates to PASS. All required dimensions verified and pas
 - `[PASS]` **clean_architecture_layers** — Architecture check: PASS (Clean Architecture 3-Tier Layer Invariants & Import Linter Contracts Validated)
 
 ### `documentation` (`PASS`)
-- `[PASS]` **docs_correctness** — Docs correctness gate: PASS (66 markdown files, 24 ADRs checked)
+- `[PASS]` **docs_correctness** — Docs correctness gate: PASS (104 markdown files, 31 ADRs checked)
 
 ### `scientific_integrity` (`PASS`)
 - `[PASS]` **dataset_sha_sidecar** — file=bf7c501f817f... sidecar=['bf7c501f817f9d6e3f87574f61c003670b008910d76b1d17632ff21451195453', 'dataset_pilot_benchmark.json']

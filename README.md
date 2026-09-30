@@ -4,14 +4,14 @@
 [![Project Status](https://img.shields.io/badge/Project_Status-PASS-brightgreen)](PROJECT_STATUS.md)
 [![CI Gates](https://img.shields.io/badge/CI_Gates-PASS-brightgreen)](https://github.com/Abell-Systems/nexus/actions/workflows/ci.yml)
 [![Architecture](https://img.shields.io/badge/Architecture-PASS-brightgreen)](PROJECT_STATUS.md#architecture-pass)
-[![Tests](https://img.shields.io/badge/Tests-497_passed-brightgreen)](PROJECT_STATUS.md#backend_testing-pass)
-[![Coverage](https://img.shields.io/badge/Coverage-80.24%25-brightgreen)](PROJECT_STATUS.md#backend_coverage-pass)
+[![Tests](https://img.shields.io/badge/Tests-995_passed-brightgreen)](PROJECT_STATUS.md#backend_testing-pass)
+[![Coverage](https://img.shields.io/badge/Coverage-95.53%25-brightgreen)](PROJECT_STATUS.md#backend_coverage-pass)
 [![Docs](https://img.shields.io/badge/Docs-PASS-brightgreen)](PROJECT_STATUS.md#documentation-pass)
 [![Scientific Integrity](https://img.shields.io/badge/Scientific_Integrity-PASS-brightgreen)](PROJECT_STATUS.md#scientific_integrity-pass)
 [![SonarCloud](https://img.shields.io/badge/SonarCloud-UNVERIFIED-yellow)](PROJECT_STATUS.md#sonar_cloud-unverified)
 [![Scientific Dashboard](https://img.shields.io/badge/Scientific_Dashboard-Live-blue)](https://abell-systems.github.io/nexus/)
 
-> **Verified against:** `1cecb8b286` · `2026-09-09T08:38:20.799950+00:00` · [Scientific Dashboard](https://abell-systems.github.io/nexus/) · [Full Project Status](PROJECT_STATUS.md) · [Raw Contract](project_status.json)
+> **Verified against:** `a427ca5419` · `2026-09-30T14:05:27.461362+00:00` · [Scientific Dashboard](https://abell-systems.github.io/nexus/) · [Full Project Status](PROJECT_STATUS.md) · [Raw Contract](project_status.json)
 <!-- PROJECT_STATUS:END -->
 
 > **Autonomous Technology Discovery, White-Space Synthesis & Prior-Art Defense.**
