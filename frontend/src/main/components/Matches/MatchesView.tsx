@@ -14,6 +14,7 @@ const IP_TYPE_LABEL: Record<string, string> = {
 function Notices({ notices }: { readonly notices: readonly string[] }) {
   return (
     <aside aria-label="Avisos" className={styles.notices}>
+      <h2 className={styles.noticesTitle}>Sobre estos resultados</h2>
       {notices.map((notice) => (
         <p key={notice}>{notice}</p>
       ))}
@@ -29,12 +30,14 @@ function AssetCard({ asset, defaultOpen }: { readonly asset: AssetResult; readon
         <h3 className={styles.assetTitle}>{asset.title}</h3>
       </header>
       <p className={styles.meta}>
-        <span>{IP_TYPE_LABEL[asset.ip_type] ?? asset.ip_type}</span>
-        {" · "}
+        <span className={styles.pill}>{IP_TYPE_LABEL[asset.ip_type] ?? asset.ip_type}</span>
         <span>{asset.publication_id}</span>
-        {asset.publication_date ? ` · ${asset.publication_date}` : ""}
+        {asset.publication_date && <span>{asset.publication_date}</span>}
       </p>
-      <p className={styles.holder}>Titular: {asset.assignees.length > 0 ? asset.assignees.join(", ") : "No disponible"}</p>
+      <p className={styles.holder}>
+        <span className={styles.label}>Titular</span>
+        {asset.assignees.length > 0 ? asset.assignees.join(", ") : "No disponible"}
+      </p>
       <details className={styles.details} open={defaultOpen}>
         <summary>Datos del activo</summary>
         {asset.abstract_language === "en" && <p className={styles.note}>Resumen en inglés</p>}
@@ -42,13 +45,12 @@ function AssetCard({ asset, defaultOpen }: { readonly asset: AssetResult; readon
         {asset.inventors.length > 0 && <p>Inventores: {asset.inventors.join(", ")}</p>}
         {asset.cpc_codes.length > 0 && <p>CPC del activo: {asset.cpc_codes.join(", ")}</p>}
       </details>
-      <p className={styles.source}>
-        Fuente:{" "}
-        <a href={asset.source_links.google_patents} target="_blank" rel="noreferrer">
+      <p className={styles.sources}>
+        <span className={styles.label}>Fuente</span>
+        <a className={styles.sourceLink} href={asset.source_links.google_patents} target="_blank" rel="noreferrer">
           Google Patents
         </a>
-        {" · "}
-        <a href={asset.source_links.espacenet} target="_blank" rel="noreferrer">
+        <a className={styles.sourceLink} href={asset.source_links.espacenet} target="_blank" rel="noreferrer">
           Espacenet
         </a>
       </p>
@@ -114,9 +116,10 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
             type="button"
             onClick={() => choose(demand.demand_id)}
             aria-pressed={selected === demand.demand_id}
+            title={demand.title}
             className={`${styles.demand} ${selected === demand.demand_id ? styles.demandSelected : ""}`}
           >
-            {demand.title}
+            <span className={styles.demandText}>{demand.title}</span>
           </button>
         ))}
       </section>
@@ -126,8 +129,8 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
           <h2 className={styles.selectedTitle}>{selectedDemand.title}</h2>
           <p className={styles.selectedText}>{selectedDemand.description}</p>
           {selectedDemand.source_url && (
-            <p className={styles.source}>
-              <a href={selectedDemand.source_url} target="_blank" rel="noreferrer">
+            <p className={styles.sources}>
+              <a className={styles.sourceLink} href={selectedDemand.source_url} target="_blank" rel="noreferrer">
                 Ver demanda original
               </a>
             </p>
@@ -135,7 +138,14 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
         </section>
       )}
 
-      {loading && <p role="status" className={styles.status}>Buscando activos…</p>}
+      {loading && (
+        <div role="status" className={styles.loading}>
+          <p className={styles.status}>Buscando activos…</p>
+          {[0, 1, 2].map((i) => (
+            <div key={i} className={styles.skeleton} />
+          ))}
+        </div>
+      )}
       {error && <p role="alert" className={styles.error}>{error}</p>}
       {result && result.assets.length === 0 && <p className={styles.status}>No hay activos elegibles para esta demanda.</p>}
       {result && result.assets.length > 0 && (
