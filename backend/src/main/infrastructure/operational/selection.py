@@ -1,5 +1,9 @@
+import json
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
+
+from domain.protocols.demand_repository import DemandRepository
 
 _OPTIONAL_GROUPS = ("borderline_excluded_by_default", "excluded")
 
@@ -77,3 +81,10 @@ def validate_against_demands(selection: DemoSelection, demand_ids: set[str] | fr
     missing = sorted(demand_ids - selection.all_ids)
     if missing:
         raise ValueError(f"Demo selection puts demands in no group: {missing}")
+
+
+def read_demo_selection(path: Path, demands: DemandRepository) -> frozenset[str]:
+    """The demands the screen lists; the full demand set stays intact and answerable."""
+    selection = parse_selection(json.loads(path.read_text(encoding="utf-8")))
+    validate_against_demands(selection, {d.demand_id for d in demands.list_all()})
+    return selection.included
