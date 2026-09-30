@@ -30,7 +30,10 @@ def _reasons(doc: dict[str, Any], key: str) -> dict[str, str]:
 
 
 def _journey(doc: dict[str, Any], name: str, included: frozenset[str]) -> tuple[str, ...]:
-    ids = doc.get("demo_journeys", {}).get(name, [])
+    journeys = doc.get("demo_journeys", {})
+    if not isinstance(journeys, dict):
+        raise ValueError("Demo selection 'demo_journeys' must be an object of journey name to demand ids")
+    ids = journeys.get(name, [])
     if not isinstance(ids, list) or not all(isinstance(i, str) for i in ids):
         raise ValueError(f"Demo selection journey '{name}' must be a list of demand ids")
     stray = [i for i in ids if i not in included]

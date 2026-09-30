@@ -54,6 +54,10 @@ class ParseSelectionTest:
         with pytest.raises(ValueError, match="journey"):
             parse_selection(_doc(demo_journeys={"primary": ["D-9"], "secondary": []}))
 
+    def test_should_reject_when_demo_journeys_is_not_an_object(self):
+        with pytest.raises(ValueError, match="demo_journeys"):
+            parse_selection(_doc(demo_journeys=[]))
+
     def test_should_expose_journeys_when_present(self):
         selection = parse_selection(_doc(demo_journeys={"primary": ["D-1"], "secondary": ["D-2"]}))
         assert selection.primary == ("D-1",) and selection.secondary == ("D-2",)
