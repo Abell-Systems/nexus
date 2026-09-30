@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import pyarrow as pa
 import pyarrow.parquet as pq
 
@@ -11,8 +9,6 @@ from infrastructure.matching.operational_corpus import (
     load_operational_patents,
     operational_eligibility_policy,
 )
-
-REPO_ROOT = Path(__file__).resolve().parents[5]
 
 
 def _patent(country="ES", title="T", abstract="A", published="2020-01-01"):
@@ -70,11 +66,6 @@ class OperationalEligibilityPolicyTest:
     def test_should_exclude_asset_when_title_is_blank(self):
         result = operational_eligibility_policy().evaluate(_patent(title=""), _demand())
         assert not result.is_eligible and result.reason == EligibilityReason.EXCLUDED_MISSING_TEXT
-
-    def test_should_obtain_policy_from_the_single_factory_when_building_probe_sheets(self):
-        source = (REPO_ROOT / "experiments" / "operational-dense-probe" / "build_probe_sheets.py").read_text(encoding="utf-8")
-        assert "operational_eligibility_policy()" in source
-        assert "DefaultPatentEligibilityPolicy" not in source
 
 
 class LoadOperationalAssetsTest:

@@ -52,3 +52,10 @@ class ReadSheetGradesTest:
             writer.writerow({"pair_id": "P999", "grade": "2"})
         with pytest.raises(KeyError):
             sp.read_sheet_grades(path, {"P001": ("D1", "ES-1-A1")})
+
+
+class ProbeEligibilityPolicyTest:
+    def test_should_obtain_policy_from_the_single_factory_when_building_probe_sheets(self):
+        source = (Path(__file__).resolve().parent / "build_probe_sheets.py").read_text(encoding="utf-8")
+        assert "operational_eligibility_policy()" in source
+        assert "DefaultPatentEligibilityPolicy" not in source
