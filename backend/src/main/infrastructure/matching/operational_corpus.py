@@ -1,8 +1,8 @@
-from dataclasses import dataclass
 from pathlib import Path
 
 import pyarrow.parquet as pq
 
+from domain.models.asset import Asset
 from domain.models.demand import DemandRecord, DemandSignal
 from domain.models.matching import EligibilityReason, EligibilityResult
 from domain.models.patent import PatentDocument
@@ -45,19 +45,23 @@ def operational_eligibility_policy() -> OperationalEligibilityPolicy:
     return OperationalEligibilityPolicy()
 
 
-@dataclass(frozen=True)
-class OperationalAsset:
-    patent: PatentDocument
-    ip_type: str
-    abstract_language: str
+class InMemoryAssetCatalog:
+    def __init__(self, assets: list[Asset]) -> None:
+        self._assets = assets
+        self._by_id = {a.patent.publication_id: a for a in assets}
+
+    def get(self, publication_id: str) -> Asset:
+        return self._by_id[publication_id]
+
+    def list_all(self) -> list[Asset]:
+        return list(self._assets)
 
 
-def load_operational_assets(parquet_path: Path) -> list[OperationalAsset]:
-    """Loads the operational corpus snapshot, preserving parquet row order."""
+def load_operational_assets(parquet_path: Path) -> list[Asset]:
     available = set(pq.read_schema(parquet_path).names)
     columns = _REQUIRED + [c for c in _OPTIONAL if c in available]
     rows = pq.read_table(parquet_path, columns=columns).to_pylist()
-    assets: list[OperationalAsset] = []
+    assets: list[Asset] = []
     for row in rows:
         publication_id = str(row["publication_number"])
         parts = publication_id.split("-")
@@ -76,7 +80,7 @@ def load_operational_assets(parquet_path: Path) -> list[OperationalAsset]:
             family_id=str(row["family_id"]) if row.get("family_id") else None,
         )
         assets.append(
-            OperationalAsset(
+            Asset(
                 patent=patent,
                 ip_type=str(row.get("ip_type") or "unknown"),
                 abstract_language=str(row.get("abstract_language") or ""),

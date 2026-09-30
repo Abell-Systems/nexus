@@ -6,8 +6,6 @@ class UnknownEmbeddingTextError(KeyError):
 
 
 class PrecomputedEmbedder:
-    """Looks up frozen demand vectors by their exact text. Structurally satisfies TextEmbedder."""
-
     def __init__(self, vectors_by_text: Mapping[str, Sequence[float]]) -> None:
         if not vectors_by_text:
             raise ValueError("PrecomputedEmbedder requires at least one vector")

@@ -2,10 +2,21 @@ import type { DemandExamplesResponse, MatchesResponse } from "../domain/operatio
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
+export class ApiError extends Error {
+  readonly code: string;
+
+  constructor(code: string, message: string) {
+    super(message);
+    this.code = code;
+  }
+}
+
 async function getJson<T>(url: string): Promise<T> {
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`Request failed (${response.status})`);
+    const body = await response.json().catch(() => null);
+    const isContract = typeof body?.code === "string" && typeof body?.message === "string";
+    throw new ApiError(isContract ? body.code : "UNKNOWN_ERROR", isContract ? body.message : `Request failed (${response.status})`);
   }
   return (await response.json()) as T;
 }

@@ -1,5 +1,9 @@
+import json
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
+
+from domain.protocols.demand_repository import DemandRepository
 
 _OPTIONAL_GROUPS = ("borderline_excluded_by_default", "excluded")
 
@@ -43,7 +47,6 @@ def _journey(doc: dict[str, Any], name: str, included: frozenset[str]) -> tuple[
 
 
 def parse_selection(raw: object) -> DemoSelection:
-    """Validates the shape of demo_selection_v1.json, which controls what a user sees."""
     if not isinstance(raw, dict):
         raise ValueError("Demo selection must be a JSON object")
     if not isinstance(raw.get("rule"), str) or not raw["rule"].strip():
@@ -70,10 +73,15 @@ def parse_selection(raw: object) -> DemoSelection:
 
 
 def validate_against_demands(selection: DemoSelection, demand_ids: set[str] | frozenset[str]) -> None:
-    """Every demand the service holds is in exactly one group, and no group names a demand it does not hold."""
     unknown = sorted(selection.all_ids - demand_ids)
     if unknown:
         raise ValueError(f"Demo selection names unknown demands: {unknown}")
     missing = sorted(demand_ids - selection.all_ids)
     if missing:
         raise ValueError(f"Demo selection puts demands in no group: {missing}")
+
+
+def read_demo_selection(path: Path, demands: DemandRepository) -> frozenset[str]:
+    selection = parse_selection(json.loads(path.read_text(encoding="utf-8")))
+    validate_against_demands(selection, {d.demand_id for d in demands.list_all()})
+    return selection.included

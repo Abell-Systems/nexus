@@ -66,7 +66,7 @@ Success (200):
 
 - `meta.corpus_parquet_sha256`, `meta.embedding_index_sha256` and `meta.corpus_id` are traceability diagnostics for the runbook and for audits. The UI does not render them and they are not part of the UI contract; they may change without a screen change.
 - `rank` is the only ordering signal exposed. **The raw score and any derived `alta/media/baja` band are not in the response.** A qualitative band is allowed only after the probe result exists and only with a rule fixed in a new spec before anyone looks at scores.
-- Unknown `demand_id` → 404 (same pattern as the existing demand route). `limit` outside 1..10 → 422.
+- Errors on the two MVP routes have one stable shape, `{"code": "...", "message": "..."}` (the legacy routes keep `detail`): unknown `demand_id` → 404 `DEMAND_NOT_FOUND`; invalid or missing parameter (`limit` outside 1..10, `demand_id` empty or over 64 characters) → 422 `INVALID_REQUEST`, naming the field; any other HTTP error → its status with a code such as `METHOD_NOT_ALLOWED`; an unexpected failure → 500 `INTERNAL_ERROR` with no details. The mapping is centralised in `errors.py`; the UI shows `message` and never parses strings.
 - If fewer than `limit` assets are eligible, return fewer; if none, `assets: []` with `eligible_count: 0`. Never pad.
 - The MVP routes are mounted only when `NEXUS_MVP_ENABLED=1` (data directory from `NEXUS_OPERATIONAL_DIR`, default `data/snapshots/operational_corpus_v1`). When enabled, a missing or hash-mismatched index, corpus or demand snapshot aborts startup (fail fast); when unset the routes are absent and the legacy app is unaffected. The route never falls back to BM25 or to a live model.
 

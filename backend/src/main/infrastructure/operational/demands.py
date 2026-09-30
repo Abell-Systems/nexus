@@ -6,7 +6,6 @@ from domain.protocols.demand_repository import DemandRepository
 
 
 class JsonDemandRepository(DemandRepository):
-    """Reads the product demand snapshot written by scripts/build_demands_snapshot.py."""
 
     def __init__(self, path: Path) -> None:
         raw = json.loads(path.read_text(encoding="utf-8"))

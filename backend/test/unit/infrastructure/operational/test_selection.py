@@ -3,7 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.operational.selection import parse_selection, validate_against_demands
+from infrastructure.operational.artifacts import load_operational_artifacts
+from infrastructure.operational.selection import parse_selection, read_demo_selection, validate_against_demands
 
 SHIPPED = Path(__file__).resolve().parents[5] / "backend" / "src" / "main" / "infrastructure" / "operational" / "demo_selection_v1.json"
 
@@ -100,3 +101,46 @@ class ValidateAgainstDemandsTest:
         del doc["excluded"]["INNOGET-2299"]
         with pytest.raises(ValueError, match="no group.*INNOGET-2299"):
             validate_against_demands(parse_selection(doc), ids)
+
+
+class ReadDemoSelectionTest:
+    @pytest.fixture
+    def demands(self, operational_dir):
+        return load_operational_artifacts(operational_dir).demands
+
+    def _selection(self, tmp_path, included):
+        path = tmp_path / "demo_selection_v1.json"
+        rest = {"D-1", "D-2"} - set(included)
+        doc = {"rule": "r", "included": {i: "reason" for i in included}, "excluded": {i: "reason" for i in rest}}
+        path.write_text(json.dumps(doc), encoding="utf-8")
+        return path
+
+    def test_should_return_the_included_demands_when_selection_covers_every_demand(self, demands, tmp_path):
+        assert read_demo_selection(self._selection(tmp_path, ["D-2"]), demands) == frozenset({"D-2"})
+
+    def test_should_abort_when_selection_names_a_demand_that_does_not_exist(self, demands, tmp_path):
+        with pytest.raises(ValueError, match="D-9"):
+            read_demo_selection(self._selection(tmp_path, ["D-9"]), demands)
+
+    def test_should_abort_when_selection_included_is_not_an_object(self, demands, tmp_path):
+        path = tmp_path / "bad.json"
+        path.write_text(json.dumps({"rule": "r", "included": ["D-1"]}), encoding="utf-8")
+        with pytest.raises(ValueError, match="included"):
+            read_demo_selection(path, demands)
+
+    def test_should_abort_when_selection_leaves_a_served_demand_in_no_group(self, demands, tmp_path):
+        path = tmp_path / "partial.json"
+        path.write_text(json.dumps({"rule": "r", "included": {"D-1": "reason"}}), encoding="utf-8")
+        with pytest.raises(ValueError, match="no group.*D-2"):
+            read_demo_selection(path, demands)
+
+    def test_should_abort_when_selection_excluded_group_names_an_unknown_demand(self, demands, tmp_path):
+        path = tmp_path / "ghost.json"
+        doc = {"rule": "r", "included": {"D-1": "r"}, "excluded": {"D-2": "r", "GHOST": "r"}}
+        path.write_text(json.dumps(doc), encoding="utf-8")
+        with pytest.raises(ValueError, match="unknown.*GHOST"):
+            read_demo_selection(path, demands)
+
+    def test_should_abort_when_selection_is_empty(self, demands, tmp_path):
+        with pytest.raises(ValueError, match="empty"):
+            read_demo_selection(self._selection(tmp_path, []), demands)
