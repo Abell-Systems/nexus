@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from infrastructure.operational.artifacts import load_operational_artifacts
+from infrastructure.operational.errors import install_error_contract
 from infrastructure.operational.notices import NOTICES
 from infrastructure.operational.router import build_router
 
@@ -22,6 +23,7 @@ def _keys(node):
 def _client(artifacts, featured=None):
     app = FastAPI()
     app.include_router(build_router(artifacts, featured))
+    install_error_contract(app)
     return TestClient(app)
 
 

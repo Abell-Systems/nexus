@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { AssetResult, DemandExamplesResponse, MatchesResponse } from "../../domain/operational";
 import * as defaultApi from "../../infrastructure/operationalClient";
+import { ApiError } from "../../infrastructure/operationalClient";
 import styles from "./MatchesView.module.css";
 
 type Api = Pick<typeof defaultApi, "getDemandExamples" | "getMatches">;
@@ -85,8 +86,10 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
       .then((response) => {
         if (request === latestRequest.current) setResult(response);
       })
-      .catch(() => {
-        if (request === latestRequest.current) setError("No se pudieron cargar los resultados.");
+      .catch((err) => {
+        if (request === latestRequest.current) {
+          setError(err instanceof ApiError && err.code !== "UNKNOWN_ERROR" ? err.message : "No se pudieron cargar los resultados.");
+        }
       })
       .finally(() => {
         if (request === latestRequest.current) setLoading(false);

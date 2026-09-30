@@ -1,12 +1,11 @@
 from functools import cache
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Query
 
 from application.matching.find_assets import (
     AssetsForDemand,
     RankedAsset,
-    UnknownDemandError,
     find_assets_for_demand,
     list_demand_examples,
 )
@@ -14,6 +13,8 @@ from domain.models.demand import DemandSignal
 from infrastructure.operational.artifacts import OperationalArtifacts
 from infrastructure.operational.links import source_links
 from infrastructure.operational.notices import NOTICES
+
+MVP_PATHS = ("/api/demand-examples", "/api/matches")
 
 
 def _demand_json(demand: DemandSignal) -> dict[str, Any]:
@@ -72,10 +73,7 @@ def build_router(artifacts: OperationalArtifacts, featured: frozenset[str] | Non
         demand_id: str = Query(..., min_length=1, max_length=64),
         limit: int = Query(5, ge=1, le=10),
     ) -> dict[str, Any]:
-        try:
-            result = find(demand_id, limit)
-        except UnknownDemandError as err:
-            raise HTTPException(status_code=404, detail=f"Demand '{demand_id}' not found.") from err
+        result = find(demand_id, limit)
         demand = _demand_json(result.demand)
         return {
             "demand": {k: demand[k] for k in ("demand_id", "title", "description", "source_url")},

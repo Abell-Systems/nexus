@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MatchesView } from "../../src/main/components/Matches/MatchesView";
+import { ApiError } from "../../src/main/infrastructure/operationalClient";
 import type { DemandExamplesResponse, MatchesResponse } from "../../src/main/domain/operational";
 
 const NOTICES = ["Aviso 1", "Aviso 2", "Aviso 3", "Aviso 4"];
@@ -123,5 +124,11 @@ describe("MatchesView", () => {
     render(<MatchesView api={pending} />);
     fireEvent.click(await screen.findByText("Lighter vehicles"));
     expect((await screen.findByRole("status")).textContent).toMatch(/Buscando activos/);
+  });
+
+  it("shouldShowTheServerMessageWhenTheRequestFailsWithAnApiError", async () => {
+    render(<MatchesView api={api(new ApiError("DEMAND_NOT_FOUND", "La demanda 'D-1' no existe."))} />);
+    fireEvent.click(await screen.findByText("Lighter vehicles"));
+    expect(await screen.findByText("La demanda 'D-1' no existe.")).toBeDefined();
   });
 });
