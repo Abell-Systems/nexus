@@ -39,19 +39,38 @@ class PairsAndSampleTest:
 
 
 class FinalLabelsTest:
-    def test_should_use_adjudicated_grade_when_pair_is_in_common_sample(self):
-        a = {("D1", "P1"): 1, ("D1", "P2"): 3}
-        adjudicated = {("D1", "P1"): 2}
-        result = dp.final_labels(a, adjudicated, common={("D1", "P1")})
+    def test_should_use_human_grade_when_pair_is_in_human_pairs(self):
+        model = {("D1", "P1"): 1, ("D1", "P2"): 3}
+        human = {("D1", "P1"): 2}
+        result = dp.final_labels(model, human, human_pairs={("D1", "P1")})
         assert result == {("D1", "P1"): 2, ("D1", "P2"): 3}
 
-    def test_should_exclude_pair_when_evaluator_a_marked_uncertain_outside_common_sample(self):
-        result = dp.final_labels({("D1", "P1"): None}, {}, common=set())
+    def test_should_keep_human_uncertain_as_excluded_when_human_answers_u(self):
+        result = dp.final_labels({("D1", "P1"): 1}, {("D1", "P1"): None}, human_pairs={("D1", "P1")})
         assert result == {("D1", "P1"): None}
 
-    def test_should_raise_when_common_pair_has_no_adjudication(self):
+    def test_should_raise_when_human_pair_has_no_human_grade(self):
         with pytest.raises(KeyError):
-            dp.final_labels({("D1", "P1"): 2}, {}, common={("D1", "P1")})
+            dp.final_labels({("D1", "P1"): 2}, {}, human_pairs={("D1", "P1")})
+
+    def test_should_raise_when_model_uncertain_pair_was_not_escalated(self):
+        with pytest.raises(ValueError, match="escalat"):
+            dp.final_labels({("D1", "P1"): None}, {}, human_pairs=set())
+
+
+class EscalationTest:
+    def test_should_escalate_when_model_confidence_is_low(self):
+        assert dp.needs_escalation(2, "low") is True
+
+    def test_should_escalate_when_model_grade_is_uncertain_even_if_confident(self):
+        assert dp.needs_escalation(None, "high") is True
+
+    def test_should_not_escalate_when_model_is_confident_and_graded(self):
+        assert dp.needs_escalation(0, "high") is False
+
+    def test_should_list_escalated_pair_ids_outside_common_sample_sorted(self):
+        judgments = {"P3": (2, "low"), "P1": (None, "high"), "P2": (1, "high"), "P4": (0, "low")}
+        assert dp.escalation_pair_ids(judgments, common_ids={"P4"}) == ["P1", "P3"]
 
 
 class PrecisionAtFiveTest:

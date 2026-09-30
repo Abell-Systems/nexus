@@ -81,18 +81,33 @@ def draw_common_sample(
 
 
 def final_labels(
-    grades_a: Mapping[Pair, Label], adjudicated: Mapping[Pair, Label], common: Collection[Pair]
+    model: Mapping[Pair, Label], human: Mapping[Pair, Label], human_pairs: Collection[Pair]
 ) -> dict[Pair, Label]:
-    common_set = set(common)
+    """Amendment A2: the human grade wherever the human graded, the model grade elsewhere."""
+    human_set = set(human_pairs)
     labels: dict[Pair, Label] = {}
-    for pair, grade in grades_a.items():
-        if pair in common_set:
-            if pair not in adjudicated:
-                raise KeyError(f"Common-sample pair {pair} has no adjudicated grade")
-            labels[pair] = adjudicated[pair]
+    for pair, grade in model.items():
+        if pair in human_set:
+            if pair not in human:
+                raise KeyError(f"Pair {pair} is reserved for the human but has no human grade")
+            labels[pair] = human[pair]
+        elif grade is None:
+            raise ValueError(f"Model-uncertain pair {pair} was not escalated to the human")
         else:
             labels[pair] = grade
     return labels
+
+
+def needs_escalation(grade: Label, confidence: str) -> bool:
+    """Fixed before the model ran (Amendment A2): low confidence or an uncertain grade goes to the human."""
+    return grade is None or confidence == "low"
+
+
+def escalation_pair_ids(judgments: Mapping[str, tuple[Label, str]], common_ids: Collection[str]) -> list[str]:
+    """Pair ids the human must grade beyond the common sample, sorted."""
+    common = set(common_ids)
+    return sorted(pid for pid, (grade, confidence) in judgments.items()
+                  if pid not in common and needs_escalation(grade, confidence))
 
 
 def precision_at_5(demand_id: str, top5: Sequence[str], labels: Mapping[Pair, Label]) -> float | None:

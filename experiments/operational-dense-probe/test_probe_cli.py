@@ -59,3 +59,31 @@ class ProbeEligibilityPolicyTest:
         source = (Path(__file__).resolve().parent / "build_probe_sheets.py").read_text(encoding="utf-8")
         assert "operational_eligibility_policy()" in source
         assert "DefaultPatentEligibilityPolicy" not in source
+
+
+class ReadModelJudgmentsTest:
+    def _write(self, tmp_path, rows):
+        path = tmp_path / "model_judgments.csv"
+        with path.open("w", newline="", encoding="utf-8") as handle:
+            writer = csv.DictWriter(handle, fieldnames=["pair_id", "grade", "confidence", "rationale"])
+            writer.writeheader()
+            writer.writerows(rows)
+        return path
+
+    def test_should_map_grade_and_confidence_when_file_is_complete(self, tmp_path):
+        path = self._write(tmp_path, [
+            {"pair_id": "P001", "grade": "3", "confidence": "high", "rationale": "x"},
+            {"pair_id": "P002", "grade": "U", "confidence": "low", "rationale": "y"},
+        ])
+        pairs = {"P001": ("D1", "ES-1-A1"), "P002": ("D1", "ES-2-A1")}
+        assert sp.read_model_judgments(path, pairs) == {"P001": (3, "high"), "P002": (None, "low")}
+
+    def test_should_raise_when_confidence_is_not_high_or_low(self, tmp_path):
+        path = self._write(tmp_path, [{"pair_id": "P001", "grade": "2", "confidence": "medium", "rationale": ""}])
+        with pytest.raises(ValueError, match="confidence"):
+            sp.read_model_judgments(path, {"P001": ("D1", "ES-1-A1")})
+
+    def test_should_raise_when_a_sheet_pair_has_no_model_judgment(self, tmp_path):
+        path = self._write(tmp_path, [{"pair_id": "P001", "grade": "2", "confidence": "high", "rationale": ""}])
+        with pytest.raises(KeyError, match="P002"):
+            sp.read_model_judgments(path, {"P001": ("D1", "a"), "P002": ("D1", "b")})
