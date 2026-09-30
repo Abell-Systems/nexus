@@ -30,7 +30,7 @@ The backend must not read from `experiments/` (ADR 0026). A product snapshot `da
 ## 4. Contracts
 
 ### 4.1 `GET /api/demand-examples`
-Returns `{"demands": [{demand_id, title, description, origin_country, posted_date, source_url}]}` in corpus order. (The existing `GET /api/demands` is bound to the legacy domain slugs and is left untouched.)
+Returns `{"demands": [{demand_id, title, description, origin_country, posted_date, source_url}], "notices": ["..."]}` in corpus order. `posted_date` is `null` for all 39 demands and is passed through as such. The four fixed notices (section 7) come from the server in both responses, so the UI never hard-codes them. (The existing `GET /api/demands` is bound to the legacy domain slugs and is left untouched.)
 
 ### 4.2 `GET /api/matches?demand_id=<id>&limit=<1..10, default 5>`
 Success (200):
@@ -63,14 +63,30 @@ Success (200):
 - `rank` is the only ordering signal exposed. **The raw score and any derived `alta/media/baja` band are not in the response.** A qualitative band is allowed only after the probe result exists and only with a rule fixed in a new spec before anyone looks at scores.
 - Unknown `demand_id` → 404 (same pattern as the existing demand route). `limit` outside 1..10 → 422.
 - If fewer than `limit` assets are eligible, return fewer; if none, `assets: []` with `eligible_count: 0`. Never pad.
-- A missing or hash-mismatched index or corpus aborts the service at startup (fail fast); the route never falls back to BM25 or to a live model.
+- The MVP routes are mounted only when `NEXUS_MVP_ENABLED=1` (data directory from `NEXUS_OPERATIONAL_DIR`, default `data/snapshots/operational_corpus_v1`). When enabled, a missing or hash-mismatched index, corpus or demand snapshot aborts startup (fail fast); when unset the routes are absent and the legacy app is unaffected. The route never falls back to BM25 or to a live model.
 
 ### 4.3 Asset links
 `google_patents`: `https://patents.google.com/patent/` + publication number with dashes removed (`ES-2594181-A1` → `ES2594181A1`). `espacenet`: `https://worldwide.espacenet.com/patent/search?q=pn%3D` + the same compact number. Both are pure string functions; the UI labels them "Fuente".
 
 ## 5. Single source of truth for eligibility
 
-The ES-jurisdiction and publication-date-before-demand rule lives in one function, `operational_eligibility_policy()`, returning `DefaultPatentEligibilityPolicy(target_jurisdiction="ES")`. The API wiring and `build_probe_sheets.py` both call it; neither constructs the policy on its own. A test asserts both modules obtain their policy from that function, so the demo and the probe cannot drift into different universes.
+**Amended (see Amendment A1 of the retrieval spec).** The 39 demands have no `posted_date`, so the Lab's `DefaultPatentEligibilityPolicy` (which requires `publication_date < demand.posted_date`) would make every eligible set empty. The operational MVP and the probe use a separate policy, defined once:
+
+```text
+operational_eligibility_policy(asset, demand):
+    jurisdiction == ES
+    AND title non-empty
+    AND abstract non-empty
+```
+
+The temporal rule is not part of the operational eligibility policy. It remains in the Lab policy, which is untouched; this is not a judgment that temporality lacks scientific value, only that the operational question (which Spanish assets of the operational corpus are candidates for this demand) is a different question from the Lab's (prior art before a demand).
+
+```text
+Lab evaluation           -> DefaultPatentEligibilityPolicy -> temporal constraint -> scientific corpus
+Operational MVP / probe  -> operational_eligibility_policy -> ES + title + abstract -> operational corpus
+```
+
+`operational_eligibility_policy()` is the only place this rule is written. The API wiring and `build_probe_sheets.py` both obtain the policy from it, and a test asserts neither constructs its own, so the demo and the probe cannot drift into different universes. It returns a policy object implementing `PatentEligibilityPolicy` with the existing `EligibilityResult` and `EligibilityReason` values.
 
 ## 6. Architecture
 

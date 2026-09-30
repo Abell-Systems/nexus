@@ -1,5 +1,7 @@
 # Operational Dense Retrieval Implementation Plan
 
+> **Amendment A1 (2026-09-30):** eligibility in `build_probe_sheets.py` and the Task 7 smoke check changes from `DefaultPatentEligibilityPolicy` to `operational_eligibility_policy()` (see spec Amendment A1). Applied in Task 1 of `2026-09-30-demand-to-assets-mvp.md`, before the sheets are built.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Generate frozen multilingual embeddings for the operational corpus, retrieve over them without torch at runtime, and build the pre-registered blind probe (BM25 vs dense) that decides whether dense retrieval removes the cross-language bottleneck.

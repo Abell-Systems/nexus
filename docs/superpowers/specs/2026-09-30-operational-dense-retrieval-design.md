@@ -62,8 +62,8 @@ Binary is used instead of the ADR 0014 JSON layout: 54,997 × 768 values as JSON
 - `PrecomputedEmbedder` implements the existing `TextEmbedder` protocol by looking up the frozen demand vector for the exact demand text. An unknown text raises; it never falls back to a live model.
 - `NumpyDenseRetriever` implements `PatentCandidateRetriever`: loads the frozen matrix once, applies the same `PatentEligibilityPolicy` as the BM25 retriever, computes cosine similarity as a matrix-vector product (vectors are L2-normalized), scores `(cos + 1) / 2` as in `DuckDbDenseSemanticRetriever`, and breaks ties by `(score DESC, publication_id ASC)`.
 - The existing `DuckDbDenseSemanticRetriever` is not modified (it loops per row in Python and is unsuited to 55k rows). The new retriever sits beside it in `infrastructure/matching/`.
-- Eligibility: `DefaultPatentEligibilityPolicy(target_jurisdiction="ES")` unchanged, the same instance type for both methods, exactly as in the #104 dry-run. Whether the temporal prior-art rule is right for a product (as opposed to the Lab) is a separate product decision, deferred; the probe keeps parity with the Lab so that both methods see the identical eligible set.
-- **Consequence to accept and report:** `DefaultPatentEligibilityPolicy(target_jurisdiction="ES")` excludes every record whose `country_code` is not `ES`, so the 10,793 EP-coded Spanish-applicant records of the corpus are not eligible in this probe (44,204 ES-coded remain before the temporal rule). The temporal rule further removes patents published on or after each demand's `posted_date`. The result document reports, per demand, the eligible-set size so that short lists can be attributed. Making the product's jurisdiction and temporal rules fit its corpus is a separate product decision, deferred.
+- Eligibility (**amended by A1, see the end of this document**): `operational_eligibility_policy()`, the same instance type for both methods: jurisdiction `ES` AND non-empty title AND non-empty abstract. The temporal prior-art rule is not part of the operational eligibility policy; it remains in the Lab's `DefaultPatentEligibilityPolicy`, which this work does not touch.
+- **Consequence to accept and report:** the operational policy excludes every record whose `country_code` is not `ES`, so the 10,793 EP-coded Spanish-applicant records of the corpus are not eligible in this probe (44,204 ES-coded records remain). The result document reports, per demand, the eligible-set size. Making the product's jurisdiction rule fit its corpus is a separate product decision, deferred.
 
 ## 7. Pre-registered probe
 
@@ -151,5 +151,23 @@ Tests, named `shouldXWhenY`, mocking only at architectural boundaries:
 - **English fallback abstracts** (about 20% of the corpus, mostly EP) may be machine-translated; `abstract_language` is carried into the judging sheet.
 - **Corpus licence is unverified** (Google Patents Public Data): internal use only; nothing built here is redistributed.
 - **Small population** (31 demands): low power by construction; the bootstrap interval is reported so the reader sees how wide the uncertainty is, but it does not gate the outcome.
-- **Temporal eligibility** for a product is undecided (§6).
+- **Temporal eligibility** is not part of the operational policy (A1); the Lab policy keeps it.
 - **CPC coverage** is 64% of the corpus; the CPC channel is not used here.
+
+
+## Amendment A1 (2026-09-30): operational eligibility policy, made before any probe data exists
+
+**Finding.** `posted_date` is `null` in 39 of 39 demands of `dataset_phase2_demand_corpus_n39.json`. `DefaultPatentEligibilityPolicy` excludes every patent when the demand has no valid `posted_date` (`EXCLUDED_TEMPORAL`), so with that policy the eligible set is empty for all 39 demands: both methods would return empty lists and the probe would measure nothing. The original text of this section assumed parity with the Lab policy without checking the demands' dates. The error was found while specifying the product MVP, before the embeddings finished, before the judging sheets were built, and before any top-5 list was looked at.
+
+**Amendment.** The probe (and the product) use `operational_eligibility_policy`: `country_code == "ES"` AND non-empty title AND non-empty abstract. Nothing else. No date is invented for the demands.
+
+**Two policies, two purposes.**
+
+```text
+Lab evaluation           -> DefaultPatentEligibilityPolicy -> temporal constraint -> scientific corpus
+Operational MVP / probe  -> operational_eligibility_policy -> ES + title + abstract -> operational corpus
+```
+
+The temporal rule is not part of the operational eligibility policy. This is not a judgment that temporality lacks scientific value: it answers the Lab's question (prior art before a demand), not the operational one (which Spanish assets of the operational corpus are candidates for this demand). BM25 and dense compete on exactly the same eligible universe.
+
+**Unchanged:** thresholds, metric, evaluators, common sample, seed, UNCERTAIN handling, bootstrap role.
