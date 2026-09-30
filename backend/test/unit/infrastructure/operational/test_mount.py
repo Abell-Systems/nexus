@@ -52,3 +52,13 @@ class DemoSelectionFileTest:
         assert sum(len(g) for g in groups) == 39 == len(set().union(*groups))
         assert all(reason.strip() for key in ("included", "borderline_excluded_by_default", "excluded") for reason in doc[key].values())
         assert doc["rule"].strip() and len(doc["included"]) > 0
+
+    def test_should_list_demo_journeys_only_among_included_demands_when_reading_the_shipped_selection(self):
+        import json
+
+        path = API_SOURCE.parent / "operational" / "demo_selection_v1.json"
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        journeys = doc["demo_journeys"]
+        assert 3 <= len(journeys["primary"]) <= 3 and 1 <= len(journeys["secondary"]) <= 2
+        assert set(journeys["primary"]) | set(journeys["secondary"]) <= set(doc["included"])
+        assert not set(journeys["primary"]) & set(journeys["secondary"])

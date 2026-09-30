@@ -1,7 +1,7 @@
 {
   "version": "v1",
   "date": "2026-09-30",
-  "status": "Rule applied to the full demand text by Claude; pending review by the owners. Chosen before looking at any retrieval result and without using the LLM judgments.",
+  "status": "Rule applied to the full demand text by Claude; reviewed and confirmed by the owners on 2026-09-30 (the 5 borderline demands stay out). Chosen before looking at any retrieval result and without using the LLM judgments.",
   "rule": "A demand is shown in the demo if it describes a concrete technological need (a material, process, device, method, sensor or formulation) that could plausibly correspond to a patent or utility model. It is left out if it asks for marketing, market or consumer research, website or software design, business modelling, LCA or regulatory assessment, programme or policy design, or if it asks for patents of a jurisdiction the corpus does not cover.",
   "included": {
     "INNOGET-1605": "Materials/manufacturing concepts for lighter vehicles.",
@@ -47,5 +47,16 @@
     "INNOGET-2414": "Neighbourhood resilience programme (15-minute city): urban and HR programme design.",
     "INNOGET-2426": "Data-driven business opportunities from a charging dataset.",
     "INNOGET-2427": "Market analysis for scaling charging solutions."
+  },
+  "demo_journeys": {
+    "note": "Presentation choice, made after the owners' manual inspection of the top-5 lists; not a reclassification of any demand. The Italian bridge-joints demand (LOMBARDIA-860) stays listed but is deliberately not a journey: its results are not interpretable enough to convince a third party.",
+    "primary": [
+      "INNOGET-1935",
+      "INNOGET-2258",
+      "INNOGET-2417"
+    ],
+    "secondary": [
+      "INNOGET-2173"
+    ]
   }
 }

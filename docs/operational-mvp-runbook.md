@@ -1,6 +1,6 @@
 # Operational MVP runbook: demand to Spanish assets
 
-Status: prototype MVP on real data, ranking quality under internal evaluation. Specs: `docs/superpowers/specs/2026-09-30-demand-to-assets-mvp-design.md` and `2026-09-30-operational-dense-retrieval-design.md` (amendments A1 to A3).
+Status: prototype MVP on real data; ranking quality is an internal, LLM-judged estimate without human validation. Specs: `docs/superpowers/specs/2026-09-30-demand-to-assets-mvp-design.md` and `2026-09-30-operational-dense-retrieval-design.md` (amendments A1 to A3).
 
 ## What it does
 
@@ -49,14 +49,27 @@ When enabled, startup verifies every hash: corpus against its manifest, both emb
 
 The 39 demands stay intact. The screen lists 21, chosen by a written rule applied to the demand text before any result was looked at (`demo_selection_v1.json`: each demand has a one-line reason; 5 borderline ones are excluded by default). The owners review the file. Choosing which demands to present in a given demo is a presentation decision and is not a reclassification.
 
+## Demo journeys
+
+Main demo, three demands with interpretable results: `INNOGET-1935` (water quality measurement), `INNOGET-2258` (renewable hydrogen), `INNOGET-2417` (sustainable food packaging). Secondary, for domain variety: `INNOGET-2173` (construction materials from mining by-products). The Italian `LOMBARDIA-860` (bridge joints) stays listed but is not a journey: its results are not interpretable enough to persuade a third party, and the demo shows product, not a defence of the model. This is a presentation choice recorded in `demo_selection_v1.json`, not a reclassification.
+
 ## What may and may not be claimed
 
 May say: it works on real ingested demands over a corpus of 54,997 Spanish industrial-property assets; every result links to its public source; ranking comes from a frozen, versioned multilingual embedding model; the data is "Google Patents Public Data" by IFI CLAIMS Patent Services and Google under CC BY 4.0 (attribution is shown on screen).
 
 An internal estimate exists: judged by a language model, without human validation, dense retrieval reached P@5 of about 0.24 against 0.06 for lexical BM25 over 31 demands. It was used for product decisions only. It is not a probe outcome and must not be cited as scientific validation (spec amendment A3).
 
-May not say, until the gates close: anything presenting the ranking quality as validated; "unexploited" assets; any price, demand or market-size figure; "customer-ready". The accurate framing for financing conversations is "working prototype MVP on real data, quality evaluation in progress".
+May not say, until the gates close: anything presenting the ranking quality as validated; "unexploited" assets; any price, demand or market-size figure; "customer-ready". The accurate framing for financing conversations is "working prototype MVP on real data; ranking quality is an internal estimate, not yet validated by humans".
 
 ## Known limits
 
 Only the 39 example demands can be searched (free text would need live embedding, forbidden by ADR 0014). EP records with a Spanish applicant (about 10,793) are not included. There is no OTRI or transfer contact; the screen shows the holder and the public source. The CC BY 4.0 reading is not legal advice; confirm with counsel, including the chain of the underlying patent-office data, before charging for the service.
+
+## Deferred minor findings (final review, 2026-09-30)
+
+Not blocking the MVP; none changes behaviour a user sees in the demo path.
+
+- `/matches` renders, with a load error, when `NEXUS_MVP_ENABLED` is off; `/matchesfoo` also routes to it.
+- Missing tests: zero-norm query in `NumpyDenseRetriever` (returns `[]`, checked by hand), the loading state of the frontend view, and an API-side assertion that the operational policy factory is the one used (the probe side is covered).
+- The `NumpyDenseRetriever` docstring says "without its per-row Python loop"; it still loops over the eligible patents in Python (about 0.2 s per request).
+- `experiments/operational-dense-probe/internal_quality_signal.py` parses grades and confidence more loosely than `score_probe.py`.

@@ -63,6 +63,12 @@ class OperationalMatchingServiceTest:
         assert service.examples()["notices"] == list(NOTICES)
         assert service.matches("D-1")["meta"]["notices"] == list(NOTICES)
 
+    def test_should_state_quality_as_internal_llm_estimate_when_serving_notices(self):
+        assert NOTICES[3] == (
+            "Calidad del ranking: estimación interna con juicio de un modelo de lenguaje, sin validación humana."
+        )
+        assert not any("preregistrado" in n or "en evaluación" in n for n in NOTICES)
+
     def test_should_list_example_demands_in_corpus_order_when_asked(self, operational_dir):
         demands = OperationalMatchingService.from_directory(operational_dir).examples()["demands"]
         assert [d["demand_id"] for d in demands] == ["D-1", "D-2"] and demands[0]["source_url"] == "https://example.org/d1"
