@@ -15,7 +15,7 @@ def build_router(service: OperationalMatchingService) -> APIRouter:
 
     @router.get("/api/matches")
     def matches(
-        demand_id: str = Query(..., min_length=1),
+        demand_id: str = Query(..., min_length=1, max_length=64),
         limit: int = Query(5, ge=1, le=10),
     ) -> dict[str, Any]:
         try:

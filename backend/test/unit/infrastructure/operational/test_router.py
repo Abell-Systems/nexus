@@ -35,3 +35,6 @@ class OperationalRouterTest:
 
     def test_should_honour_limit_when_fewer_assets_requested(self, client):
         assert len(client.get("/api/matches", params={"demand_id": "D-1", "limit": 1}).json()["assets"]) == 1
+
+    def test_should_return_422_when_demand_id_is_absurdly_long(self, client):
+        assert client.get("/api/matches", params={"demand_id": "D" * 65}).status_code == 422

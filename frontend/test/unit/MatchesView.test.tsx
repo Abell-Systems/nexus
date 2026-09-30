@@ -80,4 +80,48 @@ describe("MatchesView", () => {
     await screen.findByText("Dispositivo ligero");
     expect(container.textContent).not.toMatch(/\d\.\d{2,}|%|score|similitud:/i);
   });
+
+  it("shows the chosen demand's description and a link to its source before the results", async () => {
+    render(<MatchesView api={api(matches([ASSET]))} />);
+    fireEvent.click(await screen.findByText("Lighter vehicles"));
+    expect(await screen.findByText("Seeking new materials")).toBeDefined();
+    expect(screen.getByText("Ver demanda original").closest("a")?.getAttribute("href")).toBe("https://example.org/d1");
+  });
+
+  it("omits the source link when the demand has no source url", async () => {
+    render(<MatchesView api={api(matches([ASSET]))} />);
+    fireEvent.click(await screen.findByText("Water sensors"));
+    await screen.findByText("Cheap sensing");
+    expect(screen.queryByText("Ver demanda original")).toBeNull();
+  });
+
+  it("states how many of the eligible assets are shown", async () => {
+    const response = matches([ASSET]);
+    response.meta.eligible_count = 44195;
+    render(<MatchesView api={api(response)} />);
+    fireEvent.click(await screen.findByText("Lighter vehicles"));
+    expect(await screen.findByText(/1 de 44\.195 activos elegibles/)).toBeDefined();
+  });
+
+  it("opens the abstract of the first result only", async () => {
+    const second = { ...ASSET, rank: 2, publication_id: "ES-1000003-U", title: "Otro dispositivo" };
+    render(<MatchesView api={api(matches([ASSET, second]))} />);
+    fireEvent.click(await screen.findByText("Lighter vehicles"));
+    await screen.findByText("Otro dispositivo");
+    const open = Array.from(document.querySelectorAll("details")).map((d) => d.open);
+    expect(open).toEqual([true, false]);
+  });
+
+  it("labels an English abstract as such", async () => {
+    render(<MatchesView api={api(matches([{ ...ASSET, abstract_language: "en" }]))} />);
+    fireEvent.click(await screen.findByText("Lighter vehicles"));
+    expect(await screen.findByText(/Resumen en inglés/)).toBeDefined();
+  });
+
+  it("announces the loading state to assistive technology", async () => {
+    const pending = { getDemandExamples: () => Promise.resolve(EXAMPLES), getMatches: () => new Promise<MatchesResponse>(() => {}) };
+    render(<MatchesView api={pending} />);
+    fireEvent.click(await screen.findByText("Lighter vehicles"));
+    expect((await screen.findByRole("status")).textContent).toMatch(/Buscando activos/);
+  });
 });
