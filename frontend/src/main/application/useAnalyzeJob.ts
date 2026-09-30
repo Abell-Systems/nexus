@@ -62,7 +62,7 @@ export function useAnalyzeJob() {
       }
     };
 
-    poll();
+    void poll();
     const intervalId = setInterval(poll, 2000);
     return () => {
       isMounted = false;
