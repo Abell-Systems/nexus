@@ -58,3 +58,9 @@ class DemoPreflightTest:
         preflight = _preflight()
         assert any("score" in p for p in preflight.check(_server(preflight, extra={"score": 0.9}), artifacts))
         assert preflight.check(_server(preflight, extra={"title": "score keeping device"}), artifacts) == []
+
+    def test_should_flag_a_reachable_agent_route_when_the_server_exposes_more_than_the_product(self, artifacts):
+        preflight = _preflight()
+        reachable = lambda method, path: 200 if path == "/run" else 404  # noqa: E731
+        assert any("/run" in p for p in preflight.check(_server(preflight), artifacts, reachable))
+        assert preflight.check(_server(preflight), artifacts, lambda method, path: 405) == []

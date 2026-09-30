@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { beforeEach, describe, it, expect } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MatchesView } from "../../src/main/components/Matches/MatchesView";
 import { ApiError } from "../../src/main/infrastructure/operationalClient";
@@ -37,6 +37,8 @@ function api(result: MatchesResponse | Error) {
 }
 
 describe("MatchesView", () => {
+  beforeEach(() => window.history.replaceState(null, "", "/"));
+
   it("shouldShowExampleDemandsAndTheFourFixedNoticesWhenNoDemandIsSelected", async () => {
     render(<MatchesView api={api(matches([ASSET]))} />);
     expect(await screen.findByText("Lighter vehicles")).toBeDefined();
@@ -130,5 +132,27 @@ describe("MatchesView", () => {
     render(<MatchesView api={api(new ApiError("DEMAND_NOT_FOUND", "La demanda 'D-1' no existe."))} />);
     fireEvent.click(await screen.findByText("Lighter vehicles"));
     expect(await screen.findByText("La demanda 'D-1' no existe.")).toBeDefined();
+  });
+
+  it("shouldWriteTheChosenDemandInTheUrlWhenADemandIsChosen", async () => {
+    window.history.replaceState(null, "", "/");
+    render(<MatchesView api={api(matches([ASSET]))} />);
+    fireEvent.click(await screen.findByText("Lighter vehicles"));
+    await screen.findByText("Dispositivo ligero");
+    expect(window.location.search).toBe("?demanda=D-1");
+  });
+
+  it("shouldShowTheResultsOfTheDemandInTheUrlWhenThePageIsOpenedWithIt", async () => {
+    window.history.replaceState(null, "", "/?demanda=D-1");
+    render(<MatchesView api={api(matches([ASSET]))} />);
+    expect(await screen.findByText("Dispositivo ligero")).toBeDefined();
+  });
+
+  it("shouldIgnoreTheDemandInTheUrlWhenItIsNotOneOfTheExamples", async () => {
+    window.history.replaceState(null, "", "/?demanda=NOPE");
+    render(<MatchesView api={api(matches([ASSET]))} />);
+    await screen.findByText("Lighter vehicles");
+    expect(screen.queryByText("Dispositivo ligero")).toBeNull();
+    window.history.replaceState(null, "", "/");
   });
 });

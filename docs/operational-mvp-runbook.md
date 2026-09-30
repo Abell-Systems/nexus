@@ -23,7 +23,7 @@ The generation environment is isolated on purpose (ADR 0014): the runtime never 
 
 ```bash
 NEXUS_MVP_ENABLED=1 uvicorn main:app --app-dir backend/src/main --port 8080
-cd frontend && VITE_API_BASE_URL=http://127.0.0.1:8080 npm run dev     # then open http://127.0.0.1:5173/matches
+cd frontend && VITE_API_BASE_URL=http://127.0.0.1:8080 npm run dev     # then open http://127.0.0.1:5173/
 ```
 
 `uvicorn` does not serve `frontend/dist` from the repo in development (the static path in `api.py` resolves under `backend/src/main`), so use Vite as above. With `NEXUS_MVP_ENABLED` unset the two routes do not exist and the legacy app is unchanged.
@@ -36,6 +36,10 @@ cd frontend && VITE_API_BASE_URL=http://127.0.0.1:8080 npm run dev     # then op
 
 When enabled, startup verifies every hash: corpus against its manifest, both embedding indexes against theirs, index ids against corpus order, the indexes against the corpus and demand file they were built from, same model and dimension in both indexes, and demand texts against the snapshot's texts hash. Any mismatch aborts startup; the service never falls back to BM25 or to a live model.
 
+## What the product serves
+
+The product is this one screen, served at `/` (`/matches` shows the same page). `?demanda=<id>` opens a chosen demand, so a result can be shared or reloaded. The hackathon agent (the former landing, its `/api/analyze` job runner and the ADK scaffold routes `/run`, `/run_sse`, sessions, `/docs`, `/openapi.json`) is not reachable: its UI is no longer part of the bundle and the backend removes every route except `/health`, the two MVP routes and the static files. `NEXUS_LEGACY_API_ENABLED=1` brings the backend routes back (the provider test suite sets it); it does not bring the UI back. The legacy components still exist in `frontend/src/main/components/UserZero`, unused.
+
 ## Before a demo
 
 Kill any server already on the port first: a server left running from an older build answers happily with old notices and all 39 demands (this happened while preparing the demo). Then start the backend and run:
@@ -44,7 +48,7 @@ Kill any server already on the port first: a server left running from an older b
 python scripts/demo_preflight.py [http://127.0.0.1:8080]
 ```
 
-It exits non-zero unless the listed demands equal `demo_selection_v1.json`, the four notices equal the current build, each demo journey returns five assets with no score field in the response, and `meta.corpus_id`, `corpus_parquet_sha256` and `embedding_index_sha256` equal what the artifacts on disk declare (`NEXUS_OPERATIONAL_DIR`), so a stale server with the same shape but another build is caught. Startup already warms the first query (a cold first query took about 2 s), and answers are memoised per demand and limit, because the artifacts are frozen and verified.
+It exits non-zero if an agent route such as `POST /run` or `POST /api/analyze` answers, or unless the listed demands equal `demo_selection_v1.json`, the four notices equal the current build, each demo journey returns five assets with no score field in the response, and `meta.corpus_id`, `corpus_parquet_sha256` and `embedding_index_sha256` equal what the artifacts on disk declare (`NEXUS_OPERATIONAL_DIR`), so a stale server with the same shape but another build is caught. Startup already warms the first query (a cold first query took about 2 s), and answers are memoised per demand and limit, because the artifacts are frozen and verified.
 
 The MVP routes also send `X-Content-Type-Options`, `X-Frame-Options: DENY` and `Referrer-Policy: no-referrer`, and cap `demand_id` at 64 characters.
 
