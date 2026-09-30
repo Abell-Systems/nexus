@@ -3,7 +3,8 @@ import json
 from pathlib import Path
 from typing import Any
 
-from application.matching.find_assets import find_assets_for_demand
+from application.matching.find_assets import RankedAsset, find_assets_for_demand, list_demand_examples
+from domain.models.asset import Asset
 from domain.models.demand import DemandSignal
 from domain.protocols.demand_repository import DemandRepository
 from domain.protocols.matching import PatentCandidateRetriever, PatentEligibilityPolicy
@@ -12,7 +13,7 @@ from infrastructure.embeddings.frozen_embedding_index import load_index
 from infrastructure.embeddings.precomputed_embedder import PrecomputedEmbedder
 from infrastructure.matching.numpy_dense import NumpyDenseRetriever
 from infrastructure.matching.operational_corpus import (
-    OperationalAsset,
+    InMemoryAssetCatalog,
     load_operational_assets,
     operational_eligibility_policy,
 )
@@ -42,7 +43,7 @@ class OperationalMatchingService:
     def __init__(
         self,
         *,
-        assets: list[OperationalAsset],
+        assets: list[Asset],
         demands: DemandRepository,
         retriever: PatentCandidateRetriever,
         policy: PatentEligibilityPolicy,
@@ -53,8 +54,7 @@ class OperationalMatchingService:
     ) -> None:
         self._featured = featured_demand_ids
         self._matches_cache: dict[tuple[str, int], dict[str, Any]] = {}
-        self._assets = assets
-        self._by_id = {a.patent.publication_id: a for a in assets}
+        self._catalog = InMemoryAssetCatalog(assets)
         self._demands = demands
         self._retriever = retriever
         self._policy = policy
@@ -133,7 +133,7 @@ class OperationalMatchingService:
         return selection.included
 
     def examples(self) -> dict[str, Any]:
-        listed = [d for d in self._demands.list_all() if self._featured is None or d.demand_id in self._featured]
+        listed = list_demand_examples(self._demands, featured=self._featured)
         return {"demands": [_demand_payload(d) for d in listed], "notices": list(NOTICES)}
 
     def matches(self, demand_id: str, limit: int = 5) -> dict[str, Any]:
@@ -144,20 +144,22 @@ class OperationalMatchingService:
         return self._matches_cache[key]
 
     def _compute_matches(self, demand_id: str, limit: int) -> dict[str, Any]:
-        demand, found = find_assets_for_demand(demand_id, limit, demands=self._demands, retriever=self._retriever)
-        eligible = sum(1 for a in self._assets if self._policy.evaluate(a.patent, demand).is_eligible)
-        payload = _demand_payload(demand)
+        result = find_assets_for_demand(
+            demand_id, limit, demands=self._demands, retriever=self._retriever, catalog=self._catalog, policy=self._policy
+        )
+        payload = _demand_payload(result.demand)
         return {
             "demand": {k: payload[k] for k in ("demand_id", "title", "description", "source_url")},
-            "assets": [self._asset_payload(m.rank, self._by_id[m.publication_id]) for m in found],
-            "meta": {**self._meta, "eligible_count": eligible},
+            "assets": [self._asset_payload(r) for r in result.assets],
+            "meta": {**self._meta, "eligible_count": result.eligible_count},
         }
 
     @staticmethod
-    def _asset_payload(rank: int, asset: OperationalAsset) -> dict[str, Any]:
+    def _asset_payload(ranked: RankedAsset) -> dict[str, Any]:
+        asset = ranked.asset
         patent = asset.patent
         return {
-            "rank": rank,
+            "rank": ranked.rank,
             "publication_id": patent.publication_id,
             "title": patent.title,
             "ip_type": asset.ip_type,
