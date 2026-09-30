@@ -44,7 +44,7 @@ Kill any server already on the port first: a server left running from an older b
 python scripts/demo_preflight.py [http://127.0.0.1:8080]
 ```
 
-It exits non-zero unless the listed demands equal `demo_selection_v1.json`, the four notices equal the current build, and each demo journey returns five assets with no score in the response. Startup already warms the first query (a cold first query took about 2 s), and answers are memoised per demand and limit, because the artifacts are frozen and verified.
+It exits non-zero unless the listed demands equal `demo_selection_v1.json`, the four notices equal the current build, each demo journey returns five assets with no score field in the response, and `meta.corpus_id`, `corpus_parquet_sha256` and `embedding_index_sha256` equal what the artifacts on disk declare (`NEXUS_OPERATIONAL_DIR`), so a stale server with the same shape but another build is caught. Startup already warms the first query (a cold first query took about 2 s), and answers are memoised per demand and limit, because the artifacts are frozen and verified.
 
 The MVP routes also send `X-Content-Type-Options`, `X-Frame-Options: DENY` and `Referrer-Policy: no-referrer`, and cap `demand_id` at 64 characters.
 
