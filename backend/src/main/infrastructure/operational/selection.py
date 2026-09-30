@@ -7,8 +7,14 @@ _OPTIONAL_GROUPS = ("borderline_excluded_by_default", "excluded")
 @dataclass(frozen=True)
 class DemoSelection:
     included: frozenset[str]
+    borderline: frozenset[str]
+    excluded: frozenset[str]
     primary: tuple[str, ...]
     secondary: tuple[str, ...]
+
+    @property
+    def all_ids(self) -> frozenset[str]:
+        return self.included | self.borderline | self.excluded
 
 
 def _reasons(doc: dict[str, Any], key: str) -> dict[str, str]:
@@ -44,14 +50,27 @@ def parse_selection(raw: object) -> DemoSelection:
         raise ValueError("Demo selection is empty")
 
     seen = set(included)
+    optional: dict[str, frozenset[str]] = {}
     for key in _OPTIONAL_GROUPS:
-        if key in raw:
-            ids = set(_reasons(raw, key))
-            if ids & seen:
-                raise ValueError(f"Demo selection has demands in more than one group: {sorted(ids & seen)}")
-            seen |= ids
+        ids = set(_reasons(raw, key)) if key in raw else set()
+        if ids & seen:
+            raise ValueError(f"Demo selection has demands in more than one group: {sorted(ids & seen)}")
+        seen |= ids
+        optional[key] = frozenset(ids)
     return DemoSelection(
         included=included,
+        borderline=optional["borderline_excluded_by_default"],
+        excluded=optional["excluded"],
         primary=_journey(raw, "primary", included),
         secondary=_journey(raw, "secondary", included),
     )
+
+
+def validate_against_demands(selection: DemoSelection, demand_ids: set[str] | frozenset[str]) -> None:
+    """Every demand the service holds is in exactly one group, and no group names a demand it does not hold."""
+    unknown = sorted(selection.all_ids - demand_ids)
+    if unknown:
+        raise ValueError(f"Demo selection names unknown demands: {unknown}")
+    missing = sorted(demand_ids - selection.all_ids)
+    if missing:
+        raise ValueError(f"Demo selection puts demands in no group: {missing}")

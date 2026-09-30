@@ -156,7 +156,9 @@ class OperationalMatchingConsistencyTest:
 class DemoSelectionTest:
     def _selection(self, tmp_path, included):
         path = tmp_path / "demo_selection_v1.json"
-        path.write_text(json.dumps({"rule": "r", "included": {i: "reason" for i in included}}), encoding="utf-8")
+        rest = {"D-1", "D-2"} - set(included)
+        doc = {"rule": "r", "included": {i: "reason" for i in included}, "excluded": {i: "reason" for i in rest}}
+        path.write_text(json.dumps(doc), encoding="utf-8")
         return path
 
     def test_should_list_only_selected_demands_when_a_selection_is_given(self, operational_dir, tmp_path):
@@ -184,6 +186,19 @@ class DemoSelectionTest:
         path = tmp_path / "bad.json"
         path.write_text(json.dumps({"rule": "r", "included": ["D-1"]}), encoding="utf-8")
         with pytest.raises(ValueError, match="included"):
+            OperationalMatchingService.from_directory(operational_dir, selection_path=path)
+
+    def test_should_abort_when_selection_leaves_a_served_demand_in_no_group(self, operational_dir, tmp_path):
+        path = tmp_path / "partial.json"
+        path.write_text(json.dumps({"rule": "r", "included": {"D-1": "reason"}}), encoding="utf-8")
+        with pytest.raises(ValueError, match="no group.*D-2"):
+            OperationalMatchingService.from_directory(operational_dir, selection_path=path)
+
+    def test_should_abort_when_selection_excluded_group_names_an_unknown_demand(self, operational_dir, tmp_path):
+        path = tmp_path / "ghost.json"
+        doc = {"rule": "r", "included": {"D-1": "r"}, "excluded": {"D-2": "r", "GHOST": "r"}}
+        path.write_text(json.dumps(doc), encoding="utf-8")
+        with pytest.raises(ValueError, match="unknown.*GHOST"):
             OperationalMatchingService.from_directory(operational_dir, selection_path=path)
 
     def test_should_abort_when_selection_is_empty(self, operational_dir, tmp_path):

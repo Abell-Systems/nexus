@@ -19,7 +19,7 @@ from infrastructure.matching.operational_corpus import (
 from infrastructure.operational.demands import JsonDemandRepository
 from infrastructure.operational.links import source_links
 from infrastructure.operational.notices import NOTICES
-from infrastructure.operational.selection import parse_selection
+from infrastructure.operational.selection import parse_selection, validate_against_demands
 
 PATENT_INDEX = "embeddings_patents_v1"
 DEMAND_INDEX = "embeddings_demands_v1"
@@ -127,11 +127,9 @@ class OperationalMatchingService:
     @staticmethod
     def _read_selection(path: Path, demands: DemandRepository) -> frozenset[str]:
         """Demo view: which demands the screen lists. The full demand set stays intact and answerable."""
-        included = parse_selection(json.loads(path.read_text(encoding="utf-8"))).included
-        unknown = sorted(included - {d.demand_id for d in demands.list_all()})
-        if unknown:
-            raise ValueError(f"Demo selection names unknown demands: {unknown}")
-        return frozenset(included)
+        selection = parse_selection(json.loads(path.read_text(encoding="utf-8")))
+        validate_against_demands(selection, {d.demand_id for d in demands.list_all()})
+        return selection.included
 
     def examples(self) -> dict[str, Any]:
         listed = [d for d in self._demands.list_all() if self._featured is None or d.demand_id in self._featured]
