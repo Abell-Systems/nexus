@@ -29,6 +29,7 @@ from infrastructure.api_dependencies import (
     _research_service,
     app,
 )
+from infrastructure.operational.mount import mount_operational_mvp
 
 _background_tasks: set[asyncio.Task] = set()
 _DOMAIN_SLUG_DESC = "Domain slug"
@@ -200,6 +201,10 @@ def _get_dist_dir() -> str | None:
 _initial_dist = _get_dist_dir()
 if _initial_dist and os.path.exists(os.path.join(_initial_dist, "assets")):
     app.mount("/assets", StaticFiles(directory=os.path.join(_initial_dist, "assets")), name="assets")
+
+
+# Must precede the SPA catch-all below, or it shadows /api/matches.
+mount_operational_mvp(app)
 
 
 @app.get("/")
