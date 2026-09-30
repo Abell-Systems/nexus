@@ -77,3 +77,7 @@ experiments/article/minesoft_raw/
 
 # Isolated venv for dense-embedding generation (ADR 0014 stack isolation)
 .venv-embedding-generation/
+
+# Operational corpus: third-party (Google Patents) text, embeddings, and probe sheets. Never commit.
+data/snapshots/operational_corpus_v1/
+experiments/operational-dense-probe/outputs/
