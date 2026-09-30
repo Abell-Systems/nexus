@@ -197,3 +197,15 @@ The temporal rule is not part of the operational eligibility policy. This is not
 **Validity threats added.** (1) M and the system builder are models of the same vendor family and M may prefer text resembling its own style; not testable here. (2) Final labels mix two evaluators; the agreement estimate applies to M overall, not specifically to escalated pairs. (3) M's blindness is procedural (only the sheet copy is given); it is not sandboxed from the repository. (4) H who is also the system's author (if Valentín) keeps the evaluator-builder threat declared in section 9.
 
 **Unchanged.** Thresholds (`P@5 >= 0.40`, delta `>= 0.15`, `kappa_w >= 0.70`), the metric, the population of 31 demands, the common sample and seed 42, UNCERTAIN handling, and the informative role of the bootstrap.
+
+## Amendment A3 (2026-09-30): human probe parked, internal quality signal, blinding deliberately ended
+
+**Decision (owners).** Business priority now outweighs the scientific result: the prototype comes first and the paper is written from it. The human judging of the 165 pairs (62 common + 103 escalated) is parked, not executed.
+
+**What is recorded before `provenance_DO_NOT_OPEN.json` is opened.** Model judgments exist for all 310 pairs (128 low confidence, 0 `U`; 103 pairs would have been escalated outside the 62-pair common sample). No human grade exists. From the moment the provenance file is opened or the `/matches` screen is viewed for these demands, **this set of sheets (v1) is no longer blind and can never again validate anything**. It is retired for that purpose.
+
+**What replaces it, and what it is not.** An *internal quality signal*: P@5 of BM25 and dense computed from the model's grades alone. It is reported as "LLM-judged estimate, no human validation, used for product decisions only". It is not an outcome of this probe: no `RESOLVED-*` or `UNRESOLVED` label is attached, the thresholds are not applied as a verdict, and it must not be cited as scientific validation.
+
+**If the paper is resumed.** A new set of blinded sheets is generated from scratch (new blind order, new common sample), judged anew, and A2 applies to that set. Sheets v1 are not reused.
+
+**Unchanged.** The code, the A2 procedure, thresholds and the verdict rule remain available for that future run.
