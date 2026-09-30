@@ -110,3 +110,35 @@ class OperationalMatchingStartupTest:
         npy.write_bytes(npy.read_bytes()[:-1] + b"\x01")
         with pytest.raises(ValueError, match="sha256"):
             OperationalMatchingService.from_directory(operational_dir)
+
+
+class DemoSelectionTest:
+    def _selection(self, tmp_path, included):
+        path = tmp_path / "demo_selection_v1.json"
+        path.write_text(json.dumps({"rule": "r", "included": {i: "reason" for i in included}}), encoding="utf-8")
+        return path
+
+    def test_should_list_only_selected_demands_when_a_selection_is_given(self, operational_dir, tmp_path):
+        service = OperationalMatchingService.from_directory(operational_dir, selection_path=self._selection(tmp_path, ["D-2"]))
+        assert [d["demand_id"] for d in service.examples()["demands"]] == ["D-2"]
+
+    def test_should_keep_corpus_order_when_selection_lists_ids_in_another_order(self, operational_dir, tmp_path):
+        service = OperationalMatchingService.from_directory(
+            operational_dir, selection_path=self._selection(tmp_path, ["D-2", "D-1"])
+        )
+        assert [d["demand_id"] for d in service.examples()["demands"]] == ["D-1", "D-2"]
+
+    def test_should_still_answer_matches_for_a_demand_outside_the_selection(self, operational_dir, tmp_path):
+        service = OperationalMatchingService.from_directory(operational_dir, selection_path=self._selection(tmp_path, ["D-2"]))
+        assert len(service.matches("D-1")["assets"]) == 3
+
+    def test_should_list_every_demand_when_no_selection_is_given(self, operational_dir):
+        assert len(OperationalMatchingService.from_directory(operational_dir).examples()["demands"]) == 2
+
+    def test_should_abort_when_selection_names_a_demand_that_does_not_exist(self, operational_dir, tmp_path):
+        with pytest.raises(ValueError, match="D-9"):
+            OperationalMatchingService.from_directory(operational_dir, selection_path=self._selection(tmp_path, ["D-9"]))
+
+    def test_should_abort_when_selection_is_empty(self, operational_dir, tmp_path):
+        with pytest.raises(ValueError, match="empty"):
+            OperationalMatchingService.from_directory(operational_dir, selection_path=self._selection(tmp_path, []))

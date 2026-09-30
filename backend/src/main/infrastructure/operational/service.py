@@ -48,7 +48,9 @@ class OperationalMatchingService:
         corpus_id: str,
         corpus_sha256: str,
         embedding_index_sha256: str,
+        featured_demand_ids: frozenset[str] | None = None,
     ) -> None:
+        self._featured = featured_demand_ids
         self._assets = assets
         self._by_id = {a.patent.publication_id: a for a in assets}
         self._demands = demands
@@ -63,7 +65,7 @@ class OperationalMatchingService:
         }
 
     @classmethod
-    def from_directory(cls, directory: Path) -> "OperationalMatchingService":
+    def from_directory(cls, directory: Path, selection_path: Path | None = None) -> "OperationalMatchingService":
         parquet = directory / "publications.parquet"
         manifest = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))
         corpus_sha = hashlib.sha256(parquet.read_bytes()).hexdigest()
@@ -90,6 +92,8 @@ class OperationalMatchingService:
                 demand_index.ids.index(demand.demand_id)
             ]
 
+        featured = cls._read_selection(selection_path, demands) if selection_path is not None else None
+
         policy = operational_eligibility_policy()
         retriever = NumpyDenseRetriever(
             [a.patent for a in assets], patent_index.matrix, PrecomputedEmbedder(vectors), policy
@@ -102,10 +106,23 @@ class OperationalMatchingService:
             corpus_id=manifest["dataset_id"],
             corpus_sha256=corpus_sha,
             embedding_index_sha256=patent_index.manifest.matrix_sha256,
+            featured_demand_ids=featured,
         )
 
+    @staticmethod
+    def _read_selection(path: Path, demands: DemandRepository) -> frozenset[str]:
+        """Demo view: which demands the screen lists. The full demand set stays intact and answerable."""
+        included = set(json.loads(path.read_text(encoding="utf-8"))["included"])
+        if not included:
+            raise ValueError("Demo selection is empty")
+        unknown = sorted(included - {d.demand_id for d in demands.list_all()})
+        if unknown:
+            raise ValueError(f"Demo selection names unknown demands: {unknown}")
+        return frozenset(included)
+
     def examples(self) -> dict[str, Any]:
-        return {"demands": [_demand_payload(d) for d in self._demands.list_all()], "notices": list(NOTICES)}
+        listed = [d for d in self._demands.list_all() if self._featured is None or d.demand_id in self._featured]
+        return {"demands": [_demand_payload(d) for d in listed], "notices": list(NOTICES)}
 
     def matches(self, demand_id: str, limit: int = 5) -> dict[str, Any]:
         demand, found = find_assets_for_demand(demand_id, limit, demands=self._demands, retriever=self._retriever)

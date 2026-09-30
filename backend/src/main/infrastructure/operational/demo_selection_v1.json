@@ -1,0 +1,51 @@
+{
+  "version": "v1",
+  "date": "2026-09-30",
+  "status": "Rule applied to the full demand text by Claude; pending review by the owners. Chosen before looking at any retrieval result and without using the LLM judgments.",
+  "rule": "A demand is shown in the demo if it describes a concrete technological need (a material, process, device, method, sensor or formulation) that could plausibly correspond to a patent or utility model. It is left out if it asks for marketing, market or consumer research, website or software design, business modelling, LCA or regulatory assessment, programme or policy design, or if it asks for patents of a jurisdiction the corpus does not cover.",
+  "included": {
+    "INNOGET-1605": "Materials/manufacturing concepts for lighter vehicles.",
+    "INNOGET-1607": "Lightweighting materials and manufacturing technologies for automotive.",
+    "INNOGET-1625": "Method to remove sodium and trapped water from bio-based fuel oil.",
+    "INNOGET-1689": "Improve the material or design of rebars and beams (long steel).",
+    "INNOGET-1726": "Faster molecular method to identify fermenting yeasts.",
+    "INNOGET-1870": "Arc welding processes and mechanised/automated welding solutions.",
+    "INNOGET-1932": "Display technologies that withstand temperatures up to 95 C.",
+    "INNOGET-1935": "Water quality sensors, semiconductor and miniaturised technologies.",
+    "INNOGET-1972": "Antioxidant extract from microalgae for cosmetics, stable 12 months.",
+    "INNOGET-2006": "Botanic extract with functional effect on urinary function.",
+    "INNOGET-2167": "Fibre-reinforced polymers, ceramic composites and light alloys to cut CO2.",
+    "INNOGET-2173": "Functionalising mining by-products for use in construction.",
+    "INNOGET-2258": "Advanced electrolytic processes and hydrogen transport/storage.",
+    "INNOGET-2404": "Nano-filtration and recovery of critical raw materials.",
+    "INNOGET-2405": "Separation, removal and recovery of components and water through hybrid processes.",
+    "INNOGET-2417": "New materials for sustainable food packaging.",
+    "INNOGET-2491": "Solutions that restore oral microbiome balance against gingivitis.",
+    "INNOGET-2492": "Novel active ingredients and biotechnologies for androgenetic alopecia.",
+    "INNOGET-2493": "Antimicrobial alternatives to chlorhexidine with lower cytotoxicity and no staining.",
+    "LOMBARDIA-860": "Maintenance technologies for elastomeric bridge expansion joints (Italian text).",
+    "LOMBARDIA-947": "Monitoring and mitigation of PM10 dust in mines (Italian text)."
+  },
+  "borderline_excluded_by_default": {
+    "INNOGET-1965": "Barcode/packaging recognition by mobile app: mostly software and a database.",
+    "INNOGET-2054": "Electromagnetic applications: a collaboration call with no concrete problem stated.",
+    "INNOGET-2401": "Agri-food waste upcycling, but framed around industrial applicability and business case.",
+    "INNOGET-2403": "Brine mining process, framed as a scalability and feasibility assessment.",
+    "INNOGET-2425": "Next-generation proteins: a regional food-system call, technology only implicit."
+  },
+  "excluded": {
+    "INNOGET-2248": "Asks for DE/EP/US patents to license; the corpus covers Spanish assets only.",
+    "INNOGET-2292": "Consumer and market research on laundry detergent.",
+    "INNOGET-2293": "Understanding B2B customer needs for kitchen sinks (market research).",
+    "INNOGET-2297": "Marketing campaign design.",
+    "INNOGET-2298": "Finding business applications for a product (SmartEnvelope).",
+    "INNOGET-2299": "Website redesign.",
+    "INNOGET-2300": "Market growth strategy for warehouse robots.",
+    "INNOGET-2301": "AI assistants (RAG) for engineering workflows: software, not a patentable mechanism here.",
+    "INNOGET-2402": "Life-cycle and regulatory assessment.",
+    "INNOGET-2413": "Applying circular-economy principles to housing: policy and approach, no artefact.",
+    "INNOGET-2414": "Neighbourhood resilience programme (15-minute city): urban and HR programme design.",
+    "INNOGET-2426": "Data-driven business opportunities from a charging dataset.",
+    "INNOGET-2427": "Market analysis for scaling charging solutions."
+  }
+}

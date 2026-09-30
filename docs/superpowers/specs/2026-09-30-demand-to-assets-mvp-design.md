@@ -27,6 +27,10 @@ The MVP serves exactly the 39 demands of `dataset_phase2_demand_corpus_n39.json`
 
 The backend must not read from `experiments/` (ADR 0026). A product snapshot `data/snapshots/operational_corpus_v1/demands_v1.json` is produced once from the n39 corpus by a script, carrying: `demand_id, title, description, posted_date, origin_country, source_url` (from `provenance.source_uri`) and the sha256 of the source file. All 39 demands are served, including the 8 that the probe reserves as Lab Test demands: the probe protects its evaluation inside `experiments/`; the product shows retrieval only and makes no quality claim.
 
+### 3.1 Demo view (added 2026-09-30)
+
+The 39 demands stay intact. A separate, versioned selection file, `backend/src/main/infrastructure/operational/demo_selection_v1.json`, says which ones the screen lists. The rule, written in the file: a demand is shown if it describes a concrete technological need (a material, process, device, method, sensor or formulation) that could plausibly correspond to a patent or utility model; it is left out if it asks for marketing, market or consumer research, website or software design, business modelling, LCA or regulatory assessment, programme or policy design, or for patents of a jurisdiction the corpus does not cover. Every demand carries a one-line reason and sits in exactly one of `included`, `borderline_excluded_by_default` or `excluded`. The selection was made from the demand text, before any retrieval result was looked at and without using the LLM judgments; the owners review it. `GET /api/demand-examples` lists only `included`; `GET /api/matches` still answers for any of the 39. Startup aborts if the selection names an unknown demand or is empty. `NEXUS_DEMO_SELECTION` overrides the file path.
+
 ## 4. Contracts
 
 ### 4.1 `GET /api/demand-examples`
