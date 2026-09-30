@@ -24,8 +24,6 @@ DEMAND_INDEX = "embeddings_demands_v1"
 
 @dataclass(frozen=True)
 class OperationalArtifacts:
-    """The verified, frozen artifacts behind the MVP, wired to the ports the use cases need."""
-
     catalog: AssetCatalog
     demands: DemandRepository
     retriever: PatentCandidateRetriever
@@ -34,7 +32,6 @@ class OperationalArtifacts:
 
 
 def load_operational_artifacts(directory: Path) -> OperationalArtifacts:
-    """Loads the artifacts, aborting with ValueError on any hash or consistency mismatch."""
     parquet = directory / "publications.parquet"
     manifest = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))
     corpus_sha = hashlib.sha256(parquet.read_bytes()).hexdigest()

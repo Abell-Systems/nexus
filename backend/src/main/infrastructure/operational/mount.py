@@ -17,7 +17,6 @@ _DEFAULT_SELECTION = Path(__file__).resolve().parent / "demo_selection_v1.json"
 
 
 def mount_operational_mvp(app: FastAPI) -> bool:
-    """Mounts the MVP routes only when NEXUS_MVP_ENABLED=1; then any bad artifact aborts startup."""
     if os.getenv(ENABLE_ENV) != "1":
         return False
     artifacts = load_operational_artifacts(Path(os.getenv(DIR_ENV, str(_DEFAULT_DIR))))

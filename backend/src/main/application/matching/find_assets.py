@@ -8,7 +8,7 @@ from domain.protocols.matching import PatentCandidateRetriever, PatentEligibilit
 
 
 class UnknownDemandError(KeyError):
-    """The demand is not one of the demands this product offers."""
+    pass
 
 
 @dataclass(frozen=True)

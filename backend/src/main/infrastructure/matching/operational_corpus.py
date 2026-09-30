@@ -58,7 +58,6 @@ class InMemoryAssetCatalog:
 
 
 def load_operational_assets(parquet_path: Path) -> list[Asset]:
-    """Loads the operational corpus snapshot, preserving parquet row order."""
     available = set(pq.read_schema(parquet_path).names)
     columns = _REQUIRED + [c for c in _OPTIONAL if c in available]
     rows = pq.read_table(parquet_path, columns=columns).to_pylist()

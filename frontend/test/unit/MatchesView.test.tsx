@@ -37,13 +37,13 @@ function api(result: MatchesResponse | Error) {
 }
 
 describe("MatchesView", () => {
-  it("shows example demands and the four fixed notices before any selection", async () => {
+  it("shouldShowExampleDemandsAndTheFourFixedNoticesWhenNoDemandIsSelected", async () => {
     render(<MatchesView api={api(matches([ASSET]))} />);
     expect(await screen.findByText("Lighter vehicles")).toBeDefined();
     NOTICES.forEach((n) => expect(screen.getByText(n)).toBeDefined());
   });
 
-  it("shows rank, title, type label, holder and source link after choosing a demand", async () => {
+  it("shouldShowRankTitleTypeHolderAndSourceLinkWhenADemandIsChosen", async () => {
     render(<MatchesView api={api(matches([ASSET]))} />);
     fireEvent.click(await screen.findByText("Lighter vehicles"));
     expect(await screen.findByText("Dispositivo ligero")).toBeDefined();
@@ -54,7 +54,7 @@ describe("MatchesView", () => {
     expect(link?.getAttribute("href")).toBe("https://patents.google.com/patent/ES1000002U");
   });
 
-  it("shows the asset's own CPC under 'Datos del activo' and no match-signals block", async () => {
+  it("shouldShowTheAssetsOwnCpcAndNoMatchSignalsBlockWhenResultsAreShown", async () => {
     render(<MatchesView api={api(matches([ASSET]))} />);
     fireEvent.click(await screen.findByText("Lighter vehicles"));
     await screen.findByText("Dispositivo ligero");
@@ -63,40 +63,40 @@ describe("MatchesView", () => {
     expect(screen.queryByText(/Señales de coincidencia/)).toBeNull();
   });
 
-  it("shows an empty state when no eligible asset exists", async () => {
+  it("shouldShowAnEmptyStateWhenNoEligibleAssetExists", async () => {
     render(<MatchesView api={api(matches([]))} />);
     fireEvent.click(await screen.findByText("Lighter vehicles"));
     expect(await screen.findByText(/No hay activos elegibles/)).toBeDefined();
   });
 
-  it("shows an error message when the request fails", async () => {
+  it("shouldShowAnErrorMessageWhenTheRequestFails", async () => {
     render(<MatchesView api={api(new Error("boom"))} />);
     fireEvent.click(await screen.findByText("Lighter vehicles"));
     expect(await screen.findByText(/No se pudieron cargar los resultados/)).toBeDefined();
   });
 
-  it("never renders a similarity score or percentage", async () => {
+  it("shouldNotRenderAnyScoreOrPercentageWhenResultsAreShown", async () => {
     const { container } = render(<MatchesView api={api(matches([ASSET]))} />);
     fireEvent.click(await screen.findByText("Lighter vehicles"));
     await screen.findByText("Dispositivo ligero");
     expect(container.textContent).not.toMatch(/\d\.\d{2,}|%|score|similitud:/i);
   });
 
-  it("shows the chosen demand's description and a link to its source before the results", async () => {
+  it("shouldShowTheChosenDemandDescriptionAndSourceLinkWhenResultsAreShown", async () => {
     render(<MatchesView api={api(matches([ASSET]))} />);
     fireEvent.click(await screen.findByText("Lighter vehicles"));
     expect(await screen.findByText("Seeking new materials")).toBeDefined();
     expect(screen.getByText("Ver demanda original").closest("a")?.getAttribute("href")).toBe("https://example.org/d1");
   });
 
-  it("omits the source link when the demand has no source url", async () => {
+  it("shouldOmitTheSourceLinkWhenTheDemandHasNoSourceUrl", async () => {
     render(<MatchesView api={api(matches([ASSET]))} />);
     fireEvent.click(await screen.findByText("Water sensors"));
     await screen.findByText("Cheap sensing");
     expect(screen.queryByText("Ver demanda original")).toBeNull();
   });
 
-  it("states how many of the eligible assets are shown", async () => {
+  it("shouldStateHowManyEligibleAssetsAreShownWhenResultsAreShown", async () => {
     const response = matches([ASSET]);
     response.meta.eligible_count = 44195;
     render(<MatchesView api={api(response)} />);
@@ -104,7 +104,7 @@ describe("MatchesView", () => {
     expect(await screen.findByText(/1 de 44\.195 activos elegibles/)).toBeDefined();
   });
 
-  it("opens the abstract of the first result only", async () => {
+  it("shouldOpenOnlyTheFirstAbstractWhenSeveralResultsAreShown", async () => {
     const second = { ...ASSET, rank: 2, publication_id: "ES-1000003-U", title: "Otro dispositivo" };
     render(<MatchesView api={api(matches([ASSET, second]))} />);
     fireEvent.click(await screen.findByText("Lighter vehicles"));
@@ -113,13 +113,13 @@ describe("MatchesView", () => {
     expect(open).toEqual([true, false]);
   });
 
-  it("labels an English abstract as such", async () => {
+  it("shouldLabelTheAbstractAsEnglishWhenItsLanguageIsEnglish", async () => {
     render(<MatchesView api={api(matches([{ ...ASSET, abstract_language: "en" }]))} />);
     fireEvent.click(await screen.findByText("Lighter vehicles"));
     expect(await screen.findByText(/Resumen en inglés/)).toBeDefined();
   });
 
-  it("announces the loading state to assistive technology", async () => {
+  it("shouldAnnounceTheLoadingStateWhenResultsAreBeingFetched", async () => {
     const pending = { getDemandExamples: () => Promise.resolve(EXAMPLES), getMatches: () => new Promise<MatchesResponse>(() => {}) };
     render(<MatchesView api={pending} />);
     fireEvent.click(await screen.findByText("Lighter vehicles"));

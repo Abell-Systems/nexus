@@ -47,7 +47,6 @@ def _journey(doc: dict[str, Any], name: str, included: frozenset[str]) -> tuple[
 
 
 def parse_selection(raw: object) -> DemoSelection:
-    """Validates the shape of demo_selection_v1.json, which controls what a user sees."""
     if not isinstance(raw, dict):
         raise ValueError("Demo selection must be a JSON object")
     if not isinstance(raw.get("rule"), str) or not raw["rule"].strip():
@@ -74,7 +73,6 @@ def parse_selection(raw: object) -> DemoSelection:
 
 
 def validate_against_demands(selection: DemoSelection, demand_ids: set[str] | frozenset[str]) -> None:
-    """Every demand the service holds is in exactly one group, and no group names a demand it does not hold."""
     unknown = sorted(selection.all_ids - demand_ids)
     if unknown:
         raise ValueError(f"Demo selection names unknown demands: {unknown}")
@@ -84,7 +82,6 @@ def validate_against_demands(selection: DemoSelection, demand_ids: set[str] | fr
 
 
 def read_demo_selection(path: Path, demands: DemandRepository) -> frozenset[str]:
-    """The demands the screen lists; the full demand set stays intact and answerable."""
     selection = parse_selection(json.loads(path.read_text(encoding="utf-8")))
     validate_against_demands(selection, {d.demand_id for d in demands.list_all()})
     return selection.included
