@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { AssetResult, DemandExamplesResponse, MatchesResponse } from "../../domain/operational";
 import * as defaultApi from "../../infrastructure/operationalClient";
+import styles from "./MatchesView.module.css";
 
 type Api = Pick<typeof defaultApi, "getDemandExamples" | "getMatches">;
 
@@ -11,7 +12,7 @@ const IP_TYPE_LABEL: Record<string, string> = {
 
 function Notices({ notices }: { readonly notices: readonly string[] }) {
   return (
-    <aside aria-label="Avisos" className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-100 space-y-1">
+    <aside aria-label="Avisos" className={styles.notices}>
       {notices.map((notice) => (
         <p key={notice}>{notice}</p>
       ))}
@@ -21,31 +22,31 @@ function Notices({ notices }: { readonly notices: readonly string[] }) {
 
 function AssetCard({ asset }: { readonly asset: AssetResult }) {
   return (
-    <article className="rounded-lg border border-slate-700 bg-slate-800 p-4 space-y-2">
-      <header className="flex items-baseline gap-3">
-        <span className="text-lg font-semibold text-violet-300">#{asset.rank}</span>
-        <h3 className="font-semibold">{asset.title}</h3>
+    <article className={styles.card}>
+      <header className={styles.cardHeader}>
+        <span className={styles.rank}>#{asset.rank}</span>
+        <h3 className={styles.assetTitle}>{asset.title}</h3>
       </header>
-      <p className="text-sm text-slate-300">
+      <p className={styles.meta}>
         <span>{IP_TYPE_LABEL[asset.ip_type] ?? asset.ip_type}</span>
         {" · "}
         <span>{asset.publication_id}</span>
         {asset.publication_date ? ` · ${asset.publication_date}` : ""}
       </p>
-      <p className="text-sm">Titular: {asset.assignees.length > 0 ? asset.assignees.join(", ") : "No disponible"}</p>
-      <details className="text-sm">
-        <summary className="cursor-pointer text-violet-300">Datos del activo</summary>
-        <p className="mt-2 text-slate-200">{asset.abstract}</p>
-        {asset.inventors.length > 0 && <p className="mt-2">Inventores: {asset.inventors.join(", ")}</p>}
-        {asset.cpc_codes.length > 0 && <p className="mt-2">CPC del activo: {asset.cpc_codes.join(", ")}</p>}
+      <p className={styles.holder}>Titular: {asset.assignees.length > 0 ? asset.assignees.join(", ") : "No disponible"}</p>
+      <details className={styles.details}>
+        <summary>Datos del activo</summary>
+        <p>{asset.abstract}</p>
+        {asset.inventors.length > 0 && <p>Inventores: {asset.inventors.join(", ")}</p>}
+        {asset.cpc_codes.length > 0 && <p>CPC del activo: {asset.cpc_codes.join(", ")}</p>}
       </details>
-      <p className="text-sm">
+      <p className={styles.source}>
         Fuente:{" "}
-        <a className="text-violet-300 underline" href={asset.source_links.google_patents} target="_blank" rel="noreferrer">
+        <a href={asset.source_links.google_patents} target="_blank" rel="noreferrer">
           Google Patents
         </a>
         {" · "}
-        <a className="text-violet-300 underline" href={asset.source_links.espacenet} target="_blank" rel="noreferrer">
+        <a href={asset.source_links.espacenet} target="_blank" rel="noreferrer">
           Espacenet
         </a>
       </p>
@@ -85,35 +86,33 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
   };
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">De una demanda real a activos españoles</h1>
-      <p className="text-slate-300 text-sm">
+    <div className={styles.view}>
+      <h1 className={styles.title}>De una demanda real a activos españoles</h1>
+      <p className={styles.intro}>
         Demandas de ejemplo ingeridas desde Innoget. Elige una para ver qué activos de propiedad industrial españoles
         pueden ser relevantes.
       </p>
       {examples && <Notices notices={examples.notices} />}
 
-      <section aria-label="Demandas" className="grid gap-2 sm:grid-cols-2">
+      <section aria-label="Demandas" className={styles.demands}>
         {examples?.demands.map((demand) => (
           <button
             key={demand.demand_id}
             type="button"
             onClick={() => choose(demand.demand_id)}
             aria-pressed={selected === demand.demand_id}
-            className={`text-left rounded-lg border p-3 ${
-              selected === demand.demand_id ? "border-violet-400 bg-slate-800" : "border-slate-700 hover:border-slate-500"
-            }`}
+            className={`${styles.demand} ${selected === demand.demand_id ? styles.demandSelected : ""}`}
           >
-            <span className="font-medium">{demand.title}</span>
+            {demand.title}
           </button>
         ))}
       </section>
 
-      {loading && <p>Buscando activos…</p>}
-      {error && <p role="alert" className="text-rose-300">{error}</p>}
-      {result && result.assets.length === 0 && <p>No hay activos elegibles para esta demanda.</p>}
+      {loading && <p className={styles.status}>Buscando activos…</p>}
+      {error && <p role="alert" className={styles.error}>{error}</p>}
+      {result && result.assets.length === 0 && <p className={styles.status}>No hay activos elegibles para esta demanda.</p>}
       {result && result.assets.length > 0 && (
-        <section aria-label="Resultados" className="space-y-3">
+        <section aria-label="Resultados" className={styles.results}>
           {result.assets.map((asset) => (
             <AssetCard key={asset.publication_id} asset={asset} />
           ))}

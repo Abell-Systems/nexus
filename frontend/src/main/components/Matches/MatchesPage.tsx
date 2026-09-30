@@ -1,13 +1,16 @@
 import { BrandHeader } from "../shared/BrandHeader";
 import { MatchesView } from "./MatchesView";
+import styles from "./MatchesView.module.css";
 
 export function MatchesPage() {
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
-      <BrandHeader />
-      <main className="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 lg:p-8">
-        <MatchesView />
-      </main>
+    <div className={styles.page}>
+      <div className={styles.content}>
+        <BrandHeader />
+        <main>
+          <MatchesView />
+        </main>
+      </div>
     </div>
   );
 }
