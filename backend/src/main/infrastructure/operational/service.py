@@ -52,6 +52,7 @@ class OperationalMatchingService:
         featured_demand_ids: frozenset[str] | None = None,
     ) -> None:
         self._featured = featured_demand_ids
+        self._matches_cache: dict[tuple[str, int], dict[str, Any]] = {}
         self._assets = assets
         self._by_id = {a.patent.publication_id: a for a in assets}
         self._demands = demands
@@ -136,6 +137,13 @@ class OperationalMatchingService:
         return {"demands": [_demand_payload(d) for d in listed], "notices": list(NOTICES)}
 
     def matches(self, demand_id: str, limit: int = 5) -> dict[str, Any]:
+        # Artifacts are frozen and verified at startup, so an answer never changes; keys are bounded by demands x limits.
+        key = (demand_id, limit)
+        if key not in self._matches_cache:
+            self._matches_cache[key] = self._compute_matches(demand_id, limit)
+        return self._matches_cache[key]
+
+    def _compute_matches(self, demand_id: str, limit: int) -> dict[str, Any]:
         demand, found = find_assets_for_demand(demand_id, limit, demands=self._demands, retriever=self._retriever)
         eligible = sum(1 for a in self._assets if self._policy.evaluate(a.patent, demand).is_eligible)
         payload = _demand_payload(demand)

@@ -73,6 +73,14 @@ class OperationalMatchingServiceTest:
         demands = OperationalMatchingService.from_directory(operational_dir).examples()["demands"]
         assert [d["demand_id"] for d in demands] == ["D-1", "D-2"] and demands[0]["source_url"] == "https://example.org/d1"
 
+    def test_should_answer_a_repeated_request_from_memory_when_artifacts_are_frozen(self, operational_dir):
+        service = OperationalMatchingService.from_directory(operational_dir)
+        calls = []
+        real = service._retriever.retrieve
+        service._retriever.retrieve = lambda demand, limit: calls.append(demand.demand_id) or real(demand, limit=limit)
+        first = service.matches("D-1", 3)
+        assert service.matches("D-1", 3) == first and calls == ["D-1"]
+
     def test_should_raise_unknown_demand_when_id_is_not_offered(self, operational_dir):
         with pytest.raises(UnknownDemandError):
             OperationalMatchingService.from_directory(operational_dir).matches("D-9")

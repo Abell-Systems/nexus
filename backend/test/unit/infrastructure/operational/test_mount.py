@@ -30,6 +30,18 @@ class MountOperationalMvpTest:
         assert mount_operational_mvp(app) is True
         assert TestClient(app).get("/api/matches", params={"demand_id": "D-1"}).status_code == 200
 
+    def test_should_send_hardening_headers_when_serving_the_mvp_routes(self, monkeypatch, operational_dir):
+        monkeypatch.setenv("NEXUS_MVP_ENABLED", "1")
+        monkeypatch.setenv("NEXUS_OPERATIONAL_DIR", str(operational_dir))
+        selection = operational_dir / "selection.json"
+        selection.write_text('{"rule": "r", "included": {"D-1": "x", "D-2": "x"}}', encoding="utf-8")
+        monkeypatch.setenv("NEXUS_DEMO_SELECTION", str(selection))
+        app = FastAPI()
+        mount_operational_mvp(app)
+        headers = TestClient(app).get("/api/demand-examples").headers
+        assert headers["x-content-type-options"] == "nosniff" and headers["x-frame-options"] == "DENY"
+        assert headers["referrer-policy"] == "no-referrer"
+
     def test_should_abort_startup_when_flag_is_set_and_directory_is_missing(self, monkeypatch, tmp_path):
         monkeypatch.setenv("NEXUS_MVP_ENABLED", "1")
         monkeypatch.setenv("NEXUS_OPERATIONAL_DIR", str(tmp_path / "missing"))
