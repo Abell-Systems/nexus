@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "commit_sha": "1cecb8b286aac91a55357dae2274e05f0560743b",
-  "evaluated_at": "2026-09-09T08:38:20.799950+00:00",
+  "commit_sha": "a427ca5419d7eb588028a75c6c25851bb32ff1ef",
+  "evaluated_at": "2026-09-30T14:05:27.461362+00:00",
   "overall_status": "PASS",
   "aggregation_rule": "All required dimensions verified and passed.",
   "summary": "Nexus Project Status evaluates to PASS. All required dimensions verified and passed.",
@@ -9,22 +9,40 @@
     "backend_testing": {
       "status": "PASS",
       "requirement_level": "required",
-      "evidence_source": "pytest-results.xml",
+      "evidence_source": "test-results/e2e.xml, test-results/integration.xml, test-results/providers.xml, test-results/unit.xml",
       "evidence_available": true,
-      "message": "Backend test suites completed successfully: 497 passed, 0 skipped in 497 tests",
+      "message": "Backend test suites completed successfully: 995 passed, 0 skipped in 995 tests",
       "metrics": {
-        "total": 497,
-        "passed": 497,
+        "total": 995,
+        "passed": 995,
         "failed": 0,
         "errors": 0,
         "skipped": 0
       },
       "checks": [
         {
-          "name": "report_pytest-results",
+          "name": "report_e2e",
           "status": "PASS",
-          "value": 497,
-          "detail": "pytest-results.xml: 497/497 passed (0 failed, 0 errors, 0 skipped)"
+          "value": 11,
+          "detail": "test-results/e2e.xml: 11/11 passed (0 failed, 0 errors, 0 skipped)"
+        },
+        {
+          "name": "report_integration",
+          "status": "PASS",
+          "value": 56,
+          "detail": "test-results/integration.xml: 56/56 passed (0 failed, 0 errors, 0 skipped)"
+        },
+        {
+          "name": "report_providers",
+          "status": "PASS",
+          "value": 46,
+          "detail": "test-results/providers.xml: 46/46 passed (0 failed, 0 errors, 0 skipped)"
+        },
+        {
+          "name": "report_unit",
+          "status": "PASS",
+          "value": 882,
+          "detail": "test-results/unit.xml: 882/882 passed (0 failed, 0 errors, 0 skipped)"
         }
       ]
     },
@@ -33,18 +51,18 @@
       "requirement_level": "required",
       "evidence_source": "coverage.xml",
       "evidence_available": true,
-      "message": "Line coverage is 80.24% (threshold: 80.0%)",
+      "message": "Line coverage is 95.53% (threshold: 80.0%)",
       "metrics": {
-        "line_coverage": 80.24,
+        "line_coverage": 95.53,
         "threshold": 80.0
       },
       "checks": [
         {
           "name": "line_coverage_threshold",
           "status": "PASS",
-          "value": 80.24,
+          "value": 95.53,
           "threshold": 80.0,
-          "detail": "Line coverage is 80.24% (threshold: 80.0%)"
+          "detail": "Line coverage is 95.53% (threshold: 80.0%)"
         }
       ]
     },
@@ -75,20 +93,20 @@
       "requirement_level": "required",
       "evidence_source": "frontend/coverage/junit.xml",
       "evidence_available": true,
-      "message": "Frontend Vitest test suite completed successfully: 40 passed in 40 tests",
+      "message": "Frontend Vitest test suite completed successfully: 55 passed in 56 tests",
       "metrics": {
-        "total": 40,
-        "passed": 40,
+        "total": 56,
+        "passed": 55,
         "failed": 0,
         "errors": 0,
-        "skipped": 0
+        "skipped": 1
       },
       "checks": [
         {
           "name": "vitest_execution",
           "status": "PASS",
-          "value": 40,
-          "detail": "40/40 tests passed (0 failures)"
+          "value": 55,
+          "detail": "55/56 tests passed (0 failures)"
         }
       ]
     },
@@ -97,19 +115,19 @@
       "requirement_level": "required",
       "evidence_source": "frontend/coverage/lcov.info",
       "evidence_available": true,
-      "message": "Frontend line coverage is 90.88% (target: 80.0%)",
+      "message": "Frontend line coverage is 91.19% (target: 80.0%)",
       "metrics": {
-        "lines_found": 285,
-        "lines_hit": 259,
-        "line_coverage": 90.88
+        "lines_found": 329,
+        "lines_hit": 300,
+        "line_coverage": 91.19
       },
       "checks": [
         {
           "name": "frontend_line_coverage",
           "status": "PASS",
-          "value": 90.88,
+          "value": 91.19,
           "threshold": 80.0,
-          "detail": "259/285 lines covered"
+          "detail": "300/329 lines covered"
         }
       ]
     },
@@ -163,7 +181,7 @@
           "name": "docs_correctness",
           "status": "PASS",
           "value": 0,
-          "detail": "Docs correctness gate: PASS (66 markdown files, 24 ADRs checked)"
+          "detail": "Docs correctness gate: PASS (104 markdown files, 31 ADRs checked)"
         }
       ]
     },
