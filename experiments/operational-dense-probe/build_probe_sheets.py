@@ -22,9 +22,11 @@ from infrastructure.embeddings.embedding_texts import demand_embedding_text  # n
 from infrastructure.embeddings.frozen_embedding_index import load_index  # noqa: E402
 from infrastructure.embeddings.precomputed_embedder import PrecomputedEmbedder  # noqa: E402
 from infrastructure.matching.duckdb_bm25 import DuckDbBM25Retriever  # noqa: E402
-from infrastructure.matching.eligibility import DefaultPatentEligibilityPolicy  # noqa: E402
 from infrastructure.matching.numpy_dense import NumpyDenseRetriever  # noqa: E402
-from infrastructure.matching.operational_corpus import load_operational_patents  # noqa: E402
+from infrastructure.matching.operational_corpus import (  # noqa: E402
+    load_operational_patents,
+    operational_eligibility_policy,
+)
 
 CORPUS_DIR = dp.REPO_ROOT / "data" / "snapshots" / "operational_corpus_v1"
 LAB_DATA = dp.REPO_ROOT / "experiments" / "wpi-demand-patent-matching" / "data"
@@ -77,7 +79,7 @@ def main() -> int:
         demand_embedding_text(d.title, d.description): demand_index.matrix[demand_index.ids.index(d.demand_id)]
         for d in demands
     }
-    policy = DefaultPatentEligibilityPolicy(target_jurisdiction="ES")
+    policy = operational_eligibility_policy()
     dense = NumpyDenseRetriever(patents, patent_index.matrix, PrecomputedEmbedder(demand_vectors), policy)
 
     con = duckdb.connect()
