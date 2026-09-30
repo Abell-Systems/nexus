@@ -145,7 +145,7 @@ def paired_macro(bm25: Mapping[str, float | None], dense: Mapping[str, float | N
 
 
 def classify_outcome(p5_dense: float, p5_bm25: float, weighted_kappa: float) -> Outcome:
-    if weighted_kappa < KAPPA_THRESHOLD - _EPS:
+    if not weighted_kappa >= KAPPA_THRESHOLD - _EPS:  # also catches NaN (raters never varied)
         return Outcome.UNRESOLVED
     passes = p5_dense >= P5_THRESHOLD - _EPS and (p5_dense - p5_bm25) >= DELTA_THRESHOLD - _EPS
     return Outcome.RESOLVED_YES if passes else Outcome.RESOLVED_NO

@@ -8,9 +8,14 @@ file. The embedding generation records the same hash, which lets the service che
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO_ROOT / "backend" / "src" / "main"))
+
+from infrastructure.embeddings.embedding_texts import demand_embedding_text, texts_sha256  # noqa: E402
+
 DEFAULT_SOURCE = (
     REPO_ROOT / "experiments" / "wpi-demand-patent-matching" / "data" / "dataset_phase2_demand_corpus_n39.json"
 )
@@ -22,6 +27,7 @@ def build_snapshot(demand_corpus_path: Path) -> dict:
     demands = json.loads(raw_bytes.decode("utf-8"))["demands"]
     return {
         "source_sha256": hashlib.sha256(raw_bytes).hexdigest(),
+        "texts_sha256": texts_sha256([demand_embedding_text(d["title"], d["description"]) for d in demands]),
         "demands": [
             {
                 "demand_id": d["demand_id"],

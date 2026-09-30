@@ -36,3 +36,6 @@ class BuildDemandsSnapshotTest:
         assert snapshot["demands"][0]["source_url"] == "https://x.org/2"
         assert snapshot["demands"][1]["source_url"] == ""
         assert len(snapshot["source_sha256"]) == 64
+        from infrastructure.embeddings.embedding_texts import texts_sha256
+
+        assert snapshot["texts_sha256"] == texts_sha256(["Two second\nline", "One first"])

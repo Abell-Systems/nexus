@@ -132,6 +132,9 @@ class OutcomeTest:
     def test_should_be_unresolved_when_kappa_below_threshold_even_if_thresholds_met(self):
         assert dp.classify_outcome(0.90, 0.10, 0.69) == dp.Outcome.UNRESOLVED
 
+    def test_should_be_unresolved_when_kappa_is_nan_because_raters_never_varied(self):
+        assert dp.classify_outcome(0.50, 0.20, float("nan")) == dp.Outcome.UNRESOLVED
+
     def test_should_be_unresolved_when_kappa_below_threshold_even_if_thresholds_failed(self):
         assert dp.classify_outcome(0.10, 0.50, 0.30) == dp.Outcome.UNRESOLVED
 

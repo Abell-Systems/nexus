@@ -1,6 +1,6 @@
 import pytest
 
-from infrastructure.embeddings.embedding_texts import demand_embedding_text, patent_embedding_text
+from infrastructure.embeddings.embedding_texts import demand_embedding_text, patent_embedding_text, texts_sha256
 from infrastructure.embeddings.precomputed_embedder import PrecomputedEmbedder, UnknownEmbeddingTextError
 
 
@@ -41,3 +41,17 @@ class PrecomputedEmbedderTest:
     def test_should_reject_construction_when_no_vectors_given(self):
         with pytest.raises(ValueError):
             PrecomputedEmbedder({})
+
+
+class TextsSha256Test:
+    def test_should_be_stable_when_same_texts_in_same_order(self):
+        assert texts_sha256(["a b", "c d"]) == texts_sha256(["a b", "c d"])
+
+    def test_should_change_when_one_character_of_one_text_changes(self):
+        assert texts_sha256(["a b", "c d"]) != texts_sha256(["a b", "c e"])
+
+    def test_should_change_when_order_changes(self):
+        assert texts_sha256(["a", "b"]) != texts_sha256(["b", "a"])
+
+    def test_should_not_confuse_split_boundaries_when_concatenation_is_equal(self):
+        assert texts_sha256(["ab", "c"]) != texts_sha256(["a", "bc"])

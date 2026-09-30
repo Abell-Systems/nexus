@@ -1,13 +1,15 @@
 import json
 
+import numpy as np
 import pyarrow.parquet as pq
 import pytest
 
 from application.matching.find_assets import UnknownDemandError
+from infrastructure.embeddings.frozen_embedding_index import save_index
 from infrastructure.operational.notices import NOTICES
 from infrastructure.operational.service import OperationalMatchingService
 
-from .conftest import DEMANDS, ROWS, build_operational_dir
+from .conftest import DEMANDS, ROWS, _fields, build_operational_dir
 
 _SCORE_KEYS = {"score", "scores", "retrieval_scores", "similarity", "band", "relevance_band", "distance"}
 
@@ -109,6 +111,39 @@ class OperationalMatchingStartupTest:
         npy = operational_dir / "embeddings_patents_v1.npy"
         npy.write_bytes(npy.read_bytes()[:-1] + b"\x01")
         with pytest.raises(ValueError, match="sha256"):
+            OperationalMatchingService.from_directory(operational_dir)
+
+
+class OperationalMatchingConsistencyTest:
+    def test_should_abort_when_a_demand_text_was_edited_after_the_snapshot_was_built(self, operational_dir):
+        path = operational_dir / "demands_v1.json"
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        raw["demands"][0]["title"] = raw["demands"][0]["title"] + " (edited)"
+        path.write_text(json.dumps(raw), encoding="utf-8")
+        with pytest.raises(ValueError, match="texts"):
+            OperationalMatchingService.from_directory(operational_dir)
+
+    def test_should_abort_when_snapshot_has_no_texts_hash(self, operational_dir):
+        path = operational_dir / "demands_v1.json"
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        del raw["texts_sha256"]
+        path.write_text(json.dumps(raw), encoding="utf-8")
+        with pytest.raises(ValueError, match="texts"):
+            OperationalMatchingService.from_directory(operational_dir)
+
+    def test_should_abort_when_patent_and_demand_indexes_come_from_different_models(self, operational_dir):
+        path = operational_dir / "embeddings_demands_v1.manifest.json"
+        manifest = json.loads(path.read_text(encoding="utf-8"))
+        manifest["model_revision"] = "other-revision"
+        path.write_text(json.dumps(manifest), encoding="utf-8")
+        with pytest.raises(ValueError, match="model"):
+            OperationalMatchingService.from_directory(operational_dir)
+
+    def test_should_abort_at_startup_when_index_dimensions_differ(self, operational_dir):
+        parquet_sha = json.loads((operational_dir / "manifest.json").read_text(encoding="utf-8"))["parquet_sha256"]
+        three_d = np.array([[0.0, 0.0, 1.0], [0.0, 1.0, 0.0]], dtype=np.float32)
+        save_index(operational_dir, "embeddings_demands_v1", ["D-1", "D-2"], three_d, **_fields(parquet_sha))
+        with pytest.raises(ValueError, match="dimension"):
             OperationalMatchingService.from_directory(operational_dir)
 
 

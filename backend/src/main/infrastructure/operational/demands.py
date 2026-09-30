@@ -11,6 +11,7 @@ class JsonDemandRepository(DemandRepository):
     def __init__(self, path: Path) -> None:
         raw = json.loads(path.read_text(encoding="utf-8"))
         self.source_sha256: str = raw["source_sha256"]
+        self.texts_sha256: str | None = raw.get("texts_sha256")
         self._demands = [
             DemandSignal(
                 demand_id=d["demand_id"],

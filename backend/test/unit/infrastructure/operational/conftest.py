@@ -6,6 +6,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
+from infrastructure.embeddings.embedding_texts import demand_embedding_text, texts_sha256
 from infrastructure.embeddings.frozen_embedding_index import save_index
 
 DEMANDS = [
@@ -50,7 +51,11 @@ def build_operational_dir(directory, *, rows=ROWS, demands=DEMANDS):
         json.dumps({"dataset_id": "NEXUS-OPERATIONAL-CORPUS-V1", "parquet_sha256": sha}), encoding="utf-8"
     )
     (directory / "demands_v1.json").write_text(
-        json.dumps({"source_sha256": DEMAND_SOURCE_SHA, "demands": demands}), encoding="utf-8"
+        json.dumps({
+            "source_sha256": DEMAND_SOURCE_SHA,
+            "texts_sha256": texts_sha256([demand_embedding_text(d["title"], d["description"]) for d in demands]),
+            "demands": demands,
+        }), encoding="utf-8"
     )
     save_index(directory, "embeddings_patents_v1", [r[0] for r in rows],
                np.array(PATENT_VECTORS, dtype=np.float32), **_fields(sha))

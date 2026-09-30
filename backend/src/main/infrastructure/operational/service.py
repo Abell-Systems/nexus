@@ -7,7 +7,7 @@ from application.matching.find_assets import find_assets_for_demand
 from domain.models.demand import DemandSignal
 from domain.protocols.demand_repository import DemandRepository
 from domain.protocols.matching import PatentCandidateRetriever, PatentEligibilityPolicy
-from infrastructure.embeddings.embedding_texts import demand_embedding_text
+from infrastructure.embeddings.embedding_texts import demand_embedding_text, texts_sha256
 from infrastructure.embeddings.frozen_embedding_index import load_index
 from infrastructure.embeddings.precomputed_embedder import PrecomputedEmbedder
 from infrastructure.matching.numpy_dense import NumpyDenseRetriever
@@ -83,6 +83,19 @@ class OperationalMatchingService:
         demands = JsonDemandRepository(directory / "demands_v1.json")
         if demand_index.manifest.source_sha256.get("demand_corpus_n39") != demands.source_sha256:
             raise ValueError("Demand snapshot does not match the demand corpus the embeddings were built from")
+
+        texts = [demand_embedding_text(d.title, d.description) for d in demands.list_all()]
+        if demands.texts_sha256 is None or texts_sha256(texts) != demands.texts_sha256:
+            raise ValueError("Demand texts do not match the texts hash recorded in the demand snapshot")
+
+        patent_manifest, demand_manifest = patent_index.manifest, demand_index.manifest
+        if (patent_manifest.model_name, patent_manifest.model_revision) != (
+            demand_manifest.model_name,
+            demand_manifest.model_revision,
+        ):
+            raise ValueError("Patent and demand embeddings come from different models")
+        if patent_manifest.embedding_dimension != demand_manifest.embedding_dimension:
+            raise ValueError("Patent and demand embeddings have different dimension")
 
         vectors: dict[str, Any] = {}
         for demand in demands.list_all():
