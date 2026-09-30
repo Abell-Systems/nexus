@@ -171,3 +171,29 @@ Operational MVP / probe  -> operational_eligibility_policy -> ES + title + abstr
 The temporal rule is not part of the operational eligibility policy. This is not a judgment that temporality lacks scientific value: it answers the Lab's question (prior art before a demand), not the operational one (which Spanish assets of the operational corpus are candidates for this demand). BM25 and dense compete on exactly the same eligible universe.
 
 **Unchanged:** thresholds, metric, evaluators, common sample, seed, UNCERTAIN handling, bootstrap role.
+
+## Amendment A2 (2026-09-30): model-first judging with human tie-break, made before any judgment exists
+
+**State when written.** The 310-pair judging sheet exists and every grade cell is empty. No human and no model has graded any pair. The provenance file has not been opened. The escalation rule below is fixed now, before the model sees the sheet.
+
+**Reason.** Two humans grading 310 and 62 pairs is disproportionate effort for a prototype decision. The owners chose to delegate clear-cut pairs to a model and keep humans for the pairs that are not clear-cut. This supersedes the evaluator paragraph and the adjudication procedure of section 7.5; `adjudication.csv` is no longer used.
+
+**Evaluators.**
+- **Model evaluator (M):** `claude-opus-5-5` in a fresh-context subagent. It receives only a copy of the blinded sheet (no method labels, no provenance, no result files) and the rubric of protocol section 6.2 verbatim. It grades every one of the 310 pairs with a grade 0-3 or `U`, a confidence `high` or `low`, and a one-sentence rationale. It must use only the demand and patent text on the sheet.
+- **Human evaluator (H):** one of the two owners, recorded by name in the result document. H is blind to the retrieval method and to M's grades and confidences.
+
+**Escalation rule (fixed).** A pair is escalated to H if M's confidence is `low` OR M's grade is `U`.
+
+**Who grades what.** H grades (a) all 62 pairs of the random common sample, whatever M said, and (b) every escalated pair outside the common sample. H may answer `U`; an unresolved `U` is excluded, never imputed as 0 (protocol 6.3).
+
+**Final label.** H's grade wherever H graded; otherwise M's grade. No `U` from M survives outside H's hands, since every M `U` is escalated.
+
+**Agreement.** `kappa_w` (quadratic) and binary `kappa` between M and H are computed only on the 62 common-sample pairs graded by both (pairs where either answered `U` are excluded and counted). The common sample is random, so this is an unbiased estimate of agreement; escalated pairs are chosen for difficulty and are deliberately not used for agreement. Threshold unchanged: `kappa_w >= 0.70` or the outcome is UNRESOLVED.
+
+**Reporting added (informative only, never a gate).** Number of pairs escalated and their share; M-vs-H disagreement counts on the common sample; P@5 of both methods under M-only labels next to P@5 under final labels.
+
+**Label for the result.** "Judged by an LLM, validated against a human on a 20% random sample, with human resolution of low-confidence pairs." Not "two-human annotation".
+
+**Validity threats added.** (1) M and the system builder are models of the same vendor family and M may prefer text resembling its own style; not testable here. (2) Final labels mix two evaluators; the agreement estimate applies to M overall, not specifically to escalated pairs. (3) M's blindness is procedural (only the sheet copy is given); it is not sandboxed from the repository. (4) H who is also the system's author (if Valentín) keeps the evaluator-builder threat declared in section 9.
+
+**Unchanged.** Thresholds (`P@5 >= 0.40`, delta `>= 0.15`, `kappa_w >= 0.70`), the metric, the population of 31 demands, the common sample and seed 42, UNCERTAIN handling, and the informative role of the bootstrap.
