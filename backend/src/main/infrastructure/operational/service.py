@@ -19,6 +19,7 @@ from infrastructure.matching.operational_corpus import (
 from infrastructure.operational.demands import JsonDemandRepository
 from infrastructure.operational.links import source_links
 from infrastructure.operational.notices import NOTICES
+from infrastructure.operational.selection import parse_selection
 
 PATENT_INDEX = "embeddings_patents_v1"
 DEMAND_INDEX = "embeddings_demands_v1"
@@ -97,12 +98,13 @@ class OperationalMatchingService:
         if patent_manifest.embedding_dimension != demand_manifest.embedding_dimension:
             raise ValueError("Patent and demand embeddings have different dimension")
 
+        row_of = {demand_id: row for row, demand_id in enumerate(demand_index.ids)}
         vectors: dict[str, Any] = {}
         for demand in demands.list_all():
-            if demand.demand_id not in demand_index.ids:
+            if demand.demand_id not in row_of:
                 raise ValueError(f"Demand {demand.demand_id} has no frozen embedding")
             vectors[demand_embedding_text(demand.title, demand.description)] = demand_index.matrix[
-                demand_index.ids.index(demand.demand_id)
+                row_of[demand.demand_id]
             ]
 
         featured = cls._read_selection(selection_path, demands) if selection_path is not None else None
@@ -125,9 +127,7 @@ class OperationalMatchingService:
     @staticmethod
     def _read_selection(path: Path, demands: DemandRepository) -> frozenset[str]:
         """Demo view: which demands the screen lists. The full demand set stays intact and answerable."""
-        included = set(json.loads(path.read_text(encoding="utf-8"))["included"])
-        if not included:
-            raise ValueError("Demo selection is empty")
+        included = parse_selection(json.loads(path.read_text(encoding="utf-8"))).included
         unknown = sorted(included - {d.demand_id for d in demands.list_all()})
         if unknown:
             raise ValueError(f"Demo selection names unknown demands: {unknown}")

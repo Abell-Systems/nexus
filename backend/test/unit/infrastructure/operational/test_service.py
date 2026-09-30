@@ -180,6 +180,12 @@ class DemoSelectionTest:
         with pytest.raises(ValueError, match="D-9"):
             OperationalMatchingService.from_directory(operational_dir, selection_path=self._selection(tmp_path, ["D-9"]))
 
+    def test_should_abort_when_selection_included_is_not_an_object(self, operational_dir, tmp_path):
+        path = tmp_path / "bad.json"
+        path.write_text(json.dumps({"rule": "r", "included": ["D-1"]}), encoding="utf-8")
+        with pytest.raises(ValueError, match="included"):
+            OperationalMatchingService.from_directory(operational_dir, selection_path=path)
+
     def test_should_abort_when_selection_is_empty(self, operational_dir, tmp_path):
         with pytest.raises(ValueError, match="empty"):
             OperationalMatchingService.from_directory(operational_dir, selection_path=self._selection(tmp_path, []))

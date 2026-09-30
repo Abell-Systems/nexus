@@ -24,7 +24,7 @@ class MountOperationalMvpTest:
         monkeypatch.setenv("NEXUS_MVP_ENABLED", "1")
         monkeypatch.setenv("NEXUS_OPERATIONAL_DIR", str(operational_dir))
         selection = operational_dir / "selection.json"
-        selection.write_text('{"included": {"D-1": "x", "D-2": "x"}}', encoding="utf-8")
+        selection.write_text('{"rule": "r", "included": {"D-1": "x", "D-2": "x"}}', encoding="utf-8")
         monkeypatch.setenv("NEXUS_DEMO_SELECTION", str(selection))
         app = FastAPI()
         assert mount_operational_mvp(app) is True

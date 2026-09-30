@@ -29,7 +29,7 @@ The backend must not read from `experiments/` (ADR 0026). A product snapshot `da
 
 ### 3.1 Demo view (added 2026-09-30)
 
-The 39 demands stay intact. A separate, versioned selection file, `backend/src/main/infrastructure/operational/demo_selection_v1.json`, says which ones the screen lists. The rule, written in the file: a demand is shown if it describes a concrete technological need (a material, process, device, method, sensor or formulation) that could plausibly correspond to a patent or utility model; it is left out if it asks for marketing, market or consumer research, website or software design, business modelling, LCA or regulatory assessment, programme or policy design, or for patents of a jurisdiction the corpus does not cover. Every demand carries a one-line reason and sits in exactly one of `included`, `borderline_excluded_by_default` or `excluded`. The selection was made from the demand text, before any retrieval result was looked at and without using the LLM judgments; the owners review it. `GET /api/demand-examples` lists only `included`; `GET /api/matches` still answers for any of the 39. Startup aborts if the selection names an unknown demand or is empty. `NEXUS_DEMO_SELECTION` overrides the file path.
+The 39 demands stay intact. A separate, versioned selection file, `backend/src/main/infrastructure/operational/demo_selection_v1.json`, says which ones the screen lists. The rule, written in the file: a demand is shown if it describes a concrete technological need (a material, process, device, method, sensor or formulation) that could plausibly correspond to a patent or utility model; it is left out if it asks for marketing, market or consumer research, website or software design, business modelling, LCA or regulatory assessment, programme or policy design, or for patents of a jurisdiction the corpus does not cover. Every demand carries a one-line reason and sits in exactly one of `included`, `borderline_excluded_by_default` or `excluded`. The selection was made from the demand text, before any retrieval result was looked at and without using the LLM judgments; the owners review it. `GET /api/demand-examples` lists only `included`; `GET /api/matches` still answers for any of the 39. The selection file is parsed against an explicit contract (`selection.py`): `rule` non-blank, `included` an object of demand id to non-blank reason, groups disjoint, journeys drawn from `included`. Startup aborts if the file breaks that contract, names an unknown demand, or is empty. `NEXUS_DEMO_SELECTION` overrides the file path.
 
 ## 4. Contracts
 
@@ -64,6 +64,7 @@ Success (200):
 }
 ```
 
+- `meta.corpus_parquet_sha256`, `meta.embedding_index_sha256` and `meta.corpus_id` are traceability diagnostics for the runbook and for audits. The UI does not render them and they are not part of the UI contract; they may change without a screen change.
 - `rank` is the only ordering signal exposed. **The raw score and any derived `alta/media/baja` band are not in the response.** A qualitative band is allowed only after the probe result exists and only with a rule fixed in a new spec before anyone looks at scores.
 - Unknown `demand_id` → 404 (same pattern as the existing demand route). `limit` outside 1..10 → 422.
 - If fewer than `limit` assets are eligible, return fewer; if none, `assets: []` with `eligible_count: 0`. Never pad.
