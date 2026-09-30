@@ -53,12 +53,13 @@ The MVP routes also send `X-Content-Type-Options`, `X-Frame-Options: DENY` and `
 Besides CI (which has no frozen artifacts), run these against the real artifacts on this machine:
 
 ```bash
-python -m pytest backend/test/integration/operational -q                      # HTTP -> use case -> real artifacts (skipped without them)
-NEXUS_E2E_BASE_URL=http://127.0.0.1:8080 npx vitest run test/e2e              # in frontend/, against a live backend: real UI code over real HTTP
-python scripts/demo_preflight.py
+python -m pytest backend/test/integration/operational -q     # HTTP -> use case -> real artifacts (skipped without them)
+cd frontend && npm run test:e2e                              # real Chromium -> frontend -> HTTP -> backend -> real artifacts
+python scripts/demo_preflight.py                             # against the server you are about to demo
+NEXUS_E2E_BASE_URL=http://127.0.0.1:8080 npx vitest run test/integration   # optional: the component over real HTTP in jsdom
 ```
 
-The E2E journey drives the real component and client over real HTTP in jsdom; it is not a browser run.
+`npm run test:e2e` (Playwright) starts its own backend (port 8090) and Vite (port 5173, the only dev origin the backend CORS list allows) and never reuses running servers, so a stale build cannot answer; stop any Vite on 5173 first. The jsdom test in `frontend/test/integration` is an integration test of the component, not an E2E.
 
 ## Measured (2026-09-30, this machine)
 

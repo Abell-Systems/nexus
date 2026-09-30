@@ -33,9 +33,9 @@ def mount_operational_mvp(app: FastAPI) -> bool:
         return response
 
     # The first query pays a cold-memory cost (~2 s); pay it at startup, not on the first click of a demo.
-    first = artifacts.demands.list_all()[0]
-    find_assets_for_demand(
-        first.demand_id, 1, demands=artifacts.demands, retriever=artifacts.retriever,
-        catalog=artifacts.catalog, policy=artifacts.policy,
-    )
+    if first := next(iter(artifacts.demands.list_all()), None):
+        find_assets_for_demand(
+            first.demand_id, 1, demands=artifacts.demands, retriever=artifacts.retriever,
+            catalog=artifacts.catalog, policy=artifacts.policy,
+        )
     return True

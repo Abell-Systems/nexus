@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
+    exclude: ['**/node_modules/**', 'test/e2e/**'],
     environment: 'jsdom',
     reporters: ['default', 'junit'],
     outputFile: {
