@@ -4,7 +4,7 @@ Status: prototype MVP on real data; ranking quality is an internal, LLM-judged e
 
 ## What it does
 
-A user picks one of the example demands ingested from Innoget. The service returns the five Spanish patents or utility models of the operational corpus (54,997 assets, one per family, Spanish applicant) that a frozen multilingual embedding model ranks closest, with holder, abstract, the asset's own CPC codes and links to Google Patents and Espacenet. No score or quality band is shown; the rank is the only ordering signal.
+A user picks one of the example demands ingested from Innoget. The service returns the five Spanish patents or utility models among the 44,195 eligible ones (the operational corpus holds 54,997 assets of Spanish applicants, one per family; its 10,793 EP records are excluded, as are 9 Spanish patents without an abstract) that a frozen multilingual embedding model ranks closest, with holder, abstract, the asset's own CPC codes and links to Google Patents and Espacenet. No score or quality band is shown; the rank is the only ordering signal.
 
 ## Rebuild the artifacts
 
@@ -77,7 +77,7 @@ Main demo, three demands with interpretable results: `INNOGET-1935` (water quali
 
 ## What may and may not be claimed
 
-May say: it works on real ingested demands over a corpus of 54,997 Spanish industrial-property assets; every result links to its public source; ranking comes from a frozen, versioned multilingual embedding model; the data is "Google Patents Public Data" by IFI CLAIMS Patent Services and Google under CC BY 4.0 (attribution is shown on screen).
+May say: it works on real ingested demands over a corpus of 54,997 assets of Spanish applicants, of which the 44,195 Spanish patents and utility models are searchable; every result links to its public source; ranking comes from a frozen, versioned multilingual embedding model; the data is "Google Patents Public Data" by IFI CLAIMS Patent Services and Google under CC BY 4.0 (attribution is shown on screen).
 
 An internal estimate exists: judged by a language model, without human validation, dense retrieval reached P@5 of about 0.24 against 0.06 for lexical BM25 over 31 demands. It was used for product decisions only. It is not a probe outcome and must not be cited as scientific validation (spec amendment A3).
 

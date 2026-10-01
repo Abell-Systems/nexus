@@ -124,7 +124,7 @@ Per asset the panel is titled "Datos del activo": abstract, the asset's own CPC 
 
 ## 9. Claims this MVP may and may not make
 
-May: "works on real ingested demands over a corpus of 54,997 Spanish industrial-property assets; every result links to its public source; ranking comes from a frozen, versioned multilingual embedding model".
+May: "works on real ingested demands over a corpus of 54,997 assets of Spanish applicants, of which the 44,195 Spanish patents and utility models are searchable (corrected 2026-10-01: the 10,793 EP records are in the corpus but excluded by the jurisdiction rule, and 9 Spanish patents lack an abstract); every result links to its public source; ranking comes from a frozen, versioned multilingual embedding model".
 May not, until their gates close: any statement presenting ranking quality as validated (the human probe is parked, Amendment A3; an internal LLM-judged estimate exists and may be described as such); commercial use of the data beyond the CC BY 4.0 terms (attribution kept on screen; not legal advice, to be confirmed by counsel before charging); "unexploited" assets; any price, demand or market-size figure; "sellable product" in the sense of a customer-ready service. The accurate framing for financing conversations is "working prototype MVP on real data; ranking quality is an internal estimate, not yet validated by humans".
 
 ## 10. Risks
