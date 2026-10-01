@@ -3,9 +3,11 @@ pydantic==2.13.4
 python-dotenv==1.2.2
 fastapi==0.141.1
 uvicorn[standard]==0.52.3
-pyarrow>=15.0.0
-duckdb>=0.10.0
-numpy>=2.0.0
+# Runtime numerics of the frozen retrieval: pinned so a rebuild cannot change results.
+# Verify after a bump: scripts/build_validation_sheet.py must give the same demands, ranks and publication ids as docs/validation/validation_sheet_v1.csv.
+pyarrow==25.0.1
+duckdb==1.5.5
+numpy==2.4.6
 scipy>=1.14.0
 httpx>=0.28.0
 beautifulsoup4>=4.12.0
