@@ -4,7 +4,7 @@ Status: prototype MVP on real data; ranking quality is an internal, LLM-judged e
 
 ## What it does
 
-A user picks one of the example demands ingested from Innoget. The service returns the five Spanish patents or utility models among the 44,195 eligible ones (the operational corpus holds 54,997 assets of Spanish applicants, one per family; its 10,793 EP records are excluded) that a frozen multilingual embedding model ranks closest, with holder, abstract, the asset's own CPC codes and links to Google Patents and Espacenet. No score or quality band is shown; the rank is the only ordering signal.
+A user picks one of the example demands ingested from Innoget. The service returns the five Spanish patents or utility models among the 44,195 eligible ones (the operational corpus holds 54,997 assets of Spanish applicants, one per family; its 10,793 EP records are excluded, as are 9 Spanish patents without an abstract) that a frozen multilingual embedding model ranks closest, with holder, abstract, the asset's own CPC codes and links to Google Patents and Espacenet. No score or quality band is shown; the rank is the only ordering signal.
 
 ## Rebuild the artifacts
 
