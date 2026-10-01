@@ -13,13 +13,18 @@ services:
     depends_on:
       nexus:
         condition: service_healthy
+    secrets:
+      - basic_auth
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - ./auth.caddy:/etc/caddy/auth.caddy:ro
       - caddy_data:/data
+
+secrets:
+  basic_auth:
+    file: ./auth.caddy  # git-ignored; copy auth.caddy.example
 
 volumes:
   caddy_data:

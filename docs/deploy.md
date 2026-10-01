@@ -10,7 +10,7 @@ browser --HTTPS--> caddy (TLS + basic auth) --> nexus:8080 --reads--> /srv/nexus
 
 - Docker with Compose.
 - The frozen artifacts in `data/snapshots/operational_corpus_v1/` (not in git; the runbook explains how to rebuild them). The container refuses to start if any hash does not verify.
-- `auth.caddy` next to `docker-compose.yml` (git-ignored; start from `auth.caddy.example`):
+- `auth.caddy` next to `docker-compose.yml` (git-ignored; start from `auth.caddy.example`; it is mounted as a Compose secret, so `docker compose up` says "secret file ... does not exist" until it is there):
 
   ```bash
   docker run --rm caddy:2 caddy hash-password        # prompts for the password, prints the bcrypt hash
@@ -35,6 +35,8 @@ python scripts/demo_preflight.py http://127.0.0.1:8099    # READY: current build
 ```
 
 The preflight does not speak basic auth, so run it against the bare container as above, not through Caddy.
+
+CI only builds the image, checks that it reaches artifact verification and refuses an empty volume, and validates the compose file (the corpus is not in git). The run above, with the real artifacts, is the manual pre-release check.
 
 ## Out of scope here
 
