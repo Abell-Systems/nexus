@@ -43,11 +43,10 @@ Details and reproducible evidence: [operational runbook](docs/operational-mvp-ru
 The frozen data (`data/snapshots/operational_corpus_v1/`, about 230 MB of third-party text and vectors) is **not in git**; the runbook explains how to rebuild it.
 
 ```bash
-NEXUS_MVP_ENABLED=1 uvicorn main:app --app-dir backend/src/main --port 8080
-cd frontend && npm install && VITE_API_BASE_URL=http://127.0.0.1:8080 npm run dev   # open http://127.0.0.1:5173/
+cd frontend && npm install && npm run build && cd ..
+cd backend/src/main && python -m infrastructure.mvp_entrypoint --artifacts ../../../data/snapshots/operational_corpus_v1 --static ../../../frontend/dist   # open http://127.0.0.1:8080/
 python scripts/demo_preflight.py     # before any demo: checks the server is the current build
 ```
-
 Tests: `python -m pytest backend/test`, `cd frontend && npm test`, and the pre-release gate in the runbook (real-artifact integration test and a Playwright browser journey).
 
 ## 4. Architecture

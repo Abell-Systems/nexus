@@ -1,10 +1,9 @@
 from pathlib import Path
 
 import pytest
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from infrastructure.operational.mount import mount_operational_mvp
+from infrastructure.operational.app import create_mvp_app
 from infrastructure.operational.notices import NOTICES
 
 REAL_ARTIFACTS = Path(__file__).resolve().parents[4] / "data" / "snapshots" / "operational_corpus_v1"
@@ -15,13 +14,7 @@ PRIMARY_JOURNEYS = ["INNOGET-1935", "INNOGET-2258", "INNOGET-2417"]
 
 @pytest.fixture(scope="module")
 def client():
-    mp = pytest.MonkeyPatch()
-    mp.setenv("NEXUS_MVP_ENABLED", "1")
-    mp.setenv("NEXUS_OPERATIONAL_DIR", str(REAL_ARTIFACTS))
-    app = FastAPI()
-    mount_operational_mvp(app)
-    yield TestClient(app, raise_server_exceptions=False)
-    mp.undo()
+    return TestClient(create_mvp_app(REAL_ARTIFACTS), raise_server_exceptions=False)
 
 
 class OperationalMvpOverHttpTest:

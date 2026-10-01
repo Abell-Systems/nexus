@@ -1,7 +1,6 @@
 """Checks that the server answering on BASE_URL is the current build, before a demo. Usage: demo_preflight.py [BASE_URL]."""
 
 import json
-import os
 import sys
 import time
 import urllib.error
@@ -83,7 +82,7 @@ def main() -> int:
             return err.code
 
     started = time.perf_counter()
-    problems = check(get_json, Path(os.getenv("NEXUS_OPERATIONAL_DIR", str(DEFAULT_DIR))), status_of)
+    problems = check(get_json, Path(sys.argv[2] if len(sys.argv) > 2 else DEFAULT_DIR), status_of)
     for problem in problems:
         print(f"FAIL {problem}")
     print(f"{'NOT READY' if problems else 'READY'} ({time.perf_counter() - started:.1f}s for all journeys)")

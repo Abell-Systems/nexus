@@ -67,3 +67,10 @@ def build_operational_dir(directory, *, rows=ROWS, demands=DEMANDS):
 @pytest.fixture
 def operational_dir(tmp_path):
     return build_operational_dir(tmp_path / "operational")
+
+
+@pytest.fixture
+def selection(operational_dir):
+    path = operational_dir / "selection.json"
+    path.write_text('{"rule": "r", "included": {"D-1": "x", "D-2": "x"}}', encoding="utf-8")
+    return path

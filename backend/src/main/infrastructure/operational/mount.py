@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -9,18 +8,12 @@ from infrastructure.operational.errors import install_error_contract
 from infrastructure.operational.router import build_router
 from infrastructure.operational.selection import read_demo_selection
 
-ENABLE_ENV = "NEXUS_MVP_ENABLED"
-DIR_ENV = "NEXUS_OPERATIONAL_DIR"
-SELECTION_ENV = "NEXUS_DEMO_SELECTION"
-_DEFAULT_DIR = Path(__file__).resolve().parents[5] / "data" / "snapshots" / "operational_corpus_v1"
 _DEFAULT_SELECTION = Path(__file__).resolve().parent / "demo_selection_v1.json"
 
 
-def mount_operational_mvp(app: FastAPI) -> bool:
-    if os.getenv(ENABLE_ENV) != "1":
-        return False
-    artifacts = load_operational_artifacts(Path(os.getenv(DIR_ENV, str(_DEFAULT_DIR))))
-    featured = read_demo_selection(Path(os.getenv(SELECTION_ENV, str(_DEFAULT_SELECTION))), artifacts.demands)
+def mount_operational_mvp(app: FastAPI, artifacts_dir: Path, selection: Path = _DEFAULT_SELECTION) -> None:
+    artifacts = load_operational_artifacts(artifacts_dir)
+    featured = read_demo_selection(selection, artifacts.demands)
     app.include_router(build_router(artifacts, featured))
     install_error_contract(app)
 
@@ -38,4 +31,3 @@ def mount_operational_mvp(app: FastAPI) -> bool:
             first.demand_id, 1, demands=artifacts.demands, retriever=artifacts.retriever,
             catalog=artifacts.catalog, policy=artifacts.policy,
         )
-    return True
