@@ -1,0 +1,4 @@
+# Copy to auth.caddy (git-ignored) with a real hash: docker run --rm caddy:2 caddy hash-password
+basic_auth {
+	lydia <paste-the-bcrypt-hash-here>
+}

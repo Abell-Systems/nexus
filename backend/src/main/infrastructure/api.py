@@ -29,8 +29,6 @@ from infrastructure.api_dependencies import (
     _research_service,
     app,
 )
-from infrastructure.operational.mount import mount_operational_mvp
-from infrastructure.route_policy import restrict_to_product_routes
 
 _background_tasks: set[asyncio.Task] = set()
 _DOMAIN_SLUG_DESC = "Domain slug"
@@ -204,10 +202,6 @@ if _initial_dist and os.path.exists(os.path.join(_initial_dist, "assets")):
     app.mount("/assets", StaticFiles(directory=os.path.join(_initial_dist, "assets")), name="assets")
 
 
-# Must precede the SPA catch-all below, or it shadows /api/matches.
-mount_operational_mvp(app)
-
-
 @app.get("/")
 async def serve_root():
     dist_dir = _get_dist_dir()
@@ -235,13 +229,3 @@ async def serve_frontend(full_path: str):
         if index_file.is_relative_to(resolved_dist) and index_file.is_file():
             return FileResponse(str(index_file))
     raise HTTPException(status_code=404, detail="Frontend route not found.")
-
-
-restrict_to_product_routes(app, legacy_enabled=os.getenv("NEXUS_LEGACY_API_ENABLED") == "1")
-
-
-if __name__ == "__main__":
-    import uvicorn
-
-    host = os.getenv("HOST", "127.0.0.1")
-    uvicorn.run(app, host=host, port=int(os.getenv("PORT", "8080")))

@@ -1,26 +1,17 @@
 import { defineConfig } from "@playwright/test";
 
-const BACKEND_PORT = 8090;
-const FRONTEND_PORT = 5173; // the only dev origin the backend CORS list allows
+const PORT = 8090;
 
-// Real browser against a real backend with the frozen artifacts; servers are always started fresh (never reused),
+// Real browser against the real product with the frozen artifacts; always started fresh (never reused),
 // so a stale build can not answer.
 export default defineConfig({
   testDir: "./test/e2e",
-  use: { baseURL: `http://127.0.0.1:${FRONTEND_PORT}`, browserName: "chromium" },
-  webServer: [
-    {
-      command: `NEXUS_MVP_ENABLED=1 uvicorn main:app --app-dir backend/src/main --port ${BACKEND_PORT}`,
-      cwd: "..",
-      url: `http://127.0.0.1:${BACKEND_PORT}/api/demand-examples`,
-      reuseExistingServer: false,
-      timeout: 120_000,
-    },
-    {
-      command: `VITE_API_BASE_URL=http://127.0.0.1:${BACKEND_PORT} npm run dev -- --port ${FRONTEND_PORT} --strictPort`,
-      url: `http://127.0.0.1:${FRONTEND_PORT}/matches`,
-      reuseExistingServer: false,
-      timeout: 60_000,
-    },
-  ],
+  use: { baseURL: `http://127.0.0.1:${PORT}`, browserName: "chromium" },
+  webServer: {
+    // One process serves the built SPA and the API, the same shape the container runs.
+    command: `npm run build && cd ../backend/src/main && python -m infrastructure.mvp_entrypoint --artifacts ../../../data/snapshots/operational_corpus_v1 --static ../../../frontend/dist --port ${PORT}`,
+    url: `http://127.0.0.1:${PORT}/api/demand-examples`,
+    reuseExistingServer: false,
+    timeout: 180_000,
+  },
 });

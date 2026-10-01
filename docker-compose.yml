@@ -1,0 +1,30 @@
+services:
+  nexus:
+    build: .
+    image: nexus-mvp
+    read_only: true
+    restart: unless-stopped
+    volumes:
+      - ./data/snapshots/operational_corpus_v1:/srv/nexus/data:ro
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      nexus:
+        condition: service_healthy
+    secrets:
+      - basic_auth
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+
+secrets:
+  basic_auth:
+    file: ./auth.caddy  # git-ignored; copy auth.caddy.example
+
+volumes:
+  caddy_data:
