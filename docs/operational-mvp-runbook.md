@@ -22,33 +22,26 @@ The generation environment is isolated on purpose (ADR 0014): the runtime never 
 ## Run it locally
 
 ```bash
-NEXUS_MVP_ENABLED=1 uvicorn main:app --app-dir backend/src/main --port 8080
-cd frontend && VITE_API_BASE_URL=http://127.0.0.1:8080 npm run dev     # then open http://127.0.0.1:5173/
+cd frontend && npm install && npm run build && cd ..
+cd backend/src/main && python -m infrastructure.mvp_entrypoint --artifacts ../../../data/snapshots/operational_corpus_v1 --static ../../../frontend/dist   # open http://127.0.0.1:8080/
 ```
+The MVP runs as its own process (`infrastructure.mvp_entrypoint`) and reads no environment variables: the artifacts directory is `--artifacts` (required), the built frontend is `--static` (API only when omitted), and `--host`/`--port` default to `127.0.0.1:8080`. It never imports the hackathon agent (`api.py`, ADK), so none of that app's provider or credential variables apply. The demo selection is the versioned file `backend/src/main/infrastructure/operational/demo_selection_v1.json`.
 
-`uvicorn` does not serve `frontend/dist` from the repo in development (the static path in `api.py` resolves under `backend/src/main`), so use Vite as above. With `NEXUS_MVP_ENABLED` unset the two routes do not exist and the legacy app is unchanged.
-
-| Variable | Meaning | Default |
-|---|---|---|
-| `NEXUS_MVP_ENABLED` | `1` mounts `/api/demand-examples` and `/api/matches` | unset (off) |
-| `NEXUS_OPERATIONAL_DIR` | directory with the artifacts above | `data/snapshots/operational_corpus_v1` |
-| `NEXUS_DEMO_SELECTION` | which demands the screen lists | `backend/src/main/infrastructure/operational/demo_selection_v1.json` |
-
-When enabled, startup verifies every hash: corpus against its manifest, both embedding indexes against theirs, index ids against corpus order, the indexes against the corpus and demand file they were built from, same model and dimension in both indexes, and demand texts against the snapshot's texts hash. Any mismatch aborts startup; the service never falls back to BM25 or to a live model.
+Startup verifies every hash: corpus against its manifest, both embedding indexes against theirs, index ids against corpus order, the indexes against the corpus and demand file they were built from, same model and dimension in both indexes, and demand texts against the snapshot's texts hash. Any mismatch aborts startup; the service never falls back to BM25 or to a live model.
 
 ## What the product serves
 
-The product is this one screen, served at `/` (`/matches` shows the same page). `?demanda=<id>` opens a chosen demand, so a result can be shared or reloaded. The hackathon agent (the former landing, its `/api/analyze` job runner and the ADK scaffold routes `/run`, `/run_sse`, sessions, `/docs`, `/openapi.json`) is not reachable: its UI is no longer part of the bundle and the backend removes every route except `/health`, the two MVP routes and the static files. `NEXUS_LEGACY_API_ENABLED=1` brings the backend routes back (the provider test suite sets it); it does not bring the UI back. The legacy components still exist in `frontend/src/main/components/UserZero`, unused.
+The product is this one screen, served at `/` (`/matches` shows the same page). `?demanda=<id>` opens a chosen demand, so a result can be shared or reloaded. The hackathon agent (the former landing, its `/api/analyze` job runner and the ADK scaffold routes `/run`, `/run_sse`, sessions, `/docs`, `/openapi.json`) is not reachable: its UI is no longer part of the bundle and the MVP process simply does not contain them: its only routes are `/health` (`{"ready": true}`, answered only after every artifact hash verified), the two MVP routes and the static files. `api.py` remains as the legacy app and is not part of the product. The legacy components still exist in `frontend/src/main/components/UserZero`, unused.
 
 ## Before a demo
 
 Kill any server already on the port first: a server left running from an older build answers happily with old notices and all 39 demands (this happened while preparing the demo). Then start the backend and run:
 
 ```bash
-python scripts/demo_preflight.py [http://127.0.0.1:8080]
+python scripts/demo_preflight.py [http://127.0.0.1:8080 [artifacts-dir]]
 ```
 
-It exits non-zero if an agent route such as `POST /run` or `POST /api/analyze` answers, or unless the listed demands equal `demo_selection_v1.json`, the four notices equal the current build, each demo journey returns five assets with no score field in the response, and `meta.corpus_id`, `corpus_parquet_sha256` and `embedding_index_sha256` equal what the artifacts on disk declare (`NEXUS_OPERATIONAL_DIR`), so a stale server with the same shape but another build is caught. Startup already warms the first query (a cold first query took about 2 s), and answers are memoised per demand and limit, because the artifacts are frozen and verified.
+It exits non-zero if an agent route such as `POST /run` or `POST /api/analyze` answers, or unless the listed demands equal `demo_selection_v1.json`, the four notices equal the current build, each demo journey returns five assets with no score field in the response, and `meta.corpus_id`, `corpus_parquet_sha256` and `embedding_index_sha256` equal what the artifacts on disk declare (the artifacts directory, second argument of the script), so a stale server with the same shape but another build is caught. Startup already warms the first query (a cold first query took about 2 s), and answers are memoised per demand and limit, because the artifacts are frozen and verified.
 
 The MVP routes also send `X-Content-Type-Options`, `X-Frame-Options: DENY` and `Referrer-Policy: no-referrer`, and cap `demand_id` at 64 characters.
 
@@ -98,7 +91,7 @@ Only the 39 example demands can be searched (free text would need live embedding
 
 Not blocking the MVP; none changes behaviour a user sees in the demo path.
 
-- `/matches` renders, with a load error, when `NEXUS_MVP_ENABLED` is off; `/matchesfoo` also routes to it.
+- `/matchesfoo` also routes to the matches screen.
 - Missing tests: zero-norm query in `NumpyDenseRetriever` (returns `[]`, checked by hand), the loading state of the frontend view, and an API-side assertion that the operational policy factory is the one used (the probe side is covered).
 - The `NumpyDenseRetriever` docstring says "without its per-row Python loop"; it still loops over the eligible patents in Python (about 0.2 s per request).
 - `experiments/operational-dense-probe/internal_quality_signal.py` parses grades and confidence more loosely than `score_probe.py`.
