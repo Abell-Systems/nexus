@@ -1,0 +1,5 @@
+# Replace :80 with the domain (e.g. nexus-validation.example.org) and Caddy serves HTTPS with its own certificate.
+:80 {
+	import /etc/caddy/auth.caddy
+	reverse_proxy nexus:8080
+}

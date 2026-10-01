@@ -82,3 +82,5 @@ experiments/article/minesoft_raw/
 data/snapshots/operational_corpus_v1/
 experiments/operational-dense-probe/outputs/
 playwright-report/
+
+auth.caddy

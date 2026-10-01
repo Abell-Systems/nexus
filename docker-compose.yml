@@ -1,0 +1,25 @@
+services:
+  nexus:
+    build: .
+    image: nexus-mvp
+    read_only: true
+    restart: unless-stopped
+    volumes:
+      - ./data/snapshots/operational_corpus_v1:/srv/nexus/data:ro
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      nexus:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./auth.caddy:/etc/caddy/auth.caddy:ro
+      - caddy_data:/data
+
+volumes:
+  caddy_data:
