@@ -36,6 +36,17 @@ python scripts/demo_preflight.py http://127.0.0.1:8099    # READY: current build
 
 The preflight does not speak basic auth, so run it against the bare container as above, not through Caddy.
 
+## Same results after a rebuild
+
+`numpy`, `pyarrow` and `duckdb` are pinned in `backend/requirements.txt` because they decide the numbers of the frozen retrieval. After changing a pin or the base image, the five results of every listed demand must not move:
+
+```bash
+python scripts/build_validation_sheet.py data/snapshots/operational_corpus_v1 /tmp/sheet.csv
+diff /tmp/sheet.csv docs/validation/validation_sheet_v1.csv && echo identical
+```
+
+Run it with the interpreter that the image uses (for example through `docker run --entrypoint python`, with `scripts/` and `backend/` mounted) to check the container itself. When the pins were introduced, the unpinned image (`numpy` 2.5.3, `duckdb` 1.5.6) and the pinned one (2.4.6, 1.5.5) gave identical demands, ranks and publication ids.
+
 CI only builds the image, checks that it reaches artifact verification and refuses an empty volume, and validates the compose file (the corpus is not in git). The run above, with the real artifacts, is the manual pre-release check.
 
 ## Out of scope here
