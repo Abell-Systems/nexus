@@ -218,6 +218,30 @@ jobs:
   # already cover a lot of the same static-analysis ground locally. The final quality-gate summary
   # below reports this run as explicitly SKIPPED/UNVERIFIED rather than folding it into a plain
   # PASS: absence of Sonar evidence must never be reported as evidence Sonar passed.
+  # 5c. The MVP image builds, its Python/module/permission setup resolves, and compose is valid.
+  # The frozen corpus is not in git, so the full startup smoke (docs/deploy.md) is a manual pre-release step;
+  # here an empty volume must make the image reach artifact verification and fail on the missing manifest.
+  container-image:
+    name: 5c. Container Image
+    needs: architecture
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t nexus-mvp .
+      - name: Image reaches artifact verification and refuses an empty volume
+        run: |
+          mkdir empty
+          code=0
+          out=$(docker run --rm --read-only -v "$PWD/empty:/srv/nexus/data:ro" nexus-mvp 2>&1) || code=$?
+          echo "$out" | tail -3
+          test "$code" -ne 0
+          echo "$out" | grep -q "manifest.json"
+      - name: Compose file is valid
+        run: |
+          cp auth.caddy.example auth.caddy
+          docker compose config -q
+
   sonar-quality-gate:
     name: 6. Sonar Quality Gate
     needs: [backend-tests, provider-adk-tests, frontend-quality]
@@ -301,7 +325,7 @@ jobs:
   # 7. Final Consolidated Quality Gate & Observability Telemetry (ADR 0022)
   quality-gate:
     name: 7. QUALITY GATE (Ready to Merge)
-    needs: [architecture, python-quality, frontend-quality, security-scan, backend-tests, provider-adk-tests, sonar-quality-gate]
+    needs: [architecture, python-quality, frontend-quality, security-scan, backend-tests, provider-adk-tests, container-image, sonar-quality-gate]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -348,6 +372,7 @@ jobs:
           echo " - Gitleaks Secret Scanner: PASS"
           echo " - Backend Core Tests (Unit, Integration, E2E): PASS"
           echo " - Provider Tests (Google ADK): PASS"
+          echo " - MVP Container Image (build, refuses empty volume, compose valid): PASS"
           echo " - Coverage Threshold Gate (>=80%): PASS"
           if [ "$SONAR_SKIPPED" = "true" ]; then
             echo "::warning::SonarCloud Analysis & Quality Gate was SKIPPED (SONAR_TOKEN not configured). This run is UNVERIFIED by Sonar, not a Sonar pass — configure SONAR_TOKEN to close this gap."

@@ -1,0 +1,9 @@
+**
+!backend/requirements.txt
+!backend/src/main
+!frontend
+frontend/node_modules
+frontend/dist
+frontend/coverage
+frontend/test-results
+**/__pycache__
