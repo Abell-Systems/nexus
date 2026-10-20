@@ -31,6 +31,7 @@ def _bits(first: int, last: int, base: int) -> int:
 
 
 CopyPolicy = Literal["first", "last", "union"]
+COPY_POLICIES = ("first", "last", "union")
 
 
 def base_rates(
@@ -52,11 +53,14 @@ def base_rates(
     the horizon, for origins with ``origin + horizon <= filing_outcome_until`` (§7.2).
     ``hidden_year_origins`` and ``hidden_years``: counterfactual estimate of the positives that a missing year
     would have created, from candidates seen only in that year and observed again in the horizon (§7).
-    ``copy_policy``: which subclasses a document contributes to the activity count when several copies share
+    ``copy_policy``: a policy for **one operation only**, the activity count. It decides which subclasses a document contributes when several copies share
     its identifier and earliest publication date but differ: those of the first copy in input order (the
     default, which reproduces the printed figures), of the last, or the union of all. Not a decision of the
-    ADR: ADR 0036 leaves the policy open and this parameter exists to measure how much it matters.
+    ADR: ADR 0036 leaves the policy open and this parameter exists to measure how much it matters. Pairs
+    (seen, candidate, positive) always use every record, whatever the policy.
     """
+    if copy_policy not in COPY_POLICIES:
+        raise ValueError(f"Unknown copy policy {copy_policy!r}; expected one of {COPY_POLICIES}")
     publications = [r for r in records if r.subclasses]
     if not publications:
         return {}

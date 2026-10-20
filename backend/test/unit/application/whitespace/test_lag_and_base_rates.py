@@ -1,5 +1,7 @@
 from datetime import date
 
+import pytest
+
 from application.whitespace.analysis_records import (
     AnalysisRecord,
     distinct_publications,
@@ -127,6 +129,20 @@ def test_shouldLetTheCopyPolicyDecideActivityWhenCopiesOfADocumentDiffer():
         ]
 
     assert (active("first"), active("last"), active("union")) == (1, 1, 2)
+
+
+def test_shouldRejectAnUnknownCopyPolicyWhenComputingBaseRates():
+    with pytest.raises(ValueError, match="Unknown copy policy 'frist'"):
+        base_rates([record(2000, ("A",))], [2000], copy_policy="frist")  # type: ignore[arg-type]
+
+
+def test_shouldUseEveryCopyForPairsWhateverTheCopyPolicy():
+    history = [AnalysisRecord(f"{s}{y}", date(y, 1, 1), "patent", y, (s,)) for y in (2000, 2001) for s in "AB"]
+    copy_1 = AnalysisRecord("ES9A1", date(2002, 1, 1), "patent", 2002, ("A",))
+    copy_2 = copy_1._replace(subclasses=("A", "B"))
+    for policy in ("first", "last", "union"):
+        result = base_rates([*history, copy_1, copy_2], [2001], min_documents=2, horizon=1, copy_policy=policy)
+        assert result["2001"]["positives"] == 1
 
 
 def test_shouldSeparateFiledByOriginFromFiledLaterWhenDiagnosingPositives():
