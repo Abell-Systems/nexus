@@ -54,7 +54,25 @@ No demand data, business needs, publications or projects are used.
 
 ### 5.1 Observation
 
-One publication (one XML document) with: identifier, kind code, publication date, application date, **every** priority date the source states (the earliest is derived downstream), applicants, inventors, title, IPC classification entries with version, level and value, the anomalies found in optional fields (with their raw value), and provenance (source file, SHA-256, position in the archive). The source adapter keeps the raw values; derived values (for example "filing year") are computed downstream and labelled as derived. This is the contract implemented in `domain/models/whitespace.py`.
+One **source record** (one XML document in an archive) with: identifier, kind code, publication date, application date, **every** priority date the source states (the earliest is derived downstream), applicants, inventors, title, IPC classification entries with version, level and value, the anomalies found in optional fields (with their raw value), and provenance (source file, SHA-256, position in the archive). The source adapter keeps the raw values; derived values (for example "filing year") are computed downstream and labelled as derived. This is the contract implemented in `domain/models/whitespace.py`.
+
+### 5.1.1 Source record, publication identifier, document and analytical unit
+
+Three things are called "document" or "publication" in the first version of this ADR and in the exploratory counts. They are not the same, and every count in the experiment must say which one it uses.
+
+* **Source record.** One XML as it appears in the archives, with its provenance. The adapter keeps every one.
+* **Publication identifier.** Country, number and kind code (`doc_id`); with the publication date it forms the **publication key**. An identifier does not identify content: some keys occur in more than one source record (3,371 extra records), and in 19 of those keys the copies state different IPC subclasses. Some identifiers also appear with more than one publication date (185).
+* **Document.** A publication identifier, counted once, at its earliest publication date. This is what "distinct documents" means in the activity condition of §5.4. It is the literal reading of the term and the one under which the printed counts of the characterization are reproduced; whether an alternative (counting the publication key) would change anything at the thresholds of P2 has **not** been measured.
+
+The analytical unit depends on the operation:
+
+| Operation | Unit | Rule for repeated or differing copies |
+|---|---|---|
+| Activity of a subclass (§5.4) | Document | One copy contributes its subclasses: **policy open (O4)** |
+| Co-classification of a pair, seen and outcome | Source record | Every copy counts, so a pair is co-classified if any copy states it. This is what the descriptive counts used; it is **not** a decision |
+| Publication lag and filing-year statistics | Source record | Repeats kept; a sensitivity on distinct publication keys exists |
+
+**Copy policy (open, O4).** When copies of one publication key differ, the alternatives are: (a) select one copy by a deterministic, justified rule; (b) combine the copies by an explicit rule (for example the union of their subclasses); (c) keep each copy as a separate observation. Each has a cost: (a) discards information that may be correct; (b) can state a classification no copy states on its own; (c) can count one publication several times. Measured on the 26 files by the reproduction in pull request #132: the sets of active subclasses at origins 2006 and 2012–2022 are identical whether the first copy, the last copy or the union of the copies contributes, but one candidate pair at origin 2013 exists or not depending on whether copies are dropped. The policy is decided in the pre-registration, with that sensitivity.
 
 ### 5.2 Technology unit
 
@@ -85,7 +103,7 @@ A candidate's record must keep the two apart.
 
 All definitions refer to an origin year *t* and use only documents published in or before *t*.
 
-* A subclass is **active at *t*** if it appears on at least *m*_min distinct documents published up to *t*.
+* A subclass is **active at *t*** if it appears on at least *m*_min distinct documents (§5.1.1) first published up to *t*.
 * **Type A candidate (never observed in the corpus).** A pair of active subclasses not co-classified on any document of the observed corpus published up to *t*.
 * **Type B candidate (surprising absence).** A type A pair whose expected number of co-classifications up to *t* under the null model of §5.5 is at least *e*_min. Type B is therefore a **subset of type A** (it can coincide with it if every type A pair meets the *e*_min condition): the observed number is exactly zero.
 
@@ -216,7 +234,7 @@ B2 is undefined for the development origin 2003 (no earlier origin) and is then 
 
 ### 8.6 Sensitivity analyses
 
-Unit (main group; WIPO technology fields), *m*_min grid (10, 20, 50), *e*_min grid, horizon (2, 3, 5), IPC entries used (all entries is primary; inventive entries only is a sensitivity, P5), document kind (EP translations only; national documents only), axis (S1), hidden-year check (S2), exclusion of 2023 from the 2022 horizon, deduplication rule (P4). Conclusions are stated only where they survive.
+Unit (main group; WIPO technology fields), *m*_min grid (10, 20, 50), *e*_min grid, horizon (2, 3, 5), IPC entries used (all entries is primary; inventive entries only is a sensitivity, P5), document kind (EP translations only; national documents only), axis (S1), hidden-year check (S2), exclusion of 2023 from the 2022 horizon, copy policy and identifier-or-key unit (P4, O4). Conclusions are stated only where they survive.
 
 ### 8.7 Human review
 
@@ -270,7 +288,7 @@ A resolution fixes a protocol so that the experiment can refute the hypotheses; 
 | P1 | Null model | Reference: degree-preserving bipartite randomisation of the document × subclass incidence, stratified by publication year. The cost and fidelity of an analytic approximation are compared before it is discarded. The result is a ranking score and is never read as a significance test | Design | **Accepted, parameters open.** The form of the score and of the relatedness term (the members of *F*, H1) is fixed before any null-model code is written |
 | P2 | Thresholds | *m*_min ∈ {10, 20, 50}. A grid for *e*_min is declared before use. Values are chosen on development origins only and the configuration is frozen before the confirmatory origins are evaluated | The value 20 used in the descriptive counts has no scientific justification (stated in the characterization) | **Accepted, parameters open.** The grid values for *e*_min |
 | P3 | Numeric success criterion | Primary: the lower bound of the paired 95 % interval of the AUC-PR difference against the frozen strongest baseline is above zero in at least three of the four confirmatory origins. The absolute size of the improvement is reported as well: statistical significance is not practical usefulness | Design. The criterion is a descriptive rule across four origins, not a formal test (§8.5) | **Accepted, parameters open.** Number of resamples, interval type, human-review protocol, the smallest difference regarded as useful, and the treatment of H1, H1b and H2 together (O2) |
-| P4 | Repeated identifiers | In the analysis step, exact repeats of the analytical unit (same identifier and publication date) are removed, keeping the provenance of every original record; **the adapter itself keeps every record**. The 185 identifiers with more than one publication date stay as distinct publications. National documents and EP translations are not merged without a family identifier. Sensitivity by document kind (§8.6) | 3,371 exact repeats and 185 identifiers with several publication dates. *Reproduced* | **Accepted** |
+| P4 | Repeated identifiers | Records sharing an identifier and a publication date are **not** necessarily identical, so they are not "exact repeats" and are not removed by this ADR. The units of §5.1.1 apply; the adapter keeps every record. The 185 identifiers with more than one publication date stay distinct publications for pairs and lag; a document counts once for activity. National documents and EP translations are not merged without a family identifier. Sensitivity by document kind (§8.6) and by copy policy (O4) | 3,371 repeated keys, 19 of them with differing subclasses; 185 identifiers with several publication dates. *Reproduced*. Insensitivity of the active sets to the copy policy: pull request #132, *not yet reviewed* | **Accepted, parameters open (O4).** Replaces the first wording, which assumed that repeats were exact |
 | P5 | IPC entries | All entries are the primary analysis, for continuity with the exploratory counts. Inventive entries only is a sensitivity. The uncertainty about historical IPC revisions stays stated | The first entry of a record carries 45 distinct raw version values (*Reproduced*); 91.6 % carry `2006.01` (published in the characterization, not among the 231 reproduced figures, so *Exploratory*). Whether stored classifications are those assigned at publication. *Not verified* | **Accepted.** The question of the classification date stays an explicit limitation |
 | P6 | 2023 drop in EP translations | Observed records are kept and nothing is imputed. The 2022 horizon is reported with and without 2023, and the limitation appears in both results | 14,846 EP translations in 2023 against 24,965 (2022) and 27,712 (2024), national kinds stable. *Reproduced*. Cause unknown | **Accepted.** Depends on the reply to P7 only for the explanation |
 | P7 | Consultation with the OEPM | To be done: the 2010 gap, the 2023 drop, the repeated identifiers, programmatic access and the reuse conditions. A favourable reply does not resolve the other limitations | The message is drafted and reviewed and **has not been sent** | **Open, action pending.** Does not block the next steps; 2010 stays missing until answered |
@@ -329,6 +347,7 @@ The decisions marked *Accepted* or *Accepted, parameters open* in §10, as the r
 * **O1.** Baseline B2 at the confirmatory origin 2013 uses the outcomes of origin 2010, whose history lacks the year 2010. Define it explicitly, or omit B2 at that origin.
 * **O2.** Multiplicity across H1, H1b and H2, and the smallest AUC-PR difference regarded as practically useful. Neither is addressed in §7 or §8.
 * **O3.** Whether the 86 records with undefined entities can be recovered, which requires the official DTD (reproduction report §4.1). Until then they remain rejected.
+* **O4.** The policy for copies of one publication key that differ (§5.1.1), and whether the unit of the activity count is the identifier or the publication key, decided with the sensitivity measured in pull request #132 once that report is reviewed. Until then the descriptive counts of the characterization are not a basis for choosing either.
 
 ### 12.4 Accepting, meeting the conditions, being ready to run
 
@@ -337,7 +356,7 @@ These are three different states, and this ADR reaches only the first.
 | State | Meaning | Reached |
 |---|---|---|
 | Framework accepted | The questions, definitions and protocol of §§2–9 are the contract | Yes, when this status is merged |
-| Conditions met | C1 satisfied; O1–O3 and the open parameters of A7 and P1–P3 closed | **No** |
+| Conditions met | C1 satisfied; O1–O4 and the open parameters of A7 and P1–P3 closed | **No** |
 | Ready to run the study | Pre-registration closed with the above; no pending change to the frozen protocol | **No** |
 
 P7 (OEPM consultation) and P8 (#112/#113) do not block acceptance. P7 can change how the 2010 gap and the 2023 drop are explained; P8 matters only before shared infrastructure. Neither is a condition of the pre-registration unless the reply to P7 contradicts the treatment in A6 or P6, in which case those decisions are reopened.
