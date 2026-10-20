@@ -86,7 +86,7 @@ All definitions refer to an origin year *t* and use only documents published in 
 
 * A subclass is **active at *t*** if it appears on at least *m*_min distinct documents published up to *t*.
 * **Type A candidate (never observed in the corpus).** A pair of active subclasses not co-classified on any document of the observed corpus published up to *t*.
-* **Type B candidate (surprising absence).** A type A pair whose expected number of co-classifications up to *t* under the null model of §5.5 is at least *e*_min. Type B is therefore a **strict subset of type A**: the observed number is exactly zero.
+* **Type B candidate (surprising absence).** A type A pair whose expected number of co-classifications up to *t* under the null model of §5.5 is at least *e*_min. Type B is therefore a **subset of type A** (it can coincide with it if every type A pair meets the *e*_min condition): the observed number is exactly zero.
 
 A variant admitting up to *n*_max observed co-classifications is **not part of this design**. Such pairs are not type A, are not eligible for FCP, and would need their own pool, their own event definition and their own denominator; if studied, it will be introduced by a later ADR.
 
