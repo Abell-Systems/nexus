@@ -11,7 +11,12 @@ from pydantic import BaseModel, ConfigDict, field_validator
 
 
 class SourceRecordProvenance(BaseModel):
-    """Where a record came from: the hashed source file and the path of the record inside it."""
+    """Where a record came from: the hashed source file and the path of the record inside it.
+
+    ``archive_path`` joins the names of nested archives and of the final entry with ``/``. A segment that
+    ends in ``.zip`` is an archive to open; what follows the last one is the name of the entry, which may
+    itself contain ``/`` (for example ``ES2671175/ES2671175_20190313_B1.xml``).
+    """
 
     model_config = ConfigDict(frozen=True)
 
@@ -28,7 +33,11 @@ class SourceRecordProvenance(BaseModel):
 
 
 class SourceAnomaly(BaseModel):
-    """An optional field the source states but that cannot be read; the record is kept and the raw value is too."""
+    """An optional field the source states but that cannot be read; the record is kept and the raw value is too.
+
+    For ``encoding`` the raw value is the hexadecimal of the first offending bytes only; the whole original
+    record is recoverable from the provenance of the publication.
+    """
 
     model_config = ConfigDict(frozen=True)
 
