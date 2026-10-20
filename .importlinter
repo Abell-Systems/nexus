@@ -93,3 +93,41 @@ forbidden_modules =
     torch
     transformers
     sentence_transformers
+
+[importlinter:contract:whitespace-independent-of-matching]
+name = White-space analysis must not depend on offer-demand matching, demands or their evaluation
+type = forbidden
+source_modules =
+    domain.models.whitespace
+    domain.protocols.whitespace
+    application.whitespace
+    infrastructure.sources.patent.oepm_biblio
+forbidden_modules =
+    domain.models.matching
+    domain.models.demand
+    domain.models.evaluation
+    domain.protocols.matching
+    domain.protocols.evaluation
+    application.matching
+    application.evaluation
+    infrastructure.matching
+    infrastructure.operational
+
+[importlinter:contract:matching-independent-of-whitespace]
+name = Offer-demand matching and its evaluation must not depend on white-space analysis
+type = forbidden
+source_modules =
+    domain.models.matching
+    domain.models.demand
+    domain.models.evaluation
+    domain.protocols.matching
+    domain.protocols.evaluation
+    application.matching
+    application.evaluation
+    infrastructure.matching
+    infrastructure.operational
+forbidden_modules =
+    domain.models.whitespace
+    domain.protocols.whitespace
+    application.whitespace
+    infrastructure.sources.patent.oepm_biblio

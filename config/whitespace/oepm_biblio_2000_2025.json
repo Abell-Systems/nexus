@@ -1,0 +1,457 @@
+{
+  "source_id": "oepm_biblio_2000_2025",
+  "published_in": "docs/whitespace/oepm-biblio-corpus-characterization.md",
+  "note": "Hashes and figures transcribed from the published characterization (sections 3, 4.1, 4.3, 5, 6 and 8). Sections 4.2 and 7 are not covered.",
+  "files": {
+    "BIBLIO_2000.zip": {
+      "sha256": "e4c1ecadd7c0f80247a73a622f708b38af557e35b96c44959a309743426c691b",
+      "bytes": 20238798
+    },
+    "BIBLIO_2001.zip": {
+      "sha256": "f780a3786a3951bc093bc34c6f2770cb28d1d546cf09c204743c64b4f02afda3",
+      "bytes": 17642555
+    },
+    "BIBLIO_2002.zip": {
+      "sha256": "e7ce5f7462cd6a15e8a05a3ab96aa1113593121aa3afd04182cac208b8154036",
+      "bytes": 22188696
+    },
+    "BIBLIO_2003.zip": {
+      "sha256": "4263243833bf0664e883eb6bbdf392822908924af7f29b5fbfaaefa7b1164b2b",
+      "bytes": 25808578
+    },
+    "BIBLIO_2004.zip": {
+      "sha256": "9ab3ba7f00f0c45f5e88e8c3ffbb1c07871d29455dcca8c2eb9153a47356b412",
+      "bytes": 32784571
+    },
+    "BIBLIO_2005.zip": {
+      "sha256": "dca5b173814ba7c8485ef781f571eda1b54ce8592aefc0545d4d78051bbaed9f",
+      "bytes": 32184129
+    },
+    "BIBLIO_2006.zip": {
+      "sha256": "5d070a95e3e95e90e0b0820e11327eb464f3ec8f566a47cfe46c6fc6d1154fc7",
+      "bytes": 26195679
+    },
+    "BIBLIO_2007.zip": {
+      "sha256": "eb7ed9cacdf622478ada419f6920393845e6703c5a5141be74d5bffd40a0b2bb",
+      "bytes": 32047045
+    },
+    "BIBLIO_2008.zip": {
+      "sha256": "76aa56ba4d7914262ffd0a80aa900b400086662ef6ccc3f853a1014936955271",
+      "bytes": 29827766
+    },
+    "BIBLIO_2009.zip": {
+      "sha256": "6bc5b37fabc8e425d2d90390799b5fddfe16ecb029c626fd73bea7b562f4f937",
+      "bytes": 29028069
+    },
+    "BIBLIO_2010.zip": {
+      "sha256": "7cc4cb7817a0e0a33c6b7a631d9e95a535d3c16402d32ddae00601f2babdd3fb",
+      "bytes": 473342
+    },
+    "BIBLIO_2011.zip": {
+      "sha256": "585259a4c28258c5a464fb8b0ac5f15675ce1939d916883104e8b034292cf155",
+      "bytes": 34528817
+    },
+    "BIBLIO_2012.zip": {
+      "sha256": "d9913753fb90ea2ef01efb81e83406bf1082a1e48e00f872c97eae69d6b1bb2c",
+      "bytes": 36578688
+    },
+    "BIBLIO_2013.zip": {
+      "sha256": "ce17267745cc5c6d45cd84f6000611154cb68dae24465223116bbc18c1617a76",
+      "bytes": 39001123
+    },
+    "BIBLIO_2014.zip": {
+      "sha256": "f1b85a2eede523b45a7b1aa4a27a1a3a797642d82177217b226d514646cf1785",
+      "bytes": 36876506
+    },
+    "BIBLIO_2015.zip": {
+      "sha256": "ec3796c0e75abbe4f8bd7d9e3494dc75d2151bd6e3913421ba444d7838392b9c",
+      "bytes": 35296173
+    },
+    "BIBLIO_2016.zip": {
+      "sha256": "0eb99a92e397bb1788e33929cd2393981e82581e3f95a4a230f2e0c1c451c2dd",
+      "bytes": 33716591
+    },
+    "BIBLIO_2017.zip": {
+      "sha256": "f14b299eda41c47a43efef8fdadbebab67cd746256f27c351687d8425efbfe7d",
+      "bytes": 44005995
+    },
+    "BIBLIO_2018.zip": {
+      "sha256": "e5e891b9f2891322ed3977488d4189d88ccb316b002f71cebaa26889c5253144",
+      "bytes": 35951894
+    },
+    "BIBLIO_2019.zip": {
+      "sha256": "d367cd7ae74c9b3fb568482dd54574756552f56c51f988dd7c5082d548724338",
+      "bytes": 32523306
+    },
+    "BIBLIO_2020.zip": {
+      "sha256": "31e8b6d86092d35647d198ae0ca9d751020e7631045f9cf5796211876ea8df33",
+      "bytes": 39958138
+    },
+    "BIBLIO_2021.zip": {
+      "sha256": "58ddffaf146ddab4c322dd385bed06881d2847b8986db0f72f0debb1fb210c4d",
+      "bytes": 43948695
+    },
+    "BIBLIO_2022.zip": {
+      "sha256": "7dfdcbde9bfb8a2e703446ac1c05783a785d81f279e0bf0b91605c662d9f9558",
+      "bytes": 39972409
+    },
+    "BIBLIO_2023.zip": {
+      "sha256": "7083052788b461413f89a8627545249c0a36d74b37ef278b78e8dccf7435a927",
+      "bytes": 29068184
+    },
+    "BIBLIO_2024.zip": {
+      "sha256": "a8f1b47643a60f885c618ff9b23af9a9361565a5cb1c3fb86a401c9d3166bc7b",
+      "bytes": 43017990
+    },
+    "BIBLIO_2025.zip": {
+      "sha256": "96580d6e0bd4993e8680fac32cde86d65e4ab709bf62e88aef5bc81b9229de0c",
+      "bytes": 37896689
+    }
+  },
+  "figures": {
+    "records": 711547,
+    "rejected": 341,
+    "distinct_doc_ids": 707985,
+    "distinct_doc_id_publication_dates": 708176,
+    "exact_repeat_records": 3371,
+    "doc_ids_with_several_publication_dates": 185,
+    "records_without_ipc": 2749,
+    "distinct_ipc_subclasses": 660,
+    "records_without_application_date": 0,
+    "records_with_application_after_publication": 0,
+    "kind_groups": {
+      "ep_translation": 511992,
+      "patent": 105065,
+      "utility_model": 94490
+    },
+    "without_priority_claim": {
+      "total": 240916,
+      "share_percent": 33.9,
+      "by_group_percent": {
+        "ep_translation": 11.6,
+        "patent": 87.0,
+        "utility_model": 95.6
+      }
+    },
+    "ipc": {
+      "mean_distinct_subclasses": 1.81,
+      "two_or_more_subclasses_percent": 48.7,
+      "first_entry_versions": 36,
+      "most_common_version": "2006.01",
+      "most_common_version_percent": 91.6
+    },
+    "years_without_records": [
+      2010
+    ],
+    "by_publication_year": {
+      "2000": {
+        "records": 19202,
+        "ep_translations": 11925,
+        "national": 7277,
+        "distinct_dates": 24
+      },
+      "2001": {
+        "records": 17010,
+        "ep_translations": 9156,
+        "national": 7854,
+        "distinct_dates": 24
+      },
+      "2002": {
+        "records": 20661,
+        "ep_translations": 14207,
+        "national": 6454,
+        "distinct_dates": 24
+      },
+      "2003": {
+        "records": 23916,
+        "ep_translations": 16416,
+        "national": 7500,
+        "distinct_dates": 24
+      },
+      "2004": {
+        "records": 29961,
+        "ep_translations": 22673,
+        "national": 7288,
+        "distinct_dates": 24
+      },
+      "2005": {
+        "records": 29413,
+        "ep_translations": 21755,
+        "national": 7658,
+        "distinct_dates": 24
+      },
+      "2006": {
+        "records": 24484,
+        "ep_translations": 17132,
+        "national": 7352,
+        "distinct_dates": 24
+      },
+      "2007": {
+        "records": 29131,
+        "ep_translations": 21972,
+        "national": 7159,
+        "distinct_dates": 24
+      },
+      "2008": {
+        "records": 27396,
+        "ep_translations": 19926,
+        "national": 7470,
+        "distinct_dates": 24
+      },
+      "2009": {
+        "records": 26485,
+        "ep_translations": 18753,
+        "national": 7732,
+        "distinct_dates": 173
+      },
+      "2011": {
+        "records": 28630,
+        "ep_translations": 18404,
+        "national": 10226,
+        "distinct_dates": 236
+      },
+      "2012": {
+        "records": 30683,
+        "ep_translations": 19945,
+        "national": 10738,
+        "distinct_dates": 246
+      },
+      "2013": {
+        "records": 32262,
+        "ep_translations": 19565,
+        "national": 12697,
+        "distinct_dates": 235
+      },
+      "2014": {
+        "records": 30805,
+        "ep_translations": 18958,
+        "national": 11847,
+        "distinct_dates": 247
+      },
+      "2015": {
+        "records": 28555,
+        "ep_translations": 18493,
+        "national": 10062,
+        "distinct_dates": 247
+      },
+      "2016": {
+        "records": 26954,
+        "ep_translations": 17656,
+        "national": 9298,
+        "distinct_dates": 246
+      },
+      "2017": {
+        "records": 36940,
+        "ep_translations": 29027,
+        "national": 7913,
+        "distinct_dates": 241
+      },
+      "2018": {
+        "records": 28949,
+        "ep_translations": 23228,
+        "national": 5721,
+        "distinct_dates": 226
+      },
+      "2019": {
+        "records": 27609,
+        "ep_translations": 21573,
+        "national": 6036,
+        "distinct_dates": 246
+      },
+      "2020": {
+        "records": 34817,
+        "ep_translations": 27692,
+        "national": 7125,
+        "distinct_dates": 248
+      },
+      "2021": {
+        "records": 41189,
+        "ep_translations": 32470,
+        "national": 8719,
+        "distinct_dates": 248
+      },
+      "2022": {
+        "records": 31583,
+        "ep_translations": 24965,
+        "national": 6618,
+        "distinct_dates": 247
+      },
+      "2023": {
+        "records": 21290,
+        "ep_translations": 14846,
+        "national": 6444,
+        "distinct_dates": 244
+      },
+      "2024": {
+        "records": 34393,
+        "ep_translations": 27712,
+        "national": 6681,
+        "distinct_dates": 249
+      },
+      "2025": {
+        "records": 29229,
+        "ep_translations": 23543,
+        "national": 5686,
+        "distinct_dates": 248
+      }
+    },
+    "by_file": {
+      "BIBLIO_2000.zip": {
+        "records": 19202,
+        "first_publication_date": "2000-01-01",
+        "last_publication_date": "2000-12-16",
+        "rejected": 10
+      },
+      "BIBLIO_2001.zip": {
+        "records": 17010,
+        "first_publication_date": "2001-01-01",
+        "last_publication_date": "2001-12-16",
+        "rejected": 7
+      },
+      "BIBLIO_2002.zip": {
+        "records": 20661,
+        "first_publication_date": "2002-01-01",
+        "last_publication_date": "2002-12-16",
+        "rejected": 11
+      },
+      "BIBLIO_2003.zip": {
+        "records": 23916,
+        "first_publication_date": "2003-01-01",
+        "last_publication_date": "2003-12-16",
+        "rejected": 16
+      },
+      "BIBLIO_2004.zip": {
+        "records": 29961,
+        "first_publication_date": "2004-01-01",
+        "last_publication_date": "2004-12-16",
+        "rejected": 33
+      },
+      "BIBLIO_2005.zip": {
+        "records": 29413,
+        "first_publication_date": "2005-01-01",
+        "last_publication_date": "2005-12-16",
+        "rejected": 38
+      },
+      "BIBLIO_2006.zip": {
+        "records": 24484,
+        "first_publication_date": "2006-01-01",
+        "last_publication_date": "2006-12-16",
+        "rejected": 25
+      },
+      "BIBLIO_2007.zip": {
+        "records": 29131,
+        "first_publication_date": "2007-01-01",
+        "last_publication_date": "2007-12-16",
+        "rejected": 47
+      },
+      "BIBLIO_2008.zip": {
+        "records": 27396,
+        "first_publication_date": "2008-01-01",
+        "last_publication_date": "2008-12-16",
+        "rejected": 69
+      },
+      "BIBLIO_2009.zip": {
+        "records": 26485,
+        "first_publication_date": "2009-01-01",
+        "last_publication_date": "2009-12-30",
+        "rejected": 77
+      },
+      "BIBLIO_2010.zip": {
+        "records": 381,
+        "first_publication_date": "2011-01-10",
+        "last_publication_date": "2011-01-13",
+        "rejected": 0
+      },
+      "BIBLIO_2011.zip": {
+        "records": 28992,
+        "first_publication_date": "2011-01-14",
+        "last_publication_date": "2012-01-12",
+        "rejected": 0
+      },
+      "BIBLIO_2012.zip": {
+        "records": 30189,
+        "first_publication_date": "2012-01-13",
+        "last_publication_date": "2013-01-14",
+        "rejected": 0
+      },
+      "BIBLIO_2013.zip": {
+        "records": 32434,
+        "first_publication_date": "2013-01-15",
+        "last_publication_date": "2014-01-07",
+        "rejected": 0
+      },
+      "BIBLIO_2014.zip": {
+        "records": 30384,
+        "first_publication_date": "2014-01-08",
+        "last_publication_date": "2014-12-30",
+        "rejected": 7
+      },
+      "BIBLIO_2015.zip": {
+        "records": 28555,
+        "first_publication_date": "2015-01-02",
+        "last_publication_date": "2015-12-30",
+        "rejected": 0
+      },
+      "BIBLIO_2016.zip": {
+        "records": 26954,
+        "first_publication_date": "2016-01-04",
+        "last_publication_date": "2016-12-30",
+        "rejected": 1
+      },
+      "BIBLIO_2017.zip": {
+        "records": 36940,
+        "first_publication_date": "2017-01-02",
+        "last_publication_date": "2017-12-29",
+        "rejected": 0
+      },
+      "BIBLIO_2018.zip": {
+        "records": 28949,
+        "first_publication_date": "2018-01-02",
+        "last_publication_date": "2018-12-28",
+        "rejected": 0
+      },
+      "BIBLIO_2019.zip": {
+        "records": 27609,
+        "first_publication_date": "2019-01-02",
+        "last_publication_date": "2019-12-30",
+        "rejected": 0
+      },
+      "BIBLIO_2020.zip": {
+        "records": 34817,
+        "first_publication_date": "2020-01-02",
+        "last_publication_date": "2020-12-30",
+        "rejected": 0
+      },
+      "BIBLIO_2021.zip": {
+        "records": 41189,
+        "first_publication_date": "2021-01-04",
+        "last_publication_date": "2021-12-30",
+        "rejected": 0
+      },
+      "BIBLIO_2022.zip": {
+        "records": 31583,
+        "first_publication_date": "2022-01-03",
+        "last_publication_date": "2022-12-30",
+        "rejected": 0
+      },
+      "BIBLIO_2023.zip": {
+        "records": 21291,
+        "first_publication_date": "2023-01-02",
+        "last_publication_date": "2024-03-14",
+        "rejected": 0
+      },
+      "BIBLIO_2024.zip": {
+        "records": 34392,
+        "first_publication_date": "2024-01-02",
+        "last_publication_date": "2024-12-30",
+        "rejected": 0
+      },
+      "BIBLIO_2025.zip": {
+        "records": 29229,
+        "first_publication_date": "2025-01-02",
+        "last_publication_date": "2025-12-30",
+        "rejected": 0
+      }
+    }
+  }
+}
