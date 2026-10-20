@@ -20,7 +20,9 @@ Guiding principle: Nexus must discover and justify potential opportunities, not 
 
 ## 2. Scientific question
 
-> **Q.** Using only documents published by the OEPM up to year *t*, can pairs of IPC subclasses that have never been classified together on a single document up to *t* be ranked so that those that are classified together for the first time in publications of years *t*+1…*t*+*h* are found more often than by simple rules?
+> **Q.** Using only documents published by the OEPM up to year *t*, can pairs of IPC subclasses that have never been classified together on a single document of the observed corpus up to *t* be ranked so that those that are classified together for the first time in publications of years *t*+1…*t*+*h* are found more often than by simple rules?
+
+**"Never" always means "never within the observed corpus"**: publications from 2000 up to *t*, with 2010 missing. The corpus does not allow saying that a pair never co-occurred before 2000, during 2010, in a document not published by the OEPM, or in an unpublished filing.
 
 The event being predicted is a **first co-classification in an OEPM publication** (FCP). It is not the first appearance of a technological combination in the world, nor the emergence of an invention (see §6.2).
 
@@ -83,10 +85,12 @@ A candidate's record must keep the two apart.
 All definitions refer to an origin year *t* and use only documents published in or before *t*.
 
 * A subclass is **active at *t*** if it appears on at least *m*_min distinct documents published up to *t*.
-* **Type A candidate (never observed).** A pair of active subclasses, not co-classified on any document published up to *t*.
-* **Type B candidate (surprising absence).** A pair of active subclasses whose expected number of co-classifications up to *t* under the null model of §5.5 is at least *e*_min and whose observed number is zero (or, in a variant, at most *n*_max).
+* **Type A candidate (never observed in the corpus).** A pair of active subclasses not co-classified on any document of the observed corpus published up to *t*.
+* **Type B candidate (surprising absence).** A type A pair whose expected number of co-classifications up to *t* under the null model of §5.5 is at least *e*_min. Type B is therefore a **strict subset of type A**: the observed number is exactly zero.
 
-Type A alone is not a white-space definition: the great majority of type A pairs involve subclasses that are too rare for zero to be informative. Type B states why an absence is notable. Neither type is a similarity or a "few matches" criterion.
+A variant admitting up to *n*_max observed co-classifications is **not part of this design**. Such pairs are not type A, are not eligible for FCP, and would need their own pool, their own event definition and their own denominator; if studied, it will be introduced by a later ADR.
+
+Type A alone is not a white-space definition: the great majority of type A pairs involve subclasses that are too rare for zero to be informative. Type B states why an absence is notable. Neither type is a similarity or a "few matches" criterion, and "absent" always refers to the observed corpus (§2).
 
 A type A or type B pair becomes a **research candidate** only if all of the following hold, each checkable from the record:
 
@@ -98,11 +102,11 @@ A type A or type B pair becomes a **research candidate** only if all of the foll
 
 The research-candidate status says that a pair is worth an expert's attention. It is not a probability of success, of realization, or of commercial value, and no such interpretation may be displayed.
 
-*m*_min and *e*_min are parameters, not constants of the method. Their values may be chosen only on development origins (§6.3) from a grid declared in advance (P2).
+*m*_min and *e*_min are parameters, not constants of the method. Their values may be chosen only on development origins (§6.4) from a grid declared in advance (P2).
 
 ### 5.5 Null model — required properties
 
-The null model supplies the expected co-classification count of a pair. The choice among implementations is pending (P1). Whatever is chosen must:
+The null model supplies the expected co-classification count of a pair. The choice among implementations is resolved in outline in §10.2 (P1). Whatever is chosen must:
 
 * preserve for each subclass its number of documents, and for each document its number of subclasses (a degree-preserving randomisation of the document × subclass incidence);
 * randomise within publication-year strata, so that corpus growth and changing document mix do not create expected counts that never existed;
@@ -165,17 +169,18 @@ Year is the only unit of time in this ADR. Finer analyses would not be comparabl
 
 Stated before any detector is run; each can fail.
 
-* **H1 — signal beyond popularity.** On the confirmatory origins, at least one ranking from a pre-declared family (null-model residual of §5.5; common-neighbour and Adamic–Adar scores on the co-classification graph; a growth-trend score) has a higher AUC-PR than the popularity baseline *B1*.
-* **H2 — surprising absence adds information.** Among candidates matched on popularity, type B candidates have a higher rate of FCP than type A candidates that are not type B.
+* **H1 — signal beyond the strongest simple rule (primary).** Let *F* be the family of detector scores built on the null model of §5.5 (the residual alone, or the residual combined with a relatedness term on the co-classification graph; the exact members are fixed by the method decision, P1). One score from *F* and the strongest baseline among B0–B4 are each selected on the development origins and then frozen. On the confirmatory origins, the frozen score has a higher AUC-PR than the frozen baseline.
+* **H1b — signal beyond popularity (secondary, always reported).** The same frozen score against the popularity baseline *B1*, whether or not *B1* was the strongest on the development origins.
+* **H2 — surprising absence adds information.** Within the evaluation pool (the type A pairs), type B pairs have a higher FCP rate than the remaining type A pairs matched on popularity.
 * **H3 — robustness.** The direction of the H1 result does not reverse under the sensitivity set of §8.6.
 
-No hypothesis claims that the ranking identifies opportunities. Popularity may already explain most of the signal; if so H1 is not supported, and that outcome is reported as the finding. **Unresolved** is an allowed outcome.
+No hypothesis claims that the ranking identifies opportunities. Popularity may already explain most of the signal; if so H1 and H1b are not supported, and that outcome is reported as the finding. **Unresolved** is an allowed outcome.
 
 ## 8. Evaluation protocol
 
 ### 8.1 Task
 
-At each origin *t*: the candidate pool is the type A pairs of active subclasses; the positives are the pool pairs with FCP in *t*+1…*t*+*h*; a detector assigns each pool pair a score computed from documents published up to *t* only; the ranking is compared with the realised outcome.
+At each origin *t*: the **evaluation pool** is the set of type A pairs of active subclasses; type B pairs are a subset of that pool and are not a separate pool. The positives are the pool pairs with FCP in *t*+1…*t*+*h*. A detector assigns each pool pair a score computed from documents published up to *t* only, and the ranking is compared with the realised outcome. H2 compares type B pairs with the remaining pool pairs inside the same pool.
 
 ### 8.2 Baselines (declared in advance)
 
@@ -210,7 +215,7 @@ B2 is undefined for the development origin 2003 (no earlier origin) and is then 
 
 ### 8.6 Sensitivity analyses
 
-Unit (main group; WIPO technology fields), *m*_min grid (10, 20, 50), *e*_min grid, horizon (2, 3, 5), IPC entries used (P5), corpus restriction to national documents only, axis (S1), hidden-year check (S2), exclusion of 2023 from the 2022 horizon, deduplication rule (P4). Conclusions are stated only where they survive.
+Unit (main group; WIPO technology fields), *m*_min grid (10, 20, 50), *e*_min grid, horizon (2, 3, 5), IPC entries used (all entries is primary; inventive entries only is a sensitivity, P5), document kind (EP translations only; national documents only), axis (S1), hidden-year check (S2), exclusion of 2023 from the 2022 horizon, deduplication rule (P4). Conclusions are stated only where they survive.
 
 ### 8.7 Human review
 
@@ -248,24 +253,39 @@ The counts in the corpus characterization show that thousands of FCP positives e
 * **A7.** The baselines, metrics, temporal validation and resampling unit of §8.
 * **A8.** Hypotheses H1–H3, with "unresolved" as an allowed outcome.
 
-### 10.2 Pending approval
+### 10.2 Resolutions proposed in the review of pull request #129, and what stays open
 
-| Id | Question | Why it is open |
-|---|---|---|
-| P1 | Which null-model implementation (randomisation by swaps, or an analytic approximation), and the form of the score | Needs a small comparison of cost and fidelity; constrained by §5.5 |
-| P2 | The grids for *m*_min and *e*_min | The value 20 used in the descriptive counts has no scientific justification |
-| P3 | The numeric success criterion for H1, the review protocol and the pre-registration format | Depends on the effect-size estimate of §8.9; proposed structure: a lower confidence bound above zero for the AUC-PR difference against the strongest baseline in at least three of the four confirmatory origins |
-| P4 | Deduplication of repeated identifiers (3,562 repeats; 185 with different dates) and of translation plus national documents describing one invention | No family identifier in the source |
-| P5 | Which IPC entries count (all, or inventive only) and whether the stored classification is the one assigned at publication (91.6 % of records carry version 2006.01) | Not verified; affects the unit's meaning |
-| P6 | Treatment of the 2023 drop in EP translations (exclude, flag, or analyse on national documents) | Cause unknown |
-| P7 | Consultation with the OEPM about the 2010 gap, the 2023 drop, the repeated identifiers, programmatic access, and the terms of the OpenData licence for derived products | Requires an external reply |
-| P8 | Relation to the OEPM production-scale patent corpus contract proposed on the unmerged branches of pull requests #112 and #113 | Different purpose and acquisition route; whether to reconcile is a project decision. Numbers 0032–0035 are held by those branches |
-| P9 | Whether to acquire the OEPM CPC dataset as a robustness check | Adds a second classification but not a second source of documents |
-| P10 | Whether the primary analysis should instead be the national-document corpus on the filing axis | It removes the disclosure-delay confound (§6.2) at the cost of fewer positives (about 1,200 per origin against 2,100–3,200 on the confirmatory origins), and changes the universe of inference to national filings. The publication axis on the full corpus is adopted here because the brief for this work asks for the more complete coverage; the choice is flagged for explicit confirmation |
+The ten questions raised in the first version of this ADR keep their identifiers. The resolutions below take effect only when this ADR is approved; until then the status stays Proposed. A resolution fixes a protocol so that the experiment can refute the hypotheses; it does not turn a hypothesis into a fact.
+
+| Id | Question | Resolution | Still open |
+|---|---|---|---|
+| P1 | Null model | Reference: degree-preserving bipartite randomisation of the document × subclass incidence, stratified by publication year. The cost and fidelity of an analytic approximation are compared before it is discarded. The result is a ranking score and is never read as a significance test | The exact form of the score and of the relatedness term (the members of *F*, H1) |
+| P2 | Thresholds | *m*_min ∈ {10, 20, 50}. A grid for *e*_min is declared before use. Values are chosen on development origins only and the configuration is frozen before the confirmatory origins are evaluated | The grid values for *e*_min |
+| P3 | Numeric success criterion | Primary: the lower bound of the paired 95 % interval of the AUC-PR difference against the frozen strongest baseline is above zero in at least three of the four confirmatory origins. The absolute size of the improvement is reported as well: statistical significance is not practical usefulness | Number of resamples, interval type and the human-review protocol, to be fixed in the pre-registration |
+| P4 | Repeated identifiers | Exact repeats of the analytical unit (same identifier and publication date) are removed, keeping the provenance of every original record. The 185 identifiers with more than one publication date stay as distinct publications. National documents and EP translations are not merged without a family identifier. Sensitivity by document kind (§8.6) | None |
+| P5 | IPC entries | All entries are the primary analysis, for continuity with the exploratory counts. Inventive entries only is a sensitivity. The uncertainty about historical IPC revisions stays stated | Whether stored classifications are those assigned at publication |
+| P6 | 2023 drop in EP translations | Observed records are kept and nothing is imputed. The 2022 horizon is reported with and without 2023, and the limitation appears in both results | Cause of the drop (P7) |
+| P7 | Consultation with the OEPM | To be done: the 2010 gap, the 2023 drop, the repeated identifiers, programmatic access and the reuse conditions. A favourable reply does not resolve the other limitations | The reply |
+| P8 | Relation to the corpus contract on #112 and #113 | The retrieval corpus of the existing product and the bibliographic corpus of this experiment stay separate. Their acquisition contracts are reconciled before any shared infrastructure is introduced | Reconciliation |
+| P9 | CPC | Deferred. The IPC experiment is reproduced and evaluated first; CPC is considered afterwards if it would add a useful sensitivity that justifies its cost and access conditions | None for now |
+| P10 | Primary time axis | Confirmed: the publication axis on the full corpus, with the event always called FCP and never technological emergence. The filing-year diagnostic D1 and the sensitivity on national documents with a filing-year outcome are mandatory, and the latter is reported as answering a different universe of inference | None |
 
 ## 11. Consequences
 
 * This ADR changes no code, test, dependency or contract; the landscape modules and the MVP are untouched, and no component is retired.
-* It commits Nexus to a first experiment whose possible outcomes include "no better than popularity".
-* It makes the following work depend on approval of this ADR: a source adapter for the bibliographic files that must reproduce every number of the corpus characterization from the files identified by hash; a data and domain contract for observations and candidates; a pre-registration; and the baselines.
+* It commits Nexus to a first experiment whose possible outcomes include "no better than the strongest simple rule" and "unresolved".
 * It names what a candidate record must contain, so that a later interface cannot present a bare score.
+* Approval of this ADR as a research contract is separate from approval of the methodological hypotheses of §7: the first fixes what will be done and reported, the second is what the experiment may refute.
+
+### 11.1 Conditions on the source adapter that follows
+
+The exploratory figures were produced by a parser that is not in the repository (corpus characterization §9), and no one has yet reproduced them independently. The adapter must close that gap. It must:
+
+* verify the SHA-256 of the 26 files before reading them;
+* keep the original values and the provenance of every record;
+* group by the publication date of the record, never by the name or year of the file;
+* document and test the handling of invalid XML, repeated identifiers and IPC entries;
+* reproduce the tables and percentages published in the corpus characterization, and show any discrepancy instead of adjusting it;
+* keep the original data out of git, as the access and distribution conditions require.
+
+The adapter does not implement a detector and does not retire any component.
