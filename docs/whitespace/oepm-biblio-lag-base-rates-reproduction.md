@@ -46,15 +46,27 @@ That is every printed figure of §4.2, of the base-rate table (2012–2022), of 
 
 ## 4. How the agreement was reached
 
-The first run, with my first reading of the definitions, differed in **7 figures**, all at origin 2013 and by one unit (candidate pairs 144,361 against 144,360, positives 2,097 against 2,096, the same pair in the national subcorpus and in the filing diagnostic). Nothing else differed. I investigated instead of accepting or ignoring it:
+The first run, with my first reading of the definitions, differed in **7 figures**, all at origin 2013 and by one unit (candidate pairs 144,361 against 144,360, positives 2,097 against 2,096, the same pair in the national subcorpus and in the filing diagnostic). Nothing else differed. The seven lines of that run, kept as it printed them:
+
+```text
+/full_corpus/2013/candidate_pairs: published 144360, reproduced 144361
+/full_corpus/2013/positives: published 2096, reproduced 2097
+/full_corpus/2013/filing_diagnostic/positives: published 2096, reproduced 2097
+/full_corpus/2013/hidden_year/positives: published 2096, reproduced 2097
+/national/origins/2013/candidate_pairs: published 119995, reproduced 119996
+/national/origins/2013/positives: published 1259, reproduced 1260
+/national/origins/2013/filing_diagnostic/filed_by_origin: published 478, reproduced 479
+```
+
+The run was repeated after step 1 below and printed the same seven lines; step 2 removed them. I investigated instead of accepting or ignoring it:
 
 1. Counting "distinct documents" by (identifier, publication date) instead of by identifier was one wrong reading and was replaced by the literal one (distinct identifier). This alone did not remove the difference.
 2. The pair step had dropped records that repeat an identifier and a publication date. **Those repeats are not always identical**: of 3,371 repeated (identifier, date) keys, 19 differ in their IPC subclasses, 29 in the IPC entries, 83 in the applicants, 7 in the title and 1 in the priority dates. One pair is classified together only in one copy. Keeping every record removed the difference.
-3. The old exploratory data (the throw-away parser's output) were used only to find which reading was at fault; no figure was altered by hand. The published numbers guided the choice between two readings of an ambiguous definition, which is a limit on independence.
+3. The old exploratory data (the throw-away parser's output) were used only to find which reading was at fault; no figure was altered by hand. The published numbers guided the choice between two readings of an ambiguous definition, which is a limit on independence. Step 2 is a finding about the data, not a convenience: it stands whether or not the numbers had matched. Which copy of a repeated key is the analytical unit, and whether copies are merged, is **not decided here**: this analysis takes every copy because that is what the printed figures used, and the choice must be justified in the ADR (§6).
 
 ## 5. Results that were not printed
 
-* **Strict reading of §7.1.** Requiring every contributing record to be filed by the origin, positives already filed are 94.7 % (2006), 81.9 % (2013), 87.3 % (2016), 87.9 % (2019), 87.0 % (2022), against 95.9 %, 84.2 %, 89.2 %, 90.1 %, 89.4 % under the printed reading. The conclusion (most positives of the publication axis are filings that predate the origin) holds under both; the "84–90 %" of ADR 0036 §6.2 is the permissive reading.
+* **Strict reading of §7.1.** Requiring every contributing record to be filed by the origin, positives already filed are 94.7 % (2006), 81.9 % (2013), 87.3 % (2016), 87.9 % (2019), 87.0 % (2022), against 95.9 %, 84.2 %, 89.2 %, 90.1 %, 89.4 % under the printed reading. The conclusion (most positives of the publication axis are filings that predate the origin) holds under both; the "84–90 %" of ADR 0036 §6.2 is the permissive reading. The strict figures do not replace the printed ones; both are reported.
 * **Lag with exact repeats removed.** Mean 6.88 / 1.22, median 6 / 1, 90th percentile 11 / 3: the same to the printed precision.
 * **Hidden year, per year**: see the results file. Shares of the positives: 3.7–6.1 % (2013), 2.5–4.5 % (2016), 1.7–3.8 % (2019), consistent with "roughly 2 % to 6 %".
 * **Completeness**: 92.7 % (2013 cohort), 77.6 % (2016), 49.0 % (2019), 7.5 % (2022), printed as 93, 78, 49, 8. The 2022 value rounds at the boundary (7.5 → 8) and should be quoted as 7.5 %.
