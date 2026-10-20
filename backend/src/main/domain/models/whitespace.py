@@ -27,6 +27,16 @@ class SourceRecordProvenance(BaseModel):
         return v
 
 
+class SourceAnomaly(BaseModel):
+    """An optional field the source states but that cannot be read; the record is kept and the raw value is too."""
+
+    model_config = ConfigDict(frozen=True)
+
+    field: str
+    raw_value: str
+    reason: str
+
+
 class IpcEntry(BaseModel):
     """One IPC classification entry exactly as the source states it."""
 
@@ -62,7 +72,13 @@ class PatentPublication(BaseModel):
     applicants: tuple[str, ...] = ()
     inventors: tuple[str, ...] = ()
     ipc_entries: tuple[IpcEntry, ...] = ()
+    anomalies: tuple[SourceAnomaly, ...] = ()
     provenance: SourceRecordProvenance
+
+    @property
+    def has_priority_claim(self) -> bool:
+        """True if the source states a priority claim, even when its date could not be read."""
+        return bool(self.priority_dates) or any(a.field == "priority_date" for a in self.anomalies)
 
     @property
     def doc_id(self) -> str:

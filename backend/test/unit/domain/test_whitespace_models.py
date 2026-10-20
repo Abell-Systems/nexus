@@ -3,7 +3,13 @@ from datetime import date
 import pytest
 from pydantic import ValidationError
 
-from domain.models.whitespace import IpcEntry, PatentPublication, RejectedRecord, SourceRecordProvenance
+from domain.models.whitespace import (
+    IpcEntry,
+    PatentPublication,
+    RejectedRecord,
+    SourceAnomaly,
+    SourceRecordProvenance,
+)
 
 PROVENANCE = SourceRecordProvenance(
     source_file="BIBLIO_2020.zip", file_sha256="a" * 64, archive_path="m.zip/d.zip/x.xml"
@@ -44,3 +50,17 @@ def test_shouldNotChangeWhenAFieldIsAssignedAfterConstruction():
 def test_shouldCarryProvenanceAndReasonWhenARecordIsRejected():
     rejected = RejectedRecord(provenance=PROVENANCE, reason="ParseError: boom")
     assert rejected.provenance.archive_path == "m.zip/d.zip/x.xml"
+
+
+def test_shouldStillSayThereIsAPriorityClaimWhenItsDateWasUnreadable():
+    anomaly = SourceAnomaly(field="priority_date", raw_value="101108", reason="invalid priority date: '101108'")
+
+    assert publication(anomalies=(anomaly,)).has_priority_claim is True
+    assert publication().has_priority_claim is False
+    assert publication(priority_dates=(date(2017, 1, 1),)).has_priority_claim is True
+
+
+def test_shouldNotCountAnUnreadableApplicationDateAsAPriorityClaim():
+    anomaly = SourceAnomaly(field="application_date", raw_value="x", reason="invalid application date: 'x'")
+
+    assert publication(anomalies=(anomaly,)).has_priority_claim is False

@@ -173,7 +173,6 @@ def test_shouldReadTheRecordWhenItContainsXmlIllegalControlCharacters(tmp_path):
     ("xml", "reason"),
     [
         (record_xml(published="20201340"), "invalid publication date"),
-        (record_xml(application="2018-01-01"), "invalid application date"),
         (record_xml(ipcs=(("B", "05", ""),)), "incomplete IPC entry"),
         (record_xml().replace(b"es-patent-document", b"other"), "unexpected root element"),
     ],
@@ -185,6 +184,37 @@ def test_shouldRejectTheRecordWithAReasonWhenAFieldIsMalformed(tmp_path, xml, re
 
     assert isinstance(outcome, RejectedRecord)
     assert reason in outcome.reason
+
+
+def test_shouldKeepTheRecordAndTheRawValueAsAnAnomalyWhenThePriorityDateIsUnreadable(tmp_path):
+    xml = record_xml(priorities=("101108", "20170101"))
+    digest = write_source(tmp_path, "f.zip", {"BIBLIO_ES20200120.zip": {"a": xml}})
+
+    (publication,) = OepmBiblioSource(tmp_path, {"f.zip": digest}).read()
+
+    assert isinstance(publication, PatentPublication)
+    assert publication.priority_dates == (date(2017, 1, 1),)
+    (anomaly,) = publication.anomalies
+    assert (anomaly.field, anomaly.raw_value) == ("priority_date", "101108")
+    assert "invalid priority_date" in anomaly.reason
+    assert publication.provenance.archive_path.endswith(".xml")
+
+
+def test_shouldKeepTheRecordWithoutAnApplicationDateWhenTheSourceValueIsUnreadable(tmp_path):
+    digest = write_source(tmp_path, "f.zip", {"BIBLIO_ES20200120.zip": {"a": record_xml(application="2018-01-01")}})
+
+    (publication,) = OepmBiblioSource(tmp_path, {"f.zip": digest}).read()
+
+    assert publication.application_date is None
+    assert [(a.field, a.raw_value) for a in publication.anomalies] == [("application_date", "2018-01-01")]
+
+
+def test_shouldReportNoAnomaliesWhenEveryOptionalFieldIsReadable(source_dir):
+    directory, expected = source_dir
+
+    (publication,) = OepmBiblioSource(directory, expected).read()
+
+    assert publication.anomalies == ()
 
 
 def test_shouldNotExpandEntitiesWhenTheDocumentDeclaresThem(tmp_path):

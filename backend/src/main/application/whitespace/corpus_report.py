@@ -32,6 +32,8 @@ def build_figures(outcomes: Iterable[PatentPublication | RejectedRecord]) -> dic
     subclasses: set[str] = set()
     groups, no_priority = Counter[str](), Counter[str]()
     versions = Counter[str]()
+    anomalies = Counter[str]()
+    records_with_anomalies = 0
     total = no_ipc = two_or_more = distinct_subclass_total = no_application = application_after_publication = 0
 
     for item in outcomes:
@@ -41,7 +43,9 @@ def build_figures(outcomes: Iterable[PatentPublication | RejectedRecord]) -> dic
         group = kind_group(item.kind)
         total += 1
         groups[group] += 1
-        no_priority[group] += not item.priority_dates
+        no_priority[group] += not item.has_priority_claim
+        anomalies.update(a.field for a in item.anomalies)
+        records_with_anomalies += bool(item.anomalies)
         id_dates.add((item.doc_id, item.publication_date))
 
         file_figures = by_file.setdefault(item.provenance.source_file, {"records": 0, "dates": []})
@@ -75,6 +79,8 @@ def build_figures(outcomes: Iterable[PatentPublication | RejectedRecord]) -> dic
         "distinct_doc_id_publication_dates": len(id_dates),
         "exact_repeat_records": total - len(id_dates),
         "doc_ids_with_several_publication_dates": sum(1 for n in ids_per_date_count.values() if n > 1),
+        "records_with_source_anomalies": records_with_anomalies,
+        "source_anomalies_by_field": dict(sorted(anomalies.items())),
         "records_without_ipc": no_ipc,
         "distinct_ipc_subclasses": len(subclasses),
         "records_without_application_date": no_application,

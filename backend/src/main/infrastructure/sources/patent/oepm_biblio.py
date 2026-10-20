@@ -2,7 +2,9 @@
 
 Verifies the SHA-256 of every expected file before reading any of them, keeps every record (repeated
 identifiers included), and returns records the XML parser cannot read as ``RejectedRecord`` instead of
-dropping them. Dates are taken from each record, never from the name of the file that holds it.
+dropping them. An unreadable optional date (application, priority) does not cost the record: the date is
+left absent, the raw value is kept as a ``SourceAnomaly``. A record without a readable publication date or
+with an incomplete IPC entry is rejected. Dates are taken from each record, never from the name of its file.
 """
 
 import hashlib
@@ -14,7 +16,7 @@ from collections.abc import Iterator, Mapping
 from datetime import date, datetime
 from pathlib import Path
 
-from domain.models.whitespace import IpcEntry, PatentPublication, RejectedRecord, SourceRecordProvenance
+from domain.models.whitespace import IpcEntry, PatentPublication, RejectedRecord, SourceAnomaly, SourceRecordProvenance
 from domain.protocols.whitespace import SourceIntegrityError
 
 _DOCTYPE = re.compile(r"<!DOCTYPE[^>]*>")
@@ -36,6 +38,17 @@ def _to_date(text: str | None, field: str) -> date:
         return datetime.strptime(text, "%Y%m%d").date()
     except ValueError as exc:
         raise ValueError(f"invalid {field}: {text!r}") from exc
+
+
+def _optional_date(text: str | None, field: str, anomalies: list[SourceAnomaly]) -> date | None:
+    """An optional date that cannot be read becomes absent and is recorded; the record is not lost."""
+    if not text:
+        return None
+    try:
+        return _to_date(text, field)
+    except ValueError as exc:
+        anomalies.append(SourceAnomaly(field=field, raw_value=text, reason=str(exc)))
+        return None
 
 
 def _party_names(root: ET.Element, tag: str) -> tuple[str, ...]:
@@ -71,22 +84,27 @@ def _publication(raw: bytes, provenance: SourceRecordProvenance) -> PatentPublic
     root = ET.fromstring(_XML_ILLEGAL_CONTROL.sub("", text))
     if root.tag != "es-patent-document":
         raise ValueError(f"unexpected root element {root.tag!r}")
-    application = root.findtext(".//application-reference/document-id/date")
+    anomalies: list[SourceAnomaly] = []
+    application = _optional_date(
+        root.findtext(".//application-reference/document-id/date"), "application_date", anomalies
+    )
+    priorities = tuple(
+        d
+        for claim in root.iter("priority-claim")
+        if (d := _optional_date(claim.findtext(".//date"), "priority_date", anomalies))
+    )
     return PatentPublication(
         country=root.get("country") or "",
         doc_number=root.get("doc-number") or "",
         kind=root.get("kind") or "",
         publication_date=_to_date(root.get("date-publ"), "publication date"),
-        application_date=_to_date(application, "application date") if application else None,
-        priority_dates=tuple(
-            _to_date(claim.findtext(".//date"), "priority date")
-            for claim in root.iter("priority-claim")
-            if claim.findtext(".//date")
-        ),
+        application_date=application,
+        priority_dates=priorities,
         title=root.findtext(".//invention-title") or "",
         applicants=_party_names(root, "applicant"),
         inventors=_party_names(root, "inventor"),
         ipc_entries=tuple(_ipc_entry(node) for node in root.iter("classification-ipcr")),
+        anomalies=tuple(anomalies),
         provenance=provenance,
     )
 

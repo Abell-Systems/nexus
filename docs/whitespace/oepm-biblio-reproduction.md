@@ -1,32 +1,28 @@
 # Reproduction of the OEPM bibliographic corpus characterization
 
-**Status:** Result of one run of `scripts/reproduce_oepm_biblio_characterization.py`. Descriptive; no figure was adjusted to force agreement.
+**Status:** Result of three runs of `scripts/reproduce_oepm_biblio_characterization.py`, in the order they happened. Descriptive; no figure was adjusted to force agreement.
 **Date:** 2026-10-20
 **Checks:** [corpus characterization](oepm-biblio-corpus-characterization.md), [ADR 0036](../adr/0036-technology-white-space-scientific-scope.md) §11.1
-**Scope:** Whether the figures published in the characterization can be reproduced from the 26 source files through the repository's adapter. **Documentary only.**
+**Scope:** Whether the figures published in the characterization can be reproduced from the 26 source files through the repository's adapter, and what the reproduction changed. **Documentary only.**
 
 ---
 
 ## 1. What was run
 
-* Adapter: `OepmBiblioSource` (`infrastructure/sources/patent/oepm_biblio.py`), figures by `application/whitespace/corpus_report.py`.
-* Published figures: `config/whitespace/oepm_biblio_2000_2025.json`, transcribed from the characterization (228 figures: sections 3, 4.1, 4.3, 5, 6 and 8). A test checks that the file hashes and sizes of that JSON equal those printed in the characterization.
-* Input: the 26 files `BIBLIO_2000.zip` … `BIBLIO_2025.zip`, downloaded on 2026-10-20 and kept outside git.
-* Run time: about 2.5 minutes on one process.
+* Adapter: `OepmBiblioSource` (`infrastructure/sources/patent/oepm_biblio.py`); figures by `application/whitespace/corpus_report.py`.
+* Published figures: `config/whitespace/oepm_biblio_2000_2025.json`, transcribed from the characterization (228 figures from sections 3, 4.1, 4.3, 5, 6 and 8). A test checks that the file names, sizes and SHA-256 of that JSON equal those printed in the characterization.
+* Input: `BIBLIO_2000.zip` … `BIBLIO_2025.zip`, downloaded on 2026-10-20, kept outside git.
+* About 2.5 minutes per run on one process.
 
 ## 2. Integrity
 
-All 26 files matched their expected SHA-256 before any record was read. The reproduced file identities are therefore exactly those of §8 of the characterization.
+All 26 files matched their expected SHA-256 before any record was read, in every run. The file identities are exactly those of §8 of the characterization.
 
-| | Count |
-|---|---|
-| Records read | 711,544 |
-| Records rejected (counted, not dropped) | 344 |
-| Records in the source | 711,888 |
+## 3. Results, in order
 
-## 3. Result
+### 3.1 Run 1 — adapter that rejected a record with an unreadable optional date (historical, superseded by runs 2 and 3)
 
-Of the 228 published figures, **213 were reproduced exactly and 15 differ**. No figure was corrected.
+The figures of this section describe a behaviour that no longer exists and are kept only to show what the reproduction found. 711,544 records read, 344 rejected. Of the 228 published figures, 213 matched and 15 differed:
 
 | # | Figure | Published | Reproduced |
 |---|---|---|---|
@@ -46,25 +42,40 @@ Of the 228 published figures, **213 were reproduced exactly and 15 differ**. No 
 | 14 | `by_file.BIBLIO_2013.zip.rejected` | 0 | 2 |
 | 15 | `ipc.first_entry_versions` | 36 | 45 |
 
-### 3.1 Differences 1–14: three records with an unreadable priority date
+Differences 1–14 had one cause: three records whose priority date is not a valid date (§5) were rejected by the adapter, while the exploratory parser behind the characterization had kept the raw string. Difference 15 was an error of the characterization (§3.3).
 
-Fourteen of the fifteen differences have one cause. The adapter rejects a record whose priority date is not a valid `YYYYMMDD` date; the exploratory parser behind the characterization kept the raw string. Three records are affected:
+### 3.2 Decision: keep the record, leave the date absent
 
-| Record | File | Priority date in the source |
-|---|---|---|
-| `ES2283462` kind `T3`, published 2007-11-01 | `BIBLIO_2007.zip` | `00000000` |
-| `ES2394445` kind `A1`, published 2013-01-31 | `BIBLIO_2013.zip` | `101108` |
-| `ES2394445` kind `B1`, published 2013-08-20 | `BIBLIO_2013.zip` | `101108` |
+An unreadable optional date (application or priority) should not cost a usable publication. The adapter now keeps the record, leaves that date absent, keeps the raw value and the reason as a `SourceAnomaly`, and counts the anomaly. A record without a readable publication date, or with an incomplete IPC entry, is still rejected. ADR 0036 §11.1 asks the adapter to keep the original values and the provenance of every record and to document and test its handling of invalid XML, repeated identifiers and IPC entries; it does not ask for a record to be rejected for an unreadable optional field, so no amendment was needed.
 
-These three are now rejected with their provenance and reason. Nothing else about them was changed. Whether such a record should be rejected, or kept with the malformed priority date set aside, is a decision, not a bug fix, and is left open (§6).
+This is a decision about the data contract, taken on that principle. It is the reason differences 1–14 disappeared in run 2, and it was not taken to make the counts agree.
 
-### 3.2 Difference 15: an error in the characterization
+### 3.3 Run 2 — against the original published figures
 
-`ipc.first_entry_versions` was published as 36 "distinct year-month values" and is 45. The published number came from truncating the version string to six characters before counting, which merged different versions (for example `2016.01` … `2016.12`). The 45 raw values include an empty value and the non-date `3.11`, so the statement in §5 of the characterization that the indicator is in `YYYY.MM` form is not true of every record. The reproduced value is the correct one.
+711,547 records read, 341 rejected. One of the 228 published figures differs, and two figures that were not published appear:
+
+```text
+/ipc/first_entry_versions: published 36, reproduced 45
+/records_with_source_anomalies: reproduced 3, not published
+/source_anomalies_by_field: reproduced {'priority_date': 3}, not published
+3 difference(s) from 228 published figures
+```
+
+The `first_entry_versions` value was published as 36 "distinct year-month values". It came from truncating the version string to six characters before counting, which merged different versions (for example `2016.01` … `2016.12`). The 45 raw values are 43 in `YYYY.MM` form, one empty value and one that is not a date (`3.11`). So the characterization was wrong, and the reproduction is right.
+
+### 3.4 Run 3 — after the errata
+
+The characterization received errata (its §11: 45 versions with their forms, and the three records of §5) and the JSON of published figures was updated accordingly. Result:
+
+```text
+All 230 published figures reproduced
+```
+
+The agreement of the last two figures is by construction: the errata were written from run 2. It shows that the document and the adapter now describe the same corpus, not that the original document was right.
 
 ## 4. Rejected records
 
-The reproduction is the first complete accounting of rejected records: 344 in total, all counted and each kept with its file, its path inside the archive and its reason.
+341 in total, each kept with its file, hash, path inside the archive and reason; the same number the characterization published.
 
 | Reason | Records | First example |
 |---|---|---|
@@ -72,24 +83,32 @@ The reproduction is the first complete accounting of rejected records: 344 in to
 | Undefined entity | 86 | `ES2174601_20021101_T3.xml` in `BIBLIO_2002.zip` |
 | Junk after the document element | 7 | `ES1125530_20140929_U.xml` in `BIBLIO_2014.zip` |
 | Mismatched tag | 3 | `ES2221875_20050116_T3.xml` in `BIBLIO_2005.zip` |
-| Unreadable priority date | 3 | `ES2283462_20071101_T3.xml` in `BIBLIO_2007.zip` |
 | No element found (empty or truncated) | 1 | `ES2555789_20160617_B1.xml` in `BIBLIO_2016.zip` |
 
-By file: 2000 10, 2001 7, 2002 11, 2003 16, 2004 33, 2005 38, 2006 25, 2007 48, 2008 69, 2009 77, 2013 2, 2014 7, 2016 1; no other file has a rejected record. The "undefined entity" records may hold legitimate text with an `&` entity that the removal of the DOCTYPE leaves undefined; that has not been investigated and no record was repaired.
+By file: 2000 10, 2001 7, 2002 11, 2003 16, 2004 33, 2005 38, 2006 25, 2007 47, 2008 69, 2009 77, 2014 7, 2016 1; no other file has a rejected record. The "undefined entity" records may hold legitimate text with an `&` entity that the removal of the DOCTYPE leaves undefined; that has not been investigated and no record was repaired.
 
-## 5. What this does not cover
+## 5. Records kept with an anomaly
+
+| Record | File | Field | Raw value in the source |
+|---|---|---|---|
+| `ES2283462` kind `T3`, published 2007-11-01 | `BIBLIO_2007.zip` | priority date | `00000000` |
+| `ES2394445` kind `A1`, published 2013-01-31 | `BIBLIO_2013.zip` | priority date | `101108` |
+| `ES2394445` kind `B1`, published 2013-08-20 | `BIBLIO_2013.zip` | priority date | `101108` |
+
+All three count as having a priority claim, since the source states one. The raw value is kept and is not used as a date. `ES2283462` keeps its other, readable priority date (2000-12-27); the two `ES2394445` records are left with no readable priority date. Their IPC entries, applicants and the rest of the record are intact.
+
+## 6. What this does not cover
 
 * Section 4.2 of the characterization (publication lag and completeness of filing-year cohorts).
-* Section 7 (descriptive base rates, the estimate of the effect of the 2010 gap, the delay diagnostic and the national-documents counts). They need decisions that ADR 0036 keeps open (for example the activity threshold) and are left to a later change.
-* The facts that no record carries a CPC code, abstract or family identifier are taken from the structure of the XML and not computed.
+* Section 7 (base rates, the estimate of the effect of the 2010 gap, the delay diagnostic, the national-documents counts). They need decisions that ADR 0036 keeps open, such as the activity threshold, and are left to a later change.
+* That the XML carries no CPC code, abstract or family identifier is taken from its structure, not computed.
 
-## 6. Open points raised by the reproduction
+## 7. Open points
 
-1. **Malformed priority dates:** reject the record (current behaviour) or keep it and set the priority aside. Three records out of 711,888.
-2. **Errata to the characterization:** correct the count of distinct IPC versions to 45 and the wording about their form, and add the three rejected records to §3 and §6. Not applied here, so that the published document and its transcription stay comparable.
-3. **Undefined-entity records (86):** worth a look before they are given up for lost.
+1. The 86 "undefined entity" records are worth a look before they are given up.
+2. Only the two optional dates follow the keep-and-record rule. An incomplete IPC entry still rejects the record; extending the rule to IPC entries would change what the classification counts mean and is not done here.
 
-## 7. How to repeat
+## 8. How to repeat
 
 ```text
 python scripts/reproduce_oepm_biblio_characterization.py --data-dir data/raw/oepm_open [--write-figures FILE]

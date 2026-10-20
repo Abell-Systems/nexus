@@ -42,6 +42,7 @@ Fields **absent**: abstract and description (the XML carries empty `<description
 | Distinct (`doc_id`, publication date) | 708,176 |
 | Records unparseable after stripping control characters | 341 (0.05 %), all in files 2000–2009, 2014 and 2016 |
 | Records with no IPC classification | 2,749 |
+| Records kept with an unreadable optional date (see G7) | 3 |
 | Distinct IPC subclasses (4 characters) | 660 |
 
 `doc_id` repeats 3,562 times: 3,371 are exact repeats (same identifier and publication date, 2,127 of them kind `T3`) and 185 identifiers appear with more than one publication date. The cause of the repeats was not investigated.
@@ -126,7 +127,7 @@ Files are labelled by the year of their *file date*, not of the publication date
 ## 5. Classification
 
 * Every record but 2,749 carries at least one IPC classification. The mean number of distinct IPC subclasses per record is 1.81, and **48.7 % of records have two or more distinct subclasses**; only those records can form a pair, so about half of the corpus contributes nothing to a co-classification analysis.
-* The version indicator of the first IPC entry of every record with an IPC is in `YYYY.MM` form (36 distinct values). 91.6 % of those records carry `2006.01`. Whether this means that stored classifications are the ones assigned at publication, rather than retroactively updated, has **not been verified** (ADR 0036, P5).
+* The version indicator of the first IPC entry of the records with an IPC takes **45 distinct raw values**: 43 in `YYYY.MM` form, one empty value and one that is not a date (`3.11`) (corrected on 2026-10-20, see §11). 91.6 % of those records carry `2006.01`. Whether this means that stored classifications are the ones assigned at publication, rather than retroactively updated, has **not been verified** (ADR 0036, P5).
 * The classification level and the "inventive / additional" value are present in the XML. **They were not used** in the counts of this document: all IPC entries of a record were taken together. Whether secondary or additional-information entries should count is an open decision (ADR 0036, P5).
 * No CPC data are in this dataset.
 
@@ -140,6 +141,7 @@ Files are labelled by the year of their *file date*, not of the publication date
 | G4 | 341 records (0.05 %) could not be parsed (invalid characters), concentrated in 2004–2009. | Excluded and counted. |
 | G5 | Repeated identifiers (§3.1). | Not investigated. |
 | G6 | 2000–2008 records are assigned to one of 24 dates per year (§4.3). | Structural. |
+| G7 | Three records state a priority date that is not a valid date: `ES2283462` kind `T3` (published 2007-11-01, `00000000`) and `ES2394445` kinds `A1` and `B1` (published 2013-01-31 and 2013-08-20, `101108`). They count as having a priority claim; the unreadable date is kept as a raw value and is not used. | Found by the adapter (2026-10-20); the exploratory parser had kept the strings. |
 
 ## 7. Descriptive base rates used for feasibility
 
@@ -225,8 +227,9 @@ The filing-year outcome counts pairs unseen in publications up to *t* whose earl
 
 ## 9. How the numbers were produced, and their status
 
-* A throw-away Python parser (outside the repository) read each ZIP recursively, removed XML-illegal control characters, and wrote one row per document with: identifier, kind, publication date, application date, earliest priority date, the sorted set of IPC subclasses and the IPC version. DuckDB queries over those rows produced §3–§7.
-* **The parser and the queries are not committed.** The numbers are therefore not reproducible from this repository today. The source-adapter PR that follows this one must reproduce every figure in this document from the 26 files identified in §8, and any difference must be reported.
+* The figures of §3–§6 and §8 were first produced by a throw-away Python parser outside the repository that read each ZIP recursively, removed XML-illegal control characters, and wrote one row per document. DuckDB queries over those rows produced the tables, including §4.2 and §7.
+* On 2026-10-20 the repository's own source adapter reproduced §3–§6 and §8 from the 26 files identified in §8 (hashes verified before reading): see [the reproduction report](oepm-biblio-reproduction.md). The two corrections that this revealed are in §11.
+* **§4.2 and §7 (publication lag, base rates, the effect of the 2010 gap, the delay diagnostic and the national-documents counts) are still the product of the throw-away parser and are not reproduced from the repository.**
 * The analysis was exploratory: counts were produced and inspected before any protocol existed. Nothing here may be cited as confirmatory.
 
 ## 10. What this document does not establish
@@ -235,3 +238,10 @@ The filing-year outcome counts pairs unseen in publications up to *t* whose earl
 * That a publication in this corpus corresponds to a distinct invention: no family identifier exists.
 * That positives in §7 are predictable, or that any candidate is an opportunity.
 * That the corpus describes Spanish applicants or the world: it describes documents published by the OEPM, of which 72 % are translations of European patents.
+
+## 11. Errata (2026-10-20)
+
+Found when the figures were reproduced with the repository's adapter ([report](oepm-biblio-reproduction.md)). The original values are kept in that report.
+
+1. §5 stated that the IPC version indicator has 36 distinct values, all in `YYYY.MM` form. The value 36 came from truncating the indicator to six characters before counting. The correct count of distinct raw values is 45; two of them are not `YYYY.MM` (one empty, one `3.11`).
+2. §3.1 and §6 did not mention three records whose priority date is unreadable (G7). They are in the 711,547 records and are not among the 341 unreadable ones; the counts of those sections do not change.

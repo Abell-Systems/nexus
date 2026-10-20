@@ -1,7 +1,7 @@
 from datetime import date
 
 from application.whitespace.corpus_report import build_figures, compare_figures, kind_group
-from domain.models.whitespace import IpcEntry, PatentPublication, RejectedRecord, SourceRecordProvenance
+from domain.models.whitespace import IpcEntry, PatentPublication, RejectedRecord, SourceAnomaly, SourceRecordProvenance
 
 
 def provenance(source_file: str = "BIBLIO_2020.zip") -> SourceRecordProvenance:
@@ -102,6 +102,17 @@ def test_shouldCountPriorityIpcAndDateGapsWhenRecordsAreIncomplete():
     assert figures["ipc"]["most_common_version"] == "2006.01"
     assert figures["records_without_application_date"] == 1
     assert figures["records_with_application_after_publication"] == 1
+
+
+def test_shouldCountAnomaliesAndKeepTheRecordAsHavingAPriorityClaimWhenItsDateWasUnreadable():
+    unreadable = SourceAnomaly(field="priority_date", raw_value="101108", reason="invalid priority date")
+    record = publication(number="1").model_copy(update={"anomalies": (unreadable, unreadable)})
+
+    figures = build_figures([record, publication(number="2")])
+
+    assert figures["records_with_source_anomalies"] == 1
+    assert figures["source_anomalies_by_field"] == {"priority_date": 2}
+    assert figures["without_priority_claim"]["total"] == 1
 
 
 def test_shouldReportEmptyFiguresWhenTheSourceIsEmpty():
