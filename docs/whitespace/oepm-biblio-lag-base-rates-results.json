@@ -367,6 +367,10 @@
         "median": 1,
         "p90": 3
       }
+    },
+    "copy_policy_sensitivity": {
+      "last_versus_first": "identical at every origin",
+      "union_versus_first": "identical at every origin"
     }
   },
   "differences_from_published": []

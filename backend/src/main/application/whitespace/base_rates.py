@@ -14,7 +14,7 @@ always identical (19 of the 3,371 differ in their subclasses), so none is droppe
 from collections import Counter, defaultdict
 from collections.abc import Iterable, Sequence
 from itertools import combinations
-from typing import Any
+from typing import Any, Literal
 
 from application.whitespace.analysis_records import AnalysisRecord
 
@@ -30,6 +30,9 @@ def _bits(first: int, last: int, base: int) -> int:
     return sum(1 << (year - base) for year in range(first, last + 1))
 
 
+CopyPolicy = Literal["first", "last", "union"]
+
+
 def base_rates(
     records: Iterable[AnalysisRecord],
     origins: Sequence[int],
@@ -40,6 +43,7 @@ def base_rates(
     filing_outcome_until: int | None = None,
     hidden_year_origins: Sequence[int] = (),
     hidden_years: Sequence[int] = (),
+    copy_policy: CopyPolicy = "first",
 ) -> dict[str, Any]:
     """Figures per origin over ``records``.
 
@@ -48,6 +52,10 @@ def base_rates(
     the horizon, for origins with ``origin + horizon <= filing_outcome_until`` (§7.2).
     ``hidden_year_origins`` and ``hidden_years``: counterfactual estimate of the positives that a missing year
     would have created, from candidates seen only in that year and observed again in the horizon (§7).
+    ``copy_policy``: which subclasses a document contributes to the activity count when several copies share
+    its identifier and earliest publication date but differ: those of the first copy in input order (the
+    default, which reproduces the printed figures), of the last, or the union of all. Not a decision of the
+    ADR: ADR 0036 leaves the policy open and this parameter exists to measure how much it matters.
     """
     publications = [r for r in records if r.subclasses]
     if not publications:
@@ -56,15 +64,18 @@ def base_rates(
     index = {s: i for i, s in enumerate(sorted({s for r in publications for s in r.subclasses}))}
 
     documents: dict[int, Counter[int]] = defaultdict(Counter)  # subclass -> year of first publication -> documents
-    first_publication: dict[str, AnalysisRecord] = {}
+    first_publication: dict[str, list[AnalysisRecord]] = {}  # identifier -> copies of its earliest publication date
     years_of: dict[_Pair, int] = defaultdict(int)  # pair -> bitmask of the years it occurs in
     first_filing: dict[_Pair, int] = {}  # pair -> earliest filing year over all publications
     by_year: dict[int, list[tuple[AnalysisRecord, list[_Pair]]]] = defaultdict(list)
     for record in publications:
         ids = sorted(index[s] for s in record.subclasses)
         year = record.published.year
-        if record.doc_id not in first_publication or record.published < first_publication[record.doc_id].published:
-            first_publication[record.doc_id] = record
+        copies = first_publication.setdefault(record.doc_id, [])
+        if not copies or record.published < copies[0].published:
+            first_publication[record.doc_id] = [record]
+        elif record.published == copies[0].published:
+            copies.append(record)
         pairs = [(a << _SHIFT) | b for a, b in combinations(ids, 2)]
         for pair in pairs:
             years_of[pair] |= 1 << (year - base)
@@ -72,9 +83,14 @@ def base_rates(
                 first_filing[pair] = record.filing_year
         by_year[year].append((record, pairs))
 
-    for record in first_publication.values():
-        for s in record.subclasses:
-            documents[index[s]][record.published.year] += 1
+    for copies in first_publication.values():
+        contributed = (
+            set().union(*(c.subclasses for c in copies))
+            if copy_policy == "union"
+            else (copies[-1] if copy_policy == "last" else copies[0]).subclasses
+        )
+        for s in contributed:
+            documents[index[s]][copies[0].published.year] += 1
 
     def active_at(origin: int) -> set[int]:
         return {

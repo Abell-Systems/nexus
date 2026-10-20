@@ -116,6 +116,19 @@ def test_shouldCountADocumentOnceWhenItIsPublishedAgainAndMeasuringActivity():
     assert base_rates([first, again, other], [2001], min_documents=2, horizon=1)["2001"]["active_subclasses"] == 2
 
 
+def test_shouldLetTheCopyPolicyDecideActivityWhenCopiesOfADocumentDiffer():
+    copy_a = AnalysisRecord("ES1A1", date(2000, 6, 1), "patent", 2000, ("A",))
+    copy_b = copy_a._replace(subclasses=("B",))
+    other = AnalysisRecord("ES2A1", date(2001, 1, 1), "patent", 2001, ("A", "B"))
+
+    def active(policy):
+        return base_rates([copy_a, copy_b, other], [2001], min_documents=2, horizon=1, copy_policy=policy)["2001"][
+            "active_subclasses"
+        ]
+
+    assert (active("first"), active("last"), active("union")) == (1, 1, 2)
+
+
 def test_shouldSeparateFiledByOriginFromFiledLaterWhenDiagnosingPositives():
     history = [record(y, (s,), doc=f"{s}{y}") for y in (2000, 2001) for s in "ABCD"]
     horizon = [

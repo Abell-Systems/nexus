@@ -33,6 +33,33 @@ HIDDEN_ORIGINS, HIDDEN_YEARS = [2013, 2016, 2019], [2007, 2008, 2009, 2011, 2012
 NATIONAL_ORIGINS, FILING_COMPLETE_UNTIL = [2013, 2016, 2019, 2022], 2022
 
 
+def copy_policy_sensitivity(records: list[Any], national: list[Any]) -> dict[str, Any]:
+    """Origins at which the counts change when copies of a document that differ contribute otherwise (ADR 0036 P4)."""
+    keys = ("active_subclasses", "candidate_pairs", "positives")
+    runs = {
+        name: (
+            base_rates(records, FULL_ORIGINS, filing_diagnostic=False, copy_policy=policy),
+            base_rates(national, NATIONAL_ORIGINS, filing_diagnostic=False, copy_policy=policy),
+        )
+        for name, policy in (("first", "first"), ("last", "last"), ("union", "union"))
+    }
+    result: dict[str, Any] = {}
+    for name in ("last", "union"):
+        changed = {}
+        for scope, (default, other) in (
+            ("full_corpus", (runs["first"][0], runs[name][0])),
+            ("national", (runs["first"][1], runs[name][1])),
+        ):
+            for origin in default:
+                diff = {
+                    k: [default[origin][k], other[origin][k]] for k in keys if default[origin][k] != other[origin][k]
+                }
+                if diff:
+                    changed[f"{scope}/{origin}"] = diff
+        result[f"{name}_versus_first"] = changed or "identical at every origin"
+    return result
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--data-dir", type=Path, default=REPO_ROOT / "data" / "raw" / "oepm_open")
@@ -60,6 +87,7 @@ def main() -> int:
         },
     }
     figures["national"]["lag"] = lag_figures(national)["lag"]["national"]
+    figures["copy_policy_sensitivity"] = copy_policy_sensitivity(records, national)
 
     published = json.loads(PUBLISHED.read_text(encoding="utf-8"))["figures"]
     # the national lag line of §7.2 is the national group of §4.2; the printed value is checked once, in "lag"
