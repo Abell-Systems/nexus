@@ -1,8 +1,9 @@
 # ADR 0036: Technology White-Space Discovery — Scientific Scope and Operational Definition
 
-**Status:** Proposed
+**Status:** Accepted
 **Date:** 2026-10-20
-**Scope:** Fixes the scientific question, the universe of inference, the operational definition of a white-space candidate, the temporal design and the evaluation protocol for the first white-space experiment on the OEPM bibliographic corpus, and lists what remains undecided. **Documentary only — no code, no dependency, no contract, no test and no existing document is changed.** Nothing in this ADR claims that a detector works; no detector exists yet.
+**Acceptance:** takes effect when the pull request that sets this status is merged. It accepts a research contract (what will be done and reported) under the conditions of §12.2. It does not validate the hypotheses of §7, which are what the experiment may refute.
+**Scope:** Fixes the scientific question, the universe of inference, the operational definition of a white-space candidate, the temporal design and the evaluation protocol for the first white-space experiment on the OEPM bibliographic corpus, and lists what is accepted, what stays open and under which conditions. **This ADR is documentary: it changes no code, dependency, contract or test.** The source adapter that followed it is pull request #130. Nothing in this ADR claims that a detector works; no detector exists yet.
 
 Companion documents: [Audit of `main`](../whitespace/architecture-audit.md) · [OEPM corpus characterization](../whitespace/oepm-biblio-corpus-characterization.md)
 
@@ -53,7 +54,7 @@ No demand data, business needs, publications or projects are used.
 
 ### 5.1 Observation
 
-One publication (one XML document) with: identifier, kind code, publication date, application date, earliest priority date when a claim exists, applicants, inventors, title, IPC classification entries with version, and provenance (source file, SHA-256, position in the archive). The source adapter must keep the raw values; derived values (for example "filing year") are computed downstream and labelled as derived.
+One publication (one XML document) with: identifier, kind code, publication date, application date, **every** priority date the source states (the earliest is derived downstream), applicants, inventors, title, IPC classification entries with version, level and value, the anomalies found in optional fields (with their raw value), and provenance (source file, SHA-256, position in the archive). The source adapter keeps the raw values; derived values (for example "filing year") are computed downstream and labelled as derived. This is the contract implemented in `domain/models/whitespace.py`.
 
 ### 5.2 Technology unit
 
@@ -66,7 +67,7 @@ Justification, with its status:
 * A finer unit (main group) would multiply the unit count and thin the counts per pair; a coarser one (the 35 WIPO technology fields of the frozen concordance) would merge areas that matter. These expectations are **not measured** here; both units are sensitivity analyses (§8.6) rather than assumptions.
 * Whether subclass assignments are stable across IPC revisions is **not verified** (P5).
 
-A pair is **co-classified** on a document when both subclasses appear among its IPC entries. A document counts at most once per pair. Which IPC entries count (all entries, or only those flagged as inventive) is undecided (P5).
+A pair is **co-classified** on a document when both subclasses appear among its IPC entries. A document counts at most once per pair. All IPC entries count in the primary analysis; counting only the entries flagged as inventive is a sensitivity (P5).
 
 ### 5.3 What is evidence and what is inference
 
@@ -242,33 +243,40 @@ The counts in the corpus characterization show that thousands of FCP positives e
 
 ## 10. Decisions
 
-### 10.1 Adopted by this ADR when it is approved
+Two vocabularies are used in the tables of this section.
 
-* **A1.** The question Q, the FCP event and the explicit non-claims of §2.
-* **A2.** The universe of inference of §3.
-* **A3.** The IPC subclass as primary unit; the document-level co-classification as the pair event.
-* **A4.** The candidate structure of §5.4: type A and type B, conditions for a candidate for investigation, and no probability reading.
-* **A5.** The publication axis as primary, S1 and D1 as mandatory companions, and no mixing of axes.
-* **A6.** The treatment of the 2010 gap, the admissible origins, the development and confirmatory sets and the truncation rule.
-* **A7.** The baselines, metrics, temporal validation and resampling unit of §8.
-* **A8.** Hypotheses H1–H3, with "unresolved" as an allowed outcome.
+* **Evidence status.** *Reproduced*: recomputed from the 26 source files by the repository's adapter (pull request #130; 231 figures, reproduced after the errata of the characterization, which shows consistency and not independent validation). *Exploratory*: computed by a throw-away parser that is not in the repository and not yet reproduced (characterization §4.2 and §7). *Design*: a choice, not a measurement. *Reasoned*: argued, not measured.
+* **State.** *Accepted*. *Accepted, parameters open*: the structure is decided and named values are to be fixed in the pre-registration. *Open, action pending*. *Open, dependency*. *Deferred*.
 
-### 10.2 Resolutions proposed in the review of pull request #129, and what stays open
+### 10.1 Decisions adopted by this ADR
 
-The ten questions raised in the first version of this ADR keep their identifiers. The resolutions below take effect only when this ADR is approved; until then the status stays Proposed. A resolution fixes a protocol so that the experiment can refute the hypotheses; it does not turn a hypothesis into a fact.
-
-| Id | Question | Resolution | Still open |
+| Id | Decision | Evidence and its status | State |
 |---|---|---|---|
-| P1 | Null model | Reference: degree-preserving bipartite randomisation of the document × subclass incidence, stratified by publication year. The cost and fidelity of an analytic approximation are compared before it is discarded. The result is a ranking score and is never read as a significance test | The exact form of the score and of the relatedness term (the members of *F*, H1) |
-| P2 | Thresholds | *m*_min ∈ {10, 20, 50}. A grid for *e*_min is declared before use. Values are chosen on development origins only and the configuration is frozen before the confirmatory origins are evaluated | The grid values for *e*_min |
-| P3 | Numeric success criterion | Primary: the lower bound of the paired 95 % interval of the AUC-PR difference against the frozen strongest baseline is above zero in at least three of the four confirmatory origins. The absolute size of the improvement is reported as well: statistical significance is not practical usefulness | Number of resamples, interval type and the human-review protocol, to be fixed in the pre-registration |
-| P4 | Repeated identifiers | Exact repeats of the analytical unit (same identifier and publication date) are removed, keeping the provenance of every original record. The 185 identifiers with more than one publication date stay as distinct publications. National documents and EP translations are not merged without a family identifier. Sensitivity by document kind (§8.6) | None |
-| P5 | IPC entries | All entries are the primary analysis, for continuity with the exploratory counts. Inventive entries only is a sensitivity. The uncertainty about historical IPC revisions stays stated | Whether stored classifications are those assigned at publication |
-| P6 | 2023 drop in EP translations | Observed records are kept and nothing is imputed. The 2022 horizon is reported with and without 2023, and the limitation appears in both results | Cause of the drop (P7) |
-| P7 | Consultation with the OEPM | To be done: the 2010 gap, the 2023 drop, the repeated identifiers, programmatic access and the reuse conditions. A favourable reply does not resolve the other limitations | The reply |
-| P8 | Relation to the corpus contract on #112 and #113 | The retrieval corpus of the existing product and the bibliographic corpus of this experiment stay separate. Their acquisition contracts are reconciled before any shared infrastructure is introduced | Reconciliation |
-| P9 | CPC | Deferred. The IPC experiment is reproduced and evaluated first; CPC is considered afterwards if it would add a useful sensitivity that justifies its cost and access conditions | None for now |
-| P10 | Primary time axis | Confirmed: the publication axis on the full corpus, with the event always called FCP and never technological emergence. The filing-year diagnostic D1 and the sensitivity on national documents with a filing-year outcome are mandatory, and the latter is reported as answering a different universe of inference | None |
+| A1 | The question Q, the FCP event and the explicit non-claims of §2 | Design | Accepted |
+| A2 | The universe of inference of §3 | 711,547 records; 72.0 % EP translations, 14.8 % national patents, 13.3 % utility models. *Reproduced* | Accepted |
+| A3 | The IPC subclass as primary unit; document-level co-classification as the pair event | 99.6 % of records carry IPC, 660 subclasses, 48.7 % of records have two or more distinct subclasses. *Reproduced*. Thousands of FCP positives per origin. *Exploratory* | Accepted |
+| A4 | The candidate structure of §5.4: type A, type B, the conditions of a research candidate, no probability reading | Design | Accepted |
+| A5 | The publication axis as primary, S1 and D1 as mandatory companions, no mixing of axes | The 84–90 % of publication-axis positives already filed at the origin, and the mean lag of 6.9 years. *Exploratory*. The decision (publication axis, the FCP name, the diagnostics) does not depend on the exact figures; the wording of §6.2 does | Accepted |
+| A6 | The treatment of the 2010 gap, the admissible origins, the development and confirmatory sets, the truncation rule | No record dated 2010, 381 records of 2011-01-10…13 in the file named 2010, the 2023 drop of EP translations, the 24-date regime of 2000–2008. *Reproduced*. The 2–6 % effect of the gap on positives. *Exploratory* | Accepted |
+| A7 | The baselines, metrics, temporal validation and resampling unit of §8 | Design. See open item O1 and O2 | Accepted, parameters open |
+| A8 | Hypotheses H1–H3, with "unresolved" as an allowed outcome | Design | Accepted |
+
+### 10.2 The ten questions of the first version, with their resolutions
+
+A resolution fixes a protocol so that the experiment can refute the hypotheses; it does not turn a hypothesis into a fact.
+
+| Id | Question | Resolution | Evidence and its status | State and consequence |
+|---|---|---|---|---|
+| P1 | Null model | Reference: degree-preserving bipartite randomisation of the document × subclass incidence, stratified by publication year. The cost and fidelity of an analytic approximation are compared before it is discarded. The result is a ranking score and is never read as a significance test | Design | **Accepted, parameters open.** The form of the score and of the relatedness term (the members of *F*, H1) is fixed before any null-model code is written |
+| P2 | Thresholds | *m*_min ∈ {10, 20, 50}. A grid for *e*_min is declared before use. Values are chosen on development origins only and the configuration is frozen before the confirmatory origins are evaluated | The value 20 used in the descriptive counts has no scientific justification (stated in the characterization) | **Accepted, parameters open.** The grid values for *e*_min |
+| P3 | Numeric success criterion | Primary: the lower bound of the paired 95 % interval of the AUC-PR difference against the frozen strongest baseline is above zero in at least three of the four confirmatory origins. The absolute size of the improvement is reported as well: statistical significance is not practical usefulness | Design. The criterion is a descriptive rule across four origins, not a formal test (§8.5) | **Accepted, parameters open.** Number of resamples, interval type, human-review protocol, the smallest difference regarded as useful, and the treatment of H1, H1b and H2 together (O2) |
+| P4 | Repeated identifiers | In the analysis step, exact repeats of the analytical unit (same identifier and publication date) are removed, keeping the provenance of every original record; **the adapter itself keeps every record**. The 185 identifiers with more than one publication date stay as distinct publications. National documents and EP translations are not merged without a family identifier. Sensitivity by document kind (§8.6) | 3,371 exact repeats and 185 identifiers with several publication dates. *Reproduced* | **Accepted** |
+| P5 | IPC entries | All entries are the primary analysis, for continuity with the exploratory counts. Inventive entries only is a sensitivity. The uncertainty about historical IPC revisions stays stated | The first entry of a record carries 45 distinct raw version values; 91.6 % carry `2006.01`. *Reproduced*. Whether stored classifications are those assigned at publication. *Not verified* | **Accepted.** The question of the classification date stays an explicit limitation |
+| P6 | 2023 drop in EP translations | Observed records are kept and nothing is imputed. The 2022 horizon is reported with and without 2023, and the limitation appears in both results | 14,846 EP translations in 2023 against 24,965 (2022) and 27,712 (2024), national kinds stable. *Reproduced*. Cause unknown | **Accepted.** Depends on the reply to P7 only for the explanation |
+| P7 | Consultation with the OEPM | To be done: the 2010 gap, the 2023 drop, the repeated identifiers, programmatic access and the reuse conditions. A favourable reply does not resolve the other limitations | The message is drafted and reviewed and **has not been sent** | **Open, action pending.** Does not block the next steps; 2010 stays missing until answered |
+| P8 | Relation to the corpus contract on #112 and #113 | The retrieval corpus of the existing product and the bibliographic corpus of this experiment stay separate. Their acquisition contracts are reconciled before any shared infrastructure is introduced | Both pull requests are still open; numbers 0032–0035 are held by their branches | **Open, dependency.** Reconciliation precedes any shared infrastructure |
+| P9 | CPC | Deferred. The IPC experiment is reproduced and evaluated first; CPC is considered afterwards if it would add a useful sensitivity that justifies its cost and access conditions | Not acquired | **Deferred** |
+| P10 | Primary time axis | The publication axis on the full corpus, with the event always called FCP and never technological emergence. The filing-year diagnostic D1 and the sensitivity on national documents with a filing-year outcome are mandatory, and the latter is reported as answering a different universe of inference | The delay diagnostic and the national-documents counts. *Exploratory* | **Accepted, subject to C1.** The alternative primary analysis on national documents remains documented and available |
 
 ## 11. Consequences
 
@@ -289,3 +297,35 @@ The exploratory figures were produced by a parser that is not in the repository 
 * keep the original data out of git, as the access and distribution conditions require.
 
 The adapter does not implement a detector and does not retire any component.
+
+### 11.2 Status of those conditions after pull request #130
+
+| Condition | Evidence | Status |
+|---|---|---|
+| Verify the SHA-256 of the 26 files before reading them | `OepmBiblioSource.read` calls `verify` first; a test checks that a wrong hash or a missing file aborts before any record is yielded | Met |
+| Keep the original values and the provenance of every record | `SourceRecordProvenance` (file, hash, archive path); `SourceAnomaly` keeps raw values of unreadable optional fields | Met, with limits: 17 records contain bytes that are not valid UTF-8, replaced and flagged; 86 records are rejected, not recovered |
+| Group by publication date, never by file name | A test with a file named 2010 that holds 2011 records; the figures are computed by publication date | Met |
+| Document and test invalid XML, repeated identifiers and IPC entries | `test_oepm_biblio.py`; the rejected records are counted by reason (reproduction report §4) | Met. The 86 records with undefined entities remain a limitation of the source: the DTD that would define them is not distributed with the data |
+| Reproduce the published tables and show any discrepancy | 231 figures of sections 3–6 and 8, reproduced after the errata of the characterization | **Met for sections 3–6 and 8. Not met for §4.2 and §7**, which remain exploratory |
+| Keep the original data out of git | No file under `data/` is in the repository | Met |
+
+The expression that removes the `DOCTYPE` stops at the first `>`; it is not a general sanitiser of XML declarations. The tests show that specific hostile inputs are rejected without expansion or network access, not that the parser is safe against any hostile XML.
+
+## 12. Acceptance
+
+### 12.1 What is accepted
+
+The decisions marked *Accepted* or *Accepted, parameters open* in §10, as the research contract for the first white-space experiment on the OEPM bibliographic corpus. Nothing in this ADR activates a detector, a threshold value, a null-model implementation or a confirmatory evaluation.
+
+### 12.2 Conditions of the acceptance
+
+* **C1.** The figures of the characterization §4.2 and §7, and the numbers of this ADR that come from them (§6.2, §6.5, the mean lag, the cohort completeness, the counts of positives), are reproduced from the repository, with explicit definitions, tests and visible discrepancies, before the pre-registration. If they differ materially, the decisions that cite them (the second claim of A3, A5, the estimate of A6, P10) are reopened.
+* **C2.** No detector, threshold value, null-model code or confirmatory evaluation exists before a pre-registration closes the open parameters of A7 and P1–P3 and the open items of §12.3.
+* **C3.** The limitations stay explicit in every result: the 86 records with undefined entities, the 17 records with bytes that are not valid UTF-8, the 3 records with an unreadable priority date, the 2010 gap, the 2023 drop of EP translations, and the absence of families and of CPC. The reproduced figures show consistency with a corrected characterization, not independent validation of every parsing decision.
+* **C4.** The acceptance covers the research contract. The hypotheses of §7 are not validated by it.
+
+### 12.3 Open items for the pre-registration
+
+* **O1.** Baseline B2 at the confirmatory origin 2013 uses the outcomes of origin 2010, whose history lacks the year 2010. Define it explicitly, or omit B2 at that origin.
+* **O2.** Multiplicity across H1, H1b and H2, and the smallest AUC-PR difference regarded as practically useful. Neither is addressed in §7 or §8.
+* **O3.** Whether the 86 records with undefined entities can be recovered, which requires the official DTD (reproduction report §4.1). Until then they remain rejected.
