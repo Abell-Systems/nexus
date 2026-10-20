@@ -8,7 +8,7 @@ from application.whitespace.analysis_records import (
     filing_year,
     to_analysis_records,
 )
-from application.whitespace.base_rates import base_rates
+from application.whitespace.base_rates import active_subclass_sets, base_rates
 from application.whitespace.figure_comparison import compare_published
 from application.whitespace.publication_lag import lag_figures
 from domain.models.whitespace import IpcEntry, PatentPublication, SourceAnomaly, SourceRecordProvenance
@@ -129,6 +129,13 @@ def test_shouldLetTheCopyPolicyDecideActivityWhenCopiesOfADocumentDiffer():
         ]
 
     assert (active("first"), active("last"), active("union")) == (1, 1, 2)
+
+
+def test_shouldReturnTheActiveSetOfEachOriginWhenAskedForThem():
+    docs = [AnalysisRecord(f"ES{i}A1", date(2000 + i % 2, 1, 1), "patent", 2000, ("A", "B")) for i in range(4)]
+    docs.append(AnalysisRecord("ES9A1", date(2001, 1, 1), "patent", 2001, ("C",)))
+    sets = active_subclass_sets(docs, [2000, 2001], min_documents=2)
+    assert sets == {2000: frozenset({"A", "B"}), 2001: frozenset({"A", "B"})}
 
 
 def test_shouldRejectAnUnknownCopyPolicyWhenComputingBaseRates():

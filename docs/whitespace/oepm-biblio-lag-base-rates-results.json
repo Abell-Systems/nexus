@@ -370,7 +370,9 @@
     },
     "copy_policy_sensitivity": {
       "last_versus_first": "identical at every origin",
-      "union_versus_first": "identical at every origin"
+      "last_versus_first_active_sets": "identical member by member at origins 2006-2022 (full) and [2013, 2016, 2019, 2022]",
+      "union_versus_first": "identical at every origin",
+      "union_versus_first_active_sets": "identical member by member at origins 2006-2022 (full) and [2013, 2016, 2019, 2022]"
     }
   },
   "differences_from_published": []

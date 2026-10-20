@@ -20,7 +20,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "backend" / "src" / "main"))
 
 from application.whitespace.analysis_records import distinct_publications, to_analysis_records
-from application.whitespace.base_rates import base_rates
+from application.whitespace.base_rates import active_subclass_sets, base_rates
 from application.whitespace.figure_comparison import compare_published
 from application.whitespace.publication_lag import lag_figures
 from domain.protocols.whitespace import SourceIntegrityError
@@ -30,6 +30,7 @@ FILES = REPO_ROOT / "config" / "whitespace" / "oepm_biblio_2000_2025.json"
 PUBLISHED = REPO_ROOT / "config" / "whitespace" / "oepm_biblio_lag_base_rates_published.json"
 FULL_ORIGINS = [2006, *range(2012, 2023)]  # 2006: the development origin of §7.1
 HIDDEN_ORIGINS, HIDDEN_YEARS = [2013, 2016, 2019], [2007, 2008, 2009, 2011, 2012]
+ACTIVE_SET_ORIGINS = list(range(2006, 2023))
 NATIONAL_ORIGINS, FILING_COMPLETE_UNTIL = [2013, 2016, 2019, 2022], 2022
 
 
@@ -57,6 +58,19 @@ def copy_policy_sensitivity(records: list[Any], national: list[Any]) -> dict[str
                 if diff:
                     changed[f"{scope}/{origin}"] = diff
         result[f"{name}_versus_first"] = changed or "identical at every origin"
+        sets_differ = [
+            f"{scope}/{origin}"
+            for scope, rs, origins in (
+                ("full_corpus", records, ACTIVE_SET_ORIGINS),
+                ("national", national, NATIONAL_ORIGINS),
+            )
+            for origin, active in active_subclass_sets(rs, origins).items()
+            if active != active_subclass_sets(rs, origins, copy_policy=name)[origin]
+        ]
+        result[f"{name}_versus_first_active_sets"] = (
+            sets_differ
+            or f"identical member by member at origins {ACTIVE_SET_ORIGINS[0]}-{ACTIVE_SET_ORIGINS[-1]} (full) and {NATIONAL_ORIGINS}"
+        )
     return result
 
 

@@ -34,6 +34,50 @@ CopyPolicy = Literal["first", "last", "union"]
 COPY_POLICIES = ("first", "last", "union")
 
 
+def activity_counts(records: Iterable[AnalysisRecord], copy_policy: CopyPolicy = "first") -> dict[str, Counter[int]]:
+    """Per subclass, the documents (identifiers) by year of first publication; the one operation ``copy_policy`` governs.
+
+    A document contributes the subclasses of its earliest publication date; if several copies share that date
+    and differ, the first or the last in input order, or the union of all, according to the policy.
+    """
+    if copy_policy not in COPY_POLICIES:
+        raise ValueError(f"Unknown copy policy {copy_policy!r}; expected one of {COPY_POLICIES}")
+    earliest: dict[str, list[AnalysisRecord]] = {}
+    for record in records:
+        copies = earliest.setdefault(record.doc_id, [])
+        if not copies or record.published < copies[0].published:
+            earliest[record.doc_id] = [record]
+        elif record.published == copies[0].published:
+            copies.append(record)
+    counts: dict[str, Counter[int]] = defaultdict(Counter)
+    for copies in earliest.values():
+        contributed = (
+            set().union(*(c.subclasses for c in copies))
+            if copy_policy == "union"
+            else (copies[-1] if copy_policy == "last" else copies[0]).subclasses
+        )
+        for subclass in contributed:
+            counts[subclass][copies[0].published.year] += 1
+    return counts
+
+
+def active_subclass_sets(
+    records: Iterable[AnalysisRecord],
+    origins: Sequence[int],
+    *,
+    min_documents: int = 20,
+    copy_policy: CopyPolicy = "first",
+) -> dict[int, frozenset[str]]:
+    """The active subclasses at each origin: at least ``min_documents`` documents first published up to it."""
+    counts = activity_counts(records, copy_policy)
+    return {
+        origin: frozenset(
+            s for s, per_year in counts.items() if sum(c for y, c in per_year.items() if y <= origin) >= min_documents
+        )
+        for origin in origins
+    }
+
+
 def base_rates(
     records: Iterable[AnalysisRecord],
     origins: Sequence[int],
@@ -67,34 +111,19 @@ def base_rates(
     base = min(r.published.year for r in publications)
     index = {s: i for i, s in enumerate(sorted({s for r in publications for s in r.subclasses}))}
 
-    documents: dict[int, Counter[int]] = defaultdict(Counter)  # subclass -> year of first publication -> documents
-    first_publication: dict[str, list[AnalysisRecord]] = {}  # identifier -> copies of its earliest publication date
+    documents = {index[s]: c for s, c in activity_counts(publications, copy_policy).items()}
     years_of: dict[_Pair, int] = defaultdict(int)  # pair -> bitmask of the years it occurs in
     first_filing: dict[_Pair, int] = {}  # pair -> earliest filing year over all publications
     by_year: dict[int, list[tuple[AnalysisRecord, list[_Pair]]]] = defaultdict(list)
     for record in publications:
         ids = sorted(index[s] for s in record.subclasses)
         year = record.published.year
-        copies = first_publication.setdefault(record.doc_id, [])
-        if not copies or record.published < copies[0].published:
-            first_publication[record.doc_id] = [record]
-        elif record.published == copies[0].published:
-            copies.append(record)
         pairs = [(a << _SHIFT) | b for a, b in combinations(ids, 2)]
         for pair in pairs:
             years_of[pair] |= 1 << (year - base)
             if record.filing_year is not None and record.filing_year < first_filing.get(pair, 10_000):
                 first_filing[pair] = record.filing_year
         by_year[year].append((record, pairs))
-
-    for copies in first_publication.values():
-        contributed = (
-            set().union(*(c.subclasses for c in copies))
-            if copy_policy == "union"
-            else (copies[-1] if copy_policy == "last" else copies[0]).subclasses
-        )
-        for s in contributed:
-            documents[index[s]][copies[0].published.year] += 1
 
     def active_at(origin: int) -> set[int]:
         return {
