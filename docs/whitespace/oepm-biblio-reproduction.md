@@ -1,6 +1,6 @@
 # Reproduction of the OEPM bibliographic corpus characterization
 
-**Status:** Result of three runs of `scripts/reproduce_oepm_biblio_characterization.py`, in the order they happened. Descriptive; no figure was adjusted to force agreement.
+**Status:** Result of five runs of `scripts/reproduce_oepm_biblio_characterization.py`, in the order they happened. Descriptive; no figure was adjusted to force agreement.
 **Date:** 2026-10-20
 **Checks:** [corpus characterization](oepm-biblio-corpus-characterization.md), [ADR 0036](../adr/0036-technology-white-space-scientific-scope.md) §11.1
 **Scope:** Whether the figures published in the characterization can be reproduced from the 26 source files through the repository's adapter, and what the reproduction changed. **Documentary only.**
@@ -73,6 +73,23 @@ All 230 published figures reproduced
 
 The agreement of the last two figures is by construction: the errata were written from run 2. It shows that the document and the adapter now describe the same corpus, not that the original document was right.
 
+### 3.5 Runs 4 and 5 — after the review of the adapter
+
+The review of pull request #130 raised two points about data fidelity, both checked against the files:
+
+* The adapter decoded with `errors="replace"`, so bytes that are not valid UTF-8 became U+FFFD with no trace. **17 records** are affected (2019: 2, 2020: 11, 2021: 3, 2023: 1). They are still read, and each now carries a `SourceAnomaly` with field `encoding` and the first offending bytes. No value is repaired.
+* The 86 records rejected for undefined entities are investigated in §4. They stay rejected; the reason now lists the entity names.
+
+Run 4 against the figures of run 3 (parsing results unchanged: 711,547 read, 341 rejected):
+
+```text
+/records_with_source_anomalies: published 3, reproduced 20
+/source_anomalies_by_field/encoding: reproduced 17, not published
+2 difference(s) from 230 published figures
+```
+
+The errata (characterization §11, item 3; entry G8) and the JSON were updated from run 4. Run 5: `All 231 published figures reproduced`. As in run 3, that agreement is obtained after the errata.
+
 ## 4. Rejected records
 
 341 in total, each kept with its file, hash, path inside the archive and reason; the same number the characterization published.
@@ -80,12 +97,22 @@ The agreement of the last two figures is by construction: the errata were writte
 | Reason | Records | First example |
 |---|---|---|
 | Not well-formed XML (invalid token) | 244 | `ES2139094_20000201_T3.xml` in `BIBLIO_2000.zip` |
-| Undefined entity | 86 | `ES2174601_20021101_T3.xml` in `BIBLIO_2002.zip` |
+| Undefined named entity (§4.1) | 86 | `ES2174601_20021101_T3.xml` in `BIBLIO_2002.zip` |
 | Junk after the document element | 7 | `ES1125530_20140929_U.xml` in `BIBLIO_2014.zip` |
 | Mismatched tag | 3 | `ES2221875_20050116_T3.xml` in `BIBLIO_2005.zip` |
 | No element found (empty or truncated) | 1 | `ES2555789_20160617_B1.xml` in `BIBLIO_2016.zip` |
 
-By file: 2000 10, 2001 7, 2002 11, 2003 16, 2004 33, 2005 38, 2006 25, 2007 47, 2008 69, 2009 77, 2014 7, 2016 1; no other file has a rejected record. The "undefined entity" records may hold legitimate text with an `&` entity that the removal of the DOCTYPE leaves undefined; that has not been investigated and no record was repaired.
+By file: 2000 10, 2001 7, 2002 11, 2003 16, 2004 33, 2005 38, 2006 25, 2007 47, 2008 69, 2009 77, 2014 7, 2016 1; no other file has a rejected record. ### 4.1 The records with undefined entities
+
+Nearly every record (711,887 of 711,888) declares `<!DOCTYPE es-patent-document SYSTEM "../es-patent-document-v1-2.dtd">`: an external DTD, referenced by a relative path, that is **not distributed with the data files** (the archives inspected contain only the XML records and `authorityFile.txt`). The adapter removes the DOCTYPE before parsing, so the DTD is never loaded and no entity is ever expanded or fetched.
+
+The non-predefined named entities found in the records of the 26 files are: `&OSLASH;` (44 records), `&SZLIG;` (25), `&AMP;` (8), `&ODBLACC;` (2), and once each `&SCARONON;`, `&CCARONANCI;`, `&CCARONON;`, `&OMACRCR;`, `&Delta;`, `&alpha;`, `&ICIRC;`, `&ATILDE;`, `&ECIRC;`, `&EUML;`. They are in the files of 2002 and 2005–2009. The names are old SGML-style upper-case names. Several (`&SCARONON;`, `&CCARONANCI;`, `&CCARONON;`, `&OMACRCR;`, `&ODBLACC;`) match no standard entity set, so resolving them would mean guessing.
+
+**Decision: they stay rejected, counted, with the entity names in the reason.** Recovering them safely needs the official DTD, which the data do not include. The page of the dataset links an example file (`biblio_example.zip`, described as "ST36 / es-patent-document-v1-2.dtd") behind the registered account; whether it contains the DTD has not been checked. If it does, a closed table of character entities built from the declarations in that DTD could be passed to the adapter; nothing would be loaded from the network or from the DTD's own external references.
+
+### 4.2 Records with bytes that are not valid UTF-8
+
+See §3.5. They are not rejected. Their text fields may contain U+FFFD, and the anomaly says so.
 
 ## 5. Records kept with an anomaly
 
@@ -105,7 +132,7 @@ All three count as having a priority claim, since the source states one. The raw
 
 ## 7. Open points
 
-1. The 86 "undefined entity" records are worth a look before they are given up.
+1. The 86 "undefined entity" records need the official DTD (§4.1) to be recovered safely. Obtaining it is a pending step.
 2. Only the two optional dates follow the keep-and-record rule. An incomplete IPC entry still rejects the record; extending the rule to IPC entries would change what the classification counts mean and is not done here.
 
 ## 8. How to repeat

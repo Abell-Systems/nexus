@@ -217,6 +217,41 @@ def test_shouldReportNoAnomaliesWhenEveryOptionalFieldIsReadable(source_dir):
     assert publication.anomalies == ()
 
 
+def test_shouldRejectWithTheEntityNamesInTheReasonWhenNamedEntitiesAreNotDefinedInTheRecord(tmp_path):
+    # The record points to an external DTD (the default DOCTYPE) that is never loaded: nothing is resolved.
+    xml = record_xml(title="Ger&OSLASH;n &SCARONON; &amp; co")
+    digest = write_source(tmp_path, "f.zip", {"BIBLIO_ES20200120.zip": {"a": xml}})
+
+    (outcome,) = OepmBiblioSource(tmp_path, {"f.zip": digest}).read()
+
+    assert isinstance(outcome, RejectedRecord)
+    assert "undefined entity" in outcome.reason
+    assert "&OSLASH;, &SCARONON;" in outcome.reason
+    assert "&amp;" not in outcome.reason
+
+
+def test_shouldKeepTheRecordAndAnAnomalyWhenTheBytesAreNotValidUtf8(tmp_path):
+    xml = record_xml(title="Name X end").replace(b"X", b"\xc3(")
+    digest = write_source(tmp_path, "f.zip", {"BIBLIO_ES20200120.zip": {"a": xml}})
+
+    (publication,) = OepmBiblioSource(tmp_path, {"f.zip": digest}).read()
+
+    assert isinstance(publication, PatentPublication)
+    assert "\ufffd" in publication.title
+    (anomaly,) = publication.anomalies
+    assert (anomaly.field, anomaly.raw_value) == ("encoding", "c3")
+
+
+def test_shouldReportNoAnomalyWhenAccentedTextIsValidUtf8(tmp_path):
+    xml = record_xml(title="Ñandú ß Ø €")
+    digest = write_source(tmp_path, "f.zip", {"BIBLIO_ES20200120.zip": {"a": xml}})
+
+    (publication,) = OepmBiblioSource(tmp_path, {"f.zip": digest}).read()
+
+    assert publication.title == "Ñandú ß Ø €"
+    assert publication.anomalies == ()
+
+
 def test_shouldNotExpandEntitiesWhenTheDocumentDeclaresThem(tmp_path):
     doctype = '<!DOCTYPE es-patent-document [<!ENTITY boom "expanded">]>'
     digest = write_source(

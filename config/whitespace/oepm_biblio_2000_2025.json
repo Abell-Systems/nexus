@@ -1,7 +1,7 @@
 {
   "source_id": "oepm_biblio_2000_2025",
   "published_in": "docs/whitespace/oepm-biblio-corpus-characterization.md",
-  "note": "Hashes and figures transcribed from the published characterization (sections 3, 4.1, 4.3, 5, 6 and 8), with the errata of its section 11 applied (45 IPC versions; 3 records with an unreadable priority date). Sections 4.2 and 7 are not covered.",
+  "note": "Hashes and figures transcribed from the published characterization (sections 3, 4.1, 4.3, 5, 6 and 8), with the errata of its section 11 applied (45 IPC versions; 3 records with an unreadable priority date; 17 records with bytes that are not valid UTF-8). Sections 4.2 and 7 are not covered.",
   "files": {
     "BIBLIO_2000.zip": {
       "sha256": "e4c1ecadd7c0f80247a73a622f708b38af557e35b96c44959a309743426c691b",
@@ -453,8 +453,9 @@
         "rejected": 0
       }
     },
-    "records_with_source_anomalies": 3,
+    "records_with_source_anomalies": 20,
     "source_anomalies_by_field": {
+      "encoding": 17,
       "priority_date": 3
     }
   }

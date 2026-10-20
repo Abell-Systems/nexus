@@ -3,7 +3,10 @@
 Verifies the SHA-256 of every expected file before reading any of them, keeps every record (repeated
 identifiers included), and returns records the XML parser cannot read as ``RejectedRecord`` instead of
 dropping them. An unreadable optional date (application, priority) does not cost the record: the date is
-left absent, the raw value is kept as a ``SourceAnomaly``. A record without a readable publication date or
+left absent, the raw value is kept as a ``SourceAnomaly``. Bytes that are not valid UTF-8 are replaced as
+before but now leave a ``SourceAnomaly`` with the first offending bytes. Named entities are never resolved:
+the DTD that would declare them is not distributed with the data, so such records stay rejected, with the
+entity names in the reason. A record without a readable publication date or
 with an incomplete IPC entry is rejected. Dates are taken from each record, never from the name of its file.
 """
 
@@ -21,6 +24,8 @@ from domain.protocols.whitespace import SourceIntegrityError
 
 _DOCTYPE = re.compile(r"<!DOCTYPE[^>]*>")
 _XML_ILLEGAL_CONTROL = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]")
+_ENTITY_REFERENCE = re.compile(rb"&([A-Za-z][A-Za-z0-9]*);")
+_PREDEFINED_ENTITIES = {"amp", "lt", "gt", "quot", "apos"}
 
 
 def file_sha256(path: Path) -> str:
@@ -79,12 +84,23 @@ def _ipc_entry(node: ET.Element) -> IpcEntry:
 
 
 def _publication(raw: bytes, provenance: SourceRecordProvenance) -> PatentPublication:
-    # The DOCTYPE (and with it any entity declaration) is removed before parsing, so entities cannot expand.
-    text = _DOCTYPE.sub("", raw.decode("utf-8", "replace"))
-    root = ET.fromstring(_XML_ILLEGAL_CONTROL.sub("", text))
+    anomalies: list[SourceAnomaly] = []
+    try:
+        decoded = raw.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        anomalies.append(
+            SourceAnomaly(
+                field="encoding",
+                raw_value=exc.object[exc.start : exc.end].hex(),
+                reason="bytes that are not valid UTF-8 were replaced with U+FFFD",
+            )
+        )
+        decoded = raw.decode("utf-8", "replace")
+    # The DOCTYPE (and with it any entity declaration) is removed before parsing, so entities cannot expand
+    # and the external DTD it points to is never loaded.
+    root = ET.fromstring(_XML_ILLEGAL_CONTROL.sub("", _DOCTYPE.sub("", decoded)))
     if root.tag != "es-patent-document":
         raise ValueError(f"unexpected root element {root.tag!r}")
-    anomalies: list[SourceAnomaly] = []
     application = _optional_date(
         root.findtext(".//application-reference/document-id/date"), "application_date", anomalies
     )
@@ -113,7 +129,11 @@ def _parse_record(raw: bytes, provenance: SourceRecordProvenance) -> PatentPubli
     try:
         return _publication(raw, provenance)
     except (ET.ParseError, ValueError) as exc:
-        return RejectedRecord(provenance=provenance, reason=f"{type(exc).__name__}: {exc}")
+        reason = f"{type(exc).__name__}: {exc}"
+        if "undefined entity" in str(exc):
+            names = sorted({n.decode("latin-1") for n in _ENTITY_REFERENCE.findall(raw)} - _PREDEFINED_ENTITIES)
+            reason += f" (entity references in the record: {', '.join('&' + n + ';' for n in names)})"
+        return RejectedRecord(provenance=provenance, reason=reason)
 
 
 def _walk(

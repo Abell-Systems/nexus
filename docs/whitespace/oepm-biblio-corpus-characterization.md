@@ -42,7 +42,7 @@ Fields **absent**: abstract and description (the XML carries empty `<description
 | Distinct (`doc_id`, publication date) | 708,176 |
 | Records unparseable after stripping control characters | 341 (0.05 %), all in files 2000–2009, 2014 and 2016 |
 | Records with no IPC classification | 2,749 |
-| Records kept with an unreadable optional date (see G7) | 3 |
+| Records kept with a source anomaly (G7, G8) | 20 |
 | Distinct IPC subclasses (4 characters) | 660 |
 
 `doc_id` repeats 3,562 times: 3,371 are exact repeats (same identifier and publication date, 2,127 of them kind `T3`) and 185 identifiers appear with more than one publication date. The cause of the repeats was not investigated.
@@ -138,10 +138,11 @@ Files are labelled by the year of their *file date*, not of the publication date
 | G1 | **No record has a publication date in 2010**, and none before 2011-01-10 in 2011. `BIBLIO_2010.zip` contains a single monthly archive named `BIBLIO_201012.zip`, but its 381 records are dated 2011-01-10 to 2011-01-13. | Source gap. Cause unknown; the OEPM has not been asked. |
 | G2 | **EP translations in 2023**: 14,846, against 24,965 (2022) and 27,712 (2024), while national kinds are stable (6,444 against 6,618 and 6,681). All twelve months and 244 publication dates are present. | Unexplained. A real fluctuation and an incomplete source are both possible. |
 | G3 | 2018 has 226 distinct publication dates against 241–249 in neighbouring years. | Noted, not investigated. |
-| G4 | 341 records (0.05 %) could not be parsed (invalid characters), concentrated in 2004–2009. | Excluded and counted. |
+| G4 | 341 records (0.05 %) could not be parsed, concentrated in 2004–2009: 244 with an invalid token, 86 that use named entities the record does not define (the DTD they point to is not distributed with the data), and 11 other XML errors. | Excluded and counted; reasons in the [reproduction report](oepm-biblio-reproduction.md) §4. |
 | G5 | Repeated identifiers (§3.1). | Not investigated. |
 | G6 | 2000–2008 records are assigned to one of 24 dates per year (§4.3). | Structural. |
 | G7 | Three records state a priority date that is not a valid date: `ES2283462` kind `T3` (published 2007-11-01, `00000000`) and `ES2394445` kinds `A1` and `B1` (published 2013-01-31 and 2013-08-20, `101108`). They count as having a priority claim; the unreadable date is kept as a raw value and is not used. | Found by the adapter (2026-10-20); the exploratory parser had kept the strings. |
+| G8 | 17 records contain bytes that are not valid UTF-8 (2019: 2, 2020: 11, 2021: 3, 2023: 1). The exploratory parser replaced them with U+FFFD without a trace; they are kept and the replacement is recorded as an anomaly. Names and titles in those records may be altered. | Found in the review of the adapter (2026-10-20). |
 
 ## 7. Descriptive base rates used for feasibility
 
@@ -245,3 +246,4 @@ Found when the figures were reproduced with the repository's adapter ([report](o
 
 1. §5 stated that the IPC version indicator has 36 distinct values, all in `YYYY.MM` form. The value 36 came from truncating the indicator to six characters before counting. The correct count of distinct raw values is 45; two of them are not `YYYY.MM` (one empty, one `3.11`).
 2. §3.1 and §6 did not mention three records whose priority date is unreadable (G7). They are in the 711,547 records and are not among the 341 unreadable ones; the counts of those sections do not change.
+3. §6 did not mention 17 records with bytes that are not valid UTF-8 (G8), which had been decoded with replacement characters without being flagged. They are in the 711,547 records; with G7 they make the 20 records kept with an anomaly. G4 now states why the 341 records were unreadable.
