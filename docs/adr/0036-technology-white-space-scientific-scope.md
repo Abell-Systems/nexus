@@ -263,7 +263,7 @@ The counts in the corpus characterization show that thousands of FCP positives e
 
 Two vocabularies are used in the tables of this section.
 
-* **Evidence status.** *Reproduced*: recomputed from the 26 source files by the repository's adapter (pull request #130; 231 figures, reproduced after the errata of the characterization, which shows consistency and not independent validation). *Exploratory*: computed by a throw-away parser that is not in the repository and not yet reproduced (characterization §4.2 and §7). *Design*: a choice, not a measurement. *Reasoned*: argued, not measured.
+* **Evidence status.** *Reproduced*: recomputed from the 26 source files by the repository's adapter (pull request #130; 231 figures, reproduced after the errata of the characterization, which shows consistency and not independent validation). *Reproduced (#132)*: the same, for characterization §4.2 and §7, by pull request #132 (every printed figure reproduced after one documented correction; the printed numbers guided the choice between two readings of an ambiguous definition, so this is consistency and not independent validation); it holds once that pull request is merged. *Exploratory*: computed by a throw-away parser and not reproduced from the repository. *Design*: a choice, not a measurement. *Reasoned*: argued, not measured.
 * **State.** *Accepted*. *Accepted, parameters open*: the structure is decided and named values are to be fixed in the pre-registration. *Open, action pending*. *Open, dependency*. *Deferred*.
 
 ### 10.1 Decisions adopted by this ADR
@@ -272,10 +272,10 @@ Two vocabularies are used in the tables of this section.
 |---|---|---|---|
 | A1 | The question Q, the FCP event and the explicit non-claims of §2 | Design | Accepted |
 | A2 | The universe of inference of §3 | 711,547 records; 72.0 % EP translations, 14.8 % national patents, 13.3 % utility models. *Reproduced* | Accepted |
-| A3 | The IPC subclass as primary unit; document-level co-classification as the pair event | 99.6 % of records carry IPC, 660 subclasses, 48.7 % of records have two or more distinct subclasses. *Reproduced*. Thousands of FCP positives per origin. *Exploratory* | Accepted |
+| A3 | The IPC subclass as primary unit; document-level co-classification as the pair event | 99.6 % of records carry IPC, 660 subclasses, 48.7 % of records have two or more distinct subclasses. *Reproduced*. Thousands of FCP positives per origin (1.4–2.2 % of candidate pairs). *Reproduced (#132)* | Accepted |
 | A4 | The candidate structure of §5.4: type A, type B, the conditions of a research candidate, no probability reading | Design | Accepted |
-| A5 | The publication axis as primary, S1 and D1 as mandatory companions, no mixing of axes | The 84–90 % of publication-axis positives already filed at the origin, and the mean lag of 6.9 years. *Exploratory*. The decision (publication axis, the FCP name, the diagnostics) does not depend on the exact figures; the wording of §6.2 does | Accepted |
-| A6 | The treatment of the 2010 gap, the admissible origins, the development and confirmatory sets, the truncation rule | No record dated 2010, 381 records of 2011-01-10…13 in the file named 2010, the 2023 drop of EP translations, the 24-date regime of 2000–2008. *Reproduced*. The 2–6 % effect of the gap on positives. *Exploratory* | Accepted |
+| A5 | The publication axis as primary, S1 and D1 as mandatory companions, no mixing of axes | The 84–90 % of publication-axis positives already filed at the origin, and the mean lag of 6.9 years. *Reproduced (#132)*; the 84–90 % is the permissive reading (at least one contributing publication filed by the origin), the strict reading (all of them) gives 82–88 %. The decision (publication axis, the FCP name, the diagnostics) does not depend on the exact figures; the wording of §6.2 does | Accepted |
+| A6 | The treatment of the 2010 gap, the admissible origins, the development and confirmatory sets, the truncation rule | No record dated 2010, 381 records of 2011-01-10…13 in the file named 2010, the 2023 drop of EP translations, the 24-date regime of 2000–2008. *Reproduced*. The 2–6 % effect of the gap on positives (1.7–6.1 %, a counterfactual for a year of ordinary volume, not a measurement of 2010). *Reproduced (#132)* | Accepted |
 | A7 | The baselines, metrics, temporal validation and resampling unit of §8 | Design. See open item O1 and O2 | Accepted, parameters open |
 | A8 | Hypotheses H1–H3, with "unresolved" as an allowed outcome | Design | Accepted |
 
@@ -294,7 +294,7 @@ A resolution fixes a protocol so that the experiment can refute the hypotheses; 
 | P7 | Consultation with the OEPM | To be done: the 2010 gap, the 2023 drop, the repeated identifiers, programmatic access and the reuse conditions. A favourable reply does not resolve the other limitations | The message is drafted and reviewed and **has not been sent** | **Open, action pending.** Does not block the next steps; 2010 stays missing until answered |
 | P8 | Relation to the corpus contract on #112 and #113 | The retrieval corpus of the existing product and the bibliographic corpus of this experiment stay separate. Their acquisition contracts are reconciled before any shared infrastructure is introduced | Both pull requests are still open; numbers 0032–0035 are held by their branches | **Open, dependency.** Reconciliation precedes any shared infrastructure |
 | P9 | CPC | Deferred. The IPC experiment is reproduced and evaluated first; CPC is considered afterwards if it would add a useful sensitivity that justifies its cost and access conditions | Not acquired | **Deferred** |
-| P10 | Primary time axis | The publication axis on the full corpus, with the event always called FCP and never technological emergence. The filing-year diagnostic D1 and the sensitivity on national documents with a filing-year outcome are mandatory, and the latter is reported as answering a different universe of inference | The delay diagnostic and the national-documents counts. *Exploratory* | **Accepted, subject to C1.** The alternative primary analysis on national documents remains documented and available |
+| P10 | Primary time axis | The publication axis on the full corpus, with the event always called FCP and never technological emergence. The filing-year diagnostic D1 and the sensitivity on national documents with a filing-year outcome are mandatory, and the latter is reported as answering a different universe of inference | The delay diagnostic and the national-documents counts. *Reproduced (#132)* | **Accepted, subject to C1.** The alternative primary analysis on national documents remains documented and available |
 
 ## 11. Consequences
 
@@ -324,7 +324,7 @@ The adapter does not implement a detector and does not retire any component.
 | Keep the original values and the provenance of every record | `SourceRecordProvenance` (file, hash, archive path); `SourceAnomaly` keeps raw values of unreadable optional fields | Met, with limits: 17 records contain bytes that are not valid UTF-8, replaced and flagged; 86 records are rejected, not recovered |
 | Group by publication date, never by file name | A test with a file named 2010 that holds 2011 records; the figures are computed by publication date | Met |
 | Document and test invalid XML, repeated identifiers and IPC entries | `test_oepm_biblio.py`; the rejected records are counted by reason (reproduction report §4) | Met. The 86 records with undefined entities remain a limitation of the source: the DTD that would define them is not distributed with the data |
-| Reproduce the published tables and show any discrepancy | 231 figures of sections 3–6 and 8, reproduced after the errata of the characterization | **Met for sections 3–6 and 8. Not met for §4.2 and §7**, which remain exploratory |
+| Reproduce the published tables and show any discrepancy | 231 figures of sections 3–6 and 8, reproduced after the errata of the characterization | **Met for sections 3–6 and 8.** For §4.2 and §7: met in the operational sense by pull request #132 (see C1), effective once it is merged |
 | Keep the original data out of git | No OEPM file is tracked. The ignore rule for `data/raw/oepm_open/` is not part of that pull request nor of this one; it is a local change pending its own review | Met in the repository; protection against accidental addition not yet committed |
 
 The expression that removes the `DOCTYPE` stops at the first `>`; it is not a general sanitiser of XML declarations. The tests show that specific hostile inputs are rejected without expansion or network access, not that the parser is safe against any hostile XML.
@@ -338,6 +338,7 @@ The decisions marked *Accepted* or *Accepted, parameters open* in §10, as the r
 ### 12.2 Conditions of the acceptance
 
 * **C1.** The figures of the characterization §4.2 and §7, and the numbers of this ADR that come from them (§6.2, §6.5, the mean lag, the cohort completeness, the counts of positives), are reproduced from the repository, with explicit definitions, tests and visible discrepancies, before the pre-registration, which cannot be closed while C1 is unmet. If they differ materially, the decisions that cite them (the second claim of A3, A5, the estimate of A6, P10) are reopened.
+  *Status: satisfied in this operational and documentary sense by pull request #132, effective once it is merged.* Every printed figure is recomputed from the adapter, the definitions and the one discrepancy found are documented, and the sensitivity claimed is in the reproducible flow. None differs materially, so no decision is reopened; the strict reading of §7.1 (82–88 %) is recorded beside the printed 84–90 %. This is **not** independent validation of the characterization, and it does **not** close O1–O4.
 * **C2.** No detector, threshold value, null-model code or confirmatory evaluation exists before a pre-registration closes the open parameters of A7 and P1–P3 and the open items of §12.3.
 * **C3.** The limitations stay explicit in every result: the 86 records with undefined entities, the 17 records with bytes that are not valid UTF-8, the 3 records with an unreadable priority date, the 2010 gap, the 2023 drop of EP translations, and the absence of families and of CPC. The reproduced figures show consistency with a corrected characterization, not independent validation of every parsing decision.
 * **C4.** The acceptance covers the research contract. The hypotheses of §7 are not validated by it.
@@ -356,7 +357,7 @@ These are three different states, and this ADR reaches only the first.
 | State | Meaning | Reached |
 |---|---|---|
 | Framework accepted | The questions, definitions and protocol of §§2–9 are the contract | Yes, when this status is merged |
-| Conditions met | C1 satisfied; O1–O4 and the open parameters of A7 and P1–P3 closed | **No** |
+| Conditions met | C1 satisfied (operationally, once #132 is merged); O1–O4 and the open parameters of A7 and P1–P3 closed | **No** |
 | Ready to run the study | Pre-registration closed with the above; no pending change to the frozen protocol | **No** |
 
 P7 (OEPM consultation) and P8 (#112/#113) do not block acceptance. P7 can change how the 2010 gap and the 2023 drop are explained; P8 matters only before shared infrastructure. Neither is a condition of the pre-registration unless the reply to P7 contradicts the treatment in A6 or P6, in which case those decisions are reopened.
