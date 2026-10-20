@@ -271,7 +271,7 @@ A resolution fixes a protocol so that the experiment can refute the hypotheses; 
 | P2 | Thresholds | *m*_min ∈ {10, 20, 50}. A grid for *e*_min is declared before use. Values are chosen on development origins only and the configuration is frozen before the confirmatory origins are evaluated | The value 20 used in the descriptive counts has no scientific justification (stated in the characterization) | **Accepted, parameters open.** The grid values for *e*_min |
 | P3 | Numeric success criterion | Primary: the lower bound of the paired 95 % interval of the AUC-PR difference against the frozen strongest baseline is above zero in at least three of the four confirmatory origins. The absolute size of the improvement is reported as well: statistical significance is not practical usefulness | Design. The criterion is a descriptive rule across four origins, not a formal test (§8.5) | **Accepted, parameters open.** Number of resamples, interval type, human-review protocol, the smallest difference regarded as useful, and the treatment of H1, H1b and H2 together (O2) |
 | P4 | Repeated identifiers | In the analysis step, exact repeats of the analytical unit (same identifier and publication date) are removed, keeping the provenance of every original record; **the adapter itself keeps every record**. The 185 identifiers with more than one publication date stay as distinct publications. National documents and EP translations are not merged without a family identifier. Sensitivity by document kind (§8.6) | 3,371 exact repeats and 185 identifiers with several publication dates. *Reproduced* | **Accepted** |
-| P5 | IPC entries | All entries are the primary analysis, for continuity with the exploratory counts. Inventive entries only is a sensitivity. The uncertainty about historical IPC revisions stays stated | The first entry of a record carries 45 distinct raw version values; 91.6 % carry `2006.01`. *Reproduced*. Whether stored classifications are those assigned at publication. *Not verified* | **Accepted.** The question of the classification date stays an explicit limitation |
+| P5 | IPC entries | All entries are the primary analysis, for continuity with the exploratory counts. Inventive entries only is a sensitivity. The uncertainty about historical IPC revisions stays stated | The first entry of a record carries 45 distinct raw version values (*Reproduced*); 91.6 % carry `2006.01` (published in the characterization, not among the 231 reproduced figures, so *Exploratory*). Whether stored classifications are those assigned at publication. *Not verified* | **Accepted.** The question of the classification date stays an explicit limitation |
 | P6 | 2023 drop in EP translations | Observed records are kept and nothing is imputed. The 2022 horizon is reported with and without 2023, and the limitation appears in both results | 14,846 EP translations in 2023 against 24,965 (2022) and 27,712 (2024), national kinds stable. *Reproduced*. Cause unknown | **Accepted.** Depends on the reply to P7 only for the explanation |
 | P7 | Consultation with the OEPM | To be done: the 2010 gap, the 2023 drop, the repeated identifiers, programmatic access and the reuse conditions. A favourable reply does not resolve the other limitations | The message is drafted and reviewed and **has not been sent** | **Open, action pending.** Does not block the next steps; 2010 stays missing until answered |
 | P8 | Relation to the corpus contract on #112 and #113 | The retrieval corpus of the existing product and the bibliographic corpus of this experiment stay separate. Their acquisition contracts are reconciled before any shared infrastructure is introduced | Both pull requests are still open; numbers 0032–0035 are held by their branches | **Open, dependency.** Reconciliation precedes any shared infrastructure |
@@ -307,7 +307,7 @@ The adapter does not implement a detector and does not retire any component.
 | Group by publication date, never by file name | A test with a file named 2010 that holds 2011 records; the figures are computed by publication date | Met |
 | Document and test invalid XML, repeated identifiers and IPC entries | `test_oepm_biblio.py`; the rejected records are counted by reason (reproduction report §4) | Met. The 86 records with undefined entities remain a limitation of the source: the DTD that would define them is not distributed with the data |
 | Reproduce the published tables and show any discrepancy | 231 figures of sections 3–6 and 8, reproduced after the errata of the characterization | **Met for sections 3–6 and 8. Not met for §4.2 and §7**, which remain exploratory |
-| Keep the original data out of git | No file under `data/` is in the repository | Met |
+| Keep the original data out of git | No OEPM file is tracked. The ignore rule for `data/raw/oepm_open/` is not part of that pull request nor of this one; it is a local change pending its own review | Met in the repository; protection against accidental addition not yet committed |
 
 The expression that removes the `DOCTYPE` stops at the first `>`; it is not a general sanitiser of XML declarations. The tests show that specific hostile inputs are rejected without expansion or network access, not that the parser is safe against any hostile XML.
 
@@ -319,7 +319,7 @@ The decisions marked *Accepted* or *Accepted, parameters open* in §10, as the r
 
 ### 12.2 Conditions of the acceptance
 
-* **C1.** The figures of the characterization §4.2 and §7, and the numbers of this ADR that come from them (§6.2, §6.5, the mean lag, the cohort completeness, the counts of positives), are reproduced from the repository, with explicit definitions, tests and visible discrepancies, before the pre-registration. If they differ materially, the decisions that cite them (the second claim of A3, A5, the estimate of A6, P10) are reopened.
+* **C1.** The figures of the characterization §4.2 and §7, and the numbers of this ADR that come from them (§6.2, §6.5, the mean lag, the cohort completeness, the counts of positives), are reproduced from the repository, with explicit definitions, tests and visible discrepancies, before the pre-registration, which cannot be closed while C1 is unmet. If they differ materially, the decisions that cite them (the second claim of A3, A5, the estimate of A6, P10) are reopened.
 * **C2.** No detector, threshold value, null-model code or confirmatory evaluation exists before a pre-registration closes the open parameters of A7 and P1–P3 and the open items of §12.3.
 * **C3.** The limitations stay explicit in every result: the 86 records with undefined entities, the 17 records with bytes that are not valid UTF-8, the 3 records with an unreadable priority date, the 2010 gap, the 2023 drop of EP translations, and the absence of families and of CPC. The reproduced figures show consistency with a corrected characterization, not independent validation of every parsing decision.
 * **C4.** The acceptance covers the research contract. The hypotheses of §7 are not validated by it.
@@ -329,3 +329,15 @@ The decisions marked *Accepted* or *Accepted, parameters open* in §10, as the r
 * **O1.** Baseline B2 at the confirmatory origin 2013 uses the outcomes of origin 2010, whose history lacks the year 2010. Define it explicitly, or omit B2 at that origin.
 * **O2.** Multiplicity across H1, H1b and H2, and the smallest AUC-PR difference regarded as practically useful. Neither is addressed in §7 or §8.
 * **O3.** Whether the 86 records with undefined entities can be recovered, which requires the official DTD (reproduction report §4.1). Until then they remain rejected.
+
+### 12.4 Accepting, meeting the conditions, being ready to run
+
+These are three different states, and this ADR reaches only the first.
+
+| State | Meaning | Reached |
+|---|---|---|
+| Framework accepted | The questions, definitions and protocol of §§2–9 are the contract | Yes, when this status is merged |
+| Conditions met | C1 satisfied; O1–O3 and the open parameters of A7 and P1–P3 closed | **No** |
+| Ready to run the study | Pre-registration closed with the above; no pending change to the frozen protocol | **No** |
+
+P7 (OEPM consultation) and P8 (#112/#113) do not block acceptance. P7 can change how the 2010 gap and the 2023 drop are explained; P8 matters only before shared infrastructure. Neither is a condition of the pre-registration unless the reply to P7 contradicts the treatment in A6 or P6, in which case those decisions are reopened.
