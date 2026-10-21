@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cobertura y ausencias</title>
+<style>
+:root{--bg:#fafaf7;--fg:#1d2430;--muted:#5b6575;--line:#d9dde3;--card:#ffffff;--accent:#2f5d8a;--present:#2f5d8a;--absent-rest:#d19a3d;--absent-y:#b2473e;--warn-bg:#fff4dc;--warn-fg:#5a3d00;--heat:47,93,138}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12161c;--fg:#e6e9ee;--muted:#a3adbb;--line:#2b3340;--card:#1a2029;--accent:#7fb0e0;--present:#6fa3d6;--absent-rest:#e0b062;--absent-y:#e08278;--warn-bg:#3a2e12;--warn-fg:#f1d9a0;--heat:127,176,224}}
+:root[data-theme="dark"]{--bg:#12161c;--fg:#e6e9ee;--muted:#a3adbb;--line:#2b3340;--card:#1a2029;--accent:#7fb0e0;--present:#6fa3d6;--absent-rest:#e0b062;--absent-y:#e08278;--warn-bg:#3a2e12;--warn-fg:#f1d9a0;--heat:127,176,224}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:920px;margin:0 auto;padding:28px 16px 64px}
+h1{font-size:1.7rem;line-height:1.2;margin:.2rem 0 .3rem}
+h2{font-size:1.2rem;margin:2.2rem 0 .5rem;padding-top:1rem;border-top:1px solid var(--line)}
+.eyebrow{color:var(--muted);font-size:.85rem;letter-spacing:.04em;text-transform:uppercase}
+.lead{color:var(--muted);margin:.2rem 0 1rem}
+.banner{background:var(--warn-bg);color:var(--warn-fg);border-radius:8px;padding:12px 14px;margin:1rem 0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.card h3{margin:0 0 .3rem;font-size:1rem}
+.card p{margin:.2rem 0;color:var(--muted);font-size:.95rem}
+.tag{display:inline-block;font-size:.75rem;border:1px solid var(--line);border-radius:999px;padding:1px 8px;color:var(--muted);margin-bottom:.4rem}
+.facts{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin:1rem 0}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+.fact b{display:block;font-size:1.5rem;line-height:1.1}
+.fact span{color:var(--muted);font-size:.88rem}
+svg{width:100%;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:10px}
+.grid line,svg .grid{stroke:var(--line);stroke-width:1}
+svg .axis{fill:var(--muted);font-size:11px}
+svg .present{fill:var(--present)}svg .absent-rest{fill:var(--absent-rest)}svg .absent-y{fill:url(#hatch)}
+.hatch-bg{fill:var(--card)}.hatch-line{stroke:var(--absent-y);stroke-width:3}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);margin:.5rem 0}
+.sw{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.sw.p{background:var(--present)}.sw.r{background:var(--absent-rest)}.sw.y{background:repeating-linear-gradient(45deg,var(--absent-y) 0 2px,var(--card) 2px 5px);border:1px solid var(--absent-y)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+caption{text-align:left;color:var(--muted);padding:6px 0;font-size:.88rem}
+th,td{border:1px solid var(--line);padding:5px 8px;text-align:right}
+th[scope=row],thead th:first-child{text-align:left}
+.heat th small{display:block;font-weight:400;color:var(--muted);font-size:.7rem}
+.heat td{text-align:center;font-variant-numeric:tabular-nums}
+.l0{background:rgba(var(--heat),.04)}.l1{background:rgba(var(--heat),.16)}.l2{background:rgba(var(--heat),.3)}.l3{background:rgba(var(--heat),.48)}.l4{background:rgba(var(--heat),.68)}.l5{background:rgba(var(--heat),.88);color:#fff}
+.two{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.sr{position:absolute;left:-9999px}
+ul{padding-left:1.2rem}li{margin:.3rem 0}
+.decision{border:2px solid var(--accent);border-radius:12px;padding:16px;background:var(--card)}
+.decision h2{border:0;margin-top:0;padding-top:0}
+.scroll{overflow-x:auto}
+details{margin:.6rem 0}summary{cursor:pointer;color:var(--accent)}
+footer{color:var(--muted);font-size:.85rem;margin-top:2.5rem}
+</style>
+</head>
+<body>
+<main>
+<div class="eyebrow">Abell Nexus · nota de decisión · 21 de octubre de 2026</div>
+<h1>Cobertura y ausencias del corpus de patentes</h1>
+<p class="lead">Estado descriptivo del estudio sobre combinaciones de subclases IPC. Antes de pedir una decisión, qué datos tenemos y cuáles faltan.</p>
+
+<div class="banner"><strong>Esta página describe el corpus.</strong> No contiene candidatos, puntuaciones ni pares «prometedores». Una ausencia de co-clasificación no es una oportunidad tecnológica, y el estudio todavía no ha demostrado que ningún ranking funcione.</div>
+
+<h2>1. Qué estudiamos, en tres niveles</h2>
+<div class="grid">
+<div class="card"><span class="tag">existe</span><h3>Nivel 1 · Ausencias descriptivas</h3><p>Pares de subclases IPC que no han aparecido juntos en el corpus. Describe los datos; no son oportunidades.</p></div>
+<div class="card"><span class="tag">objetivo del estudio</span><h3>Nivel 2 · Priorización predictiva</h3><p>¿Un ranking encuentra las primeras apariciones posteriores mejor que reglas sencillas, con evaluación temporal preregistrada? Un resultado positivo probaría capacidad predictiva sobre publicaciones de la OEPM, no una oportunidad de innovación.</p></div>
+<div class="card"><span class="tag">fuera de alcance</span><h3>Nivel 3 · Oportunidades estratégicas</h3><p>Si una combinación es relevante, viable o de interés comercial. Exigiría otra pregunta, otras fuentes y validación experta.</p></div>
+</div>
+
+<h2>2. Cobertura: qué publicaciones tiene el corpus</h2>
+<p>El inventario oficial de la OEPM (el <em>Authority File</em>) lista {{INVENTORY}} publicaciones entre 2000 y 2025. El corpus bibliográfico contiene {{CORPUS}} claves de publicación distintas, casi todas presentes también en ese inventario.</p>
+{{COVERAGE_SVG}}
+<div class="legend"><span><i class="sw p"></i>Presente en el corpus</span><span><i class="sw r"></i>Ausente, resto de tipos</span><span><i class="sw y"></i>Ausente, tipo Y</span></div>
+<div class="facts">
+<div class="fact"><b>100 %</b><span>de las publicaciones de tipo Y de 2000 a 2009 están ausentes del corpus</span></div>
+<div class="fact"><b>{{ALL_2010}}</b><span>publicaciones de 2010 existen en el inventario; el corpus no tiene ninguna</span></div>
+<div class="fact"><b>{{ABSENT_2003}} % · {{ABSENT_2006}} %</b><span>del inventario acumulado hasta 2003 y hasta 2006 falta en el corpus</span></div>
+<div class="fact"><b>4 y 7 años</b><span>de historia observada en los orígenes de desarrollo 2003 y 2006: el corpus empieza en 2000</span></div>
+</div>
+<p>Hasta 2003 faltan {{Y_2003}} publicaciones de tipo Y; hasta 2006, {{Y_2006}}. Qué denota exactamente el tipo Y no lo hemos leído, y no sabemos si las publicaciones ausentes se clasifican de forma distinta de las presentes: el inventario no incluye clasificaciones. <strong>El efecto de esa ausencia sobre los resultados no se puede estimar con los datos disponibles.</strong></p>
+
+<h2>3. Mapa de co-clasificación observada</h2>
+<p>Entre las subclases IPC activas (al menos 20 documentos), qué porcentaje de pares ya aparece junto en algún documento publicado hasta el origen, agrupado por sección IPC (A a H; bajo cada letra, número de subclases activas). Las celdas claras indican pares aún no vistos, <strong>no oportunidades</strong>: la mayoría de las ausencias reflejan que dos áreas no suelen combinarse.</p>
+<div class="two scroll">
+{{HEAT_2006}}
+{{HEAT_2022}}
+</div>
+<p style="color:var(--muted);font-size:.9rem">Pasa el cursor por una celda para ver el recuento. Los datos de 2022 incluyen la historia con el hueco de 2010 y la ausencia del tipo Y.</p>
+
+<h2>4. Qué se mueve y qué no</h2>
+<p>Positivos: pares no vistos hasta el origen que aparecen juntos en los tres años siguientes. No son oportunidades; son el evento que el estudio intenta predecir.</p>
+<div class="scroll"><table>
+<caption>Positivos en los orígenes de desarrollo bajo cuatro escenarios</caption>
+<thead><tr><th>Origen</th><th>Corpus observado</th><th>Quitando un año de historia (rango)</th><th>Últimos 3 años de historia</th><th>Pérdida aleatoria simulada (2,5–97,5 %)</th></tr></thead>
+<tbody>{{SENS_ROWS}}</tbody></table></div>
+<ul>
+<li>Los recuentos dependen mucho más de la <strong>longitud y composición de la historia</strong> que de una pérdida aleatoria a las tasas conocidas.</li>
+<li>Quitar un año o acortar la historia cambia el problema (qué pares se consideran no vistos), no solo la cobertura.</li>
+<li>La simulación aleatoria <strong>no puede representar</strong> la ausencia del tipo Y: no hay publicaciones Y observadas en esos años que borrar ni a las que parecerse.</li>
+</ul>
+
+<h2>5. Lo que no afirmamos</h2>
+<ul>
+<li>Que alguna ausencia sea una oportunidad tecnológica.</li>
+<li>Que el estudio actual haya demostrado capacidad predictiva alguna: todavía no existen las líneas base ni el detector.</li>
+<li>Que sepamos cuánto cambiarían los resultados al recuperar las publicaciones ausentes.</li>
+<li>Que esta visualización sirva para elegir parámetros del preregistro.</li>
+</ul>
+
+<section class="decision" aria-labelledby="dec">
+<h2 id="dec">6. Decisión pendiente</h2>
+<p><strong>¿Qué mejora mínima de AUC-PR frente a la mejor regla sencilla justificaría, desde el punto de vista práctico de Abell, utilizar el ranking?</strong></p>
+<p>Dicho de otro modo: si el ranking propone 100 pares para revisión experta, ¿cuántos aciertos más que la regla sencilla harían que mereciera la pena? Se fija antes de ver resultados; si no existe una mejora suficiente, o los datos no permiten distinguirla de la incertidumbre, el estudio debe poder concluirlo.</p>
+<ul>
+<li><strong>Relevancia científica y práctica:</strong> qué mejora importa. La decide Abell.</li>
+<li><strong>Potencia estadística:</strong> qué diferencia puede detectar el diseño con estos datos. Depende de la respuesta anterior y de la variabilidad medida en los orígenes de desarrollo.</li>
+<li><strong>Limitaciones de cobertura:</strong> lo que esta página muestra. Condicionan qué se puede afirmar, no qué mejora es útil.</li>
+</ul>
+<p>Segunda cuestión: ¿qué limitación concreta impide responder a vuestra pregunta —contenido tecnológico, una clasificación más fina, familias de patentes— o es la pregunta del estudio la que no es la vuestra? Y tercera: ¿es el nivel estratégico un objetivo futuro de interés?</p>
+</section>
+
+<footer>Fuentes: resultados versionados en el repositorio (exposición del corpus, sensibilidad descriptiva, mapa por secciones). Datos: Oficina Española de Patentes y Marcas; origen de los datos: Oficina Española de Patentes y Marcas. Documento descriptivo, sin valor de resultado confirmatorio.</footer>
+</main>
+</body>
+</html>
