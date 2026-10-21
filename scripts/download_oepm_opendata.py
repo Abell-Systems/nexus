@@ -25,21 +25,35 @@ import re
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
+from urllib.parse import urlsplit
 
-SEDE = "https://sede.oepm.gob.es/"
+SEDE_HOST = "sede.oepm.gob.es"
 PAGE = "https://sede.oepm.gob.es/eSede/datos/es/catalogo/catalogo-patentes-y-modelos-de-utilidad/bibliograficos/"
 OUT_DIR = Path("data/raw/oepm_open")
 LINK_RE = re.compile(r"descargar\.jsp\?u=(INVENCIONES/[^'\"&]+\.zip)$")
 
 
+def is_sede_url(url: str) -> bool:
+    """True for an https URL on exactly the sede host, without credentials or a non-default port."""
+    try:
+        parts = urlsplit(url)
+        return (
+            parts.scheme == "https"
+            and parts.hostname == SEDE_HOST
+            and parts.username is None
+            and parts.password is None
+            and parts.port in (None, 443)
+        )
+    except ValueError:  # malformed port or netloc
+        return False
+
+
 def zip_paths(hrefs: list[str]) -> list[str]:
-    """Sorted, distinct INVENCIONES/....zip paths among the links of a page."""
-    return sorted({m.group(1) for h in hrefs if (m := LINK_RE.search(h))})
+    """Sorted, distinct INVENCIONES/....zip paths among the links of a page that point to the sede."""
+    return sorted({m.group(1) for h in hrefs if is_sede_url(h) and (m := LINK_RE.search(h))})
 
 
 def main() -> int:
-    from playwright.sync_api import sync_playwright  # not a project dependency: imported only when downloading
-
     ap = argparse.ArgumentParser()
     ap.add_argument("--list", action="store_true", help="only list the files the account can see")
     ap.add_argument("--match", default=None, help="regex on the file path; required to download")
@@ -47,13 +61,17 @@ def main() -> int:
         "--page", default=PAGE, help="sede page whose links are listed or downloaded (default: bibliographic data)"
     )
     args = ap.parse_args()
-    if not args.page.startswith(SEDE):
-        ap.error(f"--page must be a page of {SEDE}")
+    if not is_sede_url(args.page):
+        ap.error(f"--page must be an https page of {SEDE_HOST}")
     if not args.list and not args.match:
         ap.error("pass --list or --match")
     user, pwd = os.environ.get("OEPM_USER"), os.environ.get("OEPM_PWD")
     if not user or not pwd:
         sys.exit("set OEPM_USER and OEPM_PWD in your environment")
+
+    from playwright.sync_api import (
+        sync_playwright,
+    )  # not a project dependency: imported only once the arguments are valid
 
     with sync_playwright() as p:
         browser = p.chromium.launch()
@@ -69,6 +87,8 @@ def main() -> int:
         if args.page != PAGE:
             page.goto(args.page)
             page.wait_for_load_state("networkidle")
+            if not is_sede_url(page.url):  # a redirect must not take the logged-in session elsewhere
+                sys.exit(f"--page redirected outside {SEDE_HOST}: {page.url}")
         hrefs = page.eval_on_selector_all("a[href*='descargar.jsp']", "els => els.map(e => e.href)")
         files = zip_paths(hrefs)
         if args.list:
