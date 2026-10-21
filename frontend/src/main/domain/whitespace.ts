@@ -105,6 +105,7 @@ export interface OriginPairs {
   origin: number;
   min_documents: number;
   active: Record<string, number>;
+  first_years: Record<string, number>;
   pairs: Record<string, PairRecord>;
 }
 

@@ -34,6 +34,13 @@ def check_against_density(result: dict, density: dict) -> None:
     assert universe - len(pairs) == sum(c["possible_pairs"] - c["seen_pairs"] for c in density["cells"].values())
     per_section = {section: sum(1 for s in active if s[0] == section) for section in sorted({s[0] for s in active})}
     assert per_section == density["active_subclasses_by_section"], "active subclasses by section differ"
+    first_years = result["first_years"]
+    assert set(first_years) == set(active), "first years are not those of the active subclasses"
+    for key, pair in pairs.items():
+        a, b = key.split("|")
+        assert pair["first_year"] >= max(first_years[a], first_years[b]), (
+            f"pair {key} is older than one of its subclasses"
+        )
     for cell, figures in density["cells"].items():
         x, y = cell
         derived = per_section[x] * (per_section[x] - 1) // 2 if x == y else per_section[x] * per_section[y]

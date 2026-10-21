@@ -5,11 +5,12 @@ import { EXPLORER_TEXT, TEXT, type PairsResults } from "../../src/main/domain/wh
 import { resetSubclassPairsCache } from "../../src/main/infrastructure/subclassPairsLoader";
 
 const fixture: PairsResults = {
-  "2006": { origin: 2006, min_documents: 20, active: { A01B: 250, G06N: 90 }, pairs: {} },
+  "2006": { origin: 2006, min_documents: 20, active: { A01B: 250, G06N: 90 }, first_years: { A01B: 2000, G06N: 2001 }, pairs: {} },
   "2022": {
     origin: 2022,
     min_documents: 20,
     active: { A01B: 250, A01C: 196, G06N: 90, G06F: 500, H04L: 40 },
+    first_years: { A01B: 2000, A01C: 2000, G06N: 2001, G06F: 2000, H04L: 2003 },
     pairs: {
       "A01B|A01C": { documents: 16, by_year: { "2000": 3, "2003": 13 }, first_year: 2000 },
       "G06F|G06N": { documents: 30, by_year: { "2001": 10, "2004": 20 }, first_year: 2001 },
@@ -36,6 +37,7 @@ const user = {
 async function open(symbol = "G06N") {
   render(<SubclassExplorerSection />);
   const search = await screen.findByLabelText("Buscar subclase por símbolo");
+  fireEvent.focus(search);
   await screen.findByRole("option", { name: "2006" });
   fireEvent.change(search, { target: { value: symbol } });
   fireEvent.keyDown(search, { key: "Enter" });
@@ -45,9 +47,24 @@ async function open(symbol = "G06N") {
 const symbols = () => within(screen.getByRole("table")).getAllByRole("rowheader").map((c) => c.textContent);
 
 describe("the subclass explorer", () => {
-  it("shouldLoadTheStaticFileOnDemandAndStateTheLimitsBesideTheOriginSelectorWhenRendered", async () => {
+  it("shouldNotFetchTheFileUntilTheUserTouchesAControlWhenRendered", async () => {
     render(<SubclassExplorerSection />);
     await screen.findByLabelText("Origen");
+    expect(fetch).not.toHaveBeenCalled();
+    fireEvent.focus(screen.getByLabelText("Buscar subclase por símbolo"));
+    await screen.findByRole("option", { name: "2006" });
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it("shouldShowTheFirstYearSeenOfTheChosenSubclassWhenItsSummaryIsShown", async () => {
+    await open("G06N");
+    expect(screen.getByText(/primer año visto: 2001/)).toBeTruthy();
+  });
+
+  it("shouldLoadTheStaticFileOnDemandAndStateTheLimitsBesideTheOriginSelectorWhenUsed", async () => {
+    render(<SubclassExplorerSection />);
+    fireEvent.focus(screen.getByLabelText("Origen"));
+    await screen.findByRole("option", { name: "2006" });
     expect(fetch).toHaveBeenCalledWith("/data/oepm-subclass-pairs-results.json");
     expect(document.body.textContent).toContain(EXPLORER_TEXT.limits);
     expect(screen.getByLabelText<HTMLSelectElement>("Origen").value).toBe("2022");
@@ -124,6 +141,7 @@ describe("the subclass explorer", () => {
   it("shouldReportAnErrorAndRetryOnTheNextLoadWhenTheFileCannotBeFetched", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => ({ ok: false, status: 404, json: async () => ({}) })));
     render(<SubclassExplorerSection />);
+    fireEvent.focus(screen.getByLabelText("Origen"));
     expect(await screen.findByRole("alert")).toBeTruthy();
   });
 });

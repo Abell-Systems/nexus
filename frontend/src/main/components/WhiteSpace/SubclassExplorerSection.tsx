@@ -18,6 +18,7 @@ const MAX_MATCHES = 12;
 export function SubclassExplorerSection() {
   const [data, setData] = useState<PairsResults | null>(null);
   const [failed, setFailed] = useState(false);
+  const [started, setStarted] = useState(false);
   const [originKey, setOriginKey] = useState("2022");
   const [query, setQuery] = useState("");
   const [symbol, setSymbol] = useState<string | null>(null);
@@ -28,9 +29,13 @@ export function SubclassExplorerSection() {
   const detailRef = useRef<HTMLDivElement>(null);
   const ids = { origin: useId(), search: useId(), seen: useId(), section: useId(), sort: useId() };
 
-  useEffect(() => {
+  // On demand: the 6 MB file is fetched when the user first touches a control of the explorer, not when the page opens.
+  const start = () => {
+    if (data) return;
+    setStarted(true);
+    setFailed(false);
     loadSubclassPairs().then(setData, () => setFailed(true));
-  }, []);
+  };
   useEffect(() => {
     if (other) detailRef.current?.focus();
   }, [other]);
@@ -55,7 +60,7 @@ export function SubclassExplorerSection() {
         Elija una subclase IPC y vea, para cada otra subclase activa, si el par se ha observado junto en el corpus y con qué recuentos. Es una consulta
         descriptiva: {EXPLORER_TEXT.noScore} {EXPLORER_TEXT.symbolsOnly}
       </p>
-      <div className={styles.controls}>
+      <div className={styles.controls} onFocus={start}>
         <div>
           <label htmlFor={ids.origin}>Origen</label>
           <select id={ids.origin} value={originKey} onChange={(e) => { setOriginKey(e.target.value); setOther(null); }}>
@@ -70,7 +75,7 @@ export function SubclassExplorerSection() {
             autoComplete="off"
             value={query}
             placeholder="p. ej. G06N"
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => { setQuery(e.target.value); start(); }}
             onKeyDown={(e) => { if (e.key === "Enter" && matches.length > 0) choose(matches[0]); }}
           />
         </div>
@@ -78,7 +83,7 @@ export function SubclassExplorerSection() {
       <p className={styles.note}>{EXPLORER_TEXT.limits} {EXPLORER_TEXT.universe}</p>
 
       {failed && <p role="alert">No se han podido cargar los datos del explorador.</p>}
-      {!data && !failed && <p role="status">Cargando datos…</p>}
+      {!data && !failed && started && <p role="status">Cargando datos…</p>}
 
       {origin && query.trim() && (
         <div role="region" aria-label="Subclases que coinciden con la búsqueda">
@@ -105,7 +110,7 @@ export function SubclassExplorerSection() {
             {chosen} en el origen {originKey}
           </h3>
           <p>
-            Sección {chosen[0]} · {fmt.format(origin.active[chosen])} documentos publicados hasta {originKey}.
+            Sección {chosen[0]} · {fmt.format(origin.active[chosen])} documentos publicados hasta {originKey} · primer año visto: {origin.first_years[chosen]}.
           </p>
           <div className={styles.controls}>
             <div>

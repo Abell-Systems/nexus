@@ -6,6 +6,7 @@ const origin: OriginPairs = {
   origin: 2006,
   min_documents: 20,
   active: { A01B: 250, A01C: 196, G06N: 90, G06F: 500, H04L: 40 },
+  first_years: { A01B: 2000, A01C: 2000, G06N: 2001, G06F: 2000, H04L: 2003 },
   pairs: {
     "A01B|A01C": { documents: 16, by_year: { "2000": 3, "2003": 13 }, first_year: 2000 },
     "A01B|G06F": { documents: 2, by_year: { "2005": 2 }, first_year: 2005 },

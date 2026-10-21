@@ -3,7 +3,8 @@
 The universe is the study's: subclasses active at the origin (``min_documents`` publication identifiers first
 published up to it) and every pair of two of them. A pair is *observed* if one source record published up to the
 origin states both; only observed pairs are stored, the unobserved ones are the complement. A document is counted once
-per pair, in the year of the earliest record that carries both. Describes the corpus; nothing here ranks anything.
+per pair, in the year of the earliest record that carries both. A subclass's first year is the earliest publication
+year of its documents. Describes the corpus; nothing here ranks anything.
 """
 
 from collections.abc import Iterable
@@ -17,10 +18,10 @@ from application.whitespace.base_rates import active_subclass_sets, activity_cou
 def subclass_pairs(records: Iterable[AnalysisRecord], origin: int, min_documents: int = 20) -> dict[str, Any]:
     records = [r for r in records if r.published.year <= origin]
     active = active_subclass_sets(records, [origin], min_documents=min_documents, copy_policy="union")[origin]
-    per_subclass = {
-        s: sum(c for y, c in per_year.items() if y <= origin)
-        for s, per_year in activity_counts(records, "union").items()
-        if s in active
+    activity = {s: per_year for s, per_year in activity_counts(records, "union").items() if s in active}
+    per_subclass = {s: sum(per_year.values()) for s, per_year in activity.items()}
+    first_years = {
+        s: min(year for year, count in per_year.items() if count) for s, per_year in sorted(activity.items())
     }
     first_record: dict[tuple[str, str], dict[str, int]] = {}
     for record in records:
@@ -39,5 +40,6 @@ def subclass_pairs(records: Iterable[AnalysisRecord], origin: int, min_documents
         "origin": origin,
         "min_documents": min_documents,
         "active": dict(sorted(per_subclass.items())),
+        "first_years": first_years,
         "pairs": pairs,
     }
