@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 
 const artifactsPresent = existsSync(fileURLToPath(new URL("../../../data/snapshots/operational_corpus_v1", import.meta.url)));
 
-test.beforeEach(({}, testInfo) => {
+test.beforeEach((_fixtures, testInfo) => {
   testInfo.skip(!artifactsPresent, "frozen artifacts are not in this checkout");
 });
 
