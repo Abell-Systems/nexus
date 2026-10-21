@@ -57,10 +57,10 @@ export function CoverageSection({ results }: { readonly results: ExposureResults
           ];
           return (
             <g key={bar.year}>
-              {parts.map(({ value, className }, part) => {
+              {parts.map(({ value, className }) => {
                 const height = scale(value);
                 base -= height;
-                return height > 0 ? <rect key={part} className={className} x={x} y={base} width={width} height={height} /> : null;
+                return height > 0 ? <rect key={className} className={className} x={x} y={base} width={width} height={height} /> : null;
               })}
               {(bar.year % 2 === 0 || bar.year === 2025) && (
                 <text className={styles.axis} x={x + width / 2} y={HEIGHT - 10} textAnchor="middle">
@@ -79,7 +79,7 @@ export function CoverageSection({ results }: { readonly results: ExposureResults
       <ul className={styles.facts}>
         <li className={styles.fact}>
           <strong>100 %</strong>
-          <span>de las publicaciones de tipo Y de {yearsY[0]} a {yearsY[yearsY.length - 1]} están ausentes del corpus</span>
+          <span>de las publicaciones de tipo Y de {yearsY[0]} a {yearsY.at(-1)} están ausentes del corpus</span>
         </li>
         <li className={styles.fact}>
           <strong>{fmt.format(results.exposure.by_year["2010"].ep_translation.inventory + results.exposure.by_year["2010"].kind_y.inventory + results.exposure.by_year["2010"].other.inventory)}</strong>

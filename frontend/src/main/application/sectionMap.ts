@@ -22,7 +22,7 @@ export interface MapCell {
 
 /** The symmetric matrix of a map: cells are keyed by the sorted pair of sections, as in the results. */
 export function mapCells(map: SectionDensity, peak: number): { sections: string[]; rows: MapCell[][] } {
-  const sections = Object.keys(map.active_subclasses_by_section).sort();
+  const sections = Object.keys(map.active_subclasses_by_section).sort((a, b) => a.localeCompare(b));
   const rows = sections.map((row) =>
     sections.map((column) => {
       const cell = map.cells[row <= column ? row + column : column + row];

@@ -2,7 +2,11 @@ import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
 
-test.skip(!existsSync(fileURLToPath(new URL("../../../data/snapshots/operational_corpus_v1", import.meta.url))), "frozen artifacts are not in this checkout");
+const artifactsPresent = existsSync(fileURLToPath(new URL("../../../data/snapshots/operational_corpus_v1", import.meta.url)));
+
+test.beforeEach(({}, testInfo) => {
+  testInfo.skip(!artifactsPresent, "frozen artifacts are not in this checkout");
+});
 
 test("shouldDescribeTheCorpusWithoutPresentingAbsencesAsOpportunitiesOnTheFrontPage", async ({ page }) => {
   await page.goto("/");

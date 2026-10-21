@@ -39,7 +39,7 @@ function SectionMap({ map, peak }: { readonly map: SectionDensity; readonly peak
 }
 
 export function SectionMapSection({ density }: { readonly density: DensityResults }) {
-  const maps = Object.keys(density).sort().map((origin) => density[origin]);
+  const maps = Object.keys(density).sort((a, b) => a.localeCompare(b)).map((origin) => density[origin]);
   const peak = commonPeak(maps);
   return (
     <section id="mapa" className={styles.section} aria-labelledby="mapa-titulo">
@@ -49,7 +49,7 @@ export function SectionMapSection({ density }: { readonly density: DensityResult
         publicado hasta el origen, agrupado por sección IPC (A a H; bajo cada letra, el número de subclases activas). {TEXT.absenceIsNotOpportunity}
       </p>
       <p>
-        Escala de color <strong>común a ambos mapas</strong>:
+        Escala de color <strong>común a ambos mapas</strong>:{" "}
         <span className={styles.ramp} aria-hidden="true">
           {[0, 1, 2, 3, 4, 5].map((n) => <i key={n} className={styles[`l${n}` as keyof typeof styles]} />)}
         </span>
