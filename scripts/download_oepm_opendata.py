@@ -11,6 +11,10 @@ Needs Playwright, which is deliberately not a project dependency (a one-off tool
 
   python scripts/download_oepm_opendata.py --list                   # login, show available files
   python scripts/download_oepm_opendata.py --match 'biblio.*2020'   # download matching files
+  python scripts/download_oepm_opendata.py --page CATALOG_URL --list   # files linked from another sede page
+
+The login always happens on the bibliographic-data page; --page then moves, in the same session, to another
+page of the sede (for example the catalogue, which links the example file of every dataset).
 """
 
 import argparse
@@ -22,18 +26,29 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
-from playwright.sync_api import sync_playwright
-
+SEDE = "https://sede.oepm.gob.es/"
 PAGE = "https://sede.oepm.gob.es/eSede/datos/es/catalogo/catalogo-patentes-y-modelos-de-utilidad/bibliograficos/"
 OUT_DIR = Path("data/raw/oepm_open")
 LINK_RE = re.compile(r"descargar\.jsp\?u=(INVENCIONES/[^'\"&]+\.zip)$")
 
 
+def zip_paths(hrefs: list[str]) -> list[str]:
+    """Sorted, distinct INVENCIONES/....zip paths among the links of a page."""
+    return sorted({m.group(1) for h in hrefs if (m := LINK_RE.search(h))})
+
+
 def main() -> int:
+    from playwright.sync_api import sync_playwright  # not a project dependency: imported only when downloading
+
     ap = argparse.ArgumentParser()
     ap.add_argument("--list", action="store_true", help="only list the files the account can see")
     ap.add_argument("--match", default=None, help="regex on the file path; required to download")
+    ap.add_argument(
+        "--page", default=PAGE, help="sede page whose links are listed or downloaded (default: bibliographic data)"
+    )
     args = ap.parse_args()
+    if not args.page.startswith(SEDE):
+        ap.error(f"--page must be a page of {SEDE}")
     if not args.list and not args.match:
         ap.error("pass --list or --match")
     user, pwd = os.environ.get("OEPM_USER"), os.environ.get("OEPM_PWD")
@@ -51,8 +66,11 @@ def main() -> int:
         if "tienes que estar registrado" in page.content():
             sys.exit("login failed: the page still asks for registration")
 
+        if args.page != PAGE:
+            page.goto(args.page)
+            page.wait_for_load_state("networkidle")
         hrefs = page.eval_on_selector_all("a[href*='descargar.jsp']", "els => els.map(e => e.href)")
-        files = sorted({m.group(1) for h in hrefs if (m := LINK_RE.search(h))})
+        files = zip_paths(hrefs)
         if args.list:
             print("\n".join(files) or "no .zip links visible")
             return 0
