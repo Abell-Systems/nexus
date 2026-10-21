@@ -1,0 +1,185 @@
+{
+  "authority_file": {
+    "name": "ES_Authority_File_20260930.zip",
+    "sha256": "80a7fe1713f7b63f150f3601239dea06e0c7ddb274fa9242daa904c5a93731f1"
+  },
+  "scenarios": "ADR 0036 section 8.10",
+  "replications": 200,
+  "records_in_scope": 247659,
+  "sensitivity": {
+    "2003": {
+      "S-A": {
+        "active_subclasses": 524,
+        "candidate_pairs": 120151,
+        "positives": 6713,
+        "positive_rate_percent": 5.59
+      },
+      "S-B1": {
+        "2000": {
+          "active_subclasses": 493,
+          "candidate_pairs": 106910,
+          "positives": 7246,
+          "positive_rate_percent": 6.78,
+          "positives_whose_pair_was_seen_only_in_the_removed_year": 846,
+          "positives_change_not_explained_by_that": -313
+        },
+        "2001": {
+          "active_subclasses": 499,
+          "candidate_pairs": 109176,
+          "positives": 7049,
+          "positive_rate_percent": 6.46,
+          "positives_whose_pair_was_seen_only_in_the_removed_year": 587,
+          "positives_change_not_explained_by_that": -251
+        },
+        "2002": {
+          "active_subclasses": 501,
+          "candidate_pairs": 110654,
+          "positives": 7338,
+          "positive_rate_percent": 6.63,
+          "positives_whose_pair_was_seen_only_in_the_removed_year": 859,
+          "positives_change_not_explained_by_that": -234
+        },
+        "2003": {
+          "active_subclasses": 490,
+          "candidate_pairs": 106189,
+          "positives": 7710,
+          "positive_rate_percent": 7.26,
+          "positives_whose_pair_was_seen_only_in_the_removed_year": 1365,
+          "positives_change_not_explained_by_that": -368
+        }
+      },
+      "S-B2": {
+        "active_subclasses": 493,
+        "candidate_pairs": 106910,
+        "positives": 7246,
+        "positive_rate_percent": 6.78
+      },
+      "S-C": {
+        "replications": 200,
+        "seeds": [
+          1,
+          200
+        ],
+        "active_subclasses": {
+          "mean": 523.92,
+          "p2.5": 523,
+          "p97.5": 524
+        },
+        "candidate_pairs": {
+          "mean": 120116.06,
+          "p2.5": 119650,
+          "p97.5": 120166
+        },
+        "positives": {
+          "mean": 6707.62,
+          "p2.5": 6689,
+          "p97.5": 6716
+        },
+        "positive_rate_percent": {
+          "mean": 5.58,
+          "p2.5": 5.57,
+          "p97.5": 5.61
+        }
+      }
+    },
+    "2006": {
+      "S-A": {
+        "active_subclasses": 565,
+        "candidate_pairs": 134747,
+        "positives": 4532,
+        "positive_rate_percent": 3.36
+      },
+      "S-B1": {
+        "2000": {
+          "active_subclasses": 559,
+          "candidate_pairs": 132788,
+          "positives": 4821,
+          "positive_rate_percent": 3.63,
+          "positives_whose_pair_was_seen_only_in_the_removed_year": 301,
+          "positives_change_not_explained_by_that": -12
+        },
+        "2001": {
+          "active_subclasses": 556,
+          "candidate_pairs": 130757,
+          "positives": 4713,
+          "positive_rate_percent": 3.6,
+          "positives_whose_pair_was_seen_only_in_the_removed_year": 204,
+          "positives_change_not_explained_by_that": -23
+        },
+        "2002": {
+          "active_subclasses": 557,
+          "candidate_pairs": 131575,
+          "positives": 4803,
+          "positive_rate_percent": 3.65,
+          "positives_whose_pair_was_seen_only_in_the_removed_year": 296,
+          "positives_change_not_explained_by_that": -25
+        },
+        "2003": {
+          "active_subclasses": 559,
+          "candidate_pairs": 132999,
+          "positives": 4897,
+          "positive_rate_percent": 3.68,
+          "positives_whose_pair_was_seen_only_in_the_removed_year": 383,
+          "positives_change_not_explained_by_that": -18
+        },
+        "2004": {
+          "active_subclasses": 557,
+          "candidate_pairs": 132280,
+          "positives": 5046,
+          "positive_rate_percent": 3.81,
+          "positives_whose_pair_was_seen_only_in_the_removed_year": 539,
+          "positives_change_not_explained_by_that": -25
+        },
+        "2005": {
+          "active_subclasses": 558,
+          "candidate_pairs": 133037,
+          "positives": 5207,
+          "positive_rate_percent": 3.91,
+          "positives_whose_pair_was_seen_only_in_the_removed_year": 700,
+          "positives_change_not_explained_by_that": -25
+        },
+        "2006": {
+          "active_subclasses": 561,
+          "candidate_pairs": 134041,
+          "positives": 5086,
+          "positive_rate_percent": 3.79,
+          "positives_whose_pair_was_seen_only_in_the_removed_year": 560,
+          "positives_change_not_explained_by_that": -6
+        }
+      },
+      "S-B2": {
+        "active_subclasses": 522,
+        "candidate_pairs": 118270,
+        "positives": 6005,
+        "positive_rate_percent": 5.08
+      },
+      "S-C": {
+        "replications": 200,
+        "seeds": [
+          1,
+          200
+        ],
+        "active_subclasses": {
+          "mean": 564.95,
+          "p2.5": 564,
+          "p97.5": 565
+        },
+        "candidate_pairs": {
+          "mean": 134730.27,
+          "p2.5": 134204,
+          "p97.5": 134777
+        },
+        "positives": {
+          "mean": 4524.02,
+          "p2.5": 4507,
+          "p97.5": 4536
+        },
+        "positive_rate_percent": {
+          "mean": 3.36,
+          "p2.5": 3.34,
+          "p97.5": 3.37
+        }
+      }
+    }
+  }
+}
