@@ -147,3 +147,14 @@ def test_shouldSeparateUniqueAmbiguousAndUnmatchedFilingNumbersWhenResolvingThem
         "no_application_in_the_inventory": 2,
         "not_a_digit_number_or_unknown_office": 1,
     }
+
+
+def test_shouldCountAPublicationOnceWhenTheInventoryListsItTwice():
+    corpus = [
+        publication("1", "U8", date(2013, 1, 1), reference()),
+        publication("2", "B1", date(2013, 1, 1), reference(kind="P")),
+    ]
+    authority = [entry("1", "U8", "20130101"), entry("1", "U8", "20130101"), entry("1", "U8", "20130101")]
+    report = link_report(corpus, authority)
+    assert report["corpus_keys_in_authority"] == 1 and report["corpus_keys_not_in_authority"] == 1
+    assert report["application_key_agreement"] == {"same_key": 1}

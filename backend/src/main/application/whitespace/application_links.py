@@ -47,7 +47,7 @@ def link_report(
         copies_that_disagree += pub_key in corpus and corpus[pub_key] != value
         corpus.setdefault(pub_key, value)
 
-    seen_in_authority = 0
+    linked: set[PublicationKey] = set()
     agreement: Counter[str] = Counter()
     examples: dict[str, list[Any]] = {}
     unparsed: Counter[tuple[str, str]] = Counter()
@@ -73,7 +73,9 @@ def link_report(
         publication = (entry.publication_number, entry.kind, entry.publication_date)
         if publication not in corpus:
             continue
-        seen_in_authority += 1
+        if publication in linked:  # a publication listed twice in the inventory is counted once
+            continue
+        linked.add(publication)
         corpus_key, corpus_filing = corpus[publication]
         if corpus_key is None or key is None:
             outcome = "corpus_key_missing" if corpus_key is None else "authority_key_missing"
@@ -95,8 +97,8 @@ def link_report(
         "authority_entries": authority_entries,
         "corpus_publication_keys": len(corpus),
         "corpus_keys_with_copies_that_disagree_on_the_application": copies_that_disagree,
-        "corpus_keys_in_authority": seen_in_authority,
-        "corpus_keys_not_in_authority": len(corpus) - seen_in_authority,
+        "corpus_keys_in_authority": len(linked),
+        "corpus_keys_not_in_authority": len(corpus) - len(linked),
         "application_key_agreement": dict(agreement),
         "agreement_examples": examples,
         "authority_application_numbers_not_parsed": {f"{o}|{s}": n for (o, s), n in unparsed.most_common(10)},
