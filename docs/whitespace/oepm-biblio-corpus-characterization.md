@@ -29,6 +29,8 @@ The 26 files are identified by the hashes in §8. The CPC classification data ar
 
 One XML document per publication. Fields present and used here: country, document number, kind code, publication date, application date, earliest priority date (when a priority claim exists), applicants, inventors, title, IPC classifications with the IPC version indicator.
 
+**Application reference** (added 2026-10-21, not one of the published figures). The record also states the application it stems from (country, number, kind), which is not the publication identifier: one application has several publications (A1 and B1, for example), and the legal-status and pre-2013 citation datasets are keyed by application. The adapter keeps it raw (`PatentPublication.application_reference`). Read from the 26 files: every one of the 711,547 records has one; country is `ES` for 711,034 and `EP` for 513; 582,385 distinct (country, number) pairs, of which 504,042 have a single publication in the corpus. Number shapes: 8 digits for 511,986 EP translations, 9 digits for most national records and 7 digits for 14,303 older ones; six EP translations carry a letter prefix. The legal-status example writes European applications as `E` followed by 8 digits, so a join needs a documented normalisation that has not been verified here.
+
 Fields **absent**: abstract and description (the XML carries empty `<description>` and `<claims>` elements), CPC codes, citations, patent family identifier.
 
 ## 3. Counts
