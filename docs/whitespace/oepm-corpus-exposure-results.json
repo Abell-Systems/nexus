@@ -557,7 +557,8 @@
     },
     "accumulated_up_to_origin": {
       "2003": {
-        "history_years": 4,
+        "calendar_years_in_window": 4,
+        "years_with_corpus_publications": 4,
         "ep_translation": {
           "inventory": 51742,
           "absent": 39,
@@ -580,7 +581,8 @@
         }
       },
       "2006": {
-        "history_years": 7,
+        "calendar_years_in_window": 7,
+        "years_with_corpus_publications": 7,
         "ep_translation": {
           "inventory": 113397,
           "absent": 134,
@@ -603,7 +605,8 @@
         }
       },
       "2010": {
-        "history_years": 11,
+        "calendar_years_in_window": 11,
+        "years_with_corpus_publications": 10,
         "ep_translation": {
           "inventory": 190057,
           "absent": 16143,
@@ -626,7 +629,8 @@
         }
       },
       "2013": {
-        "history_years": 14,
+        "calendar_years_in_window": 14,
+        "years_with_corpus_publications": 13,
         "ep_translation": {
           "inventory": 248492,
           "absent": 18260,
@@ -649,7 +653,8 @@
         }
       },
       "2016": {
-        "history_years": 17,
+        "calendar_years_in_window": 17,
+        "years_with_corpus_publications": 16,
         "ep_translation": {
           "inventory": 303508,
           "absent": 18394,
@@ -672,7 +677,8 @@
         }
       },
       "2019": {
-        "history_years": 20,
+        "calendar_years_in_window": 20,
+        "years_with_corpus_publications": 19,
         "ep_translation": {
           "inventory": 380296,
           "absent": 21436,
@@ -695,7 +701,8 @@
         }
       },
       "2022": {
-        "history_years": 23,
+        "calendar_years_in_window": 23,
+        "years_with_corpus_publications": 22,
         "ep_translation": {
           "inventory": 465082,
           "absent": 21437,

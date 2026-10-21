@@ -65,14 +65,33 @@ def test_shouldAccumulateAbsencesFromTheFirstYearUpToEachOriginWhenBuildingTheTa
     ]
     table = exposure_table(corpus, authority, origins=[2000, 2001], first_year=2000, last_year=2001)
     first, second = table["accumulated_up_to_origin"]["2000"], table["accumulated_up_to_origin"]["2001"]
-    assert first["history_years"] == 1 and first["all_groups"] == {
-        "inventory": 2,
-        "absent": 1,
-        "absent_share_percent": 50.0,
-    }
-    assert second["history_years"] == 2 and second["kind_y"] == {
-        "inventory": 2,
-        "absent": 2,
-        "absent_share_percent": 100.0,
-    }
+    assert (
+        first["calendar_years_in_window"] == 1
+        and first["years_with_corpus_publications"] == 1
+        and first["all_groups"]
+        == {
+            "inventory": 2,
+            "absent": 1,
+            "absent_share_percent": 50.0,
+        }
+    )
+    assert (
+        second["calendar_years_in_window"] == 2
+        and second["years_with_corpus_publications"] == 1
+        and second["kind_y"]
+        == {
+            "inventory": 2,
+            "absent": 2,
+            "absent_share_percent": 100.0,
+        }
+    )
     assert second["all_groups"]["absent"] == 3
+
+
+def test_shouldCountOnlyYearsWithCorpusPublicationsWhenAYearIsMissingFromTheCorpus():
+    corpus = [publication("1", "B1", date(2000, 1, 1)), publication("2", "B1", date(2002, 1, 1))]
+    authority = [entry("1", "B1", "20000101"), entry("3", "B1", "20010101"), entry("2", "B1", "20020101")]
+    third = exposure_table(corpus, authority, origins=[2002], first_year=2000, last_year=2002)[
+        "accumulated_up_to_origin"
+    ]["2002"]
+    assert third["calendar_years_in_window"] == 3 and third["years_with_corpus_publications"] == 2

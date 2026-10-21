@@ -44,6 +44,7 @@ def exposure_table(
         cell = counts.setdefault((int(key[2][:4]), exposure_group(key[1])), Counter())
         cell["inventory"] += 1
         cell["absent" if key not in corpus else "present"] += 1
+    corpus_years = {int(key[2][:4]) for key in corpus}
     only_corpus = Counter(int(key[2][:4]) for key in corpus - inventory)
 
     by_year = {
@@ -63,7 +64,8 @@ def exposure_table(
     for origin in origins:
         years = range(first_year, origin + 1)
         cumulative[str(origin)] = {
-            "history_years": len(years),
+            "calendar_years_in_window": len(years),
+            "years_with_corpus_publications": len({y for y in corpus_years if first_year <= y <= origin}),
             **{
                 group: {
                     "inventory": (i := sum(counts.get((y, group), Counter())["inventory"] for y in years)),

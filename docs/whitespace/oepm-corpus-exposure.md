@@ -14,7 +14,7 @@ Reproduction: `python scripts/report_oepm_corpus_exposure.py ES_Authority_File_2
 * A **publication key** is publication number + kind code + publication date. The inventory is counted by distinct keys (a key listed twice counts once).
 * **Present**: the key is in the corpus. **Absent**: it is in the inventory and not in the corpus. A corpus key that is not in the inventory is reported apart.
 * **Kind groups** are code families of the inventory: `T*` (EP translations), `Y`, and every other kind. What kind `Y` denotes has not been read, and no interpretation is attached to the group.
-* **History length** at an origin *t* is the number of corpus years up to *t*: the corpus starts in 2000, so the history at origin 2003 is 4 years and at 2006 it is 7, however long the OEPM has published.
+* **History length** at an origin *t* is given in two numbers: the calendar years of the window from the first corpus year (2000) to *t*, and the years in that window that contain at least one corpus publication. They differ when a year is missing (2010 for the origins from 2010 on). The corpus starts in 2000, so the window at origin 2003 is 4 calendar years and at 2006 it is 7 (both with publications in every year), however long the OEPM has published.
 
 ## 2. Result (verified counts)
 
@@ -22,12 +22,12 @@ Inventory 2000–2025: 774,552 publication keys; corpus: 708,176 distinct keys.
 
 **Accumulated absences from 2000 up to each origin**
 
-| Origin | History (years) | Inventory | Absent | Share | `T*` absent / share | `Y` absent / share | Other absent / share |
+| Origin | Window (calendar years / with publications) | Inventory | Absent | Share | `T*` absent / share | `Y` absent / share | Other absent / share |
 |---|---|---|---|---|---|---|---|
-| 2003 | 4 | 93,660 | 12,874 | 13.75 % | 39 / 0.08 % | 12,830 / **100 %** | 5 / 0.02 % |
-| 2006 | 7 | 185,489 | 20,846 | 11.24 % | 134 / 0.12 % | 20,706 / **100 %** | 6 / 0.01 % |
-| 2010 | 11 | 301,885 | 54,230 | 17.96 % | | | |
-| 2013 | 14 | 394,198 | 57,794 | 14.66 % | 18,260 / 7.35 % | 30,501 / 81.59 % | 9,033 / 8.34 % |
+| 2003 | 4 / 4 | 93,660 | 12,874 | 13.75 % | 39 / 0.08 % | 12,830 / **100 %** | 5 / 0.02 % |
+| 2006 | 7 / 7 | 185,489 | 20,846 | 11.24 % | 134 / 0.12 % | 20,706 / **100 %** | 6 / 0.01 % |
+| 2010 | 11 / 10 | 301,885 | 54,230 | 17.96 % | | | |
+| 2013 | 14 / 13 | 394,198 | 57,794 | 14.66 % | 18,260 / 7.35 % | 30,501 / 81.59 % | 9,033 / 8.34 % |
 
 **By year, selected** (absent / inventory, share)
 
