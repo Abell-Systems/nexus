@@ -85,7 +85,7 @@ export const TEXT = {
   attribution: "Origen de los datos: Oficina Española de Patentes y Marcas",
   noSponsorship: "La Oficina Española de Patentes y Marcas no participa en este producto ni lo patrocina ni lo apoya.",
   absenceIsNotOpportunity:
-    "Una ausencia observada no es una oportunidad tecnológica: la mayoría refleja que dos áreas no suelen combinarse.",
+    "Una ausencia observada indica que no se ha observado co-clasificación en este corpus y periodo. No demuestra que las áreas no se combinen ni que exista una oportunidad tecnológica.",
   status: "White spaces predictivos: no disponible. Pendiente de validación científica.",
   notValidation:
     "Esta página describe resultados ya medidos. No demuestra que ningún método predictivo funcione.",

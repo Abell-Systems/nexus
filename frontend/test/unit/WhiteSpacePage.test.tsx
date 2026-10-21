@@ -12,7 +12,9 @@ describe("the white-space front page", () => {
     const text = container.textContent ?? "";
     expect(text).toContain(TEXT.attribution);
     expect(text).toContain(TEXT.noSponsorship);
-    expect(text).toContain("Una ausencia observada no es una oportunidad tecnológica");
+    expect(text).toContain("no se ha observado co-clasificación en este corpus y periodo");
+    expect(text).toContain("No demuestra que las áreas no se combinen ni que exista una oportunidad tecnológica");
+    expect(text).not.toMatch(/la mayor[ií]a refleja/);
     expect(text).toContain(TEXT.status);
     expect(text).toContain(TEXT.notValidation);
     expect(text).toContain(TEXT.yUnknown);

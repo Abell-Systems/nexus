@@ -3,7 +3,7 @@
 **Nota de decisión · 21 de octubre de 2026.** Acompaña a la [pieza descriptiva](briefing-lydia.html), que muestra la cobertura de los datos y un mapa de lo ya observado. Todas las cifras proceden de resultados versionados en este repositorio.
 
 ## 1. Qué problema abordamos
-Buscamos pares de subclases IPC que nunca han aparecido juntos en los documentos publicados por la OEPM. Hay muchos: unos 135.000 en el origen 2006. Una ausencia **no** es una oportunidad; puede significar solo que dos áreas no se combinan.
+Buscamos pares de subclases IPC que nunca han aparecido juntos en los documentos publicados por la OEPM. Hay muchos: unos 135.000 en el origen 2006. Una ausencia **no** es una oportunidad: indica solo que no se ha observado co-clasificación en este corpus y periodo, y no demuestra que las áreas no se combinen.
 
 El protocolo (ADR 0036) comprueba si un ranking acierta mejor que unas reglas sencillas las primeras apariciones posteriores de esos pares. **No hemos demostrado que funcione**: todavía no existen las líneas base ni el detector.
 
