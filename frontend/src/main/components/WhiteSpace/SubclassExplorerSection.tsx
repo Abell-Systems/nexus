@@ -19,6 +19,7 @@ export function SubclassExplorerSection() {
   const [data, setData] = useState<PairsResults | null>(null);
   const [failed, setFailed] = useState(false);
   const [started, setStarted] = useState(false);
+  const [enterPending, setEnterPending] = useState(false);
   const [originKey, setOriginKey] = useState("2022");
   const [query, setQuery] = useState("");
   const [symbol, setSymbol] = useState<string | null>(null);
@@ -52,6 +53,17 @@ export function SubclassExplorerSection() {
     setOther(null);
     setQuery(next);
   };
+  // Enter pressed while the file was still arriving is applied when it arrives, not lost.
+  useEffect(() => {
+    if (!enterPending || !origin) return;
+    setEnterPending(false);
+    const [first] = searchSubclasses(origin, query);
+    if (first) {
+      setSymbol(first);
+      setOther(null);
+      setQuery(first);
+    }
+  }, [enterPending, origin, query]);
 
   return (
     <section id="explorador" className={styles.section} aria-labelledby="explorador-titulo">
@@ -76,7 +88,11 @@ export function SubclassExplorerSection() {
             value={query}
             placeholder="p. ej. G06N"
             onChange={(e) => { setQuery(e.target.value); start(); }}
-            onKeyDown={(e) => { if (e.key === "Enter" && matches.length > 0) choose(matches[0]); }}
+            onKeyDown={(e) => {
+              if (e.key !== "Enter") return;
+              if (!origin) setEnterPending(true);
+              else if (matches.length > 0) choose(matches[0]);
+            }}
           />
         </div>
       </div>

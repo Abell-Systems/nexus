@@ -56,6 +56,14 @@ describe("the subclass explorer", () => {
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 
+  it("shouldApplyAnEnterPressedWhileTheFileWasStillLoadingWhenTheDataArrives", async () => {
+    render(<SubclassExplorerSection />);
+    const search = screen.getByLabelText("Buscar subclase por símbolo");
+    fireEvent.change(search, { target: { value: "G06N" } });
+    fireEvent.keyDown(search, { key: "Enter" });
+    expect(await screen.findByRole("heading", { name: "G06N en el origen 2022" })).toBeTruthy();
+  });
+
   it("shouldShowTheFirstYearSeenOfTheChosenSubclassWhenItsSummaryIsShown", async () => {
     await open("G06N");
     expect(screen.getByText(/primer año visto: 2001/)).toBeTruthy();
