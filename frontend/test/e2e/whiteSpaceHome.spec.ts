@@ -4,8 +4,9 @@ import { expect, test } from "@playwright/test";
 
 const artifactsPresent = existsSync(fileURLToPath(new URL("../../../data/snapshots/operational_corpus_v1", import.meta.url)));
 
-test.beforeEach((_fixtures, testInfo) => {
-  testInfo.skip(!artifactsPresent, "frozen artifacts are not in this checkout");
+// Playwright requires destructuring in the first parameter; the base URL is the only fixture needed here.
+test.beforeEach(({ baseURL }, testInfo) => {
+  testInfo.skip(!artifactsPresent || !baseURL, "frozen artifacts are not in this checkout");
 });
 
 test("shouldDescribeTheCorpusWithoutPresentingAbsencesAsOpportunitiesOnTheFrontPage", async ({ page }) => {
