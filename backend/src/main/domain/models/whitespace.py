@@ -6,6 +6,7 @@ offer-demand matching models on purpose.
 
 import re
 from datetime import date
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, field_validator
 
@@ -118,3 +119,65 @@ class RejectedRecord(BaseModel):
 
     provenance: SourceRecordProvenance
     reason: str
+
+
+class ApplicationKey(BaseModel):
+    """An application in a form comparable across sources: its series and its digits.
+
+    National patents (``P``) and utility models (``U``) are numbered in separate series that share the digit
+    space, and European applications (``E``) have their own, so the digits alone do not identify an
+    application. No key is ever built by guessing; a source that omits the series gives candidates, not a key.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    series: Literal["P", "U", "E"]
+    number: str
+
+
+_PREFIXED_NATIONAL = re.compile(r"([PU])(\d+)")
+
+
+def application_key_from_reference(reference: ApplicationReference | None) -> ApplicationKey | None:
+    """Key of a bibliographic record: its application kind is the series, its number must be digits only."""
+    if reference is None or reference.kind not in ("P", "U", "E") or not reference.number.isdigit():
+        return None
+    return ApplicationKey(series=reference.kind, number=reference.number)  # type: ignore[arg-type]
+
+
+def application_key_from_authority(office: str, text: str) -> ApplicationKey | None:
+    """Key of an Authority File entry: ``ES`` numbers carry the series as a letter (``U200502626``), ``EP`` ones are digits."""
+    if office == "EP":
+        return ApplicationKey(series="E", number=text) if text.isdigit() else None
+    match = _PREFIXED_NATIONAL.fullmatch(text) if office == "ES" else None
+    return ApplicationKey(series=match.group(1), number=match.group(2)) if match else None  # type: ignore[arg-type]
+
+
+def application_key_candidates(country: str, number: str) -> tuple[ApplicationKey, ...]:
+    """Keys a series-less filing number (as in legal-status data) could be: European, or national patent or utility model."""
+    if not number.isdigit():
+        return ()
+    if country == "EP":
+        return (ApplicationKey(series="E", number=number),)
+    return (
+        (ApplicationKey(series="P", number=number), ApplicationKey(series="U", number=number))
+        if country == "ES"
+        else ()
+    )
+
+
+class AuthorityEntry(BaseModel):
+    """One document of the OEPM's inventory of published documents (Authority File), raw."""
+
+    model_config = ConfigDict(frozen=True)
+
+    publication_number: str
+    kind: str
+    publication_date: str
+    application_office: str
+    application_text: str
+    filing_date: str
+
+    @property
+    def application_key(self) -> ApplicationKey | None:
+        return application_key_from_authority(self.application_office, self.application_text)
