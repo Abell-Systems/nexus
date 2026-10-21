@@ -1,0 +1,722 @@
+{
+  "authority_file": {
+    "name": "ES_Authority_File_20260930.zip",
+    "sha256": "80a7fe1713f7b63f150f3601239dea06e0c7ddb274fa9242daa904c5a93731f1"
+  },
+  "exposure": {
+    "first_year": 2000,
+    "inventory_publications": 774552,
+    "corpus_publications": 708176,
+    "by_year": {
+      "2000": {
+        "ep_translation": {
+          "inventory": 11933,
+          "present": 11925,
+          "absent": 8,
+          "absent_share_percent": 0.07
+        },
+        "kind_y": {
+          "inventory": 3272,
+          "present": 0,
+          "absent": 3272,
+          "absent_share_percent": 100.0
+        },
+        "other": {
+          "inventory": 7279,
+          "present": 7277,
+          "absent": 2,
+          "absent_share_percent": 0.03
+        },
+        "corpus_keys_not_in_inventory": 0
+      },
+      "2001": {
+        "ep_translation": {
+          "inventory": 9160,
+          "present": 9155,
+          "absent": 5,
+          "absent_share_percent": 0.05
+        },
+        "kind_y": {
+          "inventory": 3397,
+          "present": 0,
+          "absent": 3397,
+          "absent_share_percent": 100.0
+        },
+        "other": {
+          "inventory": 7856,
+          "present": 7854,
+          "absent": 2,
+          "absent_share_percent": 0.03
+        },
+        "corpus_keys_not_in_inventory": 1
+      },
+      "2002": {
+        "ep_translation": {
+          "inventory": 14218,
+          "present": 14207,
+          "absent": 11,
+          "absent_share_percent": 0.08
+        },
+        "kind_y": {
+          "inventory": 2932,
+          "present": 0,
+          "absent": 2932,
+          "absent_share_percent": 100.0
+        },
+        "other": {
+          "inventory": 6452,
+          "present": 6452,
+          "absent": 0,
+          "absent_share_percent": 0.0
+        },
+        "corpus_keys_not_in_inventory": 2
+      },
+      "2003": {
+        "ep_translation": {
+          "inventory": 16431,
+          "present": 16416,
+          "absent": 15,
+          "absent_share_percent": 0.09
+        },
+        "kind_y": {
+          "inventory": 3229,
+          "present": 0,
+          "absent": 3229,
+          "absent_share_percent": 100.0
+        },
+        "other": {
+          "inventory": 7501,
+          "present": 7500,
+          "absent": 1,
+          "absent_share_percent": 0.01
+        },
+        "corpus_keys_not_in_inventory": 0
+      },
+      "2004": {
+        "ep_translation": {
+          "inventory": 22705,
+          "present": 22673,
+          "absent": 32,
+          "absent_share_percent": 0.14
+        },
+        "kind_y": {
+          "inventory": 2670,
+          "present": 0,
+          "absent": 2670,
+          "absent_share_percent": 100.0
+        },
+        "other": {
+          "inventory": 7289,
+          "present": 7288,
+          "absent": 1,
+          "absent_share_percent": 0.01
+        },
+        "corpus_keys_not_in_inventory": 0
+      },
+      "2005": {
+        "ep_translation": {
+          "inventory": 21793,
+          "present": 21755,
+          "absent": 38,
+          "absent_share_percent": 0.17
+        },
+        "kind_y": {
+          "inventory": 2623,
+          "present": 0,
+          "absent": 2623,
+          "absent_share_percent": 100.0
+        },
+        "other": {
+          "inventory": 7658,
+          "present": 7658,
+          "absent": 0,
+          "absent_share_percent": 0.0
+        },
+        "corpus_keys_not_in_inventory": 0
+      },
+      "2006": {
+        "ep_translation": {
+          "inventory": 17157,
+          "present": 17132,
+          "absent": 25,
+          "absent_share_percent": 0.15
+        },
+        "kind_y": {
+          "inventory": 2583,
+          "present": 0,
+          "absent": 2583,
+          "absent_share_percent": 100.0
+        },
+        "other": {
+          "inventory": 7351,
+          "present": 7351,
+          "absent": 0,
+          "absent_share_percent": 0.0
+        },
+        "corpus_keys_not_in_inventory": 1
+      },
+      "2007": {
+        "ep_translation": {
+          "inventory": 22019,
+          "present": 21972,
+          "absent": 47,
+          "absent_share_percent": 0.21
+        },
+        "kind_y": {
+          "inventory": 2445,
+          "present": 0,
+          "absent": 2445,
+          "absent_share_percent": 100.0
+        },
+        "other": {
+          "inventory": 7159,
+          "present": 7159,
+          "absent": 0,
+          "absent_share_percent": 0.0
+        },
+        "corpus_keys_not_in_inventory": 0
+      },
+      "2008": {
+        "ep_translation": {
+          "inventory": 19995,
+          "present": 19926,
+          "absent": 69,
+          "absent_share_percent": 0.35
+        },
+        "kind_y": {
+          "inventory": 2638,
+          "present": 0,
+          "absent": 2638,
+          "absent_share_percent": 100.0
+        },
+        "other": {
+          "inventory": 7470,
+          "present": 7470,
+          "absent": 0,
+          "absent_share_percent": 0.0
+        },
+        "corpus_keys_not_in_inventory": 0
+      },
+      "2009": {
+        "ep_translation": {
+          "inventory": 18830,
+          "present": 18753,
+          "absent": 77,
+          "absent_share_percent": 0.41
+        },
+        "kind_y": {
+          "inventory": 2259,
+          "present": 0,
+          "absent": 2259,
+          "absent_share_percent": 100.0
+        },
+        "other": {
+          "inventory": 7732,
+          "present": 7732,
+          "absent": 0,
+          "absent_share_percent": 0.0
+        },
+        "corpus_keys_not_in_inventory": 0
+      },
+      "2010": {
+        "ep_translation": {
+          "inventory": 15816,
+          "present": 0,
+          "absent": 15816,
+          "absent_share_percent": 100.0
+        },
+        "kind_y": {
+          "inventory": 2151,
+          "present": 0,
+          "absent": 2151,
+          "absent_share_percent": 100.0
+        },
+        "other": {
+          "inventory": 7882,
+          "present": 0,
+          "absent": 7882,
+          "absent_share_percent": 100.0
+        },
+        "corpus_keys_not_in_inventory": 0
+      },
+      "2011": {
+        "ep_translation": {
+          "inventory": 19270,
+          "present": 18393,
+          "absent": 877,
+          "absent_share_percent": 4.55
+        },
+        "kind_y": {
+          "inventory": 2546,
+          "present": 2428,
+          "absent": 118,
+          "absent_share_percent": 4.63
+        },
+        "other": {
+          "inventory": 8180,
+          "present": 7697,
+          "absent": 483,
+          "absent_share_percent": 5.9
+        },
+        "corpus_keys_not_in_inventory": 112
+      },
+      "2012": {
+        "ep_translation": {
+          "inventory": 19973,
+          "present": 19931,
+          "absent": 42,
+          "absent_share_percent": 0.21
+        },
+        "kind_y": {
+          "inventory": 2302,
+          "present": 2296,
+          "absent": 6,
+          "absent_share_percent": 0.26
+        },
+        "other": {
+          "inventory": 8396,
+          "present": 8389,
+          "absent": 7,
+          "absent_share_percent": 0.08
+        },
+        "corpus_keys_not_in_inventory": 67
+      },
+      "2013": {
+        "ep_translation": {
+          "inventory": 19192,
+          "present": 17994,
+          "absent": 1198,
+          "absent_share_percent": 6.24
+        },
+        "kind_y": {
+          "inventory": 2336,
+          "present": 2158,
+          "absent": 178,
+          "absent_share_percent": 7.62
+        },
+        "other": {
+          "inventory": 10118,
+          "present": 9463,
+          "absent": 655,
+          "absent_share_percent": 6.47
+        },
+        "corpus_keys_not_in_inventory": 115
+      },
+      "2014": {
+        "ep_translation": {
+          "inventory": 18739,
+          "present": 18736,
+          "absent": 3,
+          "absent_share_percent": 0.02
+        },
+        "kind_y": {
+          "inventory": 2426,
+          "present": 2423,
+          "absent": 3,
+          "absent_share_percent": 0.12
+        },
+        "other": {
+          "inventory": 9287,
+          "present": 9283,
+          "absent": 4,
+          "absent_share_percent": 0.04
+        },
+        "corpus_keys_not_in_inventory": 10
+      },
+      "2015": {
+        "ep_translation": {
+          "inventory": 18492,
+          "present": 18491,
+          "absent": 1,
+          "absent_share_percent": 0.01
+        },
+        "kind_y": {
+          "inventory": 2383,
+          "present": 2382,
+          "absent": 1,
+          "absent_share_percent": 0.04
+        },
+        "other": {
+          "inventory": 7676,
+          "present": 7675,
+          "absent": 1,
+          "absent_share_percent": 0.01
+        },
+        "corpus_keys_not_in_inventory": 7
+      },
+      "2016": {
+        "ep_translation": {
+          "inventory": 17785,
+          "present": 17655,
+          "absent": 130,
+          "absent_share_percent": 0.73
+        },
+        "kind_y": {
+          "inventory": 2292,
+          "present": 2290,
+          "absent": 2,
+          "absent_share_percent": 0.09
+        },
+        "other": {
+          "inventory": 7058,
+          "present": 7003,
+          "absent": 55,
+          "absent_share_percent": 0.78
+        },
+        "corpus_keys_not_in_inventory": 6
+      },
+      "2017": {
+        "ep_translation": {
+          "inventory": 29490,
+          "present": 29025,
+          "absent": 465,
+          "absent_share_percent": 1.58
+        },
+        "kind_y": {
+          "inventory": 2170,
+          "present": 1456,
+          "absent": 714,
+          "absent_share_percent": 32.9
+        },
+        "other": {
+          "inventory": 6626,
+          "present": 6452,
+          "absent": 174,
+          "absent_share_percent": 2.63
+        },
+        "corpus_keys_not_in_inventory": 7
+      },
+      "2018": {
+        "ep_translation": {
+          "inventory": 25802,
+          "present": 23225,
+          "absent": 2577,
+          "absent_share_percent": 9.99
+        },
+        "kind_y": {
+          "inventory": 2220,
+          "present": 127,
+          "absent": 2093,
+          "absent_share_percent": 94.28
+        },
+        "other": {
+          "inventory": 6105,
+          "present": 5591,
+          "absent": 514,
+          "absent_share_percent": 8.42
+        },
+        "corpus_keys_not_in_inventory": 6
+      },
+      "2019": {
+        "ep_translation": {
+          "inventory": 21496,
+          "present": 21496,
+          "absent": 0,
+          "absent_share_percent": 0.0
+        },
+        "kind_y": {
+          "inventory": 2470,
+          "present": 640,
+          "absent": 1830,
+          "absent_share_percent": 74.09
+        },
+        "other": {
+          "inventory": 5381,
+          "present": 5378,
+          "absent": 3,
+          "absent_share_percent": 0.06
+        },
+        "corpus_keys_not_in_inventory": 1
+      },
+      "2020": {
+        "ep_translation": {
+          "inventory": 27690,
+          "present": 27690,
+          "absent": 0,
+          "absent_share_percent": 0.0
+        },
+        "kind_y": {
+          "inventory": 2414,
+          "present": 2059,
+          "absent": 355,
+          "absent_share_percent": 14.71
+        },
+        "other": {
+          "inventory": 5044,
+          "present": 5032,
+          "absent": 12,
+          "absent_share_percent": 0.24
+        },
+        "corpus_keys_not_in_inventory": 36
+      },
+      "2021": {
+        "ep_translation": {
+          "inventory": 32470,
+          "present": 32470,
+          "absent": 0,
+          "absent_share_percent": 0.0
+        },
+        "kind_y": {
+          "inventory": 3346,
+          "present": 3345,
+          "absent": 1,
+          "absent_share_percent": 0.03
+        },
+        "other": {
+          "inventory": 5375,
+          "present": 5369,
+          "absent": 6,
+          "absent_share_percent": 0.11
+        },
+        "corpus_keys_not_in_inventory": 5
+      },
+      "2022": {
+        "ep_translation": {
+          "inventory": 24626,
+          "present": 24625,
+          "absent": 1,
+          "absent_share_percent": 0.0
+        },
+        "kind_y": {
+          "inventory": 2327,
+          "present": 2327,
+          "absent": 0,
+          "absent_share_percent": 0.0
+        },
+        "other": {
+          "inventory": 4237,
+          "present": 4237,
+          "absent": 0,
+          "absent_share_percent": 0.0
+        },
+        "corpus_keys_not_in_inventory": 2
+      },
+      "2023": {
+        "ep_translation": {
+          "inventory": 14847,
+          "present": 14846,
+          "absent": 1,
+          "absent_share_percent": 0.01
+        },
+        "kind_y": {
+          "inventory": 2101,
+          "present": 2098,
+          "absent": 3,
+          "absent_share_percent": 0.14
+        },
+        "other": {
+          "inventory": 4346,
+          "present": 4345,
+          "absent": 1,
+          "absent_share_percent": 0.02
+        },
+        "corpus_keys_not_in_inventory": 1
+      },
+      "2024": {
+        "ep_translation": {
+          "inventory": 27712,
+          "present": 27709,
+          "absent": 3,
+          "absent_share_percent": 0.01
+        },
+        "kind_y": {
+          "inventory": 2358,
+          "present": 2358,
+          "absent": 0,
+          "absent_share_percent": 0.0
+        },
+        "other": {
+          "inventory": 4325,
+          "present": 4323,
+          "absent": 2,
+          "absent_share_percent": 0.05
+        },
+        "corpus_keys_not_in_inventory": 3
+      },
+      "2025": {
+        "ep_translation": {
+          "inventory": 23544,
+          "present": 23542,
+          "absent": 2,
+          "absent_share_percent": 0.01
+        },
+        "kind_y": {
+          "inventory": 1924,
+          "present": 1923,
+          "absent": 1,
+          "absent_share_percent": 0.05
+        },
+        "other": {
+          "inventory": 3770,
+          "present": 3762,
+          "absent": 8,
+          "absent_share_percent": 0.21
+        },
+        "corpus_keys_not_in_inventory": 2
+      }
+    },
+    "accumulated_up_to_origin": {
+      "2003": {
+        "history_years": 4,
+        "ep_translation": {
+          "inventory": 51742,
+          "absent": 39,
+          "absent_share_percent": 0.08
+        },
+        "kind_y": {
+          "inventory": 12830,
+          "absent": 12830,
+          "absent_share_percent": 100.0
+        },
+        "other": {
+          "inventory": 29088,
+          "absent": 5,
+          "absent_share_percent": 0.02
+        },
+        "all_groups": {
+          "inventory": 93660,
+          "absent": 12874,
+          "absent_share_percent": 13.75
+        }
+      },
+      "2006": {
+        "history_years": 7,
+        "ep_translation": {
+          "inventory": 113397,
+          "absent": 134,
+          "absent_share_percent": 0.12
+        },
+        "kind_y": {
+          "inventory": 20706,
+          "absent": 20706,
+          "absent_share_percent": 100.0
+        },
+        "other": {
+          "inventory": 51386,
+          "absent": 6,
+          "absent_share_percent": 0.01
+        },
+        "all_groups": {
+          "inventory": 185489,
+          "absent": 20846,
+          "absent_share_percent": 11.24
+        }
+      },
+      "2010": {
+        "history_years": 11,
+        "ep_translation": {
+          "inventory": 190057,
+          "absent": 16143,
+          "absent_share_percent": 8.49
+        },
+        "kind_y": {
+          "inventory": 30199,
+          "absent": 30199,
+          "absent_share_percent": 100.0
+        },
+        "other": {
+          "inventory": 81629,
+          "absent": 7888,
+          "absent_share_percent": 9.66
+        },
+        "all_groups": {
+          "inventory": 301885,
+          "absent": 54230,
+          "absent_share_percent": 17.96
+        }
+      },
+      "2013": {
+        "history_years": 14,
+        "ep_translation": {
+          "inventory": 248492,
+          "absent": 18260,
+          "absent_share_percent": 7.35
+        },
+        "kind_y": {
+          "inventory": 37383,
+          "absent": 30501,
+          "absent_share_percent": 81.59
+        },
+        "other": {
+          "inventory": 108323,
+          "absent": 9033,
+          "absent_share_percent": 8.34
+        },
+        "all_groups": {
+          "inventory": 394198,
+          "absent": 57794,
+          "absent_share_percent": 14.66
+        }
+      },
+      "2016": {
+        "history_years": 17,
+        "ep_translation": {
+          "inventory": 303508,
+          "absent": 18394,
+          "absent_share_percent": 6.06
+        },
+        "kind_y": {
+          "inventory": 44484,
+          "absent": 30507,
+          "absent_share_percent": 68.58
+        },
+        "other": {
+          "inventory": 132344,
+          "absent": 9093,
+          "absent_share_percent": 6.87
+        },
+        "all_groups": {
+          "inventory": 480336,
+          "absent": 57994,
+          "absent_share_percent": 12.07
+        }
+      },
+      "2019": {
+        "history_years": 20,
+        "ep_translation": {
+          "inventory": 380296,
+          "absent": 21436,
+          "absent_share_percent": 5.64
+        },
+        "kind_y": {
+          "inventory": 51344,
+          "absent": 35144,
+          "absent_share_percent": 68.45
+        },
+        "other": {
+          "inventory": 150456,
+          "absent": 9784,
+          "absent_share_percent": 6.5
+        },
+        "all_groups": {
+          "inventory": 582096,
+          "absent": 66364,
+          "absent_share_percent": 11.4
+        }
+      },
+      "2022": {
+        "history_years": 23,
+        "ep_translation": {
+          "inventory": 465082,
+          "absent": 21437,
+          "absent_share_percent": 4.61
+        },
+        "kind_y": {
+          "inventory": 59431,
+          "absent": 35500,
+          "absent_share_percent": 59.73
+        },
+        "other": {
+          "inventory": 165112,
+          "absent": 9802,
+          "absent_share_percent": 5.94
+        },
+        "all_groups": {
+          "inventory": 689625,
+          "absent": 66739,
+          "absent_share_percent": 9.68
+        }
+      }
+    }
+  }
+}

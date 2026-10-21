@@ -260,6 +260,23 @@ The report documents: false positives (high-ranked pairs without FCP; non-realis
 
 The counts in the corpus characterization show that thousands of FCP positives exist at every origin. That shows **descriptive feasibility**. It does not show that any detector achieves a difference from a baseline that the data can detect. The minimum difference in AUC-PR that the confirmatory design can detect will be estimated from the development origins and the resampling procedure, and stated before the confirmatory run. It depends on the smallest difference regarded as practically useful, which is a decision of value for the users of the ranking and not a statistical one (O2).
 
+### 8.10 Sensitivity of the development origins to the corpus' omissions (O5)
+
+The OEPM's inventory lists publications that the corpus lacks (C3). The inventory has no classification, so the effect of the absent publications on the pairs and on any metric **cannot be measured from the available data**. What can be measured is the exposure and the sensitivity to perturbations of the observed corpus. This section fixes the protocol before any sensitivity result is seen; the results are exploratory, do not modify the corpus, the pool or any confirmatory decision, and are never read as the effect of the omissions.
+
+**O5.1, exposure.** Counts of publication keys (number, kind code, publication date) of the inventory, present and absent in the corpus, by year and kind group (`T*`, `Y`, others), and accumulated from the first corpus year up to each origin, with the history length of each origin. An absence is a count, not evidence of a classification bias. Reported in `docs/whitespace/oepm-corpus-exposure.md`: for the origins 2003 and 2006 the accumulated absence is 13.75 % and 11.24 % of the inventory, and every kind-`Y` publication of 2000–2009 is absent.
+
+**O5.2, descriptive sensitivity.** Quantities at the development origins 2003 and 2006, horizon 3: active subclasses (*m*_min = 20), candidate pairs, positives and positive rate, with the activity rule of the decision O4 and pairs formed from single source records. Scenarios, fixed now:
+
+* **S-A, observed corpus.** The reference.
+* **S-B1, leave one history year out.** For each year *y* from the first corpus year to the origin, in turn, all publications of *y* are removed from the history; the horizon is unchanged. By construction this changes the set of unseen pairs (pairs seen only in *y* become candidates), and therefore the problem definition and not only the coverage. The result separates the positives whose pair was seen only in *y* from the rest.
+* **S-B2, shortened history.** Only the last three years before the origin are kept in the history; the horizon is unchanged. The same remark applies.
+* **S-C, omission simulation.** In 200 replications with fixed seeds, each observed publication of year *y* and kind group *g*, for the years from the first corpus year to the origin plus the horizon, is deleted independently with probability equal to the observed absence share of (*y*, *g*) in the inventory. Reported: the mean and the 2.5th and 97.5th percentiles of each quantity against S-A. The assumption is that the omitted publications resemble the observed ones within each stratum; the intervention simulates a further loss at the known rate and does not recover anything. It cannot represent the kind-`Y` omission of 2000–2009, for which there are no observed publications to resemble.
+
+All other rules of the pipeline are identical in every scenario.
+
+**O5.3, sensitivity of the metrics.** To be run after the baselines B0–B4 exist (not a condition for closing the pre-registration). At the origins 2003 and 2006 (B2 where defined), AUC-PR and precision@*K* (*K* = 100, 1,000, 5,000) of each baseline under S-A, S-B1, S-B2 and the S-C replications; the difference from S-A; and the overlap at *K* of the top-*K* lists of S-A and the perturbed scenario on the pairs common to both pools. In S-B1 and S-B2 the set of positives changes with the scenario and is reported with each result. Criterion: the choice of the strongest baseline (§8.4) is declared **sensitive** if it changes in any S-B run or in more than 5 % of the S-C replications; AUC-PR differences are reported against the spread among baselines under S-A. Allowed conclusions: robust to the perturbations, sensitive to named periods or kind groups, or not quantifiable with the data available; never that the effect of the omitted publications was measured.
+
 ## 9. Limitations that prevent reading a result as a demonstrated opportunity
 
 * An FCP event is a publication event in one national office, 72 % of it translations of European patents. It is not an innovation, a market, or a gap in world technology.
@@ -361,7 +378,7 @@ The decisions marked *Accepted* or *Accepted, parameters open* in §10, as the r
 * **O2.** *Multiplicity decided* (§7). *Open*: the smallest AUC-PR difference regarded as practically useful (a decision of value, to be taken by the users of the ranking), and the power analysis that depends on it and on the dispersion across subclasses observed on the development origins.
 * **O3.** Whether the 86 records with undefined entities can be recovered, which requires the official DTD (reproduction report §4.1). Until then they remain rejected.
 * **O4.** *Decided* (§5.1.1): the unit of activity is the publication identifier, with the union of the subclasses of its earliest date; pairs come from single source records. The code default (`copy_policy`) is changed in its own pull request.
-* **O5.** *Open*: the effect of the omissions of C3 on the pairs seen at the development origins 2003 and 2006 and on the baselines' metrics, to be measured before the pre-registration closes (for example by repeating the development evaluation with and without the documents of the years most affected, or by comparing with the recovered classification of part of the omitted documents, if a validated source is found). Nothing in this ADR corrects for the omissions.
+* **O5.** *Open*, structured in three parts by §8.10: O5.1 (exposure; measured), O5.2 (descriptive sensitivity; scenarios fixed in §8.10, to be run) and O5.3 (sensitivity of the baselines' metrics; protocol fixed in §8.10, run after the baselines exist). O5.1 and O5.2 must be reported before the pre-registration closes; O5.3 only needs its plan fixed. None of them measures the effect of the omitted publications, whose classification is not available.
 
 ### 12.4 Accepting, meeting the conditions, being ready to run
 
@@ -370,7 +387,7 @@ These are three different states, and this ADR reaches only the first.
 | State | Meaning | Reached |
 |---|---|---|
 | Framework accepted | The questions, definitions and protocol of §§2–9 are the contract | Yes, when this status is merged |
-| Conditions met | C1 satisfied (operationally; #132 is merged); O2 (smallest useful difference, power), O3, O5 and the open parameters of A7 and P1–P3 closed | **No** |
+| Conditions met | C1 satisfied (operationally; #132 is merged); O2 (smallest useful difference, power), O3, O5 (O5.2 reported and the plan of O5.3 fixed) and the open parameters of A7 and P1–P3 closed | **No** |
 | Ready to run the study | Pre-registration closed with the above; no pending change to the frozen protocol | **No** |
 
 P7 (OEPM consultation) and P8 (#112/#113) do not block acceptance. P7 can change how the 2010 gap and the 2023 drop are explained; P8 matters only before shared infrastructure. Neither is a condition of the pre-registration unless the reply to P7 contradicts the treatment in A6 or P6, in which case those decisions are reopened.
