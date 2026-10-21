@@ -378,7 +378,7 @@ The decisions marked *Accepted* or *Accepted, parameters open* in §10, as the r
 * **O2.** *Multiplicity decided* (§7). *Open*: the smallest AUC-PR difference regarded as practically useful (a decision of value, to be taken by the users of the ranking), and the power analysis that depends on it and on the dispersion across subclasses observed on the development origins.
 * **O3.** Whether the 86 records with undefined entities can be recovered, which requires the official DTD (reproduction report §4.1). Until then they remain rejected.
 * **O4.** *Decided* (§5.1.1): the unit of activity is the publication identifier, with the union of the subclasses of its earliest date; pairs come from single source records. The code default (`copy_policy`) is changed in its own pull request.
-* **O5.** *Open*, structured in three parts by §8.10: O5.1 (exposure; measured), O5.2 (descriptive sensitivity; scenarios fixed in §8.10, to be run) and O5.3 (sensitivity of the baselines' metrics; protocol fixed in §8.10, run after the baselines exist). O5.1 and O5.2 must be reported before the pre-registration closes; O5.3 only needs its plan fixed. None of them measures the effect of the omitted publications, whose classification is not available.
+* **O5.** *Open*, structured in three parts by §8.10: O5.1 (exposure; measured), O5.2 (descriptive sensitivity; scenarios fixed in §8.10; reported in `docs/whitespace/oepm-omission-sensitivity.md`) and O5.3 (sensitivity of the baselines' metrics; protocol fixed in §8.10, run after the baselines exist). O5.1 and O5.2 are reported; O5.3 only needs its plan fixed (§8.10), which it has. None of them measures the effect of the omitted publications, whose classification is not available.
 
 ### 12.4 Accepting, meeting the conditions, being ready to run
 
@@ -387,7 +387,7 @@ These are three different states, and this ADR reaches only the first.
 | State | Meaning | Reached |
 |---|---|---|
 | Framework accepted | The questions, definitions and protocol of §§2–9 are the contract | Yes, when this status is merged |
-| Conditions met | C1 satisfied (operationally; #132 is merged); O2 (smallest useful difference, power), O3, O5 (O5.2 reported and the plan of O5.3 fixed) and the open parameters of A7 and P1–P3 closed | **No** |
+| Conditions met | C1 satisfied (operationally; #132 is merged); O2 (smallest useful difference, power), O3, O5 (O5.1 and O5.2 reported, the plan of O5.3 fixed; the effect of the omitted publications remains not identifiable) and the open parameters of A7 and P1–P3 closed | **No** |
 | Ready to run the study | Pre-registration closed with the above; no pending change to the frozen protocol | **No** |
 
 P7 (OEPM consultation) and P8 (#112/#113) do not block acceptance. P7 can change how the 2010 gap and the 2023 drop are explained; P8 matters only before shared infrastructure. Neither is a condition of the pre-registration unless the reply to P7 contradicts the treatment in A6 or P6, in which case those decisions are reopened.

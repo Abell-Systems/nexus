@@ -17,6 +17,7 @@ class AnalysisRecord(NamedTuple):
     group: str
     filing_year: int | None
     subclasses: tuple[str, ...]
+    kind: str = ""
 
     @property
     def is_ep_translation(self) -> bool:
@@ -42,6 +43,7 @@ def to_analysis_records(outcomes: Iterable[PatentPublication | RejectedRecord]) 
             group=kind_group(item.kind),
             filing_year=filing_year(item),
             subclasses=tuple(sorted({entry.subclass_symbol for entry in item.ipc_entries})),
+            kind=item.kind,
         )
         for item in outcomes
         if isinstance(item, PatentPublication)
