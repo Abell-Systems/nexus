@@ -45,7 +45,7 @@ The wording of P2 says that the thresholds are chosen on the development origins
 |---|---|---|
 | *m*_min, primary | **20**, fixed by design | The middle of the declared options; the value used in the descriptive counts is kept so that the study and the descriptive results refer to the same subclasses. It has no scientific justification of its own, and the draft does not claim one |
 | *m*_min, sensitivity | 10 and 50, reported next to the primary result (§8.6) | Shows how far the conclusion depends on the threshold, without choosing on results |
-| *e*_min, primary | **1**, fixed by design | An expected count of one is the smallest value at which the absence is, under the null, less likely than one observation |
+| *e*_min, primary | **1**, fixed by design | The smallest value of the proposed grid {1, 2, 5}, so the subset of type B pairs is the widest of the three; 2 and 5 narrow it as sensitivities. No probabilistic meaning is attached to the value: the distribution of the count under the null model is not estimated here, and the draft does not claim that an absence at an expected count of one is unlikely |
 | *e*_min, sensitivity | 2 and 5, reported for H2 next to the primary result (§8.6) | The H2 conclusion is stated only where it survives |
 | Horizon | 3 (sensitivity 2 and 5), as in §6.4 | Already declared |
 
