@@ -58,10 +58,9 @@ def coverage_svg(by_year: dict) -> str:
     )
 
 
-def heatmap(density: dict) -> str:
+def heatmap(density: dict, peak: float) -> str:
     sections = sorted(density["active_subclasses_by_section"])
     cells = density["cells"]
-    peak = max(c["seen_percent"] for c in cells.values())
     rows = [
         '<tr><th scope="col"><span class="sr">Sección</span></th>'
         + "".join(
@@ -114,10 +113,14 @@ def main() -> int:
     sens = load(DOCS / "oepm-omission-sensitivity-results.json")["sensitivity"]
     density = load(DOCS / "oepm-section-density-results.json")
     acc = exposure["accumulated_up_to_origin"]
+    peak = max(
+        c["seen_percent"] for origin in density.values() for c in origin["cells"].values()
+    )  # one scale for both maps
     values = {
         "COVERAGE_SVG": coverage_svg(exposure["by_year"]),
-        "HEAT_2006": heatmap(density["2006"]),
-        "HEAT_2022": heatmap(density["2022"]),
+        "HEAT_2006": heatmap(density["2006"], peak),
+        "HEAT_2022": heatmap(density["2022"], peak),
+        "HEAT_PEAK": f"{peak:.0f}",
         "SENS_ROWS": sensitivity_rows(sens),
         "INVENTORY": f"{exposure['inventory_publications']:,}",
         "CORPUS": f"{exposure['corpus_publications']:,}",

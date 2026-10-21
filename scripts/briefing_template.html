@@ -40,6 +40,7 @@ th[scope=row],thead th:first-child{text-align:left}
 .heat th small{display:block;font-weight:400;color:var(--muted);font-size:.7rem}
 .heat td{text-align:center;font-variant-numeric:tabular-nums}
 .l0{background:rgba(var(--heat),.04)}.l1{background:rgba(var(--heat),.16)}.l2{background:rgba(var(--heat),.3)}.l3{background:rgba(var(--heat),.48)}.l4{background:rgba(var(--heat),.68)}.l5{background:rgba(var(--heat),.88);color:#fff}
+.scale{font-size:.9rem;color:var(--muted)}.ramp{display:inline-flex;vertical-align:middle;margin:0 4px}.ramp i{width:22px;height:12px;display:block;border:1px solid var(--line)}
 .two{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
 .sr{position:absolute;left:-9999px}
 ul{padding-left:1.2rem}li{margin:.3rem 0}
@@ -79,6 +80,7 @@ footer{color:var(--muted);font-size:.85rem;margin-top:2.5rem}
 
 <h2>3. Mapa de co-clasificación observada</h2>
 <p>Entre las subclases IPC activas (al menos 20 documentos), qué porcentaje de pares ya aparece junto en algún documento publicado hasta el origen, agrupado por sección IPC (A a H; bajo cada letra, número de subclases activas). Las celdas claras indican pares aún no vistos, <strong>no oportunidades</strong>: la mayoría de las ausencias reflejan que dos áreas no suelen combinarse.</p>
+<p class="scale" aria-label="Escala de color">Escala de color <strong>común a ambos mapas</strong>: <span class="ramp"><i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i><i class="l5"></i></span> de 0 % a {{HEAT_PEAK}} %.</p>
 <div class="two scroll">
 {{HEAT_2006}}
 {{HEAT_2022}}

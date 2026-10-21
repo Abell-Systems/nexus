@@ -32,3 +32,14 @@ def test_shouldStaySelfContainedAndFreeOfRankingsWhenBuildingTheBriefing(tmp_pat
     assert "<script" not in html and "http://" not in html and "https://" not in html
     assert "no es una oportunidad" in html.lower() or "no son oportunidades" in html.lower()
     assert "prometedor" in html.lower()  # named only to say that none is shown
+
+
+def test_shouldRegenerateExactlyTheCommittedPageWhenBuildingFromTheVersionedResults(tmp_path, monkeypatch):
+    committed = (REPO_ROOT / "docs" / "whitespace" / "briefing-lydia.html").read_text(encoding="utf-8")
+    assert _build(tmp_path, monkeypatch) == committed
+
+
+def test_shouldUseOneColourScaleForBothMapsWhenBuildingTheBriefing(tmp_path, monkeypatch):
+    html = _build(tmp_path, monkeypatch)
+    assert "común a ambos mapas" in html
+    assert html.count('class="heat"') == 2
