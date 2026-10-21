@@ -1,0 +1,204 @@
+{
+  "source": "docs/whitespace/oepm-biblio-corpus-characterization.md \u00a74.2, \u00a77, \u00a77.1, \u00a77.2 (transcribed from the printed tables; rounded as printed)",
+  "figures": {
+    "lag": {
+      "lag": {
+        "ep_translation": {
+          "mean": 6.9,
+          "median": 6,
+          "p90": 11
+        },
+        "national": {
+          "mean": 1.2,
+          "median": 1,
+          "p90": 3
+        }
+      },
+      "cumulative_share_percent": {
+        "3": 7.5,
+        "5": 37,
+        "7": 60,
+        "9": 78,
+        "11": 89,
+        "13": 95
+      },
+      "completeness_percent": {
+        "2013": 93,
+        "2016": 78,
+        "2019": 49,
+        "2022": 8
+      }
+    },
+    "full_corpus": {
+      "2012": {
+        "active_subclasses": 592,
+        "candidate_pairs": 143894,
+        "positives": 2060,
+        "positive_rate_percent": 1.43
+      },
+      "2013": {
+        "active_subclasses": 594,
+        "candidate_pairs": 144360,
+        "positives": 2096,
+        "positive_rate_percent": 1.45,
+        "filing_diagnostic": {
+          "positives": 2096,
+          "filed_by_origin_percent": 84,
+          "filed_5_years_before_origin_percent": 31,
+          "every_contributor_ep_translation_percent": 75,
+          "no_contributor_ep_translation_percent": 23
+        },
+        "hidden_year": {
+          "min": 77,
+          "max": 127,
+          "positives": 2096
+        }
+      },
+      "2014": {
+        "active_subclasses": 597,
+        "candidate_pairs": 145416,
+        "positives": 2626,
+        "positive_rate_percent": 1.81
+      },
+      "2015": {
+        "active_subclasses": 599,
+        "candidate_pairs": 145903,
+        "positives": 2907,
+        "positive_rate_percent": 1.99
+      },
+      "2016": {
+        "active_subclasses": 600,
+        "candidate_pairs": 145749,
+        "positives": 3159,
+        "positive_rate_percent": 2.17,
+        "filing_diagnostic": {
+          "positives": 3159,
+          "filed_by_origin_percent": 89,
+          "filed_5_years_before_origin_percent": 39,
+          "every_contributor_ep_translation_percent": 83,
+          "no_contributor_ep_translation_percent": 15
+        },
+        "hidden_year": {
+          "min": 78,
+          "max": 143,
+          "positives": 3159
+        }
+      },
+      "2017": {
+        "active_subclasses": 603,
+        "candidate_pairs": 146285,
+        "positives": 3045,
+        "positive_rate_percent": 2.08
+      },
+      "2018": {
+        "active_subclasses": 606,
+        "candidate_pairs": 147070,
+        "positives": 3255,
+        "positive_rate_percent": 2.21
+      },
+      "2019": {
+        "active_subclasses": 606,
+        "candidate_pairs": 146076,
+        "positives": 3237,
+        "positive_rate_percent": 2.22,
+        "filing_diagnostic": {
+          "positives": 3237,
+          "filed_by_origin_percent": 90,
+          "filed_5_years_before_origin_percent": 39,
+          "every_contributor_ep_translation_percent": 85,
+          "no_contributor_ep_translation_percent": 13
+        },
+        "hidden_year": {
+          "min": 56,
+          "max": 122,
+          "positives": 3237
+        }
+      },
+      "2020": {
+        "active_subclasses": 608,
+        "candidate_pairs": 146107,
+        "positives": 2738,
+        "positive_rate_percent": 1.87
+      },
+      "2021": {
+        "active_subclasses": 609,
+        "candidate_pairs": 145588,
+        "positives": 2718,
+        "positive_rate_percent": 1.87
+      },
+      "2022": {
+        "active_subclasses": 612,
+        "candidate_pairs": 146381,
+        "positives": 2632,
+        "positive_rate_percent": 1.8,
+        "filing_diagnostic": {
+          "positives": 2632,
+          "filed_by_origin_percent": 89,
+          "filed_5_years_before_origin_percent": 31,
+          "every_contributor_ep_translation_percent": 83,
+          "no_contributor_ep_translation_percent": 15
+        }
+      },
+      "2006": {
+        "positives": 4532,
+        "filing_diagnostic": {
+          "positives": 4532,
+          "filed_by_origin_percent": 96,
+          "filed_5_years_before_origin_percent": 48,
+          "every_contributor_ep_translation_percent": 88,
+          "no_contributor_ep_translation_percent": 9
+        }
+      }
+    },
+    "national": {
+      "records": 199555,
+      "records_with_two_or_more_subclasses": 65953,
+      "origins": {
+        "2013": {
+          "active_subclasses": 510,
+          "candidate_pairs": 119995,
+          "positives": 1259,
+          "positive_rate_percent": 1.05,
+          "filing_diagnostic": {
+            "filed_by_origin": 478,
+            "filed_by_origin_percent": 38
+          },
+          "positives_filing_year_outcome": 1222
+        },
+        "2016": {
+          "active_subclasses": 529,
+          "candidate_pairs": 128463,
+          "positives": 1262,
+          "positive_rate_percent": 0.98,
+          "filing_diagnostic": {
+            "filed_by_origin": 447,
+            "filed_by_origin_percent": 35
+          },
+          "positives_filing_year_outcome": 1164
+        },
+        "2019": {
+          "active_subclasses": 546,
+          "candidate_pairs": 136189,
+          "positives": 1263,
+          "positive_rate_percent": 0.93,
+          "filing_diagnostic": {
+            "filed_by_origin": 365,
+            "filed_by_origin_percent": 29
+          },
+          "positives_filing_year_outcome": 1285
+        },
+        "2022": {
+          "active_subclasses": 554,
+          "candidate_pairs": 139221,
+          "positives": 1162,
+          "positive_rate_percent": 0.83,
+          "filing_diagnostic": {
+            "filed_by_origin": 418,
+            "filed_by_origin_percent": 36
+          },
+          "positives_filing_year_outcome": null
+        }
+      }
+    }
+  }
+}

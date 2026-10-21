@@ -230,7 +230,7 @@ The filing-year outcome counts pairs unseen in publications up to *t* whose earl
 
 * The figures of §3–§6 and §8 were first produced by a throw-away Python parser outside the repository that read each ZIP recursively, removed XML-illegal control characters, and wrote one row per document. DuckDB queries over those rows produced the tables, including §4.2 and §7.
 * On 2026-10-20 the repository's own source adapter reproduced §3–§6 and §8 from the 26 files identified in §8 (hashes verified before reading): see [the reproduction report](oepm-biblio-reproduction.md). The two corrections that this revealed are in §11.
-* **§4.2 and §7 (publication lag, base rates, the effect of the 2010 gap, the delay diagnostic and the national-documents counts) are still the product of the throw-away parser and are not reproduced from the repository.**
+* **§4.2 and §7 (publication lag, base rates, the effect of the 2010 gap, the delay diagnostic and the national-documents counts)** were first produced by the throw-away parser. They were then recomputed from the repository: see [the second reproduction](oepm-biblio-lag-base-rates-reproduction.md), which also states how the agreement was reached.
 * The analysis was exploratory: counts were produced and inspected before any protocol existed. Nothing here may be cited as confirmatory.
 
 ## 10. What this document does not establish

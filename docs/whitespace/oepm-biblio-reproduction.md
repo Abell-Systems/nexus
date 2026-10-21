@@ -126,8 +126,7 @@ All three count as having a priority claim, since the source states one. The raw
 
 ## 6. What this does not cover
 
-* Section 4.2 of the characterization (publication lag and completeness of filing-year cohorts).
-* Section 7 (base rates, the estimate of the effect of the 2010 gap, the delay diagnostic, the national-documents counts). They need decisions that ADR 0036 keeps open, such as the activity threshold, and are left to a later change.
+* Sections 4.2 and 7 of the characterization (publication lag, base rates, the estimate of the effect of the 2010 gap, the delay diagnostic, the national-documents counts) are reproduced in [a separate report](oepm-biblio-lag-base-rates-reproduction.md).
 * That the XML carries no CPC code, abstract or family identifier is taken from its structure, not computed.
 
 ## 7. Open points
