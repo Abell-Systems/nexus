@@ -10,8 +10,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test:e2e": "playwright test",
-    "sync-data": "node scripts/sync-whitespace-data.mjs"
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "react": "^19.2.8",

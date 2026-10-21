@@ -11,7 +11,7 @@ import type {
   SensitivityResults,
 } from "../domain/whitespace";
 
-// Static copies of the versioned results (`npm run sync-data`); a test requires them to be identical to the originals.
+// Static copies of the versioned results (`python scripts/sync_whitespace_frontend_data.py`); a test requires them to be identical to the originals.
 export const whitespaceData = {
   exposure: exposure as unknown as ExposureResults,
   density: density as unknown as DensityResults,
