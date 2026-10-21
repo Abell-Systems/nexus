@@ -19,7 +19,14 @@ from collections.abc import Iterator, Mapping
 from datetime import date, datetime
 from pathlib import Path
 
-from domain.models.whitespace import IpcEntry, PatentPublication, RejectedRecord, SourceAnomaly, SourceRecordProvenance
+from domain.models.whitespace import (
+    ApplicationReference,
+    IpcEntry,
+    PatentPublication,
+    RejectedRecord,
+    SourceAnomaly,
+    SourceRecordProvenance,
+)
 from domain.protocols.whitespace import SourceIntegrityError
 
 _DOCTYPE = re.compile(r"<!DOCTYPE[^>]*>")
@@ -83,6 +90,19 @@ def _ipc_entry(node: ET.Element) -> IpcEntry:
     )
 
 
+def _application_reference(root: ET.Element) -> ApplicationReference | None:
+    """The first application reference of the record, raw; None if it has no number (no key is invented)."""
+    document_id = root.find(".//application-reference/document-id")
+    number = ((document_id.findtext("doc-number") or "").strip()) if document_id is not None else ""
+    if document_id is None or not number:
+        return None
+    return ApplicationReference(
+        country=(document_id.findtext("country") or "").strip(),
+        number=number,
+        kind=(document_id.findtext("kind") or "").strip(),
+    )
+
+
 def _publication(raw: bytes, provenance: SourceRecordProvenance) -> PatentPublication:
     anomalies: list[SourceAnomaly] = []
     try:
@@ -101,6 +121,7 @@ def _publication(raw: bytes, provenance: SourceRecordProvenance) -> PatentPublic
     root = ET.fromstring(_XML_ILLEGAL_CONTROL.sub("", _DOCTYPE.sub("", decoded)))
     if root.tag != "es-patent-document":
         raise ValueError(f"unexpected root element {root.tag!r}")
+    application_reference = _application_reference(root)
     application = _optional_date(
         root.findtext(".//application-reference/document-id/date"), "application_date", anomalies
     )
@@ -114,6 +135,7 @@ def _publication(raw: bytes, provenance: SourceRecordProvenance) -> PatentPublic
         doc_number=root.get("doc-number") or "",
         kind=root.get("kind") or "",
         publication_date=_to_date(root.get("date-publ"), "publication date"),
+        application_reference=application_reference,
         application_date=application,
         priority_dates=priorities,
         title=root.findtext(".//invention-title") or "",

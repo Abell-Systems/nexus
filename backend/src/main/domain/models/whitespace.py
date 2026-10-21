@@ -66,6 +66,21 @@ class IpcEntry(BaseModel):
         return f"{self.section}{self.class_number}{self.subclass}"
 
 
+class ApplicationReference(BaseModel):
+    """The application a publication stems from, as the source states it (raw strings, not normalised).
+
+    Not the publication identifier: one application has several publications (for example A1 and B1), and
+    sources such as legal status and the pre-2013 citations are keyed by application, not by publication.
+    ``country`` and ``kind`` are empty if the source omits them; a reference without a number is not kept.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    country: str
+    number: str
+    kind: str
+
+
 class PatentPublication(BaseModel):
     """One publication by a patent office, as observed in one source file."""
 
@@ -75,6 +90,7 @@ class PatentPublication(BaseModel):
     doc_number: str
     kind: str
     publication_date: date
+    application_reference: ApplicationReference | None = None
     application_date: date | None = None
     priority_dates: tuple[date, ...] = ()
     title: str = ""
