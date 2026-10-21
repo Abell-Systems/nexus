@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from domain.models.whitespace import PatentPublication, RejectedRecord
+from domain.models.whitespace import ApplicationReference, PatentPublication, RejectedRecord
 from domain.protocols.whitespace import PatentPublicationSource, SourceIntegrityError
 from infrastructure.sources.patent.oepm_biblio import OepmBiblioSource
 
@@ -16,6 +16,8 @@ def record_xml(
     number: str = "2000001",
     published: str = "20200120",
     application: str | None = "20180101",
+    application_number: str | None = "201931658",
+    application_country: str = "ES",
     priorities: tuple[str, ...] = ("20170101",),
     ipcs: tuple[tuple[str, str, str], ...] = (("B", "05", "C"),),
     title: str = "A title",
@@ -29,8 +31,9 @@ def record_xml(
         for i, (s, c, sc) in enumerate(ipcs, 1)
     )
     app = (
-        f"<application-reference><document-id><country>ES</country><doc-number>201931658</doc-number>"
-        f"<kind>{kind}</kind><date>{application}</date></document-id></application-reference>"
+        f"<application-reference><document-id><country>{application_country}</country>"
+        + (f"<doc-number>{application_number}</doc-number>" if application_number is not None else "")
+        + f"<kind>{kind}</kind><date>{application}</date></document-id></application-reference>"
         if application
         else ""
     )
@@ -323,3 +326,30 @@ def test_shouldReadTheSameRecordsInTheSameOrderWhenReadTwiceOrArchivedInAnotherO
 
     assert first == again
     assert without_hash(first) == without_hash(other)
+
+
+def read_one(tmp_path, xml: bytes):
+    digest = write_source(tmp_path, "f.zip", {"BIBLIO_ES20200120.zip": {"a": xml}})
+    return next(iter(OepmBiblioSource(tmp_path, {"f.zip": digest}).read()))
+
+
+def test_shouldKeepTheRawApplicationReferenceWhenTheRecordStatesIt(tmp_path):
+    publication = read_one(tmp_path, record_xml(kind="T3", application_number=" E06743854 ", application_country="EP"))
+    assert publication.application_reference == ApplicationReference(country="EP", number="E06743854", kind="T3")
+    assert publication.doc_number != publication.application_reference.number  # an application is not a publication
+
+
+def test_shouldHaveNoApplicationReferenceWhenTheRecordOmitsIt(tmp_path):
+    assert read_one(tmp_path, record_xml(application=None)).application_reference is None
+
+
+def test_shouldNotInventAnApplicationNumberWhenTheDocIdHasNone(tmp_path):
+    publication = read_one(tmp_path, record_xml(application_number=None))
+    assert publication.application_reference is None
+    assert publication.application_date == date(2018, 1, 1)  # the date is still read
+
+
+def test_shouldKeepTheApplicationReferenceWhenItsDateIsUnreadable(tmp_path):
+    publication = read_one(tmp_path, record_xml(application="2018-01-01"))
+    assert publication.application_reference.number == "201931658"
+    assert publication.application_date is None
