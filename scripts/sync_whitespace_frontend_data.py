@@ -5,7 +5,9 @@ The browser recomputes nothing: it draws what these files state. The frontend te
 to the originals and the recorded hashes to be those of the copies (JS/TS tooling stays inside the frontend workspace,
 ADR 0021, so this step is a Python script).
 
-  python scripts/sync_whitespace_frontend_data.py [--target frontend/src/main/infrastructure/data]
+  python scripts/sync_whitespace_frontend_data.py [--target frontend/src/main/infrastructure/data] [--public-target frontend/public/data]
+
+The subclass pairs (6 MB) are not bundled: they are copied under `public/` and fetched on demand as a static file.
 """
 
 import argparse
@@ -37,16 +39,32 @@ SOURCES = [
         "pullRequest": 130,
     },
 ]
+ON_DEMAND_SOURCES = [
+    {
+        "source": "docs/whitespace/oepm-subclass-pairs-results.json",
+        "producedBy": "scripts/report_oepm_subclass_pairs.py",
+        "pullRequest": 150,
+    },
+]
 
 
-def sync(target: Path, root: Path = REPO_ROOT) -> dict:
-    target.mkdir(parents=True, exist_ok=True)
+def sync(target: Path, public_target: Path, root: Path = REPO_ROOT) -> dict:
     files = []
-    for entry in SOURCES:
-        name = Path(entry["source"]).name
-        shutil.copyfile(root / entry["source"], target / name)
-        data = (target / name).read_bytes()
-        files.append({"file": name, **entry, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
+    for entries, destination, served in ((SOURCES, target, "bundled"), (ON_DEMAND_SOURCES, public_target, "on_demand")):
+        destination.mkdir(parents=True, exist_ok=True)
+        for entry in entries:
+            name = Path(entry["source"]).name
+            shutil.copyfile(root / entry["source"], destination / name)
+            data = (destination / name).read_bytes()
+            files.append(
+                {
+                    "file": name,
+                    **entry,
+                    "served": served,
+                    "bytes": len(data),
+                    "sha256": hashlib.sha256(data).hexdigest(),
+                }
+            )
     manifest = {"files": files}
     (target / "provenance.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     return manifest
@@ -57,8 +75,9 @@ def main() -> int:
     parser.add_argument(
         "--target", type=Path, default=REPO_ROOT / "frontend" / "src" / "main" / "infrastructure" / "data"
     )
+    parser.add_argument("--public-target", type=Path, default=REPO_ROOT / "frontend" / "public" / "data")
     args = parser.parse_args()
-    manifest = sync(args.target)
+    manifest = sync(args.target, args.public_target)
     print(f"copied {len(manifest['files'])} result files and wrote provenance.json")
     return 0
 

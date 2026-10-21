@@ -33,3 +33,29 @@ test("shouldKeepTheMatcherReachableOnItsOwnAddressAndOnSharedLinks", async ({ pa
   await page.goto("/?demanda=does-not-exist");
   await expect(page.getByRole("heading", { name: "De una demanda real a activos españoles" })).toBeVisible();
 });
+
+test("shouldSearchASubclassFilterUnseenPairsAndOpenAPairWhenUsingTheExplorer", async ({ page }) => {
+  await page.goto("/#explorador");
+  await expect(page.getByLabel("Origen")).toHaveValue("2022");
+  await page.getByLabel("Origen").selectOption("2006");
+  await page.getByLabel("Origen").selectOption("2022");
+  await page.getByLabel("Buscar subclase por símbolo").fill("G06N");
+  await page.getByLabel("Buscar subclase por símbolo").press("Enter");
+  await expect(page.getByRole("heading", { name: "G06N en el origen 2022" })).toBeVisible();
+  await page.getByLabel("Par", { exact: true }).selectOption("unseen");
+  await expect(page.getByText(/no se ha observado co-clasificación en este corpus y periodo/).first()).toBeVisible();
+  const first = page.getByRole("table", { name: /frente a G06N/ }).getByRole("row").nth(1);
+  await expect(first).toContainText("no observada en este corpus y periodo");
+  await first.getByRole("button").click();
+  await expect(page.getByRole("region", { name: /^Par (G06N y |\w+ y G06N$)/ })).toBeFocused();
+});
+
+test("shouldNotScrollHorizontallyWhenTheExplorerListsPairsOnAPhone", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/#explorador");
+  await page.getByLabel("Buscar subclase por símbolo").fill("G06N");
+  await page.getByLabel("Buscar subclase por símbolo").press("Enter");
+  await expect(page.getByRole("table", { name: /frente a G06N/ })).toBeVisible();
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  expect(overflow).toBeLessThanOrEqual(0);
+});

@@ -72,6 +72,7 @@ export interface ProvenanceFile {
   source: string;
   producedBy: string;
   pullRequest: number;
+  served: "bundled" | "on_demand";
   bytes: number;
   sha256: string;
 }
@@ -91,4 +92,34 @@ export const TEXT = {
     "Esta página describe resultados ya medidos. No demuestra que ningún método predictivo funcione.",
   yUnknown:
     "Qué denota exactamente el tipo Y no se ha leído, y el inventario no incluye clasificaciones: el efecto de estas ausencias sobre los resultados no se puede estimar con los datos disponibles.",
+} as const;
+
+// docs/whitespace/oepm-subclass-pairs-results.json, as versioned. Unseen pairs are not stored: they are the complement of `pairs`.
+export interface PairRecord {
+  documents: number;
+  by_year: Record<string, number>;
+  first_year: number;
+}
+
+export interface OriginPairs {
+  origin: number;
+  min_documents: number;
+  active: Record<string, number>;
+  pairs: Record<string, PairRecord>;
+}
+
+export type PairsResults = Record<string, OriginPairs>;
+
+// Fixed texts of docs/whitespace/product-vertical-2-contract.md section 3.
+export const EXPLORER_TEXT = {
+  unseen: "no observada en este corpus y periodo",
+  noYear: "no observada",
+  limits:
+    "Límites del corpus: faltan todas las publicaciones de tipo Y de 2000 a 2009 y todo el año 2010, y hay huecos menores en 2011–2020. La historia empieza en 2000, así que el origen 2006 cuenta con 7 años. Un periodo sin publicaciones en el corpus no se lee como ausencia de actividad.",
+  universe:
+    "Solo se listan subclases activas en el origen (al menos 20 documentos publicados hasta él); las demás no aparecen.",
+  symbolsOnly: "Solo se muestran símbolos IPC, sin títulos.",
+  definitions:
+    "Documentos con ambas: identificadores de publicación cuyos registros fuente llevan las dos subclases, hasta el origen. Primer año visto juntas: el primer año de publicación con una coincidencia. Coincidencias por año: el mismo recuento por año de publicación. Son tres medidas distintas.",
+  noScore: "Sin puntuación ni ranking: el orden lo elige quien consulta y se etiqueta con el nombre de la columna.",
 } as const;

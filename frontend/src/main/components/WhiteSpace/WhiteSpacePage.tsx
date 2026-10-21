@@ -4,6 +4,7 @@ import { TEXT } from "../../domain/whitespace";
 import { BrandHeader } from "../shared/BrandHeader";
 import { CoverageSection } from "./CoverageSection";
 import { SectionMapSection } from "./SectionMapSection";
+import { SubclassExplorerSection } from "./SubclassExplorerSection";
 import { SensitivitySection } from "./SensitivitySection";
 import { TraceabilitySection } from "./TraceabilitySection";
 import styles from "./WhiteSpacePage.module.css";
@@ -22,6 +23,7 @@ export function WhiteSpacePage() {
           <a href="#resumen">Resumen</a>
           <a href="#cobertura">Cobertura</a>
           <a href="#mapa">Mapa de co-clasificación</a>
+          <a href="#explorador">Explorador de subclases</a>
           <a href="#sensibilidad">Qué mueve los recuentos</a>
           <a href="#trazabilidad">Trazabilidad</a>
           <a href="#estado">Estado</a>
@@ -39,12 +41,13 @@ export function WhiteSpacePage() {
           </section>
           <CoverageSection results={exposure} />
           <SectionMapSection density={density} />
+          <SubclassExplorerSection />
           <SensitivitySection results={sensitivity} />
           <TraceabilitySection provenance={provenance} corpusIdentity={corpusIdentity} exposure={exposure} />
           <section id="estado" className={styles.status} aria-labelledby="estado-titulo">
             <h2 id="estado-titulo">Estado de la función de white spaces</h2>
             <p><strong>{TEXT.status}</strong></p>
-            <p>No hay en esta página ninguna lista de pares, puntuación ni selección de combinaciones.</p>
+            <p>No hay en esta página ninguna puntuación, ranking ni selección de combinaciones: el explorador solo describe qué pares se han observado.</p>
           </section>
         </main>
         <footer className={styles.footer}>
