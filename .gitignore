@@ -39,6 +39,8 @@ backend/*judge_results.json
 data/*
 !data/snapshots/
 !data/raw/
+# OEPM OpenData files, downloaded with a registered account: kept out of git, verified by SHA-256 instead
+data/raw/oepm_open/
 !data/experiments/
 !data/annotations/
 !data/external/
