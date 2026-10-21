@@ -45,7 +45,7 @@ export function SubclassExplorerSection() {
   const matches = origin ? searchSubclasses(origin, query) : [];
   const chosen = origin && symbol && symbol in origin.active ? symbol : null;
   const rows = origin && chosen ? sortRows(filterRows(pairRows(origin, chosen), { seen, section }), sort) : [];
-  const sections = origin ? [...new Set(Object.keys(origin.active).map((s) => s[0]))].sort() : [];
+  const sections = origin ? [...new Set(Object.keys(origin.active).map((s) => s[0]))].sort((a, b) => a.localeCompare(b)) : [];
   const detail = origin && chosen && other ? pairDetail(origin, chosen, other) : null;
 
   const choose = (next: string) => {
@@ -76,7 +76,7 @@ export function SubclassExplorerSection() {
         <div>
           <label htmlFor={ids.origin}>Origen</label>
           <select id={ids.origin} value={originKey} onChange={(e) => { setOriginKey(e.target.value); setOther(null); }}>
-            {Object.keys(data ?? { "2022": 0, "2006": 0 }).sort().map((key) => <option key={key} value={key}>{key}</option>)}
+            {Object.keys(data ?? { "2022": 0, "2006": 0 }).sort((a, b) => a.localeCompare(b)).map((key) => <option key={key} value={key}>{key}</option>)}
           </select>
         </div>
         <div>
