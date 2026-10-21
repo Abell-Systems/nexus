@@ -62,14 +62,14 @@ At 2006 the positive rate rises from 3.36 % to 5.08 % (+32 % positives) when thr
 
 | Origin | Positives, mean | 2.5th–97.5th percentile | Candidates, mean | Percentiles |
 |---|---|---|---|---|
-| 2003 | 6,708 | 6,698–6,716 | 120,110 | 119,645–120,165 |
-| 2006 | 4,524 | 4,510–4,534 | 134,734 | 134,207–134,769 |
+| 2003 | 6,708 | 6,689–6,716 | 120,116 | 119,650–120,166 |
+| 2006 | 4,524 | 4,507–4,536 | 134,730 | 134,204–134,777 |
 
-The spread is below 0.5 % of the positives. It is that small because the kinds that are present are almost complete in 2000–2009 (0 to 0.41 % absent), so the simulated loss is tiny.
+The spread is below 0.6 % of the positives (at most −0.55 % at 2006). The random numbers come from NumPy's generator seeded with each replication's number. It is that small because the kinds that are present are almost complete in 2000–2009 (0 to 0.41 % absent), so the simulated loss is tiny.
 
 ## 6. How to read it
 
-* The counts move much more with the **length and composition of the history** (S-B, 4 % to 32 %) than with random loss at the known rates of the present kinds (S-C, below 0.5 %). The history of the development origins is short (four and seven years) and that, not random loss, is what the counts are sensitive to.
+* The counts move much more with the **length and composition of the history** (S-B, 4 % to 32 %) than with random loss at the known rates of the present kinds (S-C, below 0.6 %). The history of the development origins is short (four and seven years) and that, not random loss, is what the counts are sensitive to.
 * S-C **says nothing about the kind-`Y` omission**: no kind-`Y` publication of 2000–2009 is observed, so there is nothing to delete or to resemble. The effect of that omission on the pairs seen at the development origins stays **not identifiable** with these data ([exposure](oepm-corpus-exposure.md)).
 * S-B1 and S-B2 change the definition of the problem as well as the coverage; their differences are not an estimate of what coverage loss would do.
 * Nothing here changes the corpus, the pool or any decision of the ADR. The sensitivity of the baselines' metrics (O5.3) is run after the baselines exist.

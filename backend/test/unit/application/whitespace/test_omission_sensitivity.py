@@ -38,7 +38,8 @@ def test_shouldSeparateThePairsSeenOnlyInTheRemovedYearWhenRemovingAHistoryYear(
     assert b1["2000"]["positives"] == 2  # A-B is unseen without 2000 and reappears in 2002, besides A-C
     assert b1["2000"]["positives_whose_pair_was_seen_only_in_the_removed_year"] == 1
     assert b1["2000"]["positives_change_not_explained_by_that"] == 0
-    assert b1["2001"]["positives"] == 1 and b1["2001"]["positives_whose_pair_was_seen_only_in_the_removed_year"] == 0
+    assert b1["2001"]["positives"] == 1
+    assert b1["2001"]["positives_whose_pair_was_seen_only_in_the_removed_year"] == 0
 
 
 def test_shouldKeepOnlyTheLastYearsOfHistoryWhenShorteningTheWindow():

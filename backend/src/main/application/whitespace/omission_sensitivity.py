@@ -8,10 +8,11 @@ S-C removes observed publications at a known rate and recovers nothing, and cann
 absent. None of this measures the effect of the omitted publications.
 """
 
-import random
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from typing import Any
+
+import numpy as np
 
 from application.whitespace.analysis_records import AnalysisRecord
 from application.whitespace.base_rates import base_rates
@@ -85,17 +86,13 @@ def omission_sensitivity(
         )
 
         in_scope = [r for r in records if r.published.year <= origin + horizon]
-        share = {
-            (r.published.year, exposure_group(r.kind)): absence_percent.get(
-                (r.published.year, exposure_group(r.kind)), 0.0
-            )
-            / 100
-            for r in in_scope
-        }
+        keep_probability = np.array(
+            [1 - absence_percent.get((r.published.year, exposure_group(r.kind)), 0.0) / 100 for r in in_scope]
+        )
         draws: dict[str, list[float]] = defaultdict(list)
         for replication in range(1, replications + 1):
-            rng = random.Random(seed_base + replication)
-            kept = [r for r in in_scope if rng.random() >= share[(r.published.year, exposure_group(r.kind))]]
+            rng = np.random.default_rng(seed_base + replication)  # a reproducible simulation, not a security use
+            kept = [r for r, keep in zip(in_scope, rng.random(len(in_scope)) < keep_probability, strict=True) if keep]
             for quantity, value in _observed(_counts(kept, origin, horizon, min_documents)).items():
                 draws[quantity].append(value)
         result[str(origin)] = {
