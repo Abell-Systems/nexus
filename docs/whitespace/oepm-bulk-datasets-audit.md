@@ -103,7 +103,7 @@ A difference of totals does not say which documents are missing, because the cor
 
 ## 6. What this suggests for ADR 0036 (nothing is changed here)
 
-* **A new limitation (C3).** The corpus omits every kind `Y` publication that the OEPM published only in its gazette. In 2000–2009, the years behind the development origins 2003 and 2006, that is about a tenth of the publications; there is also the missing year 2010 and smaller gaps in 2011–2020. The ADR lists limitations but not these. What it means for the pairs seen at each origin has not been measured: utility models of kind `Y` may be systematically different in their classifications from those that are present.
+* **A new limitation (C3).** The corpus omits every kind `Y` publication that the OEPM published only in its gazette. In 2000–2009, the years behind the development origins 2003 and 2006, that is about a tenth of the publications; there is also the missing year 2010 and smaller gaps in 2011–2020. The ADR lists limitations but not these. What it means for the pairs seen at each origin has not been measured: whether documents of kind `Y` differ in their classifications from those that are present is unknown, and no bias is claimed.
 * **A6 and the 2010 gap.** The ADR treats 2010 as missing, not zero; the inventory confirms that documents exist. The hidden-year estimate stays a counterfactual. The inventory has no classification, so it does not allow 2010 to be reconstructed.
 * **P6.** The 2023 drop is a property of the OEPM's publications, not of the download.
 * **O3** is not affected.
