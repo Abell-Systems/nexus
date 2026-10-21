@@ -1,6 +1,6 @@
 # Pre-registration draft: proposals for the open parameters of ADR 0036
 
-**Status:** **Draft for review; nothing here is decided.** Each entry is a proposal with its reason, to be accepted, changed or rejected before the pre-registration is closed. No code, threshold value, null-model implementation or confirmatory evaluation exists, and none is written by this document (ADR 0036, C2).
+**Status:** **Accepted with conditions in [ADR 0036 §8.11](../adr/0036-technology-white-space-scientific-scope.md) (2026-10-21); this document keeps the rationale and the ADR is the decision.** The text below was written as a draft for review. Each entry is a proposal with its reason, to be accepted, changed or rejected before the pre-registration is closed. No code, threshold value, null-model implementation or confirmatory evaluation exists, and none is written by this document (ADR 0036, C2).
 **Date:** 2026-10-21
 **Checks:** [ADR 0036](../adr/0036-technology-white-space-scientific-scope.md) §§5.4, 5.5, 7, 8, 12 (P1, P2, P3, A7, O2)
 **Scope:** The parameters that ADR 0036 leaves open, split into what can be fixed now (a design choice that does not depend on any result) and what is chosen on the development origins 2003 and 2006 under a rule that is fixed now. **O2 (the smallest useful AUC-PR difference and the power) depends on a decision of value that is not ours and is not proposed here.**
