@@ -5,7 +5,7 @@
 **Checks:** [ADR 0036](../adr/0036-technology-white-space-scientific-scope.md) (non-claims, C3, §9) · [corpus exposure](oepm-corpus-exposure.md) · [omission sensitivity](oepm-omission-sensitivity.md) · the descriptive briefing and the section map (pull request #142)
 **Scope:** What the first screens show, from which data, under which rules, and how it is accepted. **Descriptive only: no ranking, no score, no predictive claim, no new endpoint.**
 
-The product and the study advance separately. This vertical shows what the study has already measured; it does not make any claim that the study has not earned, and it does not select parameters of the pre-registration.
+The product and the study advance separately. **Showing results is not validating the method:** the front page describes measurements that already exist and is not evidence that the predictive approach works; no heading, caption or layout may suggest it is. This vertical shows what the study has already measured; it does not make any claim that the study has not earned, and it does not select parameters of the pre-registration.
 
 ---
 
@@ -43,16 +43,16 @@ One page with six parts, in this order:
 * `infrastructure`: the loader of the static data.
 * `components`: the page and its six parts, as inline SVG and HTML. No chart library: the charts of this release are bars and a matrix, and a library is reconsidered when a concrete interactive need appears.
 
-## 5. Open decisions for review
+## 5. Decisions taken at review
 
-1. **Relation to the current screen.** The matcher of demands and assets is the only screen today. Recommendation: the new page is the front page and the matcher stays reachable at its own address until it is retired by a separate decision, so that nothing that is deployed breaks. No code of the matcher changes.
-2. **Navigation.** Recommendation: a single page with anchors; no router dependency.
-3. **Dependency on #142.** The section map needs its results file; this vertical is implemented after #142 is merged.
+1. **Relation to the current screen.** The new page is the front page; the matcher of demands and assets stays reachable at its own address, with its implementation and the deployed links unchanged. Retiring it needs a separate decision.
+2. **Navigation.** A single page with anchors; no router and no new dependency. Independent flows would be evaluated when they appear.
+3. **Dependency on #142.** The section map is built on the versioned results that #142 introduces, without duplicating calculations or replacing them with estimates. Implementation starts when #142 is merged and stable in `main`.
 
 ## 6. Acceptance
 
 * Typecheck, lint, build and all tests pass; the built page renders at desktop and phone width without horizontal scroll.
 * Tests: the copies of the data are identical to the versioned results; the traceability hashes match; the mandatory texts are present (attribution, "an absence is not an opportunity", the unavailable status) and forbidden formulations are absent; the common colour scale is applied to both maps; headings, landmarks, text alternatives for the SVG and keyboard focus are present.
-* Visual review at desktop and phone width, and the Playwright journey of the page run against a local server.
+* Visual review at desktop and phone width, and the Playwright journey of the page run against a local server. The journey of the matcher, which was not run when the old agent UI was removed (#143), is run too and must pass.
 * The diff adds no endpoint, no ranking and no library, and changes no figure of the study.
-* The page makes no claim that the ADR does not make.
+* The page makes no claim that the ADR does not make, and nothing on it can be read as a validation of the predictive method.
