@@ -61,9 +61,11 @@ Not exposed by the service (§1). What was measured by downloading:
 
 (Sample examples from the previous audit: `biblio_example.zip` `ea29eefd…`, the other examples in that record.) Full text and booklets were **not** measured; the booklets are PDF files of every publication and will be far larger than the XML datasets. The abstract sample suggests that abstracts, CPC, citations and legal status are small next to the bibliographic files (one year each is 1–10 MB), but one year per dataset is not a bound on the rest (**inferred**).
 
-## 5. The Authority File against the corpus (exploratory)
+## 5. The Authority File against the corpus
 
-The Authority File lists every document the OEPM has published, with kind, publication date and application number, but no classification: it says how many documents exist, not what they contain. Its 2,066,479 entries (152 members) were counted by publication year and compared with the corpus (`BIBLIO_2000`–`BIBLIO_2025`, 711,547 records). Group: `T*` kinds against all others. **Exploratory; not reproduced elsewhere.**
+The Authority File lists every document the OEPM has published, with kind, publication date and application number, but no classification: it says how many documents exist, not what they contain. Its 2,066,479 entries (152 members) were compared with the corpus (`BIBLIO_2000`–`BIBLIO_2025`, 711,547 records, 708,176 distinct publication keys). **Exploratory; not part of the published figures.** Two comparisons were made, both reproducible with `scripts/audit_oepm_authority_file.py` (the second with `--corpus-dir`).
+
+### 5.1 Counts by year (T* kinds against all others)
 
 | Year | Authority | Corpus | Authority − corpus (T / others) |
 |---|---|---|---|
@@ -72,29 +74,40 @@ The Authority File lists every document the OEPM has published, with kind, publi
 | 2006 | 27,091 | 24,484 | 2,607 (25 / 2,582) |
 | 2009 | 28,821 | 26,485 | 2,336 (77 / 2,259) |
 | **2010** | **25,849** | **0** | **25,849 (15,816 / 10,033)** |
-| 2011 | 29,996 | 28,630 | 1,366 (866 / 500) |
 | 2013 | 31,646 | 32,262 | −616 |
 | 2018 | 34,127 | 28,949 | 5,178 (2,574 / 2,604) |
-| 2019 | 29,347 | 27,609 | 1,738 (−77 / 1,815) |
-| 2022 | 31,190 | 31,583 | −393 |
-| 2023 | 21,294 | 21,290 | 4 (1 / 3) |
+| 2023 | 21,294 | 21,290 | 4 |
 
-(The full table is the output of the script.) Observations, with their state:
+A difference of totals does not say which documents are missing, because the corpus counts repeated records (3,371) that the inventory does not. Hence the second comparison.
 
-1. **2010 was published.** The inventory has 25,849 documents dated 2010, 15,816 EP translations and 10,033 others, in line with neighbouring years. The corpus has none. The gap is therefore in the bibliographic files that the OpenData portal distributes, not in the OEPM's publications (**verified** as a count; the cause of the missing files is **pending**, and the inventory is the OEPM's own, so it is not an independent source).
-2. **National documents are under-covered in 2000–2009.** The inventory has 101,795 non-`T` documents in those ten years; the corpus has 73,744, so 28,051 (about 28 %) are missing, every year between 2,259 and 3,399. `T` documents differ by 4–77 a year. The cause is **pending**. It matters because the development origins 2003 and 2006 have a history in which about a quarter of the national documents are absent (**inferred**).
-3. **Other years differ too.** 2017–2019 are over 1,300 documents short in the corpus (2018: 5,178, half `T`), and 2011 by 1,366, mostly `T`. In 2013, 2014 and 2022 the corpus has more records than the inventory (−616, −353, −393); the corpus counts repeated records, which the inventory does not (**inferred**, not checked).
-4. **The 2023 drop of EP translations is in the inventory** (14,847 against 24,626 in 2022 and 27,712 in 2024): it is not a missing-file effect of the OpenData portal. Its cause remains unknown.
-5. Exception codes in 2000–2025: `X` (bibliographic data only in the Official Gazette) on 65,669 entries and none for paper or missing documents; the rest carry no exception. The net difference between the inventory (774,552 entries dated 2000–2025) and the corpus (711,547 records) is 63,005 documents, of which 2010 accounts for 25,849; whether the rest overlaps with the `X` entries is **pending**.
-6. Application numbers in the inventory carry a letter prefix (`P`, `U`) followed by the digits, for example `U200502626`, whereas the bibliographic record states the digits and the kind separately. The inventory is therefore the natural bridge to normalise the application key (**inferred**; the mapping is not built or tested here).
+### 5.2 Publication by publication (number, kind code, publication date)
+
+* 707,792 of the 708,176 distinct publication keys of the corpus are in the inventory; **384 are not** (**verified**). The corpus is, almost entirely, a subset of the OEPM's own inventory.
+* **66,760 publications of 2000–2025 in the inventory are absent from the corpus** (verified). By year and kind:
+
+| Years | Kind `Y` | `T*` | Other | Total |
+|---|---|---|---|---|
+| 2000–2009 | 28,048 | 327 | 6 | 28,381 |
+| 2010 | 2,151 | 15,816 | 7,882 | 25,849 |
+| 2011–2020 | 5,294 | 5,293 | 1,914 | 12,501 |
+| 2021–2025 | 2 | 7 | 20 | 29 |
+
+(2011–2020: Y concentrated in 2017–2020, T in 2011, 2013 and 2018.)
+
+* **In 2000–2009 the missing documents are almost all of kind `Y`**, 2,259–3,397 a year, between 8 % and 17 % of the publications of those years. In the inventory every one of the 35,495 missing `Y` entries of 2000–2025 coincides in number with the entries carrying the exception code `X`, "Bibliographic data only in Official Gazette", so the likely reading is that those documents have no bibliographic XML in the portal (**inferred**: the two counts are equal but were not cross-tabulated). What kind `Y` denotes should be read from the OEPM's document-type list (**pending**).
+* **2010 is absent as a whole**: 25,849 publications exist (15,816 EP translations, 2,151 of kind `Y`, 7,882 others) and the corpus has none. The gap is in the files the portal distributes, not in the OEPM's publications. The cause is **pending**.
+* Residual gaps outside 2010 and kind `Y`: about 5,300 `T*` and 1,900 other documents between 2011 and 2020, concentrated in 2011, 2013, 2017 and 2018. Causes are **pending**.
+* **The 2023 drop of EP translations is in the inventory** (14,847 against 24,626 in 2022 and 27,712 in 2024), and the corpus matches the inventory for 2021–2025 within a few documents. It is a property of the publications, not of the download. Its cause remains unknown.
+* Application numbers in the inventory carry a letter prefix (`P`, `U`) followed by the digits, for example `U200502626`, whereas the bibliographic record states the digits and the kind separately. The inventory is the natural bridge to normalise the application key (**inferred**; the mapping is not built or tested here).
+* 25,240 inventory entries are dated 2026, outside the corpus' range.
 
 ## 6. What this suggests for ADR 0036 (nothing is changed here)
 
-* **A6 and the 2010 gap.** The ADR already treats 2010 as missing, not zero; the inventory confirms that documents exist. The hidden-year estimate stays a counterfactual and is not replaced by this count.
-* **A new limitation (C3).** The corpus omits roughly a quarter of the national documents of 2000–2009 and some documents of 2011 and 2017–2019. The ADR lists limitations of the corpus but not this one. It should be added and its effect on the development origins assessed before the pre-registration closes.
+* **A new limitation (C3).** The corpus omits every kind `Y` publication that the OEPM published only in its gazette. In 2000–2009, the years behind the development origins 2003 and 2006, that is about a tenth of the publications; there is also the missing year 2010 and smaller gaps in 2011–2020. The ADR lists limitations but not these. What it means for the pairs seen at each origin has not been measured: utility models of kind `Y` may be systematically different in their classifications from those that are present.
+* **A6 and the 2010 gap.** The ADR treats 2010 as missing, not zero; the inventory confirms that documents exist. The hidden-year estimate stays a counterfactual. The inventory has no classification, so it does not allow 2010 to be reconstructed.
 * **P6.** The 2023 drop is a property of the OEPM's publications, not of the download.
 * **O3** is not affected.
-* **Recovery of 2010 (hypothesis, not tested).** The cited-documents-and-ECLA files cover 1993–2013 and carry IPC and ECLA codes for the documents with a search report, keyed by application. The 2010 quarters might give IPC for part of the missing year. This has not been read.
+* **Recovery of 2010 (hypothesis, not tested).** The cited-documents-and-ECLA files cover 1993–2013 and carry IPC and ECLA codes for the documents with a search report, keyed by application. The 2010 quarters might give IPC for part of the missing year. This has not been read, and they would not enter the confirmatory analysis before a validated equivalence of the classification.
 
 ## 7. Candidates for a test of ingestion
 
@@ -110,7 +123,8 @@ The Authority File lists every document the OEPM has published, with kind, publi
 ## 8. Pending
 
 * Sizes of full text and booklets; contents of the `*Feed.xml` files.
-* Cause of the missing 2010 files, of the national under-coverage of 2000–2009 and of the 2017–2019 differences.
-* Whether the missing documents are the `X` entries of the inventory.
+* Cause of the missing 2010 files and of the residual gaps of 2011–2020.
+* What kind code `Y` denotes, and whether the missing `Y` entries are exactly the `X` entries of the inventory.
+* The effect of the omissions on the pairs seen at the development origins.
 * The SOAP service terms and fields (an access form is needed).
 * Anything about patent families: no dataset lists them.
