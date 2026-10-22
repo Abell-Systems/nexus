@@ -1,6 +1,6 @@
 # Benchmark harness: design and state
 
-**State: skeleton, blocked.** Execution is blocked until the protocol PR (#155) is merged and a person creates `AUTHORISATION.json`; this branch is separate from the protocol so that the protocol was fixed before the execution code existed. The stores, comparisons, recorder and the authorisation barrier exist and are tested on synthetic data. The orchestration of workloads W1–W7 is **not written** and no measurement has been run. `PREREGISTRATION.md` (with revision R1) remains the methodological authority; this file only describes how the code serves it and must not be read as protocol.
+**State: orchestration written and tested on synthetic data; never run on the real corpus; blocked.** Execution is blocked until the protocol PR (#155) is merged and a person creates `AUTHORISATION.json`; this branch is separate from the protocol so that the protocol was fixed before the execution code existed. The stores, comparisons, recorder and the authorisation barrier exist and are tested on synthetic data. The orchestration of workloads W1–W7 is **not written** and no measurement has been run. `PREREGISTRATION.md` (with revision R1) remains the methodological authority; this file only describes how the code serves it and must not be read as protocol.
 
 ## Layout
 
@@ -38,6 +38,14 @@ Exit codes: 0 all acceptance checks passed; 1 a check failed; 2 refused; 3 envir
 
 `tests/` on synthetic data: equal and different records and pairs, refusal of incomplete comparisons, timing and phase tags, nesting refusal, materiality rule, authorisation barrier, and both stores (prepare, verify, order of mixed-case symbols, counts, alterations detected before reading, immutability, previous version intact, backup/restore, no overwrite with `FileExistsError` specifically and the existing version still verifying, equal logical content, orphan, duplicate-key, unique and allowed-value violations refused, Parquet determinism); 69 pass with PostgreSQL, 49 without. The PostgreSQL variants run only when `NEXUS_BENCH_PG_DSN` is set. Run: `NEXUS_BENCH_PG_DSN=... python -m pytest experiments/adr-0037-db-vs-files-benchmark/tests`.
 
-## Not yet written
+## Orchestration (written after R2 was merged)
 
-Orchestration of W1–W7 (alternation of A/B, first runs in fresh sessions, repetitions), W7 operational retrieval, output collection into `RESULTS.md`, and the real-data run. They follow the review of the protocol PR.
+`harness/workloads.py` implements W1–W6 and the roll-up (`evaluate`) exactly as `WORKLOAD_CONTRACTS.md`: status by exception type (`ok` / `check_failed` / `incident`), `first_run_after_start` then 5 warm runs alternating A/B, the valid-run gate (`session.wait_for_quiet`, load <= 1.0, up to 5 minutes, else incident), W4's four alterations, W5's rebuild with the previous version preserved, W6a (restore to a new location: `Store.restore_new`, a new database for A and a new directory for B) and W6b (drop and restore in place; a failure after the drop is a check failure). `harness/operational.py` implements W7 (pooled 780 observations, p95 by Python's default quantile method, per-demand diagnostics, ids and order graded). `run_benchmark.py` wires them after the authorisation barrier.
+
+Tests on synthetic data (89 with PostgreSQL, fewer without): full BIBLIO sessions for each store, the incident and check-failure rules, the load gate, alternation, C3 on the maximum, the roll-up and exit codes, pgvector against an exact numpy formula. They show the code follows the contracts; they say nothing about real results.
+
+## Not yet done
+
+* No run on the real corpus; the real-context builders (`run_benchmark.build_real_context`, `operational.build_real_operational`) are untested because the barrier stops them.
+* The 'separate fresh sessions' measurement of initial performance is run by invoking `run_benchmark.py --only A` and `--only B` separately; nothing compares them automatically.
+* `RESULTS.md` is written by a person from `raw.jsonl`, `summary.json`, `timings.json` and `environment.json`, with the operational section of the protocol (§6).

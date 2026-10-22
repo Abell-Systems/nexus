@@ -1,6 +1,6 @@
 # Contracts of the seven workloads
 
-Subordinate to `PREREGISTRATION.md`: R1 merged in #155 (merge commit `d622c8e8e314edcd1568428d4da2f4c6187d454c`, sha256 `591ff8cf7c157b846dee9a20f652d98c80c51b094443d0eeb3bf7e52f1e557d5`) **plus amendment R2 (#157), which this file already follows and which must be merged before anything runs**. After R2 the protocol's hash changes and the authorisation must name the hash in force. Where this file and the protocol differ, the protocol wins and this file is wrong. It adds no criterion, threshold or rule. It fixes, before any orchestration code exists, what each workload takes, produces and how it may fail. Nothing here is implemented yet and nothing has been measured.
+Subordinate to `PREREGISTRATION.md`: R1 merged in #155 (merge commit `d622c8e8e314edcd1568428d4da2f4c6187d454c`, sha256 `591ff8cf7c157b846dee9a20f652d98c80c51b094443d0eeb3bf7e52f1e557d5`) **plus amendment R2 (#157), which this file already follows and which must be merged before anything runs**. R2 is merged (#157, merge commit `3298274678d88d20db4eec0bf21f825b54f5d59b`); the hash of the protocol in force is `e443232df87fab16e5485dd230f215bd287295ca34bc029d770a5180a5d4c23b` and the authorisation must name it. Where this file and the protocol differ, the protocol wins and this file is wrong. It adds no criterion, threshold or rule. It fixes, before any orchestration code exists, what each workload takes, produces and how it may fail. Nothing here is implemented yet and nothing has been measured.
 
 ## Common rules
 
@@ -59,7 +59,7 @@ Subordinate to `PREREGISTRATION.md`: R1 merged in #155 (merge commit `d622c8e8e3
 * **Outputs:** sizes, digests, W2 outputs of each restored copy, timings of every step.
 * **Graded (C4):** both procedures complete; each restored copy verifies with the digest recorded before the backup; each W2 output passes the C1 items. W6a additionally requires the original to verify unchanged.
 * **Failure classification:** if a restore fails in W6b after the original was dropped, it is a **check failure** (procedure failure). It becomes an `incident` only with evidence of an environment cause recorded at the time (container or disk unavailable). It is never reclassified afterwards.
-* **Implementation requirement:** `Store` needs a way to restore to a new location (A: another database, B: another path) in addition to `restore` (in place); added when the orchestration is written, with tests, and not before R2 is merged.
+* **Implementation:** `Store.restore_new` (A: another database; B: another path) and `Store.dispose`, tested for both stores.
 * Atomicity and partial states on interruption are described in the operational section of the results, not graded.
 
 ## W7 – Operational retrieval

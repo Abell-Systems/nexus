@@ -1,0 +1,162 @@
+"""Orchestration on the synthetic corpus: statuses, classification rules, C3, roll-up. Not measurements."""
+import pytest
+from application.whitespace.analysis_records import to_analysis_records
+from application.whitespace.subclass_pairs import subclass_pairs
+from harness.compare import LOAD_CHECKS
+from harness.contract import EXIT_FAIL, EXIT_INCIDENT, EXIT_PASS, IntegrityError
+from harness.recorder import Recorder
+from harness.session import Incident, order_for, wait_for_quiet
+from harness.tables import rows_from_outcomes
+from harness.workloads import C3_BOUND_SECONDS, Context, Reference, evaluate, run_biblio_session, w2_report, w3_verify, w6_recovery
+from support import FILES, outcomes
+
+
+def pairs_fn(records, origin):
+    return subclass_pairs(records, origin, min_documents=1)
+
+
+def make_ref():
+    rows = rows_from_outcomes(outcomes(), FILES)
+    records = to_analysis_records(outcomes())
+    expected = {str(o): pairs_fn(records, o) for o in (2006, 2022)}
+    return Reference(rows=rows, records=records, pairs_expected=expected, pairs_fn=pairs_fn)
+
+
+@pytest.fixture
+def ctx(tmp_path):
+    from harness.store_files import FilesStore
+    c = Context(stores={"B": FilesStore(tmp_path / "b")}, reference=make_ref(), recorder=Recorder(), quiet=lambda: 0.1)
+    return c
+
+
+def test_shouldRunAFullSyntheticSessionForStoreBAndPassEveryGradedCriterion(ctx, tmp_path):
+    results = run_biblio_session(ctx, tmp_path, alternatives=("B",))
+    code, table = evaluate(results, ("B",))
+    assert table["B"]["incidents"] == 0, [r for r in results if r["status"] != "ok"][:3]
+    assert {k: table["B"][k] for k in ("C1", "C2", "C4", "C5")} == dict(C1=True, C2=True, C4=True, C5=True)
+    assert table["B"]["C3_stats"]["n"] == 5
+
+
+def test_shouldRunAFullSyntheticSessionForStoreAWhenPostgresIsAvailable(tmp_path):
+    import os
+    dsn = os.environ.get("NEXUS_BENCH_PG_DSN")
+    if not dsn:
+        pytest.skip("NEXUS_BENCH_PG_DSN not set")
+    import psycopg
+    from harness.store_pg import PostgresStore
+    ns = f"o{os.getpid()}"
+    c = Context(stores={"A": PostgresStore(dsn, os.environ.get("NEXUS_BENCH_PG_CONTAINER", "nexus-spike-pg"), ns)},
+                reference=make_ref(), recorder=Recorder(), quiet=lambda: 0.1)
+    try:
+        results = run_biblio_session(c, tmp_path, alternatives=("A",))
+        code, table = evaluate(results, ("A",))
+        assert table["A"]["incidents"] == 0, [r for r in results if r["status"] != "ok"][:3]
+        assert {k: table["A"][k] for k in ("C1", "C2", "C4", "C5")} == dict(C1=True, C2=True, C4=True, C5=True)
+    finally:
+        with psycopg.connect(dsn, autocommit=True) as conn:
+            for (n,) in conn.execute("SELECT nspname FROM pg_namespace WHERE nspname LIKE %s", (f"{ns}_%",)).fetchall():
+                conn.execute(f"DROP SCHEMA {n} CASCADE")
+            conn.execute(f"DROP DATABASE IF EXISTS {ns}_restored_new WITH (FORCE)")
+
+
+def test_shouldAlternateWhichAlternativeRunsFirstByRepetition():
+    assert [order_for(r)[0] for r in (1, 2, 3, 4, 5)] == ["A", "B", "A", "B", "A"]
+
+
+def test_shouldWaitForQuietThenReturnTheLoadAtStart():
+    loads = iter([2.5, 1.7, 0.4])
+    slept = []
+    assert wait_for_quiet(lambda: (next(loads), 0, 0), slept.append, lambda: 0.0) == 0.4 and len(slept) == 2
+
+
+def test_shouldDeclareAnIncidentWhenTheMachineNeverQuiets():
+    t = iter(range(0, 1000, 100))
+    with pytest.raises(Incident):
+        wait_for_quiet(lambda: (3.0, 0, 0), lambda s: None, lambda: next(t), timeout=300)
+
+
+def test_shouldMarkAWarmRunAsIncidentWhenTheGateFails(ctx):
+    def noisy():
+        raise Incident("load")
+    ctx.quiet = noisy
+    ctx.stores["B"].prepare("v", ctx.reference.rows)
+    r = w2_report(ctx, "B", 1, "warm", "v")
+    assert r["status"] == "incident" and r["checks"] == {}
+
+
+def test_shouldCountAnIntegrityErrorOnAnUnalteredVersionAsACheckFailureNotAnIncident(ctx):
+    ctx.stores["B"].prepare("v", ctx.reference.rows)
+    ctx.stores["B"].alter("v", "flip_byte")
+    r = w3_verify(ctx, "B", 0, "first_run_after_start", "v", "whatever")
+    assert r["status"] == "check_failed"
+
+
+def test_shouldClassifyAnUnexpectedExceptionAsAnIncident(ctx):
+    r = w2_report(ctx, "B", 0, "first_run_after_start", "does-not-exist")
+    assert r["status"] == "incident" and "error" not in r["outputs"]
+
+
+def test_shouldCountAFailedRestoreAfterTheDropAsACheckFailure(ctx, tmp_path, monkeypatch):
+    store = ctx.stores["B"]
+    real = type(store).restore
+
+    def failing(self, src, v):
+        if v.startswith("w6b"):
+            raise OSError("disk")
+        return real(self, src, v)
+    monkeypatch.setattr(type(store), "restore", failing)
+    a, b = w6_recovery(ctx, "B", tmp_path)
+    assert a["status"] == "ok" and b["status"] == "check_failed"
+
+
+def row(workload, alt, status="ok", run_kind="warm", outputs=None, checks=None):
+    return {"workload": workload, "alternative": alt, "status": status, "run_kind": run_kind, "outputs": outputs or {}, "checks": checks or {}}
+
+
+def full(alt, totals, w4=(True, True, True), w6=("ok", "ok")):
+    rs = [row("W1", alt), row("W2", alt, "ok", "first_run_after_start", {"total_seconds": 999.0})]
+    rs += [row("W2", alt, outputs={"total_seconds": t}) for t in totals]
+    rs += [row("W4", alt, outputs={"kind": k, "detected": d}) for k, d in zip(("change_subclass", "flip_byte", "delete_object"), w4)]
+    rs += [row("W5", alt), row("W6a", alt, w6[0]), row("W6b", alt, w6[1])]
+    return rs
+
+
+def test_shouldPassWhenEveryWarmRunIsWithinTheBoundAndIgnoreTheFirstRun():
+    code, t = evaluate(full("A", [1, 2, 3, 4, 5]) + full("B", [10] * 5))
+    assert code == EXIT_PASS and t["A"]["C3_stats"]["max"] == 5
+
+
+def test_shouldFailC3WhenOneValidWarmRunExceedsTheBoundEvenIfTheMedianIsFine():
+    code, t = evaluate(full("A", [1, 1, 1, 1, C3_BOUND_SECONDS + 0.1]) + full("B", [1] * 5))
+    assert code == EXIT_FAIL and not t["A"]["C3"] and t["A"]["C3_stats"]["median"] == 1
+
+
+def test_shouldFailC3WhenFewerThanFiveValidWarmRunsExist():
+    code, t = evaluate(full("A", [1, 1, 1, 1]) + full("B", [1] * 5))
+    assert code == EXIT_FAIL and not t["A"]["C3"]
+
+
+def test_shouldFailC2WhenAnAlterationIsNotDetected():
+    code, t = evaluate(full("A", [1] * 5, w4=(True, False, True)) + full("B", [1] * 5))
+    assert code == EXIT_FAIL and not t["A"]["C2"] and t["B"]["C2"]
+
+
+def test_shouldFailC4WhenEitherRecoveryProcedureFails():
+    code, t = evaluate(full("A", [1] * 5, w6=("ok", "check_failed")) + full("B", [1] * 5))
+    assert code == EXIT_FAIL and not t["A"]["C4"]
+
+
+def test_shouldReportAnIncidentExitCodeWhileAnIncidentIsUnresolved():
+    rs = full("A", [1] * 5) + full("B", [1] * 5) + [row("W2", "B", "incident")]
+    assert evaluate(rs)[0] == EXIT_INCIDENT
+
+
+def test_shouldRefuseAnEmptyReference():
+    with pytest.raises(ValueError):
+        Reference(rows={}, records=[], pairs_expected={}, pairs_fn=pairs_fn)
+
+
+def test_shouldFailTheRollUpWhenOperationalRetrievalOrderDiffers():
+    rs = full("A", [1] * 5) + full("B", [1] * 5) + [row("W7", "A", "check_failed")]
+    code, t = evaluate(rs)
+    assert code == EXIT_FAIL and t["A"]["W7_ids_order"] is False and t["B"]["W7_ids_order"] is None

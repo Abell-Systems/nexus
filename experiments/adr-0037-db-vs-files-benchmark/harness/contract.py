@@ -51,6 +51,13 @@ class Store(Protocol):
     def restore(self, source: Path, version: str) -> None:
         """Restore into `version`, which must not exist (no overwrite)."""
 
+    def restore_new(self, source: Path, version: str) -> "tuple[Store, str]":
+        """W6a: restore into a NEW location (A: another database, B: another path) and return the store and version to read it
+        with. The original is never touched."""
+
+    def dispose(self) -> None:
+        """Remove a location created by restore_new (no-op for the primary store)."""
+
     def drop(self, version: str) -> None: ...
 
     def size_bytes(self, version: str) -> int: ...

@@ -4,6 +4,7 @@ import subprocess
 from pathlib import Path
 
 import psycopg
+from psycopg.conninfo import make_conninfo
 
 from harness.contract import AlterKind, IntegrityError, VerifyResult, analysis_record
 from harness.tables import BY_NAME, TABLES, ConstraintError, ReferentialError, canonical_rows_digest
@@ -137,6 +138,25 @@ class PostgresStore:
         with source.open("rb") as inp:
             subprocess.run(["docker", "exec", "-i", self.container, "pg_restore", "-U", "postgres", "-d", "postgres", "--exit-on-error"],
                            stdin=inp, check=True)
+
+    def restore_new(self, source: Path, version: str):
+        db = f"{self.namespace}_restored_new"
+        with self._conn() as conn:
+            conn.execute(f"DROP DATABASE IF EXISTS {db}")
+            conn.execute(f"CREATE DATABASE {db}")
+        with source.open("rb") as inp:
+            subprocess.run(["docker", "exec", "-i", self.container, "pg_restore", "-U", "postgres", "-d", db, "--exit-on-error"],
+                           stdin=inp, check=True)
+        other = PostgresStore(make_conninfo(self.dsn, dbname=db), self.container, self.namespace)
+        other._home = self
+        other._db = db
+        return other, version
+
+    def dispose(self) -> None:
+        home = getattr(self, "_home", None)
+        if home is not None:
+            with home._conn() as conn:
+                conn.execute(f"DROP DATABASE IF EXISTS {self._db} WITH (FORCE)")
 
     def drop(self, version: str) -> None:
         with self._conn() as conn:

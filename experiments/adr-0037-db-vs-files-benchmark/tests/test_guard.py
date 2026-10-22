@@ -39,4 +39,4 @@ def test_shouldAcceptWhenAuthorisationMatchesTheProtocol(tmp_path):
 
 
 def test_shouldExitRefusedWhenEntryPointRunsWithoutAuthorisation():
-    assert run_benchmark.main() == EXIT_REFUSED  # no AUTHORISATION.json exists in the repository
+    assert run_benchmark.main(["--work-dir", "x", "--pg-dsn", "x", "--container", "x"]) == EXIT_REFUSED  # no AUTHORISATION.json exists in the repository

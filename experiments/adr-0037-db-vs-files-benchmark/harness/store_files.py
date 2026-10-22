@@ -142,6 +142,17 @@ class FilesStore:
             raise FileExistsError(f"{version} exists: restore never overwrites")
         shutil.copytree(source, self._dir(version))
 
+    def restore_new(self, source: Path, version: str):
+        new_root = self.root.parent / (self.root.name + "_restored_new")
+        other = FilesStore(new_root)
+        other.restore(source, version)
+        other._created = True
+        return other, version
+
+    def dispose(self) -> None:
+        if getattr(self, "_created", False):
+            shutil.rmtree(self.root, ignore_errors=True)
+
     def drop(self, version: str) -> None:
         shutil.rmtree(self._dir(version))
 
