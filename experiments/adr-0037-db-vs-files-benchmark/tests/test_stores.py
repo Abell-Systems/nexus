@@ -147,3 +147,107 @@ def test_shouldReportEvidenceWhenThereIsNotEnoughDiskOrTheContainerIsMissing(sto
         assert any("not running" in p for p in store.environment_problems(1))
     else:
         assert store.environment_problems(10**18)
+
+
+# ---- fourth review of 2026-10-22: no pre-existing resource is modified or deleted because a run fails to create it ----
+
+def test_shouldNeverDeleteAPreExistingStagingDirectory(tmp_path, rows):
+    from harness.store_files import FilesStore
+    s = FilesStore(tmp_path / "f")
+    leftover = s.root / "v1.staging"
+    leftover.mkdir()
+    (leftover / "sentinel.txt").write_text("not ours")
+    with pytest.raises(FileExistsError):
+        s.prepare("v1", rows)
+    assert (leftover / "sentinel.txt").read_text() == "not ours" and not (s.root / "v1").exists()
+    assert s.remove_leftover_staging("v1") == leftover and not leftover.exists()  # explicit, traceable, on request only
+
+
+def test_shouldRemoveOnlyTheStagingItCreatedWhenPrepareFailsMidway(tmp_path, rows, monkeypatch):
+    import harness.store_files as sf
+    from harness.store_files import FilesStore
+    s = FilesStore(tmp_path / "f")
+    calls = {"n": 0}
+    real = sf._write
+
+    def failing(path, t, r):
+        calls["n"] += 1
+        if calls["n"] == 3:
+            raise OSError("disk full")
+        return real(path, t, r)
+    monkeypatch.setattr(sf, "_write", failing)
+    with pytest.raises(OSError):
+        s.prepare("v1", rows)
+    assert not (s.root / "v1.staging").exists() and not (s.root / "v1").exists()
+
+
+def test_shouldRemoveTheDirectoryItCreatedWhenRestoreNewFails(tmp_path, rows, monkeypatch):
+    from harness.store_files import FilesStore
+    s = FilesStore(tmp_path / "f")
+    s.prepare("v1", rows)
+    dump = tmp_path / "d"
+    s.backup("v1", dump)
+    monkeypatch.setattr(FilesStore, "restore", lambda self, src, v: (_ for _ in ()).throw(OSError("copy failed")))
+    with pytest.raises(OSError):
+        s.restore_new(dump, "v1")
+    assert not (s.root.parent / (s.root.name + "_restored_new")).exists()
+
+
+def test_shouldNeverOverwriteAnExistingBackup(store, rows, tmp_path):
+    store.prepare("v1", rows)
+    dump = tmp_path / "dump"
+    if dump.suffix == "" and type(store).__name__ == "FilesStore":
+        dump.mkdir()
+        (dump / "sentinel.txt").write_text("not ours")
+        marker = dump / "sentinel.txt"
+    else:
+        dump.write_bytes(b"not ours")
+        marker = dump
+    with pytest.raises(FileExistsError):
+        store.backup("v1", dump)
+    assert marker.read_bytes() in (b"not ours",)
+
+
+def test_shouldCloseTheDuckDbConnectionWhenInitialisationFails(tmp_path, rows, monkeypatch):
+    import duckdb
+    import harness.store_files as sf
+    from harness.store_files import FilesStore
+    s = FilesStore(tmp_path / "f")
+    s.prepare("v1", rows)
+    (s.root / "v1" / "party.parquet").unlink()
+    opened, closed = [], []
+    real = duckdb.connect
+
+    class Spy:
+        def __init__(self):
+            self.inner = real()
+            opened.append(self)
+
+        def __getattr__(self, name):
+            return getattr(self.inner, name)
+
+        def close(self):
+            closed.append(self)
+            self.inner.close()
+    monkeypatch.setattr(sf.duckdb, "connect", lambda *a, **k: Spy())
+    with pytest.raises(Exception):
+        s.read_records("v1")
+    assert len(opened) == 1 and len(closed) == 1
+
+
+def test_shouldDropTheDatabaseItCreatedWhenPgRestoreFailsAndNotOneItDidNot(tmp_path, rows):
+    import os
+    dsn = os.environ.get("NEXUS_BENCH_PG_DSN")
+    if not dsn:
+        pytest.skip("NEXUS_BENCH_PG_DSN not set")
+    import subprocess
+    import psycopg
+    from harness.store_pg import PostgresStore
+    ns = f"y{os.getpid()}"
+    s = PostgresStore(dsn, os.environ.get("NEXUS_BENCH_PG_CONTAINER", "nexus-spike-pg"), ns)
+    garbage = tmp_path / "garbage"
+    garbage.write_bytes(b"this is not a pg_dump archive")
+    with pytest.raises(subprocess.CalledProcessError):
+        s.restore_new(garbage, "v1")
+    with psycopg.connect(dsn, autocommit=True) as c:
+        assert c.execute("SELECT 1 FROM pg_database WHERE datname=%s", (f"{ns}_restored_new",)).fetchone() is None

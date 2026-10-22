@@ -57,17 +57,29 @@ class FilesStore:
         if target.exists():
             raise FileExistsError(f"{version} already exists: versions are immutable")
         staging = target.with_name(target.name + ".staging")
-        shutil.rmtree(staging, ignore_errors=True)
-        staging.mkdir(parents=True)
-        files = {}
-        for t in TABLES:
-            path = staging / f"{t.name}.parquet"
-            _write(path, t, rows[t.name])
-            files[t.name] = {"sha256": _sha256(path), "bytes": path.stat().st_size, "rows": len(rows[t.name])}
-        digest = _manifest_digest(files)
-        (staging / "manifest.json").write_text(json.dumps({"version": version, "files": files, "manifest_sha256": digest}, indent=1))
-        staging.rename(target)  # published only when complete
+        if staging.exists():
+            raise FileExistsError(f"{staging} exists (leftover of an interrupted run?): remove it explicitly with "
+                                  f"remove_leftover_staging() before measuring; prepare never deletes it")
+        staging.mkdir(parents=True)  # from here the staging directory is ours and only ours
+        try:
+            files = {}
+            for t in TABLES:
+                path = staging / f"{t.name}.parquet"
+                _write(path, t, rows[t.name])
+                files[t.name] = {"sha256": _sha256(path), "bytes": path.stat().st_size, "rows": len(rows[t.name])}
+            digest = _manifest_digest(files)
+            (staging / "manifest.json").write_text(json.dumps({"version": version, "files": files, "manifest_sha256": digest}, indent=1))
+            staging.rename(target)  # published only when complete
+        except BaseException:
+            shutil.rmtree(staging, ignore_errors=True)  # a half-written staging directory that we created
+            raise
         return VerifyResult(version, digest)
+
+    def remove_leftover_staging(self, version: str) -> Path:
+        """Explicit, traceable cleanup of a staging directory left by an interrupted prepare. Never called automatically."""
+        staging = self._dir(version).with_name(self._dir(version).name + ".staging")
+        shutil.rmtree(staging)
+        return staging
 
     def verify(self, version: str) -> VerifyResult:
         d = self._dir(version)
@@ -87,10 +99,14 @@ class FilesStore:
 
     def _connect(self, version: str) -> duckdb.DuckDBPyConnection:
         con = duckdb.connect()
-        for name in BY_NAME:
-            con.execute(f"CREATE VIEW {name} AS SELECT * FROM read_parquet('{self._dir(version) / (name + '.parquet')}')")
-        if con.execute("SELECT 'a' < 'B'").fetchone()[0]:
-            raise RuntimeError("DuckDB collation is not binary: the ordering contract of ADR 0037 §3.8 would not hold")
+        try:
+            for name in BY_NAME:
+                con.execute(f"CREATE VIEW {name} AS SELECT * FROM read_parquet('{self._dir(version) / (name + '.parquet')}')")
+            if con.execute("SELECT 'a' < 'B'").fetchone()[0]:
+                raise RuntimeError("DuckDB collation is not binary: the ordering contract of ADR 0037 §3.8 would not hold")
+        except BaseException:
+            con.close()  # the caller never receives the connection, so it cannot close it
+            raise
         return con
 
     def read_records(self, version: str) -> list:
@@ -148,8 +164,12 @@ class FilesStore:
         new_root = self.root.parent / (self.root.name + "_restored_new")
         if new_root.exists():
             raise FileExistsError(f"{new_root} exists: restore_new never writes into, or removes, a pre-existing location")
-        other = FilesStore(new_root)
-        other.restore(source, version)
+        other = FilesStore(new_root)  # creates new_root, which did not exist: ours from here on
+        try:
+            other.restore(source, version)
+        except BaseException:
+            shutil.rmtree(new_root, ignore_errors=True)
+            raise
         other._created = True
         return other, version
 

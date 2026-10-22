@@ -37,16 +37,34 @@ Exit codes: 0 all acceptance checks passed; 1 a check failed; 2 refused; 3 envir
 
 ## Tests (correctness of the harness, not of the engines)
 
-`tests/` on synthetic data: equal and different records and pairs, refusal of incomplete comparisons, timing and phase tags, nesting refusal, materiality rule, authorisation barrier, and both stores (prepare, verify, order of mixed-case symbols, counts, alterations detected before reading, immutability, previous version intact, backup/restore, no overwrite with `FileExistsError` specifically and the existing version still verifying, equal logical content, orphan, duplicate-key, unique and allowed-value violations refused, Parquet determinism); 69 pass with PostgreSQL, 49 without. The PostgreSQL variants run only when `NEXUS_BENCH_PG_DSN` is set. Run: `NEXUS_BENCH_PG_DSN=... python -m pytest experiments/adr-0037-db-vs-files-benchmark/tests`.
+`tests/` on synthetic data: equal and different records and pairs, refusal of incomplete comparisons, timing and phase tags, nesting refusal, materiality rule, authorisation barrier, and both stores (prepare, verify, order of mixed-case symbols, counts, alterations detected before reading, immutability, previous version intact, backup/restore, no overwrite with `FileExistsError` specifically and the existing version still verifying, equal logical content, orphan, duplicate-key, unique and allowed-value violations refused, Parquet determinism). The PostgreSQL variants run only when `NEXUS_BENCH_PG_DSN` is set. Run: `NEXUS_BENCH_PG_DSN=... python -m pytest experiments/adr-0037-db-vs-files-benchmark/tests`.
 
 ## Orchestration (written after R2 was merged)
 
 `harness/workloads.py` implements W1–W6 and the roll-up (`evaluate`) exactly as `WORKLOAD_CONTRACTS.md`: status by exception type (`ok` / `check_failed` / `incident`), `first_run_after_start` then 5 warm runs alternating A/B, the valid-run gate (`session.wait_for_quiet`, load <= 1.0, up to 5 minutes, else incident), W4's four alterations, W5's rebuild with the previous version preserved, W6a (restore to a new location: `Store.restore_new`, a new database for A and a new directory for B) and W6b (drop and restore in place; a failure after the drop is a check failure). `harness/operational.py` implements W7 (pooled 780 observations, p95 by Python's default quantile method, per-demand diagnostics, ids and order graded). `run_benchmark.py` wires them after the authorisation barrier.
 
-Tests on synthetic data (121 with PostgreSQL; the PostgreSQL variants are skipped without `NEXUS_BENCH_PG_DSN`): full BIBLIO sessions for each store, the incident and check-failure rules, the load gate, alternation, C3 on the maximum, the roll-up and exit codes, pgvector against an exact numpy formula. They show the code follows the contracts; they say nothing about real results.
+Tests on synthetic data (the count changes with each review; run the suite, do not trust a number written here; the PostgreSQL variants are skipped, and reported as skipped by pytest, when `NEXUS_BENCH_PG_DSN` is not set): full BIBLIO sessions for each store, the incident and check-failure rules, the load gate, alternation, C3 on the maximum, the roll-up and exit codes, pgvector against an exact numpy formula. They show the code follows the contracts; they say nothing about real results.
 
 ## Not yet done
 
 * No run on the real corpus; the real-context builders (`run_benchmark.build_real_context`, `operational.build_real_operational`) are untested because the barrier stops them.
 * The 'separate fresh sessions' measurement of initial performance is run by invoking `run_benchmark.py --only A` and `--only B` separately; nothing compares them automatically.
 * `RESULTS.md` is written by a person from `raw.jsonl`, `summary.json`, `timings.json` and `environment.json`, with the operational section of the protocol (§6).
+
+## Destructive operations: audit (verifiable rule)
+
+Rule: no pre-existing resource is modified or deleted because a run failed to create it. Every destructive call in `harness/` and `run_benchmark.py`, and why it is allowed (re-check with `grep -n "rmtree\|unlink\|rename\|DROP \|write_text\|write_bytes\|open(.*\"[wx]" harness/*.py run_benchmark.py`):
+
+| Call | Operates on | Why it is safe |
+|---|---|---|
+| `FilesStore.prepare` staging | `<version>.staging` | refuses an existing one (`FileExistsError`); removes only a staging it created, if its own write fails |
+| `FilesStore.prepare` rename | staging -> version | publishes a complete directory; the target was checked absent, renaming onto a non-empty directory fails |
+| `FilesStore.restore_new` | `<root>_restored_new` | refuses an existing root; removes only the root it created, when its own restore fails; `dispose` removes it only if this object created it |
+| `FilesStore.restore` / `backup` | version dir / destination | `copytree` refuses an existing destination |
+| `FilesStore.drop`, `PostgresStore.drop` | a version | called by the orchestration only for versions in `Context.created`, or by W6b after it prepared that version itself |
+| `FilesStore.alter`, `PostgresStore.alter` | a version | called only on a version this run prepared for W4 |
+| `FilesStore.remove_leftover_staging`, `PostgresStore.remove_leftover_database`, `PgRetriever.remove_leftover_schema` | named leftovers | explicit, return the name, never called by the harness itself |
+| `PostgresStore.backup` | destination file | opened exclusively (`"xb"`) |
+| `PostgresStore.restore_new` | database `<ns>_restored_new` | refuses an existing database; drops only the one it created, when its own `pg_restore` fails |
+| `PgRetriever` | schema `<ns>_operational_v1` | refuses an existing schema; `close` drops it only if this object created it |
+| `run_benchmark.py` result files | `--work-dir` | refuses a non-empty directory, so earlier results are never overwritten |

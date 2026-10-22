@@ -127,7 +127,7 @@ class PostgresStore:
                 raise ValueError(kind)
 
     def backup(self, version: str, destination: Path) -> None:
-        with destination.open("wb") as out:
+        with destination.open("xb") as out:  # exclusive: an existing backup file is never overwritten
             subprocess.run(["docker", "exec", self.container, "pg_dump", "-U", "postgres", "-Fc", "-n", self._schema(version), "postgres"],
                            stdout=out, check=True)
 
@@ -146,9 +146,14 @@ class PostgresStore:
                 raise FileExistsError(f"database {db} exists (leftover of an interrupted run?): remove it explicitly with "
                                       f"remove_leftover_database() before measuring; restore_new never drops it")
             conn.execute(f"CREATE DATABASE {db}")
-        with source.open("rb") as inp:
-            subprocess.run(["docker", "exec", "-i", self.container, "pg_restore", "-U", "postgres", "-d", db, "--exit-on-error"],
-                           stdin=inp, check=True)
+        try:  # the database was created just above, so it is ours to remove if the restore fails
+            with source.open("rb") as inp:
+                subprocess.run(["docker", "exec", "-i", self.container, "pg_restore", "-U", "postgres", "-d", db, "--exit-on-error"],
+                               stdin=inp, check=True)
+        except BaseException:
+            with self._conn() as conn:
+                conn.execute(f"DROP DATABASE IF EXISTS {db} WITH (FORCE)")
+            raise
         other = PostgresStore(make_conninfo(self.dsn, dbname=db), self.container, self.namespace)
         other._home = self
         other._db = db

@@ -367,3 +367,13 @@ def test_shouldNeverDropAPreExistingVersionItDidNotCreate(store, rows, name, run
     result = runner(ctx, store)
     assert result["status"] == "incident"  # prepare refused to overwrite
     assert store.verify(name) == mine      # still there, untouched, still verifies
+
+
+def test_shouldRefuseAWorkDirectoryThatAlreadyHoldsResults(tmp_path, monkeypatch):
+    import run_benchmark
+    monkeypatch.setattr(run_benchmark, "require_authorisation", lambda: {"authorised_by": "t"})
+    work = tmp_path / "w"
+    work.mkdir()
+    (work / "summary.json").write_text("earlier results")
+    code = run_benchmark.main(["--work-dir", str(work), "--pg-dsn", "x", "--container", "x"])
+    assert code == 2 and (work / "summary.json").read_text() == "earlier results"

@@ -60,6 +60,10 @@ def main(argv=None) -> int:
         print(f"refused: {exc}", file=sys.stderr)
         return EXIT_REFUSED
     args = parser.parse_args(argv)
+    if args.work_dir.exists() and any(args.work_dir.iterdir()):
+        print(f"refused: {args.work_dir} is not empty; results already obtained are never edited or overwritten "
+              f"(protocol section 7). Use a new directory.", file=sys.stderr)
+        return EXIT_REFUSED
     args.work_dir.mkdir(parents=True, exist_ok=True)
 
     from harness.contract import EXIT_INCIDENT
