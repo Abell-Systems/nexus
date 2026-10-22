@@ -153,12 +153,23 @@ class FilesStore:
             raise ValueError(kind)
 
     def backup(self, version: str, destination: Path) -> None:
-        shutil.copytree(self._dir(version), destination)
+        if destination.exists():
+            raise FileExistsError(f"{destination} exists: a backup never overwrites or merges into it")
+        try:  # the destination did not exist, so whatever is there after a failure was created by this call
+            shutil.copytree(self._dir(version), destination)
+        except BaseException:
+            shutil.rmtree(destination, ignore_errors=True)
+            raise
 
     def restore(self, source: Path, version: str) -> None:
-        if self._dir(version).exists():
+        target = self._dir(version)
+        if target.exists():
             raise FileExistsError(f"{version} exists: restore never overwrites")
-        shutil.copytree(source, self._dir(version))
+        try:  # the target did not exist: a partial copy after a failure is ours to remove
+            shutil.copytree(source, target)
+        except BaseException:
+            shutil.rmtree(target, ignore_errors=True)
+            raise
 
     def restore_new(self, source: Path, version: str):
         new_root = self.root.parent / (self.root.name + "_restored_new")

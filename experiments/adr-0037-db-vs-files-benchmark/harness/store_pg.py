@@ -127,9 +127,14 @@ class PostgresStore:
                 raise ValueError(kind)
 
     def backup(self, version: str, destination: Path) -> None:
-        with destination.open("xb") as out:  # exclusive: an existing backup file is never overwritten
-            subprocess.run(["docker", "exec", self.container, "pg_dump", "-U", "postgres", "-Fc", "-n", self._schema(version), "postgres"],
-                           stdout=out, check=True)
+        out = destination.open("xb")  # exclusive: an existing backup file is never overwritten (FileExistsError, untouched)
+        try:  # from here the file exists because THIS call created it
+            with out:
+                subprocess.run(["docker", "exec", self.container, "pg_dump", "-U", "postgres", "-Fc", "-n", self._schema(version), "postgres"],
+                               stdout=out, check=True)
+        except BaseException:
+            destination.unlink(missing_ok=True)  # never leave a partial backup that would block the next attempt
+            raise
 
     def restore(self, source: Path, version: str) -> None:
         with self._conn() as conn:

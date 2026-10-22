@@ -1,4 +1,6 @@
 """Correctness of the harness stores on synthetic data. Not measurements: nothing here is timed or graded."""
+from pathlib import Path
+
 import pytest
 from application.whitespace.analysis_records import to_analysis_records
 from harness.compare import compare_load_checks, compare_records
@@ -251,3 +253,73 @@ def test_shouldDropTheDatabaseItCreatedWhenPgRestoreFailsAndNotOneItDidNot(tmp_p
         s.restore_new(garbage, "v1")
     with psycopg.connect(dsn, autocommit=True) as c:
         assert c.execute("SELECT 1 FROM pg_database WHERE datname=%s", (f"{ns}_restored_new",)).fetchone() is None
+
+
+# ---- fifth review of 2026-10-22: what a failing operation leaves behind ----
+
+def test_shouldLeaveNoPartialBackupFileWhenPgDumpFails(tmp_path, rows):
+    import os
+    dsn = os.environ.get("NEXUS_BENCH_PG_DSN")
+    if not dsn:
+        pytest.skip("NEXUS_BENCH_PG_DSN not set")
+    import subprocess
+    from harness.store_pg import PostgresStore
+    s = PostgresStore(dsn, "no-such-container-xyz", f"b{os.getpid()}")  # docker exec will fail
+    dest = tmp_path / "dump"
+    with pytest.raises(subprocess.CalledProcessError):
+        s.backup("v1", dest)
+    assert not dest.exists()  # and the next attempt with the same name is not blocked
+
+
+def test_shouldKeepAnExistingBackupFileIntactWhenBackupIsRefused(tmp_path, rows):
+    import os
+    dsn = os.environ.get("NEXUS_BENCH_PG_DSN")
+    if not dsn:
+        pytest.skip("NEXUS_BENCH_PG_DSN not set")
+    from harness.store_pg import PostgresStore
+    s = PostgresStore(dsn, "no-such-container-xyz", f"b{os.getpid()}")
+    dest = tmp_path / "dump"
+    dest.write_bytes(b"earlier backup")
+    with pytest.raises(FileExistsError):
+        s.backup("v1", dest)
+    assert dest.read_bytes() == b"earlier backup"  # a failing pg_dump would have deleted it if the unlink were unconditional
+
+
+def test_shouldRemoveAPartialFilesBackupItCreatedAndKeepAPreExistingOne(tmp_path, rows, monkeypatch):
+    import harness.store_files as sf
+    from harness.store_files import FilesStore
+    s = FilesStore(tmp_path / "f")
+    s.prepare("v1", rows)
+
+    def failing_copytree(src, dst, *a, **k):
+        Path(dst).mkdir()
+        (Path(dst) / "partial.parquet").write_bytes(b"x")
+        raise OSError("disk full")
+    monkeypatch.setattr(sf.shutil, "copytree", failing_copytree)
+    fresh = tmp_path / "fresh"
+    with pytest.raises(OSError):
+        s.backup("v1", fresh)
+    assert not fresh.exists()
+    keep = tmp_path / "keep"
+    keep.mkdir()
+    (keep / "sentinel").write_text("mine")
+    with pytest.raises(FileExistsError):
+        s.backup("v1", keep)
+    assert (keep / "sentinel").read_text() == "mine"
+
+
+def test_shouldRemoveAPartialRestoreItCreatedWhenCopyFails(tmp_path, rows, monkeypatch):
+    import harness.store_files as sf
+    from harness.store_files import FilesStore
+    s = FilesStore(tmp_path / "f")
+    s.prepare("v1", rows)
+    dump = tmp_path / "dump"
+    s.backup("v1", dump)
+
+    def failing_copytree(src, dst, *a, **k):
+        Path(dst).mkdir()
+        raise OSError("disk full")
+    monkeypatch.setattr(sf.shutil, "copytree", failing_copytree)
+    with pytest.raises(OSError):
+        s.restore(dump, "v2")
+    assert not (s.root / "v2").exists()
