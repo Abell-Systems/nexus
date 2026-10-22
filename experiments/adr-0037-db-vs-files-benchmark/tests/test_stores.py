@@ -72,13 +72,15 @@ def test_shouldRefuseToRestoreOverAnExistingVersion(store, rows, tmp_path):
     store.prepare("v1", rows)
     dump = tmp_path / "dump"
     store.backup("v1", dump)
-    with pytest.raises((FileExistsError, Exception)):
+    before = store.verify("v1")
+    with pytest.raises(FileExistsError):
         store.restore(dump, "v1")
+    assert store.verify("v1") == before  # the existing version is untouched and still verifies
 
 
 def test_shouldReportConfigurationThatCanAffectResults(store):
     cfg = store.configuration()
-    assert "engine" in cfg and "referential_integrity" in cfg
+    assert "engine" in cfg and "constraints" in cfg
 
 
 def test_shouldHaveEqualLogicalContentAcrossStoresAndEqualToTheSourceRows(store, rows):
@@ -118,3 +120,17 @@ def test_shouldProduceIdenticalFilesWhenTheSameRowsArePreparedTwice(tmp_path, ro
     s = FilesStore(tmp_path / "f")
     a, b = s.prepare("v1", rows), s.prepare("v2", rows)
     assert a.manifest_digest == b.manifest_digest
+
+
+@pytest.mark.parametrize("table,mutate", [
+    ("source_record", lambda r: r.append((99, r[0][1], r[0][2]))),             # same (file_id, archive_path), new record_id
+    ("party", lambda r: r.append((1, "agent", 9, "X"))),                       # role outside the allowed values
+    ("publication", lambda r: r.append(r[0])),                                 # duplicate primary key
+])
+def test_shouldRejectRowsViolatingUniqueAllowedOrKeyConstraintsInBothStores(store, rows, table, mutate):
+    from harness.tables import ConstraintError
+    mutate(rows[table])
+    with pytest.raises(ConstraintError):
+        store.prepare("v1", rows)
+    with pytest.raises(Exception):
+        store.verify("v1")  # nothing published

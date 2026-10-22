@@ -13,13 +13,15 @@ class Table:
     name: str
     columns: tuple[tuple[str, str], ...]
     key: tuple[str, ...]
-    references: tuple[tuple[str, str], ...] = ()  # (column, referenced table); enforced by A only, see HARNESS_DESIGN.md
+    references: tuple[tuple[str, str], ...] = ()  # (column, referenced table)
+    unique: tuple[tuple[str, ...], ...] = ()  # extra unique column sets besides the primary key
+    allowed: tuple[tuple[str, tuple[str, ...]], ...] = ()  # (column, permitted values)
 
 
 TABLES: tuple[Table, ...] = (
     Table("source_file", (("file_id", "int"), ("name", "text"), ("sha256", "text"), ("bytes", "bigint")), ("file_id",)),
     Table("source_record", (("record_id", "int"), ("file_id", "int"), ("archive_path", "text")), ("record_id",),
-          (("file_id", "source_file"),)),
+          (("file_id", "source_file"),), (("file_id", "archive_path"),)),
     Table("publication", (("record_id", "int"), ("country", "text"), ("doc_number", "text"), ("kind", "text"),
                           ("publication_date", "date"), ("application_country", "text"), ("application_number", "text"),
                           ("application_kind", "text"), ("application_date", "date"), ("title", "text")), ("record_id",),
@@ -27,7 +29,7 @@ TABLES: tuple[Table, ...] = (
     Table("priority_date", (("record_id", "int"), ("ordinal", "int"), ("priority_date", "date")), ("record_id", "ordinal"),
           (("record_id", "publication"),)),
     Table("party", (("record_id", "int"), ("role", "text"), ("ordinal", "int"), ("name", "text")), ("record_id", "role", "ordinal"),
-          (("record_id", "publication"),)),
+          (("record_id", "publication"),), (), (("role", ("applicant", "inventor")),)),
     Table("ipc_subclass", (("symbol", "text"), ("section", "text"), ("class_number", "text"), ("subclass", "text")), ("symbol",)),
     Table("ipc_entry", (("record_id", "int"), ("ordinal", "int"), ("subclass_symbol", "text"), ("main_group", "text"),
                         ("subgroup", "text"), ("version", "text"), ("level", "text"), ("value", "text")), ("record_id", "ordinal"),
@@ -70,7 +72,11 @@ def rows_from_outcomes(
     return rows
 
 
-class ReferentialError(Exception):
+class ConstraintError(Exception):
+    """A row violates a constraint of the compared schema (primary key, unique set, allowed values, reference)."""
+
+
+class ReferentialError(ConstraintError):
     """A row refers to a row that does not exist. Raised by both stores at prepare time, so they enforce the same semantics."""
 
 
@@ -88,6 +94,27 @@ def check_references(rows: dict[str, list[tuple]]) -> None:
             for r in rows[t.name]:
                 if r[i] not in valid:
                     raise ReferentialError(f"{t.name}.{column}={r[i]!r} has no row in {referenced}.{tcol}")
+
+
+def check_constraints(rows: dict[str, list[tuple]]) -> None:
+    """The constraints of the compared schema, checked on the shared rows by B: primary-key and unique sets, allowed values,
+    references. A enforces the same ones in the database. NOT NULL and column types are not part of the comparison."""
+    for t in TABLES:
+        names = [c for c, _ in t.columns]
+        for cols in (t.key, *t.unique):
+            idx = [names.index(c) for c in cols]
+            seen = set()
+            for r in rows[t.name]:
+                k = tuple(r[i] for i in idx)
+                if k in seen:
+                    raise ConstraintError(f"{t.name}{cols} is not unique: {k!r}")
+                seen.add(k)
+        for column, permitted in t.allowed:
+            i = names.index(column)
+            for r in rows[t.name]:
+                if r[i] not in permitted:
+                    raise ConstraintError(f"{t.name}.{column}={r[i]!r} not in {permitted}")
+    check_references(rows)
 
 
 def canonical_rows_digest(rows: dict[str, list[tuple]]) -> str:

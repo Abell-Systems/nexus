@@ -11,7 +11,7 @@ import pyarrow.parquet as pq
 
 from harness.compare import canonical_json
 from harness.contract import AlterKind, IntegrityError, VerifyResult, analysis_record
-from harness.tables import BY_NAME, TABLES, Table, canonical_rows_digest, check_references
+from harness.tables import BY_NAME, TABLES, Table, canonical_rows_digest, check_constraints
 
 _ARROW = {"int": pa.int64(), "bigint": pa.int64(), "text": pa.string(), "date": pa.date32()}
 COMPRESSION, ROW_GROUP = "zstd", 1_000_000
@@ -51,7 +51,7 @@ class FilesStore:
         return self.root / version
 
     def prepare(self, version: str, rows: dict[str, list[tuple]]) -> VerifyResult:
-        check_references(rows)  # same semantic constraints as A's foreign keys, counted in B's preparation
+        check_constraints(rows)  # the constraints A enforces in the database; counted in B's preparation
         target = self._dir(version)
         if target.exists():
             raise FileExistsError(f"{version} already exists: versions are immutable")
@@ -151,4 +151,4 @@ class FilesStore:
     def configuration(self) -> dict:
         return {"engine": f"duckdb {duckdb.__version__}", "pyarrow": pa.__version__, "compression": COMPRESSION,
                 "row_group_size": ROW_GROUP, "sorted_by": "primary key", "collation": "binary (verified at connect)",
-                "referential_integrity": "checked at prepare by check_references (same constraints as A), not enforced afterwards"}
+                "constraints": "checked at prepare by check_constraints (primary key, unique, allowed values, references; same set as A), not enforced afterwards"}

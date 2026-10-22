@@ -6,7 +6,7 @@ from pathlib import Path
 import psycopg
 
 from harness.contract import AlterKind, IntegrityError, VerifyResult, analysis_record
-from harness.tables import BY_NAME, TABLES, ReferentialError, canonical_rows_digest
+from harness.tables import BY_NAME, TABLES, ConstraintError, ReferentialError, canonical_rows_digest
 
 _PG = {"int": "integer", "bigint": "bigint", "text": "text", "date": "date"}
 
@@ -44,6 +44,8 @@ class PostgresStore:
                     digest = self._build(conn, schema, version, rows)
             except psycopg.errors.ForeignKeyViolation as exc:
                 raise ReferentialError(str(exc)) from exc
+            except (psycopg.errors.UniqueViolation, psycopg.errors.CheckViolation) as exc:
+                raise ConstraintError(str(exc)) from exc
             conn.execute("ANALYZE")
         return VerifyResult(version, digest)
 
@@ -52,7 +54,9 @@ class PostgresStore:
         for t in TABLES:
             cols = ", ".join(f"{c} {_PG[ty]}" for c, ty in t.columns)
             fks = "".join(f", FOREIGN KEY ({c}) REFERENCES {schema}.{ref}" for c, ref in t.references)
-            conn.execute(f"CREATE TABLE {schema}.{t.name} ({cols}, PRIMARY KEY ({', '.join(t.key)}){fks})")
+            uniq = "".join(f", UNIQUE ({', '.join(u)})" for u in t.unique)
+            chk = "".join(f", CHECK ({c} IN ({', '.join(repr(v) for v in vals)}))" for c, vals in t.allowed)
+            conn.execute(f"CREATE TABLE {schema}.{t.name} ({cols}, PRIMARY KEY ({', '.join(t.key)}){uniq}{chk}{fks})")
         for t in TABLES:  # TABLES is ordered so referenced tables come first
             with conn.cursor() as cur, cur.copy(f"COPY {schema}.{t.name} FROM STDIN") as cp:
                 for r in rows[t.name]:
@@ -149,4 +153,4 @@ class PostgresStore:
                         for k in ("server_version", "shared_buffers", "work_mem", "max_parallel_workers_per_gather", "effective_cache_size")}
             collate = conn.execute("SELECT datcollate FROM pg_database WHERE datname=current_database()").fetchone()[0]
         return {"engine": "postgresql", **settings, "database_collation": collate, "ordering": 'ORDER BY ... COLLATE "C" in the contractual query',
-                "vector_index": "none", "referential_integrity": "enforced (foreign keys)"}
+                "vector_index": "none", "constraints": "enforced by the database (primary key, unique, check, foreign keys)"}
