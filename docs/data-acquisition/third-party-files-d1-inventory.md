@@ -26,3 +26,20 @@ Follows ADR 0037 gate 5 (PR #159), decision D1, adopted provisionally on 2026-10
 * The content search above was run and its result recorded.
 * Docs correctness gate passes.
 * No change to the harness, the protocol, the infrastructure or ADR 0037.
+
+## Dependencies of the 39-demand corpus (read-only analysis, 2026-10-22)
+
+Retiring these files is not a plain deletion. What references them:
+
+* **Pipeline of hash-verified checks** in `experiments/wpi-demand-patent-matching/checks/` (17 scripts: `generate_*` and `check_*`) and the `config/devtest_split_v*.json` and `*.manifest.json` files, which anchor to the corpus files by name and hash. None of these runs in CI (`ci.yml` runs `backend/test` and `scripts/check_architecture.py`), so removal would not turn CI red; it would silently break the ability to re-run the checks.
+* **Protocols and ADRs** citing the files and their hashes: ADR 0019, 0020, 0026, 0029, 0030 and the `docs/phase2-*` protocols, `docs/empirical-study-protocol.md`, `docs/roadmap.md`. These must keep describing what existed; the records should not be rewritten as if the files had never been there.
+* **Operational MVP builders** that read the corpus: `scripts/build_demands_snapshot.py`, `scripts/extract_operational_texts.py`, `scripts/freeze_phase2_demand_corpus.py` and `experiments/operational-dense-probe/build_probe_sheets.py`. They produce the git-ignored operational snapshot, so the operational corpus cannot be rebuilt from a clean checkout once the file is gone.
+* `backend/test/unit/application/test_demand_independence.py` names a file only in a docstring; it does not read it.
+
+## Proposed separation (provisional; pending owner confirmation, none applied)
+
+1. **Public artefact:** a synthetic demand set with the same schema, enough to run the software tests and the check scripts' logic.
+2. **Scientific record:** methodology, schema, code version, transformations and the hashes already documented, without the protected text. The hashes of the retired files stay recorded as the identity of what was used, not as files that exist in the tree.
+3. **Restricted corpus:** only with a documented basis for access and retention; moving it to a private server does not by itself settle the right to use it.
+4. The retirement is **not** a deletion: it stays in history, forks, clones and backups. Rewriting history is a separate decision.
+5. The 2 Lombardia demands need their own request; the Innoget permission does not cover them.
