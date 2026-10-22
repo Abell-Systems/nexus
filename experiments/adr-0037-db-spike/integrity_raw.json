@@ -1,0 +1,15 @@
+{
+  "digest_seconds": 18.2,
+  "digest": "fc5c5ed144db772f95d9b1ac2203485b893210a42cb927788f057fc6d9e2f2e4",
+  "deterministic": true,
+  "stable_after_physical_reorder": true,
+  "a_identical_copy_same_digest": true,
+  "c_digest_differs_after_one_row_update": true,
+  "manifest_untouched": true,
+  "b_altered_load_refused": true,
+  "b_relations_before_after": [
+    34,
+    34
+  ],
+  "b_nothing_left_after_refusal": true
+}
