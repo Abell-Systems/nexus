@@ -104,6 +104,8 @@ Source: `valentinlineiro/infrastructure`, `roles/node/tasks/backup.yml`, `docs/b
 * A pre-purge snapshot set (242 GB) is documented as surviving "until 7/4/6 retention prunes", which is the declared precedent that deleted data persists in snapshots until retention expires.
 * A file-level snapshot of a live PostgreSQL data directory is not a consistent backup; the dump-based path of ADR 0037 would be needed. Not designed.
 
+Three separate questions, which the inspection answers only in part: **coverage** (is `/srv` or `/var/lib/docker` a source), **consistency** (a file copy of a running PostgreSQL is not a recoverable backup whatever the coverage), and **retention** (seven/four/six is the declared policy for data in the snapshots, not a guarantee of how long a deleted item stays). Even a clean inspection would not make the policy adequate for staging; that is a decision for D6.
+
 **Consequence if the declaration is accurate:** the database would not be backed up, so deleting a source from it would not leave copies in Kopia, but a disk failure would lose it; and anything placed under `backup-data` would persist up to about six months after deletion. Both statements depend on the observation below.
 
 **Read-only inspection for the host owner (run as root; prints no secrets).** Do not share `repository.config`, the password file or any output containing keys.
@@ -162,7 +164,15 @@ The three are different things. A decision recorded is not evidence obtained, an
 * LGPL review of `psycopg` if the loader is distributed in an image.
 * Reproducibility: the benchmark environment versions differ from `backend/requirements.txt`; a separate task, outside this PR.
 
-### 8.4 Owner decisions
+### 8.4 Provisional decisions on D1 and D2
+
+Status: **recommended in review; the owner's confirmation is to be recorded here** (date and name) before they count as decided. They are operational measures, not legal conclusions about past extraction, and none is applied yet.
+
+* D1. Replace the Innoget fixtures with synthetic or minimal examples that keep the test cases. Review the Lombardia, EPO OPS, OEPM, WIPO and Minesoft files one by one; they do not necessarily get the same treatment. History is not rewritten.
+* D2. Request written authorisation for the 39 demands, stating the uses, storage and publication it would cover. Until it exists, the demands do not enter the shared staging database.
+* Replacing files in the working tree does not remove them from existing commits, forks or clones. The fixture review and the history decision are recorded independently, and the second is still open.
+
+### 8.5 Owner decisions
 
 * D1. What to do about the third-party files tracked in the public repository (§2): ask each rights-holder, replace them with synthetic or minimal fixtures, or keep them with a recorded basis.
 * D2. Whether to ask Innoget for written permission for the 39 demands, and whether staging may hold them meanwhile (8.1 proposes no).
