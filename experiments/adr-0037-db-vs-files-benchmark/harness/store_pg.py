@@ -1,5 +1,6 @@
 """Alternative A: PostgreSQL + pgvector, one schema per version, per-table canonical digest in a manifest table."""
 import hashlib
+import re
 import subprocess
 from pathlib import Path
 
@@ -157,9 +158,19 @@ class PostgresStore:
             run = subprocess.run(["docker", "exec", "-i", self.container, "pg_restore", "-U", "postgres", "-d", "postgres",
                                   "--exit-on-error", "--single-transaction"], stdin=inp, stderr=subprocess.PIPE, check=False)
         if run.returncode != 0:
-            if b"already exists" in run.stderr:  # the claim was lost to somebody else: their schema is untouched
+            if self._lost_schema_claim(run.stderr, schema):  # the claim was lost to somebody else: their schema is untouched
                 raise FileExistsError(f"{schema} was created concurrently: {run.stderr.decode(errors='replace').strip()[:300]}")
             raise subprocess.CalledProcessError(run.returncode, run.args, stderr=run.stderr)
+
+    @staticmethod
+    def _lost_schema_claim(stderr: bytes, schema: str) -> bool:
+        """True only for the exact failure of the claiming statement: `schema "<schema>" already exists` reported for the command
+        `CREATE SCHEMA <schema>`. Any other error, even one that also says 'already exists' (a relation, an index, another schema),
+        is a restore failure and keeps propagating as CalledProcessError."""
+        text = stderr.decode(errors="replace")
+        name = re.escape(schema)
+        return (re.search(rf'ERROR:\s+schema "{name}" already exists', text) is not None
+                and re.search(rf"Command was:\s+CREATE SCHEMA {name};", text) is not None)
 
     def restore_new(self, source: Path, version: str):
         db = f"{self.namespace}_restored_new"

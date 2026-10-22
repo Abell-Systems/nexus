@@ -244,3 +244,47 @@ def test_shouldLeaveNoPartialSchemaWhenARestoreFailsAfterCreatingObjects(tmp_pat
         assert _tables(dsn, schema) == []                                 # single transaction: nothing partial is left to block a retry
     finally:
         _drop(dsn, schema, f"{schema}_ref")
+
+
+# ---- classification of pg_restore failures (review of 67c9f09) ----
+
+class _Run:
+    def __init__(self, stderr: bytes, code: int = 1):
+        self.returncode, self.stderr, self.args = code, stderr, ["pg_restore"]
+
+
+@pytest.mark.parametrize("stderr,is_race", [
+    (b'pg_restore: error: could not execute query: ERROR:  schema "z_v1" already exists\nCommand was: CREATE SCHEMA z_v1;\n', True),
+    # same words, but a different object created later by the restore: a real restore failure, not a lost claim
+    (b'pg_restore: error: could not execute query: ERROR:  relation "party" already exists\nCommand was: CREATE TABLE z_v1.party (...);\n', False),
+    (b'pg_restore: error: could not execute query: ERROR:  relation "x_pkey" already exists\nCommand was: ALTER TABLE ONLY z_v1.x ADD CONSTRAINT x_pkey ...;\n', False),
+    # a schema that already exists, but not the one being restored
+    (b'pg_restore: error: could not execute query: ERROR:  schema "other_v1" already exists\nCommand was: CREATE SCHEMA other_v1;\n', False),
+    # the right schema name mentioned in the wrong statement
+    (b'pg_restore: error: could not execute query: ERROR:  schema "z_v1" already exists\nCommand was: ALTER SCHEMA z_v1 OWNER TO postgres;\n', False),
+])
+def test_shouldTranslateOnlyTheClaimingStatementFailureIntoFileExistsError(tmp_path, monkeypatch, stderr, is_race):
+    import subprocess
+    import harness.store_pg as sp
+    from harness.store_pg import PostgresStore
+    s = PostgresStore("host=127.0.0.1 port=1", "c", "z")          # never connects: the early check and pg_restore are both faked
+    monkeypatch.setattr(PostgresStore, "_conn", lambda self: _NoConn())
+    monkeypatch.setattr(PostgresStore, "_exists", staticmethod(lambda conn, kind, name: False))
+    monkeypatch.setattr(sp.subprocess, "run", lambda cmd, *a, **k: _Run(stderr))
+    dump = tmp_path / "d"
+    dump.write_bytes(b"x")
+    if is_race:
+        with pytest.raises(FileExistsError):
+            s.restore(dump, "v1")
+    else:
+        with pytest.raises(subprocess.CalledProcessError) as exc:
+            s.restore(dump, "v1")
+        assert exc.value.stderr == stderr
+
+
+class _NoConn:
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
