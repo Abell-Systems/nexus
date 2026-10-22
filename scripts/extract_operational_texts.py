@@ -20,10 +20,10 @@ import pyarrow.parquet as pq  # noqa: E402
 
 from infrastructure.embeddings.embedding_texts import demand_embedding_text, patent_embedding_text  # noqa: E402
 
+sys.path.insert(0, str(REPO_ROOT / "experiments" / "wpi-demand-patent-matching"))
+import restricted_inputs  # noqa: E402
+
 DEFAULT_PARQUET = REPO_ROOT / "data" / "snapshots" / "operational_corpus_v1" / "publications.parquet"
-DEFAULT_DEMANDS = (
-    REPO_ROOT / "experiments" / "wpi-demand-patent-matching" / "data" / "dataset_phase2_demand_corpus_n39.json"
-)
 DEFAULT_OUT = REPO_ROOT / "data" / "snapshots" / "operational_corpus_v1" / "embedding_sources_v1.json"
 
 
@@ -49,11 +49,12 @@ def build_sources(parquet_path: Path, demand_corpus_path: Path) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Extract texts for the operational embedding generation")
     parser.add_argument("--parquet", type=Path, default=DEFAULT_PARQUET)
-    parser.add_argument("--demands", type=Path, default=DEFAULT_DEMANDS)
+    parser.add_argument("--demands", type=Path, help="default: the original corpus in WPI_DATA_DIR (restricted)")
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
 
-    sources = build_sources(args.parquet, args.demands)
+    demands = args.demands or restricted_inputs.data_dir((restricted_inputs.CORPUS,)) / restricted_inputs.CORPUS
+    sources = build_sources(args.parquet, demands)
     args.out.write_text(json.dumps(sources, ensure_ascii=False), encoding="utf-8")
     print(f"Wrote {args.out}: {len(sources['patent_ids'])} patents, {len(sources['demand_ids'])} demands")
     return 0

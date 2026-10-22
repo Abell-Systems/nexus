@@ -1,0 +1,671 @@
+{
+  "dataset_id": "synthetic-demand-corpus-n39",
+  "schema_version": "1.0.0",
+  "dataset_version": "1.0.0",
+  "description": "SYNTHETIC demand corpus (37 + 2 invented records) with the schema of the original N=39 corpus. Not the study's data.",
+  "demands": [
+    {
+      "demand_id": "SYNTHETIC-A-001",
+      "title": "Synthetic example 001: invented request about a sensor",
+      "description": "This is an invented description number 001 written only to exercise the software. It pretends to ask for a sensor with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-001",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "d24d911c0b146e19ddbc8353e57162e04d6647a34c2e437289a8f4792a4a93b6",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-002",
+      "title": "Synthetic example 002: invented request about a membrane",
+      "description": "This is an invented description number 002 written only to exercise the software. It pretends to ask for a membrane with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-002",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "480bb1439e4b43dd4020687a7986b181c54fc024a534717a46f0aaa4f9372596",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-003",
+      "title": "Synthetic example 003: invented request about a catalyst",
+      "description": "This is an invented description number 003 written only to exercise the software. It pretends to ask for a catalyst with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-003",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "6160fef0f9753273fc24a72d8305c75aea494ea5cec5f5e31eafa17341a8df0e",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-004",
+      "title": "Synthetic example 004: invented request about a battery",
+      "description": "This is an invented description number 004 written only to exercise the software. It pretends to ask for a battery with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-004",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "c5ee9357e1f511565bada46acbcad92d432015a0ea522ccc6b8421ad17a619ac",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-005",
+      "title": "Synthetic example 005: invented request about a filter",
+      "description": "This is an invented description number 005 written only to exercise the software. It pretends to ask for a filter with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-005",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "3996982199b5ebcf3ec31a5b867beb39b1c65d55514f3f12115eb7f963959d4e",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-006",
+      "title": "Synthetic example 006: invented request about a adhesive",
+      "description": "This is an invented description number 006 written only to exercise the software. It pretends to ask for a adhesive with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-006",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "bd3692716a1528b89148dc5cfab752685430e33b134c7f68a759f9e1d63541da",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-007",
+      "title": "Synthetic example 007: invented request about a actuator",
+      "description": "This is an invented description number 007 written only to exercise the software. It pretends to ask for a actuator with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-007",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "01a714970afef75c125b4fc802926fde6d200291f3831020f940954965d0a24d",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-008",
+      "title": "Synthetic example 008: invented request about a coating",
+      "description": "This is an invented description number 008 written only to exercise the software. It pretends to ask for a coating with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-008",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "97be761277f660655e0b5410dc8d2e36dc57f54f4aa0a7619c313514f1e1e96c",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-009",
+      "title": "Synthetic example 009: invented request about a sensor",
+      "description": "This is an invented description number 009 written only to exercise the software. It pretends to ask for a sensor with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-009",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "a196f94ce1c67cc90b71a187ea400ad84304a2cacb28e624f73e317f95e3846b",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-010",
+      "title": "Synthetic example 010: invented request about a membrane",
+      "description": "This is an invented description number 010 written only to exercise the software. It pretends to ask for a membrane with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-010",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "fd469bb9e0ece1a78794acba9506dcfcebff20bb8bcdb3c3523a69abf83b11ed",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-011",
+      "title": "Synthetic example 011: invented request about a catalyst",
+      "description": "This is an invented description number 011 written only to exercise the software. It pretends to ask for a catalyst with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-011",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "b3b108364b1986e08995bca061b74b5da8d6cd4af5c6aa0d8e487930308c2a1c",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-012",
+      "title": "Synthetic example 012: invented request about a battery",
+      "description": "This is an invented description number 012 written only to exercise the software. It pretends to ask for a battery with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-012",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "952fb8d946a09f6ceba43a2710be1d823db3baf0263bddf6859b5e1e844359a4",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-013",
+      "title": "Synthetic example 013: invented request about a filter",
+      "description": "This is an invented description number 013 written only to exercise the software. It pretends to ask for a filter with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-013",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "5eb32a483c003fe7283db7c3873644a6edfedd6f993a710e6371f1eef1adfbf4",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-014",
+      "title": "Synthetic example 014: invented request about a adhesive",
+      "description": "This is an invented description number 014 written only to exercise the software. It pretends to ask for a adhesive with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-014",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "7fcea4e82d0ba2f220a64fb5056dd5d0ce83568500513b7ebe6fc93abb64c466",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-015",
+      "title": "Synthetic example 015: invented request about a actuator",
+      "description": "This is an invented description number 015 written only to exercise the software. It pretends to ask for a actuator with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-015",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "bd4d1e70595b24bc1a4f2e49245f5c705ec96b47d656fe0057e7f5a8a8e56b25",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-016",
+      "title": "Synthetic example 016: invented request about a coating",
+      "description": "This is an invented description number 016 written only to exercise the software. It pretends to ask for a coating with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-016",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "423138489c8277dc265fc4c9d7aebdc29eb37e3f21bf9dd022a37e093aa3d254",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-017",
+      "title": "Synthetic example 017: invented request about a sensor",
+      "description": "This is an invented description number 017 written only to exercise the software. It pretends to ask for a sensor with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-017",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "6ab5ed23aacc6c447ce7e2d1d51587e6425e0c5ed73fbe5839bbd2cc5616e7dc",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-018",
+      "title": "Synthetic example 018: invented request about a membrane",
+      "description": "This is an invented description number 018 written only to exercise the software. It pretends to ask for a membrane with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-018",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "192c8997f74e3dd8587612466d1be88c8fc2e1b8ed477d2f4f05f9963468224f",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-019",
+      "title": "Synthetic example 019: invented request about a catalyst",
+      "description": "This is an invented description number 019 written only to exercise the software. It pretends to ask for a catalyst with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-019",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "ec1e06f5630dcb7dc7bd927e72afe6f7988e63782d8a9eb97ecb278053b66476",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-020",
+      "title": "Synthetic example 020: invented request about a battery",
+      "description": "This is an invented description number 020 written only to exercise the software. It pretends to ask for a battery with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-020",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "dd7e683e8fe92bae3ed91eddf161ac4ef8782bb3d693db9c3a8b4734f7d701b2",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-021",
+      "title": "Synthetic example 021: invented request about a filter",
+      "description": "This is an invented description number 021 written only to exercise the software. It pretends to ask for a filter with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-021",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "b90440cf6e07f1c37062e8daa560fac09b4d75bbb14c08938e630891b7811f36",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-022",
+      "title": "Synthetic example 022: invented request about a adhesive",
+      "description": "This is an invented description number 022 written only to exercise the software. It pretends to ask for a adhesive with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-022",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "73bada921480b9a2e55666e8be640f2c4b25cafd2bb03cbb3e58f24d65349b26",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-023",
+      "title": "Synthetic example 023: invented request about a actuator",
+      "description": "This is an invented description number 023 written only to exercise the software. It pretends to ask for a actuator with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-023",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "cc2c0a732c68e4bf4f24423415b7fa8e0aa5d1ac3d13f5565a4b073d9063a493",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-024",
+      "title": "Synthetic example 024: invented request about a coating",
+      "description": "This is an invented description number 024 written only to exercise the software. It pretends to ask for a coating with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-024",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "dc72af3bb53d123c9a235cf71a43d268e6129e681bf299905624a2261b0d7bcb",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-025",
+      "title": "Synthetic example 025: invented request about a sensor",
+      "description": "This is an invented description number 025 written only to exercise the software. It pretends to ask for a sensor with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-025",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "cfc4b31a60a481de5eb48204ce9e634db9e92c421ed0cd854d499b922ebd9d7d",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-026",
+      "title": "Synthetic example 026: invented request about a membrane",
+      "description": "This is an invented description number 026 written only to exercise the software. It pretends to ask for a membrane with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-026",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "36c0e6b44f83dda6b5461a83dbccfb1e0beab77f23f91029fd99fb82e31e0e77",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-027",
+      "title": "Synthetic example 027: invented request about a catalyst",
+      "description": "This is an invented description number 027 written only to exercise the software. It pretends to ask for a catalyst with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-027",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "b75a807c8f3d47d28981bf16e6235f7ee2f7a58d03f9b3698ee1bbd25f5a9c9f",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-028",
+      "title": "Synthetic example 028: invented request about a battery",
+      "description": "This is an invented description number 028 written only to exercise the software. It pretends to ask for a battery with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-028",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "6ca148f9dd9a2391136694021ce1ae8d0c39bac2b80ab61c4c1b74983ea820f3",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-029",
+      "title": "Synthetic example 029: invented request about a filter",
+      "description": "This is an invented description number 029 written only to exercise the software. It pretends to ask for a filter with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-029",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "92500718756b4970b54793fd10a5e6bf999f8d80961ee3519df6bca17205d099",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-030",
+      "title": "Synthetic example 030: invented request about a adhesive",
+      "description": "This is an invented description number 030 written only to exercise the software. It pretends to ask for a adhesive with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-030",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "ca82ea3c959402488ac552972fd9c2ba6bae8b074b61b7a173724c56af2de9d8",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-031",
+      "title": "Synthetic example 031: invented request about a actuator",
+      "description": "This is an invented description number 031 written only to exercise the software. It pretends to ask for a actuator with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-031",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "96677e0a861d16edb5fb0aae2b6d2693b1f60c9ae575fd5bb080002c14aab795",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-032",
+      "title": "Synthetic example 032: invented request about a coating",
+      "description": "This is an invented description number 032 written only to exercise the software. It pretends to ask for a coating with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-032",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "11e4640c732f57c22be3e0cf263a103eb2d58ea4e64c7f645a63c59533eda7ef",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-033",
+      "title": "Synthetic example 033: invented request about a sensor",
+      "description": "This is an invented description number 033 written only to exercise the software. It pretends to ask for a sensor with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-033",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "7c92442fe25882e5083993edd28c4b90c0686bfd00c2d76f3b5ace63da35c9dd",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-034",
+      "title": "Synthetic example 034: invented request about a membrane",
+      "description": "This is an invented description number 034 written only to exercise the software. It pretends to ask for a membrane with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-034",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "1e935710f19b3bb098b775bb83db2468a49f778b0ca66ea5f0760279fdcfc627",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-035",
+      "title": "Synthetic example 035: invented request about a catalyst",
+      "description": "This is an invented description number 035 written only to exercise the software. It pretends to ask for a catalyst with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-035",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "a6642638547e8834010c4869cd23334fe9e377909fbdc7da65f3a960ed3dd73a",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-036",
+      "title": "Synthetic example 036: invented request about a battery",
+      "description": "This is an invented description number 036 written only to exercise the software. It pretends to ask for a battery with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-036",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "55b7bd34a44a32afb9a40d1a2d7354ab5db659e91220655eb37b3f833e42ef81",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-A-037",
+      "title": "Synthetic example 037: invented request about a filter",
+      "description": "This is an invented description number 037 written only to exercise the software. It pretends to ask for a filter with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-A-037",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "85ab10eef211f0fd3f4d10b7b60a0bebe2b5384d30ebb4c63834769a6c66f45b",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-B-001",
+      "title": "Synthetic example 001: invented request about a sensor",
+      "description": "This is an invented description number 001 written only to exercise the software. It pretends to ask for a sensor with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-B-001",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "0f0dd44cce9a7ef4073383c50811b18a8d321703f7443b75de44d67aedd84ef8",
+        "modality": "synthetic_control"
+      }
+    },
+    {
+      "demand_id": "SYNTHETIC-B-002",
+      "title": "Synthetic example 002: invented request about a membrane",
+      "description": "This is an invented description number 002 written only to exercise the software. It pretends to ask for a membrane with some fictional property, and it is long enough to pass the twenty-five word minimum that the conformance check applies to every demand in the corpus.",
+      "posted_date": null,
+      "target_cpc_prefixes": [],
+      "origin_country": "Spain",
+      "spanish_origin_level": "level_1_direct_metadata",
+      "external_reference": null,
+      "provenance": {
+        "source_authority": "synthetic",
+        "source_uri": "https://example.invalid/synthetic/SYNTHETIC-B-002",
+        "extraction_timestamp": "2000-01-01T00:00:00Z",
+        "raw_payload_sha256": "a1d85a3d298d368d8149134ebf657cf3b30078c46b6e413a189c7830d93ac82e",
+        "modality": "synthetic_control"
+      }
+    }
+  ]
+}

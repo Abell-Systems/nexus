@@ -26,7 +26,10 @@ sys.path.insert(0, str(REPO_ROOT / "backend" / "src" / "main"))
 
 from application.evaluation.stratified_split import stratified_split  # noqa: E402
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from restricted_inputs import data_dir  # noqa: E402
+
+DATA_DIR = data_dir()
 CONFIG_DIR = Path(__file__).resolve().parent.parent / "config"
 
 ASSIGNMENTS_NAME = "sector_assignments_n24_v1.json"

@@ -21,7 +21,7 @@ To resolve this issue while maintaining scientific reproducibility, this ADR def
 ## 2. Core Decisions & Scientific Invariants
 
 ### 2.1 Partition Universe ($N=18$)
-The partition universe is strictly the 18 demands of the frozen audited corpus ([`dataset_phase2_organization_audited_corpus_v1.json`](../../experiments/wpi-demand-patent-matching/data/dataset_phase2_organization_audited_corpus_v1.json)):
+The partition universe is strictly the 18 demands of the frozen audited corpus ([`dataset_phase2_organization_audited_corpus_v1.json`](../../experiments/wpi-demand-patent-matching/data/RETIRED_FILES.json) (file retired from the public tree on 2026-10-22, identity and hash in [`RETIRED_FILES.json`](../../experiments/wpi-demand-patent-matching/data/RETIRED_FILES.json))):
 * **12 `INDEPENDENT` demands:** Verified independent organizations.
 * **6 `UNKNOWN` demands:** Indeterminate organization independence (4 `"Anonymous Organization"` + 2 `None`).
 

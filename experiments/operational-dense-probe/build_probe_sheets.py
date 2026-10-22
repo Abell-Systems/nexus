@@ -17,6 +17,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import dense_probe as dp  # noqa: E402
 
+sys.path.insert(0, str(dp.REPO_ROOT / "experiments" / "wpi-demand-patent-matching"))
+import restricted_inputs  # noqa: E402
+
 from domain.models.demand import DemandSignal  # noqa: E402
 from infrastructure.embeddings.embedding_texts import demand_embedding_text  # noqa: E402
 from infrastructure.embeddings.frozen_embedding_index import load_index  # noqa: E402
@@ -29,14 +32,15 @@ from infrastructure.matching.operational_corpus import (  # noqa: E402
 )
 
 CORPUS_DIR = dp.REPO_ROOT / "data" / "snapshots" / "operational_corpus_v1"
-LAB_DATA = dp.REPO_ROOT / "experiments" / "wpi-demand-patent-matching" / "data"
+LAB_DATA = dp.REPO_ROOT / "experiments" / "wpi-demand-patent-matching" / "data"  # public record (split, manifests)
 DEFAULT_OUT = Path(__file__).resolve().parent / "outputs"
 SHEET_COLUMNS = ["pair_id", "demand_title", "demand_description", "patent_title", "patent_abstract",
                  "abstract_language", "grade", "note"]
 
 
 def probe_demands() -> list[DemandSignal]:
-    corpus = json.loads((LAB_DATA / "dataset_phase2_demand_corpus_n39.json").read_text(encoding="utf-8"))["demands"]
+    corpus_dir = restricted_inputs.data_dir((restricted_inputs.CORPUS,))
+    corpus = json.loads((corpus_dir / restricted_inputs.CORPUS).read_text(encoding="utf-8"))["demands"]
     test_ids = set(json.loads((LAB_DATA / "devtest_split_n18_v2.json").read_text(encoding="utf-8"))["test"])
     selected = [d for d in corpus if d["demand_id"] not in test_ids]
     if len(corpus) - len(selected) != len(test_ids):
