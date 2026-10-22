@@ -22,3 +22,11 @@ Written and committed before any measurement. Throwaway: a local Postgres 17 + p
 
 ## Reporting
 Machine, versions, row counts, raw timings and every deviation go in `RESULTS.md`. No threshold is changed after seeing data; a changed rule would be a new, dated amendment.
+
+## Amendment A1 (2026-10-22, after P1/P2 results, before any P3/P4 result)
+
+Written knowing the P1 outcome; it does not change it.
+
+- **P1 stays FAIL** under the original rule (41 of 78 cases differ in score by exactly 1e-6; ids and order identical in 78/78).
+- **P1b (alternative, post hoc, reported separately):** ids and order exactly equal AND |score_sql - score_numpy| <= 1e-6, applied to the scores **after** both are rounded to 6 decimals (so a one-unit last-digit difference is accepted, two units are not). Cases: 39 demands x limit {5, 100}. It is not a replacement for P1.
+- **P5 (new, integrity of the load):** on a scratch copy of the loaded schema, (a) re-running the loader on the same version with an identical manifest changes nothing; (b) re-running it with one altered source row (a flipped subclass in one record) is refused; (c) a recomputed content digest over the rows differs from the manifest after a single-row UPDATE. The spike implements the digest as `sha256` over a canonical ordered dump of each table; the canonical form is part of what is being tested. PASS: (a), (b), (c) all behave as stated. It is a design check, not a finished loader.

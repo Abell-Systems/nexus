@@ -1,0 +1,268 @@
+{
+  "n_assets": 54997,
+  "n_eligible": 44195,
+  "load_seconds": 4.46,
+  "db_size_mb": "232.1203200000000000",
+  "P1_cases": 78,
+  "P1_mismatches": [
+    {
+      "demand": "INNOGET-1607",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-1625",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-1689",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-1726",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-1932",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-1935",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-1965",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-1972",
+      "limit": 5,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-1972",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2006",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2054",
+      "limit": 5,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2054",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2167",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2173",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2248",
+      "limit": 5,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2248",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2258",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2292",
+      "limit": 5,
+      "ids_equal": true,
+      "max_score_diff": 9.999999999177334e-07
+    },
+    {
+      "demand": "INNOGET-2292",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2293",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2297",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2298",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2299",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 9.999999999177334e-07
+    },
+    {
+      "demand": "INNOGET-2300",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2401",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2402",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 9.999999999177334e-07
+    },
+    {
+      "demand": "INNOGET-2404",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2405",
+      "limit": 5,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2405",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2413",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2414",
+      "limit": 5,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2414",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2417",
+      "limit": 5,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2417",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2425",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2426",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2427",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2491",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "INNOGET-2492",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 9.999999999177334e-07
+    },
+    {
+      "demand": "LOMBARDIA-860",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 1.0000000000287557e-06
+    },
+    {
+      "demand": "LOMBARDIA-947",
+      "limit": 100,
+      "ids_equal": true,
+      "max_score_diff": 9.999999999177334e-07
+    }
+  ],
+  "P2_sql_p95_s": 0.128,
+  "P2_numpy_p95_s": 0.1579,
+  "P2_sql_median_s": 0.1078,
+  "P2_numpy_median_s": 0.1269,
+  "plan": [
+    "Limit  (cost=11162.56..11164.97 rows=5 width=21)",
+    "  ->  Nested Loop  (cost=11162.56..36731.31 rows=53040 width=21)",
+    "        ->  Gather Merge  (cost=11162.27..17567.57 rows=54997 width=39)",
+    "              Workers Planned: 2",
+    "              ->  Sort  (cost=10162.24..10219.53 rows=22915 width=39)",
+    "                    Sort Key: ((round((((('1'::double precision - (e.embedding <=> '[-0.068585895,-0.0030957623,-0.009174111,-0.008987931,-0"
+  ],
+  "pg_version": "PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit"
+}
