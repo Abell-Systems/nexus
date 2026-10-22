@@ -62,22 +62,34 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
     args.work_dir.mkdir(parents=True, exist_ok=True)
 
+    from harness.contract import EXIT_INCIDENT
     from harness.session import capture_environment
     from harness.workloads import evaluate, run_biblio_session
 
-    ctx = build_real_context(args, authorisation)
-    alts = tuple(ctx.stores)
-    (args.work_dir / "environment.json").write_text(json.dumps({"authorisation": authorisation, **capture_environment(ctx.stores)}, indent=1, default=str))
-    results = run_biblio_session(ctx, args.work_dir / "backups", alternatives=alts)
-    from harness.operational import build_real_operational, w7_operational
-
-    retrievers, demands, vectors, closers = build_real_operational(args.operational_dir, args.pg_dsn, "bench", alts)
+    closers: list = []
     try:
+        ctx = build_real_context(args, authorisation)
+        alts = tuple(ctx.stores)
+        (args.work_dir / "environment.json").write_text(
+            json.dumps({"authorisation": authorisation, **capture_environment(ctx.stores)}, indent=1, default=str))
+        results = run_biblio_session(ctx, args.work_dir / "backups", alternatives=alts)
+        from harness.operational import build_real_operational, w7_operational
+
+        retrievers, demands, vectors, closers = build_real_operational(args.operational_dir, args.pg_dsn, "bench", alts)
         w7_operational(ctx, retrievers, demands, vectors)
+    except Exception:  # noqa: BLE001 - setup or session failure: an incident, never a graded result
+        import traceback
+
+        (args.work_dir / "incident.json").write_text(json.dumps({"traceback": traceback.format_exc()}, indent=1))
+        print("incident: see incident.json", file=sys.stderr)
+        return EXIT_INCIDENT
     finally:
         for close in closers:
-            close()
-    code, table = evaluate(results, alts)
+            try:
+                close()
+            except Exception:  # noqa: BLE001
+                pass
+    code, table = evaluate(ctx.results, alts)
     (args.work_dir / "summary.json").write_text(json.dumps(table, indent=1, default=str))
     ctx.recorder.save(args.work_dir / "timings.json")
     print(json.dumps(table, indent=1, default=str))

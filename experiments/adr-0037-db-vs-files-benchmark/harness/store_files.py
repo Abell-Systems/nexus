@@ -2,6 +2,7 @@
 import hashlib
 import json
 import shutil
+from contextlib import closing
 from datetime import date
 from pathlib import Path
 
@@ -93,26 +94,27 @@ class FilesStore:
         return con
 
     def read_records(self, version: str) -> list:
-        con = self._connect(version)
-        cur = con.execute("""SELECT p.country||p.doc_number||p.kind, p.kind, p.publication_date, p.application_date,
-            (SELECT min(priority_date) FROM priority_date d WHERE d.record_id=p.record_id),
-            coalesce((SELECT list(DISTINCT subclass_symbol ORDER BY subclass_symbol) FROM ipc_entry e WHERE e.record_id=p.record_id), [])
-            FROM publication p ORDER BY p.record_id""")
-        return [analysis_record(*row) for row in cur.fetchall()]
+        with closing(self._connect(version)) as con:
+            cur = con.execute("""SELECT p.country||p.doc_number||p.kind, p.kind, p.publication_date, p.application_date,
+                (SELECT min(priority_date) FROM priority_date d WHERE d.record_id=p.record_id),
+                coalesce((SELECT list(DISTINCT subclass_symbol ORDER BY subclass_symbol) FROM ipc_entry e WHERE e.record_id=p.record_id), [])
+                FROM publication p ORDER BY p.record_id""")
+            return [analysis_record(*row) for row in cur.fetchall()]
 
     def logical_digest(self, version: str) -> str:
-        con = self._connect(version)
-        return canonical_rows_digest({t.name: [tuple(r) for r in con.execute(f"SELECT {', '.join(c for c, _ in t.columns)} FROM {t.name}").fetchall()]
-                                      for t in TABLES})
+        with closing(self._connect(version)) as con:
+            return canonical_rows_digest({t.name: [tuple(r) for r in con.execute(
+                f"SELECT {', '.join(c for c, _ in t.columns)} FROM {t.name}").fetchall()] for t in TABLES})
 
     def load_checks(self, version: str) -> dict[str, int]:
-        con, q = self._connect(version), lambda s: self._connect(version).execute(s).fetchone()[0]
-        return {
-            "publications": q("SELECT count(*) FROM publication"), "rejected": q("SELECT count(*) FROM rejected_record"),
-            "subclasses": q("SELECT count(*) FROM ipc_subclass"),
-            "without_ipc": q("SELECT count(*) FROM publication p WHERE NOT EXISTS (SELECT 1 FROM ipc_entry e WHERE e.record_id=p.record_id)"),
-            "distinct_doc_id": q("SELECT count(DISTINCT country||doc_number||kind) FROM publication"),
-        }
+        with closing(self._connect(version)) as con:
+            q = lambda s: con.execute(s).fetchone()[0]  # noqa: E731
+            return {
+                "publications": q("SELECT count(*) FROM publication"), "rejected": q("SELECT count(*) FROM rejected_record"),
+                "subclasses": q("SELECT count(*) FROM ipc_subclass"),
+                "without_ipc": q("SELECT count(*) FROM publication p WHERE NOT EXISTS (SELECT 1 FROM ipc_entry e WHERE e.record_id=p.record_id)"),
+                "distinct_doc_id": q("SELECT count(DISTINCT country||doc_number||kind) FROM publication"),
+            }
 
     def alter(self, version: str, kind: AlterKind) -> None:
         d = self._dir(version)
@@ -144,6 +146,8 @@ class FilesStore:
 
     def restore_new(self, source: Path, version: str):
         new_root = self.root.parent / (self.root.name + "_restored_new")
+        if new_root.exists():
+            raise FileExistsError(f"{new_root} exists: restore_new never writes into, or removes, a pre-existing location")
         other = FilesStore(new_root)
         other.restore(source, version)
         other._created = True

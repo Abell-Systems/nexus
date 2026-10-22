@@ -7,7 +7,7 @@ import numpy as np
 import psycopg
 from pgvector.psycopg import register_vector
 
-from harness.session import Incident, order_for
+from harness.session import order_for
 from harness.workloads import Context, _emit, _sec
 
 SQL = """SELECT a.publication_number, round((((1 - (e.embedding <=> %s))+1)/2)::numeric, 6)::float8 AS score
@@ -35,6 +35,14 @@ class PgRetriever:
     def __init__(self, dsn: str, schema: str, publication_ids: list[str], matrix: np.ndarray, eligible: list[int]) -> None:
         self.conn = psycopg.connect(dsn, autocommit=True)
         self.schema = schema
+        try:
+            self._load(publication_ids, matrix, eligible)
+        except BaseException:
+            self.close()
+            raise
+
+    def _load(self, publication_ids: list[str], matrix: np.ndarray, eligible: list[int]) -> None:
+        schema = self.schema
         self.conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
         register_vector(self.conn)
         c = self.conn
@@ -69,6 +77,16 @@ def p95(xs: list[float]) -> float:
 
 def w7_operational(ctx: Context, retrievers: dict[str, Retriever], demands: list, vectors: dict[str, np.ndarray],
                    reps: int = 20, limits: tuple[int, ...] = (5, 100)) -> list[dict]:
+    """Any exception, in the parity queries as in the timed ones, ends W7 as a recorded incident (never an escaped traceback)."""
+    try:
+        return _w7(ctx, retrievers, demands, vectors, reps, limits)
+    except Exception as exc:  # noqa: BLE001 - Incident or anything else outside the alternative's contract
+        return [_emit(ctx, workload="W7", alternative=alt, repetition=0, run_kind="warm", order_in_repetition=0, status="incident",
+                      timings=[], outputs={}, checks={}, incident=repr(exc), start_load=None) for alt in retrievers]
+
+
+def _w7(ctx: Context, retrievers: dict[str, Retriever], demands: list, vectors: dict[str, np.ndarray], reps: int,
+        limits: tuple[int, ...]) -> list[dict]:
     """Parity of ids and order (graded), then `reps` warm observations per demand at limit 5, alternating A/B per demand (R2)."""
     import time
     out = []
@@ -88,18 +106,14 @@ def w7_operational(ctx: Context, retrievers: dict[str, Retriever], demands: list
                     parity["scores_within_one_unit"] += all(u <= 1 for u in units)
     obs: dict[str, dict[str, list[float]]] = {alt: {d.demand_id: [] for d in demands} for alt in alts}
     loads: dict[str, dict[str, list[float]]] = {alt: {d.demand_id: [] for d in demands} for alt in alts}
-    try:
-        for d in demands:
-            for rep in range(1, reps + 1):
-                for alt in [x for x in (order_for(rep) if len(alts) == 2 else alts) if x in alts]:
-                    loads[alt][d.demand_id].append(ctx.quiet())  # R2: the gate precedes every warm observation, its load is kept
-                    t = time.perf_counter()
-                    with _sec(ctx, "W7", alt, "execute", "retrieve", "warm", rep):
-                        retrievers[alt].retrieve(d, vectors[d.demand_id], 5)
-                    obs[alt][d.demand_id].append(time.perf_counter() - t)
-    except Incident as exc:
-        return [_emit(ctx, workload="W7", alternative=alt, repetition=0, run_kind="warm", order_in_repetition=0, status="incident",
-                      timings=[], outputs={}, checks={}, incident=str(exc), start_load=None) for alt in alts]
+    for d in demands:
+        for rep in range(1, reps + 1):
+            for alt in [x for x in (order_for(rep) if len(alts) == 2 else alts) if x in alts]:
+                loads[alt][d.demand_id].append(ctx.quiet())  # R2: the gate precedes every warm observation, its load is kept
+                t = time.perf_counter()
+                with _sec(ctx, "W7", alt, "execute", "retrieve", "warm", rep):
+                    retrievers[alt].retrieve(d, vectors[d.demand_id], 5)
+                obs[alt][d.demand_id].append(time.perf_counter() - t)
     for alt in alts:
         pooled = [x for v in obs[alt].values() for x in v]
         per_demand = {k: {"median": statistics.median(v), "p95": p95(v)} for k, v in obs[alt].items() if len(v) >= 2}

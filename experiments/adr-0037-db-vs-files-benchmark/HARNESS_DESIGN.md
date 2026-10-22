@@ -43,7 +43,7 @@ Exit codes: 0 all acceptance checks passed; 1 a check failed; 2 refused; 3 envir
 
 `harness/workloads.py` implements W1–W6 and the roll-up (`evaluate`) exactly as `WORKLOAD_CONTRACTS.md`: status by exception type (`ok` / `check_failed` / `incident`), `first_run_after_start` then 5 warm runs alternating A/B, the valid-run gate (`session.wait_for_quiet`, load <= 1.0, up to 5 minutes, else incident), W4's four alterations, W5's rebuild with the previous version preserved, W6a (restore to a new location: `Store.restore_new`, a new database for A and a new directory for B) and W6b (drop and restore in place; a failure after the drop is a check failure). `harness/operational.py` implements W7 (pooled 780 observations, p95 by Python's default quantile method, per-demand diagnostics, ids and order graded). `run_benchmark.py` wires them after the authorisation barrier.
 
-Tests on synthetic data (89 with PostgreSQL, fewer without): full BIBLIO sessions for each store, the incident and check-failure rules, the load gate, alternation, C3 on the maximum, the roll-up and exit codes, pgvector against an exact numpy formula. They show the code follows the contracts; they say nothing about real results.
+Tests on synthetic data (115 with PostgreSQL; the PostgreSQL variants are skipped without `NEXUS_BENCH_PG_DSN`): full BIBLIO sessions for each store, the incident and check-failure rules, the load gate, alternation, C3 on the maximum, the roll-up and exit codes, pgvector against an exact numpy formula. They show the code follows the contracts; they say nothing about real results.
 
 ## Not yet done
 

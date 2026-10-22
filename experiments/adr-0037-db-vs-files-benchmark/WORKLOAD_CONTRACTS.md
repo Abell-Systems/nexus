@@ -17,7 +17,7 @@ Subordinate to `PREREGISTRATION.md`: R1 merged in #155 (merge commit `d622c8e8e3
 * **Input:** shared rows, version name `w1_<alternative>_<n>`.
 * **Does:** `store.prepare(version, rows)`; A in one transaction, B by staging and rename. Recorded as phase `prepare`, label `prepare`. Afterwards `store.size_bytes(version)` and `store.verify(version)`.
 * **Outputs:** manifest digest, size in bytes, `logical_digest(version)`, `load_checks(version)`.
-* **Graded (C1):** `logical_digest` equals `canonical_rows_digest(shared rows)`; the five load checks equal 711,547 / 341 / 660 / 2,749 / 707,985.
+* **Graded (C1):** `logical_digest` equals `canonical_rows_digest(shared rows)`; the five load checks equal 711,547 / 341 / 660 / 2,749 / 707,985; and `verify(version)` returns the digest `prepare` returned (`verify_returns_prepared_digest`: a discrepancy is a check failure, not a silent pass).
 * **Incident:** out of disk, container not running, any exception that is not `ReferentialError` or `IntegrityError`. **Check failure:** `ReferentialError` on the shared rows (they are known valid), or a mismatch in the graded items.
 * **Repetitions:** the version is dropped after each run; every repetition prepares a fresh version. A and B timings are reported with the referential-checking caveat of `HARNESS_DESIGN.md`.
 
@@ -57,9 +57,9 @@ Subordinate to `PREREGISTRATION.md`: R1 merged in #155 (merge commit `d622c8e8e3
 * **W6a – new location, original untouched.** A: create a new database, `pg_restore` the dump into it (timed, `restore_new`); B: copy the directory to a new path. Then `verify` on the restored copy (timed, `verify_restored_new`), W2 on it, and `verify(v1)` on the original, whose digest must equal the recorded one.
 * **W6b – in place after loss.** `drop(v1)`, then restore under the same name (timed, `restore_in_place`), `verify` (timed, `verify_restored_in_place`), W2 on it. W6b runs after W6a on a freshly prepared version, never on the one W6a's checks depend on.
 * **Outputs:** sizes, digests, W2 outputs of each restored copy, timings of every step.
-* **Graded (C4):** both procedures complete; each restored copy verifies with the digest recorded before the backup; each W2 output passes the C1 items. W6a additionally requires the original to verify unchanged.
+* **Graded (C4):** both procedures complete; each restored copy verifies with the digest recorded before the backup; each restored copy passes every C1 item (pairs, records **and the five load counts**), and the roll-up applies C1 to W6a and W6b as it does to W2 (an absent W6 content check fails C1). W6a additionally requires the original to verify unchanged.
 * **Failure classification (phases kept apart):** a failure *before* the original is dropped (preparing, backing up, the drop itself) is not a recovery-procedure failure and is an `incident`. A failure *after* the drop (restore, verification, report on the restored copy) is a **check failure** unless, at that moment, `Store.environment_problems` finds an environment cause (container not running, database unreachable, free disk below twice the backup size); then it is an `incident` carrying that evidence. The output records `original_dropped`, the phase and the problems found (an empty list is evidence that none was found). Nothing is reclassified afterwards. An exception alone proves neither an environment cause nor a procedure failure.
-* **Destinations:** `restore_new` refuses an existing destination (A: database `<namespace>_restored_new`; B: the target directory) with `FileExistsError`, which ends W6a as an incident naming the leftover. Removing a leftover is explicit and traceable (`remove_leftover_database()`), done before measuring, never by the benchmark itself.
+* **Destinations:** `restore_new` refuses an existing destination (A: database `<namespace>_restored_new`; B: the whole directory `<root>_restored_new`, which is never written into nor removed when it already exists) with `FileExistsError`, which ends W6a as an incident naming the leftover. Removing a leftover is explicit and traceable (`remove_leftover_database()`), done before measuring, never by the benchmark itself.
 * **Backup directory:** created by W6 if absent.
 * **Implementation:** `Store.restore_new` (A: another database; B: another path) and `Store.dispose`, tested for both stores.
 * Atomicity and partial states on interruption are described in the operational section of the results, not graded.
@@ -81,3 +81,7 @@ Per alternative: C1 from W1, W2, W6a, W6b; C2 from W4; C3 from W2; C4 from W6a a
 ## What the orchestration must not do
 
 Change a workload's contract after the first measurement without a dated amendment; retry a `check_failed` run to make it pass; discard an incident without writing its cause; run A or B outside its own namespace; compare first runs of A and B as if conditions were equal; create `AUTHORISATION.json`.
+
+## Faults the orchestration records instead of letting them escape
+
+Any exception in W7 (parity or timed queries) ends it as a recorded incident; a failure while building the real context or during the session makes `run_benchmark.py` write `incident.json` with the traceback and exit 3 (never a graded result), and the operational resources it opened are closed.

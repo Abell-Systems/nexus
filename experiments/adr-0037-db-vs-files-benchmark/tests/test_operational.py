@@ -146,3 +146,15 @@ def test_shouldAgreeWithTheProductionPolicyThatItIgnoresTheDemand():
     from harness.operational import eligible_ids
     assets = assets_for_policy()
     assert eligible_ids(operational_eligibility_policy(), assets, [D("x"), D("y"), D("z")]) == [0, 3]
+
+
+def test_shouldRecordAnExceptionInTheParityQueriesAsAnIncidentInsteadOfEscaping():
+    ids, m, el = corpus()
+    demands, vecs = queries(k=2)
+
+    class Broken(FakeNumpy):
+        def retrieve(self, demand, vector, limit):
+            raise ConnectionError("database went away")
+    ctx = Context(stores={}, reference=None, recorder=Recorder(), quiet=lambda: 0.0)  # type: ignore[arg-type]
+    out = w7_operational(ctx, {"A": Broken(ids, m, el), "B": FakeNumpy(ids, m, el)}, demands, vecs, reps=2)
+    assert [r["status"] for r in out] == ["incident", "incident"] and "database went away" in out[0]["incident"]

@@ -102,9 +102,15 @@ def w1_prepare(ctx: Context, alt: str, rep: int, run_kind: str, version: str) ->
         checks = {"logical_equal": store.logical_digest(version) == ref.rows_digest}
         if ref.load_checks_expected is not None and hasattr(store, "load_checks"):
             checks.update({f"load_{k}": v for k, v in compare_load_checks(store.load_checks(version), ref.load_checks_expected).items()})
-        return {"manifest_digest": made.manifest_digest, "size_bytes": store.size_bytes(version),
-                "verified": store.verify(version) == made}, checks
+        checks["verify_returns_prepared_digest"] = store.verify(version) == made
+        return {"manifest_digest": made.manifest_digest, "size_bytes": store.size_bytes(version)}, checks
     return _run(ctx, "W1", alt, rep, run_kind, body, (ConstraintError, IntegrityError))
+
+
+def _load_checks(ref: "Reference", store, version: str) -> dict[str, bool]:
+    if ref.load_checks_expected is None or not hasattr(store, "load_checks"):
+        return {}
+    return {f"load_{k}": v for k, v in compare_load_checks(store.load_checks(version), ref.load_checks_expected).items()}
 
 
 def w2_report(ctx: Context, alt: str, rep: int, run_kind: str, version: str, workload: str = "W2", store: Store | None = None) -> dict:
@@ -210,7 +216,8 @@ def w6_recovery(ctx: Context, alt: str, tmp: Path, rep: int = 1) -> list[dict]:
             checks = {"digest_equal": got.manifest_digest == made.manifest_digest,
                       "original_unchanged": store.verify(f"w6a_{alt}").manifest_digest == made.manifest_digest,
                       "pairs_equal": all(compare_pairs(ref.pairs_expected, result).values()),
-                      "records_equal": compare_records(ref.records, records).equal}
+                      "records_equal": compare_records(ref.records, records).equal,
+                      **_load_checks(ref, other, version)}
         finally:
             other.dispose()
         return {"digest": got.manifest_digest}, checks
@@ -236,7 +243,8 @@ def w6_recovery(ctx: Context, alt: str, tmp: Path, rep: int = 1) -> list[dict]:
             raise ProcedureFailure({**state, "environment_problems": [], "error": repr(exc)}) from exc
         return {"digest": got.manifest_digest, **state}, {"digest_equal": got.manifest_digest == made.manifest_digest,
                                                           "pairs_equal": all(compare_pairs(ref.pairs_expected, result).values()),
-                                                          "records_equal": compare_records(ref.records, records).equal}
+                                                          "records_equal": compare_records(ref.records, records).equal,
+                                                 **_load_checks(ref, store, name)}
     # an exception after the original was dropped is a procedure failure (R2 item 1), never an incident
     out.append(_run(ctx, "W6a", alt, rep, "warm", a, (IntegrityError,)))
     out.append(_run(ctx, "W6b", alt, rep, "warm", b, (ProcedureFailure,)))
@@ -291,8 +299,11 @@ def evaluate(results: list[dict], alternatives: tuple[str, ...] = ("A", "B")) ->
         w4 = {r["outputs"].get("kind"): r["outputs"].get("detected") for r in mine if r["workload"] == "W4" and r["status"] != "incident"}
         totals = [r["outputs"]["total_seconds"] for r in mine if r["workload"] == "W2" and r["run_kind"] == "warm"
                   and r["status"] != "incident" and "total_seconds" in r["outputs"]]
+        content_names = lambda k: k in ("pairs_equal", "records_equal") or k.startswith("load_") or k in ("logical_equal",)  # noqa: E731
+        w6_content = [all(v for k, v in r["checks"].items() if content_names(k)) and bool(r["checks"])
+                      for r in mine if r["workload"] in ("W6a", "W6b") and r["status"] != "incident"]
         table[alt] = {
-            "C1": passed("W1") and passed("W2"),
+            "C1": passed("W1") and passed("W2") and bool(w6_content) and all(w6_content),
             "C2": all(w4.get(k) is True for k in GRADED_ALTERATIONS),
             "C3": len(totals) == 5 and max(totals) <= C3_BOUND_SECONDS,
             "C3_stats": {"n": len(totals), "min": min(totals, default=None),
