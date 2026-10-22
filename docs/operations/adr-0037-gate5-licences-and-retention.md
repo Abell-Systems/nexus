@@ -166,7 +166,7 @@ The three are different things. A decision recorded is not evidence obtained, an
 
 ### 8.4 Provisional decisions on D1 and D2
 
-Status: **recommended in review; the owner's confirmation is to be recorded here** (date and name) before they count as decided. They are operational measures, not legal conclusions about past extraction, and none is applied yet.
+Status: **adopted by the owner on 2026-10-22** (recorded in the session as "adoptadas"). They are provisional operational measures, not legal conclusions about past extraction, and **none is applied yet**: the fixtures are not replaced and no request has been sent.
 
 * D1. Replace the Innoget fixtures with synthetic or minimal examples that keep the test cases. Review the Lombardia, EPO OPS, OEPM, WIPO and Minesoft files one by one; they do not necessarily get the same treatment. History is not rewritten.
 * D2. Request written authorisation for the 39 demands, stating the uses, storage and publication it would cover. Until it exists, the demands do not enter the shared staging database.
