@@ -88,8 +88,9 @@ The right-hand column is a **proposal**, not a decision.
 | Spike database and container | OMEN, Docker volume | Derived OEPM | Delete after the benchmark results are committed and gate 1 is decided; the scripts rebuild it |
 | Staging database (when it exists) | Lenovo | As the corpora it holds | One immutable schema per version (ADR 0037 §3.1); keep the current and the previous; drop older ones on the owner's order |
 | Backups of the database volume | Kopia on the Lenovo (retention **not read**) | As above | **Pending:** the Kopia retention and whether the volume is included must be read before a deletion promise can be made |
-| Benchmark results (`raw.jsonl`, `summary.json`, `timings.json`, `environment.json`, `RESULTS.md`) | Repository | No (G6) | Keep indefinitely as evidence |
-| Execution logs and `incident.json` | Work directory | No, but paths | Review before publishing; keep with the results |
+| Benchmark aggregate results (`summary.json`, `timings.json`, `environment.json`, `RESULTS.md`) | Repository | No (G6) | Keep as evidence, **conditional on reviewing the artefacts** for identifiers and local paths before committing |
+| Benchmark per-demand records (`raw.jsonl` and per-demand diagnostics) | Repository or work directory | No text, but **demand identifiers** | Do not assume harmless: review the identifiers against the Innoget decision (D2) before publishing; retention to be decided after that review |
+| Execution logs, tracebacks and `incident.json` | Work directory | No text, but local paths | Review and redact before publishing; keep only with the results they explain |
 | Tracked third-party files of §2 | Public repository | Yes | Owner decision (D1); removing from the working tree does not remove them from history, forks or clones |
 
 **Deletion and recovery.** The owner authorises any deletion. Removing a source from a database corpus means building a new version without it (versions are immutable), dropping the old schema, and then purging the backups that still hold it, which depends on the unread Kopia retention. A restore is checked by the manifest digest of ADR 0037 §3.3 and, for the benchmark, by W6; neither tells whether a restored copy brings back material that was meant to be deleted. That interaction is not designed yet.
@@ -101,23 +102,55 @@ The right-hand column is a **proposal**, not a decision.
 * **Not without the rights-holder's authorisation (per §3):** Innoget demand text, Minesoft data and any other source marked pending.
 * The runbook's existing rule stays: no claim that ranking quality is validated, no price, demand or market-size figure, and the CC BY 4.0 reading is not legal advice.
 
-## 8. Decisions for the owner
+## 8. Pending evidence, owner decisions and closing conditions
 
-* D1. What to do about the third-party files tracked in the public repository (§2): ask each rights-holder, replace them with synthetic or minimal fixtures, or keep them with a recorded basis. Any removal from history is a separate, outward-facing decision.
-* D2. Whether to ask Innoget for written permission for the 39 demands before they enter any shared database or any publication; until then, whether the staging database may hold them.
+The three are different things. A decision recorded is not evidence obtained, and neither closes the gate.
+
+### 8.1 Containment measures proposed (provisional, reversible, none applied)
+
+* No new copy of the Innoget demands is added to the shared staging database or to any new operational snapshot until D2 is resolved.
+* The operational corpus stays out of staging (D4) until the scope of the rights review and the provenance of its components are clear. That a source is publicly accessible does not by itself show that all its data may be redistributed.
+* `license_status` keeps an explicitly unverified state (D3); it is not replaced by an affirmative licence without evidence. The Google blog attribution is not a verification of the whole chain of rights.
+* The retention table of §6 is not presented as approved, and no complete-deletion promise is made until the Kopia policy is read (D5).
+* The benchmark of gate 1 stays awaiting a person's authorisation; this document does not authorise it.
+* Nothing is removed from git history; that is a separate, outward-facing decision.
+
+### 8.2 Order in which to decide (by exposure, reversibility and dependency)
+
+1. D1-D2: third-party files and Innoget.
+2. D4: operational corpus in staging.
+3. D3: `license_status`.
+4. D5-D6: Kopia retention read first, then the retention table.
+5. D7-D8: assign owners to the pending checks and set the scope of legal review. They do not delay 1-4.
+
+### 8.3 Pending evidence (to obtain, not to decide)
+
+* Full text of Innoget §2.4 and §6 and of the OEPM legal notice, read by a person.
+* Kopia retention and whether the database volume is included.
+* Terms still marked *pending* in §3: Minesoft, EPO OPS, WIPO, OEPM BOPI dataset licence; Google Patents formal dataset terms.
+* LGPL review of `psycopg` if the loader is distributed in an image.
+* Reproducibility: the benchmark environment versions differ from `backend/requirements.txt`; a separate task, outside this PR.
+
+### 8.4 Owner decisions
+
+* D1. What to do about the third-party files tracked in the public repository (§2): ask each rights-holder, replace them with synthetic or minimal fixtures, or keep them with a recorded basis.
+* D2. Whether to ask Innoget for written permission for the 39 demands, and whether staging may hold them meanwhile (8.1 proposes no).
 * D3. Which text `license_status` carries in the manifest (G3).
-* D4. Whether the staging database may include the operational corpus before counsel confirms the Google Patents chain of rights, or only the OEPM corpus.
-* D5. Read and record the Kopia retention and the volume's coverage.
+* D4. Whether staging may include the operational corpus before counsel confirms the Google Patents chain, or only the OEPM corpus.
+* D5. Who reads and records the Kopia retention and the volume's coverage.
 * D6. Approve or change the retention table of §6.
-* D7. Commission the checks marked pending: Minesoft terms, EPO OPS terms, WIPO terms, the OEPM BOPI dataset licence, and the LGPL review of `psycopg` for a distributed loader.
-* D8. Whether counsel reviews the OEPM notice and the Google Patents chain (both are recorded as unreviewed).
+* D7. Who performs each pending check of 8.3.
+* D8. Whether counsel reviews the OEPM notice and the Google Patents chain (both recorded as unreviewed).
 
 ## 9. What would close the gate (none done)
 
-1. The owner's decisions D1-D8 recorded.
-2. Every *pending* row of §3 either evidenced from the publisher's own terms (with page, date and the full clause read by a person) or removed from the pilot.
+1. The decisions D1-D8 recorded **and** the containment measures of 8.1 either applied or explicitly declined.
+2. Every *pending* row of §3 evidenced from the publisher's own terms (page, date, full clause read by a person) or removed from the pilot.
 3. The manifest text and the product's attribution checked against the OEPM and Google conditions.
-4. The retention table approved, and the Kopia retention read.
+4. The Kopia retention read and the retention table approved.
+5. The benchmark artefacts reviewed for identifiers and paths before any is published.
+
+Decisions documented alone do not close the gate.
 
 ## 10. How the evidence was gathered
 
