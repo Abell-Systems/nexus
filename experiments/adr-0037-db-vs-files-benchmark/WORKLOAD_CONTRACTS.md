@@ -1,6 +1,6 @@
 # Contracts of the seven workloads
 
-Subordinate to `PREREGISTRATION.md` (merged in #155, merge commit `d622c8e8e314edcd1568428d4da2f4c6187d454c`, sha256 `591ff8cf7c157b846dee9a20f652d98c80c51b094443d0eeb3bf7e52f1e557d5`). Where this file and the protocol differ, the protocol wins and this file is wrong. It adds no criterion, threshold or rule. It fixes, before any orchestration code exists, what each workload takes, produces and how it may fail. Nothing here is implemented yet and nothing has been measured.
+Subordinate to `PREREGISTRATION.md`: R1 merged in #155 (merge commit `d622c8e8e314edcd1568428d4da2f4c6187d454c`, sha256 `591ff8cf7c157b846dee9a20f652d98c80c51b094443d0eeb3bf7e52f1e557d5`) **plus amendment R2 (#157), which this file already follows and which must be merged before anything runs**. After R2 the protocol's hash changes and the authorisation must name the hash in force. Where this file and the protocol differ, the protocol wins and this file is wrong. It adds no criterion, threshold or rule. It fixes, before any orchestration code exists, what each workload takes, produces and how it may fail. Nothing here is implemented yet and nothing has been measured.
 
 ## Common rules
 
@@ -9,6 +9,7 @@ Subordinate to `PREREGISTRATION.md` (merged in #155, merge commit `d622c8e8e314e
 * **Isolation.** Each alternative runs in its own directory / schema namespace; versions are immutable; shared rows are never modified. A worker of one alternative never reads the other's data.
 * **Input.** The shared rows come from one parse of the 26 files through `OepmBiblioSource` (hashes verified); the parse is recorded as `shared_input` and belongs to neither alternative. If the adapter reports a different count of read or rejected records than 711,547 and 341, the run is an incident.
 * **Order and repetition.** Warm runs alternate A/B across repetitions (A first in odd repetitions, B first in even ones); which alternative runs first is recorded. `first_run_after_start` is a separate record and is never compared between A and B (protocol §2).
+* **Valid warm runs (R2).** A warm run is invalid and repeated only if (a) it ended in an exception or crash outside the store's contract, (b) the container or the disk was unavailable, or (c) the 1-minute load average before it started was above 1.0 and did not fall within 5 minutes (recorded before every run; the harness waits up to 5 minutes). A valid run is a result: it is not discarded as atypical and not repeated to obtain a pass.
 * **Environment capture.** Once per session: machine, OS, kernel, Python and package versions, image digest, each store's `configuration()`. A session missing it is invalid.
 
 ## W1 – Prepare BIBLIO
@@ -25,7 +26,7 @@ Subordinate to `PREREGISTRATION.md` (merged in #155, merge commit `d622c8e8e314e
 * **Input:** a verified version from W1 (the same version across the repetitions of one session).
 * **Does:** `read_records(version)` (timed, `execute`, label `read`), then `subclass_pairs` for origins 2006 and 2022 over the returned records (timed, `execute`, label `compute`), unchanged `application/whitespace` code. Total = read + compute.
 * **Outputs:** the full pairs result per origin (canonical JSON), the record list, timings.
-* **Graded (C1):** pairs equal the versioned `docs/whitespace/oepm-subclass-pairs-results.json` for both origins; `compare_records(adapter path, store records)` equal in every field and in order; **(C3)** every one of the 5 warm totals not greater than 188.6 s, read with the interpretation of the protocol (total of the route from the zips, parsing included). The protocol does not say whether the bound applies to each warm run, the median or the mean; this contract takes the strictest reading (the maximum) provisionally, and R2 asks for it to be confirmed. The median is reported as well.
+* **Graded (C1):** pairs equal the versioned `docs/whitespace/oepm-subclass-pairs-results.json` for both origins; `compare_records(adapter path, store records)` equal in every field and in order; **(C3)** every one of the 5 warm totals not greater than 188.6 s, read with the interpretation of the protocol (total of the route from the zips, parsing included). R2 fixes it: acceptance is `max(warm_runs) <= 188.6 s` over the 5 valid warm runs; min, median and max are recorded; a slow valid run is neither discarded nor repeated.
 * **Incident:** exception while reading the store that is not an `IntegrityError`; the shared adapter path (needed as reference for records) failing. **Check failure:** any mismatch above; `IntegrityError` on a version that W1 just verified.
 
 ## W3 – Verify integrity
@@ -49,21 +50,29 @@ Subordinate to `PREREGISTRATION.md` (merged in #155, merge commit `d622c8e8e314e
 * **Outputs:** `v_next` manifest digest, `logical_digest(v_next)`, re-verified digest of `v_prev`.
 * **Graded (C5):** `v_prev` verifies and its digest equals the recorded one; `logical_digest(v_next)` differs from `logical_digest(v_prev)` and equals the digest of the changed rows; `v_next` verifies. **Incident:** failure to build for environment reasons. **Check failure:** `v_prev` altered or unverifiable after the rebuild.
 
-## W6 – Backup and restore  — **OPEN: blocked on protocol amendment R2**
+## W6 – Backup and restore (R2: W6a and W6b, both required)
 
-The merged protocol is inconsistent about W6: its workload table says *"Backup and restore into a new location, then verify"*, and its detailed text says, for A, *"`pg_dump -Fc` of the schema, drop it, `pg_restore`"* and, for B, *"copy the directory elsewhere"*. Restoring a copy to a new location and destroying then rebuilding the original are different procedures with different guarantees, and the contract must not choose. Draft amendment `R2` (separate PR against the protocol) proposes to run both, as W6a (new location, original untouched) and W6b (drop the original, restore in place), each with the same verification and the same W2 check. Until R2 is merged, W6 is not implemented and its contract is not fixed here. Nothing else in this file depends on it except C4.
+* **Input:** a verified `v1` with its manifest digest recorded before anything starts.
+* **Backup (both):** `backup(v1, artifact)`, timed, label `backup`; artifact size recorded.
+* **W6a – new location, original untouched.** A: create a new database, `pg_restore` the dump into it (timed, `restore_new`); B: copy the directory to a new path. Then `verify` on the restored copy (timed, `verify_restored_new`), W2 on it, and `verify(v1)` on the original, whose digest must equal the recorded one.
+* **W6b – in place after loss.** `drop(v1)`, then restore under the same name (timed, `restore_in_place`), `verify` (timed, `verify_restored_in_place`), W2 on it. W6b runs after W6a on a freshly prepared version, never on the one W6a's checks depend on.
+* **Outputs:** sizes, digests, W2 outputs of each restored copy, timings of every step.
+* **Graded (C4):** both procedures complete; each restored copy verifies with the digest recorded before the backup; each W2 output passes the C1 items. W6a additionally requires the original to verify unchanged.
+* **Failure classification:** if a restore fails in W6b after the original was dropped, it is a **check failure** (procedure failure). It becomes an `incident` only with evidence of an environment cause recorded at the time (container or disk unavailable). It is never reclassified afterwards.
+* **Implementation requirement:** `Store` needs a way to restore to a new location (A: another database, B: another path) in addition to `restore` (in place); added when the orchestration is written, with tests, and not before R2 is merged.
+* Atomicity and partial states on interruption are described in the operational section of the results, not graded.
 
 ## W7 – Operational retrieval
 
 * **Input:** `data/snapshots/operational_corpus_v1`, the 39 demands, A loaded in a separate namespace (`operational_*`), B = the current numpy artifacts. Separate from the BIBLIO workloads; A's schema is built once per session.
-* **Does:** for each demand and limit in {5, 100}: ids and scores from A and from `NumpyDenseRetriever` (parity). Then 20 repetitions per demand at limit 5, each alternative timed, `execute`, label `retrieve`, warm. **Aggregation (provisional, to be fixed by R2):** 20 observations per demand x 39 demands = 780 observations per alternative, pooled; p95 = `statistics.quantiles(n=20)[-1]` (default exclusive method), median = `statistics.median`; this is how spike P2 computed it. Repetitions alternate A/B per demand.
-* **Outputs:** p95 and median per alternative, parity counts reported as in the spike: identical ids and order (n of 78), strict score equality (n), scores within one unit of the last digit (n). The score policy is not re-decided here.
+* **Does:** for each demand and limit in {5, 100}: ids and scores from A and from `NumpyDenseRetriever` (parity). Then 20 repetitions per demand at limit 5, each alternative timed, `execute`, label `retrieve`, warm. **Aggregation (R2):** the unit of observation is one retrieval call; 20 observations per demand x 39 demands = 780 per alternative, pooled, all demands included; p95 = `statistics.quantiles(observations, n=20)[-1]`, median = `statistics.median`. A and B alternate per demand across repetitions. p95 and median **per demand** are stored as a diagnostic and are not a criterion.
+* **Outputs:** pooled p95 and median per alternative, per-demand p95 and median (diagnostic), parity counts reported as in the spike: identical ids and order (n of 78), strict score equality (n), scores within one unit of the last digit (n). The score policy is not re-decided here.
 * **Graded:** ids and order identical in 78/78 (equivalence of ranking). **Reported, not graded:** timings (the spike already passed P2), strict and tolerance counts.
 * **Incident:** artifacts missing or failing their own hash verification. **Check failure:** a differing id or order.
 
 ## Acceptance roll-up (as in the protocol §5)
 
-Per alternative: C1 from W1, W2 (and W6 once defined); C2 from W4; C3 from W2; C4 from W6 (blocked until R2); C5 from W5. An alternative is acceptable only if all pass. Exit code 0 if both ran and every graded check of both passed, 1 if any check failed, 3 if any workload ended as an incident that was not repeated successfully. Materiality of timing differences uses `recorder.materially_different` and is only reported.
+Per alternative: C1 from W1, W2, W6a, W6b; C2 from W4; C3 from W2; C4 from W6a and W6b; C5 from W5. An alternative is acceptable only if all pass. Exit code 0 if both ran and every graded check of both passed, 1 if any check failed, 3 if any workload ended as an incident that was not repeated successfully. Materiality of timing differences uses `recorder.materially_different` and is only reported.
 
 ## What the orchestration must not do
 
