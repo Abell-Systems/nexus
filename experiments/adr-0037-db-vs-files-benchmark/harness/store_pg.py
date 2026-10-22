@@ -146,12 +146,20 @@ class PostgresStore:
             raise
 
     def restore(self, source: Path, version: str) -> None:
+        """In-place restore. The dump begins with CREATE SCHEMA, which is the atomic claim of the name; `--single-transaction`
+        makes the whole restore one transaction, so a schema that exists (created by someone else after the early check) makes it
+        fail before anything is written, and any later failure rolls back and leaves nothing behind."""
+        schema = self._schema(version)
         with self._conn() as conn:
-            if conn.execute("SELECT 1 FROM information_schema.schemata WHERE schema_name=%s", (self._schema(version),)).fetchone():
-                raise FileExistsError(f"{self._schema(version)} exists: restore never overwrites")
+            if self._exists(conn, "schema", schema):
+                raise FileExistsError(f"{schema} exists: restore never overwrites")
         with source.open("rb") as inp:
-            subprocess.run(["docker", "exec", "-i", self.container, "pg_restore", "-U", "postgres", "-d", "postgres", "--exit-on-error"],
-                           stdin=inp, check=True)
+            run = subprocess.run(["docker", "exec", "-i", self.container, "pg_restore", "-U", "postgres", "-d", "postgres",
+                                  "--exit-on-error", "--single-transaction"], stdin=inp, stderr=subprocess.PIPE, check=False)
+        if run.returncode != 0:
+            if b"already exists" in run.stderr:  # the claim was lost to somebody else: their schema is untouched
+                raise FileExistsError(f"{schema} was created concurrently: {run.stderr.decode(errors='replace').strip()[:300]}")
+            raise subprocess.CalledProcessError(run.returncode, run.args, stderr=run.stderr)
 
     def restore_new(self, source: Path, version: str):
         db = f"{self.namespace}_restored_new"

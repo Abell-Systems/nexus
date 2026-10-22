@@ -172,3 +172,75 @@ def test_shouldNotDropAW7SchemaCreatedConcurrently(monkeypatch):
             assert c.execute(f"SELECT x FROM {schema}.sentinel").fetchone() == (9,)
     finally:
         PgRetriever.remove_leftover_schema(dsn, schema)
+
+
+def _pg_with_dump(tmp_path, rows, extra_sql=None, drop_after_dump=None):
+    dsn = os.environ.get("NEXUS_BENCH_PG_DSN")
+    if not dsn:
+        pytest.skip("NEXUS_BENCH_PG_DSN not set")
+    import psycopg
+    from harness.store_pg import PostgresStore
+    s = PostgresStore(dsn, "nexus-spike-pg", f"z{os.getpid()}")
+    schema = s._schema("v1")
+    s.prepare("v1", rows)
+    if extra_sql:
+        with psycopg.connect(dsn, autocommit=True) as c:
+            c.execute(extra_sql.format(s=schema))
+    dump = tmp_path / "dump"
+    s.backup("v1", dump)
+    s.drop("v1")
+    if drop_after_dump:
+        with psycopg.connect(dsn, autocommit=True) as c:
+            c.execute(drop_after_dump.format(s=schema))
+    return dsn, s, dump, schema
+
+
+def _tables(dsn, schema):
+    import psycopg
+    with psycopg.connect(dsn, autocommit=True) as c:
+        return sorted(r[0] for r in c.execute("SELECT table_name FROM information_schema.tables WHERE table_schema=%s", (schema,)))
+
+
+def _drop(dsn, *schemas):
+    import psycopg
+    with psycopg.connect(dsn, autocommit=True) as c:
+        for sch in schemas:
+            c.execute(f"DROP SCHEMA IF EXISTS {sch} CASCADE")
+
+
+def test_shouldNotWriteIntoASchemaCreatedBetweenTheEarlyCheckAndPgRestore(tmp_path, rows, monkeypatch):
+    """The racer creates the schema after the early check passed and just before pg_restore starts."""
+    import psycopg
+    import harness.store_pg as sp
+    dsn, s, dump, schema = _pg_with_dump(tmp_path, rows)
+    real_run = sp.subprocess.run
+
+    def run(cmd, *a, **k):
+        if "pg_restore" in cmd:
+            with psycopg.connect(dsn, autocommit=True) as c:
+                c.execute(f"CREATE SCHEMA {schema}; CREATE TABLE {schema}.sentinel(x int); INSERT INTO {schema}.sentinel VALUES (5)")
+        return real_run(cmd, *a, **k)
+    monkeypatch.setattr(sp.subprocess, "run", run)
+    try:
+        with pytest.raises(FileExistsError):
+            s.restore(dump, "v1")
+        assert _tables(dsn, schema) == ["sentinel"]                      # nothing from the dump was written into their schema
+        with psycopg.connect(dsn, autocommit=True) as c:
+            assert c.execute(f"SELECT x FROM {schema}.sentinel").fetchone() == (5,)
+    finally:
+        _drop(dsn, schema)
+
+
+def test_shouldLeaveNoPartialSchemaWhenARestoreFailsAfterCreatingObjects(tmp_path, rows):
+    """A dump whose last step (a foreign key to a schema that no longer exists) fails after tables and data were restored."""
+    import subprocess
+    dsn, s, dump, schema = _pg_with_dump(
+        tmp_path, rows,
+        extra_sql="CREATE SCHEMA {s}_ref; CREATE TABLE {s}_ref.ref(id int PRIMARY KEY); CREATE TABLE {s}.extra(x int REFERENCES {s}_ref.ref(id))",
+        drop_after_dump="DROP SCHEMA {s}_ref CASCADE")
+    try:
+        with pytest.raises(subprocess.CalledProcessError):
+            s.restore(dump, "v1")
+        assert _tables(dsn, schema) == []                                 # single transaction: nothing partial is left to block a retry
+    finally:
+        _drop(dsn, schema, f"{schema}_ref")
