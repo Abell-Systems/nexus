@@ -1,0 +1,39 @@
+{
+  "parse_seconds": 177.4,
+  "P4_from_zips_seconds_parse_plus_report": 188.6,
+  "P4_report_only_seconds_in_memory": 11.2,
+  "P3_load_seconds": 77.3,
+  "P3_checks": {
+    "publications": [
+      711547,
+      711547
+    ],
+    "rejected": [
+      341,
+      341
+    ],
+    "subclasses": [
+      660,
+      660
+    ],
+    "without_ipc": [
+      2749,
+      2749
+    ],
+    "distinct_doc_id": [
+      707985,
+      707985
+    ]
+  },
+  "db_size_mb": "1285.9859710000000000",
+  "P4_from_db_seconds_read_plus_report": 26.5,
+  "P3_records_identical_to_adapter_path": false,
+  "P3_pairs_equal_versioned_json": {
+    "2006": true,
+    "2022": true
+  },
+  "P3_observed_pairs": {
+    "2006": 24583,
+    "2022": 40585
+  }
+}
