@@ -43,3 +43,11 @@
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; word-break: break-all; }
 .footer { margin-top: 44px; color: var(--color-text-muted); font-size: 13px; line-height: 1.5; }
 .sr { position: absolute; left: -9999px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 16px; margin: 12px 0; }
+.controls div { display: flex; flex-direction: column; gap: 4px; font-size: 14px; min-width: 0; }
+.controls select, .controls input { font: inherit; padding: 6px 8px; border: 1px solid var(--color-border); border-radius: 6px; max-width: 100%; }
+.note { color: var(--color-text-muted); font-size: 14px; }
+.matches { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; padding: 0; list-style: none; }
+.matches button, .table button { font: inherit; font-size: 14px; padding: 4px 10px; border: 1px solid var(--color-border); border-radius: 6px; background: var(--color-surface); cursor: pointer; }
+.matches button[aria-pressed="true"] { border-color: var(--color-purple); font-weight: 700; }
+.detail { margin: 18px 0; padding: 14px; border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-surface); }

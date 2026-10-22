@@ -5,6 +5,7 @@
       "source": "docs/whitespace/oepm-corpus-exposure-results.json",
       "producedBy": "scripts/report_oepm_corpus_exposure.py",
       "pullRequest": 140,
+      "served": "bundled",
       "bytes": 18394,
       "sha256": "966b1c6843599f765daede65bc74fb91d59aa82e81b926c6ae24c31bd308aa59"
     },
@@ -13,6 +14,7 @@
       "source": "docs/whitespace/oepm-omission-sensitivity-results.json",
       "producedBy": "scripts/report_oepm_omission_sensitivity.py",
       "pullRequest": 141,
+      "served": "bundled",
       "bytes": 5451,
       "sha256": "e4c22dec6ec6c0347ff3b3ed842b6164ded18e1123a3ed31d2b41026fc110943"
     },
@@ -21,6 +23,7 @@
       "source": "docs/whitespace/oepm-section-density-results.json",
       "producedBy": "scripts/report_oepm_section_density.py",
       "pullRequest": 142,
+      "served": "bundled",
       "bytes": 8678,
       "sha256": "53e4a07d14ba1ad2c375e0121eac5389bf7b958916cd0434ea73c72dfd4f5f37"
     },
@@ -29,8 +32,18 @@
       "source": "config/whitespace/oepm_biblio_2000_2025.json",
       "producedBy": "scripts/reproduce_oepm_biblio_characterization.py",
       "pullRequest": 130,
+      "served": "bundled",
       "bytes": 13439,
       "sha256": "54e76bd582c7e8c6df2e1095860d09ce483847a98cecebd815366b7d504534f6"
+    },
+    {
+      "file": "oepm-subclass-pairs-results.json",
+      "source": "docs/whitespace/oepm-subclass-pairs-results.json",
+      "producedBy": "scripts/report_oepm_subclass_pairs.py",
+      "pullRequest": 150,
+      "served": "on_demand",
+      "bytes": 6217276,
+      "sha256": "43dc2137646d399d87d07c3d3e8ecd3c5afe0bab5b50a1c593f8eeac8b39ef16"
     }
   ]
 }

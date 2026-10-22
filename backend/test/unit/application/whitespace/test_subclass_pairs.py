@@ -54,3 +54,22 @@ def test_shouldAddUpByYearToTheTotalOfEveryPair():
     for pair in subclass_pairs(corpus(), 2005, min_documents=2)["pairs"].values():
         assert sum(pair["by_year"].values()) == pair["documents"]
         assert pair["first_year"] == min(int(y) for y in pair["by_year"])
+
+
+def test_shouldGiveEachActiveSubclassTheEarliestPublicationYearOfItsDocumentsWhenDescribingAnOrigin():
+    records = [
+        record("a1", 2003, "A01B"),
+        record("a2", 2001, "A01B"),
+        record("c1", 2002, "A01C"),
+        record("c2", 2002, "A01C"),
+    ]
+    records += [record("late", 1999 + 8, "A01C")]  # after the origin: ignored
+    result = subclass_pairs(records, 2005, min_documents=2)
+    assert result["first_years"] == {"A01B": 2001, "A01C": 2002}
+
+
+def test_shouldKeepFirstYearsInTheSameSetAsActiveSubclassesAndNeverAfterTheOrigin():
+    for origin in (2000, 2001, 2005):
+        result = subclass_pairs(corpus(), origin, min_documents=2)
+        assert set(result["first_years"]) == set(result["active"])
+        assert all(year <= origin for year in result["first_years"].values())

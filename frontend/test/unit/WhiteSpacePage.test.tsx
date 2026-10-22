@@ -1,5 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { WhiteSpacePage } from "../../src/main/components/WhiteSpace/WhiteSpacePage";
 import { TEXT } from "../../src/main/domain/whitespace";
 import { whitespaceData } from "../../src/main/infrastructure/whitespaceData";
@@ -7,6 +7,9 @@ import { whitespaceData } from "../../src/main/infrastructure/whitespaceData";
 const FORBIDDEN = [/prometedor/i, /pr[oó]xima oportunidad/i, /descubre/i, /oportunidades? (tecnol[oó]gica|de innovaci[oó]n) (detectad|identificad|encontrad)/i, /candidatos? (prometedor|recomendad)/i];
 
 describe("the white-space front page", () => {
+  // The explorer loads its 6 MB file on demand; these tests are about the page, so the file never arrives.
+  beforeEach(() => vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {}))));
+
   it("shouldStateTheAttributionTheAbsenceRuleAndTheUnavailableStatusWhenRendered", () => {
     const { container } = render(<WhiteSpacePage />);
     const text = container.textContent ?? "";
