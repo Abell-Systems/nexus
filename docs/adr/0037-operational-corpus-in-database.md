@@ -1,8 +1,8 @@
-# ADR 0037: Operational Corpus in a Database, Not in Loose Artifact Files
+# ADR 0037: Corpora in a Database, Not in Loose Artifact Files
 
 **Status:** Proposed
 **Date:** 2026-10-22
-**Scope:** Where the operational service (`infrastructure.mvp_entrypoint`) reads its frozen corpus, embeddings and demands from, and how their integrity is verified. **This ADR is documentary: it changes no code.** It does not touch ADR 0014 (frozen embeddings, no live provider), which stays in force.
+**Scope:** Where the two corpora of the project live and how they are synchronised and verified: the operational corpus (matcher: `infrastructure.mvp_entrypoint` reads its frozen corpus, embeddings and demands) and the OEPM BIBLIO corpus (white-space study and explorer). **This ADR is documentary: it changes no code.** It does not touch ADR 0014 (frozen embeddings, no live provider), which stays in force.
 
 ---
 
@@ -52,6 +52,23 @@ Conditions that make C acceptable, none negotiable:
 6. **Parity gate before switching.** The adapter ships behind the same `PatentCandidateRetriever` port and a test that, over the real artifacts, returns identical ids, scores and order to `NumpyDenseRetriever` for every demand. Without it the old path stays the default.
 7. **No embedding at runtime.** Embeddings are generated offline as today (ADR 0014); the ingest command only loads them.
 
+## 3.1 Two corpora, one pattern (amendment, 2026-10-22)
+
+Requirements stated by the project owner: the corpus must be consumable efficiently for the white-space work, and there must be synchronisation.
+
+| | Operational corpus | OEPM BIBLIO 2000–2025 |
+|---|---|---|
+| Use | demand-to-asset matching | pair counts, base rates, section density, explorer data |
+| Source of truth today | `data/snapshots/operational_corpus_v1/` (229 MB) built from BigQuery + 2.2 h CPU embeddings | 26 public zips, 793 MB in `data/raw/oepm_open/`, re-downloadable with `scripts/download_oepm_opendata.py`; names, sizes and sha256 versioned in `config/whitespace/oepm_biblio_2000_2025.json` |
+| In the database | rows + embeddings, as in §3 | the parsed bibliographic records (publication id, dates, kind, IPC subclasses per source record), the grain every white-space count is computed from |
+| Current consumption | numpy matrix in memory | each report script re-parses the zips |
+
+The same pattern applies to both: immutable schema per version, manifest table, `content_sha256`, fail-closed verification. For BIBLIO the manifest also records the sha256 of every source zip, which are already pinned in git, and the Authority File hash. The database is therefore a **derived, rebuildable** form of a source that is reproducible from public data, never a new source of truth.
+
+**Synchronisation** is one ingest command per corpus, run from the controller (OMEN) against the host database over the tailnet, so that nothing but the database volume holds the corpus on the host. Re-running it for an existing version must either find an identical manifest and do nothing, or fail; it never overwrites. A new version is a new schema.
+
+**Derived results stay files.** `docs/whitespace/oepm-subclass-pairs-results.json` (6.2 MB) and the other versioned results remain static, git-versioned files served to the browser, as vertical 2 requires (no endpoint, no computation in the browser). What changes is their producer: the report scripts read BIBLIO from the database, and the JSON keeps carrying the corpus identity hashes, which now equal the manifest's. The unit rules (O4: activity by publication identifier at its earliest date; pairs from single source records) stay in `application/whitespace` and are not re-implemented in SQL; SQL provides the record-level data, not the metrics, so the existing invariants (565/612 active subclasses, 24,583/40,585 observed pairs) remain the equivalence test between the file-based and the database-based producer.
+
 ## 4. Consequences
 
 **Positive.** Deployment no longer depends on a data copy; reload and rollback are schema switches; backups and access control are the database's; more than one consumer can read the same verified corpus.
@@ -65,9 +82,9 @@ Conditions that make C acceptable, none negotiable:
 ## 5. Open questions (to answer before Accepted)
 
 1. **What is the reason for the database?** Incremental updates, several consumers, host-side deployment, or something else? The answer decides between B and C: if it is only "the data should reach the host reproducibly", B plus a sync step is cheaper.
-2. **Does the white-space explorer's observed-pairs data (`subclass_pairs`) move too,** or stay a versioned file? It has its own contract and is not retrieval data.
-3. **Where is the load run from?** The controller over the tailnet (needs the DB port reachable from the tailnet only) or on the host. The former keeps the corpus off the host's filesystem.
-4. **Is pgvector's exact scan fast enough** over the 44,195 eligible rows? It must be measured with the real data before this ADR is accepted.
+2. **Granularity of BIBLIO in the database.** Records and subclasses per record only (recommended), or also the derived pair tables? The latter duplicates the versioned results and is not proposed.
+3. **Where is the load run from?** Decided in §3.1: the controller over the tailnet, with the database port reachable from the tailnet only. Remaining question: the age/SOPS custody of the application and loader roles.
+4. **Is pgvector's exact scan fast enough** over the 44,195 eligible rows, and how long do the BIBLIO reports take against the database compared with parsing the zips? Both must be measured with the real data before this ADR is accepted.
 5. **Licensing and retention.** The text is third-party (Google Patents Public Data, CC BY 4.0); a DB in a shared host keeps the same obligations (attribution on screen, not legal advice).
 
 ## 6. Enforcement
