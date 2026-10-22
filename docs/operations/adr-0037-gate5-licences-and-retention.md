@@ -87,11 +87,42 @@ The right-hand column is a **proposal**, not a decision.
 | Operational snapshot (parquet, embeddings, demands) | `data/snapshots/operational_corpus_v1`, git-ignored | Yes (Google Patents text; **Innoget text**) | Keep while the MVP runs; the Innoget part waits for G2; delete on a rights-holder's request |
 | Spike database and container | OMEN, Docker volume | Derived OEPM | Delete after the benchmark results are committed and gate 1 is decided; the scripts rebuild it |
 | Staging database (when it exists) | Lenovo | As the corpora it holds | One immutable schema per version (ADR 0037 §3.1); keep the current and the previous; drop older ones on the owner's order |
-| Backups of the database volume | Kopia on the Lenovo (retention **not read**) | As above | **Pending:** the Kopia retention and whether the volume is included must be read before a deletion promise can be made |
+| Backups of the database volume | **Declared** (§6.1): Kopia snapshots only `/mnt/data/valentin/backup-data`; a Docker volume is not in that path | As above | **Pending:** observe the real Kopia configuration (§6.1); until then, no deletion promise and no assumption that the database is backed up |
 | Benchmark aggregate results (`summary.json`, `timings.json`, `environment.json`, `RESULTS.md`) | Repository | No (G6) | Keep as evidence, **conditional on reviewing the artefacts** for identifiers and local paths before committing |
 | Benchmark per-demand records (`raw.jsonl` and per-demand diagnostics) | Repository or work directory | No text, but **demand identifiers** | Do not assume harmless: review the identifiers against the Innoget decision (D2) before publishing; retention to be decided after that review |
 | Execution logs, tracebacks and `incident.json` | Work directory | No text, but local paths | Review and redact before publishing; keep only with the results they explain |
 | Tracked third-party files of §2 | Public repository | Yes | Owner decision (D1); removing from the working tree does not remove them from history, forks or clones |
+
+### 6.1 Kopia as declared in the infrastructure repository (not observed on the host)
+
+Source: `valentinlineiro/infrastructure`, `roles/node/tasks/backup.yml`, `docs/backup-operations.md`, `docs/ADR-001-backup-tool.md`, `docs/recovery.md`, read locally on 2026-10-22. This is the **declared** state; the Lenovo was not inspected.
+
+* Source of the snapshot: `/mnt/data/valentin/backup-data` only. `/srv` (workload code, config, secrets) and `/var/lib/docker` sit on the SSD and are **not** declared as sources; `docs/recovery.md` lists `/srv/*` as "SSD + Kopia snapshot of backup-data where applicable". A PostgreSQL volume would live under `/var/lib/docker` or `/srv`, so by declaration it has no Kopia backup.
+* Repository: filesystem repo `/mnt/backup-external/kopia-lenovo` on an external NTFS disk selected by UUID. The wrapper skips with a warning when the disk is absent ("expected state"), so snapshots can be missing for long periods.
+* Schedule: daily timer with a randomised delay and `Persistent=true`.
+* Retention: `--keep-daily 7 --keep-weekly 4 --keep-monthly 6`, no yearly, applied by policy on the source path. The Drive repository was discarded (2026-09-10).
+* A pre-purge snapshot set (242 GB) is documented as surviving "until 7/4/6 retention prunes", which is the declared precedent that deleted data persists in snapshots until retention expires.
+* A file-level snapshot of a live PostgreSQL data directory is not a consistent backup; the dump-based path of ADR 0037 would be needed. Not designed.
+
+**Consequence if the declaration is accurate:** the database would not be backed up, so deleting a source from it would not leave copies in Kopia, but a disk failure would lose it; and anything placed under `backup-data` would persist up to about six months after deletion. Both statements depend on the observation below.
+
+**Read-only inspection for the host owner (run as root; prints no secrets).** Do not share `repository.config`, the password file or any output containing keys.
+
+```bash
+kopia --version
+systemctl list-timers 'kopia*' --no-pager
+systemctl cat kopia-lenovo-hdd.service kopia-lenovo-hdd.timer | grep -v -i -E 'password|token|key'
+sed -E '/KOPIA_PASSWORD|PASSFILE/d' /usr/local/bin/kopia-lenovo-hdd.sh
+findmnt /mnt/backup-external; ls -ld /mnt/backup-external/kopia-lenovo
+kopia repository status 2>&1 | grep -v -i -E 'password|key'
+kopia policy list; kopia policy show --global; kopia policy show /mnt/data/valentin/backup-data
+kopia snapshot list --all | tail -n 40
+journalctl -t kopia-lenovo-hdd --since '60 days ago' --no-pager | tail -n 40
+df -h /srv /var/lib/docker /mnt/data /mnt/backup-external
+docker volume ls
+```
+
+What the output must settle: which paths have snapshots; the effective retention; the date of the last snapshot; whether the disk was present; whether `/srv`, `/var/lib/docker` or any volume is a source.
 
 **Deletion and recovery.** The owner authorises any deletion. Removing a source from a database corpus means building a new version without it (versions are immutable), dropping the old schema, and then purging the backups that still hold it, which depends on the unread Kopia retention. A restore is checked by the manifest digest of ADR 0037 §3.3 and, for the benchmark, by W6; neither tells whether a restored copy brings back material that was meant to be deleted. That interaction is not designed yet.
 
@@ -126,7 +157,7 @@ The three are different things. A decision recorded is not evidence obtained, an
 ### 8.3 Pending evidence (to obtain, not to decide)
 
 * Full text of Innoget §2.4 and §6 and of the OEPM legal notice, read by a person.
-* Kopia retention and whether the database volume is included.
+* Kopia: the host inspection of §6.1 (declared state is recorded, observed state is not).
 * Terms still marked *pending* in §3: Minesoft, EPO OPS, WIPO, OEPM BOPI dataset licence; Google Patents formal dataset terms.
 * LGPL review of `psycopg` if the loader is distributed in an image.
 * Reproducibility: the benchmark environment versions differ from `backend/requirements.txt`; a separate task, outside this PR.
