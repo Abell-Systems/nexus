@@ -35,14 +35,23 @@ class PostgresStore:
             parts.append(f"{t.name}:{d}")
         return hashlib.sha256("\n".join(parts).encode()).hexdigest()
 
+    @staticmethod
+    def _exists(conn: psycopg.Connection, kind: str, name: str) -> bool:
+        """Early, friendly refusal only. Ownership never rests on it: the CREATE statements are the atomic claims."""
+        sql = ("SELECT 1 FROM information_schema.schemata WHERE schema_name=%s" if kind == "schema"
+               else "SELECT 1 FROM pg_database WHERE datname=%s")
+        return conn.execute(sql, (name,)).fetchone() is not None
+
     def prepare(self, version: str, rows: dict[str, list[tuple]]) -> VerifyResult:
         schema = self._schema(version)
         with self._conn() as conn:
-            if conn.execute("SELECT 1 FROM information_schema.schemata WHERE schema_name=%s", (schema,)).fetchone():
+            if self._exists(conn, "schema", schema):
                 raise FileExistsError(f"{schema} already exists: versions are immutable")
             try:
-                with conn.transaction():  # published only when complete
+                with conn.transaction():  # published only when complete; CREATE SCHEMA is the atomic claim
                     digest = self._build(conn, schema, version, rows)
+            except psycopg.errors.DuplicateSchema as exc:  # lost a race: the schema is somebody else's, only our transaction rolls back
+                raise FileExistsError(f"{schema} was created concurrently: {exc}") from exc
             except psycopg.errors.ForeignKeyViolation as exc:
                 raise ReferentialError(str(exc)) from exc
             except (psycopg.errors.UniqueViolation, psycopg.errors.CheckViolation) as exc:
@@ -147,10 +156,13 @@ class PostgresStore:
     def restore_new(self, source: Path, version: str):
         db = f"{self.namespace}_restored_new"
         with self._conn() as conn:
-            if conn.execute("SELECT 1 FROM pg_database WHERE datname=%s", (db,)).fetchone():
+            if self._exists(conn, "database", db):
                 raise FileExistsError(f"database {db} exists (leftover of an interrupted run?): remove it explicitly with "
                                       f"remove_leftover_database() before measuring; restore_new never drops it")
-            conn.execute(f"CREATE DATABASE {db}")
+            try:
+                conn.execute(f"CREATE DATABASE {db}")  # the atomic claim
+            except psycopg.errors.DuplicateDatabase as exc:  # lost a race: not ours, nothing is dropped
+                raise FileExistsError(f"database {db} was created concurrently: {exc}") from exc
         try:  # the database was created just above, so it is ours to remove if the restore fails
             with source.open("rb") as inp:
                 subprocess.run(["docker", "exec", "-i", self.container, "pg_restore", "-U", "postgres", "-d", db, "--exit-on-error"],

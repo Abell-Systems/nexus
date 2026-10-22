@@ -53,18 +53,19 @@ Tests on synthetic data (the count changes with each review; run the suite, do n
 
 ## Destructive operations: audit (verifiable rule)
 
-Rule 1: no pre-existing resource is modified or deleted because a run failed to create it. Rule 2: an operation that fails midway removes what *it* created and nothing else, so a failure leaves no partial artifact that blocks the next attempt (`prepare`, `restore`, `restore_new`, `backup`, `PgRetriever` construction). Every destructive call in `harness/` and `run_benchmark.py`, and why it is allowed (re-check with `grep -n "rmtree\|unlink\|rename\|DROP \|write_text\|write_bytes\|open(.*\"[wx]" harness/*.py run_benchmark.py`):
+Rule 0 (how ownership is established): never by 'check, then create' (a race can land between the two); always by an atomic exclusive creation (`os.mkdir`, `open("xb")`, `CREATE SCHEMA`, `CREATE DATABASE`) whose failure means the name was already taken and leaves it untouched. Early `exists`/`_exists` checks exist only to give a friendlier error; correctness never rests on them. Cleanup acts only on what the failing call itself created, and a claimed directory is released with `os.rmdir`, which refuses to remove anything another process put there. Rule 1: no pre-existing resource is modified or deleted because a run failed to create it. Rule 2: an operation that fails midway removes what *it* created and nothing else, so a failure leaves no partial artifact that blocks the next attempt (`prepare`, `restore`, `restore_new`, `backup`, `PgRetriever` construction). Every destructive call in `harness/` and `run_benchmark.py`, and why it is allowed (re-check with `grep -n "rmtree\|unlink\|rename\|DROP \|write_text\|write_bytes\|open(.*\"[wx]" harness/*.py run_benchmark.py`):
 
 | Call | Operates on | Why it is safe |
 |---|---|---|
-| `FilesStore.prepare` staging | `<version>.staging` | refuses an existing one (`FileExistsError`); removes only a staging it created, if its own write fails |
-| `FilesStore.prepare` rename | staging -> version | publishes a complete directory; the target was checked absent, renaming onto a non-empty directory fails |
-| `FilesStore.restore_new` | `<root>_restored_new` | refuses an existing root; removes only the root it created, when its own restore fails; `dispose` removes it only if this object created it |
-| `FilesStore.restore` / `backup` | version dir / destination | an existing destination is refused first (`FileExistsError`, untouched); only afterwards is a partial copy, which this call created, removed if the copy fails |
+| `FilesStore` `_atomic_publish` (prepare, backup, restore) | destination and `<destination>.staging` | `os.mkdir` claims each name atomically; a taken name raises `FileExistsError` and is untouched; the staging directory is filled and `os.rename`d over our own empty claim; on failure only our staging is removed and the claim via `os.rmdir` (refuses a non-empty directory) |
+| `FilesStore.restore_new` | `<root>_restored_new` | `os.mkdir` is the atomic claim; on failure the claim is released with `os.rmdir`; `dispose` removes it only if this object created it |
 | `FilesStore.drop`, `PostgresStore.drop` | a version | called by the orchestration only for versions in `Context.created`, or by W6b after it prepared that version itself |
 | `FilesStore.alter`, `PostgresStore.alter` | a version | called only on a version this run prepared for W4 |
 | `FilesStore.remove_leftover_staging`, `PostgresStore.remove_leftover_database`, `PgRetriever.remove_leftover_schema` | named leftovers | explicit, return the name, never called by the harness itself |
+| `PostgresStore.prepare` | schema `<ns>_<version>` | one transaction whose `CREATE SCHEMA` is the claim; a lost race raises `FileExistsError` and only our transaction rolls back |
 | `PostgresStore.backup` | destination file | opened exclusively (`"xb"`): an existing file is refused untouched; a partial file created by this call is unlinked if `pg_dump` fails, so the next attempt is not blocked |
-| `PostgresStore.restore_new` | database `<ns>_restored_new` | refuses an existing database; drops only the one it created, when its own `pg_restore` fails |
-| `PgRetriever` | schema `<ns>_operational_v1` | refuses an existing schema; `close` drops it only if this object created it |
+| `PostgresStore.restore_new` | database `<ns>_restored_new` | `CREATE DATABASE` is the atomic claim (a lost race raises `FileExistsError`, nothing dropped); drops only the one it created, when its own `pg_restore` fails |
+| `PgRetriever` | schema `<ns>_operational_v1` | `CREATE SCHEMA` is the atomic claim (a lost race raises `FileExistsError` and `_created` stays false); `close` drops it only if this object created it |
 | `run_benchmark.py` result files | `--work-dir` | refuses a non-empty directory, so earlier results are never overwritten |
+
+The race regressions are deterministic (`tests/test_races.py`): a racer creates the destination, with a sentinel file, at the first moment the code touches its path, and the tests assert the sentinel survives. The same tests fail against the previous 'check, then create' implementation (commit `bde407d`), which is how they were validated.

@@ -47,10 +47,13 @@ class PgRetriever:
         self.conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
         register_vector(self.conn)
         c = self.conn
-        if c.execute("SELECT 1 FROM information_schema.schemata WHERE schema_name=%s", (schema,)).fetchone():
+        if self._schema_exists(schema):
             raise FileExistsError(f"schema {schema} exists (leftover of an interrupted run?): remove it explicitly with "
                                   f"remove_leftover_schema() before measuring; W7 never drops it")
-        c.execute(f"CREATE SCHEMA {schema}")
+        try:
+            c.execute(f"CREATE SCHEMA {schema}")  # the atomic claim
+        except psycopg.errors.DuplicateSchema as exc:  # lost a race: not ours, and _created stays False so close() drops nothing
+            raise FileExistsError(f"schema {schema} was created concurrently: {exc}") from exc
         self._created = True
         c.execute(f"CREATE TABLE {schema}.asset(asset_id int PRIMARY KEY, publication_number text UNIQUE NOT NULL)")
         c.execute(f"CREATE TABLE {schema}.asset_embedding(asset_id int PRIMARY KEY REFERENCES {schema}.asset, embedding vector({matrix.shape[1]}) NOT NULL)")
@@ -70,6 +73,10 @@ class PgRetriever:
 
     def retrieve(self, demand, vector, limit):
         return [(p, s) for p, s in self.conn.execute(SQL.format(s=self.schema), (vector, limit)).fetchall()]
+
+    def _schema_exists(self, schema: str) -> bool:
+        """Early, friendly refusal only; the CREATE SCHEMA that follows is the atomic claim."""
+        return self.conn.execute("SELECT 1 FROM information_schema.schemata WHERE schema_name=%s", (schema,)).fetchone() is not None
 
     @staticmethod
     def remove_leftover_schema(dsn: str, schema: str) -> str:

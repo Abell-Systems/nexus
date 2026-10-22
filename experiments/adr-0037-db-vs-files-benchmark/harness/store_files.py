@@ -1,8 +1,9 @@
 """Alternative B: one Parquet file per table + manifest.json with sha256 per file, queried with DuckDB (pre-registration §1)."""
 import hashlib
 import json
+import os
 import shutil
-from contextlib import closing
+from contextlib import closing, contextmanager
 from datetime import date
 from pathlib import Path
 
@@ -37,6 +38,36 @@ def _write(path: Path, t: Table, rows: list[tuple]) -> None:
     pq.write_table(pa.table(cols, schema=_schema(t)), path, compression=COMPRESSION, row_group_size=ROW_GROUP)
 
 
+@contextmanager
+def _atomic_publish(dst: Path):
+    """Ownership is established by atomic exclusive creation, never by 'check then create'.
+
+    1. `os.mkdir(dst)` claims the destination name: it raises FileExistsError if anything is there, touching nothing.
+    2. `os.mkdir(dst.staging)` claims the staging name the same way; if it is taken, the empty claim of step 1 is released.
+    3. The caller fills the staging directory, which only this call owns.
+    4. `os.rename(staging, dst)` replaces our own empty claim in one atomic step.
+    On any failure only what this call created is removed: the staging directory, and the claim via `os.rmdir`, which refuses to
+    remove a directory that is no longer empty (so nothing another process put there can be deleted).
+    """
+    os.mkdir(dst)
+    staging = dst.with_name(dst.name + ".staging")
+    try:
+        os.mkdir(staging)
+    except BaseException:
+        os.rmdir(dst)
+        raise
+    try:
+        yield staging
+        os.rename(staging, dst)
+    except BaseException:
+        shutil.rmtree(staging, ignore_errors=True)
+        try:
+            os.rmdir(dst)
+        except OSError:
+            pass
+        raise
+
+
 def _manifest_digest(files: dict) -> str:
     return hashlib.sha256(canonical_json(files).encode()).hexdigest()
 
@@ -53,15 +84,7 @@ class FilesStore:
 
     def prepare(self, version: str, rows: dict[str, list[tuple]]) -> VerifyResult:
         check_constraints(rows)  # the constraints A enforces in the database; counted in B's preparation
-        target = self._dir(version)
-        if target.exists():
-            raise FileExistsError(f"{version} already exists: versions are immutable")
-        staging = target.with_name(target.name + ".staging")
-        if staging.exists():
-            raise FileExistsError(f"{staging} exists (leftover of an interrupted run?): remove it explicitly with "
-                                  f"remove_leftover_staging() before measuring; prepare never deletes it")
-        staging.mkdir(parents=True)  # from here the staging directory is ours and only ours
-        try:
+        with _atomic_publish(self._dir(version)) as staging:
             files = {}
             for t in TABLES:
                 path = staging / f"{t.name}.parquet"
@@ -69,10 +92,6 @@ class FilesStore:
                 files[t.name] = {"sha256": _sha256(path), "bytes": path.stat().st_size, "rows": len(rows[t.name])}
             digest = _manifest_digest(files)
             (staging / "manifest.json").write_text(json.dumps({"version": version, "files": files, "manifest_sha256": digest}, indent=1))
-            staging.rename(target)  # published only when complete
-        except BaseException:
-            shutil.rmtree(staging, ignore_errors=True)  # a half-written staging directory that we created
-            raise
         return VerifyResult(version, digest)
 
     def remove_leftover_staging(self, version: str) -> Path:
@@ -153,33 +172,25 @@ class FilesStore:
             raise ValueError(kind)
 
     def backup(self, version: str, destination: Path) -> None:
-        if destination.exists():
-            raise FileExistsError(f"{destination} exists: a backup never overwrites or merges into it")
-        try:  # the destination did not exist, so whatever is there after a failure was created by this call
-            shutil.copytree(self._dir(version), destination)
-        except BaseException:
-            shutil.rmtree(destination, ignore_errors=True)
-            raise
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        with _atomic_publish(destination) as staging:
+            shutil.copytree(self._dir(version), staging, dirs_exist_ok=True)  # into our own empty staging directory
 
     def restore(self, source: Path, version: str) -> None:
-        target = self._dir(version)
-        if target.exists():
-            raise FileExistsError(f"{version} exists: restore never overwrites")
-        try:  # the target did not exist: a partial copy after a failure is ours to remove
-            shutil.copytree(source, target)
-        except BaseException:
-            shutil.rmtree(target, ignore_errors=True)
-            raise
+        with _atomic_publish(self._dir(version)) as staging:
+            shutil.copytree(source, staging, dirs_exist_ok=True)
 
     def restore_new(self, source: Path, version: str):
         new_root = self.root.parent / (self.root.name + "_restored_new")
-        if new_root.exists():
-            raise FileExistsError(f"{new_root} exists: restore_new never writes into, or removes, a pre-existing location")
-        other = FilesStore(new_root)  # creates new_root, which did not exist: ours from here on
+        os.mkdir(new_root)  # atomic claim: FileExistsError if anything is there, which is then left untouched
+        other = FilesStore(new_root)
         try:
             other.restore(source, version)
         except BaseException:
-            shutil.rmtree(new_root, ignore_errors=True)
+            try:
+                os.rmdir(new_root)  # only if empty: restore already removed what it created
+            except OSError:
+                pass
             raise
         other._created = True
         return other, version
