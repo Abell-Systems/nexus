@@ -30,25 +30,25 @@ def origin_resolver() -> DefaultOriginResolver:
 
 @pytest.fixture
 def pg_us_payload() -> RawPayload:
-    # Uses clean, canonical version-controlled fixture
-    fixture_path = _FIXTURES_DIR / "innoget_sample_call_2446.html"
+    # Synthetic fixture: invented content, see the comment inside the file
+    fixture_path = _FIXTURES_DIR / "innoget_synthetic_us_call.html"
     return RawPayload(
         source_id="innoget_web",
-        batch_id="innoget_call_2446",
+        batch_id="innoget_call_900001",
         payload_bytes=fixture_path.read_bytes(),
-        metadata={"url": "https://www.innoget.com/technology-calls/2446/seeking-oral-care-solutions-for-non-bleach-whiteners"},
+        metadata={"url": "https://www.innoget.com/technology-calls/900001/synthetic-example-household-products"},
         retrieval_timestamp=datetime(2024, 3, 15, 12, 0, 0, tzinfo=UTC),
     )
 
 
 @pytest.fixture
 def spanish_call_payload() -> RawPayload:
-    fixture_path = _FIXTURES_DIR / "innoget_sample_spanish_call.html"
+    fixture_path = _FIXTURES_DIR / "innoget_synthetic_spanish_call.html"
     return RawPayload(
         source_id="innoget_web",
-        batch_id="innoget_call_2292",
+        batch_id="innoget_call_900002",
         payload_bytes=fixture_path.read_bytes(),
-        metadata={"url": "https://www.innoget.com/technology-calls/2292/recubrimientos-enzimaticos-biodegradables"},
+        metadata={"url": "https://www.innoget.com/technology-calls/900002/recubrimientos-sinteticos-de-ejemplo"},
         retrieval_timestamp=datetime(2024, 3, 15, 12, 0, 0, tzinfo=UTC),
     )
 
@@ -66,14 +66,14 @@ def test_innoget_normalizer_level_1_spanish_origin(
 
     demand = res.demand
     assert demand is not None
-    assert demand.demand_id == "INNOGET-2292"
-    assert "Recubrimientos enzimáticos" in demand.title
-    assert "tensioactivos y enzimas biodegradables" in demand.description
-    assert demand.requesting_organization == "INDUSAC S.L."
+    assert demand.demand_id == "INNOGET-900002"
+    assert "Recubrimientos sintéticos" in demand.title
+    assert "formulaciones biodegradables" in demand.description
+    assert demand.requesting_organization == "Empresa Ejemplo S.L."
     assert demand.origin_country == "Spain"
     assert demand.is_spanish_demand is True
-    assert demand.deadline_date == "2024-12-15"
-    assert "100,000 - 250,000 €" in (demand.budget_range or "")
+    assert demand.deadline_date == "2030-01-01"
+    assert "10,000 - 20,000 €" in (demand.budget_range or "")
 
     # Check evidence attached
     assert len(res.origin_assessment.evidence_observations) == 1
@@ -94,10 +94,10 @@ def test_innoget_normalizer_excludes_us_call(
 
     demand = res.demand
     assert demand is not None
-    assert demand.demand_id == "INNOGET-2446"
+    assert demand.demand_id == "INNOGET-900001"
     assert demand.origin_country == "United States"
     assert demand.is_spanish_demand is False
-    assert demand.requesting_organization == "The Procter & Gamble Company"
+    assert demand.requesting_organization == "Example Household Goods Inc."
 
 
 def test_innoget_normalizer_quarantines_invalid_utf8(origin_resolver: DefaultOriginResolver) -> None:
@@ -147,7 +147,7 @@ def test_innoget_normalize_stream_yields_only_included(
     # Spanish call -> yields 1
     spanish_stream = list(normalizer.normalize_stream(spanish_call_payload))
     assert len(spanish_stream) == 1
-    assert spanish_stream[0].demand_id == "INNOGET-2292"
+    assert spanish_stream[0].demand_id == "INNOGET-900002"
 
     # US call -> yields 0
     us_stream = list(normalizer.normalize_stream(pg_us_payload))
