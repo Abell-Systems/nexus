@@ -1,6 +1,6 @@
 # Benchmark harness: design and state
 
-**State: skeleton.** The stores, comparisons, recorder and the authorisation barrier exist and are tested on synthetic data. The orchestration of workloads W1–W7 is **not written** and no measurement has been run. `PREREGISTRATION.md` (with revision R1) remains the methodological authority; this file only describes how the code serves it and must not be read as protocol.
+**State: skeleton, blocked.** Execution is blocked until the protocol PR (#155) is merged and a person creates `AUTHORISATION.json`; this branch is separate from the protocol so that the protocol was fixed before the execution code existed. The stores, comparisons, recorder and the authorisation barrier exist and are tested on synthetic data. The orchestration of workloads W1–W7 is **not written** and no measurement has been run. `PREREGISTRATION.md` (with revision R1) remains the methodological authority; this file only describes how the code serves it and must not be read as protocol.
 
 ## Layout
 
@@ -26,17 +26,17 @@ Exit codes: 0 all acceptance checks passed; 1 a check failed; 2 refused; 3 envir
 * **No silent equivalence.** Comparisons raise instead of returning "equal" when a side is incomplete.
 * **Configuration captured.** `configuration()` records engine versions and parameters that can affect results (A: server version, shared_buffers, work_mem, parallel workers, effective_cache_size, database collation; B: DuckDB and pyarrow versions, compression, row-group size, sorting, collation).
 
-## Known asymmetries (to be reported, not hidden)
+## Asymmetries and how they are handled
 
-1. **Foreign keys** are enforced by A and not by B (`references` in `tables.py`). A's load cost therefore includes constraint checking that B does not do. This reflects the two designs, not an error, and goes into §6.
-2. **Parquet determinism:** manifest hashes assume the same writer version on the same input produces the same bytes; the harness does not check that yet (W1 should rebuild once and compare).
-3. **A's backup and restore** run `pg_dump`/`pg_restore` through `docker exec` in the spike container; restore recreates the dumped schema name, so W6 drops the version first (as pre-registered).
-4. **A's digest** is order-independent (rows ordered by key); B's manifest is byte-based. Test (iv) swaps physical order only: A is expected not to flag it, B to flag it. It is reported, not graded.
-5. `swap_rows` for A is checked only through the pre-registered reporting, not asserted in the synthetic tests.
+1. **Referential constraints.** A enforces foreign keys in the database. B now calls `check_references` on the same rows at `prepare`, raising the same `ReferentialError`; both stores refuse the same orphan rows (tested) and nothing is published when they do. Its cost sits in B's preparation, and the engines still differ in *how* they check (database constraint versus a Python pass over the rows), so preparation times are reported with that caveat and not read as engine-only costs.
+2. **Parquet determinism.** Tested: preparing the same rows twice gives identical manifests on this machine and library version. If that ever fails, `logical_digest` (below) tells a serialisation difference from a corpus change.
+3. **Content equivalence versus integrity.** `logical_digest` reads the stored rows back and digests them in a canonical form (rows sorted in Python by primary key, canonical JSON), independent of collation, physical order and file bytes; it is what A and B are compared on, and it must equal the digest of the source rows. `verify()` keeps each store's own integrity control (A: manifest digest of the rows; B: file hashes), reported separately. Test (iv), a physical reorder, is expected not to be flagged by A and to be flagged by B; it is reported, not graded.
+4. **A's backup and restore** run `pg_dump`/`pg_restore` through `docker exec` in the spike container; restore recreates the dumped schema name, so W6 drops the version first (as pre-registered).
+5. `swap_rows` for A is exercised only through the pre-registered reporting, not asserted in the synthetic tests.
 
 ## Tests (correctness of the harness, not of the engines)
 
-`tests/` on synthetic data: equal and different records and pairs, refusal of incomplete comparisons, timing and phase tags, nesting refusal, materiality rule, authorisation barrier, and both stores (prepare, verify, order of mixed-case symbols, counts, alterations detected before reading, immutability, previous version intact, backup/restore, no overwrite). The PostgreSQL variants run only when `NEXUS_BENCH_PG_DSN` is set. Run: `NEXUS_BENCH_PG_DSN=... python -m pytest experiments/adr-0037-db-vs-files-benchmark/tests`.
+`tests/` on synthetic data: equal and different records and pairs, refusal of incomplete comparisons, timing and phase tags, nesting refusal, materiality rule, authorisation barrier, and both stores (prepare, verify, order of mixed-case symbols, counts, alterations detected before reading, immutability, previous version intact, backup/restore, no overwrite, equal logical content, orphan rows refused, Parquet determinism). The PostgreSQL variants run only when `NEXUS_BENCH_PG_DSN` is set. Run: `NEXUS_BENCH_PG_DSN=... python -m pytest experiments/adr-0037-db-vs-files-benchmark/tests`.
 
 ## Not yet written
 

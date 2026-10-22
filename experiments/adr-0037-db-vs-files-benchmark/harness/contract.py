@@ -36,6 +36,10 @@ class Store(Protocol):
     def verify(self, version: str) -> VerifyResult:
         """Recompute integrity against the version's manifest. Raises IntegrityError on any mismatch or absence."""
 
+    def logical_digest(self, version: str) -> str:
+        """Digest of the stored rows read back and canonicalised (`canonical_rows_digest`), for content equivalence between
+        stores. It is separate from verify(), which is each store's own integrity control (manifest digest / file hashes)."""
+
     def read_records(self, version: str) -> list[AnalysisRecord]:
         """All records in record order, subclasses ordered by code point (contract of ADR 0037 §3.8)."""
 

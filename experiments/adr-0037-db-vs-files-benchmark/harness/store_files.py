@@ -11,7 +11,7 @@ import pyarrow.parquet as pq
 
 from harness.compare import canonical_json
 from harness.contract import AlterKind, IntegrityError, VerifyResult, analysis_record
-from harness.tables import BY_NAME, TABLES, Table
+from harness.tables import BY_NAME, TABLES, Table, canonical_rows_digest, check_references
 
 _ARROW = {"int": pa.int64(), "bigint": pa.int64(), "text": pa.string(), "date": pa.date32()}
 COMPRESSION, ROW_GROUP = "zstd", 1_000_000
@@ -51,6 +51,7 @@ class FilesStore:
         return self.root / version
 
     def prepare(self, version: str, rows: dict[str, list[tuple]]) -> VerifyResult:
+        check_references(rows)  # same semantic constraints as A's foreign keys, counted in B's preparation
         target = self._dir(version)
         if target.exists():
             raise FileExistsError(f"{version} already exists: versions are immutable")
@@ -99,6 +100,11 @@ class FilesStore:
             FROM publication p ORDER BY p.record_id""")
         return [analysis_record(*row) for row in cur.fetchall()]
 
+    def logical_digest(self, version: str) -> str:
+        con = self._connect(version)
+        return canonical_rows_digest({t.name: [tuple(r) for r in con.execute(f"SELECT {', '.join(c for c, _ in t.columns)} FROM {t.name}").fetchall()]
+                                      for t in TABLES})
+
     def load_checks(self, version: str) -> dict[str, int]:
         con, q = self._connect(version), lambda s: self._connect(version).execute(s).fetchone()[0]
         return {
@@ -145,4 +151,4 @@ class FilesStore:
     def configuration(self) -> dict:
         return {"engine": f"duckdb {duckdb.__version__}", "pyarrow": pa.__version__, "compression": COMPRESSION,
                 "row_group_size": ROW_GROUP, "sorted_by": "primary key", "collation": "binary (verified at connect)",
-                "referential_integrity": "not enforced"}
+                "referential_integrity": "checked at prepare by check_references (same constraints as A), not enforced afterwards"}

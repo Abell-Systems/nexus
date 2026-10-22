@@ -6,7 +6,7 @@ from pathlib import Path
 import psycopg
 
 from harness.contract import AlterKind, IntegrityError, VerifyResult, analysis_record
-from harness.tables import BY_NAME, TABLES
+from harness.tables import BY_NAME, TABLES, ReferentialError, canonical_rows_digest
 
 _PG = {"int": "integer", "bigint": "bigint", "text": "text", "date": "date"}
 
@@ -39,23 +39,30 @@ class PostgresStore:
         with self._conn() as conn:
             if conn.execute("SELECT 1 FROM information_schema.schemata WHERE schema_name=%s", (schema,)).fetchone():
                 raise FileExistsError(f"{schema} already exists: versions are immutable")
-            with conn.transaction():  # published only when complete
-                conn.execute(f"CREATE SCHEMA {schema}")
-                for t in TABLES:
-                    cols = ", ".join(f"{c} {_PG[ty]}" for c, ty in t.columns)
-                    fks = "".join(f", FOREIGN KEY ({c}) REFERENCES {schema}.{ref}" for c, ref in t.references)
-                    conn.execute(f"CREATE TABLE {schema}.{t.name} ({cols}, PRIMARY KEY ({', '.join(t.key)}){fks})")
-                for t in TABLES:  # TABLES is ordered so referenced tables come first
-                    with conn.cursor() as cur, cur.copy(f"COPY {schema}.{t.name} FROM STDIN") as cp:
-                        for r in rows[t.name]:
-                            cp.write_row(r)
-                conn.execute(f"CREATE INDEX ON {schema}.ipc_entry(subclass_symbol, record_id)")
-                conn.execute(f"CREATE INDEX ON {schema}.publication(publication_date)")
-                digest = self._digest(conn, schema)
-                conn.execute(f"CREATE TABLE {schema}.manifest(version text PRIMARY KEY, content_sha256 text NOT NULL)")
-                conn.execute(f"INSERT INTO {schema}.manifest VALUES (%s, %s)", (version, digest))
-            conn.execute(f"ANALYZE")
+            try:
+                with conn.transaction():  # published only when complete
+                    digest = self._build(conn, schema, version, rows)
+            except psycopg.errors.ForeignKeyViolation as exc:
+                raise ReferentialError(str(exc)) from exc
+            conn.execute("ANALYZE")
         return VerifyResult(version, digest)
+
+    def _build(self, conn: psycopg.Connection, schema: str, version: str, rows: dict[str, list[tuple]]) -> str:
+        conn.execute(f"CREATE SCHEMA {schema}")
+        for t in TABLES:
+            cols = ", ".join(f"{c} {_PG[ty]}" for c, ty in t.columns)
+            fks = "".join(f", FOREIGN KEY ({c}) REFERENCES {schema}.{ref}" for c, ref in t.references)
+            conn.execute(f"CREATE TABLE {schema}.{t.name} ({cols}, PRIMARY KEY ({', '.join(t.key)}){fks})")
+        for t in TABLES:  # TABLES is ordered so referenced tables come first
+            with conn.cursor() as cur, cur.copy(f"COPY {schema}.{t.name} FROM STDIN") as cp:
+                for r in rows[t.name]:
+                    cp.write_row(r)
+        conn.execute(f"CREATE INDEX ON {schema}.ipc_entry(subclass_symbol, record_id)")
+        conn.execute(f"CREATE INDEX ON {schema}.publication(publication_date)")
+        digest = self._digest(conn, schema)
+        conn.execute(f"CREATE TABLE {schema}.manifest(version text PRIMARY KEY, content_sha256 text NOT NULL)")
+        conn.execute(f"INSERT INTO {schema}.manifest VALUES (%s, %s)", (version, digest))
+        return digest
 
     def verify(self, version: str) -> VerifyResult:
         schema = self._schema(version)
@@ -78,6 +85,12 @@ class PostgresStore:
                           WHERE e.record_id=p.record_id) u), '{{}}')
                 FROM {schema}.publication p ORDER BY p.record_id""")
             return [analysis_record(*row) for row in cur.fetchall()]
+
+    def logical_digest(self, version: str) -> str:
+        schema = self._schema(version)
+        with self._conn() as conn:
+            return canonical_rows_digest({t.name: [tuple(r) for r in conn.execute(
+                f"SELECT {', '.join(c for c, _ in t.columns)} FROM {schema}.{t.name}").fetchall()] for t in TABLES})
 
     def load_checks(self, version: str) -> dict[str, int]:
         schema = self._schema(version)

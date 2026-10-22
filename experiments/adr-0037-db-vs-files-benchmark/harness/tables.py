@@ -68,3 +68,39 @@ def rows_from_outcomes(
         rows["anomaly"] += [(rid, k, x.field, x.raw_value, x.reason) for k, x in enumerate(o.anomalies)]
     rows["ipc_subclass"] = [(s, *v) for s, v in sorted(symbols.items())]
     return rows
+
+
+class ReferentialError(Exception):
+    """A row refers to a row that does not exist. Raised by both stores at prepare time, so they enforce the same semantics."""
+
+
+def check_references(rows: dict[str, list[tuple]]) -> None:
+    """The foreign keys of `tables.py`, checked on the shared rows. A also enforces them in the database; B calls this."""
+    for t in TABLES:
+        names = [c for c, _ in t.columns]
+        for column, referenced in t.references:
+            target = BY_NAME[referenced]
+            tnames = [c for c, _ in target.columns]
+            # a reference points at the referenced table's key column of the same name, or at its single key column
+            tcol = column if column in tnames else target.key[0]
+            valid = {r[tnames.index(tcol)] for r in rows[referenced]}
+            i = names.index(column)
+            for r in rows[t.name]:
+                if r[i] not in valid:
+                    raise ReferentialError(f"{t.name}.{column}={r[i]!r} has no row in {referenced}.{tcol}")
+
+
+def canonical_rows_digest(rows: dict[str, list[tuple]]) -> str:
+    """Logical content digest, common to both stores: rows sorted in Python by primary key (independent of any collation or
+    physical order), serialised as canonical JSON. Equal logical content gives an equal digest whatever the storage."""
+    import hashlib
+    import json
+
+    parts = []
+    for t in TABLES:
+        names = [c for c, _ in t.columns]
+        idx = [names.index(k) for k in t.key]
+        ordered = sorted(rows[t.name], key=lambda r: tuple(r[i] for i in idx))
+        blob = json.dumps([list(r) for r in ordered], separators=(",", ":"), ensure_ascii=False, default=str)
+        parts.append(f"{t.name}:{hashlib.sha256(blob.encode()).hexdigest()}")
+    return hashlib.sha256("\n".join(parts).encode()).hexdigest()
