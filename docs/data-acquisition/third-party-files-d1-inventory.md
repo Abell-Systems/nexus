@@ -61,3 +61,9 @@ Retiring these files is not a plain deletion. What references them:
 * The judging and escalation sheets of `experiments/operational-dense-probe/outputs/` contain demand text but are git-ignored, so they are not in the public tree.
 * Annotation sheets, the validation sheet, `judgments-A.json` and the derived reports are unchanged (separate reviews).
 * The local `restricted/` directory (git-ignored) holds the original data on this machine; that is a working copy, not an authorisation.
+
+## Continuous check and where restricted data may live
+
+* CI runs `pytest experiments/wpi-demand-patent-matching/checks/check_restricted_separation.py` after the unit tests (job "Unit Tests"). It verifies that the **versioned tree** of the experiment, `scripts/` and the dense-probe directory contains none of the fingerprinted original text, that the scripts stop when the corpus is absent, and that the synthetic set is deterministic. It does not inspect git history, forks, clones or backups, and does not detect paraphrase, text split across literals or quotes not among the fingerprints. A docs-only change skips CI (`paths-ignore`), which is fine here: the guard scans code and data paths.
+* `.gitignore` covers only the default location `experiments/wpi-demand-patent-matching/restricted/`. A restricted copy placed elsewhere through `WPI_DATA_DIR` is protected only if that location is outside the repository or ignored; the guard would flag a copy of the original text if it were committed in the scanned paths, not elsewhere in the repository.
+* The auditors' own `rationale` and `primary_technical_object` texts remain in the generator scripts. They are not assumed free of third-party content nor treated as protected; they are reviewed with the annotation sheets and derived reports.

@@ -150,6 +150,8 @@ jobs:
         run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt
       - name: Unit Tests
         run: pytest backend/test/unit -v --cov=backend/src/main --cov-report=xml:coverage.xml --junitxml=test-results/unit.xml
+      - name: Third-party data separation guard (versioned tree only; not the git history)
+        run: pytest experiments/wpi-demand-patent-matching/checks/check_restricted_separation.py -v
       - name: Integration Tests
         run: pytest backend/test/integration -v --cov=backend/src/main --cov-append --cov-report=xml:coverage.xml --junitxml=test-results/integration.xml
       - name: E2E Reproducibility Gate & Coverage Verification (Strict Fail Under)
