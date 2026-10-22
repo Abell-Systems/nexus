@@ -1,0 +1,74 @@
+# Contracts of the seven workloads
+
+Subordinate to `PREREGISTRATION.md` (merged in #155, merge commit `d622c8e8e314edcd1568428d4da2f4c6187d454c`, sha256 `591ff8cf7c157b846dee9a20f652d98c80c51b094443d0eeb3bf7e52f1e557d5`). Where this file and the protocol differ, the protocol wins and this file is wrong. It adds no criterion, threshold or rule. It fixes, before any orchestration code exists, what each workload takes, produces and how it may fail. Nothing here is implemented yet and nothing has been measured.
+
+## Common rules
+
+* **Result record.** Every workload run produces one JSON object appended to `results/raw.jsonl`: `{workload, alternative, repetition, run_kind, order_in_repetition, status, timings[], outputs{}, checks{}, incident?}`. `status` is `ok`, `check_failed` or `incident`. `timings` are `recorder.Entry` objects with their `prepare`/`execute` phase.
+* **Status meaning.** `ok`: ran to the end and every check of that workload that is graded passed. `check_failed`: ran to the end and a graded check failed; counts against the alternative (exit code 1). `incident`: the run could not complete for a reason outside the alternative's behaviour (environment, harness bug, interrupted process); nothing is graded, it is recorded, the cause is written down and the run is repeated (protocol §7). Whether a failure is an incident or a check failure is decided by the rules below, never after seeing which alternative it affects.
+* **Isolation.** Each alternative runs in its own directory / schema namespace; versions are immutable; shared rows are never modified. A worker of one alternative never reads the other's data.
+* **Input.** The shared rows come from one parse of the 26 files through `OepmBiblioSource` (hashes verified); the parse is recorded as `shared_input` and belongs to neither alternative. If the adapter reports a different count of read or rejected records than 711,547 and 341, the run is an incident.
+* **Order and repetition.** Warm runs alternate A/B across repetitions (A first in odd repetitions, B first in even ones); which alternative runs first is recorded. `first_run_after_start` is a separate record and is never compared between A and B (protocol §2).
+* **Environment capture.** Once per session: machine, OS, kernel, Python and package versions, image digest, each store's `configuration()`. A session missing it is invalid.
+
+## W1 – Prepare BIBLIO
+
+* **Input:** shared rows, version name `w1_<alternative>_<n>`.
+* **Does:** `store.prepare(version, rows)`; A in one transaction, B by staging and rename. Recorded as phase `prepare`, label `prepare`. Afterwards `store.size_bytes(version)` and `store.verify(version)`.
+* **Outputs:** manifest digest, size in bytes, `logical_digest(version)`, `load_checks(version)`.
+* **Graded (C1):** `logical_digest` equals `canonical_rows_digest(shared rows)`; the five load checks equal 711,547 / 341 / 660 / 2,749 / 707,985.
+* **Incident:** out of disk, container not running, any exception that is not `ReferentialError` or `IntegrityError`. **Check failure:** `ReferentialError` on the shared rows (they are known valid), or a mismatch in the graded items.
+* **Repetitions:** the version is dropped after each run; every repetition prepares a fresh version. A and B timings are reported with the referential-checking caveat of `HARNESS_DESIGN.md`.
+
+## W2 – Report
+
+* **Input:** a verified version from W1 (the same version across the repetitions of one session).
+* **Does:** `read_records(version)` (timed, `execute`, label `read`), then `subclass_pairs` for origins 2006 and 2022 over the returned records (timed, `execute`, label `compute`), unchanged `application/whitespace` code. Total = read + compute.
+* **Outputs:** the full pairs result per origin (canonical JSON), the record list, timings.
+* **Graded (C1):** pairs equal the versioned `docs/whitespace/oepm-subclass-pairs-results.json` for both origins; `compare_records(adapter path, store records)` equal in every field and in order; **(C3)** median warm total not greater than 188.6 s, read with the interpretation of the protocol (total of the route from the zips, parsing included).
+* **Incident:** exception while reading the store that is not an `IntegrityError`; the shared adapter path (needed as reference for records) failing. **Check failure:** any mismatch above; `IntegrityError` on a version that W1 just verified.
+
+## W3 – Verify integrity
+
+* **Input:** a verified, unaltered version.
+* **Does:** `store.verify(version)`; timed, `execute`, label `verify`.
+* **Outputs:** the manifest digest returned.
+* **Graded:** the returned digest equals the one recorded at W1; no exception. **Check failure:** `IntegrityError` or a different digest on an unaltered version. **Incident:** any other exception.
+
+## W4 – Alteration tests
+
+* **Input:** a throwaway copy per test (a new version prepared from the shared rows; never the version of W1–W3).
+* **Tests:** (i) `change_subclass`, (ii) `flip_byte`, (iii) `delete_object`, (iv) `swap_rows`. For each: `alter`, then `store.verify`, with **no report generated first**. Recorded: whether `verify` raised `IntegrityError` (detected), whether a report could be produced before detection (must be false), seconds to detection.
+* **Graded (C2):** (i), (ii), (iii) detected, raised explicitly, before any report. A warning, a non-zero digest that is only logged, or a verify that returns normally is `not detected` and a **check failure**. (iv) is reported with what each store did and is not graded.
+* **Incident:** `alter` itself raising, or the throwaway version failing to prepare. A store that cannot be verified because `verify` crashed with an exception other than `IntegrityError` counts as **not detected with the exception recorded** (a crash is not a controlled detection) and is a check failure, not an incident, unless the crash is traced to the harness.
+
+## W5 – Rebuild after a source change, previous version preserved
+
+* **Input:** version `v_prev` from W1, its manifest digest recorded **before** starting.
+* **Does:** build `v_next` from shared rows with one record changed (the first `ipc_entry` subclass replaced by another existing symbol; the shared rows are copied first, never mutated), in a separate namespace/directory. Timed: `prepare`, label `rebuild`. Then `verify(v_prev)`.
+* **Outputs:** `v_next` manifest digest, `logical_digest(v_next)`, re-verified digest of `v_prev`.
+* **Graded (C5):** `v_prev` verifies and its digest equals the recorded one; `logical_digest(v_next)` differs from `logical_digest(v_prev)` and equals the digest of the changed rows; `v_next` verifies. **Incident:** failure to build for environment reasons. **Check failure:** `v_prev` altered or unverifiable after the rebuild.
+
+## W6 – Backup and restore
+
+* **Input:** a verified `v1`; its manifest digest recorded.
+* **Does:** `backup(v1, path)` (timed, label `backup`); `drop(v1)`; `restore(path, v1)` (timed, label `restore`); `verify(v1)` (timed, label `verify_restored`); then W2 on the restored version.
+* **Outputs:** sizes of the backup artifact, digests, W2 outputs.
+* **Graded (C4):** restore completes; the restored version verifies with the same manifest digest as before the backup; W2 on it gives outputs equal to those of the original version and passes its own C1 items. **Incident:** the backup tool is missing or the container is down. **Check failure:** any digest mismatch or a restored version that fails W2.
+* **Note:** A restores by recreating the dumped schema name (dropped first); B copies the directory. What each guarantees (atomicity, partial states on interruption) is written in the operational section of the results, not graded.
+
+## W7 – Operational retrieval
+
+* **Input:** `data/snapshots/operational_corpus_v1`, the 39 demands, A loaded in a separate namespace (`operational_*`), B = the current numpy artifacts. Separate from the BIBLIO workloads; A's schema is built once per session.
+* **Does:** for each demand and limit in {5, 100}: ids and scores from A and from `NumpyDenseRetriever` (parity). Then 20 repetitions per demand at limit 5, each alternative timed, `execute`, label `retrieve`, warm.
+* **Outputs:** p95 and median per alternative, parity counts reported as in the spike: identical ids and order (n of 78), strict score equality (n), scores within one unit of the last digit (n). The score policy is not re-decided here.
+* **Graded:** ids and order identical in 78/78 (equivalence of ranking). **Reported, not graded:** timings (the spike already passed P2), strict and tolerance counts.
+* **Incident:** artifacts missing or failing their own hash verification. **Check failure:** a differing id or order.
+
+## Acceptance roll-up (as in the protocol §5)
+
+Per alternative: C1 from W1, W2, W6; C2 from W4; C3 from W2; C4 from W6; C5 from W5. An alternative is acceptable only if all pass. Exit code 0 if both ran and every graded check of both passed, 1 if any check failed, 3 if any workload ended as an incident that was not repeated successfully. Materiality of timing differences uses `recorder.materially_different` and is only reported.
+
+## What the orchestration must not do
+
+Change a workload's contract after the first measurement without a dated amendment; retry a `check_failed` run to make it pass; discard an incident without writing its cause; run A or B outside its own namespace; compare first runs of A and B as if conditions were equal; create `AUTHORISATION.json`.
