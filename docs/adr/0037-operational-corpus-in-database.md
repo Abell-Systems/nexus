@@ -69,6 +69,50 @@ The same pattern applies to both: immutable schema per version, manifest table, 
 
 **Derived results stay files.** `docs/whitespace/oepm-subclass-pairs-results.json` (6.2 MB) and the other versioned results remain static, git-versioned files served to the browser, as vertical 2 requires (no endpoint, no computation in the browser). What changes is their producer: the report scripts read BIBLIO from the database, and the JSON keeps carrying the corpus identity hashes, which now equal the manifest's. The unit rules (O4: activity by publication identifier at its earliest date; pairs from single source records) stay in `application/whitespace` and are not re-implemented in SQL; SQL provides the record-level data, not the metrics, so the existing invariants (565/612 active subclasses, 24,583/40,585 observed pairs) remain the equivalence test between the file-based and the database-based producer.
 
+## 3.2 Relational schema, not raw payload (amendment, 2026-10-22)
+
+The database is not a container for the files. Each corpus is **parsed into a normalised schema** with keys, foreign keys and constraints, so that it can be queried by record, subclass or code without re-parsing, and so that the load itself is validated by the database. Loading a Parquet blob, a JSON column or a zip into a table is not compliant with this ADR.
+
+Principles:
+
+* **Raw observations only in the base tables** (ADR 0036 §5.1): nothing derived, deduplicated or interpreted. Repeated `doc_id`s are kept (a repeat is a row, never merged). Derived measures (distinct documents, activity at an origin, pairs) are computed by the existing code in `application/whitespace`, which reads these tables through a port.
+* **One loader per corpus, built on the existing readers.** BIBLIO reuses `PatentPublicationSource` and the ST36 adapter, so parsing rules, rejected records and anomalies are the ones already tested; the loader maps `PatentPublication` / `RejectedRecord` to rows and contains no parsing of its own. The operational loader maps the same domain objects `load_operational_assets` already builds.
+* **Constraints encode the invariants.** Row counts and key relations that are today asserted in tests (§3.1 and the characterization) become load-time checks recorded in the manifest.
+* Schema versions are immutable (§3.1). The names below are the contract; column types are fixed at implementation.
+
+**`biblio_v1`** (source: 26 files, 711,547 read records and 341 rejected)
+
+| Table | Key | Content |
+|---|---|---|
+| `source_file` | `file_id` | name, `sha256`, bytes (the 26 pinned hashes) |
+| `source_record` | `record_id` (source order) | `file_id` FK, `archive_path`; unique `(file_id, archive_path)`. Provenance of every row below |
+| `publication` | `record_id` FK | country, doc_number, kind, publication_date, application_country/number/kind (nullable), application_date, title. `doc_id` is a generated column and **not unique** (3,562 repeats are kept) |
+| `priority_date` | `(record_id, ordinal)` | one readable priority date per row |
+| `party` | `(record_id, role, ordinal)` | `role` in (`applicant`, `inventor`); raw name, no entity resolution |
+| `ipc_subclass` | `symbol` | four-character symbol with section, class, subclass; the 660 observed subclasses |
+| `ipc_entry` | `(record_id, ordinal)` | `subclass_symbol` FK, main_group, subgroup, version, level, value, exactly as stated |
+| `anomaly` | `(record_id, field, ordinal)` | field, raw_value, reason |
+| `rejected_record` | `(file_id, archive_path)` | reason; counted, never lost |
+| `manifest` | one row | as in §3.1 |
+
+Load-time checks: 711,547 `publication` rows and 341 `rejected_record` rows; 660 `ipc_subclass`; 2,749 publications without `ipc_entry`; 707,985 distinct `doc_id`; every `ipc_entry.record_id` has a `publication`. Indexes follow the access paths of the white-space work: `ipc_entry(subclass_symbol, record_id)` for pairs and activity, `publication(publication_date)` for origins and lags, `publication(application_country, application_number)` for the legal-status link.
+
+**`operational_v1`** (source: 54,997 assets, 39 demands)
+
+| Table | Key | Content |
+|---|---|---|
+| `asset` | `asset_id` (corpus row order) | `publication_number` unique, country, kind, ip_type, family_id, title, abstract, abstract_language, filing_date, publication_date |
+| `asset_party` | `(asset_id, role, ordinal)` | `role` in (`assignee`, `inventor`) |
+| `asset_cpc` | `(asset_id, ordinal)` | CPC code as stated |
+| `asset_embedding` | `asset_id` FK | `vector(768)`, L2-normalised; model name/revision/dimension only in the manifest |
+| `demand` | `demand_id` | title, description, posted_date, origin_country, source_url |
+| `demand_embedding` | `demand_id` FK | `vector(768)` |
+| `manifest` | one row | as in §3 |
+
+Eligibility (Spanish patents and utility models with an abstract, 44,195 of 54,997) stays in `operational_eligibility_policy` and is not stored as a column: it is policy, not observation. `asset_id` order must reproduce the corpus row order, because the parity gate (§3.6) compares against it.
+
+Rejected by this decision: storing the derived pair tables or the study's result JSONs in the database; row-per-subclass-pair materialisations. They duplicate versioned results (§3.1).
+
 ## 4. Consequences
 
 **Positive.** Deployment no longer depends on a data copy; reload and rollback are schema switches; backups and access control are the database's; more than one consumer can read the same verified corpus.
@@ -82,7 +126,7 @@ The same pattern applies to both: immutable schema per version, manifest table, 
 ## 5. Open questions (to answer before Accepted)
 
 1. **What is the reason for the database?** Incremental updates, several consumers, host-side deployment, or something else? The answer decides between B and C: if it is only "the data should reach the host reproducibly", B plus a sync step is cheaper.
-2. **Granularity of BIBLIO in the database.** Records and subclasses per record only (recommended), or also the derived pair tables? The latter duplicates the versioned results and is not proposed.
+2. **Does the schema keep every ST36 field?** `biblio_v1` follows what the adapter already reads (§3.2). Fields the adapter ignores (for example the IPC classification level beyond what it keeps) are not added without a change to the adapter and its tests.
 3. **Where is the load run from?** Decided in §3.1: the controller over the tailnet, with the database port reachable from the tailnet only. Remaining question: the age/SOPS custody of the application and loader roles.
 4. **Is pgvector's exact scan fast enough** over the 44,195 eligible rows, and how long do the BIBLIO reports take against the database compared with parsing the zips? Both must be measured with the real data before this ADR is accepted.
 5. **Licensing and retention.** The text is third-party (Google Patents Public Data, CC BY 4.0); a DB in a shared host keeps the same obligations (attribution on screen, not legal advice).
