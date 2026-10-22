@@ -134,3 +134,16 @@ def test_shouldRejectRowsViolatingUniqueAllowedOrKeyConstraintsInBothStores(stor
         store.prepare("v1", rows)
     with pytest.raises(Exception):
         store.verify("v1")  # nothing published
+
+
+def test_shouldFindNoEnvironmentProblemWhenTheStoreIsHealthy(store):
+    assert store.environment_problems(1) == []
+
+
+def test_shouldReportEvidenceWhenThereIsNotEnoughDiskOrTheContainerIsMissing(store):
+    from harness.store_pg import PostgresStore
+    if isinstance(store, PostgresStore):
+        store.container = "no-such-container-xyz"
+        assert any("not running" in p for p in store.environment_problems(1))
+    else:
+        assert store.environment_problems(10**18)

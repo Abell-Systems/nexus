@@ -149,6 +149,10 @@ class FilesStore:
         other._created = True
         return other, version
 
+    def environment_problems(self, needed_bytes: int) -> list[str]:
+        free = shutil.disk_usage(self.root).free
+        return [f"free disk space {free} < {needed_bytes}"] if free < needed_bytes else []
+
     def dispose(self) -> None:
         if getattr(self, "_created", False):
             shutil.rmtree(self.root, ignore_errors=True)

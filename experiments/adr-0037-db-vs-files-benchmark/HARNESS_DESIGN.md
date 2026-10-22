@@ -1,6 +1,6 @@
 # Benchmark harness: design and state
 
-**State: orchestration written and tested on synthetic data; never run on the real corpus; blocked.** Execution is blocked until the protocol PR (#155) is merged and a person creates `AUTHORISATION.json`; this branch is separate from the protocol so that the protocol was fixed before the execution code existed. The stores, comparisons, recorder and the authorisation barrier exist and are tested on synthetic data. The orchestration of workloads W1–W7 is **not written** and no measurement has been run. `PREREGISTRATION.md` (with revision R1) remains the methodological authority; this file only describes how the code serves it and must not be read as protocol.
+**State: orchestration written and tested on synthetic data; never run on the real corpus; blocked.** The protocol (R1 in #155 and R2 in #157, both merged; sha256 in force `e443232d…c23b`) is the methodological authority; this file only describes how the code serves it and must not be read as protocol. Execution stays blocked until a person creates `AUTHORISATION.json` naming that hash and the merge commit, after the review of this branch. No measurement has been run.
 
 ## Layout
 
@@ -13,7 +13,8 @@
 | `harness/compare.py` | Canonical JSON, pairs, records (field by field, in order), load checks. Refuses missing, empty or different-length inputs (`IncompleteComparison`) |
 | `harness/recorder.py` | Timing entries tagged with workload, alternative, `prepare`/`execute`, `first_run_after_start`/`warm`, repetition and order; nested sections are refused; materiality rule of §5 |
 | `harness/guard.py` | Barrier: `AUTHORISATION.json` must exist, name who authorised and the protocol's merge commit, and carry the sha256 of the current `PREREGISTRATION.md` |
-| `run_benchmark.py` | Entry point; exits 2 (refused) without authorisation; workloads not implemented |
+| `harness/workloads.py`, `harness/operational.py`, `harness/session.py` | Orchestration of W1–W7, roll-up, valid-run gate (see below) |
+| `run_benchmark.py` | Entry point; exits 2 (refused) without authorisation; then runs the session |
 
 Exit codes: 0 all acceptance checks passed; 1 a check failed; 2 refused; 3 environment incident (nothing graded).
 

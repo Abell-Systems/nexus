@@ -54,6 +54,14 @@ def _emit(ctx: Context, **rec) -> dict:
     return rec
 
 
+class ProcedureFailure(Exception):
+    """A recovery step failed after the original was dropped, with no environment cause found at that moment (R2 item 1)."""
+
+    def __init__(self, outputs: dict) -> None:
+        super().__init__(json.dumps(outputs, default=str))
+        self.outputs = outputs
+
+
 def _run(ctx: Context, workload: str, alt: str, rep: int, run_kind: str, body: Callable[[], tuple[dict, dict]],
          check_exceptions: tuple[type[Exception], ...] = ()) -> dict:
     """status ok / check_failed / incident, decided by exception type only (contract 'Common rules')."""
@@ -69,7 +77,7 @@ def _run(ctx: Context, workload: str, alt: str, rep: int, run_kind: str, body: C
     except Incident as exc:
         outputs, checks, status, incident = {}, {}, "incident", str(exc)
     except check_exceptions as exc:
-        outputs, checks, status, incident = {"error": repr(exc)}, {}, "check_failed", None
+        outputs, checks, status, incident = getattr(exc, "outputs", {"error": repr(exc)}), {}, "check_failed", None
     except IncompleteComparison as exc:
         outputs, checks, status, incident = {"error": repr(exc)}, {}, "check_failed", None  # reference is validated non-empty
     except Exception as exc:  # noqa: BLE001 - anything else is outside the alternative's contract
@@ -181,6 +189,7 @@ def w5_rebuild(ctx: Context, alt: str, prev: str, rep: int = 1) -> dict:
 def w6_recovery(ctx: Context, alt: str, tmp: Path, rep: int = 1) -> list[dict]:
     """W6a then W6b (R2). Each on a freshly prepared version; backups timed; failure after the drop is a check failure."""
     store, ref, out = ctx.stores[alt], ctx.reference, []
+    tmp.mkdir(parents=True, exist_ok=True)
 
     def prepared(name):
         made = store.prepare(name, ref.rows)
@@ -208,19 +217,29 @@ def w6_recovery(ctx: Context, alt: str, tmp: Path, rep: int = 1) -> list[dict]:
 
     def b():
         made, dump = prepared(f"w6b_{alt}")
-        store.drop(f"w6b_{alt}")
-        with _sec(ctx, "W6b", alt, "execute", "restore_in_place", "warm", rep):
-            store.restore(dump, f"w6b_{alt}")
-        with _sec(ctx, "W6b", alt, "execute", "verify_restored_in_place", "warm", rep):
-            got = store.verify(f"w6b_{alt}")
-        records = store.read_records(f"w6b_{alt}")
-        result = {str(o): ref.pairs_fn(records, o) for o in ref.origins}
-        return {"digest": got.manifest_digest}, {"digest_equal": got.manifest_digest == made.manifest_digest,
-                                                 "pairs_equal": all(compare_pairs(ref.pairs_expected, result).values()),
-                                                 "records_equal": compare_records(ref.records, records).equal}
+        name = f"w6b_{alt}"
+        store.drop(name)  # from here the original is gone: a failure is the procedure's, unless an environment cause is found now
+        state = {"original_dropped": True, "phase": "restore_in_place"}
+        try:
+            with _sec(ctx, "W6b", alt, "execute", "restore_in_place", "warm", rep):
+                store.restore(dump, name)
+            state["phase"] = "verify_restored_in_place"
+            with _sec(ctx, "W6b", alt, "execute", "verify_restored_in_place", "warm", rep):
+                got = store.verify(name)
+            state["phase"] = "report_on_restored"
+            records = store.read_records(name)
+            result = {str(o): ref.pairs_fn(records, o) for o in ref.origins}
+        except Exception as exc:  # noqa: BLE001 - classified below with the evidence available at this moment
+            problems = store.environment_problems(2 * dump.stat().st_size)
+            if problems:
+                raise Incident(f"W6b failed in {state['phase']} after the drop with environment evidence {problems}: {exc!r}") from exc
+            raise ProcedureFailure({**state, "environment_problems": [], "error": repr(exc)}) from exc
+        return {"digest": got.manifest_digest, **state}, {"digest_equal": got.manifest_digest == made.manifest_digest,
+                                                          "pairs_equal": all(compare_pairs(ref.pairs_expected, result).values()),
+                                                          "records_equal": compare_records(ref.records, records).equal}
     # an exception after the original was dropped is a procedure failure (R2 item 1), never an incident
     out.append(_run(ctx, "W6a", alt, rep, "warm", a, (IntegrityError,)))
-    out.append(_run(ctx, "W6b", alt, rep, "warm", b, (IntegrityError, FileExistsError, OSError, RuntimeError)))
+    out.append(_run(ctx, "W6b", alt, rep, "warm", b, (ProcedureFailure,)))
     for n in (f"w6a_{alt}", f"w6b_{alt}"):
         try:
             store.drop(n)

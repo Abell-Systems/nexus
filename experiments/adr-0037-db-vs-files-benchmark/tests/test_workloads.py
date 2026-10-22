@@ -160,3 +160,88 @@ def test_shouldFailTheRollUpWhenOperationalRetrievalOrderDiffers():
     rs = full("A", [1] * 5) + full("B", [1] * 5) + [row("W7", "A", "check_failed")]
     code, t = evaluate(rs)
     assert code == EXIT_FAIL and t["A"]["W7_ids_order"] is False and t["B"]["W7_ids_order"] is None
+
+
+# ---- review findings of 2026-10-22 ----
+
+def test_shouldCreateTheBackupDirectoryWhenItDoesNotExist(ctx, tmp_path):
+    missing = tmp_path / "no" / "such" / "backups"
+    a, b = w6_recovery(ctx, "B", missing)
+    assert (a["status"], b["status"]) == ("ok", "ok") and missing.is_dir()
+
+
+def _w6b_after_drop_fails(ctx, monkeypatch, problems):
+    store = ctx.stores["B"]
+    real = type(store).restore
+
+    def failing(self, src, v):
+        if v.startswith("w6b"):
+            raise OSError("restore failed")
+        return real(self, src, v)
+    monkeypatch.setattr(type(store), "restore", failing)
+    monkeypatch.setattr(type(store), "environment_problems", lambda self, n: problems)
+
+
+def test_shouldRecordTheDropStateAndNoEnvironmentEvidenceWhenW6bFailsAfterTheDrop(ctx, tmp_path, monkeypatch):
+    _w6b_after_drop_fails(ctx, monkeypatch, [])
+    _, b = w6_recovery(ctx, "B", tmp_path)
+    assert b["status"] == "check_failed"
+    assert b["outputs"]["original_dropped"] is True and b["outputs"]["phase"] == "restore_in_place" and b["outputs"]["environment_problems"] == []
+
+
+def test_shouldCallItAnIncidentWithEvidenceWhenAnEnvironmentCauseIsFoundAtTheTimeOfTheFailure(ctx, tmp_path, monkeypatch):
+    _w6b_after_drop_fails(ctx, monkeypatch, ["free disk space 10 < 1000"])
+    _, b = w6_recovery(ctx, "B", tmp_path)
+    assert b["status"] == "incident" and "free disk space" in b["incident"]
+
+
+def test_shouldNotCallAFailureBeforeTheDropAProcedureFailure(ctx, tmp_path, monkeypatch):
+    store = ctx.stores["B"]
+    real = type(store).backup
+
+    def failing(self, v, dest):
+        if v.startswith("w6b"):
+            raise OSError("cannot back up")
+        return real(self, v, dest)
+    monkeypatch.setattr(type(store), "backup", failing)
+    _, b = w6_recovery(ctx, "B", tmp_path)
+    assert b["status"] == "incident"  # the original was never dropped
+
+
+def test_shouldRefuseAnExistingRestoreNewDestinationForFiles(ctx, tmp_path):
+    store = ctx.stores["B"]
+    store.prepare("v", ctx.reference.rows)
+    dump = tmp_path / "d"
+    store.backup("v", dump)
+    other, _ = store.restore_new(dump, "v")
+    with pytest.raises(FileExistsError):
+        store.restore_new(dump, "v")
+    assert other.verify("v")
+    other.dispose()
+
+
+def test_shouldRefuseAnExistingRestoreNewDatabaseAndLeaveItUntouched(tmp_path):
+    import os
+    dsn = os.environ.get("NEXUS_BENCH_PG_DSN")
+    if not dsn:
+        pytest.skip("NEXUS_BENCH_PG_DSN not set")
+    import psycopg
+    from harness.store_pg import PostgresStore
+    ns = f"x{os.getpid()}"
+    s = PostgresStore(dsn, os.environ.get("NEXUS_BENCH_PG_CONTAINER", "nexus-spike-pg"), ns)
+    db = f"{ns}_restored_new"
+    with psycopg.connect(dsn, autocommit=True) as c:
+        c.execute(f"CREATE DATABASE {db}")
+    try:
+        s.prepare("v", make_ref().rows)
+        dump = tmp_path / "d"
+        s.backup("v", dump)
+        with pytest.raises(FileExistsError):
+            s.restore_new(dump, "v")
+        with psycopg.connect(dsn, autocommit=True) as c:
+            assert c.execute("SELECT 1 FROM pg_database WHERE datname=%s", (db,)).fetchone()
+        assert s.remove_leftover_database() == db
+    finally:
+        with psycopg.connect(dsn, autocommit=True) as c:
+            c.execute(f"DROP DATABASE IF EXISTS {db} WITH (FORCE)")
+            c.execute(f"DROP SCHEMA IF EXISTS {ns}_v CASCADE")

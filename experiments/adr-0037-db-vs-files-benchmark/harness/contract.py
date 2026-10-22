@@ -55,6 +55,10 @@ class Store(Protocol):
         """W6a: restore into a NEW location (A: another database, B: another path) and return the store and version to read it
         with. The original is never touched."""
 
+    def environment_problems(self, needed_bytes: int) -> list[str]:
+        """Evidence of an environment cause (R2 item 1): empty if none is found (container down, database unreachable, disk space
+        below `needed_bytes`). Called at the time of a failure, never afterwards."""
+
     def dispose(self) -> None:
         """Remove a location created by restore_new (no-op for the primary store)."""
 

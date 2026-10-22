@@ -142,7 +142,9 @@ class PostgresStore:
     def restore_new(self, source: Path, version: str):
         db = f"{self.namespace}_restored_new"
         with self._conn() as conn:
-            conn.execute(f"DROP DATABASE IF EXISTS {db}")
+            if conn.execute("SELECT 1 FROM pg_database WHERE datname=%s", (db,)).fetchone():
+                raise FileExistsError(f"database {db} exists (leftover of an interrupted run?): remove it explicitly with "
+                                      f"remove_leftover_database() before measuring; restore_new never drops it")
             conn.execute(f"CREATE DATABASE {db}")
         with source.open("rb") as inp:
             subprocess.run(["docker", "exec", "-i", self.container, "pg_restore", "-U", "postgres", "-d", db, "--exit-on-error"],
@@ -151,6 +153,25 @@ class PostgresStore:
         other._home = self
         other._db = db
         return other, version
+
+    def remove_leftover_database(self) -> str:
+        """Explicit, traceable cleanup of a restored-new database left by an interrupted run. Never called automatically."""
+        db = f"{self.namespace}_restored_new"
+        with self._conn() as conn:
+            conn.execute(f"DROP DATABASE IF EXISTS {db} WITH (FORCE)")
+        return db
+
+    def environment_problems(self, needed_bytes: int) -> list[str]:
+        problems = []
+        running = subprocess.run(["docker", "inspect", "-f", "{{.State.Running}}", self.container], capture_output=True, text=True)
+        if running.returncode != 0 or running.stdout.strip() != "true":
+            problems.append(f"container {self.container} is not running")
+        try:
+            with self._conn() as conn:
+                conn.execute("SELECT 1")
+        except psycopg.Error as exc:
+            problems.append(f"database unreachable: {exc}")
+        return problems
 
     def dispose(self) -> None:
         home = getattr(self, "_home", None)

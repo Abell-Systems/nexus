@@ -7,7 +7,7 @@ import numpy as np
 import psycopg
 from pgvector.psycopg import register_vector
 
-from harness.session import order_for
+from harness.session import Incident, order_for
 from harness.workloads import Context, _emit, _sec
 
 SQL = """SELECT a.publication_number, round((((1 - (e.embedding <=> %s))+1)/2)::numeric, 6)::float8 AS score
@@ -87,14 +87,19 @@ def w7_operational(ctx: Context, retrievers: dict[str, Retriever], demands: list
                     parity["scores_strict_equal"] += all(u == 0 for u in units)
                     parity["scores_within_one_unit"] += all(u <= 1 for u in units)
     obs: dict[str, dict[str, list[float]]] = {alt: {d.demand_id: [] for d in demands} for alt in alts}
-    for d in demands:
-        ctx.quiet()
-        for rep in range(1, reps + 1):
-            for alt in [x for x in (order_for(rep) if len(alts) == 2 else alts) if x in alts]:
-                t = time.perf_counter()
-                with _sec(ctx, "W7", alt, "execute", "retrieve", "warm", rep):
-                    retrievers[alt].retrieve(d, vectors[d.demand_id], 5)
-                obs[alt][d.demand_id].append(time.perf_counter() - t)
+    loads: dict[str, dict[str, list[float]]] = {alt: {d.demand_id: [] for d in demands} for alt in alts}
+    try:
+        for d in demands:
+            for rep in range(1, reps + 1):
+                for alt in [x for x in (order_for(rep) if len(alts) == 2 else alts) if x in alts]:
+                    loads[alt][d.demand_id].append(ctx.quiet())  # R2: the gate precedes every warm observation, its load is kept
+                    t = time.perf_counter()
+                    with _sec(ctx, "W7", alt, "execute", "retrieve", "warm", rep):
+                        retrievers[alt].retrieve(d, vectors[d.demand_id], 5)
+                    obs[alt][d.demand_id].append(time.perf_counter() - t)
+    except Incident as exc:
+        return [_emit(ctx, workload="W7", alternative=alt, repetition=0, run_kind="warm", order_in_repetition=0, status="incident",
+                      timings=[], outputs={}, checks={}, incident=str(exc), start_load=None) for alt in alts]
     for alt in alts:
         pooled = [x for v in obs[alt].values() for x in v]
         per_demand = {k: {"median": statistics.median(v), "p95": p95(v)} for k, v in obs[alt].items() if len(v) >= 2}
@@ -102,9 +107,19 @@ def w7_operational(ctx: Context, retrievers: dict[str, Retriever], demands: list
         out.append(_emit(ctx, workload="W7", alternative=alt, repetition=0, run_kind="warm", order_in_repetition=0,
                          status="ok" if graded_ok else "check_failed", timings=[],
                          outputs={"observations": len(pooled), "pooled_p95": p95(pooled), "pooled_median": statistics.median(pooled),
-                                  "per_demand_diagnostic": per_demand, "parity": parity},
+                                  "per_demand_diagnostic": per_demand, "parity": parity,
+                                  "load_before_each_observation": loads[alt]},
                          checks={"ids_order_identical": graded_ok}, incident=None, start_load=None))
     return out
+
+
+def eligible_ids(policy, assets: list, demands: list) -> list[int]:
+    """Eligible asset indexes, computed for EVERY demand like the numpy path does. If the policy ever depends on the demand the
+    sets differ and the harness stops: a single shared eligible table would then not reproduce the reference path."""
+    sets = [frozenset(i for i, a in enumerate(assets) if policy.evaluate(a.patent, d).is_eligible) for d in demands]
+    if len(set(sets)) != 1:
+        raise ValueError("eligibility depends on the demand: the shared eligible table of alternative A cannot reproduce the reference")
+    return sorted(sets[0])
 
 
 def build_real_operational(directory, dsn: str | None, namespace: str, alternatives: tuple[str, ...]):
@@ -129,7 +144,7 @@ def build_real_operational(directory, dsn: str | None, namespace: str, alternati
         retrievers["B"] = NumpyRetriever(art.retriever, RetrievalMethod.SEMANTIC)
     if "A" in alternatives:
         assets = art.catalog.list_all()
-        eligible = [i for i, a in enumerate(assets) if art.policy.evaluate(a.patent, demands[0]).is_eligible]
+        eligible = eligible_ids(art.policy, assets, demands)
         pg = PgRetriever(dsn, f"{namespace}_operational_v1", [a.patent.publication_id for a in assets],
                          load_index(directory, "embeddings_patents_v1").matrix, eligible)
         retrievers["A"] = pg
