@@ -10,7 +10,7 @@
 
 The service loads `data/snapshots/operational_corpus_v1/` (229 MB, git-ignored): `publications.parquet`, two `.npy` embedding matrices with manifests, `demands_v1.json`. `load_operational_artifacts` verifies every hash and the alignment of ids, model and dimension, and aborts startup on any mismatch; `demo_preflight.py` compares the served `corpus_parquet_sha256` and `embedding_index_sha256` with the files on disk.
 
-Deploying to the Lenovo staging host (role `workload` of the `infrastructure` repository) exposed the cost of this shape: a checkout at a commit does not contain the data, the role has no mechanism to move it, and the workload security contract allows only `/srv/apps`, `/srv/config` and `/srv/secrets` as workload storage. The project owner's position is that the corpus should be ingested into a database rather than shipped as files. This ADR decides whether, which database, and what must be preserved.
+Deploying to the Lenovo staging host (role `workload` of the `infrastructure` repository) exposed the cost of this shape: a checkout at a commit does not contain the data, the role has no mechanism to move it, and the workload security contract allows only `/srv/apps`, `/srv/config` and `/srv/secrets` as workload storage. The project owner's current deployment requirement is that the corpus be available reproducibly to the Lenovo staging workload without manually shipping git-ignored artifacts. This ADR proposes PostgreSQL + pgvector to satisfy that requirement, subject to the alternatives and validation gates below.
 
 What the move must NOT lose (all exist today and are tested):
 
@@ -34,12 +34,12 @@ The seams already exist: `AssetCatalog`, `DemandRepository` and `PatentCandidate
 
 ## 3. Decision (proposed)
 
-**Option C, PostgreSQL with pgvector, loaded by an explicit, versioned ingest command; ranking stays an exact scan.** Option B is the fallback if C's operational cost is judged not worth it.
+**Proposed option: C, PostgreSQL with pgvector, loaded by an explicit, versioned ingest command; ranking stays an exact scan.** This is not an unconditional acceptance of the database choice: §5.1 defines the acceptance gate against option B and the measured operational cost.
 
 Reasons, in order of weight:
 
 * Only C makes the corpus a property of the **environment** instead of a payload of each **deployment**. Under A and B the data still has to be copied onto every host by something outside the database.
-* The `workload` role already deploys a Compose stack with a Postgres service, secrets and backup, so C reuses a solved path.
+* The `workload` role already deploys a Compose stack with a Postgres service, secrets and backup, so C may reuse an existing path; the Nexus-specific workload and role grants must still be verified during implementation.
 * Updates (a new corpus version, the white-space explorer's observed-pairs data) become loads into a new versioned schema, not file replacement.
 
 Conditions that make C acceptable, none negotiable:
@@ -75,7 +75,7 @@ The database is not a container for the files. Each corpus is **parsed into a no
 
 Principles:
 
-* **Raw observations only in the base tables** (ADR 0036 §5.1): nothing derived, deduplicated or interpreted. Repeated `doc_id`s are kept (a repeat is a row, never merged). Derived measures (distinct documents, activity at an origin, pairs) are computed by the existing code in `application/whitespace`, which reads these tables through a port.
+* **Preserve source observations and provenance in the base tables** (consistent with ADR 0036 §5.1): do not deduplicate repeated source records or store derived measures as if they were observations. Schema normalization (keys, foreign keys, generated identifiers and constraints) is allowed to represent those observations relationally. Repeated `doc_id`s are kept (a repeat is a row, never merged). Derived measures (distinct documents, activity at an origin, pairs) are computed by the existing code in `application/whitespace`, which reads these tables through a port.
 * **One loader per corpus, built on the existing readers.** BIBLIO reuses `PatentPublicationSource` and the ST36 adapter, so parsing rules, rejected records and anomalies are the ones already tested; the loader maps `PatentPublication` / `RejectedRecord` to rows and contains no parsing of its own. The operational loader maps the same domain objects `load_operational_assets` already builds.
 * **Constraints encode the invariants.** Row counts and key relations that are today asserted in tests (§3.1 and the characterization) become load-time checks recorded in the manifest.
 * Schema versions are immutable (§3.1). The names below are the contract; column types are fixed at implementation.
@@ -123,13 +123,17 @@ Rejected by this decision: storing the derived pair tables or the study's result
 * Integrity moves from "hash of a file" to "hash of rows"; the canonical row ordering and serialization of that digest become part of the contract and must be specified and tested.
 * More failure modes at startup (connection, role grants, schema missing).
 
-## 5. Open questions (to answer before Accepted)
+## 5. Open questions (acceptance gates; resolve with evidence before changing status to Accepted)
 
-1. **What is the reason for the database?** Incremental updates, several consumers, host-side deployment, or something else? The answer decides between B and C: if it is only "the data should reach the host reproducibly", B plus a sync step is cheaper.
-2. **Does the schema keep every ST36 field?** `biblio_v1` follows what the adapter already reads (§3.2). Fields the adapter ignores (for example the IPC classification level beyond what it keeps) are not added without a change to the adapter and its tests.
-3. **Where is the load run from?** Decided in §3.1: the controller over the tailnet, with the database port reachable from the tailnet only. Remaining question: the age/SOPS custody of the application and loader roles.
-4. **Is pgvector's exact scan fast enough** over the 44,195 eligible rows, and how long do the BIBLIO reports take against the database compared with parsing the zips? Both must be measured with the real data before this ADR is accepted.
-5. **Licensing and retention.** The text is third-party (Google Patents Public Data, CC BY 4.0); a DB in a shared host keeps the same obligations (attribution on screen, not legal advice).
+1. **Database choice versus a synchronized file.** The immediate requirement is reproducible delivery to the Lenovo. Before accepting option C, compare its ongoing maintenance cost with option B (DuckDB/file) plus a verifiable, idempotent artifact-sync step. Record the measured trade-off and the owner-approved reason for preferring PostgreSQL.
+2. **ST36 fidelity.** Characterize the source adapter's complete output and explicitly account for fields retained, intentionally ignored, and rejected. The normalized database mapping must preserve all fields required by existing consumers and tests; expanding the contract to retain currently ignored fields requires a documented change to the adapter and its tests.
+3. **Network and credential custody.** Proposed: load from the controller over the tailnet and expose the database port only on the tailnet. Before implementation, specify and test the SOPS/age custody of the loader and application roles, least-privilege grants, rotation, and failure behavior.
+4. **Performance acceptance.** Benchmark pgvector exact scan over the 44,195 eligible rows and the BIBLIO reports against the current zip-based process on the real corpora. Record environment, cold/warm timings, and acceptable thresholds before this ADR is accepted.
+5. **Licensing and retention.** Document retention/deletion behavior for third-party text and confirm that the current attribution and data-use restrictions remain applied to database-backed serving; this is an engineering gate, not legal advice.
+
+## 5.1 Acceptance gate
+
+Do not change status from Proposed to Accepted, change the default retrieval path, or advertise PostgreSQL as the settled architecture until the database-vs-sync comparison, ST36 fidelity inventory, credential/network model, and real-data performance measurements in §5 have evidence recorded in this ADR or linked reproducible reports. The parity gate in §3 remains mandatory before any switch. If PostgreSQL does not justify its operational cost for this host-side deployment, prefer the simpler versioned file-sync option rather than retaining a database for deployment convenience alone.
 
 ## 6. Enforcement
 
