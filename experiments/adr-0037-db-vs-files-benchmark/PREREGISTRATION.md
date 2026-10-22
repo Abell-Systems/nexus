@@ -72,3 +72,14 @@ For each alternative, written down factually at the end: processes to run and mo
 
 
 `RESULTS.md` with: environment table, the §3 table with min/median/max, the §5 verdict per alternative, the §6 text, every deviation and incident. Raw outputs committed. A change to this protocol after the first measurement is a dated amendment (A1, A2, …) stating what was already known; results already obtained are never edited. A failed run caused by the environment is reported as an incident and repeated, never silently dropped.
+
+**Amendment R2 (2026-10-22), before any measurement, found in the review of the workload contracts.** Clarifications of three points where R1 was ambiguous or inconsistent; no run has produced data, so no result can have influenced them. C1, C2, C5, the materiality rule, the alternatives and the outputs compared are unchanged.
+
+1. **W6 is two procedures (R1 described it in two incompatible ways: the workload table says "into a new location", the detailed text says "drop it, `pg_restore`" for A and "copy elsewhere" for B).**
+   * **W6a, restore to a new location, original untouched.** A: create a new database, `pg_restore` the `pg_dump -Fc` of the schema into it; B: copy the directory to a new path. Then verify the restored copy against its manifest, run W2 on it, and re-verify the original against its recorded digest.
+   * **W6b, recovery in place after loss.** Drop the original (A: the schema; B: the directory), restore it under the same name from the backup, verify, run W2.
+   * Each step is timed separately for both. C4 requires **both** W6a and W6b to complete, verify with the manifest digest recorded before the backup, and give the W2 outputs expected.
+2. **W7 aggregation.** For each alternative: 20 warm observations per demand (limit 5) x 39 demands = 780 observations, pooled; p95 = `statistics.quantiles(observations, n=20)[-1]` (Python's default method), median = `statistics.median`. A and B alternate per demand across the 20 repetitions. This is how spike P2 was computed.
+3. **C3 reading.** "No slower than 188.6 s" applies to **every** one of the 5 warm runs (the maximum), the strictest reading; the median is reported as well. If the owner intended the median, say so before the first measurement and this item is replaced by a further dated amendment.
+
+The hash of this file changes with R2: any authorisation must refer to the hash of the version in force when it is created.
