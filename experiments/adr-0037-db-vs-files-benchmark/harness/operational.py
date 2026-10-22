@@ -35,6 +35,7 @@ class PgRetriever:
     def __init__(self, dsn: str, schema: str, publication_ids: list[str], matrix: np.ndarray, eligible: list[int]) -> None:
         self.conn = psycopg.connect(dsn, autocommit=True)
         self.schema = schema
+        self._created = False  # only a schema this object created may ever be dropped by it
         try:
             self._load(publication_ids, matrix, eligible)
         except BaseException:
@@ -46,7 +47,11 @@ class PgRetriever:
         self.conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
         register_vector(self.conn)
         c = self.conn
-        c.execute(f"DROP SCHEMA IF EXISTS {schema} CASCADE; CREATE SCHEMA {schema}")
+        if c.execute("SELECT 1 FROM information_schema.schemata WHERE schema_name=%s", (schema,)).fetchone():
+            raise FileExistsError(f"schema {schema} exists (leftover of an interrupted run?): remove it explicitly with "
+                                  f"remove_leftover_schema() before measuring; W7 never drops it")
+        c.execute(f"CREATE SCHEMA {schema}")
+        self._created = True
         c.execute(f"CREATE TABLE {schema}.asset(asset_id int PRIMARY KEY, publication_number text UNIQUE NOT NULL)")
         c.execute(f"CREATE TABLE {schema}.asset_embedding(asset_id int PRIMARY KEY REFERENCES {schema}.asset, embedding vector({matrix.shape[1]}) NOT NULL)")
         with c.cursor() as cur:
@@ -66,9 +71,19 @@ class PgRetriever:
     def retrieve(self, demand, vector, limit):
         return [(p, s) for p, s in self.conn.execute(SQL.format(s=self.schema), (vector, limit)).fetchall()]
 
+    @staticmethod
+    def remove_leftover_schema(dsn: str, schema: str) -> str:
+        """Explicit, traceable cleanup of a leftover W7 schema. Never called automatically."""
+        with psycopg.connect(dsn, autocommit=True) as conn:
+            conn.execute(f"DROP SCHEMA IF EXISTS {schema} CASCADE")
+        return schema
+
     def close(self) -> None:
-        self.conn.execute(f"DROP SCHEMA IF EXISTS {self.schema} CASCADE")
-        self.conn.close()
+        try:
+            if self._created:
+                self.conn.execute(f"DROP SCHEMA IF EXISTS {self.schema} CASCADE")
+        finally:
+            self.conn.close()
 
 
 def p95(xs: list[float]) -> float:

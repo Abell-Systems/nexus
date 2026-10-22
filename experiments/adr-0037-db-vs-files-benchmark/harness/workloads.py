@@ -44,6 +44,24 @@ class Context:
     sink: Path | None = None
     quiet: Callable[[], float] = wait_for_quiet
     names: dict[str, str] = field(default_factory=dict)  # unique version names per alternative
+    created: set = field(default_factory=set)  # (alternative, version) this run created: the only ones it may ever drop
+
+
+def _prepare(ctx: Context, alt: str, version: str, rows):
+    """prepare + remember that THIS run created it; a refused prepare (name taken by something else) registers nothing."""
+    made = ctx.stores[alt].prepare(version, rows)
+    ctx.created.add((alt, version))
+    return made
+
+
+def _cleanup(ctx: Context, alt: str, version: str) -> None:
+    """Drop only what this run created. A pre-existing object with the same name is never touched."""
+    if (alt, version) in ctx.created:
+        ctx.created.discard((alt, version))
+        try:
+            ctx.stores[alt].drop(version)
+        except Exception:  # noqa: BLE001 - cleanup of our own throwaway
+            pass
 
 
 def _emit(ctx: Context, **rec) -> dict:
@@ -98,7 +116,7 @@ def w1_prepare(ctx: Context, alt: str, rep: int, run_kind: str, version: str) ->
 
     def body():
         with _sec(ctx, "W1", alt, "prepare", "prepare", run_kind, rep):
-            made = store.prepare(version, ref.rows)
+            made = _prepare(ctx, alt, version, ref.rows)
         checks = {"logical_equal": store.logical_digest(version) == ref.rows_digest}
         if ref.load_checks_expected is not None and hasattr(store, "load_checks"):
             checks.update({f"load_{k}": v for k, v in compare_load_checks(store.load_checks(version), ref.load_checks_expected).items()})
@@ -144,7 +162,7 @@ def w4_alteration(ctx: Context, alt: str, kind: str, rep: int = 1) -> dict:
     version = f"w4_{alt}_{kind}"
 
     def body():
-        store.prepare(version, ctx.reference.rows)
+        _prepare(ctx, alt, version, ctx.reference.rows)
         store.alter(version, kind)
         detected, error = False, None
         with _sec(ctx, "W4", alt, "execute", f"detect_{kind}", "warm", rep):
@@ -159,10 +177,7 @@ def w4_alteration(ctx: Context, alt: str, kind: str, rep: int = 1) -> dict:
     try:
         return _run(ctx, "W4", alt, rep, "warm", body)
     finally:
-        try:
-            store.drop(version)
-        except Exception:  # noqa: BLE001 - cleanup of a throwaway
-            pass
+        _cleanup(ctx, alt, version)
 
 
 def w5_rebuild(ctx: Context, alt: str, prev: str, rep: int = 1) -> dict:
@@ -176,7 +191,7 @@ def w5_rebuild(ctx: Context, alt: str, prev: str, rep: int = 1) -> dict:
         other = next(r[0] for r in rows["ipc_subclass"] if r[0] != first[2])
         rows["ipc_entry"][0] = (*first[:2], other, *first[3:])
         with _sec(ctx, "W5", alt, "prepare", "rebuild", "warm", rep):
-            made = store.prepare(nxt, rows)
+            made = _prepare(ctx, alt, nxt, rows)
         changed = canonical_rows_digest(rows)
         checks = {"previous_unchanged": store.verify(prev).manifest_digest == recorded,
                   "next_verifies": store.verify(nxt) == made,
@@ -186,10 +201,7 @@ def w5_rebuild(ctx: Context, alt: str, prev: str, rep: int = 1) -> dict:
     try:
         return _run(ctx, "W5", alt, rep, "warm", body, (IntegrityError, ConstraintError))
     finally:
-        try:
-            store.drop(nxt)
-        except Exception:  # noqa: BLE001
-            pass
+        _cleanup(ctx, alt, nxt)
 
 
 def w6_recovery(ctx: Context, alt: str, tmp: Path, rep: int = 1) -> list[dict]:
@@ -198,7 +210,7 @@ def w6_recovery(ctx: Context, alt: str, tmp: Path, rep: int = 1) -> list[dict]:
     tmp.mkdir(parents=True, exist_ok=True)
 
     def prepared(name):
-        made = store.prepare(name, ref.rows)
+        made = _prepare(ctx, alt, name, ref.rows)
         dump = tmp / f"{alt}_{name}.bak"
         with _sec(ctx, "W6", alt, "execute", "backup", "warm", rep):
             store.backup(name, dump)
@@ -249,10 +261,7 @@ def w6_recovery(ctx: Context, alt: str, tmp: Path, rep: int = 1) -> list[dict]:
     out.append(_run(ctx, "W6a", alt, rep, "warm", a, (IntegrityError,)))
     out.append(_run(ctx, "W6b", alt, rep, "warm", b, (ProcedureFailure,)))
     for n in (f"w6a_{alt}", f"w6b_{alt}"):
-        try:
-            store.drop(n)
-        except Exception:  # noqa: BLE001
-            pass
+        _cleanup(ctx, alt, n)
     return out
 
 
@@ -269,7 +278,7 @@ def run_biblio_session(ctx: Context, tmp: Path, repetitions: int = 5, alternativ
         for alt in [a for a in order_for(rep) if a in alternatives]:
             name = f"w1warm_{alt}_{rep}"
             w1_prepare(ctx, alt, rep, "warm", name)
-            ctx.stores[alt].drop(name)
+            _cleanup(ctx, alt, name)
     recorded = {alt: ctx.stores[alt].verify(main[alt]).manifest_digest for alt in alternatives}
     for alt in alternatives:
         w2_report(ctx, alt, 0, "first_run_after_start", main[alt])

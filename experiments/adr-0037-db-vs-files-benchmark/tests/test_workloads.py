@@ -8,6 +8,7 @@ from harness.recorder import Recorder
 from harness.session import Incident, order_for, wait_for_quiet
 from harness.tables import rows_from_outcomes
 from harness.workloads import (C3_BOUND_SECONDS, Context, Reference, evaluate, run_biblio_session, w1_prepare, w2_report, w3_verify,
+                               w4_alteration, w5_rebuild,
                                w6_recovery)
 from support import FILES, outcomes
 
@@ -350,3 +351,19 @@ def test_shouldReportASetupFailureAsAnIncidentWithExitCode3AndWriteItsTraceback(
     monkeypatch.setattr(run_benchmark, "build_real_context", lambda a, b: (_ for _ in ()).throw(RuntimeError("boom")))
     code = run_benchmark.main(["--work-dir", str(tmp_path / "w"), "--pg-dsn", "x", "--container", "x"])
     assert code == 3 and "boom" in json.loads((tmp_path / "w" / "incident.json").read_text())["traceback"]
+
+
+# ---- third review of 2026-10-22: the harness only drops what it created ----
+
+@pytest.mark.parametrize("name,runner", [
+    ("w4_X_change_subclass", lambda c, s: w4_alteration(c, "X", "change_subclass")),
+    ("w5_X_next", lambda c, s: w5_rebuild(c, "X", "main")),
+])
+def test_shouldNeverDropAPreExistingVersionItDidNotCreate(store, rows, name, runner):
+    from harness.contract import IntegrityError  # noqa: F401
+    ctx = Context(stores={"X": store}, reference=make_ref(), recorder=Recorder(), quiet=lambda: 0.1)
+    store.prepare("main", ctx.reference.rows)
+    mine = store.prepare(name, ctx.reference.rows)  # a leftover from "somewhere else" with the harness' fixed name
+    result = runner(ctx, store)
+    assert result["status"] == "incident"  # prepare refused to overwrite
+    assert store.verify(name) == mine      # still there, untouched, still verifies

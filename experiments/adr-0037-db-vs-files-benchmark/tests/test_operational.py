@@ -158,3 +158,40 @@ def test_shouldRecordAnExceptionInTheParityQueriesAsAnIncidentInsteadOfEscaping(
     ctx = Context(stores={}, reference=None, recorder=Recorder(), quiet=lambda: 0.0)  # type: ignore[arg-type]
     out = w7_operational(ctx, {"A": Broken(ids, m, el), "B": FakeNumpy(ids, m, el)}, demands, vecs, reps=2)
     assert [r["status"] for r in out] == ["incident", "incident"] and "database went away" in out[0]["incident"]
+
+
+def _pg():
+    dsn = os.environ.get("NEXUS_BENCH_PG_DSN")
+    if not dsn:
+        pytest.skip("NEXUS_BENCH_PG_DSN not set")
+    return dsn
+
+
+def test_shouldRefuseAnExistingW7SchemaAndLeaveItsObjectsIntact():
+    import psycopg
+    dsn = _pg()
+    schema = f"w7s_{os.getpid()}"
+    ids, m, el = corpus(n=20)
+    with psycopg.connect(dsn, autocommit=True) as c:
+        c.execute(f"CREATE SCHEMA {schema}; CREATE TABLE {schema}.sentinel(x int); INSERT INTO {schema}.sentinel VALUES (42)")
+    try:
+        with pytest.raises(FileExistsError):
+            PgRetriever(dsn, schema, ids, m, el)
+        with psycopg.connect(dsn, autocommit=True) as c:
+            assert c.execute(f"SELECT x FROM {schema}.sentinel").fetchone() == (42,)
+        assert PgRetriever.remove_leftover_schema(dsn, schema) == schema  # explicit and traceable
+        with psycopg.connect(dsn, autocommit=True) as c:
+            assert c.execute("SELECT 1 FROM information_schema.schemata WHERE schema_name=%s", (schema,)).fetchone() is None
+    finally:
+        PgRetriever.remove_leftover_schema(dsn, schema)
+
+
+def test_shouldDropItsOwnSchemaOnCloseButNeverOneItDidNotCreate():
+    import psycopg
+    dsn = _pg()
+    schema = f"w7o_{os.getpid()}"
+    ids, m, el = corpus(n=20)
+    pg = PgRetriever(dsn, schema, ids, m, el)
+    pg.close()
+    with psycopg.connect(dsn, autocommit=True) as c:
+        assert c.execute("SELECT 1 FROM information_schema.schemata WHERE schema_name=%s", (schema,)).fetchone() is None
