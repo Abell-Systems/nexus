@@ -62,6 +62,18 @@ Also found while searching: `docs/data_provenance.md` lists Innoget call titles 
 | Risks and gaps | If the located agreement applies, versioning tabular extracts of the Information in a public repository could be an "external redistribution"; that is a hypothesis, not a finding. The classification CSVs mix the project's own judgments with quoted claim text |
 | Recommendation | **Highest priority.** Pending: the owner confirms which agreement and which customer apply and whether a research arrangement exists; the contact printed in the agreement is `customerbilling@minesoft.com` (billing, not necessarily the right office for rights). Candidate for the restricted corpus with the same separation pattern as the demand corpus (record of hashes, synthetic or aggregate public artefact). No change until then |
 
+## 4b. Questions open for the repository owner (2026-10-23)
+
+None is answered; no gap is filled by inference, and an unknown provenance is not turned into a statement of authorship.
+
+1. OEPM pilot files: were the 16 records extracted from OEPM, or written for tests? Until answered they are not presented as OEPM data.
+2. EPO OPS fixtures: who wrote them, and from what? That one is reproduced in a plan document does not establish authorship.
+3. Minesoft: under which subscription or agreement were the data extracted, who is the customer, and is there a research arrangement? Until answered, no new Minesoft extracts are added to the public repository.
+4. WIPO: the rights statement inside the report itself has to be read and its attribution recorded; the Open Access Policy alone does not settle it.
+5. `docs/data_provenance.md`: the Innoget call titles that differ from the frozen corpus are a provenance discrepancy; no assumption that they are an earlier version.
+
+Order of work: OEPM and EPO provenance first (it bears on the validity of the pilot evidence), then the Minesoft agreement, then the WIPO report.
+
 ## 5. Not checked
 
 * The EPO OPS terms document; the OEPM conditions against the actual files; the first pages of the WIPO report; whether the Minesoft agreement governs this service; the git history for earlier versions of these files; the contents of the `.docx` manuscripts beyond their names.
