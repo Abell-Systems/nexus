@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { WhiteSpacePage } from "../../src/main/components/WhiteSpace/WhiteSpacePage";
@@ -21,6 +23,16 @@ describe("the white-space front page", () => {
     expect(text).toContain(TEXT.status);
     expect(text).toContain(TEXT.notValidation);
     expect(text).toContain(TEXT.yUnknown);
+  });
+
+  it("shouldStateTheDownloadDateOfTheCorpusAsRecordedInTheCharacterizationWhenRendered", () => {
+    const { container } = render(<WhiteSpacePage />);
+    const text = container.textContent ?? "";
+    expect(text).toContain(TEXT.downloadDate);
+    expect(text).toContain("20 de octubre de 2026");
+    expect(text).toContain("no la fecha de actualización que la OEPM atribuya a los datos");
+    const record = readFileSync(join(__dirname, "../../../docs/whitespace/oepm-biblio-corpus-characterization.md"), "utf-8");
+    expect(record).toMatch(/\| Downloaded \| 2026-10-20,/);
   });
 
   it("shouldNeverUseFormulationsThatPresentAbsencesAsOpportunitiesWhenRendered", () => {

@@ -51,7 +51,7 @@ export function WhiteSpacePage() {
           </section>
         </main>
         <footer className={styles.footer}>
-          <p>{TEXT.attribution}. {TEXT.noSponsorship}</p>
+          <p>{TEXT.attribution}. {TEXT.downloadDate} {TEXT.noSponsorship}</p>
         </footer>
       </div>
     </div>
