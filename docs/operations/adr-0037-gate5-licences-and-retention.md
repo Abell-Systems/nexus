@@ -144,6 +144,22 @@ docker volume ls
 
 What the output must settle: which paths have snapshots; the effective retention; the date of the last snapshot; whether the disk was present; whether `/srv`, `/var/lib/docker` or any volume is a source.
 
+#### 6.1.1 Observed on the Lenovo without root (2026-10-23)
+
+Read-only commands run over SSH as the unprivileged user (`valentin`, in the `sudo` and `docker` groups; no password prompt answered, no `sudo` used). Output kept in the session scratchpad, not in the repository.
+
+| Observation | Result | Reading |
+|---|---|---|
+| Kopia version | `0.23.1` | As declared |
+| Timer | `kopia-lenovo-hdd.timer` active; last run Fri 2026-10-23 08:23 CEST, next 2026-10-24 00:23 | The job fires daily |
+| Deployed wrapper | Same as the Ansible role: repository `/mnt/backup-external/kopia-lenovo`, single source `/mnt/data/valentin/backup-data`, skips quietly when the disk or the repository directory is missing | Matches the declaration |
+| `/mnt/backup-external` | `findmnt` printed nothing and `/mnt/backup-external/kopia-lenovo` does not exist | **The external backup disk is not mounted at the time of the check.** With this wrapper, a run in that state ends in "skipping" without a snapshot. Whether snapshots exist from earlier runs was not observed |
+| Disks | `/` and therefore `/srv` and `/var/lib/docker` are on `/dev/sda2`; `/mnt/data` is `/dev/sdb1` (280 GB used) | `/srv` and `/var/lib/docker` are not under the snapshot source, as declared |
+| Docker volumes | `career-os-staging_pgdata` exists | A PostgreSQL volume of another workload lives in `/var/lib/docker`, **outside the declared Kopia source** |
+| Journal of the job | Not readable by this user (not in `adm`/`systemd-journal`) | Whether recent runs said "snapshot ok" or "HDD absent, skipping" is **not observed** |
+
+Still not observed (needs root): `kopia snapshot list`, the effective policy, the repository status, the date of the last real snapshot, and the journal. Until then: **the declared coverage is confirmed for the source path; the declared retention is unconfirmed; and the external disk being absent means the existence of any recoverable snapshot is unconfirmed.** No deletion promise and no assumption that a database volume is backed up.
+
 **Deletion and recovery.** The owner authorises any deletion. Removing a source from a database corpus means building a new version without it (versions are immutable), dropping the old schema, and then purging the backups that still hold it, which depends on the unread Kopia retention. A restore is checked by the manifest digest of ADR 0037 §3.3 and, for the benchmark, by W6; neither tells whether a restored copy brings back material that was meant to be deleted. That interaction is not designed yet.
 
 ## 7. Scientific publication: what can accompany an article (proposal)
