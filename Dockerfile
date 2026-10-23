@@ -5,6 +5,12 @@ RUN npm ci
 COPY frontend/ ./
 RUN npm run build
 
+# Staging of the white-space page only (--target static): the built SPA behind an unprivileged nginx. No API, no corpus.
+FROM nginxinc/nginx-unprivileged:1.27-alpine AS static
+COPY deploy/nginx-static.conf /etc/nginx/nginx.conf
+COPY --from=frontend /frontend/dist /usr/share/nginx/html
+
+# Default target (the last stage): the MVP with its API and verified artifacts.
 FROM python:3.12-slim
 WORKDIR /app
 COPY backend/requirements.txt .
