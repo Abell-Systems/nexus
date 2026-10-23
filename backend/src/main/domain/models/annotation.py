@@ -87,8 +87,8 @@ class DemandOrganizationObservation(BaseModel):
     / DemandRecord.requesting_organization) -- never inferred at audit time. The
     sole basis this domain currently supports for grouping demands into
     independence clusters is an exact string match on this field. A text- or
-    name-similarity heuristic (e.g. matching "Bax & Company" to "Indira from
-    Bax&Co" as the same entity) is explicitly out of scope -- see ADR 0029
+    name-similarity heuristic (e.g. matching "Example & Company" to "Pat from
+    Example&Co" as the same entity) is explicitly out of scope -- see ADR 0029
     Context, which rejects it for the same circularity reason ADR 0027 rejected
     heuristic patent-family detection: any similarity signal strong enough to
     merge near-duplicate names is also a signal that could correlate with the

@@ -77,13 +77,13 @@ def test_near_duplicate_organization_names_are_not_grouped_exact_match_only():
     missing/excluded org) -- the two must NOT share a group id with each
     other, which is what "not grouped" means here."""
     entries = derive_independence_groups(
-        [_obs("D-1", "Bax & Company"), _obs("D-2", "Indira from Bax&Co")], frozenset()
+        [_obs("D-1", "Example & Company"), _obs("D-2", "Pat from Example&Co")], frozenset()
     )
     by_id = {e.demand_id: e for e in entries}
     assert by_id["D-1"].status == DemandIndependenceStatus.INDEPENDENT
     assert by_id["D-2"].status == DemandIndependenceStatus.INDEPENDENT
-    assert by_id["D-1"].independence_group_id == "Bax & Company"
-    assert by_id["D-2"].independence_group_id == "Indira from Bax&Co"
+    assert by_id["D-1"].independence_group_id == "Example & Company"
+    assert by_id["D-2"].independence_group_id == "Pat from Example&Co"
     assert by_id["D-1"].independence_group_id != by_id["D-2"].independence_group_id
 
 
@@ -113,8 +113,8 @@ def test_real_n24_eligible_corpus_organizations_reproduce_expected_grouping():
         ("INNOGET-1935", "Anonymous Organization"),
         ("INNOGET-1965", "Blue Room Innovation"),
         ("INNOGET-1972", "Anonymous Organization"),
-        ("INNOGET-2006", "Alberto from Pharmactive Biotech Products"),
-        ("INNOGET-2173", "Indira from Bax&Co"),
+        ("INNOGET-2006", "Sam from Sample Products"),
+        ("INNOGET-2173", "Pat from Example&Co"),
         ("INNOGET-2258", "Repsol"),
         ("INNOGET-2301", "INDUSAC"),
         ("INNOGET-2401", "SMAR3TS"),
