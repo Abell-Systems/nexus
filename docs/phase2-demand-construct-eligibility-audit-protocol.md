@@ -105,8 +105,8 @@ decision.
   §4.1 exclusion text verbatim → `exclusion_criterion_1=yes` → **INELIGIBLE**,
   independent of the underlying product's technical domain (machine
   performance/energy monitoring). Sector-fit does not override construct exclusion.
-- **`INNOGET-2054`** ("Seeking electromagnetic applications to be converted into a
-  final product"): the text describes the requesting company's *own* existing magnet
+- **`INNOGET-2054`** (title withheld from the public tree; see
+  `experiments/wpi-demand-patent-matching/data/RETIRED_FILES.json`): the text describes the requesting company's *own* existing magnet
   manufacturing capabilities and solicits commercialization collaborators; whether
   this states an external technical problem to be solved, versus a capability
   advertisement seeking partners, cannot be resolved from the text alone →

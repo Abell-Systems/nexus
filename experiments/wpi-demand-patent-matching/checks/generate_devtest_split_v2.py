@@ -21,7 +21,10 @@ from application.evaluation.organization_aware_split import (  # noqa: E402
 )
 from domain.models.annotation import DemandIndependenceStatus  # noqa: E402
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from restricted_inputs import data_dir  # noqa: E402
+
+DATA_DIR = data_dir()
 CONFIG_DIR = Path(__file__).resolve().parent.parent / "config"
 
 CONFIG_NAME = "devtest_split_v2.json"

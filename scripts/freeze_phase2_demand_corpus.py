@@ -19,6 +19,7 @@ Outputs (experiments/wpi-demand-patent-matching/data/):
 
 import hashlib
 import json
+import os
 import sys
 import time
 import urllib.request
@@ -39,7 +40,7 @@ from domain.protocols.sources import RawPayload  # noqa: E402
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (NexusPhase2CorpusFreeze/1.0)"}
 POLICY_PATH = REPO_ROOT / "config" / "policies" / "data" / "jurisdiction_policy.json"
-OUT_DIR = REPO_ROOT / "experiments" / "wpi-demand-patent-matching" / "data"
+OUT_DIR = Path(os.environ.get("WPI_DATA_DIR") or REPO_ROOT / "experiments" / "wpi-demand-patent-matching" / "restricted" / "data")  # restricted: carries third-party text
 OUT_BASENAME = "dataset_phase2_demand_corpus_n39"
 
 DATASET_ID = "nexus-phase2-demand-corpus-n39-v1"

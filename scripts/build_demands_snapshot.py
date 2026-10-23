@@ -16,9 +16,9 @@ sys.path.insert(0, str(REPO_ROOT / "backend" / "src" / "main"))
 
 from infrastructure.embeddings.embedding_texts import demand_embedding_text, texts_sha256  # noqa: E402
 
-DEFAULT_SOURCE = (
-    REPO_ROOT / "experiments" / "wpi-demand-patent-matching" / "data" / "dataset_phase2_demand_corpus_n39.json"
-)
+sys.path.insert(0, str(REPO_ROOT / "experiments" / "wpi-demand-patent-matching"))
+import restricted_inputs  # noqa: E402
+
 DEFAULT_OUT = REPO_ROOT / "data" / "snapshots" / "operational_corpus_v1" / "demands_v1.json"
 
 
@@ -44,10 +44,11 @@ def build_snapshot(demand_corpus_path: Path) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build the product demand snapshot")
-    parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
+    parser.add_argument("--source", type=Path, help="default: the original corpus in WPI_DATA_DIR (restricted)")
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
-    snapshot = build_snapshot(args.source)
+    source = args.source or restricted_inputs.data_dir((restricted_inputs.CORPUS,)) / restricted_inputs.CORPUS
+    snapshot = build_snapshot(source)
     args.out.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Wrote {args.out}: {len(snapshot['demands'])} demands")
     return 0

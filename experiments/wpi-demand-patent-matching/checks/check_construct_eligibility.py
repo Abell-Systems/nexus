@@ -19,7 +19,10 @@ sys.path.insert(0, str(REPO_ROOT / "backend" / "src" / "main"))
 from application.annotation.construct_eligibility import derive_construct_status  # noqa: E402
 from domain.models.annotation import ConstructEligibilityRubric, RubricValue  # noqa: E402
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from restricted_inputs import data_dir  # noqa: E402
+
+DATA_DIR = data_dir()
 TAXONOMY_CATEGORIES = (
     "consumer_chemistry",
     "sanitary_materials",

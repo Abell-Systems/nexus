@@ -86,3 +86,4 @@ experiments/operational-dense-probe/outputs/
 playwright-report/
 
 auth.caddy
+experiments/wpi-demand-patent-matching/restricted/

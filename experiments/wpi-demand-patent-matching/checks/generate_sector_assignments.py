@@ -28,7 +28,10 @@ import json
 import sys
 from pathlib import Path
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from restricted_inputs import attach_evidence, data_dir  # noqa: E402
+
+DATA_DIR = data_dir()
 CONFIG_DIR = Path(__file__).resolve().parent.parent / "config"
 
 ELIGIBLE_NAME = "dataset_phase2_eligible_corpus_n24_v1.json"
@@ -85,11 +88,7 @@ ASSIGNMENT_ENTRIES = [
             "technical object is a steel-product improvement -- METALLURGY is the only "
             "defensible category, resolved at step 1."
         ),
-        "evidence": [
-            "\"Celsa Group is among top 4 long-steel producers ... Our main products are "
-            "rebars and beams ... It can be an improvement of the material itself, to "
-            "make it more light for example, or any special coating.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-1726",
@@ -104,11 +103,7 @@ ASSIGNMENT_ENTRIES = [
             "DNA extraction and electrophoresis) applied to yeast during fermentation -- "
             "a biotechnological method, resolved at step 1."
         ),
-        "evidence": [
-            "\"The molecular method we use is long ... 1 day to obtain de mitocondrial "
-            "DNA and do the electrophoresis to know the result. We would like to go "
-            "faster.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-1870",
@@ -123,10 +118,7 @@ ASSIGNMENT_ENTRIES = [
             "welding), specifically mechanized and automated solutions -- an industrial "
             "machinery/process-automation object, resolved at step 1."
         ),
-        "evidence": [
-            "\"...requirements for innovative products and mechanized and automated "
-            "solutions, offering improved quality and productivity...\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-1935",
@@ -141,10 +133,7 @@ ASSIGNMENT_ENTRIES = [
             "quality sensors), explicitly naming semiconductor sensing and "
             "miniaturization -- an industrial sensing/IoT object, resolved at step 1."
         ),
-        "evidence": [
-            "\"We are especially interested in solutions based on semiconductor sensing "
-            "and miniaturization technologies.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-1972",
@@ -161,10 +150,7 @@ ASSIGNMENT_ENTRIES = [
             "is the application domain (D4 step 3), not the primary object, and is not "
             "reached because step 1 already resolves to exactly one sector."
         ),
-        "evidence": [
-            "\"Develop an Anti oxidant solution from Micro Algae specie or species with "
-            "an antioxidant action for cosmetics.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-2006",
@@ -177,10 +163,7 @@ ASSIGNMENT_ENTRIES = [
             "domain (step 3), not reached because step 1 already resolves to exactly one "
             "sector."
         ),
-        "evidence": [
-            "\"...seeking an innovative botanic extracts with functional effects on the "
-            "urinary functions.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-2258",
@@ -195,11 +178,7 @@ ASSIGNMENT_ENTRIES = [
             "directly within Energy/Renewable Energy Storage as named by the taxonomy, "
             "resolved at step 1."
         ),
-        "evidence": [
-            "\"...looking for technological solutions to develop advanced electrolytic "
-            "processes in addition to options to facilitate secure hydrogen transport "
-            "and storage.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-2403",
@@ -215,10 +194,7 @@ ASSIGNMENT_ENTRIES = [
             "from mining and metallurgical waste streams -- METALLURGY is the only "
             "defensible category among the six, resolved at step 1."
         ),
-        "evidence": [
-            "\"Pure separation of metals from mine tailings and industrial waste from "
-            "metallurgical industries and urban e-waste remains a big problem.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-2404",
@@ -232,10 +208,7 @@ ASSIGNMENT_ENTRIES = [
             "The object sought is critical raw material / metal recovery from waste "
             "(explicitly naming REE recovery) -- METALLURGY, resolved at step 1."
         ),
-        "evidence": [
-            "\"...how critical raw matericals can be recovered and applied/reused in "
-            "industry, e.g., rare earth elements (REE) recovery.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-2491",
@@ -258,11 +231,7 @@ ASSIGNMENT_ENTRIES = [
             "BIOTECHNOLOGY describes the solution's mechanism, not the problem being "
             "solved. Resolved at step 2: SANITARY_MATERIALS."
         ),
-        "evidence": [
-            "\"Lacer is seeking to identify and develop innovative solutions that "
-            "address the root cause of gingivitis by actively restoring oral microbiome "
-            "balance (eubiosis), moving beyond traditional 'kill bacteria' strategies.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-2492",
@@ -279,11 +248,7 @@ ASSIGNMENT_ENTRIES = [
             "hair-care end-use (the Pilexil product line) is the application domain "
             "(step 3), not reached."
         ),
-        "evidence": [
-            "\"Seeking Novel Active Ingredients and Bio-Technologies Targeting New "
-            "Mechanisms for Androgenetic Alopecia (AGA)\" ... \"uncover new mechanisms "
-            "of action, such as senescence targeting or novel hair growth boosters.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-2493",
@@ -300,11 +265,7 @@ ASSIGNMENT_ENTRIES = [
             "demand is open to 'an ingredient or mix of ingredients' of any origin) -- "
             "resolved at step 1, SANITARY_MATERIALS (an oral-hygiene health product)."
         ),
-        "evidence": [
-            "\"Lacer seeks substitute ingredients or formulations that deliver the same "
-            "antiseptic efficacy as Chlorhexidine (CHX). The solution must reduce plaque "
-            "and gingivitis with significantly fewer side effects.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "LOMBARDIA-947",
@@ -319,11 +280,7 @@ ASSIGNMENT_ENTRIES = [
             "system (sensing + actuation) -- an industrial monitoring/IoT object, "
             "resolved at step 1."
         ),
-        "evidence": [
-            "\"Richieste soluzioni autonome, basse in acqua, resistenti a condizioni "
-            "estreme e con analisi realtime.\" (Autonomous, low-water, extreme-condition-"
-            "resistant solutions with real-time analysis requested.)"
-        ],
+        "evidence": None,
     },
 ]
 
@@ -339,10 +296,7 @@ NO_COVERAGE_ENTRIES = [
             "(CONSUMER_CHEMISTRY), not sector-specific to metals (METALLURGY would "
             "require a metal-specific object, which this demand does not state)."
         ),
-        "evidence": [
-            "\"Do you have a specific idea or concept (material or manufacturing) on "
-            "how to design lighter vehicles?\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-1607",
@@ -350,10 +304,7 @@ NO_COVERAGE_ENTRIES = [
             "Sibling ALLIANCE call to INNOGET-1605, same automotive lightweighting "
             "material/manufacturing object, same absence of a defensible category."
         ),
-        "evidence": [
-            "\"Do you have a specific idea or concept (material or manufacturing) on "
-            "how to achieve lightweighting in vehicles?\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-1625",
@@ -363,11 +314,7 @@ NO_COVERAGE_ENTRIES = [
             "(CONSUMER_CHEMISTRY), not an energy-storage object (ENERGY_STORAGE); no "
             "other category names industrial fuel purification."
         ),
-        "evidence": [
-            "\"we are looking for a method to remove contaminants from a bio-based "
-            "residue (fuel oil), so it could be incorporated in a fossil fuel oil "
-            "blending.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-1932",
@@ -375,10 +322,7 @@ NO_COVERAGE_ENTRIES = [
             "High-temperature display/LCD material engineering -- electronics/display "
             "materials science, not named by any of the six categories."
         ),
-        "evidence": [
-            "\"We need to find alternate display technologies for high temp (up to "
-            "95ºC) displays.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-1965",
@@ -386,10 +330,7 @@ NO_COVERAGE_ENTRIES = [
             "Barcode/packaging recognition via a mobile application -- pure software, "
             "not matching any of the six physical-domain categories."
         ),
-        "evidence": [
-            "\"We are seeking a solution able to recognise the product packaging type "
-            "after scanning the product barcode through a mobile app.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-2173",
@@ -401,11 +342,7 @@ NO_COVERAGE_ENTRIES = [
             "which this demand does not state (it is waste-to-construction-material "
             "valorization, not metal recovery)."
         ),
-        "evidence": [
-            "\"A proposal development with the valorization of waste products of the "
-            "mining industry ... these by-products would be applied in the construction "
-            "sector.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-2301",
@@ -414,10 +351,7 @@ NO_COVERAGE_ENTRIES = [
             "(Automotive SPICE, ISO 26262, FMEA) -- pure software/process-automation "
             "tooling, not industrial machinery/IoT hardware; no other category applies."
         ),
-        "evidence": [
-            "\"We seek to develop custom AI assistants using RAG (Retrieval-Augmented "
-            "Generation) technology to streamline engineering workflows.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-2401",
@@ -428,10 +362,7 @@ NO_COVERAGE_ENTRIES = [
             "permitted text to defensibly place in BIOTECHNOLOGY or any other category "
             "without stretching the evidence beyond what D4 step 1-3 can support."
         ),
-        "evidence": [
-            "\"...working on tackling the problem of agri-food waste, as well as "
-            "refining, separation and purification technologies in the labs.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-2405",
@@ -441,10 +372,7 @@ NO_COVERAGE_ENTRIES = [
             "not storage) nor METALLURGY (no metal-recovery object stated) fits "
             "cleanly; no other category applies."
         ),
-        "evidence": [
-            "\"...revolutionary approaches for maximizing water reuse and water "
-            "recovery ... integration of MF, UF, NF, RO, EDBP-MD.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "INNOGET-2417",
@@ -454,11 +382,7 @@ NO_COVERAGE_ENTRIES = [
             "(SANITARY_MATERIALS); packaging materials science is not named by any of "
             "the six categories."
         ),
-        "evidence": [
-            "\"...looking for innovative approaches to support the development and "
-            "adoption of sustainable and regenerative food packaging solutions, with a "
-            "focus on new materials.\""
-        ],
+        "evidence": None,
     },
     {
         "demand_id": "LOMBARDIA-860",
@@ -468,10 +392,7 @@ NO_COVERAGE_ENTRIES = [
             "(not metal-specific, not a consumer/sanitary product, not industrial "
             "process machinery in the manufacturing sense)."
         ),
-        "evidence": [
-            "\"Una società spagnola cerca tecnologie di manutenzione per giunti di "
-            "dilatazione elastomerici e appoggi in neoprene di ponti stradali.\""
-        ],
+        "evidence": None,
     },
 ]
 
@@ -505,6 +426,7 @@ def _build_no_coverage_entry(n: dict) -> dict:
 
 
 def main() -> int:
+    attach_evidence(ASSIGNMENT_ENTRIES + NO_COVERAGE_ENTRIES, "sector_assignments")
     coverage_decision = json.loads((CONFIG_DIR / COVERAGE_DECISION_NAME).read_text(encoding="utf-8"))
     declared_no_coverage_ids = set(coverage_decision["no_sector_coverage_demand_ids"])
     generated_no_coverage_ids = {e["demand_id"] for e in NO_COVERAGE_ENTRIES}
