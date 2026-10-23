@@ -21,7 +21,15 @@ EXPERIMENT = Path(__file__).resolve().parent.parent
 REPO_ROOT = EXPERIMENT.parents[1]
 SYNTHETIC_DATA = EXPERIMENT / "synthetic" / "data"
 FINGERPRINTS = json.loads((Path(__file__).parent / "third_party_text_fingerprints.json").read_text(encoding="utf-8"))
-SCANNED = (EXPERIMENT, REPO_ROOT / "scripts", REPO_ROOT / "experiments" / "operational-dense-probe")
+SCANNED = (
+    EXPERIMENT,
+    REPO_ROOT / "scripts",
+    REPO_ROOT / "experiments" / "operational-dense-probe",
+    REPO_ROOT / "docs" / "validation",
+    REPO_ROOT / "docs" / "phase2-demand-construct-eligibility-audit-protocol.md",
+    REPO_ROOT / "data" / "annotations",
+    REPO_ROOT / "data" / "experiments",
+)
 
 
 def _load(path: Path, name: str):
@@ -41,9 +49,12 @@ def _normalise(text: str) -> str:
 
 
 def test_should_find_no_original_demand_text_in_the_scanned_tree() -> None:
-    """Tracked files only; compares the hash of every 60-character window with the hashes of the first 60 normalised
-    characters of each original description and recorded quote (no text is stored in the test)."""
-    window, known = FINGERPRINTS["window"], set(FINGERPRINTS["sha256_of_first_window"])
+    """Tracked files only. Compares the hash of every window with the hashes of the first 60 normalised characters of
+    each original description and recorded quote, and of the first 25 of each Innoget title (no text is stored)."""
+    checks = (
+        (FINGERPRINTS["window"], set(FINGERPRINTS["sha256_of_first_window"])),
+        (FINGERPRINTS["title_window"], set(FINGERPRINTS["sha256_of_first_title_window"])),
+    )
     found = []
     tracked = subprocess.run(
         ["git", "ls-files", "-z", "--", *(str(r.relative_to(REPO_ROOT)) for r in SCANNED)],
@@ -58,7 +69,9 @@ def test_should_find_no_original_demand_text_in_the_scanned_tree() -> None:
             continue
         text = _normalise(path.read_text(encoding="utf-8", errors="ignore"))
         if any(
-            hashlib.sha256(text[i : i + window].encode()).hexdigest() in known for i in range(len(text) - window + 1)
+            hashlib.sha256(text[i : i + window].encode()).hexdigest() in known
+            for window, known in checks
+            for i in range(len(text) - window + 1)
         ):
             found.append(name)
     assert not found, f"original third-party demand text found in: {found}"

@@ -1,6 +1,9 @@
 """Writes the product-validation sheet: one row per (listed demand, top-5 asset), exactly what the screen shows.
 
-Usage: python scripts/build_validation_sheet.py ARTIFACTS_DIR [OUT_CSV]
+Usage: python scripts/build_validation_sheet.py ARTIFACTS_DIR [OUT_CSV] [--without-titles]
+
+The full sheet carries third-party demand titles: give it to validators directly. The version kept in git is built
+with --without-titles (demand_title empty), enough to check demands, ranks and publication ids.
 """
 import csv
 import json
@@ -18,8 +21,10 @@ COLUMNS = ["demand_id", "demand_title", "rank", "publication_id", "ip_type", "as
 
 
 def main() -> None:
-    artifacts = Path(sys.argv[1])
-    out = Path(sys.argv[2]) if len(sys.argv) > 2 else Path("docs/validation/validation_sheet_v1.csv")
+    args = [a for a in sys.argv[1:] if a != "--without-titles"]
+    without_titles = len(args) < len(sys.argv) - 1
+    artifacts = Path(args[0])
+    out = Path(args[1]) if len(args) > 1 else Path("docs/validation/validation_sheet_v1.csv")
     client = TestClient(create_mvp_app(artifacts))
     selection = json.loads(SELECTION.read_text(encoding="utf-8"))
     demands = client.get("/api/demand-examples").json()["demands"]
@@ -32,7 +37,7 @@ def main() -> None:
         if len(body["assets"]) != 5:
             raise SystemExit(f"{demand['demand_id']} returned {len(body['assets'])} assets, expected 5")
         rows += [
-            [demand["demand_id"], demand["title"], a["rank"], a["publication_id"], a["ip_type"], a["title"], "", "", "", ""]
+            [demand["demand_id"], "" if without_titles else demand["title"], a["rank"], a["publication_id"], a["ip_type"], a["title"], "", "", "", ""]
             for a in body["assets"]
         ]
     with out.open("w", newline="", encoding="utf-8-sig") as f:  # BOM: Excel opens Spanish accents correctly
