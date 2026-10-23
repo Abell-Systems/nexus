@@ -243,6 +243,20 @@ jobs:
         run: |
           cp auth.caddy.example auth.caddy
           docker compose config -q
+      - name: Static staging image serves the page, refuses the matcher route and meets the workload contract
+        run: |
+          python scripts/check_staging_compose.py
+          TAILSCALE_BIND_IP=127.0.0.1 docker compose -f docker-compose.staging.yml up -d --build
+          for i in $(seq 1 30); do
+            [ "$(docker inspect -f '{{.State.Health.Status}}' nexus-staging-web-1)" = healthy ] && break
+            sleep 2
+          done
+          test "$(docker inspect -f '{{.State.Health.Status}}' nexus-staging-web-1)" = healthy
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8081/)" = 200
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8081/health)" = 200
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8081/data/oepm-subclass-pairs-results.json)" = 200
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8081/matches)" = 404
+          TAILSCALE_BIND_IP=127.0.0.1 docker compose -f docker-compose.staging.yml down
 
   sonar-quality-gate:
     name: 6. Sonar Quality Gate

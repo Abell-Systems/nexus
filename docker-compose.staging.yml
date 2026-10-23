@@ -1,0 +1,37 @@
+# Staging of the white-space page on the Lenovo: docker compose --env-file <env> -f docker-compose.staging.yml up -d --build
+# Only the static page (--target static): no matcher, no operational corpus, no database, no secrets.
+# Published only on the host's Tailscale address (TAILSCALE_BIND_IP), never on 0.0.0.0.
+name: nexus-staging
+
+# Workload Security Contract (infrastructure repo): non-root, read-only rootfs, no privilege escalation, no
+# capabilities, resource bounds, a named network.
+x-hardened: &hardened
+  read_only: true
+  privileged: false
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: ["ALL"]
+  networks: [nexus-net]
+
+services:
+  web:
+    <<: *hardened
+    build:
+      context: .
+      target: static
+    image: nexus-static:staging
+    restart: unless-stopped
+    user: "101:101" # the unprivileged nginx user of the base image
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=16m"]
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 50
+    ports:
+      - "${TAILSCALE_BIND_IP:?set TAILSCALE_BIND_IP to the host's Tailscale address}:8081:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+networks:
+  nexus-net: {}
