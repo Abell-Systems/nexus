@@ -27,6 +27,24 @@
 
 The MIT licence is the project's licence for its own work. Whether it can cover third-party data files kept in the same public repository is exactly what §3 leaves open for each source. **None of this has been assessed as lawful or unlawful here.**
 
+### 2.1 State after #160, #161, #162 and #163 (2026-10-23)
+
+The table above is the inventory as found on 2026-10-22. D1 has since been applied in part (merge commits `033283d`, `d91b55d`, `8a7febf`, `62d44ee`); the per-file record is `docs/data-acquisition/third-party-files-d1-inventory.md`.
+
+| Item | State now |
+|---|---|
+| Innoget fixtures | Replaced by synthetic ones (#160). The real page is still in git history |
+| Corpus of 39 demands (37 Innoget, 2 Open Innovation Lombardia): full title and description in 6 JSON files and 63 quotes in 2 scripts | Retired from the tree, identity recorded in `RETIRED_FILES.json`, scripts read an external restricted copy and stop if it is absent, synthetic set added (#161). A CI guard checks the versioned tree |
+| Validation sheet | Titles removed from the versioned copy; the full sheet is generated privately (#162) |
+| Employer-tagged personal given names in the independence example and test | Replaced by synthetic strings (#163). They remain in ADR 0029, the independence protocol, plans and `experiments/` data (kept provisionally as historical record) |
+| Demand ids | Kept (provisional) |
+| Requesting-organisation names | Pending a specific review |
+| 2 Lombardia fixtures and their test | **Unchanged**; need their own authorisation |
+| EPO OPS and OEPM BOPI samples, patent corpus snapshots, annotation sheets, WIPO PDF, Minesoft CSVs | Unchanged, pending review (annotation sheets checked: no Innoget text) |
+| Git history, forks, clones, backups | Not touched. Nothing here is a deletion; rewriting history is a separate open decision |
+
+Limits of the guard: exact fingerprints of selected text in the versioned tree; no paraphrase, no history.
+
 ## 3. Data: rights by source
 
 | Source | What Nexus holds, where | What the source's terms say (pointer) | State |
@@ -34,7 +52,7 @@ The MIT licence is the project's licence for its own work. Whether it can cover 
 | **OEPM OpenData** (BIBLIO 2000-2025, the white-space corpus) | 26 files, 793 MB, git-ignored, hash-pinned in `config/whitespace/oepm_biblio_2000_2025.json`; the spike database is a derived copy | The legal notice (`https://sede.oepm.gob.es/eSede/datos/es/aviso-legal/`) allows reuse "para fines comerciales y no comerciales" under Ley 37/2007 and RD 1495/2011, on conditions: cite "Origen de los datos: Oficina Española de Patentes y Marcas"; "Está prohibido desnaturalizar el sentido de la información"; state the date of the last update when the document gives it; do not suggest the OEPM sponsors or supports the reuse; keep the update-date and reuse-condition metadata. Read 2026-10-22 (no version or date shown on the page) and recorded earlier from a logged-in session on 2026-10-21 in `docs/whitespace/oepm-bulk-datasets-audit.md` §2 | **Documented.** Repository's own reading: derived products are not forbidden if the conditions are met. Counsel has not reviewed the notice (`docs/whitespace/oepm-biblio-corpus-characterization.md`, row "Licence"). The SOAP service's terms are separate and unread |
 | **OEPM BOPI corpus** (`patents_es_corpus`, tracked in git) | Title, abstract, assignee, CPC, filing and publication dates | Provenance recorded in `docs/data_provenance.md` (datos.gob.es / OEPM Datos Abiertos). Its own licence statement was not separately verified | **Pending** as a separate source. Whether the attribution and update date accompany the tracked files was not checked |
 | **Google Patents Public Data** (operational corpus: title, abstract, assignees, CPC of 54,997 assets; embeddings derived from the text) | `data/snapshots/operational_corpus_v1`, git-ignored, 229 MB | The publisher's blog (`https://cloud.google.com/blog/products/gcp/google-patents-public-datasets-connecting-public-paid-and-private-patent-data`) prints the attribution line "Source: “Google Patents Public Data” by IFI CLAIMS Patent Services and Google, CC BY 4.0" and, for CPC, "by the EPO and USPTO, for public use". The dataset's own listing or terms page was **not** retrieved; the `google/patents-public-data` repository states Apache-2.0 for the repository only | **Documentary support for CC BY 4.0, formal terms not retrieved.** The repository's docs say counsel has not confirmed the chain of the underlying patent-office data and that this is needed before charging for anything |
-| **Innoget demands** (39 demands with title, description, date, country, `source_url`) | Inside the operational snapshot (git-ignored); titles also in the public `validation_sheet_v1.csv`; two Innoget pages tracked as fixtures | Innoget Terms of Service, "last updated March 2026" (`https://www.innoget.com/terms-and-conditions`), Section 6: use, exploitation, copying and reproduction of site content "without written permission" prohibited; contributors' content belongs to its authors; Section 2.4: "You may not engage in any commercial activities" (user conduct). The page was searched for scraping, extraction and robots terms and **none was found**. Extraction was done on 2026-08-25 by "structured web extraction" (`docs/data_provenance.md`); the version of the terms in force then is not established | **Pending, and the highest-risk item.** No written authorisation from Innoget or the authors was found in the repository |
+| **Innoget demands** (37 of the 39 demands, with title, description, date, country, `source_url`) | Inside the operational snapshot (git-ignored). *As found on 2026-10-22:* titles also in the public `validation_sheet_v1.csv` and two Innoget pages tracked as fixtures, both since removed from the tree (2.1) | Innoget Terms of Service, "last updated March 2026" (`https://www.innoget.com/terms-and-conditions`), Section 6: use, exploitation, copying and reproduction of site content "without written permission" prohibited; contributors' content belongs to its authors; Section 2.4: "You may not engage in any commercial activities" (user conduct). The page was searched for scraping, extraction and robots terms and **none was found**. Extraction was done on 2026-08-25 by "structured web extraction" (`docs/data_provenance.md`); the version of the terms in force then is not established | **Pending, and the highest-risk item.** No written authorisation from Innoget or the authors was found in the repository |
 | **Lombardia open-innovation portal** | One demand in the 39; three pages tracked as fixtures | Terms not examined | **Pending** |
 | **Minesoft** (commercial patent service; extracts for the article) | CSVs and exports tracked in the public repository | No terms or contract in the repository | **Pending** |
 | **EPO Open Patent Services** | Samples as fixtures; ingestion code | OPS terms of use not read | **Pending** |
@@ -139,7 +157,7 @@ What the output must settle: which paths have snapshots; the effective retention
 
 The three are different things. A decision recorded is not evidence obtained, and neither closes the gate.
 
-### 8.1 Containment measures proposed (provisional, reversible, none applied)
+### 8.1 Containment measures (provisional, reversible; applied status in 2.1)
 
 * No new copy of the Innoget demands is added to the shared staging database or to any new operational snapshot until D2 is resolved.
 * The operational corpus stays out of staging (D4) until the scope of the rights review and the provenance of its components are clear. That a source is publicly accessible does not by itself show that all its data may be redistributed.
@@ -166,16 +184,16 @@ The three are different things. A decision recorded is not evidence obtained, an
 
 ### 8.4 Provisional decisions on D1 and D2
 
-Status: **adopted by the owner on 2026-10-22** (recorded in the session as "adoptadas"). They are provisional operational measures, not legal conclusions about past extraction, and **none is applied yet**: the fixtures are not replaced and no request has been sent.
+Status: **adopted by the owner on 2026-10-22** (recorded in the session as "adoptadas"). They are provisional operational measures, not legal conclusions about past extraction, and **the D1 part is applied in part (see 2.1); no request to Innoget has been sent.**
 
 * D1. Replace the Innoget fixtures with synthetic or minimal examples that keep the test cases. Review the Lombardia, EPO OPS, OEPM, WIPO and Minesoft files one by one; they do not necessarily get the same treatment. History is not rewritten.
-* D2. Request written authorisation for the 39 demands, stating the uses, storage and publication it would cover. Until it exists, the demands do not enter the shared staging database.
+* D2. Request written authorisation for the 37 Innoget demands (the 2 Lombardia demands need a separate request), stating the uses, storage and publication it would cover. Until it exists, the demands do not enter the shared staging database.
 * Replacing files in the working tree does not remove them from existing commits, forks or clones. The fixture review and the history decision are recorded independently, and the second is still open.
 
 ### 8.5 Owner decisions
 
 * D1. What to do about the third-party files tracked in the public repository (§2): ask each rights-holder, replace them with synthetic or minimal fixtures, or keep them with a recorded basis.
-* D2. Whether to ask Innoget for written permission for the 39 demands, and whether staging may hold them meanwhile (8.1 proposes no).
+* D2. Whether to ask Innoget for written permission for the 37 demands (a draft exists, not sent; Lombardia separate), and whether staging may hold them meanwhile (8.1 proposes no).
 * D3. Which text `license_status` carries in the manifest (G3).
 * D4. Whether staging may include the operational corpus before counsel confirms the Google Patents chain, or only the OEPM corpus.
 * D5. Who reads and records the Kopia retention and the volume's coverage.
