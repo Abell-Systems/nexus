@@ -4,7 +4,7 @@
 
 ## 0. Update, 2026-10-23 13:22 CEST: a staging now runs on the Lenovo
 
-The audit below was written at about 10:00 CEST, before any deployment, and is kept as the record of that moment. At 13:19:49 CEST the static staging of the page was deployed to the Lenovo (Nexus `main` at `e8f19c9`, infrastructure `main` at `3b7fac5`). **Current answers:**
+The audit below was written before any deployment and is kept as the record of that moment. At 13:19:49 CEST the static staging of the page was deployed to the Lenovo (Nexus `main` at `e8f19c9`, infrastructure `main` at `3b7fac5`). **Current answers:**
 
 | Question | Answer now |
 |---|---|
