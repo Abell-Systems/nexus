@@ -72,3 +72,18 @@ Retiring these files is not a plain deletion. What references them:
 ## Whole-repository content search (2026-10-23, before this change)
 
 All tracked text files were searched for the normalised full title (25+ characters) and the first 60 characters of the description of each of the 39 demands. Results: Innoget titles in `docs/validation/validation_sheet_v1.csv` (21) and in one protocol example (1); Lombardia title and description in the 2 Lombardia fixtures and in their unit test (pending a separate authorisation); no Innoget description text anywhere. The guard test now also fingerprints the first 25 normalised characters of the 37 Innoget titles and scans `docs/validation`, the construct-eligibility protocol, `data/annotations` and `data/experiments`. Same limits: exact match only, tracked files only, not the git history.
+
+## Demand ids and requesting-organisation names: provisional decision and review
+
+Provisional decision recorded 2026-10-23, as two separate decisions:
+
+* **Demand ids (`INNOGET-n`): keep.** They link annotations, judgments and results without bringing the Innoget text back. Being an identifier rather than literal text does not by itself make it harmless; it is kept because the scientific traceability needs it, and the decision can be revisited.
+* **Requesting-organisation names: pending a specific review; not approved for keeping.**
+
+What the search found (names taken from the organisation-audit files; 15 distinct strings, some are not organisations):
+
+* About 30 tracked files carry at least one of them: `docs/adr/0029` and `0030`, `docs/phase2-demand-independence-audit-protocol.md`, `docs/empirical-study-protocol.md`, `docs/roadmap.md`, `docs/data_provenance.md`, `docs/superpowers/` plans and specs, `experiments/wpi-demand-patent-matching/` scripts and data, and `backend/test` (also `data/raw` and `data/snapshots` for one common name, Repsol, which may be unrelated).
+* **Personal given names appear with an employer** in the display strings `Alberto from Pharmactive Biotech Products` and `Indira from Bax&Co`: in `backend/src/main/domain/models/annotation.py` (a docstring), `backend/test/unit/application/test_demand_independence.py`, ADR 0029, the independence-audit protocol and the plans. These are the most sensitive and the least necessary.
+* Analytic value: the exact strings are the data of the independence audit (ADR 0029 relies on exact string equality, and its argument against fuzzy matching uses the `Bax & Company` / `Indira from Bax&Co` pair). In the test and the docstring they are only examples.
+
+Proposal for the owner (not applied): (1) replace the two personal-name strings in `annotation.py` and the unit test by synthetic names with the same shape, which keeps the behaviour; (2) keep the company names in ADRs and protocols as the historical record of what the audit used, until the review decides; (3) decide the retained scope of names in `experiments/` data after (1)-(2). The guard does not cover names; it would need its own fingerprints once the scope is decided.
