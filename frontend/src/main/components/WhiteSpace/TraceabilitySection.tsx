@@ -1,4 +1,4 @@
-import type { CorpusIdentity, ExposureResults, Provenance } from "../../domain/whitespace";
+import { TEXT, type CorpusIdentity, type ExposureResults, type Provenance } from "../../domain/whitespace";
 import styles from "./WhiteSpacePage.module.css";
 
 export function TraceabilitySection({
@@ -42,6 +42,7 @@ export function TraceabilitySection({
         Inventario oficial usado: <span className={styles.mono}>{exposure.authority_file.name}</span>, SHA-256{" "}
         <span className={styles.mono}>{exposure.authority_file.sha256}</span>.
       </p>
+      <p>{TEXT.downloadDate}</p>
       <details>
         <summary>Identidad del corpus: {files.length} ficheros verificados por huella</summary>
         <div className={styles.scroll}>

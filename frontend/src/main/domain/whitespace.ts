@@ -85,6 +85,10 @@ export interface Provenance {
 export const TEXT = {
   attribution: "Origen de los datos: Oficina Española de Patentes y Marcas",
   noSponsorship: "La Oficina Española de Patentes y Marcas no participa en este producto ni lo patrocina ni lo apoya.",
+  // Date recorded in docs/whitespace/oepm-biblio-corpus-characterization.md (section 1) and shown by the mtime of the 26 files.
+  // It is the download date; the OEPM's own update date of the data has not been checked.
+  downloadDate:
+    "Ficheros bibliográficos 2000–2025 descargados de la OEPM el 20 de octubre de 2026 (fecha de descarga, no la fecha de actualización que la OEPM atribuya a los datos).",
   absenceIsNotOpportunity:
     "Una ausencia observada indica que no se ha observado co-clasificación en este corpus y periodo. No demuestra que las áreas no se combinen ni que exista una oportunidad tecnológica.",
   status: "White spaces predictivos: no disponible. Pendiente de validación científica.",
