@@ -1,7 +1,7 @@
 """Unit tests for LombardiaHtmlNormalizer verifying extraction and evidence-backed origin classification.
 
 Open Innovation Lombardia republishes EEN Partnering Opportunities Database "Technology
-request" listings (identical POD reference scheme, e.g. TRES20250806011). It exposes no
+request" listings (identical POD reference scheme, e.g. TRES00000000001). It exposes no
 explicit country field, so country_raw is decoded from the POD reference's embedded
 2-letter jurisdiction code (positions 3-4, e.g. "TRES..." -> "ES") -- a deterministic
 parse of a raw identifier, not a heuristic guess.
@@ -32,13 +32,13 @@ def origin_resolver() -> DefaultOriginResolver:
 
 @pytest.fixture
 def spanish_bridge_payload() -> RawPayload:
-    fixture_path = _FIXTURES_DIR / "lombardia_sample_spanish_1_pontes.html"
+    fixture_path = _FIXTURES_DIR / "lombardia_synthetic_spanish_1.html"
     return RawPayload(
         source_id="openinnovation_lombardia_web",
-        batch_id="lombardia_collab_860",
+        batch_id="lombardia_collab_900101",
         payload_bytes=fixture_path.read_bytes(),
         metadata={
-            "url": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/860/manutenzione-giunti-di-ponti"
+            "url": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/900101/esempio-sintetico-1"
         },
         retrieval_timestamp=datetime(2026, 9, 7, 12, 0, 0, tzinfo=UTC),
     )
@@ -46,13 +46,13 @@ def spanish_bridge_payload() -> RawPayload:
 
 @pytest.fixture
 def lithuania_payload() -> RawPayload:
-    fixture_path = _FIXTURES_DIR / "lombardia_sample_lithuania_call.html"
+    fixture_path = _FIXTURES_DIR / "lombardia_synthetic_lithuania.html"
     return RawPayload(
         source_id="openinnovation_lombardia_web",
-        batch_id="lombardia_collab_2024",
+        batch_id="lombardia_collab_900103",
         payload_bytes=fixture_path.read_bytes(),
         metadata={
-            "url": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/2024/gruppo-industriale-lituano-cerca-tecnologie-per-gestione-sostenibile-d"
+            "url": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/900103/esempio-sintetico-3"
         },
         retrieval_timestamp=datetime(2026, 9, 7, 12, 0, 0, tzinfo=UTC),
     )
@@ -71,25 +71,25 @@ def test_lombardia_normalizer_level_1_spanish_origin(
 
     demand = res.demand
     assert demand is not None
-    assert demand.demand_id == "LOMBARDIA-860"
-    assert demand.title == "Manutenzione giunti di ponti"
+    assert demand.demand_id == "LOMBARDIA-900101"
+    assert demand.title == "Esempio sintetico 1: richiesta inventata di manutenzione"
     assert "società spagnola" in demand.description.lower() or "societa spagnola" in demand.description.lower()
     assert len(demand.description.split()) >= 25
     assert demand.is_spanish_demand is True
-    assert demand.metadata.get("pod_reference") == "TRES20250806011"
+    assert demand.metadata.get("pod_reference") == "TRES00000000001"
 
 
 def test_lombardia_normalizer_level_1_spanish_origin_second_record(
     origin_resolver: DefaultOriginResolver,
 ) -> None:
     """Covers the second (of exactly 2) frozen Lombardia demands in the N=39 corpus."""
-    fixture_path = _FIXTURES_DIR / "lombardia_sample_spanish_2_pm10.html"
+    fixture_path = _FIXTURES_DIR / "lombardia_synthetic_spanish_2.html"
     payload = RawPayload(
         source_id="openinnovation_lombardia_web",
-        batch_id="lombardia_collab_947",
+        batch_id="lombardia_collab_900102",
         payload_bytes=fixture_path.read_bytes(),
         metadata={
-            "url": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/947/soluzioni-per-monitorare-e-mitigare-polveri-pm10-in-miniere"
+            "url": "https://www.openinnovation.regione.lombardia.it/en/collaborations/collaboration-proposals/900102/esempio-sintetico-2"
         },
         retrieval_timestamp=datetime(2026, 9, 7, 12, 0, 0, tzinfo=UTC),
     )
@@ -102,10 +102,10 @@ def test_lombardia_normalizer_level_1_spanish_origin_second_record(
     assert res.disposition == DemandDisposition.INCLUDED
     demand = res.demand
     assert demand is not None
-    assert demand.demand_id == "LOMBARDIA-947"
+    assert demand.demand_id == "LOMBARDIA-900102"
     assert len(demand.description.split()) >= 25
     assert demand.is_spanish_demand is True
-    assert demand.metadata.get("pod_reference") == "TRES20251031029"
+    assert demand.metadata.get("pod_reference") == "TRES00000000002"
 
 
 def test_lombardia_normalizer_excludes_lithuania_call(
@@ -125,9 +125,9 @@ def test_lombardia_normalizer_excludes_lithuania_call(
 
     demand = res.demand
     assert demand is not None
-    assert demand.demand_id == "LOMBARDIA-2024"
+    assert demand.demand_id == "LOMBARDIA-900103"
     assert demand.is_spanish_demand is False
-    assert demand.metadata.get("pod_reference") == "TRLT20260720004"
+    assert demand.metadata.get("pod_reference") == "TRLT00000000003"
 
 
 def test_lombardia_normalizer_quarantines_invalid_utf8(origin_resolver: DefaultOriginResolver) -> None:
@@ -175,7 +175,7 @@ def test_lombardia_normalize_stream_yields_only_included(
 
     spanish_stream = list(normalizer.normalize_stream(spanish_bridge_payload))
     assert len(spanish_stream) == 1
-    assert spanish_stream[0].demand_id == "LOMBARDIA-860"
+    assert spanish_stream[0].demand_id == "LOMBARDIA-900101"
 
     lithuania_stream = list(normalizer.normalize_stream(lithuania_payload))
     assert len(lithuania_stream) == 0

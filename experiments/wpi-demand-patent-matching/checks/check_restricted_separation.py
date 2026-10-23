@@ -29,6 +29,8 @@ SCANNED = (
     REPO_ROOT / "docs" / "phase2-demand-construct-eligibility-audit-protocol.md",
     REPO_ROOT / "data" / "annotations",
     REPO_ROOT / "data" / "experiments",
+    REPO_ROOT / "backend" / "test" / "fixtures",
+    REPO_ROOT / "backend" / "test" / "unit" / "application" / "ingestion",
 )
 
 

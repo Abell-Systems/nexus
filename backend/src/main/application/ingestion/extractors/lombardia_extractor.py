@@ -3,7 +3,7 @@
 Lombardia republishes Enterprise Europe Network Partnering Opportunities Database
 listings (identical POD reference scheme). Its pages carry no explicit country field,
 so country_raw is deterministically decoded from the POD reference's embedded
-2-letter jurisdiction code (e.g. "TRES20250806011" -> "ES") -- a factual parse of a
+2-letter jurisdiction code (e.g. "TRES00000000001" -> "ES") -- a factual parse of a
 raw identifier, not a heuristic or interpretation.
 """
 
