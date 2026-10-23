@@ -39,7 +39,7 @@ The table above is the inventory as found on 2026-10-22. D1 has since been appli
 | Employer-tagged personal given names in the independence example and test | Replaced by synthetic strings (#163). They remain in ADR 0029, the independence protocol, plans and `experiments/` data (kept provisionally as historical record) |
 | Demand ids | Kept (provisional) |
 | Requesting-organisation names | Pending a specific review |
-| 2 Lombardia fixtures and their test | **Unchanged**; need their own authorisation |
+| 2 Lombardia fixtures and their test | Replaced by synthetic ones (after this section was written, see the D1 inventory); the 2 demands still need their own authorisation |
 | EPO OPS and OEPM BOPI samples, patent corpus snapshots, annotation sheets, WIPO PDF, Minesoft CSVs | Unchanged, pending review (annotation sheets checked: no Innoget text) |
 | Git history, forks, clones, backups | Not touched. Nothing here is a deletion; rewriting history is a separate open decision |
 
