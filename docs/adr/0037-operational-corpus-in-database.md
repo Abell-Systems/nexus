@@ -51,6 +51,8 @@ Conditions that make C acceptable, none negotiable:
 5. **Exact scan.** Rank by exact cosine in SQL with the same eligibility, rounding and tie rules. No approximate index is used for anything shown or cited, because ADR 0014 and the evaluation rely on reproducible orderings. An index may be added later only after an equivalence test against the exact result on all 39 demands.
 6. **Parity gate before switching.** The adapter ships behind the same `PatentCandidateRetriever` port and a test that, over the real artifacts, returns identical ids, scores and order to `NumpyDenseRetriever` for every demand. Without it the old path stays the default.
 7. **No embedding at runtime.** Embeddings are generated offline as today (ADR 0014); the ingest command only loads them.
+8. **Deterministic order of text keys.** Every ordering the contract depends on (the subclasses of a record, ties by `publication_id`) is `ORDER BY ... COLLATE "C"`, i.e. code-point order as in Python. Startup verifies the contract itself, not only the configuration: the service reads the two OEPM records whose symbols are mixed case in the source (`b01J`, `A61k`) through the contractual query and aborts if the full subclass sequences differ from the ones recorded in the manifest. A regression test covers both records and compares sequences, not sets.
+9. **Numeric policy of the parity gate.** The gate requires identical ids and order and a score difference of at most 1e-6 **after both scores are rounded to 6 decimals** (so one unit in the last digit passes, two fail). This is a new decision taken after the spike (§7.1), not a retroactive pass of the strict criterion.
 
 ## 3.1 Two corpora, one pattern (amendment, 2026-10-22)
 
@@ -137,4 +139,41 @@ Do not change status from Proposed to Accepted, change the default retrieval pat
 
 ## 6. Enforcement
 
-An implementation is non-compliant with this ADR if it: updates a loaded corpus version in place; starts serving before the manifest and content digest are verified; falls back to files, BM25 or a live model when the database check fails; uses an approximate index for shown results without the equivalence test; or switches the default path without the parity gate of §3.6.
+An implementation is non-compliant with this ADR if it: orders contract-relevant text keys with the database default collation; updates a loaded corpus version in place; starts serving before the manifest and content digest are verified; falls back to files, BM25 or a live model when the database check fails; uses an approximate index for shown results without the equivalence test; or switches the default path without the parity gate of §3.6.
+
+## 7. Spike evidence (2026-10-22)
+
+Pre-registration (with amendment A1), scripts, raw outputs and `RESULTS.md` are in `experiments/adr-0037-db-spike/`. PostgreSQL 17.11 + pgvector in Docker, default settings, database collation `en_US.utf8`.
+
+### 7.1 Results, kept as measured
+
+| | Result |
+|---|---|
+| P1 strict parity (operational, 39 demands x limit 5 and 100) | **FAIL**: ids and order identical in 78/78, scores identical in 37 and differing by exactly 1e-6 in 41 |
+| P1b tolerance, defined after P1 (amendment A1) | 78/78; it does not replace P1 |
+| P2 latency, p95 | PASS: SQL 0.128 s, numpy 0.158 s (rule: <= 0.5 s and <= 3x numpy) |
+| P3 BIBLIO | PASS: load checks exact; observed pairs 24,583 and 40,585 equal the versioned results |
+| P4 (informational) | report from zips 188.6 s (177.4 s of parsing), from the database 26.5 s; load 77.3 s; 1.29 GB |
+| P5 integrity | PASS as a mechanism: deterministic digest, stable after physical reorder, one-row change detected, altered candidate load refused with ROLLBACK, 34 relations before and after, no candidate schema left; digest of the whole schema 18.2 s |
+
+The score difference is attributed to float32 accumulation order in pgvector against numpy; it was not investigated further. Of 711,547 records, 2 differed between the database read and the adapter, only in the order of `subclasses`, because two source records carry a lowercase symbol; the database collation `en_US.utf8` orders them differently from Python. Verified for one record with `COLLATE "C"`; the database-level collation was not tested. These two symbols are kept as distinct in the corpus; normalising them is a separate decision.
+
+### 7.2 Limits of the spike
+
+No real loader (the altered source of P5 is an altered row of a stored copy); stability of the digest across PostgreSQL versions (it uses `jsonb` text) untested; no concurrent load, no backup or recovery, no measurement of the cost of operating the server; the plan was a parallel sequential scan with no index; one machine.
+
+### 7.3 Required before production, whatever the status
+
+Each in its own change: the real loaders with the load checks of §3.2; the backup and recovery strategy (including restoring and re-verifying the digest); behaviour under concurrency; digest compatibility across PostgreSQL versions; the parity gate of §3.6 run against the real adapter with the policy of §3.9.
+
+### 7.4 Status of the acceptance gates of §5.1
+
+| Gate (§5) | Evidence | State |
+|---|---|---|
+| 4. Performance on real corpora | §7.1: P2 PASS, P4 informational with cold/warm split not separated; environment stated | **Met** for latency and report time; thresholds were pre-registered |
+| 1. Database versus synchronized file | The spike measured PostgreSQL only; option B (DuckDB/file + sync) was not benchmarked and the cost of operating the server was not measured | **Open** |
+| 2. ST36 fidelity inventory | `biblio_v1` follows what the adapter reads; the inventory of retained, ignored and rejected fields is not written | **Open** |
+| 3. Network and credential custody | Not addressed by the spike | **Open** |
+| 5. Licensing and retention | Not addressed | **Open** |
+
+Conditions 8 and 9 of §3 are added by this change as consequences of the spike; they do not alter the gates. The status stays **Proposed** until gates 1, 2, 3 and 5 have evidence recorded here or in linked reproducible reports.
