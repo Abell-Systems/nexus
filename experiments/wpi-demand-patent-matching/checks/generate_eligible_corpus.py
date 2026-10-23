@@ -12,7 +12,10 @@ import json
 import sys
 from pathlib import Path
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from restricted_inputs import data_dir  # noqa: E402
+
+DATA_DIR = data_dir()
 
 CORPUS_NAME = "dataset_phase2_demand_corpus_n39.json"
 CORPUS_SHA_NAME = "dataset_phase2_demand_corpus_n39.sha256"

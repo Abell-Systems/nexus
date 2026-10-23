@@ -1,0 +1,16 @@
+{
+  "dataset_id": "synthetic-demand-corpus-n39",
+  "schema_version": "1.0.0",
+  "dataset_version": "1.0.0",
+  "source_authorities": [
+    "synthetic"
+  ],
+  "demand_count": 39,
+  "patent_count": 0,
+  "annotation_count": 0,
+  "demand_id_prefix_counts": {
+    "SYNTHETIC-A-": 37,
+    "SYNTHETIC-B-": 2
+  },
+  "content_sha256": "fec2cfe2ec4b843430fcc217feb04825a065af2bcb988499e35e94a200f26465"
+}

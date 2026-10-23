@@ -15,7 +15,10 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from restricted_inputs import data_dir  # noqa: E402
+
+DATA_DIR = data_dir()
 CONFIG_DIR = Path(__file__).resolve().parent.parent / "config"
 
 DECISION_CONFIG_NAME = "phase2_sector_coverage_decision_v1.json"

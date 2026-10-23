@@ -20,7 +20,10 @@ sys.path.insert(0, str(REPO_ROOT / "backend" / "src" / "main"))
 from domain.models.demand import SpanishOriginLevel  # noqa: E402
 from domain.models.evaluation import DemandCorpus  # noqa: E402
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from restricted_inputs import CORPUS, data_dir  # noqa: E402
+
+DATA_DIR = data_dir((CORPUS,))
 
 
 def _load(name: str) -> dict:
