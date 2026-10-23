@@ -1,0 +1,13 @@
+# Python environment of the ADR 0037 benchmark: the tests of the harness and run_benchmark.py. Exact versions, installed on their own:
+#   python3 -m venv <venv> && <venv>/bin/pip install -r experiments/adr-0037-db-vs-files-benchmark/requirements.txt
+# The versions are the ones the pre-registered protocol and the backend pin (DuckDB 1.5.5; numpy, pyarrow and pydantic as in
+# backend/requirements.txt, because the numbers of the frozen retrieval depend on them). harness/session.py records the versions that are
+# really installed in environment.json; this file declares what is expected, it does not replace that record.
+duckdb==1.5.5
+numpy==2.4.6
+pyarrow==25.0.1
+pydantic==2.13.4
+psycopg[binary]==3.3.6
+pgvector==0.5.1
+httpx==0.28.1  # imported by the OEPM BIBLIO adapter that run_benchmark.py uses (infrastructure.sources.patent.oepm_biblio); not needed by the tests
+pytest==9.1.1
