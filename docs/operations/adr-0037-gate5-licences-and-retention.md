@@ -144,6 +144,59 @@ docker volume ls
 
 What the output must settle: which paths have snapshots; the effective retention; the date of the last snapshot; whether the disk was present; whether `/srv`, `/var/lib/docker` or any volume is a source.
 
+#### 6.1.1 Observed on the Lenovo without root (2026-10-23)
+
+Read-only commands run over SSH as the unprivileged user (`valentin`, in the `sudo` and `docker` groups; no password prompt answered, no `sudo` used). Output kept in the session scratchpad, not in the repository.
+
+| Observation | Result | Reading |
+|---|---|---|
+| Kopia version | `0.23.1` | As declared |
+| Timer | `kopia-lenovo-hdd.timer` active; last run Fri 2026-10-23 08:23 CEST, next 2026-10-24 00:23 | The job fires daily |
+| Deployed wrapper | Same as the Ansible role: repository `/mnt/backup-external/kopia-lenovo`, single source `/mnt/data/valentin/backup-data`, skips quietly when the disk or the repository directory is missing | Matches the declaration |
+| `/mnt/backup-external` | `findmnt` printed nothing and `/mnt/backup-external/kopia-lenovo` does not exist | **The external backup disk is not mounted at the time of the check.** With this wrapper, a run in that state ends in "skipping" without a snapshot. Whether snapshots exist from earlier runs was not observed |
+| Disks | `/` and therefore `/srv` and `/var/lib/docker` are on `/dev/sda2`; `/mnt/data` is `/dev/sdb1` (280 GB used) | `/srv` and `/var/lib/docker` are not under the snapshot source, as declared |
+| Docker volumes | `career-os-staging_pgdata` exists | A PostgreSQL volume of another workload lives in `/var/lib/docker`, **outside the declared Kopia source** |
+| Journal of the job | Not readable by this user (not in `adm`/`systemd-journal`) | Whether recent runs said "snapshot ok" or "HDD absent, skipping" is **not observed** |
+
+Still not observed (needs root): `kopia snapshot list`, the effective policy, the repository status, the date of the last real snapshot, and the journal. Until then: **the declared coverage is confirmed for the source path; the declared retention is unconfirmed; and the external disk being absent means the existence of any recoverable snapshot is unconfirmed.** No deletion promise and no assumption that a database volume is backed up.
+
+#### 6.1.2 Observed on the Lenovo with `sudo` (2026-10-23)
+
+Run by the owner over `ssh -t` (two earlier attempts ran on the developer workstation, not on the Lenovo, and are not evidence). The external disk had been connected that day (`/dev/sdc1`, NTFS, 1.8 TB, UUID as expected, plugged at 09:20) but was not mounted and has no `fstab` entry. It was mounted **read-only** for the commands and unmounted afterwards (`unmounted-ok`). The only change on the host: an empty directory `/mnt/backup-external` created as mount point. While it is not mounted, the wrapper finds the UUID, sees the parent filesystem type and skips with "mount unexpected".
+
+Before the disk was connected, the journal of `kopia-lenovo-hdd` showed four runs, all `HDD absent, skipping` (2026-10-22 07:57 and 08:23, 2026-10-23 07:52 and 08:23); it returned nothing older although 60 days were requested (journal retention not checked).
+
+**Snapshots in the repository (all there is):**
+
+| Source | When | Size | Files | Retention tags shown |
+|---|---|---|---|---|
+| `root@valentin:/mnt/data/valentin/backup-data` | 2026-09-09 15:15 (+1 identical until 17:09) | 242.3 GB | 8027 | latest-4..5, hourly-4..5, daily-3 |
+| same | 2026-09-10 10:52 (+2 identical until **2026-09-11 10:37**) | 48.7 GB | 7897 | latest-1..3, hourly-1..3, daily-1..2, weekly-1, monthly-1, annual-1 |
+
+* **Last snapshot: 2026-09-11 10:37.** Nothing in the six weeks since. No other source is in the repository.
+* The 242.3 GB / 8027-file snapshot is the **pre-purge** state; it is still in the repository, as `docs/backup-operations.md` anticipated "until retention prunes". Nothing has pruned it because no snapshot has been taken since.
+
+**Effective retention policy for the source** (differs from the declared 7/4/6):
+
+| Rule | Value | Origin |
+|---|---|---|
+| Daily / weekly / monthly | 7 / 4 / 6 | defined for the target |
+| **Annual** | **3** | inherited from global |
+| **Hourly** | **48** | inherited from global |
+| **Latest** | **10** | inherited from global |
+| Scheduled snapshots | none in Kopia (the systemd timer is the scheduler) | |
+| Compression | zstd, with the never-compress list as declared | |
+
+Reading (an inference from the policy, not tested): with `latest 10` and `annual 3`, a snapshot would not simply expire after about six months; one per year is kept for up to three years. Retention is applied when snapshots are made or maintenance runs; I did not check Kopia maintenance. Deleting something that is in a snapshot would need an explicit snapshot deletion and repository maintenance, not just waiting.
+
+**Scope:** the only source is `backup-data` on `/mnt/data` (personal data by its path name; its contents were not examined). The Nexus corpus is not in that path, and `/srv`, `/var/lib/docker` and the staging volume are outside the source. So by this evidence **the Lenovo's Kopia repository holds no Nexus data, and Nexus staging data on the Lenovo would have no backup.**
+
+**Conclusion for D5 at this point:** declared coverage confirmed for the source path; **actual protection lapsed** (last snapshot 2026-09-11; the scheduled job has been skipping because the disk was not available to the system); effective retention is more generous than declared (annual 3, hourly 48, latest 10) and does not run while no snapshots are taken; recovery of `backup-data` is plausible from the two surviving states but was not tested (no restore was attempted). A complete-deletion promise cannot be made for anything in `backup-data`; for Nexus data there is no Kopia copy to delete, and also none to restore.
+
+**Operational question (not decided here):** whether the external disk is meant to be disconnected. If intended, document when it is connected, how copies are made meanwhile and what protects the data in the interval. If not, treat it as a possible interruption of the backup protection and find since when. In both cases the quiet "skipping" deserves attention. Nothing about the mount, the timer or the script is changed under D5 without operational authorisation.
+
+**What is still open for D5:** (a) why there is no snapshot since 2026-09-11 and whether the disk was meant to be absent (operational answer needed); (b) whether anything else protects `backup-data`; (c) whether a restore works (never tested here); (d) the intended backup of Nexus staging, which does not exist today; (e) the intended procedure when the disk is absent, and whether the quiet skipping should alert. Items 1-4 of the earlier list (repository, snapshots, policy, last snapshot, scope) now have evidence.
+
 **Deletion and recovery.** The owner authorises any deletion. Removing a source from a database corpus means building a new version without it (versions are immutable), dropping the old schema, and then purging the backups that still hold it, which depends on the unread Kopia retention. A restore is checked by the manifest digest of ADR 0037 §3.3 and, for the benchmark, by W6; neither tells whether a restored copy brings back material that was meant to be deleted. That interaction is not designed yet.
 
 ## 7. Scientific publication: what can accompany an article (proposal)
