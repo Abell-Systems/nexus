@@ -5,7 +5,7 @@ Esta hoja sirve para que una investigadora pueda usar el prototipo y decir si le
 ## Qué hacer
 
 1. Entra en la URL y con las credenciales que te enviamos.
-2. Abre `validation_sheet_v1.csv` (Excel o Google Sheets). Tiene una fila por resultado: 21 demandas × los 5 primeros activos que muestra la pantalla (105 filas). Las columnas técnicas (`demand_id` … `asset_title`) ya están rellenas; **no las cambies**.
+2. Abre `validation_sheet_v1.csv` (Excel o Google Sheets). **La copia versionada en git no lleva los títulos de las demandas** (`demand_title` vacío, por ser texto de terceros); la hoja completa se genera sin `--without-titles` y se entrega a quien valida por un canal privado. Tiene una fila por resultado: 21 demandas × los 5 primeros activos que muestra la pantalla (105 filas). Las columnas técnicas (`demand_id` … `asset_title`) ya están rellenas; **no las cambies**.
 3. En la pantalla, elige una demanda de la lista (el `demand_id` también aparece en la URL como `?demanda=`). Empieza por las que conozcas mejor; no hace falta completar las 21.
 4. Para cada uno de sus 5 resultados, lee el título y el resumen, y abre la fuente original (Google Patents).
 5. Rellena las columnas de esa fila (abajo).
@@ -24,6 +24,6 @@ Juzga solo si el resultado te parece **útil o pertinente para la demanda**, con
 
 ## Para quien analice las respuestas
 
-- La hoja se genera con `python scripts/build_validation_sheet.py <artefactos>`; `rank` y `publication_id` permiten reconstruir exactamente lo que se evaluó. Si cambia el corpus o el índice congelado, hay que regenerar la hoja.
+- La hoja completa se genera con `python scripts/build_validation_sheet.py <artefactos>`; la versionada, con `--without-titles`; `rank` y `publication_id` permiten reconstruir exactamente lo que se evaluó. Si cambia el corpus o el índice congelado, hay que regenerar la hoja.
 - No incluye puntuaciones de similitud ni método de recuperación, a propósito.
 - El prototipo no reclama validación humana del ranking; estas respuestas son feedback de producto.

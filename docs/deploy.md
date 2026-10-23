@@ -41,7 +41,7 @@ The preflight does not speak basic auth, so run it against the bare container as
 `numpy`, `pyarrow` and `duckdb` are pinned in `backend/requirements.txt` because they decide the numbers of the frozen retrieval. After changing a pin or the base image, the five results of every listed demand must not move:
 
 ```bash
-python scripts/build_validation_sheet.py data/snapshots/operational_corpus_v1 /tmp/sheet.csv
+python scripts/build_validation_sheet.py data/snapshots/operational_corpus_v1 /tmp/sheet.csv --without-titles
 diff /tmp/sheet.csv docs/validation/validation_sheet_v1.csv && echo identical
 ```
 
