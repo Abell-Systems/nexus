@@ -160,6 +160,12 @@ Read-only commands run over SSH as the unprivileged user (`valentin`, in the `su
 
 Still not observed (needs root): `kopia snapshot list`, the effective policy, the repository status, the date of the last real snapshot, and the journal. Until then: **the declared coverage is confirmed for the source path; the declared retention is unconfirmed; and the external disk being absent means the existence of any recoverable snapshot is unconfirmed.** No deletion promise and no assumption that a database volume is backed up.
 
+**Conclusion for D5 at this point:** configured coverage partly verified; effective recovery and retention unconfirmed. The retention 7/4/6 is what is configured, not proof that new snapshots are being made or that a recoverable copy exists. The absence of the disk does not show that no earlier snapshot exists, and a failure of a privileged Kopia command while the disk is absent would not either; keep the complete error message if one occurs.
+
+**Operational question (not decided here):** whether the external disk is meant to be disconnected. If intended, document when it is connected, how copies are made meanwhile and what protects the data in the interval. If not, treat it as a possible interruption of the backup protection and find since when. In both cases the quiet "skipping" deserves attention. Nothing about the mount, the timer or the script is changed under D5 without operational authorisation.
+
+**To close D5** the following need evidence: (1) repository status and existing snapshots; (2) the effective retention policy; (3) the last real snapshot and its result (journal or execution record); (4) scope and exclusions, including the staging data left outside; (5) behaviour when the disk is absent and the intended procedure. Privileged commands to run on the host: `sudo kopia snapshot list --all` and `sudo kopia policy show /mnt/data/valentin/backup-data`.
+
 **Deletion and recovery.** The owner authorises any deletion. Removing a source from a database corpus means building a new version without it (versions are immutable), dropping the old schema, and then purging the backups that still hold it, which depends on the unread Kopia retention. A restore is checked by the manifest digest of ADR 0037 §3.3 and, for the benchmark, by W6; neither tells whether a restored copy brings back material that was meant to be deleted. That interaction is not designed yet.
 
 ## 7. Scientific publication: what can accompany an article (proposal)
