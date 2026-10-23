@@ -53,7 +53,7 @@ CI only builds the image, checks that it reaches artifact verification and refus
 
 `docker-compose.staging.yml` builds the Dockerfile target `static` (the built SPA behind an unprivileged nginx, `deploy/nginx-static.conf`) and nothing else: **no matcher, no API, no operational corpus, no database, no secret, no environment.** It shows only the versioned OEPM results the page bundles, with their attribution. The matcher route (`/matches`) answers 404 there. It is the staging of the page, not of the MVP above; the default target of the Dockerfile is still the MVP.
 
-* Published only on the host's Tailscale address (`TAILSCALE_BIND_IP`, port 8081), never on `0.0.0.0`. Access is from the tailnet, over plain HTTP, as for the other workloads of the Lenovo.
+* Published only on the host's Tailscale address (`TAILSCALE_BIND_IP`, exactly one port, 8081 to 8080/tcp), never on `0.0.0.0`; the image is nginx 1.30 (supported branch), pinned by exact version and digest. Access is from the tailnet, over plain HTTP, as for the other workloads of the Lenovo.
 * The Workload Security Contract of the infrastructure repository is checked on the rendered configuration by `scripts/check_staging_compose.py` (unit-tested), and on the running container by CI (job "5c. Container Image": the page, `/health`, a data file and the 404 of `/matches`).
 * Merging this file deploys nothing. The deployment is the `workloads` playbook of the infrastructure repository, run with the owner's authorisation after the diffs are reviewed.
 * Why not the matcher: it needs the operational corpus, which holds Innoget demands that must not enter a shared staging until Innoget answers (ADR 0037, gate 5, D2 and D4).

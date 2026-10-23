@@ -1,5 +1,6 @@
 import copy
 import importlib.util
+import re
 from pathlib import Path
 
 import pytest
@@ -18,7 +19,7 @@ COMPLIANT = {
             "cpus": 0.5,
             "pids_limit": 50,
             "networks": {"nexus-net": None},
-            "ports": [{"host_ip": "100.119.147.8", "target": 8080, "published": "8081"}],
+            "ports": [{"host_ip": "100.119.147.8", "target": 8080, "published": "8081", "protocol": "tcp"}],
         }
     },
     "networks": {"nexus-net": {}},
@@ -58,8 +59,31 @@ def test_should_accept_a_configuration_that_meets_the_contract():
         ({"pids_limit": None}, "rule 5"),
         ({"networks": None}, "rule 6"),
         ({"network_mode": "host"}, "rule 6"),
-        ({"ports": [{"host_ip": "0.0.0.0", "published": "8081"}]}, "rule 6"),
-        ({"ports": [{"published": "8081"}]}, "rule 6"),
+        ({"ports": [{"host_ip": "0.0.0.0", "published": "8081", "target": 8080, "protocol": "tcp"}]}, "rule 6"),
+        ({"ports": [{"published": "8081", "target": 8080, "protocol": "tcp"}]}, "rule 6"),
+        ({"ports": [{"host_ip": "127.0.0.1", "published": "8081", "target": 8080, "protocol": "tcp"}]}, "must bind to"),
+        ({"ports": []}, "exactly one published port"),
+        (
+            {"ports": [{"host_ip": "100.119.147.8", "published": "8082", "target": 8080, "protocol": "tcp"}]},
+            "must be 8081 to 8080/tcp",
+        ),
+        (
+            {"ports": [{"host_ip": "100.119.147.8", "published": "8081", "target": 80, "protocol": "tcp"}]},
+            "must be 8081 to 8080/tcp",
+        ),
+        (
+            {"ports": [{"host_ip": "100.119.147.8", "published": "8081", "target": 8080, "protocol": "udp"}]},
+            "must be 8081 to 8080/tcp",
+        ),
+        (
+            {
+                "ports": [
+                    COMPLIANT["services"]["web"]["ports"][0],
+                    {"host_ip": "100.119.147.8", "published": "9000", "target": 9000, "protocol": "tcp"},
+                ]
+            },
+            "exactly one published port",
+        ),
         ({"volumes": [{"type": "bind", "source": "/etc"}]}, "rule 7"),
         ({"environment": {"A": "b"}}, "environment"),
         ({"secrets": [{"source": "x"}]}, "secret"),
@@ -67,6 +91,14 @@ def test_should_accept_a_configuration_that_meets_the_contract():
 )
 def test_should_report_the_rule_when_the_configuration_breaks_it(changes, rule):
     assert any(rule in v for v in _script().violations(_with(**changes)))
+
+
+def test_should_allow_the_local_address_only_when_asked_for_a_local_run():
+    local = _with(ports=[{"host_ip": "127.0.0.1", "published": "8081", "target": 8080, "protocol": "tcp"}])
+    assert _script().violations(local, local=True) == []
+    assert _script().violations(local) != []
+    all_interfaces = _with(ports=[{"host_ip": "0.0.0.0", "published": "8081", "target": 8080, "protocol": "tcp"}])
+    assert _script().violations(all_interfaces, local=True) != []
 
 
 def test_should_report_unexpected_services_and_top_level_volumes():
@@ -92,3 +124,10 @@ def test_should_build_the_static_page_from_a_target_that_keeps_the_mvp_as_defaul
     stages = [line for line in dockerfile.splitlines() if line.startswith("FROM ")]
     assert any(line.endswith("AS static") for line in stages)
     assert stages[-1].startswith("FROM python:"), "the default target (last stage) must stay the MVP image"
+
+
+def test_should_pin_the_nginx_image_to_a_supported_version_and_a_digest():
+    dockerfile = (REPO_ROOT / "Dockerfile").read_text(encoding="utf-8")
+    static = next(line for line in dockerfile.splitlines() if line.endswith("AS static"))
+    assert re.search(r"nginx-unprivileged:\d+\.\d+\.\d+-alpine\d+\.\d+@sha256:[0-9a-f]{64} AS static$", static), static
+    assert "nginx-unprivileged:1.27" not in dockerfile, "nginx 1.27 reached its end of life in June 2025"
