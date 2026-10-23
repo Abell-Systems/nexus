@@ -2,7 +2,28 @@
 
 **Date:** 2026-10-23 · **Scope:** three questions. Where is the page published? Who can see it? Which version of the product is being served? **Read-only**: no workflow, secret, variable, DNS, configuration or server was changed; no deployment was run; no credential was read or printed. Each statement is marked **Verified** (observed today, with the command or file), **Inferred** or **Pending**.
 
-## 1. Answer
+## 0. Update, 2026-10-23 13:22 CEST: a staging now runs on the Lenovo
+
+The audit below was written at about 10:00 CEST, before any deployment, and is kept as the record of that moment. At 13:19:49 CEST the static staging of the page was deployed to the Lenovo (Nexus `main` at `e8f19c9`, infrastructure `main` at `3b7fac5`). **Current answers:**
+
+| Question | Answer now |
+|---|---|
+| Where is the page published? | **Verified.** On the Lenovo, container `nexus-staging-web-1`, image `nexus-static:staging` (nginx 1.30.6, 97 MB), `http://100.119.147.8:8081/` |
+| Who can see it? | **Verified.** Only machines on the tailnet: the port is published on `100.119.147.8:8081` and nowhere else (`docker inspect` `HostConfig.PortBindings` and `ss`: `LISTEN 100.119.147.8:8081`), plain HTTP, no authentication. The public GitHub Pages site is still the other application |
+| Which version is served? | **Verified.** Nexus `main` at `e8f19c9` (the merge of #169 and #171): the served bundle holds the page, the attribution and the download date (20 October 2026). The checkout itself was done by the playbook; reading the commit on the host needs root and was not done separately |
+
+What was deployed and what was not: only the static page. No matcher API, operational corpus, database or secret; `/matches` and `/api/...` answer 404. The bundle still contains the matcher's front-end code, including one interface sentence that mentions Innoget ("Demandas de ejemplo ingeridas desde Innoget"), but no data; excluding it would be a separate change.
+
+Evidence of the deployment (outputs kept by the owner and reviewed):
+* First real run (limited to `nexus` by extra vars): directories, deploy key and a 0600 env created; stopped at the checkout with `Permission denied (publickey)`, as planned; `/srv/{code,config,secrets}/nexus` modes checked (755, 755, 700), `env` and `deploy_key` 600 root, `.pub` 644.
+* The deploy key was added to `Abell-Systems/nexus` as a read-only deploy key after the organisation setting that disables deploy keys was changed by the owner (the first attempt returned 422).
+* Second real run: `ok=33 changed=2 failed=0` (checkout and `compose up`), readiness passed.
+* `security-verify.yml`: `ok=18 changed=0 failed=0`, `SECURITY GATE: COMPLIANT`, the container "fully compliant with containment constraints". `workload-verify.yml` (nexus and career-os): `ok=37 changed=0 failed=0`; contract rules 1 to 6 `ok` for nexus (rule 7 skipped: no volumes or mounts); secret paths `600 root`; "no age key files and no private-key-format string under /root, /home, /srv".
+* `career-os` untouched: same creation times and states before and after.
+
+Still **not** established: a human visual review of the page; the OEPM reuse conditions for a served page (gate 5); any host other than the Lenovo, GitHub Pages and the container registry (the token cannot list packages). The original `--check` note: on a first run `--check` reaches the checkout and fails there with the same authentication error, so it proves nothing about the build or the start; the role's documentation says otherwise and has not yet been corrected.
+
+## 1. Answer at the time of the first audit (before the deployment)
 
 | Question | Answer |
 |---|---|
