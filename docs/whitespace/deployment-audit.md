@@ -23,6 +23,16 @@ Evidence of the deployment (outputs kept by the owner and reviewed):
 
 Still **not** established: a human visual review of the page; the OEPM reuse conditions for a served page (gate 5); any host other than the Lenovo, GitHub Pages and the container registry (the token cannot list packages). The original `--check` note: on a first run `--check` reaches the checkout and fails there with the same authentication error, so it proves nothing about the build or the start; the role's documentation says otherwise and has not yet been corrected.
 
+## 0.1 Update, 2026-10-26 09:06 CET: the served bundle no longer contains the matcher
+
+Nexus `5ee0fc1` (the merge of #173) was deployed to the same staging (infrastructure `main` at `4a3a5df`, the merge of #17). This supersedes the sentence in section 0 that says the bundle still holds the matcher's front-end code. Only `web` was recreated.
+
+* `--check` (nexus only, extra vars): `ok=31 changed=1 failed=0`. Real run: `ok=33 changed=2 failed=0`.
+* Read from the Lenovo afterwards: `nexus-staging-web-1` created 2026-10-26 09:06:35 and healthy; `/` and `/health` 200, `/matches` 404, the OEPM results JSON 200 (over the tailnet); the served assets are one JS and one CSS file, and `grep -rlE 'demand-examples|api/matches'` over `/usr/share/nginx/html` finds nothing; published port `100.119.147.8:8081->8080` only; user `101:101`, read-only root filesystem, `CapDrop=ALL`, `no-new-privileges`.
+* `security-verify.yml` and `workload-verify.yml` were run by the owner after the deployment and reported `ok`; the counts were not recorded here.
+* `career-os`: creation times unchanged (09:15:17-18 on 2026-10-23, `db` 14:51:53 on 2026-10-21).
+* Not caused by this work: the Lenovo had been restarted about 13 minutes before the first read of that day (`uptime`); all containers came back healthy. The reason is unknown.
+
 ## 1. Answer at the time of the first audit (before the deployment)
 
 | Question | Answer |
