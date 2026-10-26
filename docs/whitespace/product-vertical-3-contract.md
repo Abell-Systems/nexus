@@ -1,6 +1,6 @@
 # Third product vertical: exploratory unobserved pairs (contract, draft)
 
-**Status:** Contract approved by the review of #177 (merged 2026-10-26). **The view is not implemented**, and the Spanish terms of §3 and §4 remain proposals until approved. Approval of the contract does not authorise exposing the view or running scenarios M1–M7; the gates of §7, §8 and §9 apply. The acceptance scenarios below are new and proposed; none comes from an earlier decision.
+**Status:** Contract approved by the review of #177 and amended on 2026-10-26 by §6.1 (integrity at load) with the test and scenario it adds in §8 (merged 2026-10-26). **The view is not implemented**, and the Spanish terms of §3 and §4 remain proposals until approved. Approval of the contract does not authorise exposing the view or running scenarios M1–M7; the gates of §7, §8 and §9 apply. The acceptance scenarios below are new and proposed; none comes from an earlier decision.
 **Date:** 2026-10-26
 **Checks:** [ADR 0038](../adr/0038-exploratory-white-space-product-track.md) (E1–E8; Proposed in #176, Accepted by the pull request that follows #177) · [ADR 0036](../adr/0036-technology-white-space-scientific-scope.md) (§5.4, §9, C3) · [vertical 1 contract](product-vertical-1-contract.md) · [vertical 2 contract](product-vertical-2-contract.md)
 **Scope:** A view in which the user explores pairs of IPC subclasses **not observed together** in the OEPM corpus up to 2025, with the expected count under independence beside each. **Exploratory and not validated: no prediction, no probability, no score, no recommendation.** It does not change the explorer of vertical 2, which stays descriptive.
@@ -57,6 +57,16 @@ Opening a pair shows: both symbols; documents per subclass up to 2025 and by pub
 * The corpus stays out of git; only the derived result is versioned.
 * Invariants tested: the number of active subclasses and the observed pairs agree with the section-density and subclass-pairs results at the years they share; unobserved + observed = pairs among active; every listed pair is absent from the observed set; the formula on a small hand-computed fixture, with a year missing (it must not count as zero) and with a subclass that has no documents in a year.
 
+### 6.1 Integrity at load (amendment, 2026-10-26)
+
+This section requires, for the vertical 3 data, the verification that the text T19 of the proposed Spanish texts (pull request #184, `docs/whitespace/vertical-3-texts-proposal.md`) presupposes. Without it the hash in `provenance.json` is a control only for the tests, not for what the browser draws.
+
+1. **One loader.** Every vertical 3 data file the page reads (the unobserved-pairs result and, when they exist, the identifier lists of E5) goes through a single loader. The loader fetches the bytes, computes their SHA-256, compares it with the one recorded for that file in the manifest that is part of the page's build (`provenance.json`, or the manifest that E5 defines for the lists), and **only if they are equal** parses the JSON and hands it to the screen. Nothing is parsed, drawn or cached for display before the comparison.
+2. **What counts as a failure, with no result drawn.** A hash that differs; a file with no entry in the manifest; a manifest entry without a hash; a file that cannot be fetched completely (a short or truncated body included); and an environment in which the hash cannot be computed. In each case the screen shows the integrity-error state (T19 once approved, or the load-error state T18 when the cause is the fetch itself), draws **no pair and no count**, and offers no fallback to an older copy or to unverified data.
+3. **The hash can be computed in the deployment context.** The Web Crypto digest (`crypto.subtle`) exists only in a secure context (HTTPS or localhost). The staging is plain HTTP on a tailnet address, which is not one, so a loader that relied on it would fail there, and one that skipped the check silently would not verify anything. The loader therefore does not depend on `crypto.subtle`: it uses a SHA-256 implementation shipped with the page without a new dependency (the contract of §8 forbids one), tested against published vectors. Using HTTPS for the view is an alternative that needs a change in the infrastructure and is not assumed.
+4. **What the check protects, and what it does not.** It detects a file that was corrupted, truncated, replaced by another version, or served from a cache that no longer matches the build. It does **not** protect against someone who can alter both the data and the page's build, because both are served by the same server. The text of the error must not claim more.
+5. **Scope.** This applies to the vertical 3 data only. The data of verticals 1 and 2 are not changed by this amendment.
+
 ## 7. Firewall with the study (E7), as requirements
 
 * No file of this vertical imports from, or is imported by, study code; a test fails if a study module path appears in its imports.
@@ -65,7 +75,7 @@ Opening a pair shows: both symbols; documents per subclass up to 2025 and by pub
 
 ## 8. Acceptance
 
-**Automated** (necessary, not sufficient): typecheck, lint, build, unit tests of search, filter, sort, the formula and the invariants; the negative tests of the forbidden formulations over the rendered page, the accessible names and the data labels (with the closed allowlist of §4, and a test that the allowlist equals the mandatory constants); keyboard operation; phone width without horizontal scroll; Playwright journey (open the view, see the notice, search a subclass, filter type A with expected ≥ 1, sort by expected count and see the second notice, open a pair); the diff adds no endpoint and no dependency and changes no figure of the study. The documentation gate passes.
+**Automated** (necessary, not sufficient), including the tests of §6.1 that follow this list: typecheck, lint, build, unit tests of search, filter, sort, the formula and the invariants; the negative tests of the forbidden formulations over the rendered page, the accessible names and the data labels (with the closed allowlist of §4, and a test that the allowlist equals the mandatory constants); keyboard operation; phone width without horizontal scroll; Playwright journey (open the view, see the notice, search a subclass, filter type A with expected ≥ 1, sort by expected count and see the second notice, open a pair); the diff adds no endpoint and no dependency and changes no figure of the study. The documentation gate passes.
 
 **Manual scenarios (proposed, new; to be run and recorded explicitly, they are not satisfied by the automated tests):**
 
@@ -78,6 +88,15 @@ Opening a pair shows: both symbols; documents per subclass up to 2025 and by pub
 | M5 | Initial state (before choosing a subclass or section) and empty states: a filter with no results, a subclass with no unobserved pairs | The text says what was filtered; it does not read as a finding |
 | M6 | Desktop and phone width, keyboard only | Everything reachable; the notices are not hidden behind a fold |
 | M7 | The access-list record exists before the first outside viewer | The record names the panel decision for each person |
+| M8 | On a local build served over plain HTTP (not localhost), change one byte of the data file the page loads and reload; then restore the file and reload | The integrity-error text appears and no pair, count or list is drawn; after restoring, the view works; the error text does not suggest that the page is the security mechanism |
+
+Tests added by §6.1 (all negative ones must fail if the check is removed):
+
+* The SHA-256 implementation gives the published results for the empty input, «abc», the 56-byte and 64-byte boundary inputs and a multi-block input, and the same result as the platform digest where one exists.
+* The loader, given a fixture whose manifest hash is right, returns the parsed data; given the same fixture with **one byte changed**, a truncated body, an empty body, a file absent from the manifest, or a manifest entry without a hash, it rejects it and the parsed data never reaches the screen.
+* A screen test: when the loader rejects, the DOM contains **no pair, no count and no list**, shows the integrity-error text, and does not show the empty-result text or the load-error text for a hash mismatch.
+* A screen test in an environment without `crypto.subtle`: the check still runs and a correct file is accepted (the plain-HTTP deployment case).
+* The error states are distinct: a hash mismatch, a failed fetch, a blocked view and a legitimately empty result produce four different texts and no shared code path that renders results.
 
 Each scenario is run by a named person, with date, build identifier and result (pass/fail with notes), in a record committed with the change that exposes the view. A failed scenario blocks exposure.
 
