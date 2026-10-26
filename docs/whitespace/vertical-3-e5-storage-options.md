@@ -1,6 +1,6 @@
 # Vertical 3, rule E5: where the identifier lists live (options, draft for decision)
 
-**Status:** Draft for review. **No option is chosen and nothing is implemented.** It compares the alternatives against the criteria the review asked for, with the measurements that exist.
+**Status:** Draft for review. **The choice is provisional (B, outside Git) and nothing is implemented.** It compares the alternatives against the criteria the review asked for, with the measurements that exist, and records the conditions of the recommended design.
 **Date:** 2026-10-26
 **Checks:** [vertical 3 contract](product-vertical-3-contract.md) §5, §6, §9.1 · [ADR 0038](../adr/0038-exploratory-white-space-product-track.md) E5, E7, E8 · [gate 5](../operations/adr-0037-gate5-licences-and-retention.md) §3, G4
 **Scope:** E5 requires, for each active subclass, the publication identifiers and dates of the documents that make it active, loaded on demand when the evidence of a pair is opened. This document decides nothing about the screen, the Spanish terms, or exposure.
@@ -57,6 +57,25 @@ An earlier estimate by source record gave 37.2 MB and 1,287,829 incidences; the 
 * The deciding questions are therefore not size: (1) is a permanent 6 MB in a public history acceptable for OEPM identifiers and dates under the notice's conditions (to be read by a person); (2) is the owner willing to build and test a fail-closed fetch step for a 37 MB artifact.
 * If the answer to (1) is yes, A is the smaller design: nothing new to deploy, to verify or to roll back. If the answer is no, B is the way, and its manifest and deploy check are the work to specify next.
 
-## 6. Decision needed
+## 6. Provisional recommendation of the review: B, outside Git
 
-The owner and the reviewer choose between A and B, after the OEPM notice has been read by a person. Until then: no lists in Git, no deployment path for them, no screen that needs them, and no exposure. This document does not authorise any of those.
+The reviewer's provisional architectural choice is **B, outside Git, with a versioned and verified download that fails closed**. It is a provisional choice, **not a finding that publishing in Git is prohibited**: at 6.3 MB compressed, Git stays technically reasonable. The reasons given are that the OEPM notice's conditions have not been read by a person, and that Git is irreversible: deleting the file from a later version does not remove it from the history or from existing replicas. If a person later confirms in writing that permanent publication in Git is acceptable, the comparison is reopened.
+
+### Conditions of the external design (to be specified before any implementation)
+
+1. **Immutable identity.** A dataset version, its provenance (corpus file hashes and Authority File identity, generating commit and script), the expected inventory (number of files, one per active subclass, with names), and the SHA-256 of every file and of the whole set, all in a manifest committed in Git.
+2. **Verified fetch.** The complete artifact is checked against the manifest before it is made available to the system. A partial or unverified artifact is never placed where the build or the server can read it.
+3. **Fail closed.** If the artifact is missing, cannot be fetched, a hash differs, or the version is not the one the committed manifest expects, the process that needs it stops. An older copy is never used silently.
+4. **Explicit update and rollback.** Lists in use are not replaced in the middle of an operation and versions are not mixed: the manifest version and the code ref move together, and a mismatch fails.
+5. **Negative tests.** Missing artifact, a corrupted file, a wrong version, a failed fetch, and the restoration of the right version after each.
+6. **No premature exposure.** Having the lists does not authorise the screen or access to the results; the nginx block of the unobserved-pairs data and the other conditions of the contract (access record, M1–M7, visual review, the completeness gate) are separate and still apply. The lists are served only under the same authorisation.
+
+### Open points of this design
+
+* **Where the store is.** Not chosen. A public release asset is as public as Git, only outside the history; a private location needs a way for the build on the host to reach it. Both must be compatible with the OEPM conditions, and the second with the workload contract (rule 7 forbids new mounts outside the allowed directories).
+* **How the files reach the image.** Baked into the build context by a verified pre-build step is consistent with a read-only image; a mount is a change to the contract.
+* **Who produces the artifact and where it is regenerated.** The generating script needs the corpus, which only the developer machine has.
+
+## 7. Decision needed
+
+The owner confirms or changes the provisional choice (B), after the OEPM notice has been read by a person. Until then: no lists in Git, no deployment path for them, no screen that needs them, and no exposure. This document does not authorise any of those.
