@@ -22,6 +22,37 @@ def _count(cell: Mapping[str, Any], name: str) -> int | None:
     return value if isinstance(value, int) and not isinstance(value, bool) and value >= 0 else None
 
 
+def _group(group: str, cell: Any, threshold_percent: int) -> tuple[dict[str, Any] | None, str | None]:
+    """The figures of one kind group and, if it cannot be shown to meet the criterion, the reason."""
+    inventory, absent, present = (
+        _count(cell, k) if isinstance(cell, Mapping) else None for k in ("inventory", "absent", "present")
+    )
+    if inventory is None or absent is None or present is None:
+        return None, f"not measurable: {group} has no valid counts"
+    if inventory == 0:
+        return None, f"not measurable: {group} has no publications in the inventory"
+    if present + absent != inventory:
+        return None, f"not measurable: {group} present + absent differ from the inventory"
+    ok = absent * 100 <= threshold_percent * inventory  # at most the threshold, exact at the limit
+    figures = {
+        "inventory": inventory,
+        "absent": absent,
+        "absent_percent": round(100 * absent / inventory, 4),
+        "within_threshold": ok,
+    }
+    reason = (
+        None if ok else f"threshold exceeded: {group} lacks {absent} of {inventory} (more than {threshold_percent} %)"
+    )
+    return figures, reason
+
+
+def _cells(exposure: Mapping[str, Any], year: int) -> Mapping[str, Any] | None:
+    section = exposure.get("exposure")
+    by_year = section.get("by_year") if isinstance(section, Mapping) else None
+    cells = by_year.get(str(year)) if isinstance(by_year, Mapping) else None
+    return cells if isinstance(cells, Mapping) else None
+
+
 def completeness_gate(
     exposure: Mapping[str, Any], year: int = REFERENCE_YEAR, threshold_percent: int = THRESHOLD_PERCENT
 ) -> dict[str, Any]:
@@ -31,34 +62,15 @@ def completeness_gate(
     authority = exposure.get("authority_file")
     if not (isinstance(authority, Mapping) and authority.get("name") and authority.get("sha256")):
         reasons.append("not measurable: the result does not identify the inventory it was computed from")
-    by_year = exposure.get("exposure", {}).get("by_year") if isinstance(exposure.get("exposure"), Mapping) else None
-    cells = by_year.get(str(year)) if isinstance(by_year, Mapping) else None
-    if not isinstance(cells, Mapping):
+    cells = _cells(exposure, year)
+    if cells is None:
         reasons.append(f"not measurable: no figures for {year}")
-        cells = {}
     for group in GROUPS:
-        cell = cells.get(group)
-        inventory, absent, present = (
-            _count(cell, k) if isinstance(cell, Mapping) else None for k in ("inventory", "absent", "present")
-        )
-        if inventory is None or absent is None or present is None:
-            reasons.append(f"not measurable: {group} has no valid counts")
-        elif inventory == 0:
-            reasons.append(f"not measurable: {group} has no publications in the inventory")
-        elif present + absent != inventory:
-            reasons.append(f"not measurable: {group} present + absent differ from the inventory")
-        else:
-            ok = absent * 100 <= threshold_percent * inventory  # at most the threshold, exact at the limit
-            groups[group] = {
-                "inventory": inventory,
-                "absent": absent,
-                "absent_percent": round(100 * absent / inventory, 4),
-                "within_threshold": ok,
-            }
-            if not ok:
-                reasons.append(
-                    f"threshold exceeded: {group} lacks {absent} of {inventory} (more than {threshold_percent} %)"
-                )
+        figures, reason = _group(group, (cells or {}).get(group), threshold_percent)
+        if figures is not None:
+            groups[group] = figures
+        if reason:
+            reasons.append(reason)
     return {
         "year": year,
         "threshold_percent": threshold_percent,
