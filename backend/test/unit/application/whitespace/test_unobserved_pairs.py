@@ -1,3 +1,4 @@
+import importlib.util
 import json
 from datetime import date
 from pathlib import Path
@@ -41,13 +42,44 @@ def test_shouldNotListAnObservedPairAndShouldCountItInTheUniverse():
     records = corpus() + [record("ab", 2002, "A01B", "B01B")]
     result = unobserved_pairs(records, 2002, min_documents=2)
     assert "B01B" not in result["pairs"].get("A01B", {})
-    assert result["counts"]["pairs"] == 3 and result["counts"]["unobserved"] == 2
+    assert result["counts"]["pairs"] == 3
+    assert result["counts"]["unobserved"] == 2
 
 
 def test_shouldStateTheQuantityAndTheFixedParametersWithoutAnyScoreOrRankField():
     result = unobserved_pairs(corpus(), 2002, min_documents=2)
-    assert result["e_min"] == 1.0 and "independence" in result["quantity"]
+    assert result["e_min"] == 1.0
+    assert "independence" in result["quantity"]
     assert not {"rank", "score", "f1", "probability"} & set(result)
+
+
+def report_script():
+    spec = importlib.util.spec_from_file_location(
+        "report_oepm_unobserved_pairs", ROOT / "scripts" / "report_oepm_unobserved_pairs.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_shouldFailWhenTheActiveSubclassesDifferEvenIfTheyAreAsManyAsTheObservedOnes():
+    result = unobserved_pairs(corpus(), 2002, min_documents=2)
+    observed = {"active": {"A01B": 3, "A01C": 2, "Z99Z": 3}, "pairs": {}}  # same size, one identifier differs
+    with pytest.raises(AssertionError, match="active subclasses differ"):
+        report_script().check_against_observed(result, observed)
+
+
+def test_shouldFailWhenTheDocumentsOfAnActiveSubclassDiffer():
+    result = unobserved_pairs(corpus(), 2002, min_documents=2)
+    observed = {"active": {"A01B": 3, "A01C": 2, "B01B": 4}, "pairs": {}}
+    with pytest.raises(AssertionError, match="active subclasses differ"):
+        report_script().check_against_observed(result, observed)
+
+
+def test_shouldAcceptTheSameActiveSubclassesWithTheSameDocuments():
+    result = unobserved_pairs(corpus(), 2002, min_documents=2)
+    observed = {"active": {"A01B": 3, "A01C": 2, "B01B": 3}, "pairs": {}}
+    report_script().check_against_observed(result, observed)
 
 
 @pytest.fixture(scope="module")
@@ -60,7 +92,9 @@ def test_shouldHaveTheCountsOfTheVersionedResultAgreeWithItsOwnPairs(versioned):
     assert counts["active"] == len(versioned["active"])
     assert counts["pairs"] == counts["active"] * (counts["active"] - 1) // 2
     assert counts["unobserved"] == sum(len(row) for row in versioned["pairs"].values())
-    assert versioned["origin"] == 2025 and versioned["min_documents"] == 20 and versioned["e_min"] == 1.0
+    assert versioned["origin"] == 2025
+    assert versioned["min_documents"] == 20
+    assert versioned["e_min"] == 1.0
 
 
 def test_shouldListOnlyOrderedPairsOfActiveSubclassesWithNonNegativeValuesInTheVersionedResult(versioned):
@@ -68,12 +102,16 @@ def test_shouldListOnlyOrderedPairsOfActiveSubclassesWithNonNegativeValuesInTheV
     for a, row in versioned["pairs"].items():
         assert a in active
         for b, value in row.items():
-            assert a < b and b in active and value >= 0
+            assert a < b
+            assert b in active
+            assert value >= 0
 
 
 def test_shouldSkipTheMissingYearAndKeepEveryOtherYearInTheVersionedResult(versioned):
     years = versioned["documents_per_year"]
-    assert "2010" not in years and "2025" in years and all(n > 0 for n in years.values())
+    assert "2010" not in years
+    assert "2025" in years
+    assert all(n > 0 for n in years.values())
 
 
 def test_shouldCarryTheCorpusHashesOfTheConfigurationInTheVersionedResult(versioned):

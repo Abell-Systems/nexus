@@ -29,6 +29,9 @@ ORIGIN = 2025
 def check_against_observed(result: dict, observed: dict) -> None:
     """Fail loudly if observed + unobserved is not every pair of active subclasses, or if a listed pair is observed."""
     active = result["active"]
+    assert active == observed["active"], (
+        "active subclasses differ from the observed-pairs result (identifiers or documents)"
+    )
     assert result["counts"]["active"] == len(active)
     assert result["counts"]["pairs"] == len(active) * (len(active) - 1) // 2
     assert sum(len(v) for v in result["pairs"].values()) == result["counts"]["unobserved"]
@@ -54,7 +57,6 @@ def main() -> int:
     for origin in (2006, 2022):  # the origins the versioned observed result holds: same function, same totals
         at_origin = unobserved_pairs(records, origin)
         check_against_observed(at_origin, observed[str(origin)])
-        assert at_origin["counts"]["active"] == len(observed[str(origin)]["active"])
         assert at_origin["counts"]["unobserved"] == at_origin["counts"]["pairs"] - len(observed[str(origin)]["pairs"])
     result = unobserved_pairs(records, ORIGIN)
     own = subclass_pairs(records, ORIGIN)
