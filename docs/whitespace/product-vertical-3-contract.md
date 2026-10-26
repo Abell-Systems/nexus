@@ -13,7 +13,7 @@ ADR 0038 allows this view under rules E1–E8. This contract turns those rules i
 
 1. Open the view from an anchor of the front page (no router, no new dependency). The corpus period is fixed: documents up to 2025, with the 2010 gap stated.
 2. Read the notice of §4 before the list.
-3. Search a subclass by symbol, or open the list of all unobserved pairs.
+3. Search a subclass by symbol, or choose a section. **No list of pairs loads before one of the two is chosen** (decision of the review, §9.3). The initial state explains how to start: choose a subclass or a section; it shows no pair and no count of pairs presented as a result.
 4. Filter: section; **type A** (every unobserved pair of two active subclasses) or **type A with expected count ≥ 1** (ADR 0036 type B, *e*_min = 1, fixed).
 5. Sort. Default **alphabetical by symbol of the first, then the second subclass**. The user may choose to sort by expected count (descending), by documents of either subclass, or by symbol. The first choice of the expected-count sort shows the notice of §4.
 6. Open a pair: the evidence of §5.
@@ -44,12 +44,12 @@ None of these, nor their translations or obvious variants, may appear in the pag
 
 ## 5. Evidence of a pair (E5)
 
-Opening a pair shows: both symbols; documents per subclass up to 2025 and by publication year; documents with both (0 by definition); the expected count and its terms (the per-year contributions); the corpus identity, the SHA-256 of the result and the configuration identifier; the limits of §3; and the activity evidence of each subclass. The reading of «documents that make each subclass active» is proposed in §9.
+Opening a pair shows: both symbols; documents per subclass up to 2025 and by publication year; documents with both (0 by definition); the expected count and its terms (the per-year contributions); the corpus identity, the SHA-256 of the result and the configuration identifier; the limits of §3; and the activity evidence of each subclass. The activity evidence of each subclass is the **full list** of its publication identifiers with dates, loaded on demand when the evidence is opened (§9.1); this is the literal reading of ADR 0038 E5.
 
 ## 6. Data
 
 * A new versioned result produced offline by a script from the corpus, in its own module, reusing the unit rules of the study (O4) but **not importing study detector or baseline code and not named F1, null model or baseline**.
-* Per active subclass: documents by year (observed years only) and the identifiers evidence of §9. Per unobserved pair: the expected count. Corpus identity hashes and the Authority File hash are recorded, like the other results.
+* Per active subclass: documents by year (observed years only), and a separate static file with all its publication identifiers and dates, fetched only when the user opens the evidence. Per unobserved pair: the expected count. Corpus identity hashes and the Authority File hash are recorded, like the other results.
 * Size is measured at implementation and stated. The result is loaded on demand as a static file (as the 6.2 MB pairs file), without an endpoint, unless the measurement says otherwise.
 * The corpus stays out of git; only the derived result is versioned.
 * Invariants tested: the number of active subclasses and the observed pairs agree with the section-density and subclass-pairs results at the years they share; unobserved + observed = pairs among active; every listed pair is absent from the observed set; the formula on a small hand-computed fixture, with a year missing (it must not count as zero) and with a subclass that has no documents in a year.
@@ -72,18 +72,20 @@ Opening a pair shows: both symbols; documents per subclass up to 2025 and by pub
 | M2 | Change the sort to the expected count | The notice appears; nothing on screen labels any pair as better; the URL/link keeps the default order |
 | M3 | Read every text and label on the view against the forbidden list, by a person | No forbidden formulation, in any state |
 | M4 | Open a pair and follow the evidence to the corpus identity | Hashes and terms are visible; the evidence is enough to recompute the expected count by hand for one pair |
-| M5 | Empty states: a filter with no results, a subclass with no unobserved pairs | The text says what was filtered; it does not read as a finding |
+| M5 | Initial state (before choosing a subclass or section) and empty states: a filter with no results, a subclass with no unobserved pairs | The text says what was filtered; it does not read as a finding |
 | M6 | Desktop and phone width, keyboard only | Everything reachable; the notices are not hidden behind a fold |
 | M7 | The access-list record exists before the first outside viewer | The record names the panel decision for each person |
 
 Each scenario is run by a named person, with date, build identifier and result (pass/fail with notes), in a record committed with the change that exposes the view. A failed scenario blocks exposure.
 
-## 9. Open points for the review
+## 9. Points of the review
 
-1. **Activity evidence (E5).** ADR 0038 asks for «the documents (identifiers and dates) that make each subclass active». Proposed reading: the 20 earliest publication identifiers with their dates, which show the activity threshold is met, plus the total count. The alternative, the full list, is large for a subclass with thousands of documents. The reviewer decides.
-2. **Completeness of 2025.** Whether the corpus is complete for 2025 is not established by this document; it is measured at implementation. If it is not, the view states it, and the reference year is reconsidered by an ADR change.
-3. **Global list size.** The number of unobserved pairs at 2025 is large (the order of 10^5). Whether the list is shown paginated or only after choosing a subclass or a section is decided in review; the proposal is to require a subclass or a section before the list loads, so that no screen of pairs can be read as a headline.
-4. **Terms.** The Spanish labels of §3 are proposals.
+Measurements below were made on 2026-10-26 from the local corpus (`BIBLIO_2000…2025`, 711,547 records) and from the versioned exposure result. The first is an approximation by source record, not by the O4 publication identifier, and is to be recomputed at implementation.
+
+1. **Activity evidence (E5). Open: decision of the reviewer.** The 20-identifier reading is **withdrawn from the contract**: it was not shown to be equivalent to the ADR, and an interface limit must not relax it. The contract states the literal reading (the full list, on demand). Feasibility, measured: 621 subclasses with at least 20 documents, 1,287,829 subclass-document incidences, about **37 MB** in total as identifier-and-date lists, per subclass a median of about 23 KB, a 95th percentile of about 212 KB and a maximum of about 2.5 MB (`A61K`); loaded one subclass at a time, none of this is on the page's critical path. If the reviewer prefers a shorter list, that is an explicit change to E5 by ADR amendment, not a choice of the interface.
+2. **Completeness of 2025. Criterion defined; the view is not exposed unless it holds.** The existing exposure result compares the corpus with the OEPM inventory by publication key. At 2025 it records 11 absent of 29,238 inventory keys (EP translations 2 of 23,544, kind `Y` 1 of 1,924, other 8 of 3,770; 0.04 % in total). Proposed criterion (a threshold to approve): before exposure, the exposure result for 2025 must show an absent share of at most **1 % in each kind group**; the figures are quoted in the view's limits. If the figure cannot be established, or exceeds the threshold, the view states that 2025 is incomplete and does not present the period as complete. Changing the reference year is done only through an amendment of ADR 0038, never silently. The comparison is against the OEPM's own inventory, not an independent count, and says nothing about records the inventory also lacks.
+3. **Size of the global list. Decided in the review: adopted.** The number of unobserved pairs is of the order of 10^5 (measured: 192,510 pairs among 621 active subclasses, 43,462 observed, 149,048 not observed; to be recomputed under O4). The view requires a subclass or a section before any list loads (§2), with the clear initial state above. There is no global list that could read as an editorial selection.
+4. **Terms. Proposals, not approved.** The Spanish labels of §3 and the notices of §4 stay proposals until approved, together with the forbidden formulations, because a notice can be technically correct and still read as a recommendation. They are reviewed against the visible texts, the accessible names, the empty states and the expected-count sort notice (scenario M3).
 
 ## 10. Not in this vertical
 
