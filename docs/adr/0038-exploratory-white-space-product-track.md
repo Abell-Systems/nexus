@@ -1,6 +1,6 @@
 # ADR 0038: Exploratory White-Space Candidates in the Product, Outside the Study
 
-**Status:** Proposed
+**Status:** Accepted (2026-10-26, on the merge of the pull request that sets this status)
 **Date:** 2026-10-26
 **Scope:** Allows the product to show **candidates** of the kind defined in [ADR 0036](0036-technology-white-space-scientific-scope.md) §5.4 (pairs of IPC subclasses never co-classified in the observed corpus), with an expected-count ordering, **as an exploratory feature that is not a result of the study**. It states the conditions under which this does not contaminate the study, and what changes in C2 of ADR 0036 and in the [vertical 2 contract](../whitespace/product-vertical-2-contract.md). **This ADR is documentary: it changes no code, dependency, contract or test.** Writing any detector code waits for its acceptance and for a vertical 3 contract (§7).
 
@@ -95,4 +95,6 @@ Risks that remain:
 
 ## 8. Acceptance
 
-Takes effect when the pull request that sets the status to Accepted is merged. Until then no detector, expected-count or ordering code is written for the product.
+Takes effect when the pull request that sets the status to Accepted is merged. It accepts the exploratory track under rules E1–E8 and the decisions of §6; the [vertical 3 contract](../whitespace/product-vertical-3-contract.md) was approved before this status (pull request #177).
+
+Acceptance **does not** authorise: exposing the view to anyone (that needs the 2025 completeness gate, the access record of E7, the manual scenarios M1–M7 run and recorded, and the visual review of the contract); the Spanish terms, which stay proposals until approved; the study's null model or any change to the pre-registration; or any use of the product's output as evidence for H1–H3. Code may now be written, in small pull requests, only as the contract describes it.
