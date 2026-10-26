@@ -1,6 +1,6 @@
 # Third product vertical: exploratory unobserved pairs (contract, draft)
 
-**Status:** Draft contract, to be reviewed before any code is written. Nothing is implemented by this document. Every acceptance scenario below is **new and proposed**; none comes from an earlier decision.
+**Status:** Contract approved by the review of #177 (merged 2026-10-26). **The view is not implemented**, and the Spanish terms of §3 and §4 remain proposals until approved. Approval of the contract does not authorise exposing the view or running scenarios M1–M7; the gates of §7, §8 and §9 apply. The acceptance scenarios below are new and proposed; none comes from an earlier decision.
 **Date:** 2026-10-26
 **Checks:** [ADR 0038](../adr/0038-exploratory-white-space-product-track.md) (E1–E8; Proposed in #176, Accepted by the pull request that follows #177) · [ADR 0036](../adr/0036-technology-white-space-scientific-scope.md) (§5.4, §9, C3) · [vertical 1 contract](product-vertical-1-contract.md) · [vertical 2 contract](product-vertical-2-contract.md)
 **Scope:** A view in which the user explores pairs of IPC subclasses **not observed together** in the OEPM corpus up to 2025, with the expected count under independence beside each. **Exploratory and not validated: no prediction, no probability, no score, no recommendation.** It does not change the explorer of vertical 2, which stays descriptive.
