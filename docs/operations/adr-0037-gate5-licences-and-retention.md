@@ -213,7 +213,17 @@ Sources: read-only SSH from the developer workstation, and output pasted by the 
 * After the run the automount unit was generated but `inactive` (systemd starts it at boot). The owner started it by hand: `/dev/sdc1` appeared as `fuseblk rw` under the automount. Reading it as a non-root user gave `Permission denied`, by design (`umask=077`, root-only).
 * The owner then started `kopia-lenovo-hdd.service`: the journal shows `snapshot ok` at **2026-10-26 10:35:56**.
 
-**Not verified**: what that snapshot contains and how many snapshots the repository now holds (the `kopia snapshot list` output was not provided); that the automount starts by itself at the next boot; any restore.
+**Repository after the snapshot** (`sudo kopia snapshot list --all`, pasted by the owner; one source, `root@valentin:/mnt/data/valentin/backup-data`):
+
+| First snapshot of the group | Object | Size | Files / dirs | Identical ones after it | Retention tags shown |
+|---|---|---|---|---|---|
+| 2026-09-09 15:15:46 | `k79e2a36f…` | 242.3 GB | 8027 / 378 | 1, until 2026-09-09 17:09:37 | latest-5..6 |
+| 2026-09-10 10:52:27 | `k6d5e6098…` | 48.7 GB | 7897 / 378 | 3, until **2026-10-26 10:35:54** | latest-1..4, hourly-1, daily-1, weekly-1, monthly-1..2, annual-1 |
+
+* The snapshot of 2026-10-26 (journal `snapshot ok` 10:35:56; listed at 10:35:54) was grouped by Kopia as **identical to the one of 2026-09-10**: same root object, same size (48.7 GB) and counts (7897 files, 378 dirs). Before it that group ended on 2026-09-11 10:37 (§6.1.2), so it grew from 3 to 4 snapshots. Reading, an inference from how Kopia groups identical snapshots: nothing under `backup-data` changed between 2026-09-10 and 2026-10-26 as far as Kopia can see. It does not say anything about the content being the intended one.
+* The tag `monthly-1..2` now covers two months (September and October), which fits one snapshot having been added in October.
+
+**Not verified**: what the data contains (only Kopia's metadata was read); that the automount starts by itself at the next boot; any restore; that the identical-snapshot reading above holds, since it was not checked against the source.
 
 **Inference, not tested**: the missing fstab entry explains the skip of 2026-10-26 (disk attached, not mounted). It does **not** explain the whole gap since 2026-09-11: on 2026-10-22 and 2026-10-23 morning the runs said `HDD absent` (disk not attached, §6.1.2), and the journal before 2026-10-22 was not readable. Whether the disk was attached and unmounted between 2026-09-11 and 2026-10-22 is unknown.
 
