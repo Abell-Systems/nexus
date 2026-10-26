@@ -1,82 +1,81 @@
 # Vertical 3: proposed Spanish texts (draft for approval)
 
-**Status:** Proposal. **None of these texts is approved.** Nothing is implemented, and the screen waits for the approval of this document.
+**Status:** Proposal after the first review. **The owner's approval is pending**: the decisions in the tables are the review's recommendation, not an approval. Nothing is implemented, and the screen waits for the approval of this document. T19 and T22 are not approved yet; T23 is excluded.
 **Date:** 2026-10-26
 **Checks:** [vertical 3 contract](product-vertical-3-contract.md) §3, §4, §8 (M3, M5) · [ADR 0038](../adr/0038-exploratory-white-space-product-track.md) E4, E6
-**Scope:** The texts of the view, by the state of the system they describe, so that an empty result, missing data, a blocked view and an error are not mistaken for each other. Each text says whether it is **new** or an **existing constant**, and whether it belongs to the closed allowlist of the contract. This is the proposal on which scenario M3 will be run; it does not replace M3.
+**Scope:** The texts of the view, by the state of the system they describe, so that an empty result, missing data, a blocked view and an error are not mistaken for each other. Each text says whether it is **new** or an **existing constant**, whether it belongs to the closed allowlist of the contract, and what the review recommended. This is the proposal on which scenario M3 will be run; it does not replace M3.
 
 ## 1. Rules applied
 
 * The states reflect real conditions of the system. No text turns a missing or blocked state into something that reads as a result, and no "no results" text is used for a failure to load.
-* The closed list of forbidden words of the contract (§4) was checked against every text below, as whole terms, without distinguishing case or accents, singular and plural. The check was an ad hoc script run for this proposal; the test that will guard the screen is a separate piece of work. Result: the only texts that contain a listed word are the three allowlisted sentences (T03, T05, T06) and one existing sentence that is **not** allowlisted (T23).
+* The closed list of forbidden words of the contract (§4) was checked against every text below, as whole terms, without distinguishing case or accents, singular and plural. The check was an ad hoc script run for this proposal; the test that will guard the screen is a separate piece of work. Result: the only texts that contain a listed word are the three allowlisted sentences (T03, T05, T06) and one existing sentence that is **not** allowlisted (T23, excluded). The list of exceptions is not extended to fit any text.
 * Placeholders in braces are filled with values read from the data or the gate; they never carry judgement.
+* The short form «Esperado» is used only after the first visible definition of «Esperado bajo independencia».
 * Spanish, as in the other verticals.
 
 ## 2. Texts by state
 
 ### 1. Results available
 
-| Id | Text | Origin | Listed words found |
-|---|---|---|---|
-| T01 | Pares no observados (exploratorio) | new; titulo | none |
-| T02 | Exploratorio. Sin validar. Ningún orden mostrado aquí es una predicción. El estudio no ha demostrado que ningún orden prediga nada (ADR 0036). | new; aviso | none |
-| T03 | Orden por esperado bajo independencia: refleja cuántas coincidencias se esperarían si las dos subclases fueran independientes; no mide probabilidad de aparición ni interés. | allowlist (new, closed list of the contract §4); aviso orden | probabilidad |
-| T04 | Parámetros fijados por diseño, no ajustados a los resultados: una subclase es activa con al menos 20 identificadores de publicación; el esperado mínimo para el tipo con esperado ≥ 1 es 1. | new; parametros | none |
-| T05 | Una ausencia observada indica que no se ha observado co-clasificación en este corpus y periodo. No demuestra que las áreas no se combinen ni que exista una oportunidad tecnológica. | allowlist (existing constant `absenceIsNotOpportunity`, vertical 1); ausencia (constante existente) | oportunidad |
-| T06 | White spaces predictivos: no disponible. Pendiente de validación científica. | allowlist (existing constant `status`, vertical 1); estado del estudio (constante existente) | white space |
-| T07 | Límites del corpus: faltan las publicaciones de tipo Y de 2000 a 2009 y todo el año 2010; hay huecos menores en 2011–2020 y una caída de traducciones EP en 2023. Un periodo sin publicaciones en el corpus no se lee como ausencia de actividad. La comparación de completitud es contra el inventario de la OEPM, no contra un recuento independiente. | new; limites | none |
-| T09 | Subclase A · Subclase B · Esperado bajo independencia (coincidencias) · Documentos de A · Documentos de B | new; columnas | none |
-| T10 | Orden: por símbolo (predeterminado) · por documentos de A · por documentos de B · por esperado bajo independencia (elegido) | new; orden | none |
-| T11 | Tipo: todos los pares no observados · Tipo: no observados con esperado ≥ 1 bajo independencia | new; filtros | none |
-| T20 | Evidencia del par · Documentos de cada subclase hasta 2025 · Términos del esperado por año · Identidad del corpus y del resultado (SHA-256) | new; evidencia titulos | none |
-| T21 | Documentos con ambas: 0 (par no observado en este corpus y periodo). | new; par documentos | none |
+| Id | Text | Origin | Listed words found | Review (recommendation) |
+|---|---|---|---|---|
+| T01 | Pares no observados (exploratorio) | new; titulo | none | Approved |
+| T02 | Exploratorio. Sin validar. Ningún orden mostrado aquí es una predicción. El estudio no ha demostrado que ningún orden prediga nada (ADR 0036). | new; aviso | none | Approved |
+| T03 | Orden por esperado bajo independencia: refleja cuántas coincidencias se esperarían si las dos subclases fueran independientes; no mide probabilidad de aparición ni interés. | allowlist (new, closed list of the contract §4); aviso orden | probabilidad | Approved |
+| T04 | Parámetros fijados por diseño, no ajustados a los resultados: una subclase es activa con al menos 20 identificadores de publicación; el esperado mínimo para el tipo con esperado ≥ 1 es 1. | new; parametros | none | Approved: Keep the full wording in the limits block. |
+| T05 | Una ausencia observada indica que no se ha observado co-clasificación en este corpus y periodo. No demuestra que las áreas no se combinen ni que exista una oportunidad tecnológica. | allowlist (existing constant `absenceIsNotOpportunity`, vertical 1); ausencia (constante existente) | oportunidad | Approved: Must stay literal. |
+| T06 | White spaces predictivos: no disponible. Pendiente de validación científica. | allowlist (existing constant `status`, vertical 1); estado del estudio (constante existente) | white space | Approved: Must stay literal. |
+| T07 | Límites del corpus: faltan las publicaciones de tipo Y de 2000 a 2009 y todo el año 2010; hay huecos menores en 2011–2020. Las traducciones de patentes europeas caen en 2023. Un periodo sin publicaciones en el corpus no se lee como ausencia de actividad. La completitud de 2025 se ha comparado con el inventario de la OEPM (como máximo un 1 % de ausencias por grupo); no es una prueba de integridad absoluta del corpus. | new; limites | none | Approved with change (applied): 2010 gap and the 2023 drop separated; the comparison is attributed to the OEPM inventory; the 1 % is not presented as absolute integrity. |
+| T09 | Subclase A · Subclase B · Esperado bajo independencia (coincidencias) · Documentos de A · Documentos de B | new; columnas | none | Approved |
+| T10 | Orden: por símbolo (predeterminado) · por documentos de A · por documentos de B · por esperado bajo independencia (elegido) | new; orden | none | Approved with change: Use «Esperado bajo independencia» in full wherever it can be read without context; the short form «Esperado» only after the first visible definition. |
+| T11 | Tipo: todos los pares no observados · Tipo: no observados con esperado ≥ 1 bajo independencia | new; filtros | none | Approved |
+| T20 | Evidencia del par · Documentos de cada subclase hasta 2025 · Términos del esperado por año · Identidad del corpus (SHA-256 de sus ficheros, registrada en el resultado) y del resultado (SHA-256) | new; evidencia titulos | none | Approved with condition (applied): Titles must be backed by the real schema of the result: the unobserved-pairs result does carry the SHA-256 of the corpus files; the exposure result does not. |
+| T21 | Documentos observados con ambas subclases: 0 (par no observado en este corpus y periodo). | new; par documentos | none | Approved with precision (applied): Reworded to «Documentos observados con ambas subclases: 0». |
 
 ### 2. Legitimately empty
 
-| Id | Text | Origin | Listed words found |
-|---|---|---|---|
-| T12 | Ningún par cumple estos filtros. Que no haya pares con estos filtros no es un hallazgo. | new; vacio legitimo | none |
-| T13 | Esta subclase no tiene pares no observados con las demás subclases activas del corpus hasta 2025. | new; subclase sin pares | none |
+| Id | Text | Origin | Listed words found | Review (recommendation) |
+|---|---|---|---|---|
+| T12 | No hay pares que cumplan los filtros seleccionados. Esto no demuestra que no exista actividad tecnológica. | new; vacio legitimo | none | Approved with change (applied): Reworded; checked against the closed list: no listed word. |
+| T13 | Esta subclase no tiene pares no observados con las demás subclases activas del corpus hasta 2025. | new; subclase sin pares | none | Approved |
 
 ### 3. Nothing shown yet (initial state, loading) and data not available
 
-| Id | Text | Origin | Listed words found |
-|---|---|---|---|
-| T08 | Elige una subclase o una sección para empezar. No se muestra ningún par hasta entonces. | new; estado inicial | none |
-| T14 | Cargando los datos… | new; cargando | none |
-| T15 | Los datos de pares no observados no están disponibles en este momento. No se muestra ningún resultado. | new; no disponible | none |
-| T22 | La lista de identificadores de esta subclase no está disponible. No se muestra la evidencia de actividad. | new; lista no disponible | none |
+| Id | Text | Origin | Listed words found | Review (recommendation) |
+|---|---|---|---|---|
+| T08 | Elige una subclase o una sección para empezar. No se muestra ningún par hasta entonces. | new; estado inicial | none | Approved |
+| T14 | Cargando los datos… | new; cargando | none | Approved |
+| T15 | Los datos de pares no observados no están disponibles en este momento. No se muestra ningún resultado. | new; no disponible | none | Approved |
+| T22 | La lista de identificadores de esta subclase no está disponible. No se muestra la evidencia de actividad. | new; lista no disponible | none | Not approved yet: Depends on E5 (§3.2). |
 
 ### 4. View blocked or not published
 
-| Id | Text | Origin | Listed words found |
-|---|---|---|---|
-| T16 | Los datos de esta vista no están publicados todavía. No se muestra ningún resultado. | new; no publicado | none |
-| T17 | Vista bloqueada: el corpus de 2025 no cumple el criterio de completitud. No se muestra ningún par. | new; bloqueo completitud | none |
+| Id | Text | Origin | Listed words found | Review (recommendation) |
+|---|---|---|---|---|
+| T16 | Los datos de esta vista no están publicados todavía. No se muestra ningún resultado. | new; no publicado | none | Approved with condition: Only when the publication of the view is not yet authorised or the data are not published; never in place of a load error. |
+| T17 | Vista bloqueada: el corpus de 2025 no cumple el criterio de completitud. No se muestra ningún par. | new; bloqueo completitud | none | Approved with condition: Only when the completeness gate has blocked exposure; the view must not look like the security mechanism. |
 
 ### 5. Load or validation error
 
-| Id | Text | Origin | Listed words found |
-|---|---|---|---|
-| T18 | No se pudieron cargar los datos. No se muestra ningún resultado. Puede reintentar. | new; error de carga | none |
-| T19 | Los datos cargados no superan la comprobación de integridad. No se muestra ningún resultado. | new; error de validacion | none |
+| Id | Text | Origin | Listed words found | Review (recommendation) |
+|---|---|---|---|---|
+| T18 | No se pudieron cargar los datos. No se muestra ningún resultado. Puede reintentar. | new; error de carga | none | Approved: «Puede reintentar» only if a retry action exists. |
+| T19 | Los datos cargados no superan la comprobación de integridad. No se muestra ningún resultado. | new; error de validacion | none | Not approved yet: Depends on the browser verifying the SHA-256 against `provenance.json` before rendering; see §3.1. |
 
 ### Existing text that must not appear on this view as it stands
 
-| Id | Text | Origin | Listed words found |
-|---|---|---|---|
-| T23 | Sin puntuación ni ranking: el orden lo elige quien consulta y se etiqueta con el nombre de la columna. | existing constant; explorador noScore (constante existente de la vertical 2) | ranking, puntuacion |
+| Id | Text | Origin | Listed words found | Review (recommendation) |
+|---|---|---|---|---|
+| T23 | Sin puntuación ni ranking: el orden lo elige quien consulta y se etiqueta con el nombre de la columna. | existing constant; explorador noScore (constante existente de la vertical 2) | ranking, puntuacion | Rejected for this view: Contains «ranking» and «puntuación»; not on the closed list; the list is not extended to fit it. |
 
-## 3. Points the proposal raises
+## 3. Points the review raises
 
-1. **T23 is an existing sentence of the explorer (vertical 2) and contains «ranking» and «puntuación».** It is not on the allowlist, so it must not appear on this view. Either it is not shown here (the proposal) or the contract is amended to add it to the allowlist. The view uses T02 and the labelled sort instead.
-2. **T03, T05 and T06 contain listed words by design.** They are negations or limits (the quantity does not measure probability; an absence is not an opportunity; the predictive white spaces are not available). Whether each one denies and does not affirm is the human check of M3.
-3. **«Vista bloqueada» (T17) and «no publicado» (T16) describe what the page can observe, not what enforces the block.** The barrier is the server and the exposure authorisation; the page only reports that the data was refused or the gate did not pass. A text must not suggest that the page itself grants or denies access.
-4. **T19 («comprobación de integridad»)** assumes the browser verifies the data against the hash in `provenance.json` before drawing it. The contract does not require that today, only the tests do. Either the screen implements the check, or T19 is removed. Decision for the review.
-5. **T22** depends on E5, which is not decided; if the lists are not available the evidence view has a smaller form and T20/T22 change.
-6. **«Esperado»** is shortened from «esperado bajo independencia» in some labels; the full phrase is kept wherever the quantity is first named in a view, and the shortened form is a decision for the review.
-7. **T07** adds the 2023 drop of EP translations and the sentence about the inventory comparison to the limits text of the explorer; both come from ADR 0036 and the contract, and neither has been shown to a reader yet.
+1. **T19 and the integrity check.** The hash in `provenance.json` is a control only if the browser compares the loaded bytes against it before rendering; a test of the error text does not implement that. Recommendation of the review: add the verification to the design of the data load, with a negative test that changes one byte and confirms that no result appears. This is a change to the contract (a requirement, a test, a scenario) and is made there, not here; until it is, T19 stays unapproved. If it is not adopted, T19 is removed or replaced by an error that describes only the validation really performed.
+2. **T22 and E5.** The state «identifier list not available» stays in the model of states, but its wording and the behaviour of the detail panel are defined after E5 and the deployment of the lists are decided, not before. The distinction between an available pairs result and unavailable documentary evidence is kept.
+3. **Terms.** The contract requires the label «Esperado bajo independencia (coincidencias)» and reserves the forbidden words to three exact sentences (T03, T05, T06), kept literally. The list of exceptions is not extended to accommodate T23; any other listed word outside those sentences keeps failing the test.
+4. **T23** is an existing sentence of the explorer (vertical 2) and is not shown on this view; the labelled sort and T02 do its job.
+5. **«Vista bloqueada» (T17) and «no publicado» (T16) describe what the page observes, not what enforces the block.** The barrier is the server and the exposure authorisation.
 
 ## 4. Approval
 
-The owner and the reviewer approve, change or reject each text. Until then the texts in the contract stay proposals, the screen is not written, and nothing is exposed. Approval of the texts does not authorise exposure: the completeness gate, the access record, M1–M7 and the visual review still apply.
+The owner approves, changes or rejects each text; the review's recommendation is to approve T01–T06, T08–T11, T13–T15 and T18; to approve with the changes marked T07, T10, T12, T16, T17, T20 and T21; to leave T19 and T22 pending on their technical dependencies; and to exclude T23. Until the owner approves, the texts in the contract stay proposals, the screen is not written, and nothing is exposed. Approval of the texts does not authorise exposure: the completeness gate, the access record, M1–M7 and the visual review still apply.
