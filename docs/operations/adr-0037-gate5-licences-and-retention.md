@@ -201,6 +201,24 @@ Reading (an inference from the policy, not tested): with `latest 10` and `annual
 
 **Deletion and recovery.** The owner authorises any deletion. Removing a source from a database corpus means building a new version without it (versions are immutable), dropping the old schema, and then purging the backups that still hold it, which depends on the unread Kopia retention. A restore is checked by the manifest digest of ADR 0037 §3.3 and, for the benchmark, by W6; neither tells whether a restored copy brings back material that was meant to be deleted. That interaction is not designed yet.
 
+#### 6.1.3 Observed and changed on 2026-10-26 (D5: automount; the gap is not yet explained)
+
+Sources: read-only SSH from the developer workstation, and output pasted by the owner from sessions on the Lenovo. Facts first, then inference.
+
+**Facts**
+* The Lenovo is **switched off on purpose** (owner's statement). `last -x` shows a clean shutdown and boot every working day (2026-10-20 to 2026-10-23: boot about 07:50-08:40, shutdown about 17:30-18:45) and one weekend off (shutdown 2026-10-23 17:30:29, boot 2026-10-26 08:41:09). The shutdowns are orderly (the journal ends at `shutdown.target`). Who or what shuts it down was not found.
+* At about 08:55 on 2026-10-26 the disk was attached (`sdc1`, NTFS, UUID `9420E7F320E7DA6E`) and **not mounted**; `/etc/fstab` had three lines and no entry for it. The journal shows, for the 09:00:49 run of `kopia-lenovo-hdd`: `mount unexpected, skipping`. The unit ended `status=0/SUCCESS` in 27 ms. So that run took no snapshot and nothing flagged it.
+* Owner's decision: the disk should mount by itself when connected.
+* Infrastructure PR #18 (merge `534594c`) adds an fstab entry by UUID (`ntfs-3g`, `nofail,x-systemd.automount,x-systemd.device-timeout=10s`, root-only) and changes the wrapper so that a disk that is present but not mounted **fails** (unit failed, journal `err`) instead of skipping; an absent disk still skips. `node.yml --check` showed 5 changes (these two, a drift in `node-housekeeping.sh` that predates this work, and two GPG-key downloads that `get_url` always reports in check mode; both keys were identical to the upstream ones); the real run gave `ok=71 changed=5 failed=0`.
+* After the run the automount unit was generated but `inactive` (systemd starts it at boot). The owner started it by hand: `/dev/sdc1` appeared as `fuseblk rw` under the automount. Reading it as a non-root user gave `Permission denied`, by design (`umask=077`, root-only).
+* The owner then started `kopia-lenovo-hdd.service`: the journal shows `snapshot ok` at **2026-10-26 10:35:56**.
+
+**Not verified**: what that snapshot contains and how many snapshots the repository now holds (the `kopia snapshot list` output was not provided); that the automount starts by itself at the next boot; any restore.
+
+**Inference, not tested**: the missing fstab entry explains the skip of 2026-10-26 (disk attached, not mounted). It does **not** explain the whole gap since 2026-09-11: on 2026-10-22 and 2026-10-23 morning the runs said `HDD absent` (disk not attached, §6.1.2), and the journal before 2026-10-22 was not readable. Whether the disk was attached and unmounted between 2026-09-11 and 2026-10-22 is unknown.
+
+**D5 status after this**: mounting and silent skipping of an attached disk: addressed in infrastructure (applied on the host, one real snapshot). Still open: the cause of the gap before 2026-10-22; a restore test; any backup of Nexus staging (the source is still only `backup-data`); an alert on the age of the last snapshot that does not depend on the disk being present (the observability script looks at the last 48 hours of `snapshot ok` in the journal, and a machine that is off at night makes a daily job easy to miss).
+
 ## 7. Scientific publication: what can accompany an article (proposal)
 
 * **Likely compatible with the evidence above:** the project's own code (MIT); the benchmark results and manifests (hashes, counts, timings); aggregate results derived from OEPM data, with "Origen de los datos: Oficina Española de Patentes y Marcas", the date of the last update, no suggestion of OEPM endorsement, and a statement of any record dropped or corrected.
