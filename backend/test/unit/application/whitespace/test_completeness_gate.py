@@ -1,0 +1,114 @@
+import copy
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+from application.whitespace.completeness_gate import completeness_gate
+
+ROOT = Path(__file__).resolve().parents[5]
+EXPOSURE = ROOT / "docs" / "whitespace" / "oepm-corpus-exposure-results.json"
+
+
+def cell(inventory: int, absent: int) -> dict:
+    return {"inventory": inventory, "present": inventory - absent, "absent": absent}
+
+
+def result(**groups: dict) -> dict:
+    cells = {"ep_translation": cell(1000, 0), "kind_y": cell(1000, 0), "other": cell(1000, 0)} | groups
+    return {"authority_file": {"name": "A.zip", "sha256": "ab" * 32}, "exposure": {"by_year": {"2025": cells}}}
+
+
+def test_shouldAllowWhenEveryGroupIsWithinTheThreshold():
+    decision = completeness_gate(result(other=cell(1000, 5)))
+    assert decision["allowed"] is True
+    assert decision["reasons"] == []
+    assert decision["groups"]["other"]["within_threshold"] is True
+
+
+def test_shouldAllowAtExactlyOnePercentWhenTheThresholdIsAtMost():
+    assert completeness_gate(result(kind_y=cell(1000, 10)))["allowed"] is True
+
+
+def test_shouldBlockJustAboveOnePercentEvenIfItRoundsToOne():
+    decision = completeness_gate(result(kind_y=cell(100000, 1001)))  # 1.001 % would display as 1.0
+    assert decision["allowed"] is False
+    assert "threshold exceeded: kind_y" in decision["reasons"][0]
+
+
+def test_shouldBlockWhenOnlyOneGroupExceedsTheThreshold():
+    decision = completeness_gate(result(ep_translation=cell(1000, 11)))
+    assert decision["allowed"] is False
+    assert decision["groups"]["kind_y"]["within_threshold"] is True
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda r: r["exposure"]["by_year"].pop("2025"),
+        lambda r: r["exposure"]["by_year"]["2025"].pop("kind_y"),
+        lambda r: r["exposure"]["by_year"]["2025"]["other"].pop("absent"),
+        lambda r: r["exposure"]["by_year"]["2025"]["other"].update(absent="3"),
+        lambda r: r["exposure"]["by_year"]["2025"]["other"].update(absent=True),
+        lambda r: r["exposure"]["by_year"]["2025"]["other"].update(absent=-1),
+        lambda r: r["exposure"]["by_year"]["2025"]["other"].update(absent=1.0),
+        lambda r: r["exposure"]["by_year"]["2025"]["other"].update(inventory=0, present=0, absent=0),
+        lambda r: r["exposure"]["by_year"]["2025"]["other"].update(present=1),
+        lambda r: r.pop("authority_file"),
+        lambda r: r["authority_file"].pop("sha256"),
+        lambda r: r.pop("exposure"),
+    ],
+)
+def test_shouldBlockWhenTheMeasurementIsMissingInvalidOrInconsistent(mutate):
+    data = copy.deepcopy(result())
+    mutate(data)
+    decision = completeness_gate(data)
+    assert decision["allowed"] is False
+    assert decision["reasons"]
+    assert all(reason.startswith(("not measurable", "threshold exceeded")) for reason in decision["reasons"])
+
+
+def test_shouldBlockWithoutAnyFigureWhenTheResultIsEmpty():
+    assert completeness_gate({})["allowed"] is False
+
+
+def test_shouldBlockAnotherYearThatIsNotInTheResult():
+    assert completeness_gate(result(), year=2030)["allowed"] is False
+
+
+def test_shouldNeverTreatAMissingValueAsFavourable():
+    data = result()
+    data["exposure"]["by_year"]["2025"]["other"] = {}
+    assert completeness_gate(data)["allowed"] is False
+
+
+def test_shouldStateTheCaveatAndTheInventoryInTheDecision():
+    decision = completeness_gate(result())
+    assert "OEPM inventory" in decision["caveat"]
+    assert decision["inventory"]["sha256"] == "ab" * 32
+
+
+def test_shouldAllowWithTheVersionedExposureResultAtTheReferenceYear():
+    decision = completeness_gate(json.loads(EXPOSURE.read_text(encoding="utf-8")))
+    assert decision["allowed"] is True
+    assert set(decision["groups"]) == {"ep_translation", "kind_y", "other"}
+
+
+def test_shouldExitNonZeroFromTheScriptWhenTheFileIsMissing(tmp_path):
+    script = ROOT / "scripts" / "check_vertical3_completeness.py"
+    run = subprocess.run(
+        [sys.executable, str(script), "--exposure", str(tmp_path / "missing.json")],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert run.returncode == 1
+    assert '"allowed": false' in run.stdout
+
+
+def test_shouldExitZeroFromTheScriptWithTheVersionedResult():
+    script = ROOT / "scripts" / "check_vertical3_completeness.py"
+    run = subprocess.run([sys.executable, str(script)], capture_output=True, text=True, check=False)
+    assert run.returncode == 0
