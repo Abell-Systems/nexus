@@ -17,6 +17,10 @@ REFERENCE_YEAR = 2025
 CAVEAT = "The comparison is against the OEPM inventory, not an independent count of the publications."
 
 
+def _text(value: Any) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
 def _count(cell: Mapping[str, Any], name: str) -> int | None:
     value = cell.get(name)
     return value if isinstance(value, int) and not isinstance(value, bool) and value >= 0 else None
@@ -60,7 +64,7 @@ def completeness_gate(
     reasons: list[str] = []
     groups: dict[str, dict[str, Any]] = {}
     authority = exposure.get("authority_file")
-    if not (isinstance(authority, Mapping) and authority.get("name") and authority.get("sha256")):
+    if not (isinstance(authority, Mapping) and _text(authority.get("name")) and _text(authority.get("sha256"))):
         reasons.append("not measurable: the result does not identify the inventory it was computed from")
     cells = _cells(exposure, year)
     if cells is None:

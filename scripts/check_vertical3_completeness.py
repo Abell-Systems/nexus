@@ -25,8 +25,13 @@ def main() -> int:
     args = parser.parse_args()
     try:
         exposure = json.loads(args.exposure.read_text(encoding="utf-8"))
-    except (OSError, ValueError) as error:
-        exposure = {"unreadable": str(error)}
+    except (
+        OSError,
+        ValueError,
+        RecursionError,
+    ) as error:  # unreadable, not JSON, bad UTF-8 or nested beyond the parser: blocked
+        print(f"blocked: {args.exposure} cannot be read as JSON ({type(error).__name__})", file=sys.stderr)
+        exposure = {}
     decision = completeness_gate(exposure if isinstance(exposure, dict) else {})
     print(json.dumps(decision, indent=2))
     return 0 if decision["allowed"] else 1
