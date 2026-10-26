@@ -1,9 +1,9 @@
 # Vertical 3: proposed Spanish texts (draft for approval)
 
-**Status:** Proposal after the first review. **The owner's approval is pending**: the decisions in the tables are the review's recommendation, not an approval. Nothing is implemented, and the screen waits for the approval of this document. T19 and T22 are not approved yet; T23 is excluded.
+**Status:** Texts approved by the owner on 2026-10-26, except **T19 and T22, which are not approved**; **T23 is excluded** from this view. This is the approval of the applicable texts only: it does not approve the pull request and does not authorise exposure. Nothing is implemented, and the screen is not started.
 **Date:** 2026-10-26
 **Checks:** [vertical 3 contract](product-vertical-3-contract.md) §3, §4, §8 (M3, M5) · [ADR 0038](../adr/0038-exploratory-white-space-product-track.md) E4, E6
-**Scope:** The texts of the view, by the state of the system they describe, so that an empty result, missing data, a blocked view and an error are not mistaken for each other. Each text says whether it is **new** or an **existing constant**, whether it belongs to the closed allowlist of the contract, and what the review recommended. This is the proposal on which scenario M3 will be run; it does not replace M3.
+**Scope:** The texts of the view, by the state of the system they describe, so that an empty result, missing data, a blocked view and an error are not mistaken for each other. Each text says whether it is **new** or an **existing constant**, whether it belongs to the closed allowlist of the contract, and the owner's decision. This is the proposal on which scenario M3 will be run; it does not replace M3.
 
 ## 1. Rules applied
 
@@ -17,7 +17,7 @@
 
 ### 1. Results available
 
-| Id | Text | Origin | Listed words found | Review (recommendation) |
+| Id | Text | Origin | Listed words found | Decision (owner, 2026-10-26) |
 |---|---|---|---|---|
 | T01 | Pares no observados (exploratorio) | new; titulo | none | Approved |
 | T02 | Exploratorio. Sin validar. Ningún orden mostrado aquí es una predicción. El estudio no ha demostrado que ningún orden prediga nada (ADR 0036). | new; aviso | none | Approved |
@@ -78,4 +78,11 @@
 
 ## 4. Approval
 
-The owner approves, changes or rejects each text; the review's recommendation is to approve T01–T06, T08–T11, T13–T15 and T18; to approve with the changes marked T07, T10, T12, T16, T17, T20 and T21; to leave T19 and T22 pending on their technical dependencies; and to exclude T23. Until the owner approves, the texts in the contract stay proposals, the screen is not written, and nothing is exposed. Approval of the texts does not authorise exposure: the completeness gate, the access record, M1–M7 and the visual review still apply.
+Decided by the owner on 2026-10-26, on the review's recommendation:
+
+* **Approved:** T01–T06, T08–T11, T13–T15 and T18.
+* **Approved with the editorial changes marked:** T07, T12, T16, T17, T20 and T21. T16, T17 and T18 keep the conditions of use noted in the Decision column. For T10, the rule is approved: «Esperado bajo independencia» in full wherever a label can be read without context, and «Esperado» only after the first visible definition.
+* **Not approved:** T19, until the contract is amended to require the SHA-256 verification in the browser and its tests are defined; T22, until E5 and the availability of the identifier lists are resolved. Their status does not change here.
+* **Excluded from this view:** T23. The closed list of exceptions is not extended.
+
+This is not the approval of the pull request and does not authorise exposure: the completeness gate, the access record, M1–M7 and the visual review still apply, and the screen is not started.
