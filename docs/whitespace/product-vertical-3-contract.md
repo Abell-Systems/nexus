@@ -54,7 +54,7 @@ Opening a pair shows (the rules for the per-year terms follow this paragraph): b
 1. The stored expected count remains the reference for listing, filtering and sorting, and is the value the sheet presents as the pair's expected count.
 2. The sheet shows the input counts n_i(y) and n_j(y), N(y), the term n_i(y)·n_j(y)/N(y) of **each observed year**, and the reconstructed sum next to the stored value.
 3. Years not observed (2010 included) are omitted, never shown with a count of zero.
-4. Agreement is defined in advance: the reconstructed sum rounded to the stored decimals equals the stored value, allowing a difference of at most one unit of the last stored decimal (1e-9 for 9 decimals). A larger difference is **shown as a discrepancy**; the stored value is neither corrected nor replaced, and the sheet does not present the pair as consistent.
+4. **One criterion, no tolerance.** Each term is the product of the two integer counts divided by N(y); the terms are summed in ascending order of year; the sum is rounded to the nine stored decimals and compared with the stored value. If the two are equal the pair is concordant. Otherwise the sheet **shows a discrepancy**: the stored value is never corrected or replaced, and the sheet does not present the pair as consistent. There is no additional margin: a difference of one unit in the last decimal is a discrepancy.
 5. Nothing computed on the sheet feeds a filter, a sort, a new metric or any label. No score of opportunity exists.
 6. The invariant «reconstructed sum agrees with the stored value» is verified for **every unobserved pair** of the result by the pull request that produces the data, not by a sample.
 
