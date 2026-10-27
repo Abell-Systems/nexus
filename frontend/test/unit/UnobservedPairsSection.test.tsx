@@ -7,6 +7,10 @@ import { TEXT, UNOBSERVED_TEXT as T } from "../../src/main/domain/whitespace";
 import { whitespaceData } from "../../src/main/infrastructure/whitespaceData";
 import { UNOBSERVED_PAIRS_URL, resetUnobservedPairsCache } from "../../src/main/infrastructure/unobservedPairsLoader";
 
+// These tests load the real 3 MB result and list or sort up to 149,048 pairs, with coverage instrumentation on the CI runner: the default
+// 5 s was exceeded there (5.3 s) while it passes locally in about one second. A longer limit for this file only; nothing else changes.
+vi.setConfig({ testTimeout: 30_000 });
+
 // The real versioned file, so the manifest hash of provenance.json is exercised end to end.
 const file = new Uint8Array(readFileSync("public/data/oepm-unobserved-pairs-results.json"));
 const real = JSON.parse(new TextDecoder().decode(file)) as { active: Record<string, number>; pairs: Record<string, Record<string, number>> };
