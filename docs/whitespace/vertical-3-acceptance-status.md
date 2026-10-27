@@ -1,9 +1,9 @@
 # Vertical 3: acceptance status against the contract and ADR 0038
 
 **Status:** Working record, not an approval. It traces each requirement to what exists today. It does not declare the view conforming to ADR 0038 E5 and it authorises no deployment or exposure. Merging code into `main` is not acceptance of the exposure criteria.
-**Date:** 2026-10-27 (updated after the merge of #187)
+**Date:** 2026-10-27 (updated after the merge of #187, and again for #188, #192 and #193)
 **Checks:** [vertical 3 contract](product-vertical-3-contract.md) §2–§9 · [ADR 0038](../adr/0038-exploratory-white-space-product-track.md) E1–E8
-**State of the pull requests when updated:** merged into `main`: #177, #178, #179, #180, #181, #185, #190, #191, #182, #186, #187 (merge commits in §9). Still open: #183 (E5 storage options, draft), #184 (Spanish texts, draft), #189 (E5 evidence specification, draft) and this record (#188). What is marked «merged» below is on `main`; what is marked pending is not.
+**State of the pull requests when updated:** merged into `main`: #177, #178, #179, #180, #181, #185, #190, #191, #182, #186, #187 (merge commits in §9). #188 (this record, first version) is also merged (`9f7ca6d`). Still open, all drafts: #183 (E5 storage options and the OEPM notice reading checklist), #184 (Spanish texts), #189 (E5 evidence specification), #192 (experience proposal for the evidence sheet) and #193 (partial evidence sheet, local prototype). What is marked «merged» below is on `main`; what is marked pending is not.
 
 ## 1. Vocabulary
 
@@ -65,9 +65,10 @@
 | States T08, T12, T18, T19 | Merged, tested | |
 | States T13 (subclass without unobserved pairs) and T14 (loading) | Merged, **no test** | |
 | States T15, T16, T17 | **Pending, not covered** (owner, 2026-10-27) | No code and no tests. No signal exists for «not published» or «blocked by the completeness gate». A `404` is a load error (T18) and is not relabelled. They belong to the exposure work. |
-| Open a pair (§2.6) and the evidence (§5): per-year terms, corpus identity, hashes, configuration identifier, limits | **Pending** | The data (`documents_by_year`, `configuration`) and the arithmetic function are merged (#191); the sheet is not implemented. Specification in #189 (draft). |
+| Open a pair (§2.6) and the evidence (§5): per-year terms, corpus identity, hashes, configuration identifier, limits | **Pending on `main`**; a partial sheet exists as a **local draft** (#193, not merged, not E5) | The data (`documents_by_year`, `configuration`) and the arithmetic function are merged (#191). The draft shows the symbols, the activity by year on a common scale with 2010 as a gap, the per-year terms with the sum next to the stored value, the traceability and the limits; 125 frontend tests passed in the assistant's own local run at its last HEAD (not an independent check and not acceptance of E5), and it was looked at only locally, by the assistant. Specification in #189, experience in #192 (drafts). |
 | Full list of publication identifiers and dates per subclass, on demand (E5) | **Pending** | Not generated, not stored, not served. Requirements recommended in #189 §8; storage options in #183 (draft); the owner's choice is provisional and conditional on a person reading the OEPM legal notice. |
-| T20, T21, T22 | **Pending** | Depend on the evidence sheet and D4. |
+| T20, T21, T22 | T20 titles and T21 are used by the draft sheet (#193); **T22 pending** | T22 depends on D4. The draft uses S4, which stands in for T22 and is **not approved**, so #193 cannot be merged until T22 and S4 are decided in #184. |
+| S1, S2, S3, S5 (texts of the evidence sheet) | Approved by the owner on 2026-10-27 (review of #192), subject to the forbidden-words check and M3 | S4 not approved. Approval of a text is not acceptance of an implementation. |
 
 ## 5. Contract §8 automated list
 
@@ -89,10 +90,10 @@
 | M1 reading of the order by a person who has not read the ADR | Pending |
 | M2 sort by expected count and notice; link keeps default | Pending (behaviour observed by the assistant, not recorded as the scenario) |
 | M3 every text read against the forbidden list by a person | Pending |
-| M4 follow the evidence to the corpus identity and recompute one pair by hand | **Pending and blocked** until the evidence sheet exists |
+| M4 follow the evidence to the corpus identity and recompute one pair by hand | **Pending**; the terms can be followed in the draft sheet (#193), but a person has not run it, and E5's identifier lists do not exist |
 | M5 initial and empty states | Pending |
 | M6 desktop, phone, keyboard only | Pending |
-| M7 access-list record before the first outside viewer, with the panel decision for each person (ADR E7) | Pending |
+| M7 access-list record before the first outside viewer, with the panel decision for each person (ADR E7) | Pending; the decision on whether Lydia, or anyone, may take part in the human review of the study is **not taken**, and until it is, no candidate is shown to anyone |
 | M8 | See §3: run by the assistant, not recorded by a named person |
 | Visual review | Pending |
 | Completeness gate | Passes in a local run; to be recorded with the exposure |
@@ -119,7 +120,7 @@ Phases C and D need their own specification (user needs, data sources, scientifi
 
 * **Merged, tested and run locally:** search, filters, default order, optional expected-count sort with its notice, the verified loader with its negative tests, T18 and T19 behaviour, the data for the evidence sheet and the exhaustive concordance of the per-year terms.
 * **Not conforming to E5:** the evidence sheet, the identifier lists (D4) and T22 do not exist. #187 is merged as an **intermediate increment** and must not be exposed. Nothing here relaxes E5.
-* **Open decisions that are the owner's:** the store of the identifier lists and how they reach the read-only image (#183, provisional); the approval of T22 (#184); the reading of the OEPM legal notice by a person; whether and when the evidence sheet is implemented (specification in #189).
+* **Open decisions that are the owner's:** the store of the identifier lists and how they reach the read-only image (#183, provisional); the reader of the OEPM legal notice, **not named** (a checklist is ready in #183); the approval of T22 and S4 (#184); the panel decision of ADR E7 (including whether Lydia may score); whether the partial sheet of #193 is kept, revised or discarded after an evaluation by people; and the full E5 sheet (specification in #189, D4 open).
 * **Independent validation is reserved** for the gates that require a named person (M1–M7, visual review, access record, legal notice). The assistant's runs of T18 and M8 are recorded as such and are not repeated only for that reason.
 * **Separate from this record:** a defence against an invalid sort value in the section (a crash, seen only when an invalid value was injected by hand); the 22 failures of the full backend suite in a local run, identical on `main` and on the branch of #191 and absent in CI, whose local cause has not been investigated; two Sonar S5778 findings reported earlier in `test_unobserved_pairs.py` (a cleanup item; not rechecked after #191).
 
@@ -127,10 +128,11 @@ Phases C and D need their own specification (user needs, data sources, scientifi
 
 | PR | Subject | State | Merge commit |
 |---|---|---|---|
-| #177, #178 | Contract and ADR 0038 accepted | Merged | — |
-| #179 | Expected count (E3) | Merged | — |
-| #180 | Unobserved pairs result | Merged | — |
-| #181 | Completeness gate | Merged | — |
+| #177 | Contract (approved) | Merged | `dac1660` |
+| #178 | ADR 0038 accepted | Merged | `bd843d5` |
+| #179 | Expected count (E3) | Merged | `ea916ba` |
+| #180 | Unobserved pairs result | Merged | `c6301db` |
+| #181 | Completeness gate | Merged | `92fbd2a` |
 | #185 | Contract §6.1 (integrity at load) | Merged | `4c88ecf` |
 | #190 | Contract amendment D1–D3 | Merged | `5c80245` |
 | #191 | Result with documents by year and configuration; presentation function | Merged | `2ac641f` |
@@ -140,4 +142,7 @@ Phases C and D need their own specification (user needs, data sources, scientifi
 | #183 | E5 storage options for the identifier lists | Open, draft | — |
 | #184 | Spanish texts by state | Open, draft | — |
 | #189 | E5 evidence sheet specification | Open, draft | — |
-| #188 | This record | Open, draft | — |
+| #188 | This record, first version | Merged | `9f7ca6d` |
+| #192 | Experience proposal for the evidence sheet | Open, draft | — |
+| #193 | Partial evidence sheet, local prototype (not E5, not for exposure; blocked by S4/T22) | Open, draft | — |
+| #194 | This update of the record | Open, draft when written; its state is in the pull request, not in this table | — |
