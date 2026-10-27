@@ -158,3 +158,16 @@ export const UNOBSERVED_TEXT = {
   loadError: "No se pudieron cargar los datos. No se muestra ningún resultado. Puede reintentar.",
   integrityError: "Los datos cargados no superan la comprobación de integridad. No se muestra ningún resultado.",
 } as const;
+
+// Entry block of the front page (docs/whitespace/frontend-entry-ux-proposal.md, option A). H1, H2 and H3 approved by the owner on 2026-10-27.
+// H4 (the label of example symbols) and H5 (skip link) are not part of this block: the example symbols are not approved and the skip link
+// belongs to the second pull request. The entries marked "label" are neutral names of fields that no list has approved yet.
+export const ENTRY_TEXT = {
+  title: "Pares de subclases IPC no observados en patentes españolas", // H1
+  sentence: "Elija una subclase o una sección y vea qué combinaciones no aparecen juntas en el corpus de la OEPM hasta 2025.", // H2
+  howMeasured: "Cómo se ha medido", // H3
+  subclass: "Subclase IPC", // label
+  section: "Sección IPC", // label
+  noSection: "Ninguna", // label
+  submit: "Buscar", // label
+} as const;

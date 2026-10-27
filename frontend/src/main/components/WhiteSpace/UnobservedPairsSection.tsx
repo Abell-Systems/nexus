@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { listPairs, searchSymbols, sectionsOf, type PairSort, type PairType } from "../../application/unobservedPairs";
 import { TEXT, UNOBSERVED_TEXT as T, type UnobservedPairsResults } from "../../domain/whitespace";
 import { loadUnobservedPairs } from "../../infrastructure/unobservedPairsLoader";
@@ -13,7 +13,13 @@ const oneDecimal = new Intl.NumberFormat("es-ES", { minimumFractionDigits: 1, ma
 
 type Load = { state: "idle" | "loading" | "load-error" | "integrity-error" } | { state: "ready"; data: UnobservedPairsResults };
 
-export function UnobservedPairsSection() {
+export interface PairsRequest {
+  id: number;
+  query: string;
+  section: string;
+}
+
+export function UnobservedPairsSection({ request = null }: { request?: PairsRequest | null }) {
   const [load, setLoad] = useState<Load>({ state: "idle" });
   const [query, setQuery] = useState("");
   const [symbol, setSymbol] = useState<string | null>(null);
@@ -22,6 +28,9 @@ export function UnobservedPairsSection() {
   const [sort, setSort] = useState<PairSort>("symbol");
   const [shown, setShown] = useState(PAGE);
   const ids = { search: useId(), section: useId(), type: useId(), sort: useId() };
+  const searchRef = useRef<HTMLInputElement>(null);
+  const handled = useRef(0);
+  const pending = useRef<string | null>(null);
 
   // The file is fetched at the first touch of a control, never when the page opens; no pair is drawn until a subclass or a section is chosen.
   const fetchData = () => {
@@ -41,6 +50,25 @@ export function UnobservedPairsSection() {
   const chosen = Boolean(data && (symbol || section));
   const reset = () => setShown(PAGE);
 
+  // A request from the entry block: take its symbol and section, fetch if nothing has been fetched yet, and move the focus to the search.
+  // Choosing the subclass waits for the verified data, and only when the text is exactly an active symbol; nothing else selects it.
+  useEffect(() => {
+    if (!request || handled.current === request.id) return;
+    handled.current = request.id;
+    setQuery(request.query);
+    setSection(request.section);
+    setSymbol(null);
+    setShown(PAGE);
+    pending.current = request.query.trim().toUpperCase() || null;
+    if (load.state === "idle") fetchData();
+    searchRef.current?.focus();
+  }, [request]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!data || pending.current === null) return;
+    if (pending.current in data.active) setSymbol(pending.current);
+    pending.current = null;
+  }, [data]);
+
   return (
     <section id="pares-no-observados" className={styles.section} aria-labelledby="pares-no-observados-titulo">
       <h2 id="pares-no-observados-titulo">{T.title}</h2>
@@ -54,7 +82,7 @@ export function UnobservedPairsSection() {
       <div className={styles.controls} onFocus={start}>
         <div>
           <label htmlFor={ids.search}>Buscar subclase por símbolo</label>
-          <input id={ids.search} type="search" autoComplete="off" value={query} placeholder="p. ej. G06N" onChange={(e) => { setQuery(e.target.value); setSymbol(null); reset(); start(); }} />
+          <input ref={searchRef} id={ids.search} type="search" autoComplete="off" value={query} placeholder="p. ej. G06N" onChange={(e) => { setQuery(e.target.value); setSymbol(null); reset(); start(); }} />
         </div>
         <div>
           <label htmlFor={ids.section}>Sección</label>
