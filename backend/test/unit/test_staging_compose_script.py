@@ -131,3 +131,10 @@ def test_should_pin_the_nginx_image_to_a_supported_version_and_a_digest():
     static = next(line for line in dockerfile.splitlines() if line.endswith("AS static"))
     assert re.search(r"nginx-unprivileged:\d+\.\d+\.\d+-alpine\d+\.\d+@sha256:[0-9a-f]{64} AS static$", static), static
     assert "nginx-unprivileged:1.27" not in dockerfile, "nginx 1.27 reached its end of life in June 2025"
+
+
+def test_shouldNotServeTheUnobservedPairsDataFromTheStaticImageUntilTheViewIsExposed():
+    conf = (REPO_ROOT / "deploy" / "nginx-static.conf").read_text(encoding="utf-8")
+    block = re.search(r"location = /data/oepm-unobserved-pairs-results\.json \{\s*return 404;\s*\}", conf)
+    assert block, "the vertical 3 data must answer 404 in the static staging until its exposure conditions are met"
+    assert conf.index(block.group(0)) < conf.index("location / {"), "the exact-match block must precede the catch-all"
