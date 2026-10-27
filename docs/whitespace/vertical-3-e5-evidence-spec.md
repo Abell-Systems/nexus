@@ -71,7 +71,7 @@ It does not choose among D1–D4, does not approve T22, does not generate or sto
 
 ## 7. Proposal for D1–D3, with recommendation (for the owner's decision)
 
-Nothing in this section is decided. Each item gives the options, what was measured, and a recommendation. Measurements were made on 2026-10-27 with a scratch script (not committed) over the hash-verified corpus and the committed result.
+**Update 2026-10-27:** the owner accepted D1(a), D2(b) and D3(a) on conditions that are carried into the contract wording proposed in #190 (a draft, not merged); this section is kept as the record of the options and the measurements. Each item gives the options, what was measured, and a recommendation. Measurements were made on 2026-10-27 with a scratch script (not committed) over the hash-verified corpus and the committed result.
 
 ### Measurements
 
@@ -112,3 +112,34 @@ ADR 0038 names it and does not define it. What the ADR fixes in E1 as configurat
 ### How the three fit together
 
 If the owner accepts the recommendations, D1 and D3 need **one regeneration** of the result (a new version with `documents_by_year` and `configuration`), one update of `provenance.json` and one frontend copy, in a single data pull request. D2 needs no data change. Order of work: (1) a documentation pull request with the contract clarifications (§3 wording for D1, §6 wording for D2) and the owner's decision on D3; (2) the data pull request, with invariants (per-subclass yearly sums equal `active`; 2010 absent; sum of terms equals the stored value, tested on a hand-computed fixture and on a sample of the real result; the new keys are covered by the hash test); (3) the sheet, over the verified loader. D4 (the lists) stays separate and does not block (1) or (2).
+
+## 8. D4. Identifier lists: recommended requirements (the store is still open)
+
+A review proposed the design below on 2026-10-27. It fixes the **format, ordering, integrity and loading** of the lists. It does **not** decide where the files live, how they reach the read-only image or where they are regenerated (items 1–4 at the end). It is a design proposal, not a verification that any implementation meets it, and it authorises neither the data pull request nor any change to #190 or the contract; a contract amendment for D4 would be a separate pull request once the store is decided.
+
+### Recommended requirements
+
+1. **One static file per active subclass, loaded on demand.** The identifiers are not embedded in the main pairs file.
+2. **Complete content.** Each record is the publication identifier and its date (O4: the publication identifier, with the earliest date). No silent truncation and no sample list.
+3. **Deterministic order.** Sorted by date and, on a tie, by identifier. Sorting does not change the set of records.
+4. **Unambiguous binding.** Each file belongs to one subclass and to the same corpus and the same versioned result as the sheet that shows it (the corpus identity and the configuration identifier of the result are recorded in the manifest).
+5. **Verifiable integrity.** A deterministic manifest lists, for every file, the subclass, the number of records and the SHA-256. It is part of the page's script bundle, as contract §6.1 item 1 requires, and every list goes through the verified loader before it is presented as evidence.
+6. **Load only what the open pair needs.** The sheet requests the two files of the pair that was opened, never the others. A load error (T18) or an integrity error (T19) is shown as such and never interpreted as an empty list.
+7. **Reproducible tests, in the data pull request:**
+   * each list contains every identifier and date of its subclass, with no duplicate identifier (the unit is the publication identifier);
+   * its length equals `active[subclass]`;
+   * the histogram of the years of its dates equals `documents_by_year[subclass]`;
+   * the manifest's hashes and counts equal the files, and a changed byte, a missing file or an extra file is rejected.
+
+The histogram check holds by construction if both come from the same `activity_counts`; it has **not** been verified yet.
+
+### Cost and limits
+
+The manifest adds a small generation and maintenance cost, and 621 entries (subclass, count, SHA-256) to the bundle, of the order of tens of KB; it must be measured in the data pull request and stated. The largest list is 2.44 MB (`A61K`, measured in #183).
+
+### Still open inside D4
+
+1. **Where the files live**: in Git or outside it. The provisional choice in #183 is outside Git with a verified fetch that fails closed, pending a person reading the OEPM legal notice; it is not confirmed.
+2. **How they reach the image**: the static image is read-only and the workload contract (rule 7) forbids new mounts outside the allowed directories.
+3. **Where they are regenerated**: the generating script needs the 793 MB corpus, which only the developer machine has.
+4. **What the sheet shows when one of the two files of a pair fails**: the sheet says which one failed and shows no activity evidence for it (§4.4); what remains visible of the other is a decision for the review of the texts.
