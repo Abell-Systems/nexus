@@ -51,3 +51,9 @@
 .matches button, .table button { font: inherit; font-size: 14px; padding: 4px 10px; border: 1px solid var(--color-border); border-radius: 6px; background: var(--color-surface); cursor: pointer; }
 .matches button[aria-pressed="true"] { border-color: var(--color-purple); font-weight: 700; }
 .detail { margin: 18px 0; padding: 14px; border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-surface); }
+.entry { margin: 20px 0; padding: 16px 18px; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-surface); }
+.entry h2 { margin: 0 0 6px; font-size: 22px; line-height: 1.25; }
+.entry p { line-height: 1.55; max-width: 74ch; }
+.primary { font: inherit; font-weight: 700; padding: 7px 18px; border: 0; border-radius: 8px; background: var(--color-purple); color: #ffffff; cursor: pointer; align-self: flex-end; }
+.entry form { align-items: flex-end; }
+.entry a { color: var(--color-purple); }

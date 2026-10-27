@@ -139,6 +139,8 @@ export interface UnobservedPairsResults {
 }
 
 // Texts of docs/whitespace/vertical-3-texts-proposal.md as approved by the owner (T05, T06 and T03 are the allowlisted sentences of the contract section 4).
+const SYMBOL_SHAPE = /^[A-Z](\d(\d[A-Z]?)?)?$/i;
+
 export const UNOBSERVED_TEXT = {
   title: "Pares no observados (exploratorio)",
   notice: "Exploratorio. Sin validar. Ningún orden mostrado aquí es una predicción. El estudio no ha demostrado que ningún orden prediga nada (ADR 0036).",
@@ -156,5 +158,22 @@ export const UNOBSERVED_TEXT = {
   start: "Elige una subclase o una sección para empezar. No se muestra ningún par hasta entonces.",
   loading: "Cargando los datos…",
   loadError: "No se pudieron cargar los datos. No se muestra ningún resultado. Puede reintentar.",
+  // Sentence approved by the owner on 2026-10-27; the fixed variant was approved with option (b) the same day. What the person typed is repeated only
+  // when it has the shape of an IPC symbol or of a prefix of one (letter, two digits, letter; the shape every active symbol of the result has), which no
+  // word of the closed list of forbidden formulations (contract §4) can have. Anything else gets the fixed sentence and is never repeated on the page.
+  noMatch: (text: string) => (SYMBOL_SHAPE.test(text) ? `Ninguna subclase activa coincide con «${text}».` : "Ninguna subclase activa coincide con el texto escrito."),
   integrityError: "Los datos cargados no superan la comprobación de integridad. No se muestra ningún resultado.",
+} as const;
+
+// Entry block of the front page (docs/whitespace/frontend-entry-ux-proposal.md, option A). H1, H2 and H3 approved by the owner on 2026-10-27.
+// H4 (the label of example symbols) and H5 (skip link) are not part of this block: the example symbols are not approved and the skip link
+// belongs to the second pull request. The entries marked "label" are neutral names of fields that no list has approved yet.
+export const ENTRY_TEXT = {
+  title: "Pares de subclases IPC no observados en patentes españolas", // H1
+  sentence: "Elija una subclase o una sección y vea qué combinaciones no aparecen juntas en el corpus de la OEPM hasta 2025.", // H2
+  howMeasured: "Cómo se ha medido", // H3
+  subclass: "Subclase IPC", // label
+  section: "Sección IPC", // label
+  noSection: "Ninguna", // label
+  submit: "Buscar", // label
 } as const;
