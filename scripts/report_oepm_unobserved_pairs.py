@@ -33,6 +33,10 @@ def check_against_observed(result: dict, observed: dict) -> None:
         "active subclasses differ from the observed-pairs result (identifiers or documents)"
     )
     assert result["counts"]["active"] == len(active)
+    by_year = result["documents_by_year"]
+    assert set(by_year) == set(active) and {k: sum(v.values()) for k, v in by_year.items()} == active, (
+        "documents by year do not add up to the documents of each active subclass"
+    )
     assert result["counts"]["pairs"] == len(active) * (len(active) - 1) // 2
     assert sum(len(v) for v in result["pairs"].values()) == result["counts"]["unobserved"]
     for a, row in result["pairs"].items():
