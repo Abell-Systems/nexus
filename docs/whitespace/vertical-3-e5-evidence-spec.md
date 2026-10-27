@@ -2,6 +2,7 @@
 
 **Status:** Draft specification for review. Documentation only: it implements nothing, decides nothing that belongs to the owner, and does not modify [ADR 0038](../adr/0038-exploratory-white-space-product-track.md) or the [contract](product-vertical-3-contract.md). Where it meets a gap or an ambiguity it says so as an **open decision (D1…)** instead of choosing.
 **Date:** 2026-10-27
+**Update 2026-10-27, after #190 and #191 were merged:** D1–D3 are decided and their wording is in the contract (#190, merge commit `5c80245`); the result on `main` now carries `documents_by_year` and `configuration` (#191, `2ac641f`, SHA-256 `6a269125…482f7`, 2,992,694 bytes). **§2 and §3 below describe the state before those merges**; they are kept as the record of what was missing. What is still open is D4 (the identifier lists, §8) and, with it, the full E5. A partial sheet exists as a local draft (#193) built on this specification and on #192; it does not satisfy E5.
 **Checks:** ADR 0038 E3, E5, E6 · contract §3, §5, §6, §6.1, §8, §9.1 · texts T05, T07, T20–T22 of the texts proposal (#184) · storage options (#183, provisional) · acceptance record (#188)
 **Scope:** What opening a pair must show, which of it the data already carry, which it does not, and the acceptance criteria. Phases C and D of the UX proposal (technical problem, research sheet) are out of scope, and no score, rank or hypothesis generation is part of the sheet.
 
@@ -11,7 +12,7 @@ ADR 0038 E5 (mandatory content of every candidate): the documents (identifiers a
 
 Contract §5 turns it into: both symbols; documents per subclass up to 2025 and by publication year; documents with both (0 by definition); the expected count and its terms (the per-year contributions); the corpus identity, the SHA-256 of the result and the configuration identifier; the limits of §3; and the activity evidence of each subclass, the **full list** of its publication identifiers with dates, loaded on demand (§9.1: the 20-identifier reading is withdrawn; a shorter list is an ADR amendment, not an interface choice). M4 (manual) requires that the evidence be enough to **recompute the expected count by hand for one pair**.
 
-## 2. Element by element: what exists today
+## 2. Element by element: what exists today (state before #190 and #191; see the update at the top)
 
 Checked on 2026-10-27 against `docs/whitespace/oepm-unobserved-pairs-results.json` (top-level keys: `origin`, `min_documents`, `e_min`, `quantity`, `formula`, `decimals`, `documents_per_year`, `active`, `counts`, `pairs`, `corpus`).
 
@@ -31,7 +32,7 @@ Checked on 2026-10-27 against `docs/whitespace/oepm-unobserved-pairs-results.jso
 | «Absence is not an opportunity» sentence | ADR E5 | Yes: T05 (allowlisted, verbatim) | To be shown on the sheet. |
 | **Full list of publication identifiers and dates per active subclass** | ADR E5; contract §5, §6, §9.1 | **No.** Not generated, not stored, not served | Everything: generation under O4, store, delivery, manifest (see §5 and #183). |
 
-## 3. Open decisions that block the specification
+## 3. Open decisions that blocked the specification (D1–D3 resolved in #190; D4 open)
 
 * **D1. How the terms are shown.** The contract says the browser «filters and sorts; it computes no metric» (§3) and M4 requires enough evidence to recompute the expected count by hand. Two readings: (a) the sheet receives, per subclass, the counts by year, and the browser **displays the per-year products** n_i(y)·n_j(y)/N(y) as arithmetic on verified inputs, with a visible check that their sum equals the stored expected count; (b) the per-year terms are precomputed for every pair and shipped. (b) is large (about 149,000 unobserved pairs times the years in which both have documents). (a) is small, but is arithmetic in the browser, which the contract's wording could be read to forbid. Which reading is allowed is a contract interpretation for the owner; it is not decided here. If (a) is chosen and the displayed sum differs from the stored value, the sheet must say so and not show a number as if it agreed.
 * **D2. Authority File hash.** Add it to the unobserved-pairs result or show it from the exposure result. Either way the sheet shows what the data record, and not more. §7 notes that the unobserved-pairs result does not read the Authority File.
@@ -71,7 +72,7 @@ It does not choose among D1–D4, does not approve T22, does not generate or sto
 
 ## 7. Proposal for D1–D3, with recommendation (for the owner's decision)
 
-**Update 2026-10-27:** the owner accepted D1(a), D2(b) and D3(a) on conditions that are carried into the contract wording proposed in #190 (a draft, not merged); this section is kept as the record of the options and the measurements. Each item gives the options, what was measured, and a recommendation. Measurements were made on 2026-10-27 with a scratch script (not committed) over the hash-verified corpus and the committed result.
+**Update 2026-10-27:** the owner accepted D1(a), D2(b) and D3(a) on conditions that are carried into the contract wording merged in #190 (`5c80245`); this section is kept as the record of the options and the measurements. Each item gives the options, what was measured, and a recommendation. Measurements were made on 2026-10-27 with a scratch script (not committed) over the hash-verified corpus and the committed result.
 
 ### Measurements
 
