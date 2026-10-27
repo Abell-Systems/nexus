@@ -1,8 +1,10 @@
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { UnobservedPairsSection } from "../../src/main/components/WhiteSpace/UnobservedPairsSection";
 import { TEXT, UNOBSERVED_TEXT as T } from "../../src/main/domain/whitespace";
+import { whitespaceData } from "../../src/main/infrastructure/whitespaceData";
 import { UNOBSERVED_PAIRS_URL, resetUnobservedPairsCache } from "../../src/main/infrastructure/unobservedPairsLoader";
 
 // The real versioned file, so the manifest hash of provenance.json is exercised end to end.
@@ -165,6 +167,38 @@ describe("forbidden formulations", () => {
     touch();
     await pick("G06N");
     const headers = screen.getAllByRole("columnheader").map((h) => h.textContent);
-    expect(headers).toEqual([T.columns.a, T.columns.b, T.columns.docsA, T.columns.docsB, T.columns.expected]);
+    expect(headers).toEqual([T.columns.a, T.columns.b, T.columns.docsA, T.columns.docsB, T.columns.expected, "Ficha del par"]);
+  });
+});
+
+describe("evidence sheet opened from the list", () => {
+  it("shouldOpenTheSheetOfARowKeepTheListAndReturnFocusToTheRowWhenClosed", async () => {
+    vi.stubGlobal("fetch", serve(file));
+    render(<UnobservedPairsSection />);
+    touch();
+    await pick("G06N");
+    const list = screen.getByRole("table");
+    const rowsOf = () => within(list).getAllByRole("row").slice(1);
+    const rowsBefore = rowsOf().length;
+    const first = within(rowsOf()[0]).getByRole("button", { name: /Ver la evidencia del par/ });
+    fireEvent.click(first);
+    const sheet = screen.getByRole("region", { name: /^Evidencia del par / });
+    expect(document.activeElement).toBe(sheet);
+    expect(rowsOf().length).toBe(rowsBefore);
+    fireEvent.click(within(sheet).getByRole("button", { name: "Cerrar la ficha" }));
+    expect(screen.queryByRole("region", { name: /^Evidencia del par / })).toBeNull();
+    await waitFor(() => expect(document.activeElement).toBe(first));
+  });
+
+  it("shouldShowTheSha256TheBundleVerifiedAndNotAnyOtherWhenTheSheetIsOpen", async () => {
+    vi.stubGlobal("fetch", serve(file));
+    render(<UnobservedPairsSection />);
+    touch();
+    await pick("G06N");
+    fireEvent.click(within(bodyRows()[0]).getByRole("button", { name: /Ver la evidencia del par/ }));
+    const sheet = screen.getByRole("region", { name: /^Evidencia del par / });
+    const entry = whitespaceData.provenance.files.find((f) => f.file === "oepm-unobserved-pairs-results.json");
+    expect(entry?.sha256).toBe(createHash("sha256").update(file).digest("hex"));
+    expect(within(sheet).getByText(entry!.sha256)).toBeTruthy();
   });
 });

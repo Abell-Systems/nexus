@@ -51,3 +51,10 @@
 .matches button, .table button { font: inherit; font-size: 14px; padding: 4px 10px; border: 1px solid var(--color-border); border-radius: 6px; background: var(--color-surface); cursor: pointer; }
 .matches button[aria-pressed="true"] { border-color: var(--color-purple); font-weight: 700; }
 .detail { margin: 18px 0; padding: 14px; border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-surface); }
+.seriesB { fill: #6b7b93; }
+.gap { fill: none; stroke: var(--color-muted); stroke-width: 1; stroke-dasharray: 3 3; }
+.detail h4 { margin: 22px 0 6px; font-size: 16px; }
+.detail details { margin: 10px 0; }
+.detail dl { margin: 8px 0; }
+.detail dt { margin-top: 8px; font-weight: 700; font-size: 14px; }
+.detail dd { margin: 2px 0 0; overflow-wrap: anywhere; }

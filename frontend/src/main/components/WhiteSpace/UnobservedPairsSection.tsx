@@ -1,8 +1,10 @@
 import { useId, useState } from "react";
 import { listPairs, searchSymbols, sectionsOf, type PairSort, type PairType } from "../../application/unobservedPairs";
 import { TEXT, UNOBSERVED_TEXT as T, type UnobservedPairsResults } from "../../domain/whitespace";
-import { loadUnobservedPairs } from "../../infrastructure/unobservedPairsLoader";
+import { UNOBSERVED_PAIRS_URL, loadUnobservedPairs, manifest } from "../../infrastructure/unobservedPairsLoader";
+import { whitespaceData } from "../../infrastructure/whitespaceData";
 import { IntegrityError } from "../../infrastructure/verifiedLoader";
+import { PairEvidenceSheet } from "./PairEvidenceSheet";
 import styles from "./WhiteSpacePage.module.css";
 
 const MAX_MATCHES = 12;
@@ -21,6 +23,7 @@ export function UnobservedPairsSection() {
   const [type, setType] = useState<PairType>("all");
   const [sort, setSort] = useState<PairSort>("symbol");
   const [shown, setShown] = useState(PAGE);
+  const [open, setOpen] = useState<{ a: string; b: string } | null>(null);
   const ids = { search: useId(), section: useId(), type: useId(), sort: useId() };
 
   // The file is fetched at the first touch of a control, never when the page opens; no pair is drawn until a subclass or a section is chosen.
@@ -39,7 +42,15 @@ export function UnobservedPairsSection() {
   const matches = data ? searchSymbols(data, query) : [];
   const rows = data ? listPairs(data, { symbol, section, type, sort }) : [];
   const chosen = Boolean(data && (symbol || section));
-  const reset = () => setShown(PAGE);
+  const reset = () => {
+    setShown(PAGE);
+    setOpen(null);
+  };
+  const closeSheet = () => {
+    const trigger = open && document.getElementById(`pair-${open.a}-${open.b}`);
+    setOpen(null);
+    if (trigger) setTimeout(() => trigger.focus());
+  };
 
   return (
     <section id="pares-no-observados" className={styles.section} aria-labelledby="pares-no-observados-titulo">
@@ -103,6 +114,9 @@ export function UnobservedPairsSection() {
       {(load.state === "idle" || (data && !chosen)) && <p>{T.start}</p>}
       {chosen && sort === "expected" && <p className={styles.note} role="note">{T.expectedSortNotice}</p>}
       {chosen && rows.length === 0 && <p>{symbol && !section && type === "all" ? T.noPairsForSubclass : T.none}</p>}
+      {data && open && (
+        <PairEvidenceSheet data={data} a={open.a} b={open.b} resultSha256={manifest[UNOBSERVED_PAIRS_URL] ?? ""} authorityFile={whitespaceData.exposure.authority_file} onClose={closeSheet} />
+      )}
       {chosen && rows.length > 0 && (
         <>
           <p role="status">Mostrando {count.format(Math.min(shown, rows.length))} de {count.format(rows.length)} pares.</p>
@@ -115,6 +129,7 @@ export function UnobservedPairsSection() {
                   <th scope="col">{T.columns.docsA}</th>
                   <th scope="col">{T.columns.docsB}</th>
                   <th scope="col">{T.columns.expected}</th>
+                  <th scope="col"><span className={styles.sr}>Ficha del par</span></th>
                 </tr>
               </thead>
               <tbody>
@@ -125,6 +140,11 @@ export function UnobservedPairsSection() {
                     <td>{count.format(row.docsA)}</td>
                     <td>{count.format(row.docsB)}</td>
                     <td>{oneDecimal.format(row.expected)}</td>
+                    <td>
+                      <button type="button" id={`pair-${row.a}-${row.b}`} onClick={() => setOpen({ a: row.a, b: row.b })} aria-label={`Ver la evidencia del par ${row.a} y ${row.b}`}>
+                        Ver evidencia
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
