@@ -86,4 +86,4 @@ Decided by the owner on 2026-10-26, on the review's recommendation:
 * **Not approved:** T22, until E5 and the availability of the identifier lists are resolved. Their status does not change here.
 * **Excluded from this view:** T23. The closed list of exceptions is not extended.
 
-This is not the approval of the pull request and does not authorise exposure: the completeness gate, the access record, M1–M7 and the visual review still apply, and the screen is not started.
+This is not the approval of the pull request and does not authorise exposure: the completeness gate, the access record, M1–M7 and the visual review still apply, and the list screen is merged only as an intermediate increment (#187), not exposed.
