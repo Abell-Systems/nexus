@@ -4,6 +4,7 @@ import { TEXT } from "../../domain/whitespace";
 import { BrandHeader } from "../shared/BrandHeader";
 import { CoverageSection } from "./CoverageSection";
 import { SectionMapSection } from "./SectionMapSection";
+import { UnobservedPairsSection } from "./UnobservedPairsSection";
 import { SubclassExplorerSection } from "./SubclassExplorerSection";
 import { SensitivitySection } from "./SensitivitySection";
 import { TraceabilitySection } from "./TraceabilitySection";
@@ -24,6 +25,7 @@ export function WhiteSpacePage() {
           <a href="#cobertura">Cobertura</a>
           <a href="#mapa">Mapa de co-clasificación</a>
           <a href="#explorador">Explorador de subclases</a>
+          <a href="#pares-no-observados">Pares no observados</a>
           <a href="#sensibilidad">Qué mueve los recuentos</a>
           <a href="#trazabilidad">Trazabilidad</a>
           <a href="#estado">Estado</a>
@@ -42,6 +44,7 @@ export function WhiteSpacePage() {
           <CoverageSection results={exposure} />
           <SectionMapSection density={density} />
           <SubclassExplorerSection />
+          <UnobservedPairsSection />
           <SensitivitySection results={sensitivity} />
           <TraceabilitySection provenance={provenance} corpusIdentity={corpusIdentity} exposure={exposure} />
           <section id="estado" className={styles.status} aria-labelledby="estado-titulo">

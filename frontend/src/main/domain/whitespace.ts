@@ -128,3 +128,33 @@ export const EXPLORER_TEXT = {
     "Documentos con ambas: identificadores de publicación cuyos registros fuente llevan las dos subclases, hasta el origen. Primer año visto juntas: el primer año de publicación con una coincidencia. Coincidencias por año: el mismo recuento por año de publicación. Son tres medidas distintas.",
   noScore: "Sin puntuación ni ranking: el orden lo elige quien consulta y se etiqueta con el nombre de la columna.",
 } as const;
+
+// docs/whitespace/oepm-unobserved-pairs-results.json (ADR 0038 E3). Only unobserved pairs are stored: pairs[a][b] with a < b is the expected count.
+export interface UnobservedPairsResults {
+  origin: number;
+  min_documents: number;
+  e_min: number;
+  active: Record<string, number>;
+  pairs: Record<string, Record<string, number>>;
+}
+
+// Texts of docs/whitespace/vertical-3-texts-proposal.md as approved by the owner (T05, T06 and T03 are the allowlisted sentences of the contract section 4).
+export const UNOBSERVED_TEXT = {
+  title: "Pares no observados (exploratorio)",
+  notice: "Exploratorio. Sin validar. Ningún orden mostrado aquí es una predicción. El estudio no ha demostrado que ningún orden prediga nada (ADR 0036).",
+  expectedSortNotice:
+    "Orden por esperado bajo independencia: refleja cuántas coincidencias se esperarían si las dos subclases fueran independientes; no mide probabilidad de aparición ni interés.",
+  parameters:
+    "Parámetros fijados por diseño, no ajustados a los resultados: una subclase es activa con al menos 20 identificadores de publicación; el esperado mínimo para el tipo con esperado ≥ 1 es 1.",
+  limits:
+    "Límites del corpus: faltan las publicaciones de tipo Y de 2000 a 2009 y todo el año 2010; hay huecos menores en 2011–2020. Las traducciones de patentes europeas caen en 2023. Un periodo sin publicaciones en el corpus no se lee como ausencia de actividad. La completitud de 2025 se ha comparado con el inventario de la OEPM (como máximo un 1 % de ausencias por grupo); no es una prueba de integridad absoluta del corpus.",
+  columns: { a: "Subclase A", b: "Subclase B", expected: "Esperado bajo independencia (coincidencias)", docsA: "Documentos de A", docsB: "Documentos de B" },
+  sorts: { symbol: "por símbolo (predeterminado)", docsA: "por documentos de A", docsB: "por documentos de B", expected: "por esperado bajo independencia" },
+  types: { all: "Tipo: todos los pares no observados", expected: "Tipo: no observados con esperado ≥ 1 bajo independencia" },
+  none: "No hay pares que cumplan los filtros seleccionados. Esto no demuestra que no exista actividad tecnológica.",
+  noPairsForSubclass: "Esta subclase no tiene pares no observados con las demás subclases activas del corpus hasta 2025.",
+  start: "Elige una subclase o una sección para empezar. No se muestra ningún par hasta entonces.",
+  loading: "Cargando los datos…",
+  loadError: "No se pudieron cargar los datos. No se muestra ningún resultado. Puede reintentar.",
+  integrityError: "Los datos cargados no superan la comprobación de integridad. No se muestra ningún resultado.",
+} as const;
