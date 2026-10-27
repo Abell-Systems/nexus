@@ -1,6 +1,6 @@
 # Vertical 3, rule E5: where the identifier lists live (options, draft for decision)
 
-**Status:** Draft for review. **The choice is provisional (B, outside Git) and nothing is implemented.** It compares the alternatives against the criteria the review asked for, with the measurements that exist, and records the conditions of the recommended design.
+**Status:** Draft for review. **The choice is provisional (B, outside Git) and nothing is implemented for the lists.** A reading checklist for the OEPM legal notice, which the choice waits for, is in `oepm-legal-notice-reading-checklist.md` (same branch); the reader has not been named, and the format, order, integrity and loading requirements recommended for the lists are in the E5 evidence specification (#189, §8). It compares the alternatives against the criteria the review asked for, with the measurements that exist, and records the conditions of the recommended design.
 **Date:** 2026-10-26
 **Checks:** [vertical 3 contract](product-vertical-3-contract.md) §5, §6, §9.1 · [ADR 0038](../adr/0038-exploratory-white-space-product-track.md) E5, E7, E8 · [gate 5](../operations/adr-0037-gate5-licences-and-retention.md) §3, G4
 **Scope:** E5 requires, for each active subclass, the publication identifiers and dates of the documents that make it active, loaded on demand when the evidence of a pair is opened. This document decides nothing about the screen, the Spanish terms, or exposure.
@@ -25,7 +25,7 @@ An earlier estimate by source record gave 37.2 MB and 1,287,829 incidences; the 
 * The corpus (793 MB, account-protected download, git-ignored) is **not on the Lenovo and not in CI**. Nothing at deployment can regenerate the lists from the corpus.
 * The static staging image is built from a checkout of this repository on the host (`compose up --build`) and serves a read-only filesystem. Files reach the container by being in the build context, or by a mount.
 * The workload contract (infrastructure repository, rule 7) confines workload data to `/srv/apps`, `/srv/config` and `/srv/secrets` and forbids mounting `/mnt/data`, the Docker socket and system paths. A bind mount of a new data directory is a change to the contract, not a free choice.
-* The repository already versions derived OEPM results with attribution: the subclass pairs (6.2 MB) and the unobserved pairs (2.8 MB). Identifiers and dates are OEPM facts, not derived scores.
+* The repository already versions derived OEPM results with attribution: the subclass pairs (6.2 MB) and the unobserved pairs (2.8 MB when this document was written; 2,992,694 bytes since #191 added the per-year counts and the configuration). Identifiers and dates are OEPM facts, not derived scores.
 * Gate 5 (§3) records that the OEPM legal notice allows reuse, including commercial, **on conditions** (cite "Origen de los datos: Oficina Española de Patentes y Marcas", do not distort the information, state the last update), and that its full text has to be read by a person (pending, §8.3 there). So no option here is cleared by gate 5 yet; the conditions apply to every one of them equally, in or out of Git.
 * The history of the public repository is not rewritten (decision on record). A file committed stays in history.
 
