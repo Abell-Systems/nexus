@@ -34,9 +34,9 @@
 | GET with `cache: 'no-store'`, status exactly 200, `arrayBuffer()`, `JSON.parse` only after equality, `response.json()` never used | Implemented, tested (#186) | 18 tests including a spy on `JSON.parse`. |
 | Body-read failure is a load error (T18); mismatch, missing entry, missing hash, missing or undefined manifest, hash failure are integrity errors (T19) | Implemented, tested | #186. |
 | Pure-JS SHA-256 without a new dependency, not relying on `crypto.subtle` | Implemented, tested | Written from FIPS 180-4, origin stated in the file header. Dependency absence: **inspected by the assistant** (no change in `package.json`); the contract asks the review to check it. |
-| SHA-256 vectors required by §8: empty, «abc», 55/56/64/119 bytes of «a», the NIST 56-byte message, one million «a», and an input of at least 2.5 MB against an independent implementation | **Partly tested** | #186 covers empty, «abc», the NIST message and lengths 55, 56, 63, 64, 65, 119, 120, 1000, 100000 against Node `crypto`. **Missing:** one million «a» and the ≥ 2.5 MB comparison. |
-| Test with `crypto.subtle` stubbed as undefined: correct file accepted, one changed byte rejected | **Pending as a unit test** | The loader never calls `crypto.subtle`, but no test stubs it. Covered only by the manual run below. |
-| Negative tests detect removal of the check (delete or skip the comparison and see the tests fail) | **Pending** | Must be recorded in the PR that implements the loader. |
+| SHA-256 vectors required by §8: empty, «abc», 55/56/64/119 bytes of «a», the NIST 56-byte message, one million «a», and an input of at least 2.5 MB against an independent implementation | Tested in #186 (commit `87f98f8`, after this record was first written) | Empty, «abc», the NIST message, 55/56/64/119 bytes of «a» with reference values, one million «a», other lengths against Node `crypto`, and a 2,600,001-byte input against Node `crypto` as the independent implementation. #187 carries the earlier loader commit and does not have these tests yet. |
+| Test with `crypto.subtle` stubbed as undefined: correct file accepted, one changed byte rejected | Tested in #186 (`87f98f8`) | A correct file is accepted and one changed byte rejected with `crypto.subtle` undefined, plus the manual run below. |
+| Negative tests detect removal of the check (delete or skip the comparison and see the tests fail) | Run once and recorded in a comment of #186 (not independent) | Skipping the comparison makes 4 tests fail; moving `JSON.parse` before the comparison makes 3 fail. The loader was restored afterwards. |
 | Screen: on rejection no pair, count or list in the DOM; integrity text and load-error text are different and never shown together | Implemented, tested (#187) | |
 | «Each of the states T15 to T19 and the empty result renders a different text» | **Partly** | T14, T18, T19, T12, T13, T08 exist (T13 and T14 untested). T15, T16, T17 do not (no signal for not published or blocked). |
 | No service worker or application cache | Inspected (assistant): no `serviceWorker` in `frontend/src`; **not tested** | Review must repeat the inspection. |
@@ -95,7 +95,22 @@
 | Authorisation to lift the nginx block | Not given. #182 keeps the data answering `404` in the static image; T18 in that case was **run by the assistant** on 2026-10-27 (page 200, data 404, T18 with a working retry button, no table). |
 | Deployment to staging | Not authorised. |
 
-## 7. What this record concludes
+## 7. UX evolution: product proposals, not obligations
+
+The view above is the first instrument of a longer path. The path is a **product proposal**; it does not change the contract or ADR 0038, and the identifiers below do not replace theirs.
+
+| Phase | What the user does | Status |
+|---|---|---|
+| A. Discover and explore | Reads the notice, searches or filters, understands the default order and the optional expected-count order, and tells apart absent pairs, empty filters, a failed load and an integrity failure | A1–A3 implemented in #187, human validation pending (see §4, §6) |
+| B. Understand a combination | Opens a pair and sees what it is, which data support it, which corpus and configuration were used, and what cannot be concluded | **Required by E5 and contract §5**; pending |
+| C. Link the combination to a technical problem | Describes a problem, what each subclass could contribute, and contrasts the idea with existing documents | Proposal; not specified; needs search capability and sources not defined |
+| D. Document and prioritise research | Saves a research sheet (combination, problem, hypothesis, searches, uncertainties); any prioritisation uses explicit criteria agreed with users | Proposal; not specified |
+
+Constraints that hold in every phase: an observed absence does not show that the technology does not exist, that there is an opportunity, or that a patent would be novel or inventive. No score of «potential» and no ranking of opportunities (ADR 0038 E4). If a later phase needs a score, new labels, another way of ordering or an inference the contract does not allow, it is a product and scientific-governance decision taken explicitly, not a change made to fit a design. Success of a first version would be measured by whether a person can explain a pair, find its evidence, state a technical hypothesis and say what to check before proposing a patent, observed in usability sessions; no predictive performance is measured on the study's reserved origins (ADR 0038 E7).
+
+Phases C and D are not added to #187. They need their own specification (user needs, data sources, scientific risks, acceptance criteria).
+
+## 8. What this record concludes
 
 * **Implemented, tested and run locally:** search, filters, default order, optional expected-count sort with its notice, the integrity check in an insecure context, T18 and T19 behaviour.
 * **Not conforming to E5:** the evidence panel, the identifier lists and T22 do not exist. #187 can be accepted only as an intermediate increment documented as such, or after those requirements are met. Nothing here relaxes E5.
