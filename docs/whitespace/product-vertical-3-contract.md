@@ -56,7 +56,7 @@ Opening a pair shows (the rules for the per-year terms follow this paragraph): b
 3. Years not observed (2010 included) are omitted, never shown with a count of zero.
 4. **One criterion, no tolerance.** Each term is the product of the two integer counts divided by N(y); the terms are summed in ascending order of year; the sum is rounded to the nine stored decimals and compared with the stored value. If the two are equal the pair is concordant. Otherwise the sheet **shows a discrepancy**: the stored value is never corrected or replaced, and the sheet does not present the pair as consistent. There is no additional margin: a difference of one unit in the last decimal is a discrepancy.
 5. Nothing computed on the sheet feeds a filter, a sort, a new metric or any label. No score of opportunity exists.
-6. The invariant «reconstructed sum agrees with the stored value» is verified for **every unobserved pair** of the result by the pull request that produces the data, not by a sample.
+6. The invariant «the reconstructed sum is concordant with the stored value» is verified for **every unobserved pair** of the result by the pull request that produces the data, not by a sample, **using exactly the procedure of item 4 as the browser applies it** (the same operations, order and rounding), so that the criterion is tested where it is used. If any pair is a discrepancy, the procedure is reviewed before the data are accepted; a tolerance is not added to hide it.
 
 ## 6. Data
 
