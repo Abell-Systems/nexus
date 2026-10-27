@@ -95,6 +95,14 @@ def test_shouldChangeTheIdWhenAParameterChanges():
     assert configuration(2025, 20, 1.5)["id"] != base
 
 
+def test_shouldListTheSamePairsWhateverTheEMinBecauseTheReaderAppliesTheThreshold():
+    low = unobserved_pairs(corpus(), 2002, min_documents=2, e_min=1.0)
+    high = unobserved_pairs(corpus(), 2002, min_documents=2, e_min=5.0)
+    assert low["pairs"] == high["pairs"]
+    assert low["e_min"] != high["e_min"]
+    assert low["configuration"]["id"] != high["configuration"]["id"]  # the declared configuration differs, the pairs do not
+
+
 def test_shouldNotDependOnTheOrderOfTheKeysWhenComputingTheId():
     parameters = configuration(2025, 20, 1.0)["parameters"]
     assert configuration_id(dict(reversed(list(parameters.items())))) == configuration_id(parameters)

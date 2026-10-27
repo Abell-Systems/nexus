@@ -38,7 +38,12 @@ def configuration_id(parameters: dict[str, Any]) -> str:
 
 
 def configuration(origin: int, min_documents: int, e_min: float) -> dict[str, Any]:
-    """The parameters that change what the generation computes or how the result is read; not the code that ran."""
+    """The declared configuration: the parameters that change what the generation computes or how the result is read; not the code that ran.
+
+    ``e_min`` is a reading parameter: ``pairs`` lists every unobserved pair whatever its value, and the reader applies the threshold
+    (type A with expected count >= ``e_min``). It is in the identifier because the identifier names the configuration the result is
+    offered under (vertical 3 contract, section 6), not because it changes ``pairs``.
+    """
     parameters = {
         "schema": SCHEMA,
         "origin": origin,
