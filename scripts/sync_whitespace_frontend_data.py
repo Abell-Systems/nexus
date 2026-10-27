@@ -7,7 +7,7 @@ ADR 0021, so this step is a Python script).
 
   python scripts/sync_whitespace_frontend_data.py [--target frontend/src/main/infrastructure/data] [--public-target frontend/public/data]
 
-The subclass pairs (6 MB) are not bundled: they are copied under `public/` and fetched on demand as a static file.
+The subclass pairs (6 MB) and the unobserved pairs (2.8 MB) are not bundled: they are copied under `public/` and fetched on demand as static files.
 """
 
 import argparse
@@ -44,6 +44,11 @@ ON_DEMAND_SOURCES = [
         "source": "docs/whitespace/oepm-subclass-pairs-results.json",
         "producedBy": "scripts/report_oepm_subclass_pairs.py",
         "pullRequest": 150,
+    },
+    {
+        "source": "docs/whitespace/oepm-unobserved-pairs-results.json",
+        "producedBy": "scripts/report_oepm_unobserved_pairs.py",
+        "pullRequest": 180,
     },
 ]
 

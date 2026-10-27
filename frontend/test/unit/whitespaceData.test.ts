@@ -40,4 +40,12 @@ describe("the white-space data shipped with the frontend", () => {
     expect(entry?.served).toBe("on_demand");
     expect(readdirSync(data)).not.toContain("oepm-subclass-pairs-results.json");
   });
+
+  it("shouldServeTheUnobservedPairsResultOnDemandAndNotBundleItWhenTheFrontendIsBuilt", () => {
+    const entry = provenance.files.find((f) => f.file === "oepm-unobserved-pairs-results.json");
+    expect(entry?.served).toBe("on_demand");
+    expect(entry?.source).toBe("docs/whitespace/oepm-unobserved-pairs-results.json");
+    expect(readdirSync(data)).not.toContain("oepm-unobserved-pairs-results.json");
+    expect(readdirSync(publicData)).toContain("oepm-unobserved-pairs-results.json");
+  });
 });
