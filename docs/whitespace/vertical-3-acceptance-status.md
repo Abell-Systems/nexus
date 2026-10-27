@@ -65,7 +65,7 @@
 | States T08, T12, T18, T19 | Merged, tested | |
 | States T13 (subclass without unobserved pairs) and T14 (loading) | Merged, **no test** | |
 | States T15, T16, T17 | **Pending, not covered** (owner, 2026-10-27) | No code and no tests. No signal exists for «not published» or «blocked by the completeness gate». A `404` is a load error (T18) and is not relabelled. They belong to the exposure work. |
-| Open a pair (§2.6) and the evidence (§5): per-year terms, corpus identity, hashes, configuration identifier, limits | **Pending on `main`**; a partial sheet exists as a **local draft** (#193, not merged, not E5) | The data (`documents_by_year`, `configuration`) and the arithmetic function are merged (#191). The draft shows the symbols, the activity by year on a common scale with 2010 as a gap, the per-year terms with the sum next to the stored value, the traceability and the limits; it has 125 passing frontend tests at its last HEAD and was looked at only locally, by the assistant. Specification in #189, experience in #192 (drafts). |
+| Open a pair (§2.6) and the evidence (§5): per-year terms, corpus identity, hashes, configuration identifier, limits | **Pending on `main`**; a partial sheet exists as a **local draft** (#193, not merged, not E5) | The data (`documents_by_year`, `configuration`) and the arithmetic function are merged (#191). The draft shows the symbols, the activity by year on a common scale with 2010 as a gap, the per-year terms with the sum next to the stored value, the traceability and the limits; 125 frontend tests passed in the assistant's own local run at its last HEAD (not an independent check and not acceptance of E5), and it was looked at only locally, by the assistant. Specification in #189, experience in #192 (drafts). |
 | Full list of publication identifiers and dates per subclass, on demand (E5) | **Pending** | Not generated, not stored, not served. Requirements recommended in #189 §8; storage options in #183 (draft); the owner's choice is provisional and conditional on a person reading the OEPM legal notice. |
 | T20, T21, T22 | T20 titles and T21 are used by the draft sheet (#193); **T22 pending** | T22 depends on D4. The draft uses S4, which stands in for T22 and is **not approved**, so #193 cannot be merged until T22 and S4 are decided in #184. |
 | S1, S2, S3, S5 (texts of the evidence sheet) | Approved by the owner on 2026-10-27 (review of #192), subject to the forbidden-words check and M3 | S4 not approved. Approval of a text is not acceptance of an implementation. |
@@ -128,10 +128,11 @@ Phases C and D need their own specification (user needs, data sources, scientifi
 
 | PR | Subject | State | Merge commit |
 |---|---|---|---|
-| #177, #178 | Contract and ADR 0038 accepted | Merged | — |
-| #179 | Expected count (E3) | Merged | — |
-| #180 | Unobserved pairs result | Merged | — |
-| #181 | Completeness gate | Merged | — |
+| #177 | Contract (approved) | Merged | `dac1660` |
+| #178 | ADR 0038 accepted | Merged | `bd843d5` |
+| #179 | Expected count (E3) | Merged | `ea916ba` |
+| #180 | Unobserved pairs result | Merged | `c6301db` |
+| #181 | Completeness gate | Merged | `92fbd2a` |
 | #185 | Contract §6.1 (integrity at load) | Merged | `4c88ecf` |
 | #190 | Contract amendment D1–D3 | Merged | `5c80245` |
 | #191 | Result with documents by year and configuration; presentation function | Merged | `2ac641f` |
@@ -144,3 +145,4 @@ Phases C and D need their own specification (user needs, data sources, scientifi
 | #188 | This record, first version | Merged | `9f7ca6d` |
 | #192 | Experience proposal for the evidence sheet | Open, draft | — |
 | #193 | Partial evidence sheet, local prototype (not E5, not for exposure; blocked by S4/T22) | Open, draft | — |
+| #194 | This update of the record | Open, draft when written; its state is in the pull request, not in this table | — |
