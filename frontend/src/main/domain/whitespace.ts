@@ -134,8 +134,12 @@ export interface UnobservedPairsResults {
   origin: number;
   min_documents: number;
   e_min: number;
+  configuration: { id: string; parameters: Record<string, string | number> };
+  documents_per_year: Record<string, number>;
   active: Record<string, number>;
+  documents_by_year: Record<string, Record<string, number>>;
   pairs: Record<string, Record<string, number>>;
+  corpus: { source_id: string; files: Record<string, string> };
 }
 
 // Texts of docs/whitespace/vertical-3-texts-proposal.md as approved by the owner (T05, T06 and T03 are the allowlisted sentences of the contract section 4).
@@ -157,4 +161,26 @@ export const UNOBSERVED_TEXT = {
   loading: "Cargando los datos…",
   loadError: "No se pudieron cargar los datos. No se muestra ningún resultado. Puede reintentar.",
   integrityError: "Los datos cargados no superan la comprobación de integridad. No se muestra ningún resultado.",
+} as const;
+
+// Texts of the evidence sheet. Approved by the owner on 2026-10-27 (proposal of docs/whitespace/vertical-3-sheet-ux-proposal.md, #192): S1, S2, S3, S5;
+// T20 (titles) and T21 as in docs/whitespace/vertical-3-texts-proposal.md. S4 is NOT approved (it stands in for T22, which is not): this prototype
+// cannot be merged until it is. The entries marked "label" are neutral names of blocks that no list has approved yet.
+export const SHEET_TEXT = {
+  title: "Evidencia del par", // T20
+  documents: "Documentos de cada subclase hasta 2025", // T20
+  termsTitle: "Términos del esperado por año", // T20
+  identityTitle: "Identidad del corpus (SHA-256 de sus ficheros, registrada en el resultado) y del resultado (SHA-256)", // T20
+  bothZero: "Documentos observados con ambas subclases: 0", // T21
+  definition: "El esperado bajo independencia es la suma, año a año, de documentos de A × documentos de B ÷ documentos del año.", // S1
+  concordant: "La suma reconstruida coincide con el valor almacenado.", // S2
+  discrepancy: "La suma reconstruida no coincide con el valor almacenado: se muestra la diferencia.", // S2
+  gap: "Sin publicaciones en el corpus este año.", // S3
+  listsUnavailable: "Las listas de identificadores de las subclases aún no están disponibles en esta vista.", // S4, NOT approved
+  beforeInterpreting:
+    "Antes de interpretar: ¿el periodo y el tipo de documento cubren lo que busca? ¿Los símbolos se usan igual en otras fuentes? ¿Qué documentos hay en cada subclase?", // S5
+  activityTitle: "Actividad por año", // label
+  listsTitle: "Identificadores y fechas de los documentos", // label
+  limitsTitle: "Límites y cautelas", // label
+  close: "Cerrar la ficha", // label
 } as const;
