@@ -1,6 +1,6 @@
 # Frontend: proposal to make the entry page a tool people want to use (draft)
 
-**Status:** Draft proposal for review. Documentation only: it changes no code, no contract and no ADR, approves no text, and shows no candidate to anyone. Every contract change it would need is named as such and is **not** made here. All Spanish wording is a proposal.
+**Status:** Draft proposal for review. **Decisions of the owner's review, 2026-10-27:** option **A approved as the design direction** (not the texts, not the implementation); **B parked** (reconsidered only if the evaluation of A finds a problem that the current contract cannot solve; changing the role of `/` needs an explicit contract decision); **C out of scope** (no merging of the two searches without its own contract proposal); the **limits and parameters stay visible** next to each list (no fold by default) until the reading of «beside the list» is documented and decided; **H1–H5 and the example symbols are not approved**, to be approved separately after reviewing their literal versions in context; the first implementation pull request is **option A alone**, the quick wins go in a **second** one with their own tests. This document stays a draft and authorises no code. Documentation only: it changes no code, no contract and no ADR, approves no text, and shows no candidate to anyone. Every contract change it would need is named as such and is **not** made here. All Spanish wording is a proposal.
 **Date:** 2026-10-27
 **Checks:** [vertical 1 contract](product-vertical-1-contract.md) §1–§2 · [vertical 2 contract](product-vertical-2-contract.md) · [vertical 3 contract](product-vertical-3-contract.md) §2–§4 · [sheet experience proposal](vertical-3-sheet-ux-proposal.md) · [acceptance record](vertical-3-acceptance-status.md)
 **Scope:** The entry page of the frontend (`/`) and the way its sections lead to the search of unobserved pairs. The matcher (`/matches`) is out of scope except for one note (§7).
@@ -34,7 +34,7 @@ Measured on `main` at `c683b6e`, running locally at 1280 px and 390 px, plus a r
 | **B. Two pages** | `/` becomes the tool (search, then the evidence sheet); the study moves to its own address (for example `/estudio`) with the six parts intact and linked from the tool. | Vertical 1: where the front page lives. | Medium | The product feels like a product; the study stays complete. |
 | **C. Full reorder and merged search** | One search flow (observed and unobserved pairs) on one page, with the study as secondary content. | Verticals 1, 2 and 3. | Large | Best experience, highest risk of contradicting the contracts. |
 
-**Recommendation: A now, then B after it has been evaluated with people.** A changes no contract, can be built and judged in one small pull request, and tells us whether the first-screen action is what is missing. B follows only if A is not enough, and it needs the owner's decision on vertical 1. C is not proposed until the first two have been evaluated.
+**Decision (2026-10-27): A approved as direction; B parked; C out of scope.** The recommendation was: A now, then B after it has been evaluated with people. A changes no contract, can be built and judged in one small pull request, and tells us whether the first-screen action is what is missing. B follows only if A is not enough, and it needs the owner's decision on vertical 1. C is not proposed until the first two have been evaluated.
 
 ## 4. What option A looks like (wireframe, not a final design)
 
@@ -57,7 +57,7 @@ Measured on `main` at `c683b6e`, running locally at 1280 px and 390 px, plus a r
 
 Design rules for the block and for the pairs section:
 
-* **Search first, caution beside it.** Controls on one row where they fit (search, section, type, order), the notice visible above the list, and the limits and fixed parameters in the same section as an open-by-default block that the person may fold. Folded or not, they stay on the page and next to the list.
+* **Search first, caution beside it.** Controls on one row where they fit (search, section, type, order), the notice visible above the list, and the limits and fixed parameters **visible** next to the list, as they are now. Any fold, even open by default, waits for the reading of «beside the list» to be documented and decided; this pull request does not decide it.
 * **Initial state with a way in.** Clickable example symbols (neutral: chosen for being common, not for their results; the choice of examples is reviewed against «no recommendation») instead of a single line of text.
 * **One link style** (brand purple, underlined), **one focus style** (the 3 px purple ring the matcher already defines), form controls with the brand's radius and borders.
 * The two searches stay **distinct and named by what they answer**: «Pares observados de una subclase» (vertical 2) and «Pares no observados» (vertical 3), each pointing to the other. Merging them is option C.
@@ -76,7 +76,7 @@ These can go in the same pull request as option A or in a separate one; none tou
 
 ## 6. Texts this proposal would need
 
-All are proposals and need the owner's approval and the forbidden-words check of the vertical 3 contract before use:
+All are proposals and need the owner's approval, text by text, after reviewing their literal versions in context. **Forbidden-words check of 2026-10-27** (the closed list of the vertical 3 contract §4, as whole terms, without case or accents, singular and plural; an ad hoc script, not the test that will guard the screen): none of H1–H5 contains a listed word. That is a necessary check, not the approval, and says nothing about whether the wording suggests a recommendation, which only the review of the text in context can settle.
 
 | Id | Where | Text | Note |
 |---|---|---|---|
@@ -96,8 +96,6 @@ Matcher note: `/matches` could not be audited with data (it needs the API and th
 
 ## 8. Decisions needed
 
-* **Option:** A first (recommended), B later, or another route. B and C each need a contract decision that is not taken here.
-* **«Beside the list» (vertical 3 §4):** may the limits and parameters be an open-by-default fold in the same section, or must they stay unfolded text?
-* **Texts H1–H5** and the choice of example symbols.
-* **Scope of the first pull request:** option A alone, or A plus the quick wins of §5.
-* **Evaluation:** who runs it, and after which panel decision (E7). Open and not decided here.
+* **Decided on 2026-10-27:** option A as direction; B parked; C out of scope; limits and parameters stay visible; first pull request is option A alone and the quick wins of §5 go in a second one, each with its own tests (keyboard and phone for the skip link, focus, text size and touch targets; the real error states for the matcher's retry; a print check that the limits, the provenance and the cautions are not hidden).
+* **Still open:** the texts H1–H5 and the example symbols, approved separately and in context (a symbol must have an unambiguous meaning and suggest no classification, score or recommendation the system does not produce; no text may present an unobserved pair as an opportunity, a novelty or a conclusion on patentability; the explanation «Cómo se ha medido» must be reachable without hiding the methodological limits); the reading of «beside the list» if a fold is ever wanted; and who runs the evaluation and after which panel decision (E7).
+* **Next step:** review the literal H1–H5 and the wireframe of §4 before authorising the implementation of the first pull request.
