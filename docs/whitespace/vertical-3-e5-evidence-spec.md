@@ -34,7 +34,7 @@ Checked on 2026-10-27 against `docs/whitespace/oepm-unobserved-pairs-results.jso
 ## 3. Open decisions that block the specification
 
 * **D1. How the terms are shown.** The contract says the browser «filters and sorts; it computes no metric» (§3) and M4 requires enough evidence to recompute the expected count by hand. Two readings: (a) the sheet receives, per subclass, the counts by year, and the browser **displays the per-year products** n_i(y)·n_j(y)/N(y) as arithmetic on verified inputs, with a visible check that their sum equals the stored expected count; (b) the per-year terms are precomputed for every pair and shipped. (b) is large (about 149,000 unobserved pairs times the years in which both have documents). (a) is small, but is arithmetic in the browser, which the contract's wording could be read to forbid. Which reading is allowed is a contract interpretation for the owner; it is not decided here. If (a) is chosen and the displayed sum differs from the stored value, the sheet must say so and not show a number as if it agreed.
-* **D2. Authority File hash.** Add it to the unobserved-pairs result (a new version of the result, regenerated and re-hashed) or show it from the exposure result. Either way the sheet shows what the data record, and not more.
+* **D2. Authority File hash.** Add it to the unobserved-pairs result or show it from the exposure result. Either way the sheet shows what the data record, and not more. §7 notes that the unobserved-pairs result does not read the Authority File.
 * **D3. What the «identifier of the configuration» is.** ADR 0038 names it but does not define it. Candidates, to choose among: the parameters themselves in a canonical form (`origin`, `min_documents`, `e_min`, the formula name); a hash of those parameters plus the generating script's path; the generating commit. None is chosen here, and the sheet must not invent one.
 * **D4. Where the identifier lists live and how they reach the image.** Provisional in #183 (outside Git, verified fetch, fail closed), conditional on a person reading the OEPM legal notice; three points open (store location, delivery to the read-only image, regeneration). The sheet depends on this; this specification does not resolve it.
 
@@ -68,3 +68,47 @@ Checked on 2026-10-27 against `docs/whitespace/oepm-unobserved-pairs-results.jso
 ## 6. What this specification does not do
 
 It does not choose among D1–D4, does not approve T22, does not generate or store any list, does not touch the nginx barrier, and does not make #187 conforming to E5. #187 stays an intermediate increment until the criteria above are met or the owner amends E5 through an ADR.
+
+## 7. Proposal for D1–D3, with recommendation (for the owner's decision)
+
+Nothing in this section is decided. Each item gives the options, what was measured, and a recommendation. Measurements were made on 2026-10-27 with a scratch script (not committed) over the hash-verified corpus and the committed result.
+
+### Measurements
+
+* The per-subclass, per-year counts of the 621 active subclasses (O4 union, as `activity_counts(records, "union")` gives them) are **14,922 entries, 154,693 bytes as compact JSON, 35,648 bytes at zlib level 6**. Their per-subclass sums equal the `active` totals of the result.
+* The corpus has **25 years with documents; 2010 is absent** from `documents_per_year`, so it can never appear as a zero term.
+* For a sample (every pair whose first symbol is among the first 40 first-symbols of the result), the sum over years of n_i(y)·n_j(y)/N(y), rounded to 9 decimals, equals the stored expected count with **a maximum difference of 0**. For A01B and A01J it is 0.554177296 in both, with 25 non-zero terms. This shows the stored value can be reproduced from the per-year counts; it does not prove it for all 149,048 pairs.
+* Precomputing the terms of every pair would mean up to 149,048 × 25 ≈ 3.7 million numbers. Not built or measured; at several bytes each it is tens of MB.
+* The generating script and function read **only the bibliographic files**. The Authority File is not an input of the unobserved-pairs result (read in `report_oepm_unobserved_pairs.py` and `unobserved_pairs.py`). It is the inventory used by the 2025 completeness comparison.
+
+### D1. How the terms are shown
+
+| Option | What it is | Assessment |
+|---|---|---|
+| (a) Counts by year, terms displayed by the browser | The result gains the per-subclass per-year counts. The sheet multiplies and divides for display and shows that the sum equals the stored value | Small (about 0.15 MB, 36 KB compressed). Satisfies §5 (terms visible) and M4 (recomputable by hand). Needs the contract to say what «computes no metric» covers |
+| (b) Precomputed terms per pair | Shipped with the result | Tens of MB, unmeasured; adds data nobody sorts or filters by |
+| (c) Counts and N(y) only; the person computes | No terms shown | Does not satisfy §5 literally («its terms (the per-year contributions)») |
+
+**Recommendation: (a)**, with these limits. The stored expected count remains the only value used to list, filter, sort and label. The per-year products are display arithmetic on verified inputs, never fed back into any order or filter. The sheet shows the sum next to the stored value; if they differ at the stored 9 decimals, it shows the discrepancy and not a number that looks consistent. **This needs a clarification of contract §3**, by the usual amendment process and not by the interface. Proposed wording, for review: «The browser filters and sorts the stored expected count and computes no other metric for listing, filtering, sorting or labelling. On the evidence sheet it may display the per-year contributions of a pair as arithmetic on the verified counts of the result, together with their sum compared with the stored value.»
+
+### D2. Authority File hash
+
+The contract (§6) says the Authority File hash is recorded «like the other results». For this result that sentence presupposes an input it does not have. Options: (a) add the hash to the result anyway; (b) show the Authority File identity on the sheet from the exposure result, as the inventory of the 2025 completeness comparison; (c) leave it out and correct §6.
+
+**Recommendation: (b), plus a one-line correction of §6.** Adding the hash to a result that does not read the file (a) would claim a dependency that does not exist, which is the kind of provenance claim we avoid. The sheet's limits line already says the completeness is compared against the OEPM inventory; showing the inventory's name and SHA-256 there, taken from the exposure result and not from this one, is accurate. The §6 correction would read: «The corpus identity hashes are recorded in the result; the Authority File identity is recorded in the exposure result and shown with the completeness comparison.»
+
+### D3. Identifier of the configuration
+
+ADR 0038 names it and does not define it. What the ADR fixes in E1 as configuration is: the reference year, the minimum documents of an active subclass, the minimum expected count of the second type, plus the unit (O4) and the quantity (E3).
+
+| Option | Identifier | Assessment |
+|---|---|---|
+| (a) Parameters in canonical form | A SHA-256 of the canonical JSON of `{schema, origin, min_documents, e_min, unit, quantity, decimals}`, shown with those parameters in words | Deterministic, readable, independent of Git. Does not identify the code |
+| (b) (a) plus the script | Hash over the parameters and the bytes of the generating script | Identifies the code, but changes on any reformatting and mixes two things |
+| (c) Generating commit | The commit that produced the result | Self-referential: the result is committed after it is generated, so the commit cannot be known inside it |
+
+**Recommendation: (a), recorded in the result as `configuration: { id, parameters }`.** The code version is already identified by the result's own SHA-256 together with the tests that regenerate and compare it (contract §6), so the configuration id need not carry it. The sheet shows the id (a short prefix is acceptable if the full value is available) and the parameters in words. This is an interpretation of an undefined term; the owner confirms it or chooses another.
+
+### How the three fit together
+
+If the owner accepts the recommendations, D1 and D3 need **one regeneration** of the result (a new version with `documents_by_year` and `configuration`), one update of `provenance.json` and one frontend copy, in a single data pull request. D2 needs no data change. Order of work: (1) a documentation pull request with the contract clarifications (§3 wording for D1, §6 wording for D2) and the owner's decision on D3; (2) the data pull request, with invariants (per-subclass yearly sums equal `active`; 2010 absent; sum of terms equals the stored value, tested on a hand-computed fixture and on a sample of the real result; the new keys are covered by the hash test); (3) the sheet, over the verified loader. D4 (the lists) stays separate and does not block (1) or (2).
