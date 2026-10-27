@@ -2,7 +2,7 @@
 
 **Status:** Draft proposal for review. It changes no contract, no ADR and no code, approves no text, and shows no candidate to anyone. All Spanish wording below is a **proposal**; the texts of the screen need the owner's approval like the others (#184).
 **Date:** 2026-10-27
-**Checks:** [vertical 3 contract](product-vertical-3-contract.md) §3–§5, §8 · [E5 evidence specification](vertical-3-e5-evidence-spec.md) (#189) · [acceptance record](vertical-3-acceptance-status.md) · ADR 0038 E4–E7
+**Checks:** [vertical 3 contract](product-vertical-3-contract.md) §3–§5, §8 · the E5 evidence specification (`vertical-3-e5-evidence-spec.md`, draft in #189, not on `main`) · [acceptance record](vertical-3-acceptance-status.md) · ADR 0038 E4–E7
 **Scope:** How the sheet that opens from a row of the list should read and look, built on the data and rules that exist. It is the design basis for a **local** prototype of a *partial* sheet (no identifier lists, so it does not satisfy E5). Nothing here exposes anything; the nginx barrier stays.
 
 ## 1. The question the sheet answers
