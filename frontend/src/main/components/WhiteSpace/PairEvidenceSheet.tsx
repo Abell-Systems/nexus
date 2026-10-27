@@ -1,10 +1,15 @@
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { buildEvidence, type YearPoint } from "../../application/pairEvidence";
 import { SHEET_TEXT as T, TEXT, UNOBSERVED_TEXT, type UnobservedPairsResults } from "../../domain/whitespace";
 import styles from "./WhiteSpacePage.module.css";
 
 const count = new Intl.NumberFormat("es-ES");
 const nine = new Intl.NumberFormat("es-ES", { minimumFractionDigits: 9, maximumFractionDigits: 9 });
+// Presentation only: the terms are shown shortened by default; the sum and the stored value always carry the nine stored decimals,
+// and the concordance is decided on the full values (expectedTerms.ts), never on what is displayed.
+const four = new Intl.NumberFormat("es-ES", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+const SERIES_A = "#2f5d8a";
+const SERIES_B = "#6b7b93";
 
 const WIDTH = 560;
 const HEIGHT = 150;
@@ -63,6 +68,7 @@ function ActivityChart({ symbol, points, pick, max, tone }: { symbol: string; po
 
 export function PairEvidenceSheet({ data, a, b, resultSha256, authorityFile, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null);
+  const [fullPrecision, setFullPrecision] = useState(false);
   const evidence = buildEvidence(data, a, b);
   useEffect(() => ref.current?.focus(), [a, b]);
   if (!evidence) return null;
@@ -75,11 +81,14 @@ export function PairEvidenceSheet({ data, a, b, resultSha256, authorityFile, onC
 
       <h4>{T.documents}</h4>
       <p>
-        {a}: {count.format(evidence.documentsA)} documentos · {b}: {count.format(evidence.documentsB)} documentos. {T.bothZero}.
+        {a}: {count.format(evidence.documentsA)} documentos · {b}: {count.format(evidence.documentsB)} documentos.
       </p>
-      <p className={styles.note}>{TEXT.absenceIsNotOpportunity}</p>
 
       <h4>{T.activityTitle}</h4>
+      <p className={styles.legend}>
+        <span><i className={styles.swatch} style={{ background: SERIES_A }} />{a}</span>
+        <span><i className={styles.swatch} style={{ background: SERIES_B }} />{b}</span>
+      </p>
       <p className={styles.note}>{a}</p>
       <ActivityChart symbol={a} points={years} pick={(p) => p.countA} max={evidence.maxCount} tone={styles.present} />
       <p className={styles.note}>{b}</p>
@@ -116,43 +125,17 @@ export function PairEvidenceSheet({ data, a, b, resultSha256, authorityFile, onC
         </div>
       </details>
 
+      <p>{T.bothZero}.</p>
+      <p className={styles.note}>{TEXT.absenceIsNotOpportunity}</p>
+
       <h4>{T.termsTitle}</h4>
       <p>{T.definition}</p>
-      <div className={styles.scroll}>
-        <table className={styles.table}>
-          <caption>{T.termsTitle}</caption>
-          <thead>
-            <tr>
-              <th scope="col">Año</th>
-              <th scope="col">{UNOBSERVED_TEXT.columns.docsA}</th>
-              <th scope="col">{UNOBSERVED_TEXT.columns.docsB}</th>
-              <th scope="col">Documentos del año</th>
-              <th scope="col">Término</th>
-            </tr>
-          </thead>
-          <tbody>
-            {r.terms.map((t) => (
-              <tr key={t.year}>
-                <th scope="row">{t.year}</th>
-                <td>{count.format(t.countA)}</td>
-                <td>{count.format(t.countB)}</td>
-                <td>{count.format(t.total)}</td>
-                <td>{nine.format(t.term)}</td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr>
-              <th scope="row" colSpan={4}>Suma reconstruida</th>
-              <td>{nine.format(r.rounded)}</td>
-            </tr>
-            <tr>
-              <th scope="row" colSpan={4}>{UNOBSERVED_TEXT.columns.expected}, valor almacenado</th>
-              <td>{nine.format(evidence.stored)}</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+      <dl>
+        <dt>Suma reconstruida</dt>
+        <dd>{nine.format(r.rounded)}</dd>
+        <dt>{UNOBSERVED_TEXT.columns.expected}, valor almacenado</dt>
+        <dd>{nine.format(evidence.stored)}</dd>
+      </dl>
       {r.concordant ? (
         <p role="status">{T.concordant}</p>
       ) : (
@@ -160,9 +143,40 @@ export function PairEvidenceSheet({ data, a, b, resultSha256, authorityFile, onC
           {T.discrepancy} Diferencia: {nine.format(r.rounded - evidence.stored)}.
         </p>
       )}
-
-      <h4>{T.listsTitle}</h4>
-      <p>{T.listsUnavailable}</p>
+      <details>
+        <summary>Tabla de los términos por año</summary>
+        <p className={styles.note}>
+          {fullPrecision ? "Términos con 9 decimales." : "Términos con 4 decimales para leerlos; la suma reconstruida se calcula con los valores completos."}{" "}
+          <button type="button" aria-pressed={fullPrecision} onClick={() => setFullPrecision(!fullPrecision)}>
+            Mostrar precisión completa
+          </button>
+        </p>
+        <div className={styles.scroll}>
+          <table className={styles.table}>
+            <caption>{T.termsTitle}</caption>
+            <thead>
+              <tr>
+                <th scope="col">Año</th>
+                <th scope="col">{UNOBSERVED_TEXT.columns.docsA}</th>
+                <th scope="col">{UNOBSERVED_TEXT.columns.docsB}</th>
+                <th scope="col">Documentos del año</th>
+                <th scope="col">Término</th>
+              </tr>
+            </thead>
+            <tbody>
+              {r.terms.map((t) => (
+                <tr key={t.year}>
+                  <th scope="row">{t.year}</th>
+                  <td>{count.format(t.countA)}</td>
+                  <td>{count.format(t.countB)}</td>
+                  <td>{count.format(t.total)}</td>
+                  <td>{(fullPrecision ? nine : four).format(t.term)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </details>
 
       <h4>{T.identityTitle}</h4>
       <dl>
@@ -205,6 +219,9 @@ export function PairEvidenceSheet({ data, a, b, resultSha256, authorityFile, onC
         </div>
       </details>
       <p className={styles.note}>{TEXT.attribution}. {TEXT.downloadDate}</p>
+
+      <h4>{T.listsTitle}</h4>
+      <p>{T.listsUnavailable}</p>
 
       <h4>{T.limitsTitle}</h4>
       <p className={styles.note}>{UNOBSERVED_TEXT.limits}</p>

@@ -29,16 +29,33 @@ describe("PairEvidenceSheet", () => {
     for (const title of [T.documents, T.termsTitle, T.identityTitle]) expect(screen.getByRole("heading", { name: title })).toBeTruthy();
   });
 
-  it("shouldListTheTermsOfTheObservedYearsAndTheirSumNextToTheStoredValueWhenConcordant", () => {
+  it("shouldShowTheSumNextToTheStoredValueAndFoldTheTermsTableWhenConcordant", () => {
     open();
     const expected = reconstructExpected(data.documents_by_year[A], data.documents_by_year[B], data.documents_per_year, data.pairs[A][B]);
     const table = screen.getByRole("table", { name: T.termsTitle });
-    const rows = within(table).getAllByRole("row");
-    // header + one row per term + two rows of the footer
-    expect(rows.length).toBe(1 + expected.terms.length + 2);
-    expect(within(table).getAllByText("0,554177296", { selector: "td" })).toHaveLength(2); // the reconstructed sum and the stored value
+    const folded = table.closest("details")!;
+    expect(folded.hasAttribute("open")).toBe(false);
+    expect(within(folded).getByText("Tabla de los términos por año", { selector: "summary" })).toBeTruthy();
+    expect(within(table).getAllByRole("row").length).toBe(1 + expected.terms.length);
+    // the sum and the stored value stay visible outside the folded table, with the nine stored decimals
+    expect(screen.getAllByText("0,554177296", { selector: "dd" })).toHaveLength(2);
     expect(screen.getByRole("status").textContent).toBe(T.concordant);
     expect(screen.queryByRole("alert")).toBeNull();
+  });
+
+  it("shouldShowTheTermsWithFourDecimalsByDefaultAndWithNineWhenFullPrecisionIsAsked", () => {
+    open();
+    const table = screen.getByRole("table", { name: T.termsTitle });
+    const firstTerm = () => within(within(table).getAllByRole("row")[1]).getAllByRole("cell").at(-1)!.textContent;
+    expect(firstTerm()).toBe("0,0255");
+    const toggle = screen.getByRole("button", { name: "Mostrar precisión completa" });
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute("aria-pressed")).toBe("true");
+    expect(firstTerm()).toBe("0,025518175");
+    // presentation only: the sum, the stored value and the verdict do not change with the precision of the terms
+    expect(screen.getAllByText("0,554177296", { selector: "dd" })).toHaveLength(2);
+    expect(screen.getByRole("status").textContent).toBe(T.concordant);
   });
 
   it("shouldShowTheDiscrepancyAndKeepTheStoredValueWhenTheStoredValueDiffersByOneUnitOfTheLastDecimal", () => {
@@ -47,8 +64,8 @@ describe("PairEvidenceSheet", () => {
     open(altered);
     expect(screen.getByRole("alert").textContent).toContain(T.discrepancy);
     expect(screen.queryByText(T.concordant)).toBeNull();
-    const table = screen.getByRole("table", { name: T.termsTitle });
-    expect(within(table).getByText("0,554177297", { selector: "td" })).toBeTruthy(); // the stored value is shown as it is, not corrected
+    expect(screen.getByText("0,554177297", { selector: "dd" })).toBeTruthy(); // the stored value is shown as it is, not corrected
+    expect(screen.getByText("0,554177296", { selector: "dd" })).toBeTruthy(); // and the reconstructed sum beside it
   });
 
   it("shouldMarkTheYearWithoutPublicationsAsAGapAndNeverAsAZero", () => {
@@ -71,6 +88,35 @@ describe("PairEvidenceSheet", () => {
     const largest = Math.max(...Object.values(data.documents_by_year[A]), ...Object.values(data.documents_by_year[B]));
     expect(maxima).toEqual([largest, largest]);
     for (const chart of charts) expect(chart.getAttribute("role")).toBe("img");
+  });
+
+  it("shouldReadTheActivityBeforeTheZeroBothTextAndTheAbsenceSentence", () => {
+    const { container } = open();
+    const charts = container.querySelectorAll("svg[data-max]");
+    const lastChart = charts[charts.length - 1];
+    const zero = screen.getByText(`${T.bothZero}.`);
+    const absence = screen.getByText(TEXT.absenceIsNotOpportunity);
+    const follows = (x: Node, y: Node) => Boolean(x.compareDocumentPosition(y) & Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(follows(lastChart, zero)).toBe(true);
+    expect(follows(zero, absence)).toBe(true);
+    expect(follows(absence, screen.getByRole("heading", { name: T.termsTitle }))).toBe(true);
+  });
+
+  it("shouldIdentifyEachSubclassWithALegendAndACaptionOverItsChart", () => {
+    const { container } = open();
+    const legend = container.querySelector("p[class*='legend']")!;
+    expect(legend.textContent).toBe(`${A}${B}`);
+    const captions = [...container.querySelectorAll("p[class*='note']")].map((p) => p.textContent);
+    expect(captions).toContain(A);
+    expect(captions).toContain(B);
+  });
+
+  it("shouldFoldTheCorpusHashesByDefaultWithoutHidingTheConfigurationOrTheResultHash", () => {
+    open();
+    const files = screen.getByRole("table", { name: "Ficheros del corpus" }).closest("details")!;
+    expect(files.hasAttribute("open")).toBe(false);
+    expect(files.contains(screen.getByText(SHA))).toBe(false);
+    expect(files.contains(screen.getByText(data.configuration.id))).toBe(false);
   });
 
   it("shouldOfferTheActivityDataAsATableForKeyboardAndScreenReaderUsers", () => {
