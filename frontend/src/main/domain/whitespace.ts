@@ -156,6 +156,8 @@ export const UNOBSERVED_TEXT = {
   start: "Elige una subclase o una sección para empezar. No se muestra ningún par hasta entonces.",
   loading: "Cargando los datos…",
   loadError: "No se pudieron cargar los datos. No se muestra ningún resultado. Puede reintentar.",
+  // Approved by the owner on 2026-10-27 (proposal of the accessibility review of #197); {text} is what the person typed, shown between guillemets.
+  noMatch: (text: string) => `Ninguna subclase activa coincide con «${text.length > 40 ? `${text.slice(0, 40)}…` : text}».`, // a long text is cut to 40 characters for the line; React escapes it
   integrityError: "Los datos cargados no superan la comprobación de integridad. No se muestra ningún resultado.",
 } as const;
 

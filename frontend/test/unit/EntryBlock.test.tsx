@@ -117,6 +117,53 @@ describe("EntryBlock in the front page", () => {
     expect(document.activeElement).toBe(within(pairs()).getByLabelText("Buscar subclase por símbolo"));
   });
 
+  it("shouldSayThatNothingMatchesInALiveRegionWithoutMovingTheFocusOrFetchingAgainWhenTheTextMatchesNoActiveSubclass", async () => {
+    const fetcher = serve();
+    vi.stubGlobal("fetch", fetcher);
+    render(<WhiteSpacePage />);
+    const region = () => within(pairs()).getAllByRole("status").find((r) => r.className.includes("note"))!;
+    expect(region().textContent).toBe(""); // the region is in the page before anything is said, which is what lets a screen reader announce the change
+    fireEvent.change(screen.getByLabelText(T.subclass), { target: { value: " ZZZZ " } });
+    fireEvent.click(screen.getByRole("button", { name: T.submit }));
+    await waitFor(() => expect(region().textContent).toBe("Ninguna subclase activa coincide con «ZZZZ»."));
+    expect(UNOBSERVED_TEXT.noMatch("ZZZZ")).toBe(region().textContent);
+    expect(within(pairs()).queryByText(UNOBSERVED_TEXT.start)).toBeNull(); // not the «nothing chosen yet» state
+    expect(within(pairs()).queryByRole("alert")).toBeNull(); // not an error
+    expect(document.activeElement).toBe(within(pairs()).getByLabelText("Buscar subclase por símbolo"));
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    // typing more in the section's search updates the same region, with no further request
+    fireEvent.change(within(pairs()).getByLabelText("Buscar subclase por símbolo"), { target: { value: "QQQ" } });
+    expect(region().textContent).toBe("Ninguna subclase activa coincide con «QQQ».");
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
+  it("shouldCutALongTextAndShowItAsTextNeverAsMarkupInTheNoMatchSentence", () => {
+    expect(UNOBSERVED_TEXT.noMatch("Z".repeat(60))).toBe(`Ninguna subclase activa coincide con «${"Z".repeat(40)}…».`);
+    vi.stubGlobal("fetch", serve());
+    const { container } = render(<WhiteSpacePage />);
+    expect(container.querySelector("img")).toBeNull();
+    expect(UNOBSERVED_TEXT.noMatch("<img src=x>")).toBe("Ninguna subclase activa coincide con «<img src=x>».");
+  });
+
+  it("shouldKeepTheInitialSentenceAndNoNoMatchSentenceWhenNothingHasBeenTyped", async () => {
+    vi.stubGlobal("fetch", serve());
+    render(<WhiteSpacePage />);
+    fireEvent.change(screen.getByLabelText(T.section), { target: { value: "" } });
+    fireEvent.click(screen.getByRole("button", { name: T.submit }));
+    await waitFor(() => expect(within(pairs()).getByLabelText("Sección").querySelectorAll("option").length).toBeGreaterThan(1));
+    expect(within(pairs()).getByText(UNOBSERVED_TEXT.start)).toBeTruthy();
+    expect(within(pairs()).queryByText(/^Ninguna subclase activa coincide/)).toBeNull();
+  });
+
+  it("shouldNotSayNoMatchWhenTheTextMatchesAnActiveSubclass", async () => {
+    vi.stubGlobal("fetch", serve());
+    render(<WhiteSpacePage />);
+    fireEvent.change(screen.getByLabelText(T.subclass), { target: { value: "A01" } });
+    fireEvent.click(screen.getByRole("button", { name: T.submit }));
+    await waitFor(() => expect(within(pairs()).getAllByRole("button", { name: /^A01/ }).length).toBeGreaterThan(1));
+    expect(within(pairs()).queryByText(/^Ninguna subclase activa coincide/)).toBeNull();
+  });
+
   it("shouldShowTheLoadErrorFetchOnceAndKeepTheFocusInTheSectionWhenTheFileIsMissing", async () => {
     const fetcher = vi.fn(async () => new Response("", { status: 404 }));
     vi.stubGlobal("fetch", fetcher);

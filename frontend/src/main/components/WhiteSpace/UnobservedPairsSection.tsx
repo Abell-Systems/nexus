@@ -48,6 +48,10 @@ export function UnobservedPairsSection({ request = null }: { request?: PairsRequ
   const matches = data ? searchSymbols(data, query) : [];
   const rows = data ? listPairs(data, { symbol, section, type, sort }) : [];
   const chosen = Boolean(data && (symbol || section));
+  // «No match» is its own state: verified data are in, something was typed, no active subclass contains it and none is selected.
+  // It is neither the initial state (nothing chosen yet) nor an error. Its sentence goes into a live region that is always in the page,
+  // so that the change is announced without moving the focus and without a new request.
+  const noMatchText = data && !symbol && query.trim() && matches.length === 0 ? T.noMatch(query.trim()) : "";
   const reset = () => setShown(PAGE);
 
   // A request from the entry block: take its symbol and section, fetch if nothing has been fetched yet, and move the focus to the search.
@@ -128,7 +132,8 @@ export function UnobservedPairsSection({ request = null }: { request?: PairsRequ
         </ul>
       )}
 
-      {(load.state === "idle" || (data && !chosen)) && <p>{T.start}</p>}
+      <p role="status" className={styles.note}>{noMatchText}</p>
+      {(load.state === "idle" || (data && !chosen)) && !noMatchText && <p>{T.start}</p>}
       {chosen && sort === "expected" && <p className={styles.note} role="note">{T.expectedSortNotice}</p>}
       {chosen && rows.length === 0 && <p>{symbol && !section && type === "all" ? T.noPairsForSubclass : T.none}</p>}
       {chosen && rows.length > 0 && (
