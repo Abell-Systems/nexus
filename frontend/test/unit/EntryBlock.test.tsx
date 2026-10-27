@@ -123,26 +123,45 @@ describe("EntryBlock in the front page", () => {
     render(<WhiteSpacePage />);
     const region = () => within(pairs()).getAllByRole("status").find((r) => r.className.includes("note"))!;
     expect(region().textContent).toBe(""); // the region is in the page before anything is said, which is what lets a screen reader announce the change
-    fireEvent.change(screen.getByLabelText(T.subclass), { target: { value: " ZZZZ " } });
+    fireEvent.change(screen.getByLabelText(T.subclass), { target: { value: " Z99 " } });
     fireEvent.click(screen.getByRole("button", { name: T.submit }));
-    await waitFor(() => expect(region().textContent).toBe("Ninguna subclase activa coincide con «ZZZZ»."));
-    expect(UNOBSERVED_TEXT.noMatch("ZZZZ")).toBe(region().textContent);
+    await waitFor(() => expect(region().textContent).toBe("Ninguna subclase activa coincide con «Z99»."));
+    expect(UNOBSERVED_TEXT.noMatch("Z99")).toBe(region().textContent);
     expect(within(pairs()).queryByText(UNOBSERVED_TEXT.start)).toBeNull(); // not the «nothing chosen yet» state
     expect(within(pairs()).queryByRole("alert")).toBeNull(); // not an error
     expect(document.activeElement).toBe(within(pairs()).getByLabelText("Buscar subclase por símbolo"));
     expect(fetcher).toHaveBeenCalledTimes(1);
     // typing more in the section's search updates the same region, with no further request
-    fireEvent.change(within(pairs()).getByLabelText("Buscar subclase por símbolo"), { target: { value: "QQQ" } });
-    expect(region().textContent).toBe("Ninguna subclase activa coincide con «QQQ».");
+    fireEvent.change(within(pairs()).getByLabelText("Buscar subclase por símbolo"), { target: { value: "Q9" } });
+    expect(region().textContent).toBe("Ninguna subclase activa coincide con «Q9».");
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
 
-  it("shouldCutALongTextAndShowItAsTextNeverAsMarkupInTheNoMatchSentence", () => {
-    expect(UNOBSERVED_TEXT.noMatch("Z".repeat(60))).toBe(`Ninguna subclase activa coincide con «${"Z".repeat(40)}…».`);
+  const FIXED = "Ninguna subclase activa coincide con el texto escrito.";
+
+  it("shouldRepeatOnlyTextWithTheShapeOfAnIpcSymbolOrOfAPrefixOfOne", () => {
+    for (const ok of ["A", "z", "G0", "G06", "g06n", "Z99"]) expect(UNOBSERVED_TEXT.noMatch(ok), ok).toBe(`Ninguna subclase activa coincide con «${ok}».`);
+    for (const other of ["ZZZZ", "G06NX", "G6N", "G 06", "<img src=x>", "Z".repeat(60), "", "é", "1", "A01B02"]) expect(UNOBSERVED_TEXT.noMatch(other), other).toBe(FIXED);
+  });
+
+  it("shouldNeverRepeatAListedWordInTheNoMatchSentenceWhateverTheCaseOrTheSurroundingText", async () => {
+    const WORDS = ["oportunidad", "hueco prometedor", "potencial", "atractivo", "recomendado", "mejor", "top", "ranking", "puntuación", "probabilidad", "p-valor", "significativo", "white space", "innovación", "euro", "dólar", "precio", "mercado", "ventas", "ingresos", "rentabilidad", "inversión", "negocio", "comercial", "€", "$", "top 10", "oportunidades", "Mejor"];
+    const forms = WORDS.flatMap((w) => [w, w.toUpperCase(), w[0].toUpperCase() + w.slice(1), `A01 ${w}`, `${w} A01`, `«${w}»`, `<b>${w}</b>`, `A${w}`]);
     vi.stubGlobal("fetch", serve());
-    const { container } = render(<WhiteSpacePage />);
-    expect(container.querySelector("img")).toBeNull();
-    expect(UNOBSERVED_TEXT.noMatch("<img src=x>")).toBe("Ninguna subclase activa coincide con «<img src=x>».");
+    render(<WhiteSpacePage />);
+    const region = () => within(pairs()).getAllByRole("status").find((r) => r.className.includes("note"))!;
+    fireEvent.change(screen.getByLabelText(T.subclass), { target: { value: "Z99" } });
+    fireEvent.click(screen.getByRole("button", { name: T.submit }));
+    await waitFor(() => expect(region().textContent).toBe("Ninguna subclase activa coincide con «Z99»."));
+    const search = within(pairs()).getByLabelText("Buscar subclase por símbolo");
+    for (const typed of forms) {
+      fireEvent.change(search, { target: { value: typed } });
+      const needle = typed.trim().toLowerCase();
+      const page = (document.body.textContent ?? "").toLowerCase();
+      expect(region().textContent, typed).toBe(FIXED);
+      expect(page, typed).not.toContain(`«${needle}»`);
+      expect(region().innerHTML, typed).not.toMatch(/<(?!\/?p\b)/); // nothing but text inside the region
+    }
   });
 
   it("shouldKeepTheInitialSentenceAndNoNoMatchSentenceWhenNothingHasBeenTyped", async () => {

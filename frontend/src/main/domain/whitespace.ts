@@ -139,6 +139,8 @@ export interface UnobservedPairsResults {
 }
 
 // Texts of docs/whitespace/vertical-3-texts-proposal.md as approved by the owner (T05, T06 and T03 are the allowlisted sentences of the contract section 4).
+const SYMBOL_SHAPE = /^[A-Z](\d(\d[A-Z]?)?)?$/i;
+
 export const UNOBSERVED_TEXT = {
   title: "Pares no observados (exploratorio)",
   notice: "Exploratorio. Sin validar. Ningún orden mostrado aquí es una predicción. El estudio no ha demostrado que ningún orden prediga nada (ADR 0036).",
@@ -156,8 +158,10 @@ export const UNOBSERVED_TEXT = {
   start: "Elige una subclase o una sección para empezar. No se muestra ningún par hasta entonces.",
   loading: "Cargando los datos…",
   loadError: "No se pudieron cargar los datos. No se muestra ningún resultado. Puede reintentar.",
-  // Approved by the owner on 2026-10-27 (proposal of the accessibility review of #197); {text} is what the person typed, shown between guillemets.
-  noMatch: (text: string) => `Ninguna subclase activa coincide con «${text.length > 40 ? `${text.slice(0, 40)}…` : text}».`, // a long text is cut to 40 characters for the line; React escapes it
+  // Sentence approved by the owner on 2026-10-27; the fixed variant was approved with option (b) the same day. What the person typed is repeated only
+  // when it has the shape of an IPC symbol or of a prefix of one (letter, two digits, letter; the shape every active symbol of the result has), which no
+  // word of the closed list of forbidden formulations (contract §4) can have. Anything else gets the fixed sentence and is never repeated on the page.
+  noMatch: (text: string) => (SYMBOL_SHAPE.test(text) ? `Ninguna subclase activa coincide con «${text}».` : "Ninguna subclase activa coincide con el texto escrito."),
   integrityError: "Los datos cargados no superan la comprobación de integridad. No se muestra ningún resultado.",
 } as const;
 
