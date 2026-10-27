@@ -154,8 +154,11 @@ describe("EntryBlock in the front page", () => {
     fireEvent.click(screen.getByRole("button", { name: T.submit }));
     await waitFor(() => expect(region().textContent).toBe("Ninguna subclase activa coincide con «Z99»."));
     const search = within(pairs()).getByLabelText("Buscar subclase por símbolo");
+    fireEvent.change(search, { target: { value: "ZZZZ" } });
+    const baseline = document.body.textContent; // rendered page for an input that is not repeated; any other typed text must leave it identical
     for (const typed of forms) {
       fireEvent.change(search, { target: { value: typed } });
+      expect(document.body.textContent, typed).toBe(baseline);
       const needle = typed.trim().toLowerCase();
       const page = (document.body.textContent ?? "").toLowerCase();
       expect(region().textContent, typed).toBe(FIXED);
