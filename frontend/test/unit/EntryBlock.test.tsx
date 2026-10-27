@@ -104,6 +104,51 @@ describe("EntryBlock in the front page", () => {
     expect((within(pairs()).getByLabelText("Sección") as HTMLSelectElement).value).toBe("H");
   });
 
+  it("shouldFetchOnceAndKeepTheFocusInTheSectionWhenNothingMatchesTheText", async () => {
+    const fetcher = serve();
+    vi.stubGlobal("fetch", fetcher);
+    render(<WhiteSpacePage />);
+    fireEvent.change(screen.getByLabelText(T.subclass), { target: { value: "ZZZZ" } });
+    fireEvent.click(screen.getByRole("button", { name: T.submit }));
+    await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(within(pairs()).getByLabelText("Sección").querySelectorAll("option").length).toBeGreaterThan(1));
+    expect(within(pairs()).queryByRole("table")).toBeNull();
+    expect(within(pairs()).queryAllByRole("button", { name: /^ZZZZ/ })).toHaveLength(0);
+    expect(document.activeElement).toBe(within(pairs()).getByLabelText("Buscar subclase por símbolo"));
+  });
+
+  it("shouldShowTheLoadErrorFetchOnceAndKeepTheFocusInTheSectionWhenTheFileIsMissing", async () => {
+    const fetcher = vi.fn(async () => new Response("", { status: 404 }));
+    vi.stubGlobal("fetch", fetcher);
+    render(<WhiteSpacePage />);
+    fireEvent.change(screen.getByLabelText(T.subclass), { target: { value: "A01B" } });
+    fireEvent.click(screen.getByRole("button", { name: T.submit }));
+    expect((await within(pairs()).findByRole("alert")).textContent).toContain(UNOBSERVED_TEXT.loadError);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(within(pairs()).queryByRole("table")).toBeNull();
+    expect(document.activeElement).toBe(within(pairs()).getByLabelText("Buscar subclase por símbolo"));
+  });
+
+  it("shouldShowTheIntegrityErrorAndNoPairWhenAByteOfTheFileIsChanged", async () => {
+    const tampered = file.slice();
+    tampered[tampered.indexOf(0x41)] = 0x42;
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(tampered)));
+    render(<WhiteSpacePage />);
+    fireEvent.change(screen.getByLabelText(T.subclass), { target: { value: "A01B" } });
+    fireEvent.click(screen.getByRole("button", { name: T.submit }));
+    expect((await within(pairs()).findByRole("alert")).textContent).toBe(UNOBSERVED_TEXT.integrityError);
+    expect(within(pairs()).queryByRole("table")).toBeNull();
+  });
+
+  it("shouldNotSelectASymbolTypedWithOnlyPartOfItWhenTheTextIsAPrefixOfAnActiveOne", async () => {
+    vi.stubGlobal("fetch", serve());
+    render(<WhiteSpacePage />);
+    fireEvent.change(screen.getByLabelText(T.subclass), { target: { value: "A01" } });
+    fireEvent.click(screen.getByRole("button", { name: T.submit }));
+    await waitFor(() => expect(within(pairs()).getAllByRole("button", { name: /^A01/ }).length).toBeGreaterThan(1));
+    expect(within(pairs()).queryByRole("table")).toBeNull();
+  });
+
   it("shouldOnlyShowMatchesAndNoTableWhenTheTextIsNotExactlyAnActiveSymbol", async () => {
     vi.stubGlobal("fetch", serve());
     render(<WhiteSpacePage />);
