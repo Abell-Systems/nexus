@@ -1,6 +1,6 @@
 # Vertical 3: proposed Spanish texts (draft for approval)
 
-**Status:** Texts approved by the owner on 2026-10-26, except **T19 and T22, which are not approved**; **T23 is excluded** from this view. This is the approval of the applicable texts only: it does not approve the pull request and does not authorise exposure. Nothing is implemented, and the screen is not started.
+**Status:** Texts approved by the owner on 2026-10-26, and **T19 approved by the owner on 2026-10-27** after the contract amendment (#185, merged as `4c88ecf`) required the browser-side SHA-256 verification; **T22 is not approved**; **T23 is excluded** from this view. This is the approval of the applicable texts only: it does not approve the pull request and does not authorise exposure. Nothing is implemented, and the screen is not started.
 **Date:** 2026-10-26
 **Checks:** [vertical 3 contract](product-vertical-3-contract.md) §3, §4, §8 (M3, M5) · [ADR 0038](../adr/0038-exploratory-white-space-product-track.md) E4, E6
 **Scope:** The texts of the view, by the state of the system they describe, so that an empty result, missing data, a blocked view and an error are not mistaken for each other. Each text says whether it is **new** or an **existing constant**, whether it belongs to the closed allowlist of the contract, and the owner's decision. This is the proposal on which scenario M3 will be run; it does not replace M3.
@@ -60,7 +60,7 @@
 | Id | Text | Origin | Listed words found | Review (recommendation) |
 |---|---|---|---|---|
 | T18 | No se pudieron cargar los datos. No se muestra ningún resultado. Puede reintentar. | new; error de carga | none | Approved: «Puede reintentar» only if a retry action exists. |
-| T19 | Los datos cargados no superan la comprobación de integridad. No se muestra ningún resultado. | new; error de validacion | none | Not approved yet: Depends on the browser verifying the SHA-256 against `provenance.json` before rendering; see §3.1. |
+| T19 | Los datos cargados no superan la comprobación de integridad. No se muestra ningún resultado. | new; error de validacion | none | Approved 2026-10-27. Depends on the browser verifying the SHA-256 against the manifest before rendering, now required by contract §6.1 (#185); the text is shown only in the integrity-error state, whose behaviour is verified by the tests of §8 and scenario M8, none of which has run yet. |
 
 ### Existing text that must not appear on this view as it stands
 
@@ -82,7 +82,8 @@ Decided by the owner on 2026-10-26, on the review's recommendation:
 
 * **Approved:** T01–T06, T08–T11, T13–T15 and T18.
 * **Approved with the editorial changes marked:** T07, T12, T16, T17, T20 and T21. T16, T17 and T18 keep the conditions of use noted in the Decision column. For T10, the rule is approved: «Esperado bajo independencia» in full wherever a label can be read without context, and «Esperado» only after the first visible definition.
-* **Not approved:** T19, until the contract is amended to require the SHA-256 verification in the browser and its tests are defined; T22, until E5 and the availability of the identifier lists are resolved. Their status does not change here.
+* **Approved on 2026-10-27:** T19, after the amendment (#185) was merged. Approving the text does not implement or test the verification.
+* **Not approved:** T22, until E5 and the availability of the identifier lists are resolved. Their status does not change here.
 * **Excluded from this view:** T23. The closed list of exceptions is not extended.
 
 This is not the approval of the pull request and does not authorise exposure: the completeness gate, the access record, M1–M7 and the visual review still apply, and the screen is not started.
