@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { whitespaceData } from "../../infrastructure/whitespaceData";
 import { TEXT } from "../../domain/whitespace";
 import { BrandHeader } from "../shared/BrandHeader";
+import { SkipLink } from "../shared/SkipLink";
 import { CoverageSection } from "./CoverageSection";
 import { EntryBlock } from "./EntryBlock";
 import { SectionMapSection } from "./SectionMapSection";
@@ -25,6 +26,7 @@ export function WhiteSpacePage() {
 
   return (
     <div className={styles.page}>
+      <SkipLink />
       <div className={styles.content}>
         <BrandHeader />
         <nav className={styles.nav} aria-label="Secciones de la página">
@@ -37,7 +39,7 @@ export function WhiteSpacePage() {
           <a href="#trazabilidad">Trazabilidad</a>
           <a href="#estado">Estado</a>
         </nav>
-        <main>
+        <main id="contenido" tabIndex={-1}>
           <section id="resumen" aria-labelledby="resumen-titulo">
             <h1 id="resumen-titulo" className={styles.title}>Cobertura y ausencias del corpus de patentes</h1>
             <p className={styles.lead}>

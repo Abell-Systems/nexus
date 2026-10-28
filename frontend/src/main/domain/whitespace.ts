@@ -168,6 +168,9 @@ export const UNOBSERVED_TEXT = {
 // Entry block of the front page (docs/whitespace/frontend-entry-ux-proposal.md, option A). H1, H2 and H3 approved by the owner on 2026-10-27.
 // H4 (the label of example symbols) and H5 (skip link) are not part of this block: the example symbols are not approved and the skip link
 // belongs to the second pull request. The entries marked "label" are neutral names of fields that no list has approved yet.
+// H5, the skip link. Named by the owner in the scope of the second pull request (2026-10-28); the standard wording of the proposal.
+export const SKIP_TEXT = "Saltar al contenido";
+
 export const ENTRY_TEXT = {
   title: "Pares de subclases IPC no observados en patentes españolas", // H1
   sentence: "Elija una subclase o una sección y vea qué combinaciones no aparecen juntas en el corpus de la OEPM hasta 2025.", // H2

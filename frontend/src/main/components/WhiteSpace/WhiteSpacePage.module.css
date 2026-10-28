@@ -1,7 +1,8 @@
 .page { min-height: 100vh; color: var(--color-text); background: linear-gradient(135deg, #ffffff 0%, #faf6fd 48%, #f5e9fa 100%); }
 .content { max-width: 980px; margin: 0 auto; padding: 20px 16px 72px; }
-.nav { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 14px 0 4px; font-size: 14px; }
-.nav a { color: var(--color-purple); }
+.nav { display: flex; flex-wrap: wrap; gap: 0 18px; margin: 10px 0 4px; font-size: 15px; }
+.nav a { display: inline-flex; align-items: center; min-height: 32px; }
+@media (pointer: coarse) { .nav a { min-height: 44px; } }
 .title { margin: 18px 0 6px; font-size: clamp(26px, 4vw, 38px); line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; }
 .lead { margin: 0; color: var(--color-text-muted); font-size: 17px; line-height: 1.5; max-width: 66ch; }
 .banner { margin: 18px 0; padding: 12px 14px; border-radius: 10px; background: var(--color-warning-surface); color: #5a3d00; border: 1px solid var(--color-warning); font-size: 15px; line-height: 1.5; }
@@ -13,7 +14,7 @@
 .fact strong { display: block; font-size: 24px; line-height: 1.1; }
 .fact span { color: var(--color-text-muted); font-size: 14px; }
 .chart { width: 100%; height: auto; display: block; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 10px; }
-.axis { fill: var(--color-muted); font-size: 11px; }
+.axis { fill: var(--color-muted); font-size: 12px; }
 .gridline { stroke: var(--color-border); stroke-width: 1; }
 .present { fill: #2f5d8a; }
 .absentRest { fill: #d19a3d; }
@@ -29,7 +30,7 @@
 .scroll { overflow-x: auto; }
 .maps { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
 .heat td { text-align: center; font-variant-numeric: tabular-nums; }
-.heat th small { display: block; font-weight: 400; color: var(--color-text-muted); font-size: 11px; }
+.heat th small { display: block; font-weight: 400; color: var(--color-text-muted); font-size: 12px; }
 .l0 { background: rgba(47, 93, 138, 0.04); }
 .l1 { background: rgba(47, 93, 138, 0.16); }
 .l2 { background: rgba(47, 93, 138, 0.30); }
@@ -40,12 +41,12 @@
 .ramp i { display: block; width: 22px; height: 12px; border: 1px solid var(--color-border); }
 .status { margin-top: 38px; padding: 16px; border: 2px dashed var(--color-border); border-radius: 12px; background: var(--color-surface-sunken); }
 .status h2 { margin: 0 0 6px; font-size: 19px; }
-.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; word-break: break-all; }
-.footer { margin-top: 44px; color: var(--color-text-muted); font-size: 13px; line-height: 1.5; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; word-break: break-all; }
+.footer { margin-top: 44px; color: var(--color-text-muted); font-size: 14px; line-height: 1.5; }
 .sr { position: absolute; left: -9999px; }
 .controls { display: flex; flex-wrap: wrap; gap: 10px 16px; margin: 12px 0; }
 .controls div { display: flex; flex-direction: column; gap: 4px; font-size: 14px; min-width: 0; }
-.controls select, .controls input { font: inherit; padding: 6px 8px; border: 1px solid var(--color-border); border-radius: 6px; max-width: 100%; }
+.controls select, .controls input { font: inherit; padding: 6px 8px; border: 1px solid var(--color-border); border-radius: 6px; max-width: 100%; background: var(--color-surface); color: var(--color-text); }
 .note { color: var(--color-text-muted); font-size: 14px; }
 .matches { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; padding: 0; list-style: none; }
 .matches button, .table button { font: inherit; font-size: 14px; padding: 4px 10px; border: 1px solid var(--color-border); border-radius: 6px; background: var(--color-surface); cursor: pointer; }
@@ -56,4 +57,13 @@
 .entry p { line-height: 1.55; max-width: 74ch; }
 .primary { font: inherit; font-weight: 700; padding: 7px 18px; border: 0; border-radius: 8px; background: var(--color-purple); color: #ffffff; cursor: pointer; align-self: flex-end; }
 .entry form { align-items: flex-end; }
-.entry a { color: var(--color-purple); }
+
+/* Print: keep the evidence, the limits, the parameters and the traceability; drop only the navigation and the entry form (the skip link hides itself in index.css).
+   Nothing that carries a caution is hidden (docs/whitespace/frontend-entry-ux-proposal.md §5.7). */
+@media print {
+  .nav, .entry form { display: none; } /* controls and pair buttons stay: they show which filter was applied and which pair a row is */
+  .page { background: #ffffff; }
+  .content { max-width: none; padding: 0; }
+  .section, .status, .fact, .detail { break-inside: avoid; }
+  details::details-content { content-visibility: visible; }
+}
