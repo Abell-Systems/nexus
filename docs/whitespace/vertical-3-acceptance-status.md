@@ -1,9 +1,9 @@
 # Vertical 3: acceptance status against the contract and ADR 0038
 
 **Status:** Working record, not an approval. It traces each requirement to what exists today. It does not declare the view conforming to ADR 0038 E5 and it authorises no deployment or exposure. Merging code into `main` is not acceptance of the exposure criteria.
-**Date:** 2026-10-28 (updated after the merge of #187, again after #188, #194, #183, #184, #189 and #192, a third time after #195 and #197, and a fourth time after #198, #199, #200 and #201)
+**Date:** 2026-10-28 (updated after the merge of #187, again after #188, #194, #183, #184, #189 and #192, a third time after #195 and #197, and a fourth time after #198, #199, #200 and #201, and a fifth time after #202 and #203)
 **Checks:** [vertical 3 contract](product-vertical-3-contract.md) §2–§9 · [ADR 0038](../adr/0038-exploratory-white-space-product-track.md) E1–E8
-**State of the pull requests when updated:** merged into `main`: #177, #178, #179, #180, #181, #185, #190, #191, #182, #186, #187 (merge commits in §9). #188 (this record, first version), #194 (its first update), #184 (Spanish texts), #189 (E5 evidence specification), #192 (experience proposal for the evidence sheet), #183 (E5 storage options and the OEPM notice reading checklist), #195 (the previous update of this record) #197 (entry block of the front page), #198 (the third update of this record), #199 (quick wins of the front page and the matcher: skip link, focus, target and text sizes, retry, print), #200 and #201 (working drafts of reading notes on the state of the art, research notes that are not acceptance evidence for this vertical) are merged as well. **Merging a document records its content; it decides nothing it leaves open.** Still open, a draft: #193 (partial evidence sheet, local prototype, blocked by S4/T22). What is marked «merged» below is on `main`; what is marked pending is not.
+**State of the pull requests when updated:** merged into `main`: #177, #178, #179, #180, #181, #185, #190, #191, #182, #186, #187 (merge commits in §9). #188 (this record, first version), #194 (its first update), #184 (Spanish texts), #189 (E5 evidence specification), #192 (experience proposal for the evidence sheet), #183 (E5 storage options and the OEPM notice reading checklist), #195 (the previous update of this record) #197 (entry block of the front page), #198 (the third update of this record), #202 (the fourth update of this record), #199 (quick wins of the front page and the matcher: skip link, focus, target and text sizes, retry, print), #200, #201 and #203 (working drafts of reading notes on the state of the art, research notes that are not acceptance evidence for this vertical) are merged as well. **Merging a document records its content; it decides nothing it leaves open.** Still open, a draft: #193 (partial evidence sheet, local prototype, blocked by S4/T22). What is marked «merged» below is on `main`; what is marked pending is not.
 
 ## 1. Vocabulary
 
@@ -154,4 +154,6 @@ Phases C and D need their own specification (user needs, data sources, scientifi
 | #199 | Quick wins of the front page and the matcher | Merged | `aee410f007816297922cd53b8f6565df1ea5f3e5` |
 | #200 | State-of-the-art reading notes, working draft (not an acceptance document) | Merged | `bb3f626f362a14bd0f973b2e1fae3a4f81e16c5c` |
 | #201 | State-of-the-art reading notes, second pass (not an acceptance document) | Merged | `857b12aeaa51912b7dddb18ee189bf6bf49f8649` |
-| (this pull request) | Fourth update of this record | Its state is in the pull request, not in this table | — |
+| #202 | Fourth update of this record | Merged | `4b0d7e6fbd486f03924cb066485505a7b1303b4b` |
+| #203 | State-of-the-art reading notes, third pass (not an acceptance document) | Merged | `09f49cc787b83fb0dd92b418971d953b50a45220` |
+| (this pull request) | Fifth update of this record | Its state is in the pull request, not in this table | — |
