@@ -54,3 +54,13 @@ Aggregate tables only, as `oepm-omission-sensitivity-2025-results.json` and `oep
 ## 6. Order of work
 
 1. This protocol is reviewed and committed. 2. Only then the analysis is run. 3. The report states every deviation from this document.
+
+## 7. Amendment 1 (2026-10-28, before any scenario other than S-A was run)
+
+S-A was run first (621 / 192,510 / 149,048, output byte-identical to the versioned result; the stop rule did not trigger). While writing the script, a defect of §3 item 2 was found, with no result of S-B1, S-C or S-D seen:
+
+- Removing documents cannot create a co-classification, only delete one. Therefore, among pairs whose two subclasses stay active, U_A ⊆ U_s, and the statistic «share of U_A that becomes observed» is 0 by construction in S-B1 and S-C. It is kept only as an **invariant check** (it must be 0; any other value stops the run).
+- The informative statistic runs the other way and is added: **new unobservedness** = |O_A ∩ U_s| / |O_A|, restricted to the pairs whose two subclasses are active in both S-A and *s*, where O_A is the set of pairs observed in S-A. Pairs with a subclass that is no longer active are counted apart as `dropped`, as in item 2.
+- For S-D the status change can go both ways (the universe changes with the threshold); both directions are reported over the common universe.
+
+Nothing else in this protocol changes. Seeds, rules and limits stand.
