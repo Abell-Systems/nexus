@@ -32,7 +32,9 @@
   }
  },
  "units": {
-  "source_records": 711547,
+  "records_read": 711888,
+  "records_rejected": 341,
+  "records_accepted": 711547,
   "o4_units": 707985,
   "o4_units_per_year": {
    "2000": 19202,

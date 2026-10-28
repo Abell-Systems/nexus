@@ -1,12 +1,12 @@
 # Descriptive sensitivity of the 2025 unobserved pairs to artificial perturbations of the corpus
 
-**Status:** Result of `scripts/report_oepm_omission_sensitivity_2025.py` under the [protocol](oepm-omission-sensitivity-2025-protocol.md) (with its amendment 1), both committed before the run. Exploratory and descriptive. It does **not** estimate the effect of the real omitted publications and is no evidence of technological opportunity, novelty, patentability or freedom to operate.
+**Status:** Result of `scripts/report_oepm_omission_sensitivity_2025.py` (commit `b96e872`; the results file below was produced by exactly that script, with the input hashes recorded in it) under the [protocol](oepm-omission-sensitivity-2025-protocol.md) (with its amendment 1), both committed before the run. Exploratory and descriptive. It does **not** estimate the effect of the real omitted publications and is no evidence of technological opportunity, novelty, patentability or freedom to operate.
 **Date:** 2026-10-28
 **Results:** [`oepm-omission-sensitivity-2025-results.json`](oepm-omission-sensitivity-2025-results.json). Aggregate only: no pair and no identifier.
 
 ## 1. Inputs and reproduction (S-A)
 
-711,547 source records; 707,985 eligible O4 units (per year in the JSON). S-A gives 621 active subclasses, 192,510 pairs and 149,048 unobserved pairs, as required (the stop rule did not trigger); its output was byte-identical to the versioned result (SHA-256 `6a269125…3482f7`).
+711,888 records read, of which 341 were rejected by the adapter and 711,547 accepted for analysis; 707,985 eligible O4 units (per year in the JSON). All four figures equal the corpus manifest and the script stops if they differ. S-A gives 621 active subclasses, 192,510 pairs and 149,048 unobserved pairs, as required (the stop rule did not trigger); its output was byte-identical to the versioned result (SHA-256 `6a269125…3482f7`).
 
 ## 2. S-B1: one publication year removed (25 years; 2010 not eligible)
 
@@ -68,11 +68,14 @@ Changing the threshold changes the **population** of pairs (15 subclasses enter 
 ## 5. Reading
 
 - The set of unobserved pairs is **not** stable under removal. Of the 43,462 pairs observed in S-A, between 0.59 % and 2.31 % (256 to 1,002 pairs) become unobserved when one year is removed, and 3.14 % to 3.28 % (1,364 to 1,423) when 10 % of the units are removed. The counts of unobserved pairs are a property of this corpus as observed, as the outline's non-claims already say.
-- The order of E over the pairs unobserved in both scenarios is almost unchanged (Spearman ≥ 0.9992). This is expected: E is a function of subclass frequencies per year, which move little. It does not support any claim about the pairs.
-- The threshold changes the universe by about 10,000 pairs either way.
+- **Universe changes with the threshold (S-D).** At thresholds 10, 20 and 40 there are 636, 621 and 603 active subclasses and 158,293, 149,048 and 138,463 unobserved pairs. The Spearman of 1.0 in S-D is computed only on pairs both configurations contain; it does not mean the global result is invariant, because the set of pairs itself changes by about 10,000 either way. It says nothing about which threshold is right.
+- **Rank correlation of E is secondary.** It is computed only over the pairs unobserved in both scenarios (Spearman ≥ 0.9992). It does not measure the stability of the full set of unobserved pairs, and it does not show that the absences are robust. That E barely reorders is expected, because E is a function of subclass frequencies per year, which move little.
+
+Descriptive conclusion this report supports: the number of unobserved pairs depends on the observed coverage and on the activity threshold, while the order of E among pairs that stay unobserved in both scenarios barely changes under these perturbations. Nothing here estimates the effect of the real omitted publications or says anything about novelty, opportunity or value.
 
 ## 6. Deviations from the protocol
 
 - Amendment 1 (committed before the run) replaced the zero-by-construction statistic of §3 item 2 by «new unobservedness» and kept the former as an invariant (0 in all 32 runs).
+- Amendment 2 (labelling only): the first run called 711,547 «source records»; the corpus manifest separates 711,888 read, 341 rejected and 711,547 accepted. The script was corrected and rerun; the scenario numbers did not depend on the label.
 - «Entering» pairs of S-D at threshold 10 are not a field of the JSON; they are derived here as `unobserved − common_unobserved_pairs_of_S_A − became_unobserved`.
 - S-B1 and S-C Spearman summaries are min, median and max, as fixed; per-year and per-seed values are in the JSON.
