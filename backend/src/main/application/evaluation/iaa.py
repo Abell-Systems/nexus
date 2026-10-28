@@ -29,8 +29,10 @@ class IAAReport(BaseModel):
 
 
 def _weighted_kappa(labels_a: list[int], labels_b: list[int]) -> tuple[float, list[list[int]]]:
-    """Linear-weighted Cohen's kappa: penalizes distant disagreements (e.g. 0 vs 3)
-    proportionally more than adjacent ones (e.g. 2 vs 3), per PR-E spec §7."""
+    """Quadratic-weighted Cohen's kappa: penalizes distant disagreements (e.g. 0 vs 3)
+    quadratically more than adjacent ones (e.g. 2 vs 3), per
+    docs/empirical-study-protocol.md §6.3 ("Weighted Cohen's Kappa ... with
+    quadratic weights")."""
     n = len(labels_a)
     confusion = [[0] * _NUM_GRADES for _ in range(_NUM_GRADES)]
     for a, b in zip(labels_a, labels_b, strict=True):
@@ -47,9 +49,7 @@ def _weighted_kappa(labels_a: list[int], labels_b: list[int]) -> tuple[float, li
     col_marginals = observed.sum(axis=0)
     expected = np.outer(row_marginals, col_marginals) / n
 
-    weights = np.array(
-        [[abs(i - j) / (_NUM_GRADES - 1) for j in range(_NUM_GRADES)] for i in range(_NUM_GRADES)]
-    )
+    weights = np.array([[((i - j) / (_NUM_GRADES - 1)) ** 2 for j in range(_NUM_GRADES)] for i in range(_NUM_GRADES)])
 
     weighted_observed_disagreement = float((weights * observed).sum())
     weighted_expected_disagreement = float((weights * expected).sum())

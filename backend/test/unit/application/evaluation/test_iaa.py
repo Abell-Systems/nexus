@@ -82,6 +82,28 @@ class IaaTest:
         with pytest.raises(ValueError, match="non-empty"):
             compute_iaa([], [])
 
+    def test_should_use_quadratic_weights_per_protocol_section_6_3(self):
+        # Reference value computed independently (not via the function under test)
+        # using Cohen's quadratic-weighted kappa formula: w(i,j) = ((i-j)/(N-1))**2.
+        # docs/empirical-study-protocol.md §6.3 requires quadratic weights; linear
+        # weights (the pre-fix implementation) give ~0.4828 for this same input.
+        judgments_a = [
+            _judgment("D1", "P1", "valentin", 2),
+            _judgment("D1", "P2", "valentin", 0),
+            _judgment("D1", "P3", "valentin", 1),
+            _judgment("D1", "P4", "valentin", 3),
+            _judgment("D1", "P5", "valentin", 2),
+        ]
+        judgments_b = [
+            _judgment("D1", "P1", "lydia", 2),
+            _judgment("D1", "P2", "lydia", 1),
+            _judgment("D1", "P3", "lydia", 1),
+            _judgment("D1", "P4", "lydia", 3),
+            _judgment("D1", "P5", "lydia", 0),
+        ]
+        report = compute_iaa(judgments_a, judgments_b)
+        assert report.weighted_kappa == pytest.approx(0.5283018867924528)
+
     def test_should_report_nan_kappa_for_zero_variance_input_not_perfect_agreement(self):
         # Both annotators grade everything 0 -> no expected variance, kappa is
         # 0/0 (undefined), not perfect agreement.
