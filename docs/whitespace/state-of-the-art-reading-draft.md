@@ -4,7 +4,7 @@
 
 **Status:** Working draft of reading notes. It is **not** a closed literature review, **not** a claim about Nexus's performance or superiority, and it decides nothing: whether Nexus stays a descriptive tool or adds a predictive line remains open and tied to [ADR 0038](../adr/0038-exploratory-white-space-product-track.md) (E7). No code, ADR or product decision changes here.
 **Date:** 2026-10-28
-**Scope:** (1) what two papers and one more actually measure; (2) a first, partial look at commercial products; (3) how each differs from Nexus. Out of scope for this first delivery: the EBT at UCA, intellectual property of the code and licences of the OEPM data for commercial use. None of those is addressed by this note.
+**Scope:** (1) what two papers read through an extraction tool measure (Youn et al. 2015 and Fenoaltea et al. 2026), and a third (Kim et al. 2016) that is identified but **not yet read**; (2) a first, partial look at commercial products; (3) how each differs from Nexus. Out of scope for this first delivery: the EBT at UCA, intellectual property of the code and licences of the OEPM data for commercial use. None of those is addressed by this note.
 
 ## 0. How to read the tags
 
@@ -57,7 +57,7 @@ Nothing here was tested with an account; all of it is **[S]** from the vendors' 
 |---|---|---|
 | PatSnap | Landscape tool in which clusters form «mountains» and gaps appear between clusters, formed by IPC and CPC commonality; white space described as limited patenting activity presented as openings for innovation | [S], [PatSnap blog](https://www.patsnap.com/resources/blog/rd-blog/ai-patent-whitespace-analysis-patsnap-eureka/), [PatSnap help](https://help.patsnap.com/hc/en-us/articles/115000409785) |
 | Questel Orbit | White space analysis with a choice of how automated it is | [S], [Orbit page](https://www.questel.com/orbit-intelligence) |
-| Derwent Innovation | Search by IPC, CPC, F-terms and dashboards; no white-space feature found | [S], [Clarivate](https://clarivate.com/derwent/zh-hant/?p=40828) |
+| Derwent Innovation | Search by IPC, CPC, F-terms and dashboards [S], [Clarivate](https://clarivate.com/derwent/zh-hant/?p=40828). **Observation, not a vendor statement:** the search did not find a white-space feature in the material consulted | [S] for the first part; [V] for the absence |
 | Lens.org | No white-space feature details found | [V] |
 
 ## 5. What differs from Nexus
