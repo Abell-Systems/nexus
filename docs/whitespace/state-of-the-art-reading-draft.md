@@ -55,7 +55,7 @@ All **[S]** from arXiv 1406.2938v1 (read as plain text, third pass) unless marke
 - **Random comparison.** If one combination is chosen at random among all possible ones, the probability of choosing the same one twice is about (10⁴/10⁶)² ≈ 10⁻⁴ for T = 10,000; the observed reuse is about 40 %. They add that a random walk would give a Poisson-like frequency distribution of reuse, against the heavy tails observed (their Fig. 3). **No simulation and no statistical test** is described.
 - **Stated limits.** The difference between possible and realized combinations is «beyond the scope of the research reported here»; the paper does not measure the quality of an invention.
 - **[I]** The paper is conceptual support for treating invention as combinatorial. It is **not** a methodological antecedent of Nexus: it uses USPTO codes, not IPC; its unit is the full code set of a patent, not a pair; and it has no expected count under independence.
-- **[V]** Not compared: the published 2015 version against this v1, and the PMC extraction against the PDF beyond the items above.
+- **Published version (partial check, 2026-10-28).** The published 2015 text, available only as PMC HTML read through the extraction tool, agrees with arXiv v1 on every item that could be compared: 474 classes and about 161,000 codes; C(t) = αP with α ≈ 0.6; about 44 % of multiple-code patents being «narrow»; heavy tails fitted near x^−2.4; one mandatory and optional discretionary codes; the definition of C_max and the random comparison of about 10⁻⁴. The published equations are numbered 3.1 and 3.2, the arXiv ones 1 and 2. **[V]** This is not a full comparison: the published PDF could not be downloaded (the publisher answered 403, as did Europe PMC's PDF endpoint, and the PMC PDF link returned an HTML page), and the published text was only read through a summarising tool. Any difference outside the items listed is unchecked.
 
 ## 4. Commercial products (first pass, vendor material only)
 
@@ -101,8 +101,8 @@ All **[I]** unless stated.
 
 ## 6. Pending for the next pass
 
-1. Compare the published 2015 version of Youn et al. with the arXiv v1 read here (the publisher's site refused the download).
-2. Compare the published EPJ Data Science version of Kim et al. with the arXiv v1 read here.
+1. Finish the comparison of the published 2015 version of Youn et al. with the arXiv v1 (only a partial check is done, section 3); it needs the published PDF.
+2. Compare the published EPJ Data Science version of Kim et al. with the arXiv v1 read here. **Attempted on 2026-10-28 without success:** the publisher's page redirects to an identity check, the PDF links return an HTML page, and the article is not indexed in Europe PMC. It needs a person with access to the published PDF. Until then every statement about Kim et al. in this note refers to arXiv v1 (19 Dec 2015).
 3. Analytic comparison of the three expected counts (Nexus annual sum, Kim cumulative hypergeometric, Fenoaltea Chung–Lu): what each preserves, what question each answers, and whether an experiment is justified. Only then, if the owner decides it, a small reproducible experiment with metrics agreed beforehand.
 4. Resolve with the authors' text, or leave stated, the unresolved fine-tuning range behind the 0.936.
 5. If the owner decides it is useful, a comparative reading of the products with trial accounts.
