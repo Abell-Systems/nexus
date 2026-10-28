@@ -71,9 +71,15 @@ All **[S]** from the arXiv v1 PDF unless marked.
 - **Their remark on fine granularity.** Without that aggregation, code frequencies far below |P| make one co-occurrence exceed the expectation, so fine-grained codes «mostly» give positive z-scores and the novel pairs cannot be seen.
 - **Limits they state.** The null does not handle single-code inventions or the creation date of a code.
 
-**[I] Relation with Nexus (derived by us; to be checked by a second person).** Nexus's per-year term n_i · n_j / N(y) has the form of Kim's Eq. 3 applied to one year. The two differ in that Nexus **sums the per-year terms** over the years with documents, while Kim et al. evaluate one cumulative set P(t). Nexus does not compute a variance or a z-score. A pair with zero observations and an expected count of at least 1 is, in Kim's reading, one with a negative z-score; Nexus does not use that reading.
+**[I] Three separate statements about the relations. Each is ours, none is a numerical test, and a second person should check them. None of them says that Kim's aggregated expected count equals Nexus's.**
 
-**[I] Relation with the Chung–Lu null of Fenoaltea et al.** If every patent has the same degree w, then N = w · |P| and P_pc = w · w_c / N = w_c / |P|, so E_cc' = Σ_p (w_c/|P|)(w_c'/|P|) = w_c · w_c' / |P|, which is Kim's Eq. 3. With heterogeneous patent degrees the two differ. This is an algebraic observation, not a numerical test, and says nothing about how large the difference is on real data. It does **not** make the Chung–Lu null equal to Nexus's annual sum.
+1. **Kim and Chung–Lu under uniform patent degree (algebraic).** If every patent has the same degree w, then N = w · |P| and P_pc = w · w_c / N = w_c / |P|, so E_cc' = Σ_p (w_c/|P|)(w_c'/|P|) = w_c · w_c' / |P|, which is Kim's Eq. 3. With heterogeneous patent degrees the two differ, by an amount not measured here.
+2. **Formal resemblance between Kim's expected count for one set of patents and Nexus's yearly term.** Nexus's term n_i · n_j / N(y) has the form of Kim's Eq. 3 applied to the documents of one year. This is a resemblance of form, not an identity of models: Nexus computes no variance and no z-score.
+3. **Potential differences, which decide what analytic comparison makes sense.**
+   - *Aggregation.* Kim does not recompute the null with the frequencies of the coarse category: for a class or subclass pair he sums the code-level o, μ and σ² (his Eqs. 5–7, with the factor that avoids double counting when both categories are the same). Since each code-level μ is n_αi · n_βj / |P|, the sum over the codes of the two categories equals the product of the **totals of code occurrences** in each category divided by |P|. That total counts a patent once per code it has in the category, whereas Nexus counts the documents that have the subclass. The two agree only if no document has more than one code in the same subclass. Kim's aggregated expectation is therefore **not** shown to equal Nexus's subclass-level expectation.
+   - *Time.* Nexus sums yearly terms over the years with documents; Kim evaluates one cumulative set P(t).
+   - *Unit.* Kim's «code» is a USPC code; Nexus's unit is an IPC subclass.
+   - Whether any of these differences matters numerically is **untested**.
 
 ## 5. What differs from Nexus
 
