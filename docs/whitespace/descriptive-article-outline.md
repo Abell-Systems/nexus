@@ -19,7 +19,7 @@ Universe: documents published by the OEPM (ADR 0036 §3). The article draws no c
 1. The corpus, its gaps (2010 missing, publication lag, 72.0 % EP translations) and how they shape the observed set of pairs.
 2. A reproducible count: 621 active subclasses (at least 20 O4 publication identifiers published in or before 2025, cumulative, not 20 in 2025 alone), 192,510 pairs, 149,048 unobserved pairs (`oepm-unobserved-pairs-results.json`).
 3. For each unobserved pair, the expected co-classifications under independence within publication years, E = Σ_y n_i(y)·n_j(y)/N(y) (ADR 0038 E3), and the distribution of E across pairs.
-4. Sensitivity of those counts to the configuration (minimum documents, E_min). **Not yet backed for 2025:** `oepm-omission-sensitivity.md` analyses omitted years only at the development origins 2003 and 2006 (524 and 565 active subclasses) and is a methodological antecedent, not evidence about the 149,048 pairs. Either a 2025-specific analysis is run or the claim is limited to the antecedent.
+4. Sensitivity of those counts to the configuration (minimum documents, E_min). Backed for 2025 by [oepm-omission-sensitivity-2025.md](oepm-omission-sensitivity-2025.md) (protocol fixed before the run). `oepm-omission-sensitivity.md` (origins 2003 and 2006) remains only a methodological antecedent. The removals are artificial and estimate nothing about real omissions.
 
 **Nature of E.** E is a reference under independence within years. It is not the null model of the predictive evaluation (ADR 0036) and not a significance test; the article must say so.
 
@@ -49,7 +49,7 @@ Universe: documents published by the OEPM (ADR 0036 §3). The article draws no c
 |---|---|
 | Comparison with a second null model (e.g. degree-preserving bipartite, as in the literature read) | Undecided; without it the article describes one model only. |
 | Unit of analysis (O4 vs. families) | O4 fixed in §1; justification (families not identified) to be written in §3 of the article. |
-| Sensitivity to omissions at the 2025 origin | No analysis exists; decide whether to run one. |
+| Sensitivity to omissions at the 2025 origin | Done, descriptive; see the report above. |
 | Citing the literature | Every [S] in the reading notes is "to be checked against the original before citing"; none may be cited as is. |
 | OEPM licence for publication of derived counts and any identifier lists | **D4, no responsible person yet.** No identifier lists are generated or published until it is resolved. |
 | Whether tables list individual candidate pairs | Tied to E7 (deferred). Default: aggregate tables only. |
