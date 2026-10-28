@@ -84,7 +84,7 @@ def spearman(xs: Sequence[float], ys: Sequence[float]) -> float | None:
     syy = sum((b - my) ** 2 for b in ry)
     if sxx == 0 or syy == 0:
         return None
-    return sum((a - mx) * (b - my) for a, b in zip(rx, ry)) / (sxx * syy) ** 0.5
+    return sum((a - mx) * (b - my) for a, b in zip(rx, ry, strict=True)) / (sxx * syy) ** 0.5
 
 
 def _expected(result: dict[str, Any]) -> dict[Pair, float]:
