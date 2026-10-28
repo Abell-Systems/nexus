@@ -6,7 +6,9 @@
 
 ## 1. Question and scope
 
-> **Q-D.** In the OEPM bibliographic corpus 2000–2025 (2010 absent), which pairs of IPC subclasses are never classified together on one document, and how many co-classifications would be expected for each under an independence model?
+> **Q-D.** In the OEPM bibliographic corpus 2000–2025 (2010 absent), which pairs of IPC subclasses are never classified together on a single analytic document (unit O4), and how many co-classifications would be expected for each under independence within publication years?
+
+**Unit of analysis (O4).** The unit is the publication identifier, carrying the union of the subclasses of its earliest date (contract §6; ADR 0038 E3), not the XML record. Patent families are not identified in the corpus, so they cannot be the unit; the article must state this as the reason for O4 and as a limit.
 
 It is a question about the corpus, not about technology. ADR 0036 §2 (predicting first co-classification) is **not** part of this article.
 
@@ -15,9 +17,11 @@ Universe: documents published by the OEPM (ADR 0036 §3). The article draws no c
 ## 2. Claims the article may make
 
 1. The corpus, its gaps (2010 missing, publication lag, 72.0 % EP translations) and how they shape the observed set of pairs.
-2. A reproducible count: 621 active subclasses (≥ 20 documents in 2025), 192,510 pairs, 149,048 unobserved pairs (`oepm-unobserved-pairs-results.json`).
+2. A reproducible count: 621 active subclasses (at least 20 O4 publication identifiers published in or before 2025, cumulative, not 20 in 2025 alone), 192,510 pairs, 149,048 unobserved pairs (`oepm-unobserved-pairs-results.json`).
 3. For each unobserved pair, the expected co-classifications under independence within publication years, E = Σ_y n_i(y)·n_j(y)/N(y) (ADR 0038 E3), and the distribution of E across pairs.
-4. Sensitivity of those counts to omissions and to the choices in the configuration (`oepm-omission-sensitivity.md`, minimum documents, E_min).
+4. Sensitivity of those counts to the configuration (minimum documents, E_min). **Not yet backed for 2025:** `oepm-omission-sensitivity.md` analyses omitted years only at the development origins 2003 and 2006 (524 and 565 active subclasses) and is a methodological antecedent, not evidence about the 149,048 pairs. Either a 2025-specific analysis is run or the claim is limited to the antecedent.
+
+**Nature of E.** E is a reference under independence within years. It is not the null model of the predictive evaluation (ADR 0036) and not a significance test; the article must say so.
 
 ## 3. Claims the article must not make
 
@@ -35,7 +39,7 @@ Universe: documents published by the OEPM (ADR 0036 §3). The article draws no c
 | 3 | Definitions: active subclass, pair, unobserved, O4 unit, configuration id `456858bd…83bd8` | contract, `configuration` in results |
 | 4 | Null model: independence within years; assumptions and where they fail (no co-occurrence structure, size effects, single-code documents) | ADR 0038 E3 |
 | 5 | Results: counts, distribution of E, unobserved pairs by section | results JSON |
-| 6 | Robustness: omission sensitivity, parameter choices, completeness gate of 2025 | `oepm-omission-sensitivity.md`, `oepm-corpus-exposure.md` |
+| 6 | Robustness: parameter choices, completeness gate of 2025; omission sensitivity only if a 2025 analysis exists (2003/2006 as antecedent) | `oepm-omission-sensitivity.md` (antecedent), `oepm-corpus-exposure.md` |
 | 7 | Limits and non-claims (§3 above, verbatim) | ADR 0036 §3, §6 |
 | 8 | Reproducibility: code, configuration id, hashes, one command per table | acceptance status §2 |
 
@@ -44,7 +48,8 @@ Universe: documents published by the OEPM (ADR 0036 §3). The article draws no c
 | Point | State |
 |---|---|
 | Comparison with a second null model (e.g. degree-preserving bipartite, as in the literature read) | Undecided; without it the article describes one model only. |
-| Unit of analysis (documents vs. families) | Defined as O4 in the contract; the justification must be written down. |
+| Unit of analysis (O4 vs. families) | O4 fixed in §1; justification (families not identified) to be written in §3 of the article. |
+| Sensitivity to omissions at the 2025 origin | No analysis exists; decide whether to run one. |
 | Citing the literature | Every [S] in the reading notes is "to be checked against the original before citing"; none may be cited as is. |
 | OEPM licence for publication of derived counts and any identifier lists | **D4, no responsible person yet.** No identifier lists are generated or published until it is resolved. |
 | Whether tables list individual candidate pairs | Tied to E7 (deferred). Default: aggregate tables only. |
