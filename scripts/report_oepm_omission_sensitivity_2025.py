@@ -69,6 +69,7 @@ def main() -> int:
     units = o4_years(records)
     expected = figures["figures"]  # the published manifest: accepted records, rejected records, distinct identifiers (O4 units)
     check_manifest_counts(len(outcomes), rejected, len(records), len(units), expected)
+    per_year = units_per_year(units)
     out = {
         "protocol": "docs/whitespace/oepm-omission-sensitivity-2025-protocol.md (with amendment 1)",
         "corpus": {"source_id": figures["source_id"], "files": files},
