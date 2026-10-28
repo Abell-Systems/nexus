@@ -66,3 +66,15 @@ describe("print style", () => {
     expect(hidden).toEqual([".nav, .entry form"]);
   });
 });
+
+describe("focus indicator", () => {
+  it("shouldNeverRemoveTheFocusOutlineInAnyStylesheetBecauseTheSkipLinkTargetNeedsItToBeFoundWhenFocused", () => {
+    for (const name of ["index.css", "components/WhiteSpace/WhiteSpacePage.module.css", "components/Matches/MatchesView.module.css", "components/shared/BrandHeader.module.css"]) {
+      expect(css(name), name).not.toMatch(/outline:\s*(none|0)\b/);
+    }
+  });
+
+  it("shouldGiveEveryControlBothDimensionsOfTheMinimumTargetSize", () => {
+    expect(css("index.css")).toContain("button, select, input, summary { min-height: 24px; min-width: 24px; }");
+  });
+});
