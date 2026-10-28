@@ -1,9 +1,9 @@
 # Vertical 3: acceptance status against the contract and ADR 0038
 
 **Status:** Working record, not an approval. It traces each requirement to what exists today. It does not declare the view conforming to ADR 0038 E5 and it authorises no deployment or exposure. Merging code into `main` is not acceptance of the exposure criteria.
-**Date:** 2026-10-27 (updated after the merge of #187, and again after #188, #194, #183, #184, #189 and #192)
+**Date:** 2026-10-28 (updated after the merge of #187, again after #188, #194, #183, #184, #189 and #192, and a third time after #195 and #197)
 **Checks:** [vertical 3 contract](product-vertical-3-contract.md) §2–§9 · [ADR 0038](../adr/0038-exploratory-white-space-product-track.md) E1–E8
-**State of the pull requests when updated:** merged into `main`: #177, #178, #179, #180, #181, #185, #190, #191, #182, #186, #187 (merge commits in §9). #188 (this record, first version), #194 (its first update), #184 (Spanish texts), #189 (E5 evidence specification), #192 (experience proposal for the evidence sheet) and #183 (E5 storage options and the OEPM notice reading checklist) are merged as well. **Merging a document records its content; it decides nothing it leaves open.** Still open, a draft: #193 (partial evidence sheet, local prototype, blocked by S4/T22). What is marked «merged» below is on `main`; what is marked pending is not.
+**State of the pull requests when updated:** merged into `main`: #177, #178, #179, #180, #181, #185, #190, #191, #182, #186, #187 (merge commits in §9). #188 (this record, first version), #194 (its first update), #184 (Spanish texts), #189 (E5 evidence specification), #192 (experience proposal for the evidence sheet), #183 (E5 storage options and the OEPM notice reading checklist), #195 (the previous update of this record) and #197 (entry block of the front page) are merged as well. **Merging a document records its content; it decides nothing it leaves open.** Still open, a draft: #193 (partial evidence sheet, local prototype, blocked by S4/T22). What is marked «merged» below is on `main`; what is marked pending is not.
 
 ## 1. Vocabulary
 
@@ -65,6 +65,7 @@
 | States T08, T12, T18, T19 | Merged, tested | |
 | States T13 (subclass without unobserved pairs) and T14 (loading) | Merged, **no test** | |
 | States T15, T16, T17 | **Pending, not covered** (owner, 2026-10-27) | No code and no tests. No signal exists for «not published» or «blocked by the completeness gate». A `404` is a load error (T18) and is not relabelled. They belong to the exposure work. |
+| Entry block at the top of the front page: title, sentence, subclass/section search that takes the person to the pairs section, link «Cómo se ha medido» (option A of the entry proposal) | Merged (#197, merge commit `61632eeb96c1838fcf13df00a1011b6bcebeb450`; merged HEAD `a2baab29af73e02a78bf957ee01ce512065f96e9`; all ten CI checks SUCCESS on that HEAD before the merge). H1, H2 and H3 are implemented in `main`; **H4, H5 and the example symbols are not approved as implemented text and are not in `main`.** The four field labels («Subclase IPC», «Sección IPC», «Ninguna», «Buscar») are provisional. | Tested (unit): nothing is fetched on open or typing; one request on submit; the sentence for no match is a live region and repeats the typed text only when it has the shape of an IPC symbol or of a prefix of one, otherwise the fixed sentence «Ninguna subclase activa coincide con el texto escrito.» (every word of the closed forbidden list tried in several forms; the rendered page is identical). The rule checks the shape, not the existence of a subclass. **Accessibility is partially verified: keyboard and accessibility tree were checked, a real screen reader was not**; the record template is in the PR. No deployment and no change of the 404 barrier. |
 | Open a pair (§2.6) and the evidence (§5): per-year terms, corpus identity, hashes, configuration identifier, limits | **Pending on `main`**; a partial sheet exists as a **local draft** (#193, not merged, not E5) | The data (`documents_by_year`, `configuration`) and the arithmetic function are merged (#191). The draft shows the symbols, the activity by year on a common scale with 2010 as a gap, the per-year terms with the sum next to the stored value, the traceability and the limits; 125 frontend tests passed in the assistant's own local run at its last HEAD (not an independent check and not acceptance of E5), and it was looked at only locally, by the assistant. Specification in #189 and experience in #192 (both merged as documents; they leave D4, S4 and the panel decision open). |
 | Full list of publication identifiers and dates per subclass, on demand (E5) | **Pending** | Not generated, not stored, not served. Requirements recommended in #189 §8; storage options in #183 (merged as options, not as a decision); the owner's choice is provisional, is not a legal conclusion, and is conditional on a person reading the OEPM legal notice. |
 | T20, T21, T22 | T20 titles and T21 are used by the draft sheet (#193); **T22 pending** | T22 depends on D4. The draft uses S4, which stands in for T22 and is **not approved**, so #193 cannot be merged until T22 and S4 are decided in #184. |
@@ -92,7 +93,7 @@
 | M3 every text read against the forbidden list by a person | Pending |
 | M4 follow the evidence to the corpus identity and recompute one pair by hand | **Pending**; the terms can be followed in the draft sheet (#193), but a person has not run it, and E5's identifier lists do not exist |
 | M5 initial and empty states | Pending |
-| M6 desktop, phone, keyboard only | Pending |
+| M6 desktop, phone, keyboard only | Pending (the entry block of #197 was checked by the assistant with the keyboard and in the accessibility tree; no real screen reader; not the scenario) |
 | M7 access-list record before the first outside viewer, with the panel decision for each person (ADR E7) | Pending; the decision on whether Lydia, or anyone, may take part in the human review of the study is **not taken**, and until it is, no candidate is shown to anyone |
 | M8 | See §3: run by the assistant, not recorded by a named person |
 | Visual review | Pending |
@@ -146,4 +147,6 @@ Phases C and D need their own specification (user needs, data sources, scientifi
 | #192 | Experience proposal for the evidence sheet | Merged | `5046574` |
 | #193 | Partial evidence sheet, local prototype (not E5, not for exposure; blocked by S4/T22) | Open, draft | — |
 | #194 | First update of this record | Merged | `5c9feb7` |
-| (this pull request) | Second update of this record | Its state is in the pull request, not in this table | — |
+| #195 | Second update of this record | Merged | `c683b6e` |
+| #197 | Entry block of the front page (option A) | Merged | `61632eeb96c1838fcf13df00a1011b6bcebeb450` |
+| (this pull request) | Third update of this record | Its state is in the pull request, not in this table | — |
