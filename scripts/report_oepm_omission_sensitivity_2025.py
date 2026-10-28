@@ -18,6 +18,7 @@ sys.path.insert(0, str(REPO_ROOT / "backend" / "src" / "main"))
 
 from application.whitespace.analysis_records import to_analysis_records
 from application.whitespace.omission_sensitivity_2025 import (
+    check_manifest_counts,
     compare,
     o4_years,
     remove_units,
@@ -67,10 +68,7 @@ def main() -> int:
     records = to_analysis_records(outcomes)
     units = o4_years(records)
     expected = figures["figures"]  # the published manifest: accepted records, rejected records, distinct identifiers (O4 units)
-    assert (len(records), rejected, len(units)) == (expected["records"], expected["rejected"], expected["distinct_doc_ids"]), (
-        "record counts differ from the corpus manifest"
-    )
-    per_year = units_per_year(units)
+    check_manifest_counts(len(outcomes), rejected, len(records), len(units), expected)
     out = {
         "protocol": "docs/whitespace/oepm-omission-sensitivity-2025-protocol.md (with amendment 1)",
         "corpus": {"source_id": figures["source_id"], "files": files},

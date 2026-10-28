@@ -123,3 +123,10 @@ def compare(base: dict[str, Any], scenario: dict[str, Any]) -> dict[str, Any]:
         "spearman_pairs": len(shared),
         "spearman_excluded_unobserved_in_S_A": len(unobserved_a) - len(shared),
     }
+
+
+def check_manifest_counts(read: int, rejected: int, accepted: int, o4_units: int, manifest: dict[str, int]) -> None:
+    """The four figures against the corpus manifest: read = accepted + rejected of the manifest; raises on any difference."""
+    expected = (manifest["records"] + manifest["rejected"], manifest["rejected"], manifest["records"], manifest["distinct_doc_ids"])
+    if (read, rejected, accepted, o4_units) != expected:
+        raise ValueError(f"record counts (read, rejected, accepted, O4 units) {(read, rejected, accepted, o4_units)} differ from the manifest {expected}")

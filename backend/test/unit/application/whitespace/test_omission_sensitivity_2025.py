@@ -4,6 +4,7 @@ import pytest
 
 from application.whitespace.analysis_records import AnalysisRecord
 from application.whitespace.omission_sensitivity_2025 import (
+    check_manifest_counts,
     compare,
     o4_years,
     remove_units,
@@ -66,3 +67,16 @@ def test_shouldCountPairsOfSubclassesThatStopBeingActiveApartFromTheCommonUniver
     stats = compare(base, stricter)
     assert stats["common_active"] == 2 and stats["active"] == 2
     assert stats["dropped_unobserved_pairs_of_S_A"] == 2  # the two pairs that involve A01C
+
+
+MANIFEST = {"records": 711547, "rejected": 341, "distinct_doc_ids": 707985}
+
+
+def test_shouldAcceptTheManifestCountsIncludingTheNumberOfRecordsRead():
+    check_manifest_counts(711888, 341, 711547, 707985, MANIFEST)
+
+
+@pytest.mark.parametrize("figures", [(711887, 341, 711547, 707985), (711888, 340, 711547, 707985), (711888, 341, 711546, 707985), (711888, 341, 711547, 707984)])
+def test_shouldRaiseWhenAnyOfTheFourCountsDiffersFromTheManifest(figures):
+    with pytest.raises(ValueError):
+        check_manifest_counts(*figures, MANIFEST)
