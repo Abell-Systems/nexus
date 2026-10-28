@@ -13,7 +13,9 @@
 | Unit | O4: the publication identifier, with the union of the subclasses of its earliest date |
 | Origin | 2025 (documents published in or before 2025) |
 | Activity threshold (base) | 20 O4 identifiers, cumulative to the origin |
-| E | Σ_y n_i(y)·n_j(y)/N(y), years with documents only; 2010 skipped and never counted as zero; `E_min = 1` |
+| Units | The report records separately the number of source records (711,547) and the number of eligible O4 units, in total and per year, before any scenario runs. The two are not interchangeable. |
+| E | Σ_y n_i(y)·n_j(y)/N(y), years with documents only; 2010 skipped and never counted as zero |
+| `E_min` | 1, kept as the reference reading configuration. It does not change the universe: the stored result holds **all** unobserved pairs and the threshold is applied afterwards. The analysis compares all unobserved pairs and applies no E filter; 149,048 is not the number of pairs with E ≥ 1. |
 | Pair | Unordered pair of active subclasses; *unobserved* if no single source record published up to 2025 carries both |
 
 ## 2. Scenarios
@@ -22,7 +24,7 @@
 |---|---|---|
 | S-A | None. **Stop rule:** if it does not give 621 active subclasses, 192,510 pairs and 149,048 unobserved pairs, stop, diagnose, and run nothing else. | 1 |
 | S-B1 | Remove every document of one publication year, one year at a time. Eligible years: every year 2000–2025 with documents (25 years). 2010 is not eligible: it is already a gap, not a year with data. | 25 |
-| S-C | Remove 10 % of the O4 identifiers, **stratified by publication year** (each year loses round(0.10 · n_y), ties of rounding by floor). Seeds fixed now: **20261101, 20261102, 20261103, 20261104, 20261105** (Python `random.Random(seed)`). | 5 |
+| S-C | Remove O4 identifiers **stratified by publication year**: year *y* with n_y eligible O4 identifiers loses k_y = ⌊0.10 · n_y⌋ of them (so a stratum may lose slightly less than 10 %; years with n_y < 10 lose none). The k_y are chosen with `random.Random(seed).sample(sorted(ids_y), k_y)`, `ids_y` being the O4 identifiers of year *y* sorted as strings. The sampled population is the O4 units, not XML records. Seeds fixed now: **20261101, 20261102, 20261103, 20261104, 20261105** (Python `random.Random(seed)`). | 5 |
 | S-D | Same corpus, activity threshold 10 and 40 (base 20 is S-A). All other rules unchanged. | 2 |
 
 In S-B1 and S-C, N(y) and n_i(y) are recomputed on the reduced corpus; a removed year has no term in E (it is skipped like 2010), so S-B1 also changes the temporal history used for E. This is stated, not corrected.
@@ -33,8 +35,8 @@ Let U_A be the set of unobserved pairs of S-A (149,048) and U_s that of scenario
 
 1. **Active subclasses and unobserved pairs of *s*:** counts.
 2. **Loss of unobservedness (S-B1, S-C):** `|U_A \ U_s| / |U_A|`, over pairs of U_A whose two subclasses are still active in *s*. Pairs whose subclass falls below the threshold are counted apart as `dropped`, and the denominator is stated for both.
-3. **S-D:** the comparison universe is the pairs whose two subclasses are active in **both** S-A and the S-D configuration. Reported separately: (a) pairs of U_A leaving the universe because a subclass is no longer active (threshold 40), (b) pairs entering because new subclasses become active (threshold 10), (c) within the common universe, change of observed status and rank change of E.
-4. **Rank correlation of E:** Spearman ρ between E in S-A and E in *s*, computed over the pairs in U_A ∩ U_s (unobserved in both). Ties receive average ranks. Pairs absent from either side are excluded, and their number is reported. E is taken with 9 decimals as stored.
+3. **S-D:** the comparison universe is the pairs whose two subclasses are active in **both** S-A and the S-D configuration. Reported separately: (a) pairs of U_A leaving the universe because a subclass is no longer active (threshold 40), (b) pairs entering because new subclasses become active (threshold 10), (c) within the common universe, change of observed status only. No rank statistic is computed for S-D beyond item 4, because E is stored only for unobserved pairs and the analysis is not widened to compute it for the rest.
+4. **Rank correlation of E:** Spearman ρ between E in S-A and E in *s*, computed over the pairs in U_A ∩ U_s (unobserved in both). Ties receive average ranks. Pairs absent from either side are excluded, and their number is reported. This is the only rank statistic of the protocol, for every scenario including S-D. E is taken with 9 decimals as stored.
 5. **S-C:** the five replicates are reported individually and summarised by min, median and max. They are five draws of one artificial mechanism, not five independent observations of the real world, and no confidence interval is computed from them.
 6. **S-B1:** reported per year and as min/median/max across years.
 
