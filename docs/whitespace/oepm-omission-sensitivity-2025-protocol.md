@@ -64,3 +64,7 @@ S-A was run first (621 / 192,510 / 149,048, output byte-identical to the version
 - For S-D the status change can go both ways (the universe changes with the threshold); both directions are reported over the common universe.
 
 Nothing else in this protocol changes. Seeds, rules and limits stand.
+
+## 8. Amendment 2 (2026-10-28, labelling only; no scenario, seed or statistic changes)
+
+§1 and the first report called 711,547 «source records». The corpus manifest separates **711,888 records read**, **341 rejected** and **711,547 accepted** for analysis, and 707,985 O4 units (`distinct_doc_ids`). The script now records the four figures and stops if they differ from the manifest. The numbers of the scenarios do not depend on the label; the analysis is rerun so that the results file comes from the committed script.

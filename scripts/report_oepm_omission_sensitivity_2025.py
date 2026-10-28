@@ -26,6 +26,7 @@ from application.whitespace.omission_sensitivity_2025 import (
     units_per_year,
 )
 from application.whitespace.unobserved_pairs import unobserved_pairs
+from domain.models.whitespace import RejectedRecord
 from infrastructure.sources.patent.oepm_biblio import OepmBiblioSource
 
 CORPUS_FIGURES = REPO_ROOT / "config" / "whitespace" / "oepm_biblio_2000_2025.json"
@@ -61,15 +62,21 @@ def main() -> int:
 
     figures = json.loads(CORPUS_FIGURES.read_text(encoding="utf-8"))
     files = {n: f["sha256"] for n, f in figures["files"].items()}
-    records = to_analysis_records(OepmBiblioSource(args.corpus_dir, files).read())
+    outcomes = list(OepmBiblioSource(args.corpus_dir, files).read())
+    rejected = sum(isinstance(o, RejectedRecord) for o in outcomes)
+    records = to_analysis_records(outcomes)
     units = o4_years(records)
+    expected = figures["figures"]  # the published manifest: accepted records, rejected records, distinct identifiers (O4 units)
+    assert (len(records), rejected, len(units)) == (expected["records"], expected["rejected"], expected["distinct_doc_ids"]), (
+        "record counts differ from the corpus manifest"
+    )
     per_year = units_per_year(units)
     out = {
         "protocol": "docs/whitespace/oepm-omission-sensitivity-2025-protocol.md (with amendment 1)",
         "corpus": {"source_id": figures["source_id"], "files": files},
-        "units": {"source_records": len(records), "o4_units": len(units), "o4_units_per_year": {str(y): n for y, n in per_year.items()}},
+        "units": {"records_read": len(outcomes), "records_rejected": rejected, "records_accepted": len(records), "o4_units": len(units), "o4_units_per_year": {str(y): n for y, n in per_year.items()}},
     }
-    say(f"records {len(records)}, O4 units {len(units)}")
+    say(f"read {len(outcomes)}, rejected {rejected}, accepted {len(records)}, O4 units {len(units)}")
 
     base = run(records)
     if base["counts"] != EXPECTED_S_A:
