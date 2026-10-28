@@ -64,6 +64,7 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [failed, setFailed] = useState<"examples" | "matches" | null>(null); // what «Reintentar» repeats
   const latestRequest = useRef(0);
   const selectedPanel = useRef<HTMLElement | null>(null);
 
@@ -80,6 +81,7 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
       window.history.replaceState(null, "", `${window.location.pathname}?demanda=${encodeURIComponent(demandId)}`);
       setResult(null);
       setError(null);
+      setFailed(null);
       setLoading(true);
       api
         .getMatches(demandId)
@@ -89,6 +91,7 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
         .catch((err) => {
           if (request === latestRequest.current) {
             setError(err instanceof ApiError && err.code !== "UNKNOWN_ERROR" ? err.message : "No se pudieron cargar los resultados.");
+            setFailed("matches");
           }
         })
         .finally(() => {
@@ -98,7 +101,7 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
     [api],
   );
 
-  useEffect(() => {
+  const loadExamples = useCallback(() => {
     api
       .getDemandExamples()
       .then((response) => {
@@ -106,8 +109,17 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
         const requested = new URLSearchParams(window.location.search).get("demanda");
         if (requested && response.demands.some((d) => d.demand_id === requested)) choose(requested);
       })
-      .catch(() => setError("No se pudieron cargar las demandas de ejemplo."));
+      .catch(() => {
+        setError("No se pudieron cargar las demandas de ejemplo.");
+        setFailed("examples");
+      });
   }, [api, choose]);
+  useEffect(loadExamples, [loadExamples]);
+  const retryExamples = () => {
+    setError(null);
+    setFailed(null);
+    loadExamples();
+  };
 
   const selectedDemand = examples?.demands.find((d) => d.demand_id === selected);
 
@@ -157,7 +169,16 @@ export function MatchesView({ api = defaultApi }: { readonly api?: Api }) {
           ))}
         </div>
       )}
-      {error && <p role="alert" className={styles.error}>{error}</p>}
+      {error && (
+        <p role="alert" className={styles.error}>
+          {error}{" "}
+          {failed && (
+            <button type="button" className={styles.retry} onClick={() => (failed === "examples" || !selected ? retryExamples() : choose(selected))}>
+              Reintentar
+            </button>
+          )}
+        </p>
+      )}
       {result && result.assets.length === 0 && <p className={styles.status}>No hay activos elegibles para esta demanda.</p>}
       {result && result.assets.length > 0 && (
         <section aria-label="Resultados" className={styles.results}>

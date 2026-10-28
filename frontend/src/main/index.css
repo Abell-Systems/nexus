@@ -37,3 +37,13 @@ body { min-height: 100vh; }
 button, input { font-family: inherit; }
 #root { min-height: 100vh; }
 
+
+/* One focus ring and one link style for every screen (the matcher's 3 px purple ring was the only strong one). */
+a { color: var(--color-purple); text-decoration: underline; text-underline-offset: 2px; }
+:focus-visible { outline: 3px solid var(--color-purple); outline-offset: 2px; }
+button, select, input, summary { min-height: 24px; } /* WCAG 2.2 AA target size (2.5.8) */
+@media (pointer: coarse) { button, select, input, summary { min-height: 44px; } }
+
+.skip { position: absolute; left: 8px; top: -64px; z-index: 10; padding: 10px 16px; border-radius: 8px; background: var(--color-purple); color: #ffffff; font-weight: 700; }
+.skip:focus { top: 8px; }
+@media print { .skip { display: none; } }
