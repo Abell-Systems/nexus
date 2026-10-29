@@ -1,0 +1,111 @@
+# Technology topic map: product design
+
+**Status:** Draft for the owner's approval. Nothing is built from this document until it is approved. It approves no exposure of real candidates, resolves no D4 or E7 decision, and claims nothing about patentability.
+**Date:** 2026-10-29
+**Origin:** two throwaway prototypes (batteries, solar) built and reviewed on 2026-10-28/29. They live outside git; this document keeps what was learned from them.
+**Relates to:** [ADR 0036](../../adr/0036-technology-white-space-scientific-scope.md) · [ADR 0038](../../adr/0038-exploratory-white-space-product-track.md) · [vertical 3 acceptance status](../../whitespace/vertical-3-acceptance-status.md) · [decisions of 2026-10-28](../../whitespace/descriptive-article-outline.md)
+
+Marks used: **[Owner]** decided or confirmed by the owner; **[My call]** a choice made while writing, open to change; **[Open]** undecided.
+
+## 1. Intent and why
+
+The existing page reads as a scientific report: it is written to defend what it measures, not to help someone decide where to look. **[Owner]** wants a product: patent intelligence that helps a person understand a technology area and decide where to look next, in language anyone can follow.
+
+The owner is not a patent expert, and "if it cannot be understood without domain knowledge it is not usable" is the test for every screen.
+
+## 2. Users
+
+- **[My call]** The first user is a non-expert who arrives with a topic ("batteries", "solar") and wants a map: is it growing, what is it about, what does it mix with, who is in it, what is rarely combined.
+- **[Open]** Who the first real users are (an IP firm, an R&D department, a researcher looking for lines). Two or three people doing technology watch are to be asked to use the prototype before this is decided.
+
+## 3. Goals, non-goals, anti-goals
+
+**Goals**
+- A person with no patent background understands each screen without help and can answer, after two minutes on a topic: is it growing, what are its main parts, who is in it.
+- Every figure is traceable to the versioned corpus, as in vertical 3.
+- Caveats are said once, clearly, not scattered.
+
+**Non-goals**
+- No claim that anything is novel, patentable, free to operate, valuable or an opportunity. **[Owner]** decision of 2026-10-28; ADR 0036/0038.
+- No ranking, score or "best candidates" list (ADR 0038, explorer contract).
+- No prediction; that stays a later phase with its own protocol.
+- No data other than the OEPM corpus 2000–2025.
+
+**Anti-goals (a failure even if it works)**
+- A client reading "hueco patentable" and acting on it.
+- A polished page that hides that 85 % of battery documents are translations of European patents, or that one applicant makes 56 % of the 2024–2025 battery documents.
+- Plain-language names that sound authoritative and are wrong.
+
+## 4. Constraints
+
+- **Corpus:** documents published by the OEPM 2000–2025, 2010 absent; 707,985 O4 units. Fields available: title, applicants, inventors, IPC (subgroup truncated to two digits), publication/filing/priority dates, kind. Not available: abstract, claims or description text, citations, patent families, CPC.
+- **Reading limits:** the date is the OEPM publication date; EP translations are published about 7 years after filing on average, so recent years describe what was published in Spain, not current research.
+- **IPC changes over time:** H01M 2 was replaced by H01M 50 (2021.01); H01L 31 moved to H10F (2025.01; in this corpus H10F appears only in 2025, 21 documents); F24J 2 became F24S (2018.01, group-to-group transfer not verified). A topic definition must list the old and new codes.
+- **Governance:** E7 (who may see real candidates) is deferred and D4 (reading of the OEPM legal notice) has no owner. Until both are resolved, no real list of never-co-classified pairs is shown, and the Nginx barrier stays.
+- **Architecture:** the repository's Clean Architecture (domain, application, infrastructure), tests named `shouldXWhenY`, integrity of served data as in vertical 3 (versioned result, SHA-256 checked at load).
+
+## 5. The experience
+
+**[Owner]** approved a three-level structure after seeing it clickable.
+
+1. **Entry.** One question, "¿Qué tecnología te interesa?", with a search box and the available topics. **[Owner]** If the typed topic does not exist, the page says "No tenemos ese tema todavía." and nothing else.
+2. **Topic summary.** One sentence with the main answer and four large buttons: ¿Crece? · ¿De qué trata? · ¿Quién está? · Pistas sin explorar.
+3. **Detail views, one question each.** At most five items visible and a "Ver N más" fold. Each opens with a sentence that answers the question, then the chart or list.
+4. **"Cómo leer esto"** reachable from every view (a dialog), holding the general caveats: corpus, translations, publication date, 2010 gap, nothing here says what is new or patentable.
+5. Breadcrumbs on every view. No long single-scroll page.
+
+**[My call]** Sentence templates are generated from the data with guards: the "one applicant dominates" clause appears only when one applicant is at least 30 % of the last two years; otherwise the page says no company dominates. Numbers use the Spanish thousands separator.
+
+### Content per view
+
+| View | Answers | Contents |
+|---|---|---|
+| ¿Crece? | Are more patents published than before? | Averages 2000–2009, 2011–2023, 2024–2025; the peak year(s); a bar chart by year with the 2010 gap marked; when one applicant dominates, its share drawn in another colour; reminder that the axis is publication in Spain. |
+| ¿De qué trata? | What are its parts and what does it mix with? | Sub-areas with plain names and one-line descriptions; neighbouring technologies by co-classification. |
+| ¿Quién está? | Who patents? | Applicants with the largest number of documents, variants of known names merged. |
+| Pistas sin explorar | What is combined less than expected? | Observed-but-rare combinations with their expected count (see section 7). |
+
+## 6. Topics and names
+
+- **[My call]** A topic is a hand-written definition: a list of IPC subclasses or main groups (current and superseded), a plain name, a description for each sub-area, and plain names for neighbouring subclasses. The catalogue starts with batteries and solar.
+- Plain names were checked against the official IPC 2026.01 scheme titles by two subagents (2026-10-29). Corrected names are in the prototype source, not yet in the repository. **[Open]** A sector expert still has to review them before a client sees them. F01K was not verified.
+- **[Open]** How a new topic is added, and who reviews its definition, is not designed. Topic quality depends entirely on the definition (batteries is one subclass and reads sharply; solar mixes four areas and reads more loosely).
+- Some topics cannot be built from this corpus: "precision agriculture" lives at subgroup level (A01B 79/005) and subgroups are truncated.
+- Applicant names are merged by hand-written rules for well-known companies only. **[Open]** A systematic normalisation.
+
+## 7. White spaces
+
+- **What exists now:** "se combinan menos de lo que cabría esperar": subclasses observed together with the topic, fewer times than their size suggests, shown with "aparece N veces; por su tamaño cabría esperar unas M". They come from the observed corpus and show no candidate pair.
+- **What is only a mock:** a block of never-co-classified pairs, with fictitious pairs and fictitious numbers, labelled everywhere as fictitious, in alphabetical order with no score. It tests wording only. Real pairs are not shown while E7 and D4 are open.
+- **[Open, owner]** The criterion for which never-co-classified pairs a topic view may show. Constraints it has to respect: the expected count under independence (ADR 0038 E3, minimum 1), no ranking, aggregate or alphabetical presentation, and that most such pairs are technically meaningless (for example batteries with algae farming), so the filter is a scientific decision, not a design one.
+- Each row, real or mock, says what is not known: whether it exists outside Spain or outside this corpus, and whether there is a technical reason it is not combined. Said once at the top of the view, with a short mark on each row.
+
+## 8. Data and delivery (what the builder works from)
+
+- **[My call]** Per-topic aggregate results computed offline from the versioned corpus by a script, served as static, versioned JSON with a SHA-256 checked at load, as in vertical 3. The browser computes no metric beyond presentation. Raw documents, titles and per-document identifiers are not served.
+- The prototype computed, per topic: documents by year (O4 units by earliest publication year), sub-area counts, neighbour subclasses with counts and a ratio against corpus-wide frequency, and applicants. These definitions are the starting point and the builder may restructure them.
+- Right now the corpus generator takes about three minutes per topic. Fine offline; a topic added at request time would need precomputation, not a live query.
+
+## 9. Findings from the prototypes (facts, not claims about the product)
+
+- Batteries (H01M): 5,676 documents (0.8 % of the corpus); 85 % are EP translations; LG Energy Solution is in 22 % of them and 56 % of the 2024–2025 ones (none before 2022). Sub-areas: rechargeable batteries, electrodes, casings and connections, fuel cells.
+- Solar (H01L 31, H10F, H10K 30, H02S, F24S, F24J 2, F03G 6): 5,812 documents; 44 % EP translations; no applicant above about 5 %. The same screens worked with a different profile.
+- Both topics are 0.8 % of the corpus by coincidence.
+- Two errors made and fixed during the prototypes show the risk: a text claimed recent years were under-represented when they were the highest, and a substring rule merged all "Politécnica" universities under Madrid. Generated sentences need tests against the data.
+
+## 10. Success and how it will be judged
+
+- **[My call]** Two or three people who do technology watch use the prototype on a shared screen without explanation. The test is what they understand, what they ask, and what they miss; not whether they like it.
+- Sentence guards and merged names covered by tests (`shouldMentionDominantApplicantOnlyWhenAboveThreshold` style).
+- Acceptance of exposure stays with ADR 0038; this document does not replace it.
+
+## 11. Left to the builder
+
+Technology choices inside the existing frontend and backend, file layout, chart implementation, how definitions and names are stored, accessibility details (keyboard, contrast, small screens), and the test strategy.
+
+## 12. Decisions the owner still has to make
+
+1. The criterion for the never-co-classified pairs a topic view may show (section 7), and whether showing any is allowed before E7 and D4.
+2. Who reads the OEPM legal notice (D4).
+3. Who the first real users are, and who reviews plain names and topic definitions.
+4. How a topic that is not in the catalogue is eventually added.
