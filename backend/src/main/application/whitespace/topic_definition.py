@@ -12,7 +12,9 @@ def load_definition(path: Path) -> TopicDefinition:
 
 def definition_id(definition: TopicDefinition) -> str:
     """SHA-256 of the canonical JSON: any change to a name, description or code rule changes it."""
-    return configuration_id(definition.model_dump(mode="json"))
+    dumped = definition.model_dump(mode="json")
+    dumped["own_subclasses"] = sorted(dumped["own_subclasses"])  # a set dumps in hash-seed order
+    return configuration_id(dumped)
 
 
 def unreviewed_names(definition: TopicDefinition) -> list[str]:

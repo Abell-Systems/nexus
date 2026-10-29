@@ -1,3 +1,6 @@
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 from application.whitespace.topic_definition import definition_id, load_definition, unreviewed_names
@@ -37,3 +40,28 @@ def test_shouldLoadBothCommittedDefinitions() -> None:
     assert [a.key for a in sol.subareas] == ["pv", "systems", "thermal"]
     assert len(bat.neighbour_names) == len(sol.neighbour_names) == 31
     assert unreviewed_names(bat) and unreviewed_names(sol)
+
+
+def test_shouldKeepTheDefinitionIdStableWhenSubclassesAreInsertedInAnotherOrder(tmp_path: Path) -> None:
+    a = load_definition(_write(tmp_path / "a.json", "Uno"))
+    subclasses = ["H01L", "H02S", "F24S", "F24J", "H10F", "H10K", "F03G"]
+    forward = a.model_copy(update={"own_subclasses": frozenset(subclasses)})
+    backward = a.model_copy(update={"own_subclasses": frozenset(reversed(subclasses))})
+    assert definition_id(forward) == definition_id(backward)
+    code = (
+        "from pathlib import Path; from application.whitespace.topic_definition import definition_id, load_definition;"
+        f"print(definition_id(load_definition(Path(r'{TOPICS / 'solar.json'}'))))"
+    )
+    ids = {
+        subprocess.run(
+            [sys.executable, "-c", code], capture_output=True, text=True, check=True,
+            env={**os.environ, "PYTHONHASHSEED": seed, "PYTHONPATH": "backend/src/main"},
+        ).stdout
+        for seed in ("1", "2", "3")
+    }
+    assert len(ids) == 1
+
+
+def test_shouldPhraseJoinedAfterAVerbWhenLoadingCommittedDefinitions() -> None:
+    assert load_definition(TOPICS / "baterias.json").joined == "junto a baterías"
+    assert load_definition(TOPICS / "solar.json").joined == "junto a la energía solar"
