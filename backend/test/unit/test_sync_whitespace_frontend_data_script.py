@@ -32,3 +32,38 @@ def test_shouldKeepTheLargePairsResultOutOfTheBundledDataWhenSyncing(tmp_path):
     assert not (tmp_path / "bundled" / "oepm-subclass-pairs-results.json").exists()
     assert (tmp_path / "public" / "oepm-subclass-pairs-results.json").exists()
     assert {e["served"] for e in manifest["files"]} == {"bundled", "on_demand"}
+
+
+def _root_with_topic(tmp_path, names):
+    root = tmp_path / "root"
+    (root / "docs" / "whitespace").mkdir(parents=True)
+    for name in names:
+        (root / "docs" / "whitespace" / name).write_text('{"synthetic": true}\n', encoding="utf-8")
+    return root
+
+
+def _sync_without_the_fixed_sources(script, tmp_path, root):
+    script.SOURCES, script.ON_DEMAND_SOURCES = [], []
+    return script.sync(tmp_path / "bundled", tmp_path / "public", root)
+
+
+def test_shouldSkipATopicResultThatDoesNotExistYet(tmp_path):
+    manifest = _sync_without_the_fixed_sources(_script(), tmp_path, _root_with_topic(tmp_path, []))
+    assert manifest["files"] == []
+    assert list((tmp_path / "public").glob("topic-map-*")) == []
+
+
+def test_shouldCopyATopicResultWithItsHashWhenItExists(tmp_path):
+    import hashlib
+
+    root = _root_with_topic(tmp_path, ["topic-map-batteries.json", "topic-map.json", "other-topic-map-x.json"])
+    manifest = _sync_without_the_fixed_sources(_script(), tmp_path, root)
+    (entry,) = manifest["files"]
+    copy = tmp_path / "public" / "topic-map-batteries.json"
+    assert entry["file"] == "topic-map-batteries.json"
+    assert entry["served"] == "on_demand"
+    assert entry["producedBy"] == "scripts/report_topic_map.py"
+    assert "pullRequest" not in entry
+    assert entry["bytes"] == len(copy.read_bytes())
+    assert entry["sha256"] == hashlib.sha256(copy.read_bytes()).hexdigest()
+    assert not (tmp_path / "public" / "topic-map.json").exists()
