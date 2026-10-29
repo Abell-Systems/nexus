@@ -64,6 +64,9 @@ def build_topic_result(
             applicant_documents[canonical] += 1
             applicant_years[canonical][unit.year] += 1
     applicants = _top(applicant_documents, TOP_APPLICANTS)
+    # R11: the leader of the last two years of `years`, which is what the dominance clause reads
+    recent_documents = {a: sum(by_year[y] for y in years[-2:]) for a, by_year in applicant_years.items()}
+    recent = _top({a: d for a, d in recent_documents.items() if d}, 1)
 
     parameters = {
         "schema": SCHEMA,
@@ -95,9 +98,7 @@ def build_topic_result(
         ],
         "ep_share": round(sum(ep.values()) / total, 9) if total else 0.0,
         "top_applicant_recent": (
-            {"name": applicants[0][0], "by_year": [applicant_years[applicants[0][0]][y] for y in years]}
-            if applicants
-            else None
+            {"name": recent[0][0], "by_year": [applicant_years[recent[0][0]][y] for y in years]} if recent else None
         ),
         "subareas": [
             {

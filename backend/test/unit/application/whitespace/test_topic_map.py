@@ -192,7 +192,39 @@ def test_shouldMergeApplicantsByRulesCountingEachUnitOnceAndDroppingBlankNames()
         {"name": "Beta Corp", "documents": 2, "originals": ["Beta Corp", "beta corp"]},
         {"name": "Zeta", "documents": 1, "originals": ["Zeta"]},
     ]
-    assert result["top_applicant_recent"] == {"name": "Acme", "by_year": [2, 0, 0, 0]}
+    # last two years are 2002 (no applicant) and 2011 (Zeta): the recent leader is not the overall leader Acme
+    assert result["top_applicant_recent"] == {"name": "Zeta", "by_year": [0, 0, 0, 1]}
+
+
+def applicant_units(spec):
+    """spec: (applicant or None, year, count); every unit is in the topic."""
+    out = []
+    for name, year, count in spec:
+        applicants = [name] if name else []
+        out += [rec(f"{name}-{year}-{i}", date(year, 1, 1), ["T01T"], [], applicants) for i in range(count)]
+    return out
+
+
+def test_shouldPickTheLeaderOfTheLastTwoYearsWhenItDiffersFromTheOverallLeader():
+    # OldCo: 10 in 2020, 1 in 2024 -> 11 overall, 1 recent ; NewCo: 3 in 2024, 2 in 2025 -> 5 overall, 5 recent
+    records = applicant_units([("OldCo", 2020, 10), ("OldCo", 2024, 1), ("NewCo", 2024, 3), ("NewCo", 2025, 2)])
+    result = build_topic_result(records, definition(), RULES, CORPUS)
+    assert result["applicants"][0]["name"] == "Oldco"
+    assert result["top_applicant_recent"] == {"name": "Newco", "by_year": [0, 3, 2]}
+
+
+def test_shouldBreakARecentTieByNameWhenTwoApplicantsHaveTheSameRecentDocuments():
+    # Zed: 5 in 2020 + 2 in 2025 (7 overall, 2 recent) ; Abe: 2 in 2024 (2 overall, 2 recent) -> Abe by name
+    records = applicant_units([("Zed", 2020, 5), ("Zed", 2025, 2), ("Abe", 2024, 2)])
+    result = build_topic_result(records, definition(), RULES, CORPUS)
+    assert result["top_applicant_recent"] == {"name": "Abe", "by_year": [0, 2, 0]}
+
+
+def test_shouldGiveNoRecentLeaderWhenNobodyHasDocumentsInTheLastTwoYears():
+    records = applicant_units([("OldCo", 2000, 3), (None, 2024, 1), (None, 2025, 1)])
+    result = build_topic_result(records, definition(), RULES, CORPUS)
+    assert result["applicants"][0]["name"] == "Oldco"
+    assert result["top_applicant_recent"] is None
 
 
 def test_shouldKeepTwelveApplicantsWhenThereAreMore():
