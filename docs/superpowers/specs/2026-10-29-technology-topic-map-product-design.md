@@ -53,8 +53,10 @@ The owner is not a patent expert, and "if it cannot be understood without domain
 3. **Detail views, one question each.** At most five items visible and a "Ver N más" fold. Each opens with a sentence that answers the question, then the chart or list.
 4. **"Cómo leer esto"** reachable from every view (a dialog), holding the general caveats: corpus, translations, publication date, 2010 gap, nothing here says what is new or patentable.
 5. Breadcrumbs on every view. No long single-scroll page.
+6. **[My call]** Spanish only for now. All user text lives in one module, so that a second language can be added later without touching the views.
+7. **[My call]** The topic map is a new route that coexists with the existing explorer. The explorer, its contract and the Nginx barrier are untouched.
 
-**[My call]** Sentence templates are generated from the data with guards: the "one applicant dominates" clause appears only when one applicant is at least 30 % of the last two years; otherwise the page says no company dominates. Numbers use the Spanish thousands separator.
+**[My call]** Sentence templates are generated from the data with guards: the "one applicant dominates" clause appears only when one applicant is at least 30 % of the last two years; otherwise the page says no company dominates. Numbers use the Spanish thousands separator. Other rules: the peak is the year(s) with the most documents (ties all named); five applicants and five neighbours are visible and the rest fold; figures are rounded to whole numbers; sub-areas may overlap and the page says so.
 
 ### Content per view
 
@@ -69,6 +71,7 @@ The owner is not a patent expert, and "if it cannot be understood without domain
 
 - **[My call]** A topic is a hand-written definition: a list of IPC subclasses or main groups (current and superseded), a plain name, a description for each sub-area, and plain names for neighbouring subclasses. The catalogue starts with batteries and solar.
 - Plain names were checked against the official IPC 2026.01 scheme titles by two subagents (2026-10-29). Corrected names are in the prototype source, not yet in the repository. **[Open]** A sector expert still has to review them before a client sees them. F01K was not verified.
+- **[My call]** Definitions and plain names live in one versioned definition file per topic in the repository, reviewed by a person. Its identifier goes into the result's configuration, so changing a name or a code changes the version. Each name carries a `reviewed` flag; a build for clients refuses topics with unreviewed names, a development build shows them marked.
 - **[Open]** How a new topic is added, and who reviews its definition, is not designed. Topic quality depends entirely on the definition (batteries is one subclass and reads sharply; solar mixes four areas and reads more loosely).
 - Some topics cannot be built from this corpus: "precision agriculture" lives at subgroup level (A01B 79/005) and subgroups are truncated.
 - Applicant names are merged by hand-written rules for well-known companies only. **[Open]** A systematic normalisation.
@@ -76,12 +79,15 @@ The owner is not a patent expert, and "if it cannot be understood without domain
 ## 7. White spaces
 
 - **What exists now:** "se combinan menos de lo que cabría esperar": subclasses observed together with the topic, fewer times than their size suggests, shown with "aparece N veces; por su tamaño cabría esperar unas M". They come from the observed corpus and show no candidate pair.
+  - **[My call, provisional, pending the owner's criterion below]** Expected count: the same formula as ADR 0038 E3, within publication years (the prototype used corpus-wide frequencies, which ignore time; the build must not). Included: observed count at least 30 and ratio observed/expected below 0.8. All qualifying rows are listed.
+  - **Order: alphabetical by plain name.** The prototype sorted by ratio, ascending, which is a ranking in disguise and contradicts the no-ranking rule; it must not be repeated. The bar may show the ratio; the order does not encode it.
 - **What is only a mock:** a block of never-co-classified pairs, with fictitious pairs and fictitious numbers, labelled everywhere as fictitious, in alphabetical order with no score. It tests wording only. Real pairs are not shown while E7 and D4 are open.
 - **[Open, owner]** The criterion for which never-co-classified pairs a topic view may show. Constraints it has to respect: the expected count under independence (ADR 0038 E3, minimum 1), no ranking, aggregate or alphabetical presentation, and that most such pairs are technically meaningless (for example batteries with algae farming), so the filter is a scientific decision, not a design one.
 - Each row, real or mock, says what is not known: whether it exists outside Spain or outside this corpus, and whether there is a technical reason it is not combined. Said once at the top of the view, with a short mark on each row.
 
 ## 8. Data and delivery (what the builder works from)
 
+- **[My call]** The prototype code is reference only and is rewritten under the repository's architecture (the domain defines topic, sub-area and metric; the application computes them; infrastructure reads the corpus and writes the result). The prototype's extraction script for solar and the corrected names are in `.playwright-mcp/spike-src/` (not in git); the battery generator was lost and has to be written again from this section.
 - **[My call]** Per-topic aggregate results computed offline from the versioned corpus by a script, served as static, versioned JSON with a SHA-256 checked at load, as in vertical 3. The browser computes no metric beyond presentation. Raw documents, titles and per-document identifiers are not served.
 - The prototype computed, per topic: documents by year (O4 units by earliest publication year), sub-area counts, neighbour subclasses with counts and a ratio against corpus-wide frequency, and applicants. These definitions are the starting point and the builder may restructure them.
 - Right now the corpus generator takes about three minutes per topic. Fine offline; a topic added at request time would need precomputation, not a live query.
@@ -93,19 +99,25 @@ The owner is not a patent expert, and "if it cannot be understood without domain
 - Both topics are 0.8 % of the corpus by coincidence.
 - Two errors made and fixed during the prototypes show the risk: a text claimed recent years were under-represented when they were the highest, and a substring rule merged all "Politécnica" universities under Madrid. Generated sentences need tests against the data.
 
-## 10. Success and how it will be judged
+## 10. Scope of the first build
+
+**[My call, to be confirmed by the owner]** The first build delivers the three views with real data (¿Crece?, ¿De qué trata?, ¿Quién está?) and, in "Pistas sin explorar", only the real "menos de lo esperado" part. The fictitious block of never-co-classified pairs is **not** shipped: it stays a development fixture, so no fictitious data reaches a client. The result format does not carry a block of unobserved pairs until the criterion of section 7 exists.
+
+## 11. Success and how it will be judged
 
 - **[My call]** Two or three people who do technology watch use the prototype on a shared screen without explanation. The test is what they understand, what they ask, and what they miss; not whether they like it.
+- **[My call]** The first phase counts as understood if at least two of three people answer correctly, without help and within two minutes, the three questions of section 3 for a topic they did not see before.
 - Sentence guards and merged names covered by tests (`shouldMentionDominantApplicantOnlyWhenAboveThreshold` style).
 - Acceptance of exposure stays with ADR 0038; this document does not replace it.
 
-## 11. Left to the builder
+## 12. Left to the builder
 
 Technology choices inside the existing frontend and backend, file layout, chart implementation, how definitions and names are stored, accessibility details (keyboard, contrast, small screens), and the test strategy.
 
-## 12. Decisions the owner still has to make
+## 13. Decisions the owner still has to make
 
 1. The criterion for the never-co-classified pairs a topic view may show (section 7), and whether showing any is allowed before E7 and D4.
 2. Who reads the OEPM legal notice (D4).
 3. Who the first real users are, and who reviews plain names and topic definitions.
 4. How a topic that is not in the catalogue is eventually added.
+5. Confirm that the fictitious block of never-co-classified pairs is not shipped (section 10).
