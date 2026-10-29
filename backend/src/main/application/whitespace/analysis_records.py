@@ -18,6 +18,8 @@ class AnalysisRecord(NamedTuple):
     filing_year: int | None
     subclasses: tuple[str, ...]
     kind: str = ""
+    groups: tuple[str, ...] = ()
+    applicants: tuple[str, ...] = ()
 
     @property
     def is_ep_translation(self) -> bool:
@@ -44,6 +46,8 @@ def to_analysis_records(outcomes: Iterable[PatentPublication | RejectedRecord]) 
             filing_year=filing_year(item),
             subclasses=tuple(sorted({entry.subclass_symbol for entry in item.ipc_entries})),
             kind=item.kind,
+            groups=tuple(sorted({f"{e.subclass_symbol} {e.main_group}" for e in item.ipc_entries if e.main_group})),
+            applicants=tuple(dict.fromkeys(item.applicants)),
         )
         for item in outcomes
         if isinstance(item, PatentPublication)
