@@ -49,12 +49,14 @@ The owner is not a patent expert, and "if it cannot be understood without domain
 **[Owner]** approved a three-level structure after seeing it clickable.
 
 1. **Entry.** One question, "¿Qué tecnología te interesa?", with a search box and the available topics. **[Owner]** If the typed topic does not exist, the page says "No tenemos ese tema todavía." and nothing else.
-2. **Topic summary.** One sentence with the main answer and four large buttons: ¿Crece? · ¿De qué trata? · ¿Quién está? · Pistas sin explorar.
+2. **Topic summary.** One sentence with the main answer and four large buttons: ¿Cómo evoluciona? · ¿De qué trata? · ¿Quién está? · Pistas sin explorar.
 3. **Detail views, one question each.** At most five items visible and a "Ver N más" fold. Each opens with a sentence that answers the question, then the chart or list.
 4. **"Cómo leer esto"** reachable from every view (a dialog), holding the general caveats: corpus, translations, publication date, 2010 gap, nothing here says what is new or patentable.
 5. Breadcrumbs on every view. No long single-scroll page.
 6. **[My call]** Spanish only for now. All user text lives in one module, so that a second language can be added later without touching the views.
 7. **[My call]** The topic map is a new route that coexists with the existing explorer. The explorer, its contract and the Nginx barrier are untouched.
+
+**[My call, label to be confirmed by the owner]** The first button is renamed from "¿Crece?" to "¿Cómo evoluciona?", because the data supports counts of publications per year, not a growth claim.
 
 **[My call]** Sentence templates are generated from the data with guards: the "one applicant dominates" clause appears only when one applicant is at least 30 % of the last two years; otherwise the page says no company dominates. Numbers use the Spanish thousands separator. Other rules: the peak is the year(s) with the most documents (ties all named); five applicants and five neighbours are visible and the rest fold; figures are rounded to whole numbers; sub-areas may overlap and the page says so.
 
@@ -62,7 +64,7 @@ The owner is not a patent expert, and "if it cannot be understood without domain
 
 | View | Answers | Contents |
 |---|---|---|
-| ¿Crece? | Are more patents published than before? | Averages 2000–2009, 2011–2023, 2024–2025; the peak year(s); a bar chart by year with the 2010 gap marked; when one applicant dominates, its share drawn in another colour; reminder that the axis is publication in Spain. |
+| ¿Cómo evoluciona? | How many documents are published per year, and how has that number changed? | Descriptive only: the yearly average for 2000–2009, 2011–2023 and 2024–2025, each next to the share of EP translations in that period; the peak year(s); a bar chart by year with the 2010 gap marked; when one applicant dominates, its share drawn in another colour; reminder that the axis is publication in Spain. The text never says "crece" or "decrece": a comparison of three averages is not a trend. |
 | ¿De qué trata? | What are its parts and what does it mix with? | Sub-areas with plain names and one-line descriptions; neighbouring technologies by co-classification. |
 | ¿Quién está? | Who patents? | Applicants with the largest number of documents, variants of known names merged. |
 | Pistas sin explorar | What is combined less than expected? | Observed-but-rare combinations with their expected count (see section 7). |
@@ -74,12 +76,24 @@ The owner is not a patent expert, and "if it cannot be understood without domain
 - **[My call]** Definitions and plain names live in one versioned definition file per topic in the repository, reviewed by a person. Its identifier goes into the result's configuration, so changing a name or a code changes the version. Each name carries a `reviewed` flag; a build for clients refuses topics with unreviewed names, a development build shows them marked.
 - **[Open]** How a new topic is added, and who reviews its definition, is not designed. Topic quality depends entirely on the definition (batteries is one subclass and reads sharply; solar mixes four areas and reads more loosely).
 - Some topics cannot be built from this corpus: "precision agriculture" lives at subgroup level (A01B 79/005) and subgroups are truncated.
-- Applicant names are merged by hand-written rules for well-known companies only. **[Open]** A systematic normalisation.
+- **Applicants [My call].** Merging rules live in a versioned file, each with its pattern, the canonical name, the reason and a date. A rule matches whole normalised names or whole-word prefixes, never a bare substring (a substring rule once merged every "Politécnica" university under Madrid). The original name stays attached to every merged count for traceability. Names no rule resolves stay separate. Tests cover collisions and false positives (for example Universidad Politécnica de Madrid vs de Valencia or de Cataluña). A systematic normalisation remains **[Open]**.
+
+### Topic semantics (contract the build must fix as tests)
+
+- **Unit:** the O4 unit, with the union of the subclasses and main groups of its earliest publication date. Everything below counts units, never records.
+- **Membership:** a unit belongs to a topic if at least one of its IPC entries matches at least one code of the definition. It is counted once for the topic however many codes match. A unit belongs to a sub-area under the same rule applied to that sub-area's codes.
+- **Overlap:** sub-areas may overlap, so their counts may add up to more than the topic total. Every code of a definition belongs to exactly one sub-area.
+- **Invariants:** each sub-area count ≤ the topic count; the union of the sub-areas equals the topic; the topic count is the same whatever the order of the codes; the counts are reproducible from the corpus hash and the definition identifier.
+- **Neighbours:** a subclass X is a neighbour of T if the same unit carries X; the subclasses named in the definition are excluded. Counts are units.
+- **Historical codes:** each definition lists current and superseded codes with the IPC version that introduced or removed them and the source checked (H01M 2→50, 2021.01, verified; H01L 31→H10F, 2025.01, verified; F24J 2→F24S, 2018.01, group-to-group transfer not verified). Unverified mappings are marked in the definition file and in the topic's notes.
 
 ## 7. White spaces
 
 - **What exists now:** "se combinan menos de lo que cabría esperar": subclasses observed together with the topic, fewer times than their size suggests, shown with "aparece N veces; por su tamaño cabría esperar unas M". They come from the observed corpus and show no candidate pair.
-  - **[My call, provisional, pending the owner's criterion below]** Expected count: the same formula as ADR 0038 E3, within publication years (the prototype used corpus-wide frequencies, which ignore time; the build must not). Included: observed count at least 30 and ratio observed/expected below 0.8. All qualifying rows are listed.
+  - **Definition [My call, provisional parameters].** For a topic T and a neighbouring subclass X, over O4 units published in years with documents (2010 skipped, never counted as zero): observed O = units in T that also carry X; expected E = Σ_y n_T(y)·n_X(y) / N(y), the ADR 0038 E3 formula with n_T(y) the units of T published in year y, n_X(y) those carrying X, and N(y) all units of year y. Ratio = O / E. The prototype used corpus-wide frequencies, which ignore time; its figures are not results and are recomputed.
+  - **Inclusion (parameters provisional, to be approved):** O ≥ 1 and E ≥ 30 and ratio < 0.8. A minimum expected count keeps the ratio from resting on small numbers. **O = 0 is excluded on purpose:** a topic-subclass pair never observed together is a never-co-classified pair and belongs to the E7/D4 gate, so this list never contains one. E = 0 is excluded (ratio undefined).
+  - Meaning of the ratio: observed co-classifications divided by what independence within years would give. It describes the corpus; it says nothing about a technical reason or an opportunity.
+  - Boundary cases to be fixed as tests before building: E just below and above 30, ratio 0.79 and 0.80, a year with no documents, a topic with no qualifying row (the view says so instead of showing an empty chart).
   - **Order: alphabetical by plain name.** The prototype sorted by ratio, ascending, which is a ranking in disguise and contradicts the no-ranking rule; it must not be repeated. The bar may show the ratio; the order does not encode it.
 - **What is only a mock:** a block of never-co-classified pairs, with fictitious pairs and fictitious numbers, labelled everywhere as fictitious, in alphabetical order with no score. It tests wording only. Real pairs are not shown while E7 and D4 are open.
 - **[Open, owner]** The criterion for which never-co-classified pairs a topic view may show. Constraints it has to respect: the expected count under independence (ADR 0038 E3, minimum 1), no ranking, aggregate or alphabetical presentation, and that most such pairs are technically meaningless (for example batteries with algae farming), so the filter is a scientific decision, not a design one.
@@ -101,12 +115,13 @@ The owner is not a patent expert, and "if it cannot be understood without domain
 
 ## 10. Scope of the first build
 
-**[My call, to be confirmed by the owner]** The first build delivers the three views with real data (¿Crece?, ¿De qué trata?, ¿Quién está?) and, in "Pistas sin explorar", only the real "menos de lo esperado" part. The fictitious block of never-co-classified pairs is **not** shipped: it stays a development fixture, so no fictitious data reaches a client. The result format does not carry a block of unobserved pairs until the criterion of section 7 exists.
+**[My call, to be confirmed by the owner]** The first build delivers the three views with real data (¿Cómo evoluciona?, ¿De qué trata?, ¿Quién está?) and, in "Pistas sin explorar", only the real "menos de lo esperado" part. The fictitious block of never-co-classified pairs is **not** shipped: it stays a development fixture, so no fictitious data reaches a client. The result format does not carry a block of unobserved pairs until the criterion of section 7 exists.
 
 ## 11. Success and how it will be judged
 
 - **[My call]** Two or three people who do technology watch use the prototype on a shared screen without explanation. The test is what they understand, what they ask, and what they miss; not whether they like it.
-- **[My call]** The first phase counts as understood if at least two of three people answer correctly, without help and within two minutes, the three questions of section 3 for a topic they did not see before.
+- **[My call]** The first phase counts as understood if at least two of three people answer correctly, without help and within two minutes, the three questions of section 3 for a topic they did not see before. With three participants this is a formative test, not evidence of general usability.
+- **Protocol, fixed before the session [My call]:** (1) the exact questions, written per topic from the data (for example "¿Se publican más o menos documentos al año que a principios de los 2000?", "¿Cuál es la parte más grande de este tema?", "¿Qué empresa aparece más?"); (2) for each, the accepted answers, derived from the computed data; (3) one uniform instruction read to every participant, with no help from the moderator; (4) an observation sheet with time to answer, wrong or missing answers, where the person hesitated and what they said aloud; (5) what counts as an error, decided in advance.
 - Sentence guards and merged names covered by tests (`shouldMentionDominantApplicantOnlyWhenAboveThreshold` style).
 - Acceptance of exposure stays with ADR 0038; this document does not replace it.
 
