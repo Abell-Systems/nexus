@@ -1,0 +1,92 @@
+[
+  {
+    "pattern": "ABENGOA SOLAR",
+    "canonical": "Abengoa Solar",
+    "reason": "Names starting with Abengoa Solar are the same applicant, Abengoa Solar.",
+    "date": "2026-10-29"
+  },
+  {
+    "pattern": "UNIVERSIDAD POLITECNICA DE MADRID",
+    "canonical": "Universidad Politécnica de Madrid",
+    "reason": "Names starting with Universidad Politecnica De Madrid are the same applicant, Universidad Politécnica de Madrid.",
+    "date": "2026-10-29"
+  },
+  {
+    "pattern": "UNIVERSIDAD POLIT CNICA DE MADRID",
+    "canonical": "Universidad Politécnica de Madrid",
+    "reason": "Names starting with Universidad Polit Cnica De Madrid are the same applicant, Universidad Politécnica de Madrid.",
+    "date": "2026-10-29"
+  },
+  {
+    "pattern": "COMMISSARIAT A L ENERGIE ATOMIQUE",
+    "canonical": "CEA (Francia)",
+    "reason": "Names starting with Commissariat A L Energie Atomique are the same applicant, CEA (Francia).",
+    "date": "2026-10-29"
+  },
+  {
+    "pattern": "COMMISSARIAT L ENERGIE ATOMIQUE",
+    "canonical": "CEA (Francia)",
+    "reason": "Names starting with Commissariat L Energie Atomique are the same applicant, CEA (Francia).",
+    "date": "2026-10-29"
+  },
+  {
+    "pattern": "TRINA SOLAR",
+    "canonical": "Trina Solar",
+    "reason": "Names starting with Trina Solar are the same applicant, Trina Solar.",
+    "date": "2026-10-29"
+  },
+  {
+    "pattern": "FRAUNHOFER GESELLSCHAFT",
+    "canonical": "Fraunhofer (Alemania)",
+    "reason": "Names starting with Fraunhofer Gesellschaft are the same applicant, Fraunhofer (Alemania).",
+    "date": "2026-10-29"
+  },
+  {
+    "pattern": "CONSEJO SUPERIOR DE INVESTIGACIONES CIENTIFICAS",
+    "canonical": "CSIC",
+    "reason": "Names starting with Consejo Superior De Investigaciones Cientificas are the same applicant, CSIC.",
+    "date": "2026-10-29"
+  },
+  {
+    "pattern": "CENTRO DE INVESTIGACIONES ENERGETICAS",
+    "canonical": "CIEMAT",
+    "reason": "Names starting with Centro De Investigaciones Energeticas are the same applicant, CIEMAT.",
+    "date": "2026-10-29"
+  },
+  {
+    "pattern": "LG ENERGY SOLUTION",
+    "canonical": "LG Energy Solution",
+    "reason": "Names starting with Lg Energy Solution are the same applicant, LG Energy Solution.",
+    "date": "2026-10-29"
+  },
+  {
+    "pattern": "HUNAN BRUNP",
+    "canonical": "Brunp Recycling (grupo)",
+    "reason": "Names starting with Hunan Brunp are the same applicant, Brunp Recycling (grupo).",
+    "date": "2026-10-29"
+  },
+  {
+    "pattern": "GUANGDONG BRUNP",
+    "canonical": "Brunp Recycling (grupo)",
+    "reason": "Names starting with Guangdong Brunp are the same applicant, Brunp Recycling (grupo).",
+    "date": "2026-10-29"
+  },
+  {
+    "pattern": "CONTEMPORARY AMPEREX TECHNOLOGY",
+    "canonical": "CATL",
+    "reason": "Names starting with Contemporary Amperex Technology are the same applicant, CATL.",
+    "date": "2026-10-29"
+  },
+  {
+    "pattern": "SIEMENS AKTIENGESELLSCHAFT",
+    "canonical": "Siemens",
+    "reason": "Names starting with Siemens Aktiengesellschaft are the same applicant, Siemens.",
+    "date": "2026-10-29"
+  },
+  {
+    "pattern": "ROBERT BOSCH",
+    "canonical": "Bosch",
+    "reason": "Names starting with Robert Bosch are the same applicant, Bosch.",
+    "date": "2026-10-29"
+  }
+]

@@ -53,9 +53,18 @@ ON_DEMAND_SOURCES = [
 ]
 
 
+def _topic_map_sources(root: Path) -> list[dict]:
+    """Topic maps are served on demand when their result exists; absent ones are skipped."""
+    return [
+        {"source": path.relative_to(root).as_posix(), "producedBy": "scripts/report_topic_map.py"}
+        for path in sorted((root / "docs" / "whitespace").glob("topic-map-*.json"))
+    ]
+
+
 def sync(target: Path, public_target: Path, root: Path = REPO_ROOT) -> dict:
     files = []
-    for entries, destination, served in ((SOURCES, target, "bundled"), (ON_DEMAND_SOURCES, public_target, "on_demand")):
+    on_demand = ON_DEMAND_SOURCES + _topic_map_sources(root)
+    for entries, destination, served in ((SOURCES, target, "bundled"), (on_demand, public_target, "on_demand")):
         destination.mkdir(parents=True, exist_ok=True)
         for entry in entries:
             name = Path(entry["source"]).name

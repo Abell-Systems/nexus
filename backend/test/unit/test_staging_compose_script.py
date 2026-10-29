@@ -138,3 +138,12 @@ def test_shouldNotServeTheUnobservedPairsDataFromTheStaticImageUntilTheViewIsExp
     block = re.search(r"location = /data/oepm-unobserved-pairs-results\.json \{\s*return 404;\s*\}", conf)
     assert block, "the vertical 3 data must answer 404 in the static staging until its exposure conditions are met"
     assert conf.index(block.group(0)) < conf.index("location / {"), "the exact-match block must precede the catch-all"
+
+
+def test_shouldNotServeTheTopicMapDataFromTheStaticImageUntilD4IsRecorded():
+    conf = (REPO_ROOT / "deploy" / "nginx-static.conf").read_text(encoding="utf-8")
+    block = re.search(r"location \^~ /data/topic-map- \{\s*return 404;\s*\}", conf)
+    assert block, "every topic-map-<topic>.json must answer 404 in the static staging until D4 and the exposure are recorded"
+    # ^~ is a prefix: it closes topic-map-batteries.json and any other topic, and nothing outside the prefix
+    # (topic-map.json or other-topic-map-x.json stay served as ordinary files).
+    assert conf.index(block.group(0)) < conf.index("location / {"), "the block must precede the catch-all"

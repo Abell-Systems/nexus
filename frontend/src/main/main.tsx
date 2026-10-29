@@ -8,11 +8,18 @@ import "./index.css";
 const MatchesPage = import.meta.env.VITE_STATIC_ONLY
   ? null
   : lazy(() => import("./components/Matches/MatchesPage.tsx").then((m) => ({ default: m.MatchesPage })));
+const TopicMapPage = import.meta.env.VITE_STATIC_ONLY
+  ? null
+  : lazy(() => import("./components/TopicMap/TopicMapPage.tsx").then((m) => ({ default: m.TopicMapPage })));
 const screen = chooseScreen(window.location.pathname, window.location.search);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    {MatchesPage && screen === "matcher" ? (
+    {TopicMapPage && screen === "topics" ? (
+      <Suspense fallback={null}>
+        <TopicMapPage />
+      </Suspense>
+    ) : MatchesPage && screen === "matcher" ? (
       <Suspense fallback={null}>
         <MatchesPage />
       </Suspense>

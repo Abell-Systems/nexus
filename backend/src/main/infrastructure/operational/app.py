@@ -29,6 +29,8 @@ def create_mvp_app(artifacts_dir: Path, static_dir: Path | None = None, selectio
         @app.get("/{path:path}")
         def spa(path: str) -> FileResponse:
             target = (root / path).resolve()
+            if path.startswith("data/topic-map-"):  # D4: topic data is never served by the MVP container
+                raise HTTPException(status_code=404)
             if path in _SPA_ROUTES:
                 return FileResponse(root / "index.html")
             if target.is_relative_to(root) and target.is_file():

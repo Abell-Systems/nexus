@@ -1,0 +1,281 @@
+{
+  "key": "baterias",
+  "name": "Baterías",
+  "noun": "baterías",
+  "joined": "junto a baterías",
+  "own_subclasses": [
+    "H01M"
+  ],
+  "subareas": [
+    {
+      "key": "10",
+      "name": "Baterías recargables",
+      "description": "Pilas y acumuladores que se pueden volver a cargar, como las de litio de móviles y coches.",
+      "reviewed": false,
+      "codes": [
+        {
+          "subclass": "H01M",
+          "main_group": "10",
+          "introduced": null,
+          "removed": null,
+          "verified": true
+        }
+      ]
+    },
+    {
+      "key": "4",
+      "name": "Electrodos y sus materiales",
+      "description": "Los electrodos de una batería y los materiales con que se fabrican.",
+      "reviewed": false,
+      "codes": [
+        {
+          "subclass": "H01M",
+          "main_group": "4",
+          "introduced": null,
+          "removed": null,
+          "verified": true
+        }
+      ]
+    },
+    {
+      "key": "2+50",
+      "name": "Carcasas, separadores y conexiones",
+      "description": "La envoltura, los soportes, los separadores y las conexiones eléctricas de las baterías (no de las pilas de combustible).",
+      "reviewed": false,
+      "codes": [
+        {
+          "subclass": "H01M",
+          "main_group": "2",
+          "introduced": null,
+          "removed": "2021.01",
+          "verified": true
+        },
+        {
+          "subclass": "H01M",
+          "main_group": "50",
+          "introduced": "2021.01",
+          "removed": null,
+          "verified": true
+        }
+      ]
+    },
+    {
+      "key": "8",
+      "name": "Pilas de combustible",
+      "description": "Producen electricidad a partir de un combustible, por ejemplo hidrógeno.",
+      "reviewed": false,
+      "codes": [
+        {
+          "subclass": "H01M",
+          "main_group": "8",
+          "introduced": null,
+          "removed": null,
+          "verified": true
+        }
+      ]
+    },
+    {
+      "key": "6",
+      "name": "Pilas no recargables (de un solo uso)",
+      "description": "Pilas que no se pueden volver a cargar.",
+      "reviewed": false,
+      "codes": [
+        {
+          "subclass": "H01M",
+          "main_group": "6",
+          "introduced": null,
+          "removed": null,
+          "verified": true
+        }
+      ]
+    },
+    {
+      "key": "12",
+      "name": "Baterías híbridas (mezcla de principios)",
+      "description": "Tipos que mezclan principios de distintos tipos de pila.",
+      "reviewed": false,
+      "codes": [
+        {
+          "subclass": "H01M",
+          "main_group": "12",
+          "introduced": null,
+          "removed": null,
+          "verified": true
+        }
+      ]
+    },
+    {
+      "key": "16",
+      "name": "Combinaciones de distintos generadores",
+      "description": "Varios tipos de generadores eléctricos electroquímicos combinados.",
+      "reviewed": false,
+      "codes": [
+        {
+          "subclass": "H01M",
+          "main_group": "16",
+          "introduced": null,
+          "removed": null,
+          "verified": true
+        }
+      ]
+    }
+  ],
+  "neighbour_names": [
+    {
+      "subclass": "C01B",
+      "name": "Elementos no metálicos y sus compuestos",
+      "reviewed": false
+    },
+    {
+      "subclass": "H02J",
+      "name": "Carga y gestión de energía eléctrica",
+      "reviewed": false
+    },
+    {
+      "subclass": "G01R",
+      "name": "Medición de magnitudes eléctricas",
+      "reviewed": false
+    },
+    {
+      "subclass": "C25B",
+      "name": "Electrólisis para fabricar compuestos",
+      "reviewed": false
+    },
+    {
+      "subclass": "C01G",
+      "name": "Compuestos de otros metales",
+      "reviewed": false
+    },
+    {
+      "subclass": "B60L",
+      "name": "Propulsión y alimentación de vehículos eléctricos",
+      "reviewed": false
+    },
+    {
+      "subclass": "H01G",
+      "name": "Condensadores",
+      "reviewed": false
+    },
+    {
+      "subclass": "B01J",
+      "name": "Procesos químicos y catalizadores",
+      "reviewed": false
+    },
+    {
+      "subclass": "B01D",
+      "name": "Separación de sustancias (filtrado, membranas)",
+      "reviewed": false
+    },
+    {
+      "subclass": "C08J",
+      "name": "Elaboración y acabado de polímeros",
+      "reviewed": false
+    },
+    {
+      "subclass": "G01N",
+      "name": "Análisis y ensayo de materiales",
+      "reviewed": false
+    },
+    {
+      "subclass": "C08L",
+      "name": "Mezclas de polímeros",
+      "reviewed": false
+    },
+    {
+      "subclass": "C07D",
+      "name": "Compuestos orgánicos con anillos que contienen otros elementos",
+      "reviewed": false
+    },
+    {
+      "subclass": "C07C",
+      "name": "Compuestos orgánicos de carbono (cadena y anillo)",
+      "reviewed": false
+    },
+    {
+      "subclass": "B60R",
+      "name": "Equipamiento y piezas de vehículos",
+      "reviewed": false
+    },
+    {
+      "subclass": "C09D",
+      "name": "Pinturas, tintas y recubrimientos",
+      "reviewed": false
+    },
+    {
+      "subclass": "B29C",
+      "name": "Moldeado y unión de plásticos",
+      "reviewed": false
+    },
+    {
+      "subclass": "C08G",
+      "name": "Polímeros de condensación (poliuretanos, poliésteres)",
+      "reviewed": false
+    },
+    {
+      "subclass": "B32B",
+      "name": "Materiales en capas (laminados)",
+      "reviewed": false
+    },
+    {
+      "subclass": "G02B",
+      "name": "Lentes, espejos y sistemas ópticos",
+      "reviewed": false
+    },
+    {
+      "subclass": "E04D",
+      "name": "Tejados, claraboyas y canalones",
+      "reviewed": false
+    },
+    {
+      "subclass": "F28D",
+      "name": "Intercambio y almacenamiento de calor",
+      "reviewed": false
+    },
+    {
+      "subclass": "C23C",
+      "name": "Recubrimientos metálicos y depósito al vacío",
+      "reviewed": false
+    },
+    {
+      "subclass": "B08B",
+      "name": "Limpieza",
+      "reviewed": false
+    },
+    {
+      "subclass": "E04H",
+      "name": "Edificios para usos concretos, piscinas, mástiles, vallas",
+      "reviewed": false
+    },
+    {
+      "subclass": "F24D",
+      "name": "Calefacción y agua caliente de viviendas",
+      "reviewed": false
+    },
+    {
+      "subclass": "F03D",
+      "name": "Aerogeneradores y motores de viento",
+      "reviewed": false
+    },
+    {
+      "subclass": "C03C",
+      "name": "Composición y tratamiento del vidrio",
+      "reviewed": false
+    },
+    {
+      "subclass": "F01K",
+      "name": "Centrales de vapor y ciclos térmicos",
+      "reviewed": false,
+      "note": "Nombre sin verificar contra IPC 2026.01"
+    },
+    {
+      "subclass": "F16L",
+      "name": "Tuberías, uniones y aislamiento térmico",
+      "reviewed": false
+    },
+    {
+      "subclass": "C08K",
+      "name": "Aditivos para plásticos y gomas",
+      "reviewed": false
+    }
+  ]
+}

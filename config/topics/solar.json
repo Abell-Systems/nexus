@@ -1,0 +1,248 @@
+{
+  "key": "solar",
+  "name": "Energía solar",
+  "noun": "energía solar",
+  "joined": "junto a la energía solar",
+  "own_subclasses": [
+    "F03G",
+    "F24J",
+    "F24S",
+    "H01L",
+    "H02S",
+    "H10F",
+    "H10K"
+  ],
+  "subareas": [
+    {
+      "key": "pv",
+      "name": "Células solares y sensores de luz",
+      "description": "Dispositivos semiconductores que reaccionan a la luz: las células que convierten el sol en electricidad y también detectores de luz.",
+      "reviewed": false,
+      "codes": [
+        {
+          "subclass": "H01L",
+          "main_group": "31",
+          "introduced": null,
+          "removed": "2025.01",
+          "verified": true
+        },
+        {
+          "subclass": "H10F",
+          "main_group": null,
+          "introduced": "2025.01",
+          "removed": null,
+          "verified": true
+        },
+        {
+          "subclass": "H10K",
+          "main_group": "30",
+          "introduced": null,
+          "removed": null,
+          "verified": true
+        }
+      ]
+    },
+    {
+      "key": "systems",
+      "name": "Instalaciones y paneles solares eléctricos",
+      "description": "Centrales, estructuras de soporte, componentes y control de sistemas para generar electricidad con luz solar.",
+      "reviewed": false,
+      "codes": [
+        {
+          "subclass": "H02S",
+          "main_group": null,
+          "introduced": null,
+          "removed": null,
+          "verified": true
+        }
+      ]
+    },
+    {
+      "key": "thermal",
+      "name": "Calor solar: colectores y sistemas",
+      "description": "Captadores que aprovechan el calor del sol, por ejemplo para agua caliente, y centrales termosolares.",
+      "reviewed": false,
+      "codes": [
+        {
+          "subclass": "F24S",
+          "main_group": null,
+          "introduced": "2018.01",
+          "removed": null,
+          "verified": true
+        },
+        {
+          "subclass": "F24J",
+          "main_group": "2",
+          "introduced": null,
+          "removed": "2018.01",
+          "verified": false
+        },
+        {
+          "subclass": "F03G",
+          "main_group": "6",
+          "introduced": null,
+          "removed": null,
+          "verified": true
+        }
+      ]
+    }
+  ],
+  "neighbour_names": [
+    {
+      "subclass": "C01B",
+      "name": "Elementos no metálicos y sus compuestos",
+      "reviewed": false
+    },
+    {
+      "subclass": "H02J",
+      "name": "Carga y gestión de energía eléctrica",
+      "reviewed": false
+    },
+    {
+      "subclass": "G01R",
+      "name": "Medición de magnitudes eléctricas",
+      "reviewed": false
+    },
+    {
+      "subclass": "C25B",
+      "name": "Electrólisis para fabricar compuestos",
+      "reviewed": false
+    },
+    {
+      "subclass": "C01G",
+      "name": "Compuestos de otros metales",
+      "reviewed": false
+    },
+    {
+      "subclass": "B60L",
+      "name": "Propulsión y alimentación de vehículos eléctricos",
+      "reviewed": false
+    },
+    {
+      "subclass": "H01G",
+      "name": "Condensadores",
+      "reviewed": false
+    },
+    {
+      "subclass": "B01J",
+      "name": "Procesos químicos y catalizadores",
+      "reviewed": false
+    },
+    {
+      "subclass": "B01D",
+      "name": "Separación de sustancias (filtrado, membranas)",
+      "reviewed": false
+    },
+    {
+      "subclass": "C08J",
+      "name": "Elaboración y acabado de polímeros",
+      "reviewed": false
+    },
+    {
+      "subclass": "G01N",
+      "name": "Análisis y ensayo de materiales",
+      "reviewed": false
+    },
+    {
+      "subclass": "C08L",
+      "name": "Mezclas de polímeros",
+      "reviewed": false
+    },
+    {
+      "subclass": "C07D",
+      "name": "Compuestos orgánicos con anillos que contienen otros elementos",
+      "reviewed": false
+    },
+    {
+      "subclass": "C07C",
+      "name": "Compuestos orgánicos de carbono (cadena y anillo)",
+      "reviewed": false
+    },
+    {
+      "subclass": "B60R",
+      "name": "Equipamiento y piezas de vehículos",
+      "reviewed": false
+    },
+    {
+      "subclass": "C09D",
+      "name": "Pinturas, tintas y recubrimientos",
+      "reviewed": false
+    },
+    {
+      "subclass": "B29C",
+      "name": "Moldeado y unión de plásticos",
+      "reviewed": false
+    },
+    {
+      "subclass": "C08G",
+      "name": "Polímeros de condensación (poliuretanos, poliésteres)",
+      "reviewed": false
+    },
+    {
+      "subclass": "B32B",
+      "name": "Materiales en capas (laminados)",
+      "reviewed": false
+    },
+    {
+      "subclass": "G02B",
+      "name": "Lentes, espejos y sistemas ópticos",
+      "reviewed": false
+    },
+    {
+      "subclass": "E04D",
+      "name": "Tejados, claraboyas y canalones",
+      "reviewed": false
+    },
+    {
+      "subclass": "F28D",
+      "name": "Intercambio y almacenamiento de calor",
+      "reviewed": false
+    },
+    {
+      "subclass": "C23C",
+      "name": "Recubrimientos metálicos y depósito al vacío",
+      "reviewed": false
+    },
+    {
+      "subclass": "B08B",
+      "name": "Limpieza",
+      "reviewed": false
+    },
+    {
+      "subclass": "E04H",
+      "name": "Edificios para usos concretos, piscinas, mástiles, vallas",
+      "reviewed": false
+    },
+    {
+      "subclass": "F24D",
+      "name": "Calefacción y agua caliente de viviendas",
+      "reviewed": false
+    },
+    {
+      "subclass": "F03D",
+      "name": "Aerogeneradores y motores de viento",
+      "reviewed": false
+    },
+    {
+      "subclass": "C03C",
+      "name": "Composición y tratamiento del vidrio",
+      "reviewed": false
+    },
+    {
+      "subclass": "F01K",
+      "name": "Centrales de vapor y ciclos térmicos",
+      "reviewed": false,
+      "note": "Nombre sin verificar contra IPC 2026.01"
+    },
+    {
+      "subclass": "F16L",
+      "name": "Tuberías, uniones y aislamiento térmico",
+      "reviewed": false
+    },
+    {
+      "subclass": "C08K",
+      "name": "Aditivos para plásticos y gomas",
+      "reviewed": false
+    }
+  ]
+}
