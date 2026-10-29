@@ -27,7 +27,9 @@ def normalise(raw: str) -> str:
 def canonical_name(raw: str, rules: Sequence[Rule]) -> tuple[str, str]:
     """(canonical, original). A rule matches the whole name or a whole-word prefix of it."""
     name = normalise(raw)
-    matched = {r.canonical for r in rules if name == normalise(r.pattern) or name.startswith(normalise(r.pattern) + " ")}
+    matched = {
+        r.canonical for r in rules if name == normalise(r.pattern) or name.startswith(normalise(r.pattern) + " ")
+    }
     if len(matched) > 1:
         raise ValueError(f"{raw!r} matches rules with different canonicals: {sorted(matched)}")
     return (matched.pop() if matched else name.title()), raw
