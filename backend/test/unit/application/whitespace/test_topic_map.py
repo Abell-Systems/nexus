@@ -358,3 +358,18 @@ def test_shouldWriteTheBuiltResultWhenRunWithASyntheticCorpus(tmp_path, monkeypa
     assert seen == [Path("synthetic")]
     assert written == script.build_for_topic("baterias", records, CORPUS, allow_unreviewed=True)
     assert (written["topic"]["key"], written["total_documents"], written["names_reviewed"]) == ("baterias", 1, False)
+
+
+SAMPLE = REPO_ROOT / "contracts" / "topic-map" / "1" / "synthetic-result.json"  # the frontend contract test reads the same file
+
+
+def test_shouldMatchTheCommittedSampleByteForByteWhenBuiltFromTheSyntheticInputs():
+    assert SAMPLE.read_text(encoding="utf-8") == result_bytes() + "\n"
+
+
+def test_shouldPassTheInvariantChecksWhenTheCommittedSampleIsLoaded():
+    check_invariants(json.loads(SAMPLE.read_text(encoding="utf-8")))
+
+
+def test_shouldDeclareTheSchemaTheFrontendReadsWhenBuildingTheSample():
+    assert full_result()["schema"] == SCHEMA == "topic-map/1"
