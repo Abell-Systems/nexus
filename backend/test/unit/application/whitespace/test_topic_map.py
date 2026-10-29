@@ -299,7 +299,8 @@ def test_shouldNotContainAnyRecordOrPerDocumentIdentifier():
 
 
 def test_shouldReproduceTheSameBytesWhenRunTwice():
-    assert result_bytes() == result_bytes()
+    first, second = result_bytes(), result_bytes()
+    assert first == second
     snippet = f"import runpy; print(runpy.run_path({str(Path(__file__))!r})['result_bytes']())"
     outputs = {
         subprocess.run(
