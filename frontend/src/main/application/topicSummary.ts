@@ -32,12 +32,13 @@ export function peakYears(r: TopicMapResult): number[] {
 const lastTwo = (r: TopicMapResult) => r.trend.slice(-2);
 const yearsLabel = (r: TopicMapResult) => lastTwo(r).map((t) => t.year).join(S.and);
 
-export function dominantApplicant(r: TopicMapResult): { name: string; share: number } | null {
+export function dominantApplicant(r: TopicMapResult): { name: string; share: number; recentDocuments: number } | null {
   const a = r.top_applicant_recent;
   const denominator = sum(lastTwo(r).map((t) => t.documents));
   if (!a || !denominator) return null;
-  const share = sum(a.by_year.slice(-2)) / denominator;
-  return share >= DOMINANCE ? { name: a.name, share } : null;
+  const recentDocuments = sum(a.by_year.slice(-2));
+  const share = recentDocuments / denominator;
+  return share >= DOMINANCE ? { name: a.name, share, recentDocuments } : null;
 }
 
 export function formatNumber(n: number): string {
@@ -45,7 +46,14 @@ export function formatNumber(n: number): string {
 }
 
 const whole = (n: number) => formatNumber(n);
-const pct = (fraction: number) => String(Math.round(fraction * 100));
+const docsPerYear = (avg: number) => {
+  const n = Math.round(avg);
+  return S.docsPerYear(whole(avg), avg > 0 && avg < 1 ? "less" : n === 0 ? "zero" : n === 1 ? "one" : "many");
+};
+const pct = (f: number) => {
+  const n = Math.round(f * 100);
+  return S.share(String(n), f > 0 && n < 1 ? "less" : f < 1 && n >= 100 ? "almost" : "exact");
+};
 const hasNoDocuments = (r: TopicMapResult) => sum(r.trend.map((t) => t.documents)) === 0;
 
 function dominantClause(r: TopicMapResult, withoutIt: boolean): string | null {
@@ -53,8 +61,8 @@ function dominantClause(r: TopicMapResult, withoutIt: boolean): string | null {
   if (!d) return null;
   if (!withoutIt) return S.dominantSummary(d.name, pct(d.share), yearsLabel(r));
   const rows = lastTwo(r);
-  const rest = (sum(rows.map((t) => t.documents)) - sum(r.top_applicant_recent!.by_year.slice(-2))) / rows.length;
-  return S.dominantEvolution(d.name, pct(d.share), yearsLabel(r), whole(rest));
+  const rest = Math.max(0, sum(rows.map((t) => t.documents)) - d.recentDocuments) / rows.length;
+  return S.dominantEvolution(d.name, pct(d.share), yearsLabel(r), docsPerYear(rest));
 }
 
 export function evolutionSentence(r: TopicMapResult): string {
@@ -62,13 +70,15 @@ export function evolutionSentence(r: TopicMapResult): string {
   const avg = periodAverages(r);
   const ep = periodEpShare(r);
   const parts = (["early", "middle", "recent"] as const).flatMap((p) =>
-    avg[p] === null ? [] : [S.periodAverage(S.PERIODS[p], whole(avg[p]), ep[p] === null ? null : S.epShare(pct(ep[p])))],
+    avg[p] === null ? [] : [S.periodAverage(S.PERIODS[p], docsPerYear(avg[p]), ep[p] === null ? null : S.epShare(pct(ep[p])))],
   );
+  if (!parts.length) return S.noPeriodData;
   const peaks = peakYears(r).map(String);
   const peak = peaks.length === 1
     ? S.peakOne(peaks[0])
     : S.peakMany(`${peaks.slice(0, -1).join(", ")}${S.and}${peaks[peaks.length - 1]}`);
-  const dominance = dominantClause(r, true) ?? S.noDominant(yearsLabel(r));
+  const noRecent = sum(lastTwo(r).map((t) => t.documents)) === 0;
+  const dominance = noRecent ? S.noRecentDocuments(yearsLabel(r)) : dominantClause(r, true) ?? S.noDominant(yearsLabel(r));
   const first = parts.join("; ");
   return `${first[0].toUpperCase()}${first.slice(1)}. ${peak}. ${dominance}.`;
 }
@@ -77,11 +87,11 @@ export function summarySentence(r: TopicMapResult): string {
   if (hasNoDocuments(r)) return S.noDocuments;
   const { middle, recent } = periodAverages(r);
   const averages = recent !== null && middle !== null
-    ? S.averages(S.perYear(whole(recent)), S.perYear(whole(middle)))
-    : recent !== null ? S.averageOne(S.perYear(whole(recent)), S.PERIODS.recent)
-    : middle !== null ? S.averageOne(S.perYear(whole(middle)), S.PERIODS.middle)
+    ? S.averages(docsPerYear(recent), docsPerYear(middle))
+    : recent !== null ? S.averageOne(docsPerYear(recent), S.PERIODS.recent)
+    : middle !== null ? S.averageOne(docsPerYear(middle), S.PERIODS.middle)
     : null;
-  return [S.total(whole(r.total_documents)), averages, dominantClause(r, false)]
+  return [S.total(whole(r.total_documents), r.total_documents === 1), averages, dominantClause(r, false)]
     .filter((x): x is string => x !== null)
     .join(". ") + ".";
 }
