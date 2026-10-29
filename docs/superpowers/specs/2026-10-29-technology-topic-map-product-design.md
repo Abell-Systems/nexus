@@ -1,6 +1,6 @@
 # Technology topic map: product design
 
-**Status:** Draft for the owner's approval. Nothing is built from this document until it is approved. It approves no exposure of real candidates, resolves no D4 or E7 decision, and claims nothing about patentability.
+**Status:** Approved by the owner on 2026-10-29 as the design to plan from. The approval covers this design only: it resolves no D4 or E7 decision, approves no exposure of real candidates, validates no threshold, and claims nothing about patentability. D4 stays unresolved until the owner has read the OEPM legal notice and recorded it; the two named roles of section 13 are still open.
 **Date:** 2026-10-29
 **Origin:** two throwaway prototypes (batteries, solar) built and reviewed on 2026-10-28/29. They live outside git; this document keeps what was learned from them.
 **Relates to:** [ADR 0036](../../adr/0036-technology-white-space-scientific-scope.md) · [ADR 0038](../../adr/0038-exploratory-white-space-product-track.md) · [vertical 3 acceptance status](../../whitespace/vertical-3-acceptance-status.md) · [decisions of 2026-10-28](../../whitespace/descriptive-article-outline.md)
