@@ -26,7 +26,7 @@ function fixture(over: Partial<TopicMapResult> = {}): TopicMapResult {
     ],
     neighbours: names(7, "Vecino").map((name) => ({ subclass: "H01M", name, documents: 50 })),
     rare: [
-      { subclass: "A61K", name: "Alfa", observed: 1, expected: 40.4, ratio: 0.9 },
+      { subclass: "A61K", name: "Alfa", observed: 31, expected: 40.4, ratio: 0.77 },
       { subclass: "B01D", name: "Beta", observed: 35, expected: 50, ratio: 0.7 },
       { subclass: "C02F", name: "Gamma", observed: 31, expected: 100, ratio: 0.31 },
     ],
@@ -81,7 +81,7 @@ describe("the topic map page", () => {
     expect(screen.getAllByText("Ver 2 más")[0].closest("details")?.querySelectorAll("li")).toHaveLength(2);
     expect(container.querySelectorAll("details")).toHaveLength(2);
     expect(screen.getByText(/Aparecen sobre todo junto a Vecino 1, Vecino 2 y Vecino 3\./)).toBeTruthy();
-    expect(screen.getByText(/Lo más habitual es Parte 1 \(10 % de los documentos\)\. Un mismo documento puede estar en más de una\./)).toBeTruthy();
+    expect(screen.getByText(/Lo más habitual es Parte 1 \(10 % de los documentos\)\. Un mismo documento puede estar en más de una subárea\./)).toBeTruthy();
   });
 
   it("shouldRenderASubareaWithZeroDocuments", async () => {
@@ -108,9 +108,59 @@ describe("the topic map page", () => {
     await screen.findByText(/Son pistas para investigar, no oportunidades/);
     const rows = Array.from(container.querySelectorAll("li strong")).map((s) => s.textContent);
     expect(rows).toEqual(["Alfa", "Beta", "Gamma"]); // alphabetical as given; by ratio it would be Gamma, Beta, Alfa
-    expect(container.textContent).toContain("Aparece 1 vez junto a baterías; por su tamaño cabría esperar unas 40.");
+    expect(container.textContent).toContain("Aparece 31 veces junto a baterías; por su tamaño cabría esperar unas 40.");
     expect(container.textContent).toContain("Aparece 35 veces junto a baterías; por su tamaño cabría esperar unas 50.");
+    expect(container.textContent).toContain("Lo que no sabemos: si ya existe fuera de España o fuera de este conjunto de documentos, y si hay una razón técnica para que no se combinen.");
+    expect(container.textContent?.split("Lo que no sabemos").length).toBe(2); // said once
+    expect(container.querySelectorAll("li small")).toHaveLength(3);
+    expect(Array.from(container.querySelectorAll("li small")).every((m) => m.textContent === "Sin comprobar")).toBe(true);
+    expect(container.textContent).toContain("Estas tecnologías aparecen junto a baterías menos veces de las que sugiere el tamaño de cada una.");
     expect(container.textContent).toContain("El criterio es provisional y no está validado.");
+  });
+
+  it.each([
+    ["ten percent", { name: "Acme", by_year: years.map((y) => (y >= 2024 ? 20 : 1)) }],
+    ["nobody", null],
+  ])("shouldNotDrawTheApplicantPartWhenNoApplicantDominates (%s)", async (_label, top) => {
+    window.location.hash = "#/baterias/evolucion";
+    const { container } = render(<TopicMapPage load={async () => fixture({ top_applicant_recent: top })} />);
+    await screen.findByRole("img");
+    expect(screen.queryByText(/Solo los de/)).toBeNull();
+    expect(container.querySelector("svg")?.textContent).not.toContain("Acme");
+    expect(container.querySelectorAll("rect[class*=barApplicant]")).toHaveLength(0);
+    expect(container.textContent).toContain("2010: sin datos"); // the gap legend stays
+  });
+
+  it("shouldNotShowTheGapLegendWhenNoYearIsMissing", async () => {
+    window.location.hash = "#/baterias/evolucion";
+    const all = Array.from({ length: 26 }, (_, i) => 2000 + i);
+    const { container } = render(
+      <TopicMapPage load={async () => fixture({ years: all, trend: all.map((year) => ({ year, documents: 10, share: 2, ep_documents: 5 })), top_applicant_recent: null })} />,
+    );
+    await screen.findByRole("img");
+    expect(container.textContent).not.toContain(": sin datos");
+  });
+
+  it("shouldTitleTheApplicantPartOfEachYearWhenOneApplicantDominates", async () => {
+    window.location.hash = "#/baterias/evolucion";
+    const { container } = render(<TopicMapPage load={async () => fixture()} />);
+    await screen.findByRole("img");
+    const titles = Array.from(container.querySelectorAll("svg title")).map((t) => t.textContent);
+    expect(titles).toContain("Acme: 60 documentos en 2025");
+    expect(titles).toContain("Acme: 1 documento en 2005");
+  });
+
+  it.each(["constructor", "toString", "__proto__"])("shouldShowTheSummaryWhenTheViewIsAnInheritedKey (%s)", async (key) => {
+    window.location.hash = `#/baterias/${key}`;
+    render(<TopicMapPage load={async () => fixture()} />);
+    expect(await screen.findByRole("link", { name: "¿Quién está?" })).toBeTruthy();
+  });
+
+  it("shouldExplainTheUnreviewedMarkInPlainWords", async () => {
+    window.location.hash = "#/baterias";
+    render(<TopicMapPage load={async () => fixture({ names_reviewed: false })} />);
+    expect(await screen.findByText(/Los nombres de este tema aún no los ha revisado una persona del sector\./)).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /cerrar|ocultar/i })).toBeNull();
   });
 
   it("shouldTellThereAreNoRowsWhenNothingQualifies", async () => {

@@ -1,5 +1,6 @@
 import type { TopicMapResult } from "../../domain/topicMap";
 import { formatNumber } from "../../application/topicSummary";
+import { listAnd } from "../../application/spanishList";
 import { FoldedList } from "./FoldedList";
 import * as S from "./strings";
 import styles from "./TopicMapPage.module.css";
@@ -28,7 +29,7 @@ export function ThemesView({ result }: { readonly result: TopicMapResult }) {
       {names.length > 0 && (
         <>
           <h2>{S.neighboursHeading}</h2>
-          <p>{S.neighboursSentence(names)}</p>
+          <p>{S.neighboursSentence(listAnd(names))}</p>
           <FoldedList
             items={result.neighbours}
             row={(n) => (

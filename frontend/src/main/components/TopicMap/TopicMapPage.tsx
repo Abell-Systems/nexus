@@ -24,7 +24,7 @@ function useHashRoute() {
     return () => window.removeEventListener("hashchange", onChange);
   }, []);
   const topic = TOPICS.find((t) => t.key === parts[0]);
-  return { topic, view: parts[1] in VIEWS ? (parts[1] as ViewKey) : null };
+  return { topic, view: Object.hasOwn(VIEWS, parts[1]) ? (parts[1] as ViewKey) : null };
 }
 
 export function TopicMapPage({ load = loadTopicMap }: { readonly load?: (topic: string) => Promise<TopicMapResult> }) {
@@ -71,7 +71,7 @@ export function TopicMapPage({ load = loadTopicMap }: { readonly load?: (topic: 
           <p>{S.unavailable}</p>
         ) : (
           <>
-            {!result.names_reviewed && <p className={styles.unreviewed}>{S.unreviewedMark}</p>}
+            {!result.names_reviewed && <p className={styles.unreviewed}><strong>{S.unreviewedMark}</strong> {S.unreviewedExplanation}</p>}
             <View result={result} />
           </>
         )}

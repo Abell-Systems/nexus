@@ -14,12 +14,13 @@ export function CluesView({ result }: { readonly result: TopicMapResult }) {
       ) : (
         <>
           <p className={styles.lead}>{S.cluesIntro(joined)}</p>
+          <p>{S.cluesUnknown}</p>
           {/* Order as given (alphabetical): never by ratio, no score. */}
           <FoldedList
             items={result.rare}
             row={(r) => (
               <li key={r.name}>
-                <strong>{r.name}</strong>
+                <strong>{r.name}</strong> <small className={styles.mark}>{S.clueMark}</small>
                 <p>{S.clueRow(formatNumber(r.observed), Math.round(r.observed) === 1, joined, formatNumber(r.expected))}</p>
               </li>
             )}

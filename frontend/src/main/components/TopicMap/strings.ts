@@ -45,11 +45,12 @@ export const noTopic = "No tenemos ese tema todavía.";
 export const loading = "Cargando…";
 export const unavailable = "Datos no disponibles";
 export const unreviewedMark = "Nombres sin revisar";
+export const unreviewedExplanation = "Los nombres de este tema aún no los ha revisado una persona del sector.";
 export const help = "Cómo leer esto";
 export const close = "Cerrar";
 export const helpHeading = "Cómo leer esto";
 export const helpPoints = [
-  "Los datos son de las patentes publicadas en España entre 2000 y 2025 (corpus de la OEPM).",
+  "Los datos son de las patentes publicadas en España entre 2000 y 2025 (conjunto de documentos de la OEPM).",
   "Una parte grande son traducciones de patentes europeas.",
   "La fecha es la de publicación en España, no la de la invención ni la de la solicitud.",
   "2010 no tiene datos.",
@@ -77,15 +78,20 @@ export const neighboursHeading = "Temas que aparecen cerca";
 export const subareasHeading = "Partes del tema";
 export const applicantsHeading = "Solicitantes";
 export const themesSentence = (name: string, pct: string) =>
-  `Lo más habitual es ${name} (${pct} % de los documentos). Un mismo documento puede estar en más de una.`;
-export const neighboursSentence = (names: string[]) =>
-  `Aparecen sobre todo junto a ${names.length > 1 ? `${names.slice(0, -1).join(", ")}${and}${names[names.length - 1]}` : names[0]}.`;
-export const playersSentence = (top: string, pct: string, others: string[]) =>
-  `${top} figura como solicitante en el ${pct} % de los documentos.${others.length ? ` Después, ${others.join(and)}.` : ""}`;
+  `Lo más habitual es ${name} (${pct} % de los documentos). Un mismo documento puede estar en más de una subárea.`;
+export const neighboursSentence = (names: string) => `Aparecen sobre todo junto a ${names}.`;
+export const playersSentence = (top: string, pct: string, others: string) =>
+  `${top} figura como solicitante en el ${pct} % de los documentos.${others ? ` Después, ${others}.` : ""}`;
 export const applicantsNote = "Las variantes de un mismo nombre solo se unen para los solicitantes más conocidos.";
 export const cluesIntro = (joined: string) =>
-  `Aparecen ${joined} menos veces de las que sugiere su tamaño. Son pistas para investigar, no oportunidades: no se ha comprobado si hay algo nuevo ahí.`;
+  `Estas tecnologías aparecen ${joined} menos veces de las que sugiere el tamaño de cada una. Son pistas para investigar, no oportunidades: no se ha comprobado si hay algo nuevo ahí.`;
 export const clueRow = (observed: string, once: boolean, joined: string, expected: string) =>
   `Aparece ${observed} ${once ? "vez" : "veces"} ${joined}; por su tamaño cabría esperar unas ${expected}.`;
 export const noClues = "Ningún tema vecino cumple el criterio provisional todavía.";
 export const provisional = "El criterio es provisional y no está validado.";
+export const cluesUnknown =
+  "Lo que no sabemos: si ya existe fuera de España o fuera de este conjunto de documentos, y si hay una razón técnica para que no se combinen.";
+export const clueMark = "Sin comprobar";
+export const gapLegend = (year: number) => `${year}: ${noData}`;
+export const applicantTitle = (name: string, year: number, n: string) =>
+  `${name}: ${n} ${n === "1" ? "documento" : "documentos"} en ${year}`;

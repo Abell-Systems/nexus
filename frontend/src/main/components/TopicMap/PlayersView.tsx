@@ -1,5 +1,6 @@
 import type { TopicMapResult } from "../../domain/topicMap";
 import { formatNumber } from "../../application/topicSummary";
+import { listAnd } from "../../application/spanishList";
 import { FoldedList } from "./FoldedList";
 import * as S from "./strings";
 import styles from "./TopicMapPage.module.css";
@@ -11,7 +12,7 @@ export function PlayersView({ result }: { readonly result: TopicMapResult }) {
       <h1>{S.views.quien}</h1>
       {top && result.total_documents > 0 && (
         <p className={styles.lead}>
-          {S.playersSentence(top.name, formatNumber((100 * top.documents) / result.total_documents), rest.slice(0, 2).map((a) => a.name))}
+          {S.playersSentence(top.name, formatNumber((100 * top.documents) / result.total_documents), listAnd(rest.slice(0, 2).map((a) => a.name)))}
         </p>
       )}
       <FoldedList
