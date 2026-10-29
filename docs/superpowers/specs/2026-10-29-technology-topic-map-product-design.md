@@ -56,7 +56,7 @@ The owner is not a patent expert, and "if it cannot be understood without domain
 6. **[My call]** Spanish only for now. All user text lives in one module, so that a second language can be added later without touching the views.
 7. **[My call]** The topic map is a new route that coexists with the existing explorer. The explorer, its contract and the Nginx barrier are untouched.
 
-**[My call, label to be confirmed by the owner]** The first button is renamed from "¿Crece?" to "¿Cómo evoluciona?", because the data supports counts of publications per year, not a growth claim.
+**[Owner, confirmed 2026-10-29]** The first button is renamed from "¿Crece?" to "¿Cómo evoluciona?", because the data supports counts of publications per year, not a growth claim.
 
 **[My call]** Sentence templates are generated from the data with guards: the "one applicant dominates" clause appears only when one applicant is at least 30 % of the last two years; otherwise the page says no company dominates. Numbers use the Spanish thousands separator. Other rules: the peak is the year(s) with the most documents (ties all named); five applicants and five neighbours are visible and the rest fold; figures are rounded to whole numbers; sub-areas may overlap and the page says so.
 
@@ -74,7 +74,7 @@ The owner is not a patent expert, and "if it cannot be understood without domain
 - **[My call]** A topic is a hand-written definition: a list of IPC subclasses or main groups (current and superseded), a plain name, a description for each sub-area, and plain names for neighbouring subclasses. The catalogue starts with batteries and solar.
 - Plain names were checked against the official IPC 2026.01 scheme titles by two subagents (2026-10-29). Corrected names are in the prototype source, not yet in the repository. **[Open]** A sector expert still has to review them before a client sees them. F01K was not verified.
 - **[My call]** Definitions and plain names live in one versioned definition file per topic in the repository, reviewed by a person. Its identifier goes into the result's configuration, so changing a name or a code changes the version. Each name carries a `reviewed` flag; a build for clients refuses topics with unreviewed names, a development build shows them marked.
-- **[Open]** How a new topic is added, and who reviews its definition, is not designed. Topic quality depends entirely on the definition (batteries is one subclass and reads sharply; solar mixes four areas and reads more loosely).
+- **[Owner, 2026-10-29]** A new topic is added by hand: we write the codes and names and a sector expert reviews them before publication. A template filled in by an expert stays a possible later step. **[Open]** Who the sector reviewer is. Topic quality depends entirely on the definition (batteries is one subclass and reads sharply; solar mixes four areas and reads more loosely).
 - Some topics cannot be built from this corpus: "precision agriculture" lives at subgroup level (A01B 79/005) and subgroups are truncated.
 - **Applicants [My call].** Merging rules live in a versioned file, each with its pattern, the canonical name, the reason and a date. A rule matches whole normalised names or whole-word prefixes, never a bare substring (a substring rule once merged every "Politécnica" university under Madrid). The original name stays attached to every merged count for traceability. Names no rule resolves stay separate. Tests cover collisions and false positives (for example Universidad Politécnica de Madrid vs de Valencia or de Cataluña). A systematic normalisation remains **[Open]**.
 
@@ -128,7 +128,7 @@ The first criterion lets in unrelated fields (medicines, packaging, telecommunic
 
 ## 10. Scope of the first build
 
-**[My call, to be confirmed by the owner]** The first build delivers the three views with real data (¿Cómo evoluciona?, ¿De qué trata?, ¿Quién está?) and, in "Pistas sin explorar", only the real "menos de lo esperado" part. The fictitious block of never-co-classified pairs is **not** shipped: it stays a development fixture, so no fictitious data reaches a client. The result format does not carry a block of unobserved pairs until the criterion of section 7 exists.
+**[Owner confirmed 2026-10-29 that the fictitious block is not shipped; the rest is my call]** The first build delivers the three views with real data (¿Cómo evoluciona?, ¿De qué trata?, ¿Quién está?) and, in "Pistas sin explorar", only the real "menos de lo esperado" part. The fictitious block of never-co-classified pairs is **not** shipped: it stays a development fixture, so no fictitious data reaches a client. The result format does not carry a block of unobserved pairs until the criterion of section 7 exists.
 
 ## 11. Success and how it will be judged
 
@@ -142,10 +142,16 @@ The first criterion lets in unrelated fields (medicines, packaging, telecommunic
 
 Technology choices inside the existing frontend and backend, file layout, chart implementation, how definitions and names are stored, accessibility details (keyboard, contrast, small screens), and the test strategy.
 
-## 13. Decisions the owner still has to make
+## 13. Decisions
 
-1. The criterion for the never-co-classified pairs a topic view may show (section 7), and whether showing any is allowed before E7 and D4.
-2. Who reads the OEPM legal notice (D4).
-3. Who the first real users are, and who reviews plain names and topic definitions.
-4. How a topic that is not in the catalogue is eventually added.
-5. Confirm that the fictitious block of never-co-classified pairs is not shipped (section 10).
+Closed on 2026-10-29 **[Owner]**:
+- The fictitious block of never-co-classified pairs is not shipped (development fixture only).
+- The first button is "¿Cómo evoluciona?".
+- A new topic is added by hand, with review by a sector expert.
+- The inclusion criterion of the rare-combinations list is approved as a provisional exploratory filter (section 7); it is not validated.
+- D4: the owner reads the OEPM legal notice himself and records the date and the reading. **D4 is not resolved until that is done.** This replaces the earlier plan of assigning another person.
+
+Still open:
+1. Who the first real users are, and who the sector reviewer of topic definitions and plain names is.
+2. Whether any never-co-classified pair may ever be shown, and under which criterion (E7, after D4).
+3. Calibration of the thresholds with a sector reviewer and a third topic.
