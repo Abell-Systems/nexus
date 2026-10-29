@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import * as S from "./strings";
+import * as S from "../../application/topicMapStrings";
 import styles from "./TopicMapPage.module.css";
 
 export function HelpDialog() {

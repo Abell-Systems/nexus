@@ -1,5 +1,5 @@
 import type { TopicMapResult } from "../domain/topicMap";
-import * as S from "../components/TopicMap/strings";
+import * as S from "./topicMapStrings";
 
 type Period = "early" | "middle" | "recent";
 type ByPeriod<T> = Record<Period, T | null>;

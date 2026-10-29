@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { visibleAndFolded } from "../../application/topicSummary";
-import * as S from "./strings";
+import * as S from "../../application/topicMapStrings";
 import styles from "./TopicMapPage.module.css";
 
 export function FoldedList<T>({ items, row }: { readonly items: T[]; readonly row: (item: T) => ReactNode }) {

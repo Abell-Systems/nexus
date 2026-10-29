@@ -1,6 +1,6 @@
 import type { TopicMapResult } from "../../domain/topicMap";
 import { summarySentence } from "../../application/topicSummary";
-import * as S from "./strings";
+import * as S from "../../application/topicMapStrings";
 import styles from "./TopicMapPage.module.css";
 
 export function SummaryView({ result }: { readonly result: TopicMapResult }) {

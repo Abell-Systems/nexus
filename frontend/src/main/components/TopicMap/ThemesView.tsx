@@ -2,7 +2,7 @@ import type { TopicMapResult } from "../../domain/topicMap";
 import { formatNumber } from "../../application/topicSummary";
 import { listAnd } from "../../application/spanishList";
 import { FoldedList } from "./FoldedList";
-import * as S from "./strings";
+import * as S from "../../application/topicMapStrings";
 import styles from "./TopicMapPage.module.css";
 
 export function ThemesView({ result }: { readonly result: TopicMapResult }) {

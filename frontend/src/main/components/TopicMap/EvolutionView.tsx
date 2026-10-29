@@ -1,6 +1,6 @@
 import type { TopicMapResult } from "../../domain/topicMap";
 import { dominantApplicant, evolutionSentence, formatNumber } from "../../application/topicSummary";
-import * as S from "./strings";
+import * as S from "../../application/topicMapStrings";
 import styles from "./TopicMapPage.module.css";
 
 const WIDTH = 880;

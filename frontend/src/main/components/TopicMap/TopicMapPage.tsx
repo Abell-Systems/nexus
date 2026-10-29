@@ -8,7 +8,7 @@ import { HelpDialog } from "./HelpDialog";
 import { PlayersView } from "./PlayersView";
 import { SummaryView } from "./SummaryView";
 import { ThemesView } from "./ThemesView";
-import * as S from "./strings";
+import * as S from "../../application/topicMapStrings";
 import styles from "./TopicMapPage.module.css";
 
 const VIEWS = { evolucion: EvolutionView, tema: ThemesView, quien: PlayersView, pistas: CluesView } as const;

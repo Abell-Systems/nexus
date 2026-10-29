@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TOPICS } from "../../infrastructure/topicMapLoader";
-import * as S from "./strings";
+import * as S from "../../application/topicMapStrings";
 import styles from "./TopicMapPage.module.css";
 
 const plain = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().trim();
