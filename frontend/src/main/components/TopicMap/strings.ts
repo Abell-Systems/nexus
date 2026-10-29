@@ -1,4 +1,4 @@
-// User-facing Spanish text of the topic map. Only strings used by application/topicSummary.ts so far.
+// User-facing Spanish text of the topic map (components and application/topicSummary.ts).
 export const PERIODS = {
   early: "2000–2009",
   middle: "2011–2023",
@@ -76,7 +76,6 @@ export const documents = (n: string) => `${n} ${n === "1" ? "documento" : "docum
 export const more = (n: number) => `Ver ${n} más`;
 export const neighboursHeading = "Temas que aparecen cerca";
 export const subareasHeading = "Partes del tema";
-export const applicantsHeading = "Solicitantes";
 export const themesSentence = (name: string, pct: string) =>
   `Lo más habitual es ${name} (${pct} % de los documentos). Un mismo documento puede estar en más de una subárea.`;
 export const neighboursSentence = (names: string) => `Aparecen sobre todo junto a ${names}.`;

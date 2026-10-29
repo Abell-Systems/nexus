@@ -257,7 +257,9 @@ jobs:
           test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8081/data/oepm-subclass-pairs-results.json)" = 200
           test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8081/matches)" = 404
           test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8081/data/oepm-unobserved-pairs-results.json)" = 404
-          ! docker exec nexus-staging-web-1 grep -rlE 'demand-examples|api/matches' /usr/share/nginx/html
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8081/temas)" = 404
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8081/data/topic-map-baterias.json)" = 404
+          ! docker exec nexus-staging-web-1 grep -rlE 'demand-examples|api/matches|topic-map-' /usr/share/nginx/html
           TAILSCALE_BIND_IP=127.0.0.1 docker compose -f docker-compose.staging.yml down
 
   sonar-quality-gate:

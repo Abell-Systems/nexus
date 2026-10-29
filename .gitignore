@@ -87,3 +87,7 @@ playwright-report/
 
 auth.caddy
 experiments/wpi-demand-patent-matching/restricted/
+
+# D4: remove when recorded and the owner authorises, Task 13
+docs/whitespace/topic-map-*.json
+frontend/public/data/topic-map-*.json

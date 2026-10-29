@@ -1,6 +1,6 @@
 import type { TopicMapResult } from "../domain/topicMap";
 import provenance from "./data/provenance.json";
-import { loadVerifiedJson, type HashManifest } from "./verifiedLoader";
+import { IntegrityError, loadVerifiedJson, type HashManifest } from "./verifiedLoader";
 
 export const TOPICS: readonly { key: string; name: string }[] = [
   { key: "baterias", name: "Baterías" },
@@ -21,7 +21,10 @@ export function loadTopicMap(
 ): Promise<TopicMapResult> {
   let pending = cache.get(topic);
   if (!pending) {
-    pending = loadVerifiedJson<TopicMapResult>(`/data/topic-map-${topic}.json`, manifest, fetcher);
+    pending = loadVerifiedJson<TopicMapResult>(`/data/topic-map-${topic}.json`, manifest, fetcher).then((result) => {
+      if (result.topic.key !== topic) throw new IntegrityError("topic key differs from the requested topic");
+      return result;
+    });
     cache.set(topic, pending);
     pending.catch(() => cache.delete(topic));
   }

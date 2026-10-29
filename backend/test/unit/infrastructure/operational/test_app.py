@@ -72,6 +72,13 @@ class MvpAppTest:
         result = subprocess.run([sys.executable, "-c", code], env={}, capture_output=True, text=True)
         assert result.returncode == 0, result.stderr
 
+    def test_should_not_serve_topic_map_data_when_the_file_exists_in_the_static_directory(self, operational_dir, static_dir, selection):
+        (static_dir / "data").mkdir()
+        (static_dir / "data" / "topic-map-x.json").write_text("{}", encoding="utf-8")
+        (static_dir / "data" / "other.json").write_text("{}", encoding="utf-8")
+        client = TestClient(create_mvp_app(operational_dir, static_dir, selection))
+        assert client.get("/data/topic-map-x.json").status_code == 404
+        assert client.get("/data/other.json").status_code == 200
 
 class EntrypointArgsTest:
     def test_should_require_the_artifacts_directory(self):
@@ -81,3 +88,4 @@ class EntrypointArgsTest:
     def test_should_default_to_loopback_without_a_static_directory(self):
         args = parse_args(["--artifacts", "/srv/nexus/data"])
         assert (args.artifacts, args.static, args.host, args.port) == (Path("/srv/nexus/data"), None, "127.0.0.1", 8080)
+

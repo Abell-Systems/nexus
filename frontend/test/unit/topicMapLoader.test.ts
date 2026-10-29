@@ -62,6 +62,11 @@ describe("loadTopicMap", () => {
     await expect(loadTopicMap("synthetic", respond(bytes), {})).rejects.toBeInstanceOf(IntegrityError);
   });
 
+  it("shouldRejectWhenTheKeyDiffersFromTheRequestedTopic", async () => {
+    const other = "/data/topic-map-other.json";
+    await expect(loadTopicMap("other", respond(bytes), { [other]: manifest[URL_] })).rejects.toBeInstanceOf(IntegrityError);
+  });
+
   it("shouldFailWhenTheFileAnswers404", async () => {
     await expect(loadTopicMap("synthetic", respond(bytes, 404), manifest)).rejects.toBeInstanceOf(LoadError);
   });
@@ -82,9 +87,11 @@ describe("loadTopicMap", () => {
 
   it("shouldKeepTopicsApartWhenTheyAreCached", async () => {
     const other = "/data/topic-map-other.json";
-    const fetcher = respond(bytes);
-    await loadTopicMap("synthetic", fetcher, { ...manifest, [other]: manifest[URL_] });
-    await loadTopicMap("other", fetcher, { ...manifest, [other]: manifest[URL_] });
+    const otherBytes = new TextEncoder().encode(JSON.stringify({ ...result, topic: { ...result.topic, key: "other" } }));
+    const both = { ...manifest, [other]: sha256Hex(otherBytes) };
+    const fetcher = vi.fn(async (u: RequestInfo | URL) => new Response(u === other ? otherBytes : bytes)) as unknown as typeof fetch;
+    await loadTopicMap("synthetic", fetcher, both);
+    await loadTopicMap("other", fetcher, both);
     expect(fetcher).toHaveBeenCalledTimes(2);
   });
 
