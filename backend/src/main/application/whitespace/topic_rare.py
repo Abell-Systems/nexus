@@ -9,6 +9,7 @@ from application.whitespace.topic_units import Unit, in_topic
 from domain.models.topic_map import TopicDefinition
 
 MIN_OBSERVED = 30
+# redundant given MIN_OBSERVED and MAX_RATIO (they imply E > 37.5); kept because the approved criterion lists it (R8)
 MIN_EXPECTED = 30.0
 MAX_RATIO = 0.8
 

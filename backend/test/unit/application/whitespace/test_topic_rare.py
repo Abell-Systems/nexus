@@ -44,6 +44,13 @@ def test_shouldComputeExpectedWithinYearsWhenTwoYearsDiffer():
     assert rare_combinations(data, definition({"X01X": "Equis"})) == [RareRow("X01X", "Equis", 100, 180.0, 0.555555556)]
 
 
+def test_shouldWeightEachYearByItsOwnTotalWhenTotalsDiffer():
+    # y1: N=500 nT=100 nX=250 -> 100*250/500 = 50 ; y2: N=2000 nT=1000 nX=400 -> 1000*400/2000 = 200
+    # E = 250 (a hard-coded N=1000 would give 25 + 400 = 425) ; O = 40 + 60 = 100 ; ratio = 0.4
+    data = single_x(40, 60, 210, 190, 2000) + single_x(60, 940, 340, 660, 2001)
+    assert rare_combinations(data, definition()) == [RareRow("X01X", "X01X", 100, 250.0, 0.4)]
+
+
 def test_shouldSkipTheYearWithoutDocumentsWhenSumming():
     data = single_x(50, 50, 850, 50, 2009) + single_x(50, 850, 50, 50, 2011)
     assert [r.expected for r in rare_combinations(data, definition())] == [180.0]
@@ -63,6 +70,8 @@ def test_shouldIncludeWhenObservedIs30():
 
 
 def test_shouldExcludeWhenExpectedIs29Point9():
+    # E >= 30 is redundant given O >= 30 and ratio < 0.8 (they imply E > 37.5); kept because the
+    # owner-approved criterion lists it (ruling R8), so this case is excluded through the ratio rule.
     # nT=299 nX=100 N=1000 -> 29.9
     assert rows(30, 269, 70, 631) == []
 
