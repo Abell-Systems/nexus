@@ -152,6 +152,9 @@ Closed on 2026-10-29 **[Owner]**:
 - D4: the owner reads the OEPM legal notice himself and records the date and the reading. **D4 is not resolved until that is done.** This replaces the earlier plan of assigning another person.
 
 Still open:
-1. Who the first real users are, and who the sector reviewer of topic definitions and plain names is.
+1. **Names for two roles.** The profiles are set below; nobody is named until their availability and independence are confirmed.
+   - **Sector reviewer** of topic definitions and plain names: a person with experience in patents and technical knowledge of batteries or solar, able to judge whether the IPC codes and the names fit. Preferably someone who took no part in choosing the exploratory thresholds.
+   - **First users** (usability): two or three people outside the development, not experts in patent classification. They judge whether they understand the map and its four views. They need no access to never-co-classified pairs.
+   - **Separation of roles:** before any person who could assess candidates scientifically sees them, E7 is resolved and it is recorded whether that person may take part in the human review.
 2. Whether any never-co-classified pair may ever be shown, and under which criterion (E7, after D4).
 3. Calibration of the thresholds with a sector reviewer and a third topic.
