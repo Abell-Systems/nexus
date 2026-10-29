@@ -91,9 +91,11 @@ The owner is not a patent expert, and "if it cannot be understood without domain
 
 - **What exists now:** "se combinan menos de lo que cabría esperar": subclasses observed together with the topic, fewer times than their size suggests, shown with "aparece N veces; por su tamaño cabría esperar unas M". They come from the observed corpus and show no candidate pair.
   - **Definition [My call, provisional parameters].** For a topic T and a neighbouring subclass X, over O4 units published in years with documents (2010 skipped, never counted as zero): observed O = units in T that also carry X; expected E = Σ_y n_T(y)·n_X(y) / N(y), the ADR 0038 E3 formula with n_T(y) the units of T published in year y, n_X(y) those carrying X, and N(y) all units of year y. Ratio = O / E. The prototype used corpus-wide frequencies, which ignore time; its figures are not results and are recomputed.
-  - **Inclusion (parameters provisional, to be approved):** O ≥ 1 and E ≥ 30 and ratio < 0.8. A minimum expected count keeps the ratio from resting on small numbers. **O = 0 is excluded on purpose:** a topic-subclass pair never observed together is a never-co-classified pair and belongs to the E7/D4 gate, so this list never contains one. E = 0 is excluded (ratio undefined).
+  - **Inclusion [My call, provisional heuristic, approved by the owner as an exploratory filter]:** O ≥ 30 and E ≥ 30 and ratio < 0.8. The minimum of observed co-classifications keeps out neighbours that are rare against the expectation only because they belong to an unrelated field. E ≥ 30 keeps the ratio from resting on small numbers; E = 0 is excluded (ratio undefined).
+  - **What this list is not.** It lists observed neighbours that appear less often than their size suggests. It is **not** a list of never-co-classified pairs: O ≥ 30 excludes every pair with no or few observed co-classifications, and those stay behind the E7/D4 gate. The aggregate counts of such pairs obtained in the exploration do not authorise showing any of them.
+  - **Not calibrated.** The thresholds are heuristics chosen after looking at batteries and solar, the same two topics that motivate them; they are not validated and the 0.8 line is arbitrary. A sector reviewer and a third topic that played no part in the choice are needed before they are frozen.
   - Meaning of the ratio: observed co-classifications divided by what independence within years would give. It describes the corpus; it says nothing about a technical reason or an opportunity.
-  - Boundary cases to be fixed as tests before building: E just below and above 30, ratio 0.79 and 0.80, a year with no documents, a topic with no qualifying row (the view says so instead of showing an empty chart).
+    - Boundary cases to be fixed as tests before building: E and O just below and above 30, ratio 0.79 and 0.80, a year with no documents, a topic with no qualifying row (the view says so instead of showing an empty chart).
   - **Order: alphabetical by plain name.** The prototype sorted by ratio, ascending, which is a ranking in disguise and contradicts the no-ranking rule; it must not be repeated. The bar may show the ratio; the order does not encode it.
 - **What is only a mock:** a block of never-co-classified pairs, with fictitious pairs and fictitious numbers, labelled everywhere as fictitious, in alphabetical order with no score. It tests wording only. Real pairs are not shown while E7 and D4 are open.
 - **[Open, owner]** The criterion for which never-co-classified pairs a topic view may show. Constraints it has to respect: the expected count under independence (ADR 0038 E3, minimum 1), no ranking, aggregate or alphabetical presentation, and that most such pairs are technically meaningless (for example batteries with algae farming), so the filter is a scientific decision, not a design one.
@@ -107,6 +109,17 @@ The owner is not a patent expert, and "if it cannot be understood without domain
 - Right now the corpus generator takes about three minutes per topic. Fine offline; a topic added at request time would need precomputation, not a live query.
 
 ## 9. Findings from the prototypes (facts, not claims about the product)
+
+**Exploration of the inclusion thresholds (2026-10-29, exploratory evidence, not validation).** With E3 computed within years over O4 units, for batteries (5,676 documents) and solar (5,812):
+
+| Criterion | Batteries | Solar |
+|---|---|---|
+| O ≥ 1, E ≥ 30, ratio < 0.8 | 52 rows (35 with ratio < 0.2) | 47 rows (28 with ratio < 0.2) |
+| O ≥ 10, E ≥ 30, ratio < 0.8 | 19 | 22 |
+| O ≥ 30, E ≥ 30, ratio < 0.8 | 7 | 6 |
+
+The first criterion lets in unrelated fields (medicines, packaging, telecommunications) with ratios near 0.01. The ratio threshold barely changes the count (ratios fall in two separate groups), so the minimum observed count is what decides. The figures were produced once by the author and not independently reproduced; the scripts are not in git.
+
 
 - Batteries (H01M): 5,676 documents (0.8 % of the corpus); 85 % are EP translations; LG Energy Solution is in 22 % of them and 56 % of the 2024–2025 ones (none before 2022). Sub-areas: rechargeable batteries, electrodes, casings and connections, fuel cells.
 - Solar (H01L 31, H10F, H10K 30, H02S, F24S, F24J 2, F03G 6): 5,812 documents; 44 % EP translations; no applicant above about 5 %. The same screens worked with a different profile.
