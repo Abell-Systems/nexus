@@ -74,6 +74,8 @@ jobs:
         run: npm test
       - name: Typecheck
         run: npm run typecheck
+      - name: Typecheck contract test (field lists against the TopicMapResult type)
+        run: npm run typecheck:tests
       - name: Lint
         run: npm run lint
       - name: Production Build
