@@ -109,6 +109,7 @@ def check_frontend_files(errors: list[str]) -> None:
         "tsconfig.json",
         "tsconfig.app.json",
         "tsconfig.node.json",
+        "tsconfig.test.json",
         "vite.config.ts",
         "playwright.config.ts",
         "test-results",
