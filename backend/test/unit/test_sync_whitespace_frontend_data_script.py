@@ -38,7 +38,8 @@ def _root_with_topic(tmp_path, names):
     root = tmp_path / "root"
     (root / "docs" / "whitespace").mkdir(parents=True)
     for name in names:
-        (root / "docs" / "whitespace" / name).write_text('{"synthetic": true}\n', encoding="utf-8")
+        (root / "docs" / name if "/" in name else root / "docs" / "whitespace" / name).parent.mkdir(exist_ok=True)
+        (root / "docs" / name if "/" in name else root / "docs" / "whitespace" / name).write_text('{"synthetic": true}\n', encoding="utf-8")
     return root
 
 
@@ -67,3 +68,13 @@ def test_shouldCopyATopicResultWithItsHashWhenItExists(tmp_path):
     assert entry["bytes"] == len(copy.read_bytes())
     assert entry["sha256"] == hashlib.sha256(copy.read_bytes()).hexdigest()
     assert not (tmp_path / "public" / "topic-map.json").exists()
+
+
+def test_shouldOnlyDiscoverTopicResultsDirectlyUnderDocsWhitespace(tmp_path):
+    # Closed: topic-map-looking files elsewhere under docs/ or nested below docs/whitespace/ are never copied or listed.
+    root = _root_with_topic(
+        tmp_path, ["topic-map-ok.json", "other/topic-map-x.json", "whitespace/sub/topic-map-y.json"]
+    )
+    manifest = _sync_without_the_fixed_sources(_script(), tmp_path, root)
+    assert [e["file"] for e in manifest["files"]] == ["topic-map-ok.json"]
+    assert [p.name for p in (tmp_path / "public").glob("*.json")] == ["topic-map-ok.json"]
